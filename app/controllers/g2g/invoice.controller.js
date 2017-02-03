@@ -293,7 +293,7 @@ exports.insert = function (req, res) {
             .do(inv_do => {
                 return r.db('g2g').table('invoice').get(inv_do('generated_keys')(0))
                     .do(book_do => {
-                        return r.db('g2g').table('invoice').get(book_do('book_id')).update({ book_status: true })
+                        return r.db('g2g').table('book').get(book_do('book_id')).update({ book_status: true })
                     })
             })
             .run()
