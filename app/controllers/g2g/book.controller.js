@@ -287,7 +287,7 @@ exports.insert = function (req, res) {
         r.db("g2g").table("book")
             .insert(req.body)
             .run()
-            .then(function (result) {
+            .then(function (response) {
                 result.message = response;
                 if (response.errors == 0) {
                     result.result = true;
@@ -313,7 +313,7 @@ exports.update = function (req, res) {
             .get(req.body.id)
             .update(req.body)
             .run()
-            .then(function (result) {
+            .then(function (response) {
                 result.message = response;
                 if (response.errors == 0) {
                     result.result = true;
