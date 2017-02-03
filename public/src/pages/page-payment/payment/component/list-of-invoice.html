@@ -1,0 +1,169 @@
+<link rel="import" href="../../../../../bower_components/paper-checkbox/paper-checkbox.html">
+<dom-module id="list-of-invoice">
+  <style include="iron-flex iron-flex-factors iron-flex-alignment gl-styles">
+    :host {
+      display: block;
+    }
+    *{
+      font-family: 'CSChatThaiUI', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    .labelSearch{
+    font-size: var(--font-size-h4);
+    margin: 10px 10px 10px 10px;
+    }
+    .table-body >tr > td{
+      cursor:pointer;
+      
+    }
+    .title {
+      margin: 16px;
+      text-align: center;
+      font-size: var(--font-size-h4);
+    }
+    .worrne{
+      padding: 15px;
+    }
+    table.gl-table-default {
+      width: 98%;
+      border: 1px solid #ddd;
+      margin-bottom: 15px;
+    }
+  </style>
+  <template>
+    <div class="title">รวมใบกำกับสินค้าของสัญญา [[dataForSelect.nameContract]]</div>
+    <div class="flex searchInput ">
+       <!-- <div class="horizontal end-justified layout">
+         <div class="labelSearch">Invoice No.</div>{{searchInput}}
+         <paper-input label=" " no-label-float value="{{searchInput}}"></paper-input>
+         <paper-icon-button icon="search"></paper-icon-button>
+       </div> -->
+   </div>
+
+   <div class="horizontal center-justified layout">
+    <table class="gl-table-default">
+          <thead class="table-head">
+            <tr>
+              <th></th>
+              <!--<th>ชื่อการทำสัญญา</th>-->
+              <th>งวดการส่งมอบ</th>
+              <th>เลขที่ใบแจ้งหนี้</th>
+              <th>Port of Delivery </th>
+              <th>Port of Destination </th>
+              <th style="width:3%">Print</th>
+            </tr>
+
+          </thead>
+          <tbody class="table-body">
+            <template is="dom-if" if="[[!_isHave(data)]]">
+              <template is="dom-repeat" items="{{data}}" as="payment">
+                <template is="dom-repeat" items="{{payment.invoice_detail}}">
+                  <tr >
+                    <!-- disabled="[[_checkDisabled(shipid,payment.shm_id,item.invoice_id)]]" -->
+                    <td>
+                      <paper-checkbox id="[[index]]"class="checkBox" data="{{item}}" shm-id="{{payment.shm_id}}" on-tap="checkData" ></paper-checkbox>
+                    </td>
+                    <!--<td data="[[item]]" on-tap="getInvoiceDetail">[[item.cl_name]]</td>-->
+                    <td data="[[item]]" on-tap="getInvoiceDetail">[[payment.shm_no]]</td>
+                    <td data="[[item]]" on-tap="getInvoiceDetail">[[item.invoice_no]]</td>
+                    <td data="[[item]]" on-tap="getInvoiceDetail">[[item.deli_port_name]]</td>
+                   <td data="[[item]]" on-tap="getInvoiceDetail">[[item.dest_port_name]]</td>
+                   <td>
+                     <paper-icon-button id="printShipment" data="[[item]]" class="crud" icon="print" raised on-tap="getInvoiceid"  hidden="[[!data.shm_status]]"></paper-icon-button>
+                     <paper-tooltip for="printShipment" offset="0">Print Shipment</paper-tooltip>
+                   </td>
+                  </tr>
+                </template>
+                <tr>
+                  <td style="cursor: default;"></td>
+                  <td style="cursor: default;"></td>
+                  <td style="cursor: default;"></td>
+                  <td style="cursor: default;"></td>
+                  <td style="cursor: default;"></td>
+                  <td style="cursor: default;">
+                    <div class="horizontal end-justified layout btnMoney">
+                     <paper-button class="gl-btn-success" raised on-tap="payMoney">ได้รับเงิน</paper-button>
+                  </div>
+                </td>
+                </tr>
+          </template>
+
+
+        </template>
+        <template is="dom-if" if="[[_isHave(data)]]">
+            <tr >
+              <td colspan="5" style="text-align:center">  ไม่มีข้อมูล</td>
+            </tr>
+        </template>
+         </tbody>
+      </table>
+      </div>
+      <div class="worrne">
+        *กรุณาติ้กเครื่องถูกที่งวดเดียวกัน
+      </div>
+  </template>
+  <script>
+    Polymer({
+      is: "list-of-invoice",
+      behaviors: [
+          g2gCongtroller
+      ],
+      properties: {
+        data: {
+          type: Object,
+        },
+        shipid:{
+          type: String,
+          value:''
+        }
+      },
+      observers:[
+        '_cleanCheckBox(data.*)'
+      ],
+      _cleanCheckBox:function (data) {
+        // console.log(data);
+        let checkDisabled = Polymer.dom(this.root).querySelectorAll('paper-checkbox[aria-disabled="true"]');
+        checkDisabled.map((el)=>{
+            el.disabled=false;
+        });
+        let check = Polymer.dom(this.root).querySelectorAll('paper-checkbox[aria-checked="true"]');
+        check.map((el)=>{
+            el.checked=false;
+        });
+      },
+      checkData:function (e){
+        // console.log(e.currentTarget.shmId);
+        this.shipid = e.currentTarget.shmId;
+        // console.log('กดสิ');
+        // console.log(this.shipid);
+        let notCheck = Polymer.dom(this.root).querySelectorAll('paper-checkbox[aria-checked="false"]');
+        // console.log(notCheck);
+        notCheck.map((el)=>{
+          if (this.shipid != el.shmId){
+            el.disabled=true;
+          }
+          // console.log(el.disabled);
+        })
+        let check = Polymer.dom(this.root).querySelectorAll('paper-checkbox[aria-checked="true"]');
+        // console.log(check);
+        if (check.length < 1) {
+          let checkDisabled = Polymer.dom(this.root).querySelectorAll('paper-checkbox[aria-disabled="true"]');
+          checkDisabled.map((el)=>{
+              el.disabled=false;
+            })
+        }
+      },
+      getInvoiceDetail:function (e) {
+        this.fire('get-invoice-detail',{detail:e.currentTarget.data});
+      },
+      getInvoiceid:function (e) {
+        // console.log(e.currentTarget.data.invoice_id);
+        window.open('http://localhost:8080/api/payment/report1?invoice_id='+e.currentTarget.data.invoice_id,'1');
+      },
+      payMoney:function () {
+        let check = Polymer.dom(this.root).querySelectorAll('paper-checkbox[aria-checked="true"]');
+        this.fire('get-select-draftPayment', {detail: check,});
+      }
+    });
+  </script>
+</dom-module>
