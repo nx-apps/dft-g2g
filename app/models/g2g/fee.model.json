@@ -7,9 +7,6 @@
         "fee_no": {
             "type": "number"
         },
-        "fee_name": {
-            "type": "string"
-        },
         "fee_status": {
             "type": "boolean"
         },
