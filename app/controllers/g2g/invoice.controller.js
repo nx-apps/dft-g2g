@@ -35,8 +35,8 @@ exports.getByContractId = function (req, res) {
             })
         }).pluck("left", { right: ["deli_port_name", "deli_port_code"] }).zip()
         .eqJoin("shipline_id", r.db('common').table("shipline")).pluck("left", { right: ["shipline_name", "shipline_tel"] }).zip()
-        .eqJoin("shm_id", r.db('g2g').table("shipment")).pluck("left", { right: ["shm_name", "shm_no", "cl_id", "contract_id"] }).zip()
-        .eqJoin("cl_id", r.db('g2g').table("confirm_letter")).pluck("left", { right: ["cl_name", "cl_no", "cl_date"] }).zip()
+        .eqJoin("shm_id", r.db('g2g').table("shipment")).pluck("left", { right: ["shm_no", "cl_id", "contract_id"] }).zip()
+        .eqJoin("cl_id", r.db('g2g').table("confirm_letter")).pluck("left", { right: ["cl_no", "cl_date"] }).zip()
         .eqJoin("contract_id", r.db('g2g').table("contract")).pluck("left", { right: ["contract_date"] }).zip()
 
         .merge(function (m) {
@@ -53,7 +53,7 @@ exports.getByContractId = function (req, res) {
         })
         .group(function (g) {
             return g.pluck(
-                "shm_id", "shm_no", "shm_name", "cl_id", "cl_no", "cl_name"
+                "shm_id", "shm_no", "cl_id", "cl_no"
             )
         })
         .ungroup()
@@ -61,10 +61,8 @@ exports.getByContractId = function (req, res) {
             return {
                 shm_id: me('group')('shm_id'),
                 shm_no: me('group')('shm_no'),
-                shm_name: me('group')('shm_name'),
                 cl_id: me('group')('cl_id'),
                 cl_no: me('group')('cl_no'),
-                cl_name: me('group')('cl_name'),
                 invoice_detail: me('reduction')
             }
         })
@@ -114,8 +112,8 @@ exports.getByShmId = function (req, res) {
             })
         }).pluck("left", { right: ["deli_port_name", "deli_port_code"] }).zip()
         .eqJoin("shipline_id", r.db('common').table("shipline")).pluck("left", { right: ["shipline_name", "shipline_tel"] }).zip()
-        .eqJoin("shm_id", r.db('g2g').table("shipment")).pluck("left", { right: ["shm_name", "shm_no", "cl_id", "contract_id"] }).zip()
-        .eqJoin("cl_id", r.db('g2g').table("confirm_letter")).pluck("left", { right: ["cl_name", "cl_no", "cl_date"] }).zip()
+        .eqJoin("shm_id", r.db('g2g').table("shipment")).pluck("left", { right: ["shm_no", "cl_id", "contract_id"] }).zip()
+        .eqJoin("cl_id", r.db('g2g').table("confirm_letter")).pluck("left", { right: ["cl_no", "cl_date"] }).zip()
         .eqJoin("contract_id", r.db('g2g').table("contract")).pluck("left", { right: ["contract_date"] }).zip()
 
         .merge(function (m) {

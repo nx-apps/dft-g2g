@@ -13,9 +13,6 @@
         "shm_no": {
             "type": "number"
         },
-        "shm_name": {
-            "type": "string"
-        },
         "shm_status": {
             "type": "boolean"
         }

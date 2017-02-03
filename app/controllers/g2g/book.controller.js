@@ -4,9 +4,9 @@ exports.getByContractId = function (req, res) {
     r.db('g2g').table('book')
         .getAll(req.params.contract_id, { index: 'tags' })
         .filter({ book_status: false })
-        .eqJoin("shm_id", r.db('g2g').table("shipment")).pluck("left", { right: ["cl_id", "contract_id", "shm_name", "shm_no", "shm_status"] }).zip()
+        .eqJoin("shm_id", r.db('g2g').table("shipment")).pluck("left", { right: ["cl_id", "contract_id", "shm_no", "shm_status"] }).zip()
         .filter({ shm_status: true })
-        .eqJoin("cl_id", r.db('g2g').table("confirm_letter")).pluck("left", { right: ["cl_name", "cl_no", "cl_date", "incoterms"] }).zip()
+        .eqJoin("cl_id", r.db('g2g').table("confirm_letter")).pluck("left", { right: [ "cl_no", "cl_date", "incoterms"] }).zip()
         .eqJoin("contract_id", r.db('g2g').table("contract")).pluck("left", { right: ["contract_name", "contract_date"] }).zip()
         .eqJoin('carrier_id', r.db('common').table('carrier')).pluck("left", { right: "carrier_name" }).zip()
         .eqJoin('shipline_id', r.db('common').table('shipline')).pluck("left", { right: ["shipline_name", "shipline_tel"] }).zip()
@@ -148,10 +148,10 @@ exports.getById = function (req, res) {
     r.db('g2g').table('book')
         .get(req.params.book_id)
         .merge(function (m) {
-            return r.db('g2g').table("shipment").get(m('shm_id')).pluck("cl_id", "contract_id", "shm_no", "shm_name")
+            return r.db('g2g').table("shipment").get(m('shm_id')).pluck("cl_id", "contract_id", "shm_no")
         })
         .merge(function (m) {
-            return r.db('g2g').table("confirm_letter").get(m('cl_id')).pluck("cl_no", "cl_name", "incoterms", "cl_date")
+            return r.db('g2g').table("confirm_letter").get(m('cl_id')).pluck("cl_no", "incoterms", "cl_date")
         })
         .merge(function (m) {
             return r.db('g2g').table("contract").get(m('contract_id')).pluck("contract_date", "contract_name", "buyer_id")

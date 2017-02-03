@@ -2,7 +2,7 @@ exports.getByContractId = function (req, res) {
     var r = req._r;
     r.db('g2g').table('fee')
         .getAll(req.params.contract_id, { index: 'tags' }).without('tags')
-        .eqJoin('shm_id', r.db('g2g').table('shipment')).pluck("left", { right: ['shm_no', 'shm_name', 'cl_id'] }).zip()
+        .eqJoin('shm_id', r.db('g2g').table('shipment')).pluck("left", { right: ['shm_no', 'cl_id'] }).zip()
         .filter({ 'fee_status': false })
         .merge(function (m) {
             return {
@@ -332,7 +332,7 @@ exports.getPayByContractId = function (req, res) {
     var r = req._r;
     r.db('g2g').table('fee')
         .getAll(req.params.contract_id, { index: 'tags' }).without('tags')
-        .eqJoin('shm_id', r.db('g2g').table('shipment')).pluck("left", { right: ['shm_no', 'shm_name', 'cl_id'] }).zip()
+        .eqJoin('shm_id', r.db('g2g').table('shipment')).pluck("left", { right: ['shm_no', 'cl_id'] }).zip()
         .filter({ 'fee_status': true })
         .merge(function (m) {
             return {
