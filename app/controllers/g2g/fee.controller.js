@@ -66,7 +66,6 @@ exports.getByShmID = function (req, res) {
     var r = req._r;
     r.db('g2g').table('fee')
         .getAll(req.params.shm_id, { index: 'shm_id' })
-        .filter({ fee_status: false })
         .merge({ fee_id: r.row('id') })
         .without('id')
         .run()
