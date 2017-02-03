@@ -1,0 +1,14 @@
+{
+    "name": "common.surveyor",
+    "properties": {
+        "id": {
+            "type": "string"
+        },
+        "surveyor_name": {
+            "type": "string"
+        }
+    },
+    "required": [
+        "surveyor_name"
+    ]
+}

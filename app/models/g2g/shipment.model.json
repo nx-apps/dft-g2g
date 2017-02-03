@@ -1,0 +1,29 @@
+{
+    "name": "g2g.shipment",
+    "properties": {
+        "id": {
+            "type": "string"
+        },
+        "contract_id": {
+            "type": "string"
+        },
+        "cl_id": {
+            "type": "string"
+        },
+        "shm_no": {
+            "type": "number"
+        },
+        "shm_name": {
+            "type": "string"
+        },
+        "shm_status": {
+            "type": "boolean"
+        }
+    },
+    "required": [
+        "contract_id",
+        "cl_id",
+        "shm_no",
+        "shm_status"
+    ]
+}

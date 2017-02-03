@@ -1,0 +1,25 @@
+{
+    "name": "g2g.fee",
+    "properties": {
+        "id": {
+            "type": "string"
+        },
+        "fee_no": {
+            "type": "number"
+        },
+        "fee_name": {
+            "type": "string"
+        },
+        "fee_status": {
+            "type": "boolean"
+        },
+        "shm_id": {
+            "type": "string"
+        }
+    },
+    "required": [
+        "fee_no",
+        "fee_status",
+        "shm_id"
+    ]
+}

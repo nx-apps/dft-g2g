@@ -1,0 +1,15 @@
+{
+    "name": "common.incoterms",
+    "properties": {
+        "id": {
+            "type": "string"
+        },
+        "inct_name": {
+            "type": "string"
+        }
+    },
+    "required": [
+        "id",
+        "inct_name"
+    ]
+}

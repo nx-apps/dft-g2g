@@ -1,0 +1,18 @@
+{
+    "name": "common.ship",
+    "properties": {
+        "id": {
+            "type": "string"
+        },
+        "ship_name": {
+            "type": "string"
+        },
+        "shipline_id": {
+            "type": "string"
+        }
+    },
+    "required": [
+        "ship_name",
+        "shipline_id"
+    ]
+}

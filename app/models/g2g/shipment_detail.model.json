@@ -1,0 +1,44 @@
+{
+    "name": "g2g.shipment_detail",
+    "items": {
+        "properties": {
+            "id": {
+                "type": "string"
+            },
+            "num_of_container": {
+                "type": "integer"
+            },
+            "package_id": {
+                "type": "string"
+            },
+            "exporter_id": {
+                "type": "string"
+            },
+            "shm_det_quantity": {
+                "type": "number"
+            },
+            "price_per_ton": {
+                "type": "number"
+            },
+            "shm_id": {
+                "type": "string"
+            },
+            "type_rice_id": {
+                "type": "string"
+            },
+            "book_id": {
+                "type": "string"
+            }
+        },
+        "required": [
+            "package_id",
+            "exporter_id",
+            "book_id",
+            "shm_det_quantity",
+            "shm_id",
+            "type_rice_id",
+            "num_of_container",
+            "price_per_ton"
+        ]
+    }
+}

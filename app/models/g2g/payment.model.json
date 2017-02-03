@@ -1,0 +1,46 @@
+{
+    "name": "g2g.payment",
+    "properties": {
+        "id": {
+            "type": "string"
+        },
+        "pay_no": {
+            "type": "string"
+        },
+        "pay_amount": {
+            "type": "number"
+        },
+        "pay_date": {
+            "type": "string",
+            "format": "date-time"
+        },
+        "bank_id": {
+            "type": "string"
+        },
+        "bank_branch": {
+            "type": "string"
+        },
+        "payment_detail": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "pay_det_id": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "pay_det_id"
+                ]
+            }
+        }
+    },
+    "required": [
+        "pay_no",
+        "pay_amount",
+        "pay_date",
+        "bank_id",
+        "bank_branch",
+        "payment_detail"
+    ]
+}

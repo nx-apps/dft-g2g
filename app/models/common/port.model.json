@@ -1,0 +1,23 @@
+{
+    "name": "common.port",
+    "properties": {
+        "id": {
+            "type": "string"
+        },
+        "port_code": {
+            "type": "string"
+        },
+        "port_name": {
+            "type": "string"
+        },
+        "country_id": {
+            "type": "string"
+        }
+    },
+    "required": [
+        "id",
+        "port_code",
+        "port_name",
+        "country_id"
+    ]
+}

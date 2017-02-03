@@ -1,0 +1,14 @@
+{
+    "name": "common.carrier",
+    "properties": {
+        "id": {
+            "type": "string"
+        },
+        "carrier_name": {
+            "type": "string"
+        }
+    },
+    "required": [
+        "carrier_name"
+    ]
+}

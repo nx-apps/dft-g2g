@@ -1,0 +1,34 @@
+{
+    "name": "common.notifyParty",
+    "properties": {
+        "id": {
+            "type": "string"
+        },
+        "notify_name": {
+            "type": "string"
+        },
+        "notify_address": {
+            "type": "string"
+        },
+        "notify_tel": {
+            "type": "string"
+        },
+        "notify_fax": {
+            "type": "string"
+        },
+        "buyer_id": {
+            "type": "string"
+        },
+        "port_id": {
+            "type": "string"
+        }
+    },
+    "required": [
+        "notify_name",
+        "notify_address",
+        "notify_tel",
+        "notify_fax",
+        "buyer_id",
+        "port_id"
+    ]
+}

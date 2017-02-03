@@ -1,0 +1,94 @@
+{
+    "name": "g2g.confirm_letter",
+    "properties": {
+        "id": {
+            "type": "string"
+        },
+        "cl_name": {
+            "type": "string"
+        },
+        "cl_no": {
+            "type": "number"
+        },
+        "cl_date": {
+            "type": "string",
+            "format": "date-time"
+        },
+        "cl_quality": {
+            "type": "string"
+        },
+        "cl_type_rice": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "type_rice_id": {
+                        "type": "string"
+                    },
+                    "type_rice_quantity": {
+                        "type": "number"
+                    },
+                    "project_th": {
+                        "type": "string"
+                    },
+                    "project_en": {
+                        "type": "string"
+                    },
+                    "tolerance_rate": {
+                        "type": "number"
+                    },
+                    "package": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "package_id": {
+                                    "type": "string"
+                                },
+                                "price_per_ton": {
+                                    "type": "number"
+                                }
+                            },
+                            "required": [
+                                "package_id",
+                                "price_per_ton"
+                            ]
+                        }
+                    }
+                },
+                "required": [
+                    "type_rice_id",
+                    "type_rice_quantity",
+                    "package",
+                    "project_th",
+                    "project_en",
+                    "tolerance_rate"
+                ]
+            }
+        },
+        "incoterms": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "inct_id": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "inct_id"
+                ]
+            }
+        },
+        "cl_status": {
+            "type": "boolean"
+        }
+    },
+    "required": [
+        "cl_no",
+        "cl_date",
+        "cl_type_rice",
+        "incoterms",
+        "cl_status"
+    ]
+}
