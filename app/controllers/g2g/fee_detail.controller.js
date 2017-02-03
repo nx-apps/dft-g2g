@@ -119,6 +119,14 @@ exports.insert = function (req, res) {
     if (valid) {
         r.db("g2g").table("fee_detail")
             .insert(req.body)
+            .do(fee_det_do => {
+                return r.db('g2g').table('fee_detail').get(fee_det_do('generated_keys')(0))
+                    .do(update_inv_do => {
+                        return update_inv_do('invoice').forEach(inv_each => {
+                            return r.db('g2g').table('invoice').get(inv_each('invoice_id')).update({ invoice_status: true })
+                        })
+                    })
+            })
             .run()
             .then(function (response) {
                 result.message = response;
