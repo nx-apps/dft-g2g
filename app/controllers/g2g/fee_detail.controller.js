@@ -170,7 +170,15 @@ exports.delete = function (req, res) {
         var q = r.db('g2g').table("fee_detail").get(req.params.id).do(function (result) {
             return r.branch(
                 result('fee_det_status').eq(false)
-                , r.db('g2g').table('fee_detail').get(req.params.id).delete()
+                , r.db('g2g').table('fee_detail').get(req.params.id)
+                    .do(fee_det_do => {
+                        return fee_det_do('invoice').forEach(inv_each => {
+                            return r.db('g2g').table('invoice').get(inv_each('invoice_id')).update({ invoice_status: false })
+                        })
+                    })
+                    .do(fee_det_do => {
+                        return r.db('g2g').table('fee_detail').get(req.params.id).delete()
+                    })
                 , r.expr("Can't delete because this status = true.")
             )
         })

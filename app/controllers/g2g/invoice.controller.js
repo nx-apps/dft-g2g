@@ -341,7 +341,13 @@ exports.delete = function (req, res) {
         var q = r.db('g2g').table("invoice").get(req.params.id).do(function (result) {
             return r.branch(
                 result('invoice_status').eq(false)
-                , r.db('g2g').table('invoice').get(req.params.id).delete()
+                , r.db('g2g').table('invoice').get(req.params.id)
+                    .do(inv_do => {
+                        return r.db('g2g').table('book').get(inv_do('book_id')).update({ book_status: false })
+                    })
+                    .do(inv_do => {
+                        return r.db('g2g').table('invoice').get(req.params.id).delete()
+                    })
                 , r.expr("Can't delete because this status = true.")
             )
         })
