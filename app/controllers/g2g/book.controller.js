@@ -6,7 +6,7 @@ exports.getByContractId = function (req, res) {
         .filter({ book_status: false })
         .eqJoin("shm_id", r.db('g2g').table("shipment")).pluck("left", { right: ["cl_id", "contract_id", "shm_no", "shm_status"] }).zip()
         .filter({ shm_status: true })
-        .eqJoin("cl_id", r.db('g2g').table("confirm_letter")).pluck("left", { right: [ "cl_no", "cl_date", "incoterms"] }).zip()
+        .eqJoin("cl_id", r.db('g2g').table("confirm_letter")).pluck("left", { right: ["cl_no", "cl_date", "incoterms"] }).zip()
         .eqJoin("contract_id", r.db('g2g').table("contract")).pluck("left", { right: ["contract_name", "contract_date"] }).zip()
         .eqJoin('carrier_id', r.db('common').table('carrier')).pluck("left", { right: "carrier_name" }).zip()
         .eqJoin('shipline_id', r.db('common').table('shipline')).pluck("left", { right: ["shipline_name", "shipline_tel"] }).zip()
@@ -59,8 +59,8 @@ exports.getByContractId = function (req, res) {
                 cl_date: m('cl_date').split('T')(0),
                 contract_date: m('contract_date').split('T')(0),
                 cut_of_date: m('cut_of_date').split('T')(0),
-                // date_created: m('date_created').split('T')(0),
-                // date_updated: m('date_updated').split('T')(0)
+                date_created: m('date_created').split('T')(0),
+                date_updated: m('date_updated').split('T')(0)
             }
         })
         .without('id', 'tags')
@@ -129,8 +129,8 @@ exports.getByShmId = function (req, res) {
                 product_date: m('product_date').split('T')(0),
                 cl_date: m('cl_date').split('T')(0),
                 cut_of_date: m('cut_of_date').split('T')(0),
-                // date_created: m('date_created').split('T')(0),
-                // date_updated: m('date_updated').split('T')(0)
+                date_created: m('date_created').split('T')(0),
+                date_updated: m('date_updated').split('T')(0)
             }
         })
         .without('id', 'tags')
@@ -284,8 +284,9 @@ exports.insert = function (req, res) {
     var r = req._r;
     var result = { result: false, message: null, id: null };
     if (valid) {
+        var obj = Object.assign(req.body, { date_created: new Date().toISOString(), creater: 'admin' });
         r.db("g2g").table("book")
-            .insert(req.body)
+            .insert(obj)
             .run()
             .then(function (response) {
                 result.message = response;
@@ -309,9 +310,10 @@ exports.update = function (req, res) {
     var result = { result: false, message: null, id: null };
     if (req.body.id != '' && req.body.id != null && typeof req.body.id != 'undefined') {
         result.id = req.body.id;
+        var obj = Object.assign(req.body, { date_updated: new Date().toISOString(), updater: 'admin' });
         r.db("g2g").table("book")
             .get(req.body.id)
-            .update(req.body)
+            .update(obj)
             .run()
             .then(function (response) {
                 result.message = response;
