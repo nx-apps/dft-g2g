@@ -117,7 +117,7 @@ exports.insert = function (req, res) {
     var r = req._r;
     var result = { result: false, message: null, id: null };
     if (valid) {
-        var obj = Object.assign(req.body, { date_created: new Date().toISOString(), creater: 'admin' });
+        var obj = Object.assign(req.body, { date_created: new Date().toISOString(), date_updated: new Date().toISOString(),creater: 'admin' ,updater:'admin'});
         r.db("g2g").table("fee_detail")
             .insert(obj)
             .do(fee_det_do => {
