@@ -59,8 +59,8 @@ exports.getByContractId = function (req, res) {
                 cl_date: m('cl_date').split('T')(0),
                 contract_date: m('contract_date').split('T')(0),
                 cut_of_date: m('cut_of_date').split('T')(0),
-                date_created: m('date_created').split('T')(0),
-                date_updated: m('date_updated').split('T')(0)
+                // date_created: m('date_created').split('T')(0),
+                // date_updated: m('date_updated').split('T')(0)
             }
         })
         .without('id', 'tags')
@@ -129,8 +129,8 @@ exports.getByShmId = function (req, res) {
                 product_date: m('product_date').split('T')(0),
                 cl_date: m('cl_date').split('T')(0),
                 cut_of_date: m('cut_of_date').split('T')(0),
-                date_created: m('date_created').split('T')(0),
-                date_updated: m('date_updated').split('T')(0)
+                // date_created: m('date_created').split('T')(0),
+                // date_updated: m('date_updated').split('T')(0)
             }
         })
         .without('id', 'tags')
