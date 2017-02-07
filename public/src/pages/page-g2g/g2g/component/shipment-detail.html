@@ -224,7 +224,13 @@
                    </paper-item>
                    <iron-collapse id="collapse[[item.shm_det_id]]">
                      <detail-exporter-ship data-for-select="[[dataForSelect]]" pol="[[dataForSelect.pol]]"
-                     pod="[[dataForSelect.pod]]"   data="[[item]]" bl-nos="[[dataForSelect.blNos]]" is-view-seleted="[[isViewSeleted]]" is-input-disabled="[[isInputDisabled]]" shm-status="[[data.shm_status]]"></detail-exporter-ship>
+                                          pod="[[dataForSelect.pod]]"
+                                          data="[[item]]"
+                                          bl-nos="[[dataForSelect.blNos]]"
+                                          data-old="[[data.shipment_detail]]"
+                                          is-view-seleted="[[isViewSeleted]]"
+                                          is-input-disabled="[[isInputDisabled]]"
+                                          shm-status="[[data.shm_status]]"></detail-exporter-ship>
                    </iron-collapse>
                  </template>
 
@@ -243,6 +249,7 @@
                                     pol="[[dataForSelect.pol]]"
                                     pod="[[dataForSelect.pod]]"
                                     bl-nos="[[dataForSelect.blNos]]"
+                                    data-old="[[data.shipment_detail]]"
                                     is-view-seleted="[[!isViewSeleted]]"></detail-exporter-ship>
             </div>
           </iron-pages>

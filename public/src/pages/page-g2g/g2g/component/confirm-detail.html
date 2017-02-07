@@ -585,9 +585,6 @@
             newData.cl_type_rice=[];
             newData.incoterms=[];
             newData.cl_date= new Date(newData.cl_date);
-            data.tags.map((tag)=>{
-              newData.tags.push(tag);
-            });
             data.cl_type_rice.map((cl_type_rice,index)=>{
               newData.cl_type_rice.push({type_rice_id:cl_type_rice.type_rice_id,
                                       type_rice_quantity:cl_type_rice.type_rice_quantity,

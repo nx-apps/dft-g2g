@@ -251,7 +251,6 @@
           if (data.carrier_id == '' || data.carrier_id == undefined) {
             data.carrier_id = this._checkCarrierIsBlank();
           }
-          // console.log(data);
           this.insert('./g2g/book/insert',data, () => {
             this.fire('get-list-bl',{shm_id:data.shm_id});
             this.fire('toast',{status:'success',text:'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
