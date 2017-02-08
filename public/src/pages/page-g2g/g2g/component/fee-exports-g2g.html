@@ -54,7 +54,7 @@
          </gl-grid-col>
          <gl-grid-col width="[[getWidth]]" grid="[[300,6],[500,3]]">
            <gl-combo-box class="required" required disabled error-message="กรุณาชื่อรอบการจ่ายเงิน" placeholder="เลือกชื่อรอบการจ่ายเงิน" label="ชื่อรอบการจ่ายเงิน"
-             item-label-path="fee_name" item-value-path="fee_id" value="{{data.fee_id}}" items="[[dataForSelect.feeListinShm]]" on-value-changed="_getFeeName">
+             item-label-path="fee_no"   item-value-path="fee_id" value="{{data.fee_id}}" items="[[dataForSelect.feeListinShm]]" on-value-changed="_getFeeName">
            </gl-combo-box >
          </gl-grid-col>
          <gl-grid-col width="[[getWidth]]" grid="[[300,6],[500,3]]">

@@ -43,7 +43,7 @@
         <table class="gl-table-default">
               <thead class="table-head">
                 <tr>
-                  <th>ชื่อการทำสัญญา</th>
+                  <!-- <th>ชื่อการทำสัญญา</th> -->
                   <th>งวดการส่งมอบ</th>
                   <th>ครั้งที่คิดค่าธรรมเนียม</th>
                 </tr>
@@ -52,9 +52,9 @@
                 <template is="dom-if" if="[[!_isHave(newData)]]">
                   <template is="dom-repeat" items="[[newData]]" >
                     <tr data="[[item]]" on-tap="getFeeDetailList">
-                      <td>[[item.cl_name]]</td>
-                      <td>[[item.shm_name]] ([[item.shm_no]])</td>
-                      <td>[[item.fee_name]] ([[item.fee_no]])</td>
+                      <!-- <td>[[item.cl_name]]</td> -->
+                      <td>[[item.shm_no]]</td>
+                      <td>[[item.fee_no]]</td>
                     </tr>
                   </template>
                 </template>

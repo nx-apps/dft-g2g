@@ -98,16 +98,24 @@
        <vaadin-date-picker always-float-label class="required" required  disabled="[[_checkArrayTrue(isInputDisabled,data.contract_status)]]" label="วันที่" value="{{data.contract_date}}" name="contract_date"></vaadin-date-picker>
      </gl-grid-col>
      </gl-grid-row>
+
      <gl-grid-row width="{{getWidth}}">
-       <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">[[changeString2Num(data.*,'contract_quantity')]]
+       <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,9]]">
+         <gl-combo-box class="required" required  disabled="[[_checkArrayTrue(isInputDisabled,data.contract_status)]]" label="รูปแบบการชำระเงิน" error-message="กรุณาเลือกรูปแบบการชำระเงิน" placeholder="รูปแบบการชำระเงิน" name="payterms"
+         items="[[payterms]]"    item-label-path="payterms_Name"   item-value-path="payterms_Id" value="{{data.payterm}}" >
+         </gl-combo-box >
+       </gl-grid-col>
+       <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">[[changeString2Num(data.*,'contract_quantity')]]
            <gl-form-input class="required number" required allowed-pattern="[0-9||,||.]" format-number="on" disabled="[[_checkArrayTrue(isInputDisabled,data.contract_status)]]" error-message="กรุณาใส่จำนวน" required label="ปริมาณสินค้า (ตัน)" value="{{data.contract_quantity}}" placeholder="ใส่รายละเอียด" id="contract_quantity"></gl-form-input>
        </gl-grid-col>
+     </gl-grid-row>
+
        <!-- <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">[[changeString2Num(data.*,'tolerance_rate')]]
            <gl-form-input class="required number"maxlength="3" allowed-pattern="[0-9||,||.]" required disabled="[[_checkArrayTrue(isInputDisabled,data.contract_status)]]" error-message="กรุณาใส่จำนวน" required label="ค่าคลาดเคลื่อนที่ยอมรับได้" value="{{data.tolerance_rate}}" placeholder="ใส่รายละเอียด" id="tolerance_rate">
               <div suffix>%</div>
            </gl-form-input>
        </gl-grid-col> -->
-     </gl-grid-row>
+
 
      <gl-grid-row>
        <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,9]]">
@@ -217,11 +225,20 @@
         },
         data: {
           type: Object,
-          value:{contract_quantity:0,contract_type_rice:[{}],tolerance_rate:0,}
+          value:{contract_quantity:0,contract_type_rice:[{}]}
         },
         dataForUse:{
           type: Object,
         },
+        payterms:{
+          type:Object,
+          value:[
+                  {payterms_Name:'L/C',payterms_Id:'L/C'},
+                  {payterms_Name:'T/T',payterms_Id:'T/T'},
+                  {payterms_Name:'D/P',payterms_Id:'D/P'},
+                  {payterms_Name:'D/A',payterms_Id:'D/A'}
+              ]
+        }
 
       },
       observers:[
@@ -384,9 +401,9 @@
         let el = Polymer.dom(this.root).querySelectorAll('.required');
         let stat = el.map((el)=> el.validate());
           if (stat.every(elem => elem == true)) {
-            let {buyer_id,contract_date,contract_desc,contract_name,contract_status,tolerance_rate}=data;
+            let {buyer_id,contract_date,contract_desc,contract_name,contract_status,payterm}=data;
             let {contract_quantity}=data;
-            let newData = {buyer_id,contract_date,contract_desc,contract_name,contract_quantity,contract_status,tolerance_rate};
+            let newData = {buyer_id,contract_date,contract_desc,contract_name,contract_quantity,contract_status,payterm};
             newData.contract_type_rice=[];
             newData.contract_date= new Date(newData.contract_date);
             data.contract_type_rice.map((riceCode)=>{

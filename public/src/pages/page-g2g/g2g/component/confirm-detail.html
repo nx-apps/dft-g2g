@@ -209,7 +209,7 @@
     <gl-grid-row>
       <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,5]]">
         <template is="dom-repeat" items="[[data.incoterms]]">
-          <gl-combo-box id="incoterms-[[index]]" class="required" required  disabled="[[isInputDisabled]]" label="ราคาและการส่งมอบข้าว [[_ObcountIndex(index)]]" error-message="กรุณาเลือกราคาและการส่งมอบข้าว [[_ObcountIndex(index)]]" placeholder="ราคาและการส่งมอบข้าว [[_ObcountIndex(index)]]"
+          <gl-combo-box id="incoterms-[[index]]" class="required" required  disabled="[[isInputDisabled]]" label="เงือนไขการส่งมอบสินค้า [[_ObcountIndex(index)]]" error-message="เงือนไขการส่งมอบสินค้า [[_ObcountIndex(index)]]" placeholder="เงือนไขการส่งมอบสินค้า [[_ObcountIndex(index)]]"
         item-label-path="inct_name" item-value-path="inct_id" value="{{item.inct_id}}"  on-value-changed="_incotermsConfirm">
           </gl-combo-box >
         </template>
