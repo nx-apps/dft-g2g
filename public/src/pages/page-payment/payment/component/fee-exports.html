@@ -69,7 +69,7 @@
          </gl-grid-col>-->
          <gl-grid-col width="[[getWidth]]" grid="[[300,6],[500,3]]">
           <gl-combo-box class="required" required disabled="[[isInputDisabled]]" error-message="ครั้งที่" placeholder="ครั้งที่" label="ครั้งที่"
-             item-label-path="fee_no"   item-value-path="fee_id"  value="{{data.fee_id}}" items="[[dataForSelect.feeListinShm]]">
+             item-label-path="fee_no"   item-value-path="fee_id"  value="{{data.fee_id}}" items="[[_filterFee(dataForSelect.feeListinShm)]]">
              <!--  <template>
                 [[index]]: [[item.fee_no]] <b>[[item.fee_id]</b>
               </template>
@@ -229,6 +229,23 @@
         this.data.fee_no = num.fee_no;
         this.notifyPath('data.fee_no');
       },
+      _filterFee:function (items) {
+        try {
+          return items.filter((item) => item.fee_status == false);
+        } catch (e) {
+
+        }
+
+        // return item.fee_status == false
+      },
+      // computeFilterFee:function (feeListinShm) {
+      //   try {
+      //     console.log('>?',feeListinShm);
+      //   } catch (e) {
+      //
+      //   }
+      //
+      // },
       _balanceLessFees(amount_usd,fee_internal){
         this.data.balanceLessFees = amount_usd-fee_internal
         this.notifyPath('data.balanceLessFees');
