@@ -74,12 +74,17 @@
       behaviors: [
           FormatNumberBehavior
       ],
-      
+      properties: {
+        data: {
+          type: Object,
+          value:{}
+        }
+      },
       calR2R:function () {
         // console.log(this.dataFake);
         this.set('data.total_ton',0);
         this.set('data.total_price',0);
-        console.log(this.dataFake.filter((item) => item.status == false || typeof item.status == 'undefined' && item.status == undefined));
+        // console.log(this.dataFake.filter((item) => item.status == false || typeof item.status == 'undefined' && item.status == undefined));
         // console.log(this.dataFake[0].status == false);
         // console.log(typeof this.dataFake[0].status == 'undefined');
         // console.log(this.dataFake[0].status == undefined);
