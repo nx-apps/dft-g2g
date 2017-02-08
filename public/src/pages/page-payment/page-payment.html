@@ -224,7 +224,7 @@
               this.read('./g2g/payment/contract/id/'+contractId,(data)=>{
                 this.dataListPay.payments=data;
                 this.notifyPath('dataListPay.payments');
-                console.log(this.dataListPay.chequeList);
+                // console.log(this.dataListPay.chequeList);
               });
             },
             _getFeeListInShmEvent:function (e) {
@@ -317,7 +317,7 @@
               //
               this.fire('toast',{status:'load'});
               this.read('./g2g/fee/invoice/id/'+url,(data)=>{
-                console.log(data);
+                // console.log(data);
                 // console.log(data.invoice[0]);
                 this.set('dataForSelect.shm_id',data.shm_id);
                 this.set('dataForSelect.cl_id',data.cl_id);

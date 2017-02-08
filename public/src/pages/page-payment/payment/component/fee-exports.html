@@ -233,19 +233,8 @@
         try {
           return items.filter((item) => item.fee_status == false);
         } catch (e) {
-
         }
-
-        // return item.fee_status == false
       },
-      // computeFilterFee:function (feeListinShm) {
-      //   try {
-      //     console.log('>?',feeListinShm);
-      //   } catch (e) {
-      //
-      //   }
-      //
-      // },
       _balanceLessFees(amount_usd,fee_internal){
         this.data.balanceLessFees = amount_usd-fee_internal
         this.notifyPath('data.balanceLessFees');

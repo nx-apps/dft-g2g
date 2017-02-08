@@ -37,7 +37,7 @@
           <paper-button raised on-tap="addFee" class="gl-btn-primary" disabled="[[isInputDisabled]]">เพิ่ม</paper-button>
         </template>
         <template is="dom-if" if="[[!isViewSeleted]]">
-          <paper-button raised on-tap="cancelFee" class="gl-btn-default" >ย้อนกลับ</paper-button>
+          <!-- <paper-button raised on-tap="cancelFee" class="gl-btn-default" >ย้อนกลับ</paper-button> -->
           <template is="dom-if" if="[[!isInputDisabled]]">
             <paper-button raised on-tap="cancelFeede" class="gl-btn-danger" >ยกเลิก</paper-button>
             <paper-button raised on-tap="saveFee" class="gl-btn-success" >บันทึก</paper-button>
@@ -53,7 +53,7 @@
     properties: {
       data: {
         type: Object,
-        value:{fee_no:1},
+        value:{},
       },
     },
     behaviors: [
@@ -86,7 +86,6 @@
           });
         });
       } else {
-        console.log(1111);
        this.fire('toast',{status:'connectError',text:'ครั้งที่ซ้ำกับที่มีอยู่', //คำสั่งสำหรับเปิด toast error
                       callback:function(){
         }})
@@ -149,8 +148,8 @@
 
     },
     cancelFee:function () {
-      this.cancelFeeDetail();
-      this.editInput();
+      // this.cancelFeeDetail();
+      // this.editInput();
       this.fire('_get-list-fee',{data:'_get-list-fee'});
     },
     cancelFeede:function () {
