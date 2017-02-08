@@ -199,11 +199,13 @@ exports.getByInvoiceId = function (req, res) {
         })
         .eqJoin("shipline_id", r.db('common').table("shipline")).without({ right: ["id", "date_created", "date_updated", "creater", "updater"] }).zip()
         .eqJoin("shm_id", r.db('g2g').table("shipment")).pluck("left", { right: ["cl_id", "contract_id"] }).zip()
+        .eqJoin("contract_id", r.db('g2g').table("contract")).pluck("left", { right: ["payterm"] }).zip()
         .run()
         .then(function (result) {
             d['invoice'] = result;
             d['cl_id'] = result[0].cl_id;
             d['contract_id'] = result[0].contract_id;
+            d['payterm'] = result[0].payterm;
             d['shm_id'] = result[0].shm_id;
             d['amount_usd'] = Object.keys(result).reduce(function (a, b) {
                 return a + result[b].amount_usd;
