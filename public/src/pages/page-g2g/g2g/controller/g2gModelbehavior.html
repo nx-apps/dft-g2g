@@ -11,8 +11,8 @@
       insert:function (url,data,actionInpage) {
         axios.post(url, data)
                   .then((response)=> {
-                    console.log("success");
-                    console.log(response);
+                    // console.log("success");
+                    // console.log(response);
                     if (response.data.result == true) {
                       actionInpage();
                     }
@@ -38,7 +38,7 @@
       read:function (url,callback) {
         axios.get(url)
               .then((response)=> {
-                console.log("success");
+                // console.log("success");
                 callback(response.data);
                 // if (response.data.result == true) {
                 //   actionInpage();
@@ -66,8 +66,8 @@
       update:function (url,data,actionInpage) {
         axios.put(url, data)
                   .then((response) => {
-                    console.log("success");
-                    console.log(response);
+                    // console.log("success");
+                    // console.log(response);
                     if (response.data.result == true) {
                       actionInpage();
                     }
@@ -97,8 +97,8 @@
       delete:function (url,data,actionInpage) {
         axios.delete(url+data)
                   .then((response)=> {
-                    console.log("success");
-                    console.log(response);
+                    // console.log("success");
+                    // console.log(response);
                     if (response.data.result == true) {
                       actionInpage();
                     }

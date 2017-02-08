@@ -252,6 +252,7 @@
             data.carrier_id = this._checkCarrierIsBlank();
           }
           this.insert('./g2g/book/insert',data, () => {
+            this.fire('toast',{status:'load'});
             this.fire('get-list-bl',{shm_id:data.shm_id});
             this.fire('toast',{status:'success',text:'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
               callback:()=>{

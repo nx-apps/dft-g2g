@@ -419,8 +419,12 @@
           // console.log(this.dataForSelect);
           let packing = this.dataForSelect.package.filter((packageing)=> packageing.package_id == package_id );
           this.price=packing[0];
-          this.data.price_per_ton = this.price.price_per_ton;
-          this.notifyPath('data.price_per_ton');
+          // console.log(packing[0]);
+          if (typeof packing[0] != 'undefined' && packing[0] != undefined) {
+            this.data.price_per_ton = this.price.price_per_ton;
+            this.notifyPath('data.price_per_ton');
+          }
+
           // console.log(this.data.price_per_ton );
           // this.data.shm_det_quantity='',
           // this.notifyPath('data.shm_det_quantity');
