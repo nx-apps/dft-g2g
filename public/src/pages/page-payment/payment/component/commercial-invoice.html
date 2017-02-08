@@ -368,9 +368,11 @@
         this._cleanDataInvoice(this.data,(data)=>{
           // console.log(data);
           this.insert('./g2g/invoice/insert',data, () => {
+            this.fire('toast',{status:'load'});
             this.fire('close-drawer',{detail:'close-drawer'})
             this.fire('get-bl-list',{detail:contract_id});
             this.fire('get-invoice-list',{detail:contract_id});
+            this.fire('toast',{status:'load'});
          });
         });
       },
