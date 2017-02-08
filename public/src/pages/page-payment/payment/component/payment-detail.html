@@ -1,3 +1,4 @@
+<link rel="import" href="payment-detail-by-rice.html">
 <dom-module id="payment-detail">
   <style include="iron-flex iron-flex-factors iron-flex-alignment gl-styles">
     :host {
@@ -55,14 +56,14 @@
           </thead>
           <tbody class="table-body">
             <template is="dom-repeat" items="[[data.payment_detail]]">
-              <tr>
-               <td>
-                 <paper-checkbox id="[[index]]"class="checkBox" data="{{item}}" exporter-id="{{item.exporter_id}}" on-tap="checkData" checked="{{item.status}}"></paper-checkbox>
-               </td>
-               <td>[[_ObcountIndex(index)]]</td>
-               <td>[[item.exporter_name]]</td>
-               <td>[[item.invoice_exporter_no]]</td>
-               <td>[[formatNumber(item.pay_amount)]]</td>
+              <tr id="tr-[[item.exporter_id]]">
+                 <td>
+                   <paper-checkbox id="index" class="checkBoxPay" data="{{item}}" exporter-id="{{item.exporter_id}}" on-tap="checkData" checked="{{item.status}}"></paper-checkbox>
+                 </td>
+                 <td>[[_ObcountIndex(index)]]</td>
+                 <td>[[item.exporter_name]]</td>
+                 <td>[[item.invoice_exporter_no]]</td>
+                 <td>[[formatNumber(item.pay_amount)]]</td>
               </tr>
             </template>
          </tbody>
@@ -119,43 +120,7 @@
 
 
      <iron-collapse id="collapse">
-       <div>
-         <br>
-        <table class="gl-table-default">
-          <thead class="table-head">
-            <tr>
-              <th></th>
-              <th>รหัสการจอง</th>
-              <th>ชื่อการจอง</th>
-              <th>ปริมาณตัน</th>
-              <th>มูลค่าบาท</th>
-            </tr>
-            </tr>
-          </thead>
-          <tbody class="table-body">
-            <template is="dom-repeat" items="[[dataFake]]">
-              <tr>
-               <td>
-                 <paper-checkbox id="[[index]]"class="checkBox" data="{{item}}" exporter-id="{{item.exporter_id}}" on-tap="calR2R" checked="{{item.status}}"></paper-checkbox>
-               </td>
-               <td>[[item.id]]</td>
-               <td>[[item.name]]</td>
-               <td>[[item.ton]]</td>
-               <td>[[formatNumber(item.value)]]</td>
-              </tr>
-            </template>
-         </tbody>
-      </table>
-      <gl-grid-row width="{{getWidth}}">
-        <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,2]]"></gl-grid-col>
-        <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-          <gl-form-input disabled label="น้ำหนักรวม :" placeholder="0" value="{{data.total_ton}}" name="total_ton"></gl-form-input>
-        </gl-grid-col>
-        <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-          <gl-form-input disabled label="มูลค่ารวม :" placeholder="0" value="{{data.total_price}}" name="total_price"></gl-form-input>
-        </gl-grid-col>
-      </gl-grid-row>
-      </div>
+        <payment-detail-by-rice data-fake="[[dataFake]]"></payment-detail-by-rice>
       </iron-collapse>
 
 
@@ -186,7 +151,6 @@
                   {id:'Rx1236',name:'ข้าวขาว 25 %',ton:25000,value:500000},
                   {id:'Rx1237',name:'ข้าวขาว 35 %',ton:35000,value:700000},
                   {id:'Rx1238',name:'ข้าวขาว 45 %',ton:50000,value:1050000},
-
                 ]
         }
       },
@@ -198,42 +162,37 @@
       toggle: function() {
         this.$.collapse.toggle();
       },
+      // observers:[
+      //   '_oBCheckBoxDisabled(data.payment_detail.*)'
+      // ],
       checkData:function (e){
-          let exporter_id = e.currentTarget.exporterId;
-          let notCheck = Polymer.dom(this.root).querySelectorAll('paper-checkbox[aria-checked="false"]');
-          notCheck.map((el)=>{
-            if (exporter_id != el.exporterId){
-              el.disabled=true;
-            }
-          })
-          let check = Polymer.dom(this.root).querySelectorAll('paper-checkbox[aria-checked="true"]');
-          // console.log(check);
-          this.set('data.pay_amount',0);
-          let pay_amount=0;
-          check.map((el)=>{
-            pay_amount = pay_amount + el.data.pay_amount;
-          })
-          this.set('data.pay_amount',pay_amount);
-          if (check.length < 1) {
-            let checkDisabled = Polymer.dom(this.root).querySelectorAll('paper-checkbox[aria-disabled="true"]');
-            checkDisabled.map((el)=>{
-                el.disabled=false;
-              })
-          }
+        // console.log(this.data.payment_detail);
+         let dataPay = this.data.payment_detail.filter((item) => item.status == true);
+         this.set('data.pay_amount',0);
+         this.set('data.pay_amount',Object.keys(dataPay).reduce((previous, current) => previous + dataPay[current].pay_amount , 0));
+        //  console.log(dataPay);
+        //  console.log(e.currentTarget.id);
+        //ปิดการไม่ให้เลือกอันอื่นที่ไม่ตรงกับเลือกอันแรก
+         this._checkBoxDisabled(e.currentTarget.exporterId);
+         this._checkBoxEabled(dataPay);
       },
-      calR2R:function () {
-        // console.log(this.dataFake);
-        this.set('data.total_ton',0);
-        this.set('data.total_price',0);
-        console.log(this.dataFake.filter((item) => item.status == false || typeof item.status == 'undefined' && item.status == undefined));
-        console.log(this.dataFake[0].status == false);
-        console.log(typeof this.dataFake[0].status == 'undefined');
-        console.log(this.dataFake[0].status == undefined);
-
-        let dataR2r = this.dataFake.filter((item) => item.status == true);
-        this.set('data.total_ton',Object.keys(dataR2r).reduce((previous, current) => previous + dataR2r[current].ton , 0));
-        this.set('data.total_price',Object.keys(dataR2r).reduce((previous, current) => previous + dataR2r[current].value , 0))
-// total_price
+      _checkBoxDisabled:function (exporter_id) {
+        let notCheck = Polymer.dom(this.root).querySelectorAll('paper-checkbox.checkBoxPay')
+        notCheck.map((el)=>{
+          if (exporter_id != el.exporterId) {
+                el.disabled=true;
+                el.parentNode.parentNode.style.backgroundColor = '#F1F1F1';
+          }
+        })
+      },
+      _checkBoxEabled:function (dataPay) {
+        if (dataPay.length < 1) {
+          let checkDisabled = Polymer.dom(this.root).querySelectorAll('paper-checkbox.checkBoxPay[aria-disabled="true"]');
+          checkDisabled.map((el)=>{
+              el.disabled=false;
+              el.parentNode.parentNode.style.backgroundColor = '#FFFFFF';
+            })
+        }
       },
       attached: function() {
         this.set('data.bank_id','KTB');

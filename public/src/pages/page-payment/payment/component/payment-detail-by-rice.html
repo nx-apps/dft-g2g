@@ -1,0 +1,94 @@
+<dom-module id="payment-detail-by-rice">
+  <style include="gl-styles">
+    :host {
+      display: block;
+    }
+    table.gl-table-default {
+      width: 98%;
+      border: 1px solid #ddd;
+      margin-bottom: 15px;
+    }
+    table.gl-table-default > thead.table-head > tr > th,
+    table.gl-table-default > tbody.table-body > tr > td,
+    table.gl-table-default > thead.table-head > tr > th {
+      text-align: center;
+    }
+    table.gl-table-default > tbody.table-body > tr > td:nth-child(3) {
+      text-align: left;
+    }
+    table.gl-table-default > tbody.table-body > tr > td:nth-child(1),
+    table.gl-table-default > tbody.table-body > tr > td:nth-child(2) {
+      width: 5%;
+    }
+    table.gl-table-default > tbody.table-body > tr > td:nth-child(3),
+    table.gl-table-default > tbody.table-body > tr > td:nth-child(4) {
+      width: 20%;
+    }
+    table.gl-table-default > tbody.table-body > tr > td:nth-child(5),
+    table.gl-table-default > tfoot.table-foot > tr > td:nth-child(3){
+      text-align: right;
+      width: 15%;
+    }
+  </style>
+  <template>
+
+      <br>
+     <table class="gl-table-default">
+       <thead class="table-head">
+         <tr>
+           <th></th>
+           <th>รหัสการจอง</th>
+           <th>ชื่อการจอง</th>
+           <th>ปริมาณตัน</th>
+           <th>มูลค่าบาท</th>
+         </tr>
+         </tr>
+       </thead>
+       <tbody class="table-body">
+         <template is="dom-repeat" items="[[dataFake]]">
+           <tr>
+            <td>
+              <paper-checkbox id="[[index]]"class="checkBox" data="{{item}}" exporter-id="{{item.exporter_id}}" on-tap="calR2R" checked="{{item.status}}"></paper-checkbox>
+            </td>
+            <td>[[item.id]]</td>
+            <td>[[item.name]]</td>
+            <td>[[item.ton]]</td>
+            <td>[[formatNumber(item.value)]]</td>
+           </tr>
+         </template>
+      </tbody>
+   </table>
+   <gl-grid-row width="{{getWidth}}">
+     <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,2]]"></gl-grid-col>
+     <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+       <gl-form-input disabled label="น้ำหนักรวม :" placeholder="0" value="{{data.total_ton}}" name="total_ton"></gl-form-input>
+     </gl-grid-col>
+     <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+       <gl-form-input disabled label="มูลค่ารวม :" placeholder="0" value="{{data.total_price}}" name="total_price"></gl-form-input>
+     </gl-grid-col>
+   </gl-grid-row>
+  </template>
+  <script>
+    Polymer({
+      is: "payment-detail-by-rice",
+      behaviors: [
+          FormatNumberBehavior
+      ],
+      
+      calR2R:function () {
+        // console.log(this.dataFake);
+        this.set('data.total_ton',0);
+        this.set('data.total_price',0);
+        console.log(this.dataFake.filter((item) => item.status == false || typeof item.status == 'undefined' && item.status == undefined));
+        // console.log(this.dataFake[0].status == false);
+        // console.log(typeof this.dataFake[0].status == 'undefined');
+        // console.log(this.dataFake[0].status == undefined);
+
+        let dataR2r = this.dataFake.filter((item) => item.status == true);
+        this.set('data.total_ton',Object.keys(dataR2r).reduce((previous, current) => previous + dataR2r[current].ton , 0));
+        this.set('data.total_price',Object.keys(dataR2r).reduce((previous, current) => previous + dataR2r[current].value , 0))
+// total_price
+      },
+    });
+  </script>
+</dom-module>
