@@ -55,8 +55,8 @@ table.gl-table-default {
           <template is="dom-if" if="[[!_isHaveMany(data.shipment,1)]]">
             <template is="dom-repeat" items="[[data.shipment]]">
               <tr on-tap="getShipmentDetail" data="[[item]]">
-                <td>[[_ObcountIndex(index)]]</td>
-                <!-- <td>[[item.shm_name]]</td> -->
+                <!-- <td>[[_ObcountIndex(index)]]</td> -->
+                <td>[[item.shm_no]]</td>
                 <td>[[formatNumberNoZero(item.shm_quantity)]]</td>
                 <td>[[item.shm_status_name]]</td>
               </tr>

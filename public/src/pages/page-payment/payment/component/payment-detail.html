@@ -73,12 +73,54 @@
 
 
 
-        <label id="label3">รูปแบบการจ่ายเงิน:</label>
+        <!-- <label id="label3">รูปแบบการจ่ายเงิน:</label>
         <paper-radio-group selected="a" allow-empty-selection aria-labelledby="label3">
           <paper-radio-button name="a">เช็ค</paper-radio-button>
           <paper-radio-button name="b">R2R</paper-radio-button>
-        </paper-radio-group>
+        </paper-radio-group> -->
         <br>  รายละเอียดการจ่าย
+
+        <gl-grid-row width="{{getWidth}}">
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,2]]"></gl-grid-col>
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+            <gl-form-input  class="required" required label="จำนวนเงิน :" placeholder="จำนวนเงิน" value="{{data.pay_amount}}" name="pay_times"></gl-form-input>
+          </gl-grid-col>
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+            <gl-form-input  class="required" required label="ครั้งที่ :" placeholder="ครั้งที่จ่ายเงิน" value="{{data.pay_times}}" name="pay_times"></gl-form-input>
+          </gl-grid-col>
+        </gl-grid-row>
+      <gl-grid-row >
+       <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,2]]"></gl-grid-col>
+       <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+         <gl-combo-box class="required" required id="bank" label="ธนาคาร" item-label-path="bank_name_th"
+             item-value-path="bank_id" items="[[dataForSelect.dataBank]]" value="{{data.bank_id}}" ></gl-combo-box>
+       </gl-grid-col>
+       <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+         <gl-form-input  class="required" required label="สาขา :" placeholder="กรุณาใส่ชื่อสาขา" value="{{data.bank_branch}}" name="bank_branch"></gl-form-input>
+       </gl-grid-col>
+     </gl-grid-row>
+     <gl-grid-row>
+       <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,2]]"></gl-grid-col>
+       <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+         <gl-form-input  class="required" required label="เลขที่เช็ค :" allowed-pattern="[0-9||,||.]" placeholder="กรุณาใส่เลขที่เช็ค" value="{{data.pay_no}}" name="pay_no"></gl-form-input>
+       </gl-grid-col>
+       <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+         <vaadin-date-picker class="required" required label="วันที่เช็ค" value="{{data.pay_date}}" name="pay_date"></vaadin-date-picker>
+       </gl-grid-col>
+     </gl-grid-row>
+     <gl-grid-row>
+       <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,2]]"></gl-grid-col>
+       <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+         <paper-checkbox class="checkBox"on-tap="toggle" aria-labelledby="label3"></paper-checkbox>
+         <label id="label3">จ่ายเพิ่มเติมด้วยข้าว</label>
+
+       </gl-grid-col>
+     </gl-grid-row>
+
+
+     <iron-collapse id="collapse">
+       <div>
+         <br>
         <table class="gl-table-default">
           <thead class="table-head">
             <tr>
@@ -113,34 +155,9 @@
           <gl-form-input disabled label="มูลค่ารวม :" placeholder="0" value="{{data.total_price}}" name="total_price"></gl-form-input>
         </gl-grid-col>
       </gl-grid-row>
-        <!-- <gl-grid-row width="{{getWidth}}">
-          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,2]]"></gl-grid-col>
-          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-            <gl-form-input  class="required" required label="จำนวนเงิน :" placeholder="จำนวนเงิน" value="{{data.pay_amount}}" name="pay_times"></gl-form-input>
-          </gl-grid-col>
-          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-            <gl-form-input  class="required" required label="ครั้งที่ :" placeholder="ครั้งที่จ่ายเงิน" value="{{data.pay_times}}" name="pay_times"></gl-form-input>
-          </gl-grid-col>
-        </gl-grid-row>
-      <gl-grid-row >
-       <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,2]]"></gl-grid-col>
-       <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-         <gl-combo-box class="required" required id="bank" label="ธนาคาร" item-label-path="bank_name_th"
-             item-value-path="bank_id" items="[[dataForSelect.dataBank]]" value="{{data.bank_id}}" ></gl-combo-box>
-       </gl-grid-col>
-       <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-         <gl-form-input  class="required" required label="สาขา :" placeholder="กรุณาใส่ชื่อสาขา" value="{{data.bank_branch}}" name="bank_branch"></gl-form-input>
-       </gl-grid-col>
-     </gl-grid-row>
-     <gl-grid-row>
-       <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,2]]"></gl-grid-col>
-       <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-         <gl-form-input  class="required" required label="เลขที่เช็ค :" allowed-pattern="[0-9||,||.]" placeholder="กรุณาใส่เลขที่เช็ค" value="{{data.pay_no}}" name="pay_no"></gl-form-input>
-       </gl-grid-col>
-       <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-         <vaadin-date-picker class="required" required label="วันที่เช็ค" value="{{data.pay_date}}" name="pay_date"></vaadin-date-picker>
-       </gl-grid-col>
-     </gl-grid-row> -->
+      </div>
+      </iron-collapse>
+
 
     </gl-form-panel-body>
 
@@ -178,6 +195,9 @@
           g2gCongtroller,
           FormatNumberBehavior
       ],
+      toggle: function() {
+        this.$.collapse.toggle();
+      },
       checkData:function (e){
           let exporter_id = e.currentTarget.exporterId;
           let notCheck = Polymer.dom(this.root).querySelectorAll('paper-checkbox[aria-checked="false"]');

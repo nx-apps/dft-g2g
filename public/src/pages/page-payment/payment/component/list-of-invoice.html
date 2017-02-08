@@ -14,7 +14,7 @@
     }
     .table-body >tr > td{
       cursor:pointer;
-      
+
     }
     .title {
       margin: 16px;
@@ -28,6 +28,11 @@
       width: 98%;
       border: 1px solid #ddd;
       margin-bottom: 15px;
+    }
+    .sendMoney > td:hover {
+      color: red;
+      cursor: default;
+      background-color: #ffffff;
     }
   </style>
   <template>
@@ -74,13 +79,13 @@
                    </td>
                   </tr>
                 </template>
-                <tr>
-                  <td style="cursor: default;"></td>
-                  <td style="cursor: default;"></td>
-                  <td style="cursor: default;"></td>
-                  <td style="cursor: default;"></td>
-                  <td style="cursor: default;"></td>
-                  <td style="cursor: default;">
+                <tr class="sendMoney">
+                  <!-- <td colspan="6"></td> -->
+                  <!-- <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td> -->
+                  <td colspan="6">
                     <div class="horizontal end-justified layout btnMoney">
                      <paper-button class="gl-btn-success" raised on-tap="payMoney">ได้รับเงิน</paper-button>
                   </div>
