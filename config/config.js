@@ -2,7 +2,7 @@ var config = {
   
   development: {
     server: {
-      port: 8080,
+      port: 8082,
       cluster:1
     },
     database: {
