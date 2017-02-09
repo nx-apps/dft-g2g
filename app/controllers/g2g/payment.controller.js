@@ -36,11 +36,11 @@ exports.getByContractId = function (req, res) {
                             }).reduce((left, right) => {
                                 return left.add(' / ', right)
                             }),
-                            exporter_name: r.db('external_f3').table('exporter').get(fee_det_merge('exporter_id'))
-                                .getField('trader_id').do(function (trader_do) {
-                                    return r.db('external_f3').table('trader').get(trader_do).getField('seller_id').do(function (seller_do) {
-                                        return r.db('external_f3').table('seller').get(seller_do).getField('seller_name_th')
-                                    })
+                            exporter_name: r.db('external').table('exporter').get(fee_det_merge('exporter_id'))
+                                .getField('seller_id').do(function (seller_do) {
+                                    // return r.db('external').table('trader').get(trader_do).getField('seller_id').do(function (seller_do) {
+                                    return r.db('external').table('seller').get(seller_do).getField('seller_name_th')
+                                    // })
                                 }),
                             pay_det_status_name: r.branch(fee_det_merge('pay_det_status').eq(true), 'จ่ายแล้ว', 'ยังไม่ได้จ่าย')
                         }
@@ -97,11 +97,11 @@ exports.getByFeeId = function (req, res) {
                             }).reduce((left, right) => {
                                 return left.add(' / ', right)
                             }),
-                            exporter_name: r.db('external_f3').table('exporter').get(fee_det_merge('exporter_id'))
-                                .getField('trader_id').do(function (trader_do) {
-                                    return r.db('external_f3').table('trader').get(trader_do).getField('seller_id').do(function (seller_do) {
-                                        return r.db('external_f3').table('seller').get(seller_do).getField('seller_name_th')
-                                    })
+                            exporter_name: r.db('external').table('exporter').get(fee_det_merge('exporter_id'))
+                                .getField('seller_id').do(function (seller_do) {
+                                    // return r.db('external').table('trader').get(trader_do).getField('seller_id').do(function (seller_do) {
+                                    return r.db('external').table('seller').get(seller_do).getField('seller_name_th')
+                                    // })
                                 }),
                             pay_det_status_name: r.branch(fee_det_merge('pay_det_status').eq(true), 'จ่ายแล้ว', 'ยังไม่ได้จ่าย')
                         }
@@ -129,7 +129,7 @@ exports.insert = function (req, res) {
     var r = req._r;
     var result = { result: false, message: null, id: null };
     if (valid) {
-        var obj = Object.assign(req.body, { date_created: new Date().toISOString(), date_updated: new Date().toISOString(),creater: 'admin' ,updater:'admin'});
+        var obj = Object.assign(req.body, { date_created: new Date().toISOString(), date_updated: new Date().toISOString(), creater: 'admin', updater: 'admin' });
         r.db('g2g').table('payment')
             .insert(obj)
             .do(after_insert_do => {
