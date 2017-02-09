@@ -29,14 +29,14 @@
       <thead class="table-head">
         <tr>
           <th>ครั้งที่</th>
-          <th>สถานนะการถั่วเงิน</th>
+          <th>สถานะการถัวเงิน</th>
         </tr>
       </thead>
       <tbody class="table-body">
         <template is="dom-repeat" items="[[data.feeListinShm]]">
           <tr data="[[item]]" on-tap="getFeeMana">
             <td>[[item.fee_no]]</td>
-            <td>[[item.fee_status]]</td>
+            <td>[[item.fee_status_name]]</td>
           </tr>
         </template>
         <template is="dom-if" if="[[_isHave(data.feeListinShm)]]">
@@ -46,7 +46,7 @@
         </template>
       </tbody>
     </table>
-    *สถานนะการถั่วเงิน ถ้ายืนยันแล้วจะดูได้อย่างเดียว
+    *สถานะการถัวเงิน ถ้ายืนยันแล้วจะดูได้อย่างเดียว
   </template>
   <script>
     Polymer({

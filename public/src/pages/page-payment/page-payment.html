@@ -144,6 +144,7 @@
               'get-select-draftPayment':'_getInvoiceDetail',
               'get-fee-list-in-shm-event':'_getFeeListInShmEvent',
               'get-fee-detail':'_getFeeDetail',
+              'get-Cheque-list':'_getChequeListFire',
               'get-cheque-detail':'_getChequeDetail',
               'get-payment-list':'_getPaymentsFire',
               'get-payment-detail':'_getPaymentDetail',
@@ -209,6 +210,9 @@
                 this.dataListPay.feeList=data;
                 this.notifyPath('dataListPay.feeList');
               });
+            },
+            _getChequeListFire:function (e) {
+                this._getChequeList(e.detail.detail);
             },
             _getChequeList:function (contractId) {
               this.read('./g2g/fee/payment/contract/id/'+contractId,(data)=>{

@@ -128,8 +128,8 @@ Polymer({
       } else {
           return true;
       }
-    
-    
+
+
   },
   getFeeDetail:function (e) {
     // console.log(this.dataForSelect);
@@ -169,6 +169,7 @@ Polymer({
         // console.log(data);
         this.fire('close-drawer',{detail:'close-drawer'});
         let contract_id= this._getUrl();
+        this.fire('get-Cheque-list',{detail:contract_id});
         this.fire('get-fee-list',{detail:contract_id});
       });
       // this.update('./g2g/fee/approve/id/',detail.data, () => {
