@@ -2,7 +2,10 @@ exports.getByContractId = function (req, res) {
     var r = req._r;
     r.db('g2g').table('payment_detail')
         .getAll(req.params.contract_id, { index: 'tags' })
-        .filter({ pay_det_status: false })
+        // .filter({ pay_det_status: false })
+        .filter(function(pay_det_filter){
+            return pay_det_filter('invoice_exporter_date').ne('').and(pay_det_filter('pay_det_status').eq(false))
+        })
         .merge({ pay_det_id: r.row('id') })
         .without('id', 'tags')
         .group("invoice_id")
