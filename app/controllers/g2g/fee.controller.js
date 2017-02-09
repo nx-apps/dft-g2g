@@ -66,7 +66,10 @@ exports.getByShmID = function (req, res) {
     var r = req._r;
     r.db('g2g').table('fee')
         .getAll(req.params.shm_id, { index: 'shm_id' })
-        .merge({ fee_id: r.row('id') })
+        .merge({
+            fee_id: r.row('id'),
+            fee_status_name: r.branch(r.row('fee_status').eq(true), 'อนุมัติ', 'ยังไม่อนุมัติ')
+        })
         .without('id')
         .run()
         .then(function (result) {
@@ -400,7 +403,7 @@ exports.insert = function (req, res) {
     var r = req._r;
     var result = { result: false, message: null, id: null };
     if (valid) {
-        var obj = Object.assign(req.body, { date_created: new Date().toISOString(), date_updated: new Date().toISOString(),creater: 'admin' ,updater:'admin'});
+        var obj = Object.assign(req.body, { date_created: new Date().toISOString(), date_updated: new Date().toISOString(), creater: 'admin', updater: 'admin' });
         r.db("g2g").table("fee")
             .insert(obj)
             .run()
