@@ -13,8 +13,8 @@
   <template>
     <div class="layout horizontal center-justified wrap">
       <box-menu-search>
-        <div class="title-head">
-          เลือกเดือนที่ต้องการดูรายงาน ภงด
+        <div class="title-head" style="font-size:40px">
+           ภงด.53
         </div>
         <div class="layout horizontal center-justified">
           <div class="menu">
@@ -50,7 +50,9 @@
         var toYear = new Date().toISOString().split('-')[0];
         var toMonth = new Date().toISOString().split('-')[1];
         typeof this.data.month == 'undefined' ? this.data.month = toMonth : this.data.month ;
-        window.open('http://localhost:8080/api/shipment/report1?datestart='+toYear+'-'+this.data.month+'-01&dataend='+toYear+'-'+this.data.month+'-31','_blank');
+        this.data.month < 10 ? this.data.month='0'+this.data.month : this.data.month;
+        window.open('http://localhost:8081/api/payment/report7?date_start='+toYear+'-'+this.data.month+'-01&date_end='+toYear+'-'+this.data.month+'-31','_blank');
+        window.open('http://localhost:8081/api/payment/report8?date_start='+toYear+'-'+this.data.month+'-01&date_end='+toYear+'-'+this.data.month+'-31','_blank');
       }
     });
   </script>
