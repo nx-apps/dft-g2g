@@ -212,15 +212,20 @@
         this._cleanDataPayment(this.data,(data)=>{
           // console.log(data);
           let contract_id= this._getUrl();
-          this.insert('./g2g/payment/insert',data, () => {
+          // window.open('http://localhost:8080/api/shipment/report1?paymentId=','_blank');
+          this.insertCall('./g2g/payment/insert',data, () => {
             this.fire('toast',{status:'success',text:'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
               callback:()=>{
-                    this.fire('close-drawer',{detail:'close-drawer'});
+                    //
                     this.fire('get-payment-list',{detail:contract_id});
                     let el = Polymer.dom(this.root).querySelectorAll('.required');
                     el.map((el)=> {el.reset();});
                 }
             });
+          },(data)=>{
+            window.open('http://localhost:8081/api/payment/report5/'+data.id[0],'_blank');
+            this.fire('close-drawer',{detail:'close-drawer'});
+            console.log('data=>',data.id[0]);
           });
         });
         // console.log(this.data.pay_amounts.reduce((previous, current) => previous+current , 0));
