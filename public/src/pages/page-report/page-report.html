@@ -1,0 +1,57 @@
+<link rel="import" href="components/box-menu.html">
+<link rel="import" href="components/box-menu-search.html">
+<link rel="import" href="components/month-behavior.html">
+<dom-module id="page-report">
+  <style include="iron-flex iron-flex-factors iron-flex-alignment gl-styles">
+    :host {
+      display: block;
+    }
+    .btn-search {
+      margin-top: 15px;
+    }
+  </style>
+  <template>
+    <div class="layout horizontal center-justified wrap">
+      <box-menu-search>
+        <div class="title-head">
+          เลือกเดือนที่ต้องการดูรายงาน ภงด
+        </div>
+        <div class="layout horizontal center-justified">
+          <div class="menu">
+            เดือนที่
+          </div>
+          <div class="layout horizontal center-justified">
+            <gl-combo-box always-float-label   error-message="กรุณาเลือกเดือนที่ต้องการดูรายงาน"
+             items="[[getMonth()]]" item-label-path="name"   item-value-path="id"  value="{{data.month}}"  >
+            </gl-combo-box>
+          </div>
+          <div class="btn-search">
+            <paper-button raised class="gl-btn-primary" on-tap="getReportPay">เลือก</paper-button>
+          </div>
+
+        </div>
+      </box-menu-search>
+    </div>
+  </template>
+  <script>
+    Polymer({
+      is: "page-report",
+      behaviors: [
+          MonthBehavior,
+      ],
+      properties: {
+        data:{
+          type: Object,
+          value:{}
+        },
+      },
+      getReportPay:function () {
+        // console.log(this.data);
+        var toYear = new Date().toISOString().split('-')[0];
+        var toMonth = new Date().toISOString().split('-')[1];
+        typeof this.data.month == 'undefined' ? this.data.month = toMonth : this.data.month ;
+        window.open('http://localhost:8080/api/shipment/report1?datestart='+toYear+'-'+this.data.month+'-01&dataend='+toYear+'-'+this.data.month+'-31','_blank');
+      }
+    });
+  </script>
+</dom-module>

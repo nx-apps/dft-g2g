@@ -63,9 +63,9 @@
 
 	</style>
 	<div blur$="{{offline}}">
-		<!-- <app-drawer id="drawer"> -->
-			<!-- <layout-main-drawer path="{{path}}" on-toggle-drawer="_toggleDrawer"></layout-main-drawer> -->
-		<!-- </app-drawer> -->
+		<app-drawer id="drawer">
+			<layout-main-drawer path="{{path}}" on-toggle-drawer="_toggleDrawer"></layout-main-drawer>
+		</app-drawer>
 
 		<app-header-layout style="z-index:1;">
 			<app-header fixed >
@@ -105,18 +105,18 @@
 			},
 			_toggleDrawer:function(){
         // console.log(2);
-        console.log(this.$.drawer);
+        // console.log(this.$.drawer);
 				this.$.drawer.toggle();
 			},
       _openDrawer:function(){
         // console.log('open');
-        console.log(this.$.drawer);
+        // console.log(this.$.drawer);
 				this.$.drawer.open();
 
 			},
       _closeDrawer:function(){
         // console.log('close');
-        console.log(this.$.drawer);
+        // console.log(this.$.drawer);
 				this.$.drawer.close();
 
 			},
