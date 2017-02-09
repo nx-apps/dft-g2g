@@ -68,7 +68,7 @@ exports.getById = function (req, res) {
                                             .merge(function (m2) {
                                                 return {
                                                     exporter_date_approve: m2('exporter_date_approve').split('T')(0),
-                                                    trader_date_approve: m2('trader_date_approve').split('T')(0)
+                                                    // trader_date_approve: m2('trader_date_approve').split('T')(0)
                                                 }
                                             })
                                             .without('tags')

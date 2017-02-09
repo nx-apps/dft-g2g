@@ -156,7 +156,7 @@ exports.getByInvoiceId = function (req, res) {
                             shm_det_id: m1('id'),
                             exporter_date_approve: m1('exporter_date_approve').split('T')(0),
                             // exporter_date_update: m1('exporter_date_update').split('T')(0),
-                            trader_date_approve: m1('trader_date_approve').split('T')(0),
+                            // trader_date_approve: m1('trader_date_approve').split('T')(0),
                             quantity_tons: m1('shm_det_quantity'),
                             quantity_bags: m1('shm_det_quantity').mul(1000).div(m1('package_kg_per_bag'))
                         }
