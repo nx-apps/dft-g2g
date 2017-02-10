@@ -1,5 +1,5 @@
 exports.getByContractId = function (req, res) {
-    var r = req._r;
+    var r = req.r;
     r.db('g2g').table('fee')
         .getAll(req.params.contract_id, { index: 'tags' }).without('tags')
         .eqJoin('shm_id', r.db('g2g').table('shipment')).pluck("left", { right: ['shm_no', 'cl_id'] }).zip()
@@ -63,7 +63,7 @@ exports.getByContractId = function (req, res) {
 }
 
 exports.getByShmID = function (req, res) {
-    var r = req._r;
+    var r = req.r;
     r.db('g2g').table('fee')
         .getAll(req.params.shm_id, { index: 'shm_id' })
         .merge({
@@ -80,7 +80,7 @@ exports.getByShmID = function (req, res) {
         })
 }
 exports.getById = function (req, res) {
-    var r = req._r;
+    var r = req.r;
     r.db('g2g').table('fee')
         .get(req.params.id)
         .merge(function (fee_merge) {
@@ -136,7 +136,7 @@ exports.getById = function (req, res) {
         })
 }
 exports.getByInvoiceId = function (req, res) {
-    var r = req._r;
+    var r = req.r;
     var d = {};
     r.db('g2g').table('invoice')
         .filter(function (f) {
@@ -230,7 +230,7 @@ exports.getByInvoiceId = function (req, res) {
         })
 }
 exports.approve = function (req, res) {
-    var r = req._r;
+    var r = req.r;
     r.db('g2g').table('fee_detail').getAll(req.params.fee_id, { index: 'fee_id' })
         .merge(function (fee_det_merge) {
             return r.db('g2g').table('fee').get(fee_det_merge('fee_id')).pluck('shm_id')
@@ -334,7 +334,7 @@ exports.approve = function (req, res) {
         })
 }
 exports.getPayByContractId = function (req, res) {
-    var r = req._r;
+    var r = req.r;
     r.db('g2g').table('fee')
         .getAll(req.params.contract_id, { index: 'tags' }).without('tags')
         .eqJoin('shm_id', r.db('g2g').table('shipment')).pluck("left", { right: ['shm_no', 'cl_id'] }).zip()
@@ -399,8 +399,8 @@ exports.getPayByContractId = function (req, res) {
         })
 }
 exports.insert = function (req, res) {
-    var valid = req._validator.validate('g2g.fee', req.body);
-    var r = req._r;
+    var valid = req.ajv.validate('g2g.fee', req.body);
+    var r = req.r;
     var result = { result: false, message: null, id: null };
     if (valid) {
         var obj = Object.assign(req.body, { date_created: new Date().toISOString(), date_updated: new Date().toISOString(), creater: 'admin', updater: 'admin' });
@@ -420,12 +420,12 @@ exports.insert = function (req, res) {
                 res.json(result);
             })
     } else {
-        result.message = req._validator.errorsText()
+        result.message = req.ajv.errorsText()
         res.json(result);
     }
 }
 exports.update = function (req, res) {
-    var r = req._r;
+    var r = req.r;
     var result = { result: false, message: null, id: null };
     if (req.body.id != '' && req.body.id != null && typeof req.body.id != 'undefined') {
         result.id = req.body.id;
@@ -451,7 +451,7 @@ exports.update = function (req, res) {
     }
 }
 exports.delete = function (req, res) {
-    var r = req._r;
+    var r = req.r;
     var result = { result: false, message: null, id: null };
     if (req.params.id != '' || req.params.id != null) {
         result.id = req.params.id;

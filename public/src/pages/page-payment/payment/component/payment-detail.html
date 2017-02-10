@@ -114,14 +114,14 @@
        <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
          <br>
          <paper-checkbox class="checkBox" on-tap="toggle" aria-labelledby="label3"></paper-checkbox>
-         <label id="label3" >จ่ายเพิ่มเติมด้วยข้าวจากโกดังของรัฐ</label>
+         <label id="label3" >จ่ายเพิ่มเติมด้วยข้าวจากสต็อกของรัฐ</label>
 
        </gl-grid-col>
      </gl-grid-row>
 
 
      <iron-collapse id="collapse">
-        <payment-detail-by-rice data-fake="[[dataFake]]"></payment-detail-by-rice>
+        <payment-detail-by-rice data-fake="[[dataSilo]]"></payment-detail-by-rice>
       </iron-collapse>
 
 
@@ -166,6 +166,7 @@
       // observers:[
       //   '_oBCheckBoxDisabled(data.payment_detail.*)'
       // ],
+
       checkData:function (e){
         // console.log(this.data.payment_detail);
          let dataPay = this.data.payment_detail.filter((item) => item.status == true);
@@ -223,7 +224,7 @@
                 }
             });
           },(data)=>{
-            window.open('http://localhost:8081/api/payment/report5/'+data.id[0],'_blank');
+            window.open('https://localhost:3000/api/payment/report5/'+data.id[0],'_blank');
             this.fire('close-drawer',{detail:'close-drawer'});
             console.log('data=>',data.id[0]);
           });

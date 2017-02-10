@@ -1,5 +1,5 @@
 exports.getByContractId = function (req, res) {
-    var r = req._r;
+    var r = req.r;
     var orderby = req.query.orderby;
     r.db('g2g').table("confirm_letter")
         .getAll(req.params.contract_id, { index: "contract_id" })
@@ -37,7 +37,7 @@ exports.getByContractId = function (req, res) {
 }
 
 exports.getById = function (req, res) {
-    var r = req._r;
+    var r = req.r;
     r.db('g2g').table("confirm_letter")
         .get(req.params.cl_id)
         .merge(function (row) {
@@ -71,8 +71,8 @@ exports.getById = function (req, res) {
         })
 }
 exports.insert = function (req, res) {
-    var valid = req._validator.validate('g2g.confirm_letter', req.body);
-    var r = req._r;
+    var valid = req.ajv.validate('g2g.confirm_letter', req.body);
+    var r = req.r;
     var result = { result: false, message: null, id: null };
     if (valid) {
         var obj = Object.assign(req.body, { date_created: new Date().toISOString(), date_updated: new Date().toISOString(), creater: 'admin', updater: 'admin' });
@@ -92,12 +92,12 @@ exports.insert = function (req, res) {
                 res.json(result);
             })
     } else {
-        result.message = req._validator.errorsText()
+        result.message = req.ajv.errorsText()
         res.json(result);
     }
 }
 exports.update = function (req, res) {
-    var r = req._r;
+    var r = req.r;
     var result = { result: false, message: null, id: null };
     if (req.body.id != '' && req.body.id != null && typeof req.body.id != 'undefined') {
         result.id = req.body.id;
@@ -123,7 +123,7 @@ exports.update = function (req, res) {
     }
 }
 exports.delete = function (req, res) {
-    var r = req._r;
+    var r = req.r;
     var result = { result: false, message: null, id: null };
     if (req.params.id != '' || req.params.id != null) {
         result.id = req.params.id;

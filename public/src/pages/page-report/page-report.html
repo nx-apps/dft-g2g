@@ -51,8 +51,8 @@
         var toMonth = new Date().toISOString().split('-')[1];
         typeof this.data.month == 'undefined' ? this.data.month = toMonth : this.data.month ;
         this.data.month < 10 ? this.data.month=this.data.month : this.data.month;
-        window.open('http://localhost:8081/api/payment/report7?date_start='+toYear+'-'+this.data.month+'-01&date_end='+toYear+'-'+this.data.month+'-31','_blank');
-        window.open('http://localhost:8081/api/payment/report8?date_start='+toYear+'-'+this.data.month+'-01&date_end='+toYear+'-'+this.data.month+'-31','_blank');
+        window.open('https://localhost:3000/api/payment/report7?date_start='+toYear+'-'+this.data.month+'-01&date_end='+toYear+'-'+this.data.month+'-31','_blank');
+        window.open('https://localhost:3000/api/payment/report8?date_start='+toYear+'-'+this.data.month+'-01&date_end='+toYear+'-'+this.data.month+'-31','_blank');
       }
     });
   </script>

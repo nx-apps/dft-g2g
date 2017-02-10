@@ -1,19 +1,19 @@
 <script>
-  g2gCongtroller={
+  g2gCongtroller = {
     properties: {
-      isInputDisabled:{
-        type:Boolean,
-        value:true
+      isInputDisabled: {
+        type: Boolean,
+        value: true
       },
-      isEdit:{
-        type:Boolean,
-        value:true
+      isEdit: {
+        type: Boolean,
+        value: true
       },
-      isViewSeleted:{
-        type:Boolean,
-        value:true
+      isViewSeleted: {
+        type: Boolean,
+        value: true
       },
-      oldData:{
+      oldData: {
         type: Object,
         // readOnly: true,
       },
@@ -22,36 +22,36 @@
       //   value:false
       // },
     },
-    observers:[
+    observers: [
       '_cloneData(data)'
     ],
     // observers: function(oldData) {
     //
     //   this._setResponse(oldData);
     // }
-    changeDateCC:function (date) {
+    changeDateCC: function (date) {
       // let date = '2016-12-20';
-      let day,mouth,year;
-      day=date.split("-")[2];
-      mouth=date.split("-")[1];
-      year=Number(date.split("-")[0])+543;
+      let day, mouth, year;
+      day = date.split("-")[2];
+      mouth = date.split("-")[1];
+      year = Number(date.split("-")[0]) + 543;
       // console.log(day+'-'+mouth+'-'+String(year));
-      return day+'/'+mouth+'/'+String(year);
+      return day + '/' + mouth + '/' + String(year);
     },
-    _cloneData:function (data) {
+    _cloneData: function (data) {
 
       let old = this.g2gClone(data);
       // let old = Object.assign({}, data);
-      this.oldData =old;
+      this.oldData = old;
     },
-    _isViewing:function (data) {
+    _isViewing: function (data) {
       return data == true;
     },
-    _isNan:function (num) {
+    _isNan: function (num) {
       if (isNaN(num)) {
         // console.log(num);
         return 0;
-      }else {
+      } else {
         // console.log(num);
         return num;
       }
@@ -59,38 +59,38 @@
     // _isEditing:function (data) {
     //   return data == true;
     // },
-    g2gClone:function (data) {
-      if(typeof data !== 'undefined' && data !== 'undefined'){
+    g2gClone: function (data) {
+      if (typeof data !== 'undefined' && data !== 'undefined') {
         return JSON.parse(JSON.stringify(data));
       }
     },
-    test:function () {
+    test: function () {
       console.log('ถึงแล้วววว');
     },
-    editInput:function () {
+    editInput: function () {
       this.isInputDisabled = !this.isInputDisabled;
     },
-    checkBtnView:function (data) {
+    checkBtnView: function (data) {
       return data == true;
     },
     //approve function
-    approve:function (data) {
+    approve: function (data) {
       // console.log(data);
       return data = !data;
     },
     //เช็คว่ามีข้อมูลในอาเรย์ไหม
-    _isHave:function (data) {
+    _isHave: function (data) {
       // console.log(typeof data == 'object');
       if ((typeof data == 'object') && (data !== null)) {
 
         // console.log('fffff',data);
-          if (data.length < 1) {
-            return true;
-          }else {
-            return false
-          }
+        if (data.length < 1) {
+          return true;
+        } else {
+          return false
+        }
 
-      }else {
+      } else {
         // console.log('aaaaa',data);
         return true
       }
@@ -103,57 +103,51 @@
       // }
 
     },
-    _checkUndefined:function (data) {
+    _checkUndefined: function (data) {
       if (data != undefined) {
         return true
       }
     },
-    _isHaveMany:function (data,count) {
+    _isHaveMany: function (data, count) {
       // console.log(data.length);
       if (data.length < count) {
         return true;
       }
     },
-    _isHaveForUse:function(arr1,arr2){
+    _isHaveForUse: function (arr1, arr2) {
       // [[!_isHaveForUse(data.incoterms,dataForSelect.incoterms,data.incoterms.*)]]
       // console.log(arr1.length,arr2.length);
       if (arr1.length < arr2.length) {
         // this.btnCheckDis=true;
         // console.log('true');
         return true;
-      }else {
+      } else {
         // console.log('false');
         // this.btnCheckDis=false;
         return false;
       }
     },
-    _isHaveForDelete:function(arr1){
+    _isHaveForDelete: function (arr1) {
       // [[_isHaveForDelete(data.incoterms,data.incoterms.*)]]
       // console.log(arr1.length,arr2.length);
       if (arr1.length < 2) {
         return true;
       }
     },
-    _ObcountIndex:function (index) {
-      return index+1;
+    _ObcountIndex: function (index) {
+      return index + 1;
     },
-    _getUrl:function () {
-      // get cookie
-      let cookie = document.cookie.split(';');
-      let contract_id;
-      cookie.map((ee)=>{
-        if (ee.charAt(0) == ' ') {
-          // this.dataForSeleted.nameContract = ee.split('=')[1];
-          // this.notifyPath('dataForSeleted.nameContract');
-        } else if (ee.indexOf("contract_id") == 0 ) {
-          contract_id = ee.split('=')[1];
-          // this.dataForSeleted.contract_id=contract_id;
-          // this.notifyPath('dataForSeleted.contract_id');
-        }
-      });
-      return contract_id;
+    _getCookie: function (name) {
+      var value = "; " + document.cookie;
+      var parts = value.split("; " + name + "=");
+      if (parts.length == 2) return parts.pop().split(";").shift();
     },
-    getDateg2g:function (date,callback) {
+    _getUrl: function () {
+      // this.set('dataForSelect.nameContract', this._getCookie("contractName"));
+      // this.set('dataForSelect.contract_id', this._getCookie("contract_id"));
+      return this._getCookie("contract_id");
+    },
+    getDateg2g: function (date, callback) {
       // ex
       // this.getDateg2g(dateUn,(date)=>{
       //   //   console.log('date',date);
@@ -165,36 +159,36 @@
         callback(dateNow[0]);
       }
     },
-    _checkArrayTrue:function (disabled,status=false) {
+    _checkArrayTrue: function (disabled, status = false) {
       if (status) {
         return true;
-      }else {
+      } else {
         if (disabled) {
           return true;
-        }else {
+        } else {
           return false;
         }
       }
     },
-    calcelContract:function () {
-        this.fire('toast',{  //คำสั่งสำหรับเปิด toast dialog
-            status:'dialog',
-            text:'ต้องการยกเลิกใช่หรือไม่ ?',
-            confirmed:this._cencelDataContract.bind(this), //function ที่ใช้รับค่า ปุ่ม
-            el: this, // compontents
-            data:this.data // ข้อมูลที่ส่งไป เช่น id ที่จะใช้ลบข้อมูล ใน db
-        });
+    calcelContract: function () {
+      this.fire('toast', {  //คำสั่งสำหรับเปิด toast dialog
+        status: 'dialog',
+        text: 'ต้องการยกเลิกใช่หรือไม่ ?',
+        confirmed: this._cencelDataContract.bind(this), //function ที่ใช้รับค่า ปุ่ม
+        el: this, // compontents
+        data: this.data // ข้อมูลที่ส่งไป เช่น id ที่จะใช้ลบข้อมูล ใน db
+      });
 
     },
-    _cencelDataContract:function (result,detail){
-       if (result == true) {
-         let el = Polymer.dom(this.root).querySelectorAll('.required');
-         el.map((el)=> {el.reset();});
+    _cencelDataContract: function (result, detail) {
+      if (result == true) {
+        let el = Polymer.dom(this.root).querySelectorAll('.required');
+        el.map((el) => { el.reset(); });
         //  this.data.contract_type_rice=[];
-         //Object.assign(this.data,this.oldData);
+        //Object.assign(this.data,this.oldData);
         // this.data.contract_type_rice=   this.g2gClone(this.oldData.contract_type_rice);
-         this.data = this.oldData;
-         this.editInput();
+        this.data = this.oldData;
+        this.editInput();
         //  this.notifyPath('data.contract_name');
         //  this.notifyPath('data.buyer_id');
         //   this.notifyPath('data.contract_date');
@@ -213,9 +207,9 @@
         //  console.log(detail.data.contract_id);
         //  this.fire('get-contract-detail',{contractId:detail.data.contract_id});
         //
-       }
+      }
     },
-    changeString2Num:function(ob,param){
+    changeString2Num: function (ob, param) {
       //console.log(typeof ob.value);
       // if(typeof ob.value == "string"){
       //   console.log(numeral().unformat(ob.value));
@@ -227,16 +221,17 @@
       //       }
       //   }
       // }
-      if(typeof ob.value == "string"){
+      if (typeof ob.value == "string") {
         var pathChange = ob.path.split(".");
         // undefined
-        if(pathChange.length == 2){
-            if(pathChange[1]==param){
-              ob.base[param]=numeral().unformat(ob.value);
-              // console.log(ob.base[param]);
-            }
+        if (pathChange.length == 2) {
+          if (pathChange[1] == param) {
+            ob.base[param] = numeral().unformat(ob.value);
+            // console.log(ob.base[param]);
+          }
         }
       }
     },
   }
+
 </script>
