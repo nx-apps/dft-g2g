@@ -46,6 +46,7 @@
     "axios": "^0.15.3",
     "nylon-panel": "^0.0.2",
     "paper-checkbox": "PolymerElements/paper-checkbox#^1.4.2",
-    "paper-radio-group": "PolymerElements/paper-radio-group#^1.2.1"
+    "paper-radio-group": "PolymerElements/paper-radio-group#^1.2.1",
+    "paper-badge": "PolymerElements/paper-badge#^1.1.4"
   }
 }

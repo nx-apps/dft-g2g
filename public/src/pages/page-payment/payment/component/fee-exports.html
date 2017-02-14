@@ -282,10 +282,9 @@
       },
       _countFee:function (fee) {
         try {
-          console.log(fee/this.data.invoice.length);
           return fee/this.data.invoice.length;
         } catch (e) {
-
+          console.log(e);
         }
 
       },
