@@ -189,9 +189,15 @@
         this.set('data.invoice_detail.'+index+'.amountUsd',parseFloat(amountUsd));
       },
       _averageFee:function (feeTotal,invoice) {
-        var invoice_fee = invoice.invoice_detail.length;
-        for (var i = 0; i < invoice.invoice_detail.length; i++) {
-          this.set('data.invoice_detail.'+i+'.invoice_fee',feeTotal/invoice_fee);
+        try {
+          if (this.data.invoice_detail[0].invoice_fee == undefined) {
+            var invoice_fee = invoice.invoice_detail.length;
+            for (var i = 0; i < invoice.invoice_detail.length; i++) {
+              this.set('data.invoice_detail.'+i+'.invoice_fee',feeTotal/invoice_fee);
+            }
+          }
+        } catch (e) {
+          console.log(e);
         }
       },
       _totalfee:function (invoice_fee,index) {

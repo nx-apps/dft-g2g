@@ -148,10 +148,10 @@
      </div>
 
      <template is="dom-repeat" items="{{data.invoice}}" as="invoice">
-       <fee-exports-invoice data="{{invoice}}"
+       <fee-exports-invoice fee-total="[[_countFee(data.feeTotal)]] "
+                             data="{{invoice}}"
                             rate-bank="{{data.rate_bank}}"
                             invoice-index="[[_ObcountIndex(index)]]"
-                            fee-total="[[_countFee(data.feeTotal)]] "
                             invoice-page="[[data.invoicePage]]"
        ></fee-exports-invoice>
 
@@ -276,12 +276,18 @@
           this.data.invoicePage = invoice.length;
           this.notifyPath('data.invoicePage');
         } catch (e) {
-          console.log();
+          console.log(e);
         }
 
       },
       _countFee:function (fee) {
-        return fee/this.data.invoice.length;
+        try {
+          console.log(fee/this.data.invoice.length);
+          return fee/this.data.invoice.length;
+        } catch (e) {
+
+        }
+
       },
       closeDrawerFee:function () {
         // this.fire('close-drawer',{detail:'close-drawer'});
