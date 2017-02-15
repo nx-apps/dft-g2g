@@ -43,10 +43,10 @@
       <thead class="table-head">
         <tr>
           <th></th>
-          <th>รหัสการจอง</th>
-          <th>ชื่อการจอง</th>
-          <th>ปริมาณตัน</th>
-          <th>มูลค่าบาท</th>
+          <th>{{localize('label_booking_code')}}</th>
+          <th>{{localize('label_booking_name')}}</th>
+          <th>{{localize('label_total_tons')}}</th>
+          <th>{{localize('text_amount')}}</th>
         </tr>
         </tr>
       </thead>
@@ -68,10 +68,10 @@
     <gl-grid-row width="{{getWidth}}">
       <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,2]]"></gl-grid-col>
       <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-        <gl-form-input disabled label="น้ำหนักรวม :" placeholder="0" value="{{data.total_ton}}" name="total_ton"></gl-form-input>
+        <gl-form-input disabled label="{{localize('label_total_ton')}} :" placeholder="0" value="{{data.total_ton}}" name="total_ton"></gl-form-input>
       </gl-grid-col>
       <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-       <gl-form-input disabled label="มูลค่ารวม :" placeholder="0" value="{{data.total_price}}" name="total_price"></gl-form-input>
+       <gl-form-input disabled label="{{localize('label_amount_total')}} :" placeholder="0" value="{{data.total_price}}" name="total_price"></gl-form-input>
      </gl-grid-col>
     </gl-grid-row>
   </template>

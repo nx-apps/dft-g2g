@@ -47,10 +47,10 @@
           <thead class="table-head">
             <tr>
               <th>เลือก</th>
-              <th>ลำดับ</th>
-              <th>ชื่อบริษัท</th>
-              <th>เลขใบแจ้งหนี้</th>
-              <th>จำนวนเงิน</th>
+              <th>{{localize('label_order')}}</th>
+              <th>{{localize('label_componey')}}</th>
+              <th>{{localize('text_invoice_no')}}</th>
+              <th>{{localize('text_amount')}}</th>
             </tr>
             </tr>
           </thead>
@@ -79,15 +79,15 @@
           <paper-radio-button name="a">เช็ค</paper-radio-button>
           <paper-radio-button name="b">R2R</paper-radio-button>
         </paper-radio-group> -->
-        <br>  รายละเอียดการจ่าย
+        <br> {{localize('label_detail')}}
 
         <gl-grid-row width="{{getWidth}}">
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,2]]"></gl-grid-col>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-            <gl-form-input  class="required" required label="จำนวนเงิน :" placeholder="จำนวนเงิน" value="{{data.pay_amount}}" name="pay_times"></gl-form-input>
+            <gl-form-input  class="required" required label="{{localize('text_amount')}} :" placeholder="{{localize('text_amount')}}" value="{{data.pay_amount}}"></gl-form-input>
           </gl-grid-col>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-            <gl-form-input  class="required" required label="ครั้งที่ :" placeholder="ครั้งที่จ่ายเงิน" value="{{data.pay_times}}" name="pay_times"></gl-form-input>
+            <gl-form-input  class="required" required label="{{localize('label_order')}} :" placeholder="{{localize('label_order')}}" value="{{data.pay_times}}" ></gl-form-input>
           </gl-grid-col>
         </gl-grid-row>
       <gl-grid-row >
@@ -97,16 +97,16 @@
              item-value-path="bank_id" items="[[dataForSelect.dataBank]]" value="{{data.bank_id}}" ></gl-combo-box>
        </gl-grid-col>
        <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-         <gl-form-input  class="required" required label="สาขา :" placeholder="กรุณาใส่ชื่อสาขา" value="{{data.bank_branch}}" name="bank_branch"></gl-form-input>
+         <gl-form-input  class="required" required label="{{localize('label_bank_branch')}} :" placeholder="{{localize('label_bank_branch')}}" value="{{data.bank_branch}}" ></gl-form-input>
        </gl-grid-col>
      </gl-grid-row>
      <gl-grid-row>
        <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,2]]"></gl-grid-col>
        <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-         <gl-form-input  class="required" required label="เลขที่เช็ค :" allowed-pattern="[0-9||,||.]" placeholder="กรุณาใส่เลขที่เช็ค" value="{{data.pay_no}}" name="pay_no"></gl-form-input>
+         <gl-form-input  class="required" required label="{{localize('text_cheque_no')}} :" allowed-pattern="[0-9||,||.]" placeholder="{{localize('text_cheque_no')}}" value="{{data.pay_no}}"></gl-form-input>
        </gl-grid-col>
        <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-         <vaadin-date-picker class="required" required label="วันที่เช็ค" value="{{data.pay_date}}" name="pay_date"></vaadin-date-picker>
+         <vaadin-date-picker class="required" required label="{{localize('label_cheque_date')}}" value="{{data.pay_date}}" ></vaadin-date-picker>
        </gl-grid-col>
      </gl-grid-row>
      <gl-grid-row>
@@ -114,7 +114,7 @@
        <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
          <br>
          <paper-checkbox class="checkBox" on-tap="toggle" aria-labelledby="label3"></paper-checkbox>
-         <label id="label3" >จ่ายเพิ่มเติมด้วยข้าวจากสต็อกของรัฐ</label>
+         <label id="label3" >{{localize('label_rice_from_stock')}}</label>
 
        </gl-grid-col>
      </gl-grid-row>
@@ -128,7 +128,7 @@
     </gl-form-panel-body>
 
       <gl-form-panel-footer label="" set-padding="10px">
-         <paper-button class="gl-btn-success" raised on-tap="addPayment">ชำระ</paper-button>
+         <paper-button class="gl-btn-success" raised on-tap="addPayment">{{localize('btn_pay')}}</paper-button>
       </gl-form-panel-footer>
   </gl-form-panel>
 

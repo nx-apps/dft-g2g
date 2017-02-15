@@ -36,13 +36,13 @@
     <table class="gl-table-default">
       <thead class="table-head">
         <tr>
-          <th>ลำดับ</th>
-          <th>ชื่อเรื่อ</th>
-          <th>ชื่อบริษัท</th>
-          <th>ชนิดข้าว</th>
-          <th>ขนาดแพคเกจ</th>
-          <th>เลขใบแจ้งหนี้</th>
-          <th>วันที่</th>
+          <th>{{localize('label_order')}}</th>
+          <th>{{localize('label_vessel')}}</th>
+          <th>{{localize('label_componey')}}</th>
+          <th>{{localize('label_rice_type')}}</th>
+          <th>{{localize('label_package')}}</th>
+          <th>{{localize('text_invoice_no')}}</th>
+          <th>{{localize('label_date')}}</th>
         </tr>
         </tr>
       </thead>
@@ -54,7 +54,7 @@
            <td>[[item.exporter_name]]</td>
            <td>[[item.type_rice_name_th]]</td>
            <td>[[item.package_kg_per_bag]]  กก.</td>
-           <td><gl-form-input placeholder="เลขใบแจ้งหนี้" no-label-float  value="{{item.invoice_exporter_no}}" data="[[item]]"on-blur="updateCheque"></gl-form-input></td>
+           <td><gl-form-input placeholder="{{localize('text_invoice_no')}}" no-label-float  value="{{item.invoice_exporter_no}}" data="[[item]]"on-blur="updateCheque"></gl-form-input></td>
            <td><vaadin-date-picker no-label-float value="{{item.invoice_exporter_date}}" data="[[item]]"on-blur="updateCheque"></vaadin-date-picker></td>
           </tr>
           <!-- <tr>
