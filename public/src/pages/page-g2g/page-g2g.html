@@ -6,6 +6,7 @@
 <link rel="import" href="g2g/component/chart-pie-g2g.html">
 <link rel="import" href="g2g/component/taps-g2g.html">
 <link rel="import" href="../../nylon-behavior.html">
+<link rel="import" href="../components/icon-button-management.html">
 <!-- <link rel="import" href="g2g/component/list-of-fee-g2g.html"> -->
 <!-- <link rel="import" href="g2g/component/contract-detail.html">
 <link rel="import" href="g2g/component/print-files.html">
@@ -76,10 +77,9 @@
       </div>
 
       </nylon-panel-right>
-
       <div class="btnFab">
-        <paper-fab icon="add" title="เพิ่มสัญญา" id="addContract" on-tap="addContract"></paper-fab>
-        <paper-tooltip for="addContract" offset="0">{{localize('addContract')}}</paper-tooltip>
+        <paper-fab icon="add" title="{{localize('label_add_contract')}}" id="addContract" on-tap="addContract"></paper-fab>
+        <paper-tooltip for="addContract" offset="0">{{localize('label_add_contract')}}</paper-tooltip>
       </div>
     </template>
     <script>

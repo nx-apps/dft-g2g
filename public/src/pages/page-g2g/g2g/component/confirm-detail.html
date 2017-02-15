@@ -55,39 +55,42 @@
   </style>
   <template>
     <gl-form-panel set-padding="10px 20px 10px 20px" set-border="1px">
-      <template is="dom-if" if="[[!_isViewing(data.cl_status)]]">
+      <template is="dom-if" if="[[!data.cl_status]]">
+        <template is="dom-if" if="[[isViewSeleted]]">
         <gl-form-panel-head label="" set-padding="10px" set-border="1px">
-          <div class="horizontal end-justified layout">
+          <!-- <div class="horizontal end-justified layout">
             <paper-icon-button id="editConfirm" class="crud" icon="create" raised on-tap="editInput" ></paper-icon-button>
             <paper-tooltip for="editConfirm" offset="0">Edit Confirmmation Letter</paper-tooltip>
             <paper-icon-button id="deleteConfirm" class="crud" icon="delete" raised on-tap="deleteConfirm" ></paper-icon-button>
             <paper-tooltip for="deleteConfirm" offset="0">Delete Confirmmation Letter</paper-tooltip>
-          </div>
+          </div> -->
+          <icon-button-management is-input-disabled="[[!isInputDisabled]]"></icon-button-management>
         </gl-form-panel-head>
+        </template>
       </template>
     <!-- disabled="[[checkInput]]" -->
       <gl-form-panel-body label="" set-padding="10px" set-border="1px">
     <gl-grid-row width="{{getWidth}}">
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,2]]">
             [[changeString2Num(data.*,'cl_no')]]
-            <gl-form-input class="required" required  autofocus allowed-pattern="[0-9||,||.]" format-number="on" disabled="[[isInputDisabled]]" error-message="กรุณาลำดับ" required label="ลำดับ" always-float-label value="{{data.cl_no}}"></gl-form-input>
+            <gl-form-input class="required" required  autofocus allowed-pattern="[0-9||,||.]" format-number="on" disabled="[[isInputDisabled]]" error-message="{{localize('label_error_order')}}" required label="{{localize('label_order')}}" always-float-label value="{{data.cl_no}}"></gl-form-input>
           </gl-grid-col>
           <!-- <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,7]]">
             <gl-form-input  disabled="[[isInputDisabled]]" error-message="กรุณาใส่ชื่อสัญญาย่อย" required label="ชื่อสัญญาย่อย" always-float-label value="{{data.cl_name}}"></gl-form-input>
           </gl-grid-col> -->
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
-            <vaadin-date-picker class="required" required   disabled="[[isInputDisabled]]" label="วันที่" value="{{data.cl_date}}" name="cl_date"></vaadin-date-picker>
+            <vaadin-date-picker class="required" required   disabled="[[isInputDisabled]]" label="{{localize('label_date')}}" value="{{data.cl_date}}" ></vaadin-date-picker>
           </gl-grid-col>
       </gl-grid-row>
 
-    <div class="top ">รายละเอียด</div>
+    <div class="top ">{{localize('label_detail')}}</div>
 
     <template is="dom-repeat" items="[[data.cl_type_rice]]">
         <div class="bg">
           <gl-form-panel set-padding="10px 20px 10px 20px" set-border="1px">
             <gl-form-panel-body label="" set-padding="10px" set-border="1px">
               <div class="horizontal end-justified layout">
-                <paper-button id="[[index]]" raised class="btnInTable gl-btn-danger" on-tap="deleteRiceType" style="margin-top:16px" hidden="[[_isViewing(isInputDisabled)]]"><iron-icon icon="remove"></iron-icon>ลบชนิดข้าว</paper-button>
+                <paper-button id="[[index]]" raised class="btnInTable gl-btn-danger" on-tap="deleteRiceType" style="margin-top:16px" hidden="[[_isViewing(isInputDisabled)]]"><iron-icon icon="remove"></iron-icon>{{localize('btn_delete_rice_type')}}</paper-button>
               </div>
             </gl-form-panel-body>
             <gl-form-panel-body label="" set-padding="10px" set-border="1px">
@@ -98,7 +101,7 @@
             item-label-path="type_rice_name_th"   item-value-path="type_rice_id" value="{{item.type_rice_id}}" items="{{dataForSelect.contract_type_rice}}" >
               </gl-combo-box > -->
               <!-- [[_isHaveForUse(data.cl_type_rice,dataForSelect.contract_type_rice)]] -->
-                <gl-combo-box id="riceType-[[index]]" class="required" required  disabled="[[isInputDisabled]]" error-message="กรุณาเลือกชนิดข้าว" placeholder="เลือกชนิดข้าว" name="type_rice_name" label="ชนิดข้าว"
+                <gl-combo-box id="riceType-[[index]]" class="required" required  disabled="[[isInputDisabled]]" error-message="{{localize('label_error_rice_type')}}" placeholder="{{localize('label_rice_type')}}" name="type_rice_name" label="{{localize('label_rice_type')}}"
               item-label-path="type_rice_name_th"   item-value-path="type_rice_id" value="{{item.type_rice_id}}" on-value-changed="_typeRiceConfirm">
                 </gl-combo-box >
 
@@ -107,11 +110,11 @@
 
               [[changeString2Num(item.*,'type_rice_quantity')]]
               [[_obCalcWeight(item.*,'type_rice_quantity')]]
-              <gl-form-input class="required" required allowed-pattern="[0-9||,||.]" format-number="on" disabled="[[isInputDisabled]]" label="ปริมาณ (ตัน)" placeholder="กรุณาใส่ปริมาณ" error-message="กรุณาใส่ปริมาณ" value="{{item.type_rice_quantity}}"   name="type_rice_quantity"></gl-form-input>
+              <gl-form-input class="required" required allowed-pattern="[0-9||,||.]" format-number="on" disabled="[[isInputDisabled]]" label="{{localize('label_quantity')}}" placeholder="{{localize('label_quantity')}}" error-message="{{localize('label_error_quantity')}}" value="{{item.type_rice_quantity}}"   name="type_rice_quantity"></gl-form-input>
 
             </gl-grid-col>
             <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,2]]">[[changeString2Num(item.*,'tolerance_rate')]]
-                <gl-form-input class="required number" required maxlength="3" allowed-pattern="[0-9||,||.]" error-message="กรุณาใส่จำนวน" disabled="[[isInputDisabled]]" label="ค่าคลาดเคลื่อนที่ยอมรับได้" value="{{item.tolerance_rate}}" placeholder="กรุณาใส่ค่าคลาดเคลื่อนที่ยอมรับได้" id="tolerance_rate">
+                <gl-form-input class="required number" required maxlength="3" allowed-pattern="[0-9||,||.]" error-message="{{localize('label_error_tolerance_rate')}}" disabled="[[isInputDisabled]]" label="{{localize('label_tolerance_rate')}}" value="{{item.tolerance_rate}}" placeholder="{{localize('label_tolerance_rate')}}"error-message="{{localize('label_error_tolerance_rate')}}" id="tolerance_rate">
                    <div suffix>%</div>
                 </gl-form-input>
             </gl-grid-col>
@@ -120,10 +123,10 @@
 
           <gl-grid-row>
             <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,6]]">
-              <gl-form-input class="required" required disabled="[[isInputDisabled]]" label="ปีฤูดกาลผลิต (ไทย)" placeholder="กรุณาใส่ปีฤูดกาลผลิต" value="{{item.project_th}}"  name="project_th" error-message="กรุณาใส่ปีฤูดกาลผลิต"></gl-form-input>
+              <gl-form-input class="required" required disabled="[[isInputDisabled]]" label="{{localize('label_project_th')}}" placeholder="{{localize('label_project_th')}}" value="{{item.project_th}}"   error-message="{{localize('label_error_project_en')}}"></gl-form-input>
             </gl-grid-col>
             <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,6]]">
-              <gl-form-input class="required" required disabled="[[isInputDisabled]]" label="ปีฤูดกาลผลิต (อังกฤษ)" placeholder="กรุณาใส่ปีฤูดกาลผลิต" value="{{item.project_en}}"  name="project_en" error-message="กรุณาใส่ปีฤูดกาลผลิต"></gl-form-input>
+              <gl-form-input class="required" required disabled="[[isInputDisabled]]" label="{{localize('label_project_en')}}" placeholder="{{localize('label_project_en')}}" value="{{item.project_en}}" error-message="{{localize('label_error_project_en')}}"></gl-form-input>
             </gl-grid-col>
             <!-- <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
               <gl-form-input class="required" required disabled="[[isInputDisabled]]" label="ฤูดกาล (ไทย)" placeholder="กรุณาใส่ฤูดกาล" value="{{item.season_th}}"  name="season_th"></gl-form-input>
@@ -146,12 +149,12 @@
           <table class="gl-table-default" id="[[index]]">
             <thead class="table-head">
             <tr>
-              <th style="text-align: center; width: 30%">ชนิดบรรจุภัณฑ์ <br> (กก./กระสอบ)</th>
-              <th style="text-align: center; width: 20%">ราคา<br> (USD/ตัน)</th>
-              <th style="text-align: center; width: 20%">น้ำหนักกระสอบ <br>(กรัม)</th>
+              <th style="text-align: center; width: 30%">{{localize('text_packaging_type')}} <br> {{localize('text_kk_sack')}}</th>
+              <th style="text-align: center; width: 20%">{{localize('text_price')}}<br> {{localize('text_usd_ton')}}</th>
+              <th style="text-align: center; width: 20%">{{localize('text_weight_sacks')}} <br>{{localize('text_gram')}}</th>
               <th style="text-align: center; width: 30%">
                 <template is="dom-if" if="[[!_isViewing(isInputDisabled)]]">
-                  จัดการ
+                  {{localize('label_action')}}
                 </template>
                 </th>
             </tr>
@@ -165,20 +168,20 @@
                 item-label-path="package_name_th"   item-value-path="package_id" value="{{packageitem.package_id}}" items="{{dataForSelect.package}}" >
                   </gl-combo-box > -->
                   <!-- items="{{dataForSelect.package}}"  -->
-                  <gl-combo-box id="package-[[index]]-[[indexpackeage]]" class="required InTable" required  disabled="[[isInputDisabled]]" error-message="กรุณาเลือกชนิดขนาดบรรจุภัณฑ์" placeholder="เลือกประเภท" name="package_name"
+                  <gl-combo-box id="package-[[index]]-[[indexpackeage]]" class="required InTable" required  disabled="[[isInputDisabled]]" error-message="{{localize('label_error_package')}}" placeholder="{{localize('label_package')}}"
                 item-label-path="package_name_th"   item-value-path="package_id" value="{{packageitem.package_id}}" on-value-changed="_typePackageConfirm">
                   </gl-combo-box >
 
                 </td>
                 <td > [[changeString2Num(packageitem.*,'price_per_ton')]]
-                  <gl-form-input class="required numberBack" required allowed-pattern="[0-9||,||.]" format-number="on" disabled="[[isInputDisabled]]"  placeholder="กรุณาใส่ราคา"  error-message="กรุณาใส่ราคา" value="{{packageitem.price_per_ton}}" name="price_per_ton" no-label-float></gl-form-input>
+                  <gl-form-input class="required numberBack" required allowed-pattern="[0-9||,||.]" format-number="on" disabled="[[isInputDisabled]]"  placeholder="{{localize('text_price')}}"  error-message="{{localize('text_error_price')}}" value="{{packageitem.price_per_ton}}"  no-label-float></gl-form-input>
                 </td>
                 <td >
                   <gl-form-input class="numberBack" disabled  value="[[_obChangePrice(packageitem.package_id,dataForSelect.package)]]" name="package_weight_bag"  no-label-float></gl-form-input>
                 </td>
                 <td style="text-align:center;">
                   <paper-button id-packeage="[[indexpackeage]]" id-table="[[index]]" raised class="btnInTable gl-btn-danger" on-tap="delePackage" hidden="[[_isViewing(isInputDisabled)]]" disabled="[[_isHaveForDelete(item.package,item.package.*)]]">
-                  <iron-icon icon="remove"></iron-icon>ลบ</paper-button>
+                  <iron-icon icon="remove"></iron-icon>{{localize('btn_delete')}}</paper-button>
                 </td>
               </tr>
             </template>
@@ -190,7 +193,7 @@
             <!-- <template is="dom-if" if="[[_isHaveForUse(item.package,dataForSelect.package,item.package.*)]]"> -->
               <div class="horizontal end-justified layout">
                   <paper-button  raised id="[[index]]" class="btnInTable gl-btn-primary" on-tap="addPackage" hidden="[[_isViewing(isInputDisabled)]]" disabled="[[!_isHaveForUse(item.package,dataForSelect.package,item.package.*)]]">
-                  <iron-icon icon="add"></iron-icon>เพิ่มบรรจุภัณฑ์</paper-button>
+                  <iron-icon icon="add"></iron-icon>{{localize('btn_add_package')}}</paper-button>
               </div>
             <!-- </template> -->
           <!-- </template> -->
@@ -202,33 +205,33 @@
         <template is="dom-if" if="[[!_isViewing(isInputDisabled)]]">
           <!-- <template is="dom-if" if="[[_isHaveForUse(data.cl_type_rice,dataForSelect.contract_type_rice,data.cl_type_rice.*)]]"> -->
             <paper-button raised on-tap="addNewTypeRice" class="gl-btn-primary" hidden="[[btnCheckDisabled]]" disabled="[[!_isHaveForUse(data.cl_type_rice,dataForSelect.contract_type_rice,data.cl_type_rice.*)]]">
-              <iron-icon icon="add"></iron-icon>เพิ่มชนิดข้าว</paper-button>
+              <iron-icon icon="add"></iron-icon>{{localize('btn_add_rice_type')}}</paper-button>
           <!-- </template> -->
         </template>
       </div>
     <gl-grid-row>
       <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,5]]">
         <template is="dom-repeat" items="[[data.incoterms]]">
-          <gl-combo-box id="incoterms-[[index]]" class="required" required  disabled="[[isInputDisabled]]" label="เงือนไขการส่งมอบสินค้า [[_ObcountIndex(index)]]" error-message="เงือนไขการส่งมอบสินค้า [[_ObcountIndex(index)]]" placeholder="เงือนไขการส่งมอบสินค้า [[_ObcountIndex(index)]]"
+          <gl-combo-box id="incoterms-[[index]]" class="required" required  disabled="[[isInputDisabled]]" label="{{localize('label_incoterms')}} [[_ObcountIndex(index)]]" error-message="{{localize('label_error_incoterms')}} [[_ObcountIndex(index)]]" placeholder="{{localize('label_incoterms')}} [[_ObcountIndex(index)]]"
         item-label-path="inct_name" item-value-path="inct_id" value="{{item.inct_id}}"  on-value-changed="_incotermsConfirm">
           </gl-combo-box >
         </template>
       </gl-grid-col>
       <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
-          <gl-form-input class="numberBack" disabled allowed-pattern="[0-9||,||.]" format-number="on" always-float-label label="น้ำหนักรวมทั้งหมด (ตัน)" value="{{dataForSelect.cl_total_quantity}}" name="cl_total_quantity"></gl-form-input>
+          <gl-form-input class="numberBack" disabled allowed-pattern="[0-9||,||.]" format-number="on" always-float-label label="{{localize('label_total_ton')}}" value="{{dataForSelect.cl_total_quantity}}" ></gl-form-input>
       </gl-grid-col>
     </gl-grid-row>
     <gl-grid-row>
       <div class="horizontal start-justified layout">
           <paper-button raised class="gl-btn-primary" on-tap="addincoterms" hidden="[[_isViewing(isInputDisabled)]]" disabled="[[!_isHaveForUse(data.incoterms,dataForSelect.incoterms,data.incoterms.*)]]">
-          <iron-icon icon="add"></iron-icon>เพิ่ม</paper-button>
+          <iron-icon icon="add"></iron-icon>{{localize('btn_add')}}</paper-button>
           <paper-button raised class="gl-btn-danger" on-tap="deleteIncoterms" hidden="[[_isViewing(isInputDisabled)]]" disabled="[[_isHaveForDelete(data.incoterms,data.incoterms.*)]]">
-          <iron-icon icon="remove"></iron-icon>ลบ</paper-button>
+          <iron-icon icon="remove"></iron-icon>{{localize('btn_delete')}}</paper-button>
       </div>
     </gl-grid-row>
     <!-- <gl-grid-row>
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,7]]">
-            <gl-form-textarea  disabled="[[isInputDisabled]]" label="รายละเอียดเพิ่มเติม" placeholder="รายละเอียดเพิ่มเติม" error-message="กรุณาใส่รายละเอียด" required value="{{data.cl_quality}}" name="cl_quality"></gl-form-textarea>
+            <gl-form-textarea  disabled="[[isInputDisabled]]" label="รายละเอียด{{localize('btn_add')}}เติม" placeholder="รายละเอียดเพิ่มเติม" error-message="{{localize('text_enter_your_detail')}}" required value="{{data.cl_quality}}" name="cl_quality"></gl-form-textarea>
         </gl-grid-col>
     </gl-grid-row> -->
   </gl-form-panel-body>
@@ -236,17 +239,17 @@
 
     <div class="horizontal end-justified layout">
         <template is="dom-if" if="[[!_isViewing(isInputDisabled)]]">
-          <paper-button  raised on-tap="backPageInsert" class="gl-btn-default" hidden="[[isViewSeleted]]">ย้อนกลับ</paper-button>
-          <paper-button class="gl-btn-danger" on-tap="canncelConfirm" raised hidden="[[isViewSeleted]]">ยกเลิก</paper-button>
-        <paper-button class="gl-btn-primary" on-tap="insertConfirm" raised hidden="[[isViewSeleted]]">เพิ่มสัญญา</paper-button>
+          <paper-button  raised on-tap="backPageInsert" class="gl-btn-default" hidden="[[isViewSeleted]]">{{localize('btn_back_ward')}}</paper-button>
+          <paper-button class="gl-btn-danger" on-tap="canncelConfirm" raised hidden="[[isViewSeleted]]">{{localize('btn_cancel')}}</paper-button>
+        <paper-button class="gl-btn-primary" on-tap="insertConfirm" raised hidden="[[isViewSeleted]]">{{localize('btn_add_confirm_detail')}}</paper-button>
         </template>
         <template is="dom-if" if="[[_isViewing(isInputDisabled)]]">
-        <paper-button  raised on-tap="backPage" class="gl-btn-default">ย้อนกลับ</paper-button>
-        <paper-button class="gl-btn-info" raised on-tap="confirmConfirm" hidden="[[data.cl_status]]">ยืนยันสัญญา</paper-button>
+        <paper-button  raised on-tap="backPage" class="gl-btn-default">{{localize('btn_back_ward')}}</paper-button>
+        <paper-button class="gl-btn-info" raised on-tap="confirmConfirm" hidden="[[data.cl_status]]">{{localize('btn_confirm_detail')}}</paper-button>
         </template>
          <template is="dom-if" if="[[_isViewing(isViewSeleted)]]">
-           <paper-button class="gl-btn-danger" on-tap="calcelContract" raised hidden="[[isInputDisabled]]">ยกเลิก</paper-button>
-        <paper-button class="gl-btn-success" on-tap="saveConfirm" raised hidden="[[isInputDisabled]]">บันทึก</paper-button>
+           <paper-button class="gl-btn-danger" on-tap="calcelContract" raised hidden="[[isInputDisabled]]">{{localize('btn_cancel')}}</paper-button>
+        <paper-button class="gl-btn-success" on-tap="saveConfirm" raised hidden="[[isInputDisabled]]">{{localize('btn_save')}}</paper-button>
         </template>
     </div>
   </gl-form-panel-footer>
@@ -277,6 +280,10 @@
         '_incotermsConfirm(data.*)',
         '_isHaveForUse(data.cl_type_rice,dataForSelect.contract_type_rice,data.cl_type_rice.*)'
       ],
+      listeners: {
+        'edit-input':'editInput',
+        'delete-input':'deleteConfirm'
+      },
       created:function(){
           this.nylonLocalizeImport('/i18n-page1.json');
       },

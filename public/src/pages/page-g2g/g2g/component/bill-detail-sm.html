@@ -17,40 +17,42 @@
     div.title{
       margin-top: 16px;
       text-align: center;
-      font-size: var(--font-size-h5);
+      font-size: var(--font-size-h4);
     }
   </style>
   <template>
     <template is="dom-if" if="[[!checkBtnView(shmStatus)]]">
-      <template is="dom-if" if="[[_isViewing(isInputDisabled)]]">
+      <!-- <template is="dom-if" if="[[_isViewing(isInputDisabled)]]"> -->
         <div class="horizontal end-justified layout">
           <paper-icon-button id="editConfirm" class="crud" icon="create" raised on-tap="editInput"  ></paper-icon-button>
           <paper-tooltip for="editConfirm" offset="0">Edit Booking</paper-tooltip>
           <paper-icon-button id="deleteConfirm" class="crud" icon="delete" raised on-tap="deleteBooking" hidden="[[data.shm_status]]"></paper-icon-button>
           <paper-tooltip for="deleteConfirm" offset="0">Delete Shipment</paper-tooltip>
          </div>
-      </template>
+        <!-- <icon-button-management is-input-disabled="[[!isInputDisabled]]"></icon-button-management> -->
+      <!-- </template> -->
     </template>
+
       <gl-form-panel-body>
-        <div class="title">Booking</div>
+        <div class="title">{{localize('label_booking_no')}}</div>
       </gl-form-panel-body>
     <gl-form-panel-body>
     <!-- {{dataForSelect.shm_id}}//shm_id -->
     <gl-grid-row width="{{getWidth}}">
       <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-        <gl-form-input  required class="required"label="Booking No."always-float-labelerror-message="กรุณาใส่รายละเอียด" placeholder="ใส่รายละเอียด"  value="{{data.book_no}}" disabled="[[isInputDisabled]]"></gl-form-input>
+        <gl-form-input  required class="required" label="{{localize('label_booking_no')}}" always-float-label placeholder="{{localize('label_booking_no')}}"  value="{{data.book_no}}" disabled="[[isInputDisabled]]"></gl-form-input>
       </gl-grid-col>
       <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-        <gl-form-input  required class="required"label="B/L No."always-float-labelerror-message="กรุณาใส่รายละเอียด" placeholder="ใส่รายละเอียด"  value="{{data.bl_no}}" disabled="[[isInputDisabled]]"></gl-form-input>
+        <gl-form-input  required class="required" label="{{localize('label_bill_of_lading')}}" always-float-label placeholder="{{localize('label_bill_of_lading')}}"  value="{{data.bl_no}}" disabled="[[isInputDisabled]]"></gl-form-input>
       </gl-grid-col>
 
       <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-        <gl-combo-box  label="Shipping Agent"always-float-label item-label-path="carrier_name" disabled="[[isInputDisabled]]"
+        <gl-combo-box  label="{{localize('label_shipping_agent')}}"always-float-label item-label-path="carrier_name" disabled="[[isInputDisabled]]"
            item-value-path="carrier_id" items="{{dataForSelect.carrier}}" value="{{data.carrier_id}}"></gl-combo-box>
       </gl-grid-col>
 
       <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-        <gl-combo-box required class="required"label="Shipping Line"always-float-label item-label-path="shipline_name" disabled="[[isInputDisabled]]"
+        <gl-combo-box required class="required"label="{{localize('label_shipping_line')}}"always-float-label item-label-path="shipline_name" disabled="[[isInputDisabled]]"
            item-value-path="shipline_id" items="{{dataForSelect.shipline}}" value="{{data.shipline_id}}" ></gl-combo-box>
       </gl-grid-col>
 
@@ -60,14 +62,14 @@
            item-value-path="ship_id" items="[[_getShip(data.shipline_id,dataForSelect)]]" value="{{item.ship_id}}"></gl-combo-box> -->
           [[_getShip(data.shipline_id,dataForSelect)]]
           <!-- [[_isHaveForUse(index,dataForSelect.ships)]] -->
-           <gl-combo-box id="ship-[[index]]" required class="required"label="Vessel [[_ObcountIndex(index)]]" always-float-label item-label-path="ship_name" disabled="[[isInputDisabled]]"
+           <gl-combo-box id="ship-[[index]]" required class="required"label="{{localize('label_vessel')}} [[_ObcountIndex(index)]]" always-float-label item-label-path="ship_name" disabled="[[isInputDisabled]]"
             item-value-path="ship_id" value="{{item.ship_id}}" on-value-changed="_getResetShip"></gl-combo-box>
 
 
         </gl-grid-col>
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-          <gl-form-input required class="required"label="Voy No."always-float-label  error-message="กรุณาใส่รายละเอียด" placeholder="ใส่รายละเอียด" value="{{item.ship_voy_no}}" disabled="[[isInputDisabled]]"
-          name="voyNo"></gl-form-input>
+          <gl-form-input required class="required"label="{{localize('label_voy_no')}}"always-float-label placeholder="{{localize('label_voy_no')}}" value="{{item.ship_voy_no}}" disabled="[[isInputDisabled]]"
+          ></gl-form-input>
         </gl-grid-col>
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]"></gl-grid-col>
       </template>
@@ -77,10 +79,10 @@
           <div class="horizontal end-justified layout">
             <!-- <template is="dom-if" if="[[_isHaveForUse(data.ship,dataForSelect.ships,data.ship.*)]]"> -->
               <paper-button raised class="gl-btn-primary btnVessel" on-tap="addShip" hidden="[[isInputDisabled]]" disabled="[[!_isHaveForUse(data.ship,dataForSelect.ships,data.ship.*)]]">
-              <iron-icon icon="add"></iron-icon>เพิ่มเรือ</paper-button>
+              <iron-icon icon="add"></iron-icon>{{localize('btn_add_vessel')}}</paper-button>
             <!-- </template> -->
             <paper-button raised class="gl-btn-danger btnVessel" on-tap="deleteShip" hidden="[[isInputDisabled]]" disabled="[[_isHaveForDelete(data.ship,data.ship.*)]]">
-              <iron-icon icon="remove"></iron-icon>ลบเรือ</paper-button>
+              <iron-icon icon="remove"></iron-icon>{{localize('btn_delete_vessel')}}</paper-button>
           </div>
         <!-- </template> -->
 
@@ -92,7 +94,7 @@
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
           [[_getSurveyor(item.surveyor_id,dataForSelect,data.surveyor.*)]]
            <!-- items="{{dataForSelect.surveyor}}" -->
-          <gl-combo-box required class="required" id="surveyor-[[index]]" label="Surveyor [[_ObcountIndex(index)]]" always-float-label disabled="[[isInputDisabled]]" item-label-path="surveyor_name"
+          <gl-combo-box required class="required" id="surveyor-[[index]]" label="{{localize('label_surveyor')}} [[_ObcountIndex(index)]]" always-float-label disabled="[[isInputDisabled]]" item-label-path="surveyor_name"
             item-value-path="surveyor_id" items="{{dataForSelect.surveyor}}" value="{{item.surveyor_id}}"  on-value-changed="_getResetSurveyor"></gl-combo-box>
         </gl-grid-col>
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]"></gl-grid-col>
@@ -103,91 +105,87 @@
         <div class="horizontal end-justified layout">
           <!-- <template is="dom-if" if="[[_isHaveForUse(data.surveyor,dataForSelect.surveyor,data.surveyor.*)]]"> -->
             <paper-button raised class="gl-btn-primary btnVessel" on-tap="addSurveyor" hidden="[[isInputDisabled]]" disabled="[[!_isHaveForUse(data.surveyor,dataForSelect.surveyor,data.surveyor.*)]]">
-            <iron-icon icon="add"></iron-icon>เพิ่ม Surveyor</paper-button>
+            <iron-icon icon="add"></iron-icon>{{localize('btn_add_surveyor')}}</paper-button>
           <!-- </template> -->
           <paper-button raised class="gl-btn-danger btnVessel" on-tap="deleteSurveyor" hidden="[[isInputDisabled]]" disabled="[[_isHaveForDelete(data.surveyor,data.surveyor.*)]]">
-            <iron-icon icon="remove"></iron-icon>ลบ Surveyor</paper-button>
+            <iron-icon icon="remove"></iron-icon>{{localize('btn_delete_surveyor')}}</paper-button>
         </div>
       <!-- </template> -->
     </gl-grid-row>
 
     <gl-grid-row width="{{getWidth}}">
       <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-        <gl-form-input required class="required"label="Lot No. (ลำที่)"always-float-label  error-message="กรุณาใส่รายละเอียด" placeholder="ใส่รายละเอียด" value="{{data.ship_lot_no}}" disabled="[[isInputDisabled]]"
-        name="lotNo"></gl-form-input>
+        <gl-form-input required class="required" label="{{localize('label_lot_no')}}" always-float-label placeholder="{{localize('text_your_detail')}}" value="{{data.ship_lot_no}}" disabled="[[isInputDisabled]]"></gl-form-input>
       </gl-grid-col>
 
-
-
       <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-        <gl-combo-box required class="required"label="Port of loading"always-float-label item-label-path="port_name" disabled="[[isInputDisabled]]"
+        <gl-combo-box required class="required" label="{{localize('label_port_of_loading')}}" always-float-label item-label-path="port_name" disabled="[[isInputDisabled]]"
          item-value-path="port_id" items="{{dataForSelect.pol}}" value="{{data.load_port_id}}"></gl-combo-box>
       </gl-grid-col>
       <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-        <vaadin-date-picker required class="required" label="ETD"always-float-label  value="{{data.etd_date}}" disabled="[[isInputDisabled]]"></vaadin-date-picker>
+        <vaadin-date-picker required class="required" label="{{localize('label_etd')}}"always-float-label  value="{{data.etd_date}}" disabled="[[isInputDisabled]]"></vaadin-date-picker>
       </gl-grid-col>
       <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-        <vaadin-date-picker required class="required"  label="ETA"always-float-label value="{{data.eta_date}}" disabled="[[isInputDisabled]]"></vaadin-date-picker>
+        <vaadin-date-picker required class="required"  label="{{localize('label_eta')}}"always-float-label value="{{data.eta_date}}" disabled="[[isInputDisabled]]"></vaadin-date-picker>
       </gl-grid-col>
 
       <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-        <gl-combo-box required class="required"label="Port of Discharge"always-float-label  item-label-path="port_name" disabled="[[isInputDisabled]]"
+        <gl-combo-box required class="required"label="{{localize('label_port_of_discharge')}}"always-float-label  item-label-path="port_name" disabled="[[isInputDisabled]]"
         item-value-path="port_id" items="{{dataForSelect.pod}}"  value="{{data.dest_port_id}}"></gl-combo-box>
       </gl-grid-col>
       <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-        <gl-combo-box required class="required"label="Place of Delivery"always-float-label  item-label-path="port_name" disabled="[[isInputDisabled]]"
+        <gl-combo-box required class="required"label="{{localize('label_place_of_delivery')}}"always-float-label  item-label-path="port_name" disabled="[[isInputDisabled]]"
         item-value-path="port_id" items="{{dataForSelect.pod}}" value="{{data.deli_port_id}}"></gl-combo-box>
       </gl-grid-col>
 
 
       <!-- <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
         [[changeString2Num(data.*,'num_of_container')]]
-          <gl-form-input required class="required" allowed-pattern="[0-9||,||.]" format-number="on" label="จำนวนตู้คอนเทนเนอร์"always-float-label error-message="กรุณาใส่รายละเอียด"  placeholder="ใส่รายละเอียด" value="{{data.num_of_container}}" disabled="[[isInputDisabled]]"></gl-form-input>
+          <gl-form-input required class="required" allowed-pattern="[0-9||,||.]" format-number="on" label="จำนวนตู้คอนเทนเนอร์"always-float-label error-message="{{localize('text_enter_your_detail')}}"  placeholder="{{localize('text_your_detail')}}" value="{{data.num_of_container}}" disabled="[[isInputDisabled]]"></gl-form-input>
       </gl-grid-col> -->
 
       <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
         [[changeString2Num(data.*,'weight_per_container')]]
-        <gl-form-input required class="required" allowed-pattern="[0-9||,||.]" format-number="on"label="ตู้ละ (ตัน)"always-float-label error-message="กรุณาใส่รายละเอียด"  placeholder="ใส่รายละเอียด" disabled="[[isInputDisabled]]"
+        <gl-form-input required class="required" allowed-pattern="[0-9||,||.]" format-number="on"label="{{localize('label_cabinet')}}"always-float-label placeholder="{{localize('text_your_detail')}}" disabled="[[isInputDisabled]]"
           value="{{data.weight_per_container}}" ></gl-form-input>
       </gl-grid-col>
       <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-        <vaadin-date-picker required class="required"label="Packing Date"always-float-label  value="{{data.packing_date}}" disabled="[[isInputDisabled]]"></vaadin-date-picker>
+        <vaadin-date-picker required class="required"label="{{localize('label_packing_date')}}"always-float-label  value="{{data.packing_date}}" disabled="[[isInputDisabled]]"></vaadin-date-picker>
       </gl-grid-col>
 
       <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-        <vaadin-date-picker required class="required"label="Cut of Date"always-float-label  value="{{data.cut_of_date}}" disabled="[[isInputDisabled]]"></vaadin-date-picker>
+        <vaadin-date-picker required class="required"label="{{localize('label_cut_off_date')}}"always-float-label  value="{{data.cut_of_date}}" disabled="[[isInputDisabled]]"></vaadin-date-picker>
       </gl-grid-col>
 
       <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-        <gl-form-input label="Cut of Time" always-float-label required class="required" type="time" error-message="กรุณาใส่รายละเอียด" placeholder="ใส่รายละเอียด" value="{{data.cut_of_time}}" disabled="[[isInputDisabled]]"></gl-form-input>
+        <gl-form-input label="{{localize('label_cut_off_time')}}" always-float-label required class="required" type="time" placeholder="{{localize('label_cut_off_time')}}" value="{{data.cut_of_time}}" disabled="[[isInputDisabled]]"></gl-form-input>
       </gl-grid-col>
 
       <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-        <vaadin-date-picker label="Production Date"always-float-label required class="required" value="{{data.product_date}}" disabled="[[isInputDisabled]]"></vaadin-date-picker>
+        <vaadin-date-picker label="{{localize('label_production_date')}}"always-float-label required class="required" value="{{data.product_date}}" disabled="[[isInputDisabled]]"></vaadin-date-picker>
       </gl-grid-col>
       </gl-grid-row>
       <gl-grid-row width="{{getWidth}}">
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]"></gl-grid-col>
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]"></gl-grid-col>
       <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-        <gl-form-input label="หมายเหตุ (แก้ไข)" always-float-label  error-message="กรุณาใส่รายละเอียด"  value="{{data.book_remark}}" disabled="[[isInputDisabled]]"
-        name="lotNo"></gl-form-input>
+        <gl-form-input label="{{localize('label_note')}}" always-float-label  value="{{data.book_remark}}" disabled="[[isInputDisabled]]" ></gl-form-input>
       </gl-grid-col>
     </gl-grid-row>
       </gl-form-panel-body>
 
     <template is="dom-if" if="[[!_isViewing(isViewSeleted)]]">
     <gl-form-panel-footer>
-      <paper-button class="gl-btn-default" raised on-tap="cancelInsertShipment">     ย้อนกลับ</paper-button>
-      <paper-button class="gl-btn-primary" raised on-tap="addBl">  เพิ่ม</paper-button>
+      <paper-button class="gl-btn-default" raised on-tap="cancelInsertShipment">     {{localize('btn_back_ward')}}</paper-button>
+      <paper-button class="gl-btn-primary" raised on-tap="addBl">  {{localize('btn_add')}}</paper-button>
     </gl-form-panel-footer>
     </template>
     <template is="dom-if" if="[[_isViewing(isViewSeleted)]]">
     <gl-form-panel-footer>
       <paper-button class="gl-btn-default" raised on-tap="cancelInsertShipment" hidden="[[!isInputDisabled]]">
-        ย้อนกลับ</paper-button>
-      <paper-button class="gl-btn-danger" on-tap="calcelBl" raised hidden="[[isInputDisabled]]">ยกเลิก</paper-button>
-      <paper-button class="gl-btn-success" raised on-tap="editBl" hidden="[[isInputDisabled]]">  บันทึก</paper-button>
+        {{localize('btn_back_ward')}}</paper-button>
+      <paper-button class="gl-btn-danger" on-tap="calcelBl" raised hidden="[[isInputDisabled]]">{{localize('btn_cancel')}}</paper-button>
+      <paper-button class="gl-btn-success" raised on-tap="editBl" hidden="[[isInputDisabled]]">  {{localize('btn_save')}}</paper-button>
     </gl-form-panel-footer>
     </template>
   </template>
@@ -221,6 +219,10 @@
         '_getPod(dataForSelect)',
         '_changeDataBl(data.etd_date)',
       ],
+      listeners: {
+        // 'edit-input':'editInput',
+        // 'delete-input':'deleteBooking'
+      },
       created:function(){
           this.nylonLocalizeImport('/i18n-page1.json');
       },

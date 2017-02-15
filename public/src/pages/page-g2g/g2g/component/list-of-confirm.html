@@ -46,7 +46,7 @@ table.gl-table-default {
   <gl-form-panel set-padding="10px 20px 10px 20px" set-border="1px">
     <gl-form-panel-head label="" set-padding="10px" set-border="1px">
         <div class="addconfirm horizontal end-justified layout">
-          <paper-button raised class="gl-btn-primary" on-tap="createConfirm">เพิ่ม</paper-button>
+          <paper-button raised class="gl-btn-primary" on-tap="createConfirm">{{localize('btn_add')}}</paper-button>
         </div>
           </gl-form-panel-head>
           <br>
@@ -55,10 +55,10 @@ table.gl-table-default {
         <table class="gl-table-default">
           <thead class="table-head">
             <tr>
-              <th>ลำดับที่</th>
+              <th>{{localize('label_order')}}</th>
               <!-- <th>ชื่อสัญญาย่อย</th> -->
-              <th>ปริมาณ(ตัน)</th>
-              <th>สถานะ</th>
+              <th>{{localize('label_quantity')}}</th>
+              <th>{{localize('text_status')}}</th>
             </tr>
           </thead>
           <!-- <tfoot class="table-foot">
@@ -82,7 +82,7 @@ table.gl-table-default {
             </template>
             <template is="dom-if" if="[[_isHave(data.confirm_letter)]]">
                 <tr >
-                  <td colspan="4">  ไม่มีข้อมูล</td>
+                  <td colspan="4">  {{localize('text_no_data')}}</td>
                 </tr>
             </template>
           </tbody>

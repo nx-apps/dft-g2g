@@ -68,9 +68,9 @@
 
                 <div class="flex-8 layout horizontal textSum">
                   <div class="flex">
-                    <div class="flex">ทั้งหมด</div>
+                    <div class="flex">{{localize('label_total')}}</div>
                     <div class="flex">[[_labelNames(seleteChartPie)]]</div>
-                    <div class="flex">คงเหลือ</div>
+                    <div class="flex">{{localize('label_balance')}}</div>
                   </div>
                   <div class="flex">
                     <div class="flex">[[formatNumberNoZero(data.contract_quantity)]]</div>
@@ -115,13 +115,13 @@
             <iron-icon icon="radio-button-unchecked" item-icon class="iconNextRadio" id="chartShipment" on-tap="chartPieNext"></iron-icon>
         </div>
         <div class="card-actions horizontal end-justified layout">
-          <paper-button raised on-tap="contractDetail">รายละเอียดของสัญญา</paper-button>
-          <paper-button raised on-tap="listConfirm">ยืนยันทำสัญญา</paper-button>
-          <paper-button raised on-tap="listShipment">ส่งมอบสินค้า</paper-button>
-          <paper-button id="number" raised on-tap="listFee">ค่าธรรมเนียม</paper-button>
+          <paper-button raised on-tap="contractDetail">{{localize('btn_contract_detail')}}</paper-button>
+          <paper-button raised on-tap="listConfirm">{{localize('btn_confirm_detail')}}</paper-button>
+          <paper-button raised on-tap="listShipment">{{localize('btn_shipment_detail')}}</paper-button>
+          <paper-button id="number" raised on-tap="listFee">{{localize('btn_fee_detail')}}</paper-button>
           <paper-badge for="number" label="4">
           </paper-badge>
-          <paper-button raised on-tap="listPayment">ด้านการเงิน</paper-button>
+          <paper-button raised on-tap="listPayment">{{localize('btn_payment')}}</paper-button>
         </div>
       </paper-card>
 
@@ -170,6 +170,7 @@
         // }, 3000);
         this.chartPiePrevious();
         // this.chartPieNext();
+        // this.set('labelName.0',localize('text_enter_your_detail'))
       },
       _computeChartPie:function (confirm,balance,name,colorPie){
           this.fire('okload');
@@ -254,11 +255,7 @@
       listPayment:function () {
         document.cookie = "contract_id="+this.data.contract_id;
         document.cookie = "contractName="+this.data.contract_name;
-        // console.log(this.data.contract_name);
-        // console.log(document.cookie);
         this.fire('nylon-change-page',{path:'/payment'})
-              // console.log(x.indexOf("url"));
-        // this.glChangePath('/g2g/add-draft/');
       },
     });
   </script>

@@ -175,18 +175,18 @@
 
 
                <template is="dom-if" if="[[_isViewing(isInputDisabled)]]">
-               <paper-button raised on-tap="cancelFeeReturn" class="gl-btn-default" >ย้อนกลับ</paper-button>
+               <paper-button raised on-tap="cancelFeeReturn" class="gl-btn-default" >{{localize('btn_back_ward')}}</paper-button>
                <template is="dom-if" if="[[data.fee_det_status]]">
-                  <paper-button raised on-tap="approvePayment" class="gl-btn-danger">ยกเลิกยืนยัน</paper-button>
+                  <paper-button raised on-tap="approvePayment" class="gl-btn-danger">{{localize('btn_cancel')}}ยืนยัน</paper-button>
                </template>
                 </template>
                <template is="dom-if" if="[[!_isViewing(isInputDisabled)]]">
-                 <paper-button raised class="gl-btn-danger" on-tap="cancelFee" hidden="[[!isViewSeleted]]">ยกเลิก</paper-button>
-                 <paper-button raised on-tap="addPayment" class="gl-btn-success" hidden="[[!isViewSeleted]]">เพิ่ม</paper-button>
+                 <paper-button raised class="gl-btn-danger" on-tap="cancelFee" hidden="[[!isViewSeleted]]">{{localize('btn_cancel')}}</paper-button>
+                 <paper-button raised on-tap="addPayment" class="gl-btn-success" hidden="[[!isViewSeleted]]">{{localize('btn_add')}}</paper-button>
                </template>
                <template is="dom-if" if="[[!_isViewing(isInputDisabled)]]">
-                 <paper-button raised class="gl-btn-danger" on-tap="calcelContract" hidden="[[isViewSeleted]]">ยกเลิก</paper-button>
-                 <paper-button raised on-tap="savePayment" class="gl-btn-success" hidden="[[isViewSeleted]]">บันทึก</paper-button>
+                 <paper-button raised class="gl-btn-danger" on-tap="calcelContract" hidden="[[isViewSeleted]]">{{localize('btn_cancel')}}</paper-button>
+                 <paper-button raised on-tap="savePayment" class="gl-btn-success" hidden="[[isViewSeleted]]">{{localize('btn_save')}}</paper-button>
                </template>
              </div>
            </gl-form-panel-footer>

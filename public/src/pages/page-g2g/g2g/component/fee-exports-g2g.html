@@ -151,14 +151,14 @@
 
                 <!-- <paper-button raised class="gl-btn-danger" on-tap="cancelFee" >ffff</paper-button> -->
                <template is="dom-if" if="[[_isViewing(isInputDisabled)]]">
-               <paper-button raised on-tap="cancelFeeReturn" class="gl-btn-default" >ย้อนกลับ</paper-button>
+               <paper-button raised on-tap="cancelFeeReturn" class="gl-btn-default" >{{localize('btn_back_ward')}}</paper-button>
                 <template is="dom-if" if="[[!data.fee_det_status]]">
                  <paper-button raised on-tap="approvePayment" class="gl-btn-success" >ยืนยัน</paper-button>
                </template>
                 </template>
                <template is="dom-if" if="[[!_isViewing(isInputDisabled)]]">
-                 <paper-button raised on-tap="calcelContract"class="gl-btn-danger"  >ยกเลิก</paper-button>
-                 <paper-button raised on-tap="savePayment" class="gl-btn-success" >บันทึก</paper-button>
+                 <paper-button raised on-tap="calcelContract"class="gl-btn-danger"  >{{localize('btn_cancel')}}</paper-button>
+                 <paper-button raised on-tap="savePayment" class="gl-btn-success" >{{localize('btn_save')}}</paper-button>
                </template>
              </div>
            </gl-form-panel-footer>

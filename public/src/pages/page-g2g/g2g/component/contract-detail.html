@@ -79,39 +79,40 @@
 
     <template is="dom-if" if="[[_isViewing(isViewSeleted)]]">
       <gl-form-panel-head label="" set-padding="10px" set-border="1px">
-      <div class="horizontal end-justified layout">
-        <paper-icon-button id="editConfirm" class="crud" icon="create" raised on-tap="editInput" ></paper-icon-button>
+      <!-- <div class="horizontal end-justified layout"> -->
+        <!-- <paper-icon-button id="editConfirm" class="crud" icon="create" raised on-tap="editInput" ></paper-icon-button>
         <paper-tooltip for="editConfirm" offset="0">Edit Contract</paper-tooltip>
         <template is="dom-if" if="[[!_isViewing(data.contract_status)]]">
           <paper-icon-button id="deleteConfirm" class="crud" icon="delete" raised on-tap="deleteContract"></paper-icon-button>
           <paper-tooltip for="deleteConfirm" offset="0">Delete Contract</paper-tooltip>
-        </template>
-      </div>
+        </template> -->
+        <icon-button-management is-input-disabled="[[!isInputDisabled]]"></icon-button-management>
+      <!-- </div> -->
       </gl-form-panel-head>
     </template>
       <gl-form-panel-body label="" set-padding="10px" set-border="1px">
    <gl-grid-row width="{{getWidth}}">
      <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,9]]">
-       <gl-form-input required class="required" disabled="[[_checkArrayTrue(isInputDisabled,data.contract_status)]]" error-message="กรุณาใส่ชื่อสัญญา" label="ชื่อสัญญา" value="{{data.contract_name}}" placeholder="ใส่รายละเอียด" name="contract_name"></gl-form-input>
+       <gl-form-input required class="required" disabled="[[_checkArrayTrue(isInputDisabled,data.contract_status)]]" error-message="{{localize('label_error_contract')}}" label="{{localize('label_contract')}}" value="{{data.contract_name}}" placeholder="{{localize('label_contract')}}"></gl-form-input>
      </gl-grid-col>
      <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
-       <vaadin-date-picker always-float-label class="required" required  disabled="[[_checkArrayTrue(isInputDisabled,data.contract_status)]]" label="วันที่" value="{{data.contract_date}}" name="contract_date"></vaadin-date-picker>
+       <vaadin-date-picker always-float-label class="required" required  disabled="[[_checkArrayTrue(isInputDisabled,data.contract_status)]]" label="{{localize('label_date')}}" error-message="{{localize('label_error_date')}}"value="{{data.contract_date}}" ></vaadin-date-picker>
      </gl-grid-col>
      </gl-grid-row>
 
      <gl-grid-row width="{{getWidth}}">
        <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,9]]">
-         <gl-combo-box class="required" required  disabled="[[_checkArrayTrue(isInputDisabled,data.contract_status)]]" label="รูปแบบการชำระเงิน" error-message="กรุณาเลือกรูปแบบการชำระเงิน" placeholder="รูปแบบการชำระเงิน" name="payterms"
-         items="[[payterms]]"    item-label-path="payterms_Name"   item-value-path="payterms_Id" value="{{data.payterm}}" >
+         <gl-combo-box class="required" required  disabled="[[_checkArrayTrue(isInputDisabled,data.contract_status)]]" label="{{localize('label_payment_type')}}" error-message="{{localize('label_error_payment_type')}}" placeholder="{{localize('label_payment_type')}}"
+          items="[[payterms]]"    item-label-path="payterms_Name"   item-value-path="payterms_Id" value="{{data.payterm}}" >
          </gl-combo-box >
        </gl-grid-col>
        <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">[[changeString2Num(data.*,'contract_quantity')]]
-           <gl-form-input class="required number" required allowed-pattern="[0-9||,||.]" format-number="on" disabled="[[_checkArrayTrue(isInputDisabled,data.contract_status)]]" error-message="กรุณาใส่จำนวน" required label="ปริมาณสินค้า (ตัน)" value="{{data.contract_quantity}}" placeholder="ใส่รายละเอียด" id="contract_quantity"></gl-form-input>
+           <gl-form-input class="required number" required allowed-pattern="[0-9||,||.]" format-number="on" disabled="[[_checkArrayTrue(isInputDisabled,data.contract_status)]]" error-message="{{localize('label_error_quantity')}}" required label="{{localize('label_quantity')}}" value="{{data.contract_quantity}}" placeholder="{{localize('label_quantity')}}" id="contract_quantity"></gl-form-input>
        </gl-grid-col>
      </gl-grid-row>
 
        <!-- <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">[[changeString2Num(data.*,'tolerance_rate')]]
-           <gl-form-input class="required number"maxlength="3" allowed-pattern="[0-9||,||.]" required disabled="[[_checkArrayTrue(isInputDisabled,data.contract_status)]]" error-message="กรุณาใส่จำนวน" required label="ค่าคลาดเคลื่อนที่ยอมรับได้" value="{{data.tolerance_rate}}" placeholder="ใส่รายละเอียด" id="tolerance_rate">
+           <gl-form-input class="required number"maxlength="3" allowed-pattern="[0-9||,||.]" required disabled="[[_checkArrayTrue(isInputDisabled,data.contract_status)]]" error-message="กรุณาใส่จำนวน" required label="ค่าคลาดเคลื่อนที่ยอมรับได้" value="{{data.tolerance_rate}}" placeholder="{{localize('text_your_detail')}}" id="tolerance_rate">
               <div suffix>%</div>
            </gl-form-input>
        </gl-grid-col> -->
@@ -120,7 +121,7 @@
      <gl-grid-row>
        <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,9]]">
          [[_getBuyerAddressFromData(data)]]
-         <gl-combo-box class="required" always-float-label  required id="buyer_id" disabled="[[_checkArrayTrue(isInputDisabled,data.contract_status)]]" label="ผู้สั่งซื้อสินค้า" error-message="กรุณาเลือกผู้ซื้อ"
+         <gl-combo-box class="required" always-float-label  required id="buyer_id" disabled="[[_checkArrayTrue(isInputDisabled,data.contract_status)]]" label="{{localize('label_buyer')}}" error-message="{{localize('label_error_buyer')}}"
           value="{{data.buyer_id}}"  on-value-changed="_getBuyerAddress">
          </gl-combo-box>
        </gl-grid-col>
@@ -128,22 +129,22 @@
      <gl-grid-row>
 
          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,6]]">
-             <gl-form-textarea rows="2"  disabled label="ที่อยู่ผู้สั่งซื้อ" placeholder="ที่อยู่" value="{{data.buyerAddress}}" name="buyer_address"></gl-form-textarea>
+             <gl-form-textarea rows="2"  disabled label="{{localize('label_buyer_address')}}" placeholder="{{localize('label_buyer_address')}}" value="{{data.buyerAddress}}" ></gl-form-textarea>
          </gl-grid-col>
      </gl-grid-row>
 
      <gl-grid-row>
        <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,12]]">
 
-       <div class="titleName">รายชื่อชนิดข้าว</div>
+       <div class="titleName">{{localize('label_list_rice')}}</div>
      <table class="gl-table-default">
        <thead class="table-head">
          <tr>
-           <th>ลำดับที่</th>
-           <th>ชนิดข้าว</th>
+           <th>{{localize('label_order')}}</th>
+           <th>{{localize('label_rice_type')}}</th>
            <th>
              <template is="dom-if" if="[[!_isViewing(isInputDisabled)]]">
-               กระทำการ
+               {{localize('label_action')}}
                </template>
            </th>
          </tr>
@@ -155,7 +156,7 @@
              <td></td>
              <td>
                <!-- <template is="dom-if" if="[[!_isViewing(isInputDisabled)]]"> -->
-               <paper-button hidden="[[isInputDisabled]]" raised id="[[index]]" on-tap="addTypeRice" class="btnInTable gl-btn-primary" ><iron-icon icon="add"></iron-icon>เพิ่ม</paper-button>
+               <paper-button hidden="[[isInputDisabled]]" raised id="[[index]]" on-tap="addTypeRice" class="btnInTable gl-btn-primary" ><iron-icon icon="add"></iron-icon>{{localize('btn_add')}}</paper-button>
                 <!-- </template> -->
               </td>
            </tr>
@@ -172,14 +173,14 @@
                    <!-- <gl-combo-box id="riceSelected" class="required" required  disabled="[[isInputDisabled]]" error-message="กรุณาเลือกชนิดข้าว" placeholder="เลือกประเภท" name="type_rice_name"
                  item-label-path="type_rice_name_th"   item-value-path="type_rice_id" value="{{item.type_rice_id}}" items="{{dataForSelect.typeRice}}" >
                    </gl-combo-box > -->
-                   <gl-combo-box id="rice-[[index]]" class="required" required  disabled="[[isInputDisabled]]" error-message="กรุณาเลือกชนิดข้าว" placeholder="เลือกประเภท" name="type_rice_name"
+                   <gl-combo-box id="rice-[[index]]" class="required" required  disabled="[[isInputDisabled]]" error-message="{{localize('label_error_rice_type')}}" placeholder="{{localize('label_rice_type')}}" name="type_rice_name"
                  item-label-path="type_rice_name_th"   item-value-path="type_rice_id" value="{{item.type_rice_id}}"  on-value-changed="_typeRiceContract">
                    </gl-combo-box >
                  </div>
                </td>
                <td>
                  <template is="dom-if" if="[[!_isViewing(data.isInputDisabled)]]">
-                   <paper-button hidden="[[isInputDisabled]]" raised id="[[index]]" on-tap="deleteTypeRice" class="btnInTable gl-btn-danger"title="ลบชนิดข้าว"><iron-icon icon="remove"></iron-icon>ลบ</paper-button>
+                   <paper-button hidden="[[isInputDisabled]]" raised id="[[index]]" on-tap="deleteTypeRice" class="btnInTable gl-btn-danger" title="ลบชนิดข้าว"><iron-icon icon="remove"></iron-icon>{{localize('btn_delete')}}</paper-button>
                   </template>
                 </td>
            </tr>
@@ -191,7 +192,7 @@
 
  <gl-grid-row>
      <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,6]]">
-         <gl-form-textarea disabled="[[_checkArrayTrue(isInputDisabled,data.contract_status)]]" rows="2" label="รายละเอียดเพิ่มเติม" placeholder="รายละเอียดเพิ่มเติม" value="{{data.contract_desc}}" name="contract_desc"></gl-form-textarea>
+         <gl-form-textarea disabled="[[_checkArrayTrue(isInputDisabled,data.contract_status)]]" rows="2" label="{{localize('label_more_detail')}}" placeholder="{{localize('label_more_detail')}}" value="{{data.contract_desc}}" name="contract_desc"></gl-form-textarea>
      </gl-grid-col>
  </gl-grid-row>
  </gl-form-panel-body>
@@ -199,14 +200,14 @@
       <div class="horizontal end-justified layout">
 
        <template is="dom-if" if="[[!_isViewing(isEdit)]]">
-         <paper-button class="gl-btn-primary" on-tap="insertContract" raised hidden="[[_isViewing(data.contract_status)]]" >เพิ่มสัญญา</paper-button>
+         <paper-button class="gl-btn-primary" on-tap="insertContract" raised hidden="[[_isViewing(data.contract_status)]]" >{{localize('btn_add')}}</paper-button>
        </template>
          <template is="dom-if" if="[[_isViewing(isViewSeleted)]]">
-           <paper-button class="gl-btn-danger" on-tap="calcelContract" raised hidden="[[_isViewing(isInputDisabled)]]">ยกเลิก</paper-button>
-       <paper-button class="gl-btn-success" on-tap="saveContract" raised hidden="[[_isViewing(isInputDisabled)]]">บันทึก</paper-button>
+           <paper-button class="gl-btn-danger" on-tap="calcelContract" raised hidden="[[_isViewing(isInputDisabled)]]">{{localize('btn_cancel')}}</paper-button>
+       <paper-button class="gl-btn-success" on-tap="saveContract" raised hidden="[[_isViewing(isInputDisabled)]]">{{localize('btn_save')}}</paper-button>
         </template>
         <template is="dom-if" if="[[_isViewing(isInputDisabled)]]">
-          <paper-button class="gl-btn-info" raised on-tap="confirmDrawer" hidden="[[_isViewing(data.contract_status)]]" >ยืนยันสัญญา</paper-button>
+          <paper-button class="gl-btn-info" raised on-tap="confirmDrawer" hidden="[[_isViewing(data.contract_status)]]" >{{localize('btn_confirm_detail')}}</paper-button>
         </template>
       </div>
     </gl-form-panel-footer>
@@ -247,6 +248,10 @@
         '_changeDataContract(data.contract_date)',
         '_getBuyer(dataForSelect.buyer)',
       ],
+      listeners: {
+        'edit-input':'editInput',
+        'delete-input':'deleteContract'
+      },
       created:function(){
           this.nylonLocalizeImport('/i18n-page1.json');
       },

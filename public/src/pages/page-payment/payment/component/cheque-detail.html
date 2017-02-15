@@ -15,7 +15,7 @@
             <div class="gl-panel-default-content">
               <gl-grid-row width="{{getWidth}}">
                 <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,2]]">
-                  <gl-form-input class="required" required  disabled="[[isInputDisabled]]" label="NO :" placeholder="ใส่รายละเอียด" error-message="กรุณาใส่รายละเอียด" value="{{item.invoice_no}}"></gl-form-input>
+                  <gl-form-input class="required" required  disabled="[[isInputDisabled]]" label="NO :" placeholder="{{localize('text_your_detail')}}" error-message="{{localize('text_enter_your_detail')}}" value="{{item.invoice_no}}"></gl-form-input>
                 </gl-grid-col>
                 <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,2]]">
                   <vaadin-date-picker class="required" required   disabled="[[isInputDisabled]]" label="Date" value="{{item.invoice_date}}"></vaadin-date-picker>

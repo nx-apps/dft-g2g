@@ -89,15 +89,15 @@
             <!-- <paper-tooltip for="printShipment" offset="0">Print Shipment</paper-tooltip> -->
             <!-- <gl-grid-row width="{{getWidth}}"> -->
              <!-- <gl-grid-col width="[[getWidth]]" grid="[[500,4],[700,4]]"> -->
-               <gl-combo-box always-float-label label="รายงาน" placeholder="รายงาน" value="{{printReport.typeReport}}"  item-label-path="report_name"
+               <gl-combo-box always-float-label label="{{localize('label_report')}}" placeholder="{{localize('label_report')}}" value="{{printReport.typeReport}}"  item-label-path="report_name"
                   item-value-path="report_name_id" items="{{report.report_name}}"></gl-combo-box>
              <!-- </gl-grid-col> -->&nbsp;
              <!-- <gl-grid-col width="[[getWidth]]" grid="[[500,4],[700,4]]"> -->
-               <gl-combo-box always-float-label label="รูปแบบ" placeholder="รูปแบบ" value="{{printReport.typeFile}}"  item-label-path="report_type"
+               <gl-combo-box always-float-label label="{{localize('label_report_type')}}" placeholder="{{localize('label_report_type')}}" value="{{printReport.typeFile}}"  item-label-path="report_type"
                   item-value-path="report_type_id" items="{{report.report_type}}"></gl-combo-box>
               <div class="icon_print">
                 <paper-icon-button id="printShipment" class="crud" icon="print" raised on-tap="printShipment"  hidden="[[!data.shm_status]]"></paper-icon-button>
-                <paper-tooltip for="printShipment" offset="0">Print Shipment</paper-tooltip>
+                <paper-tooltip for="printShipment" offset="0">{{localize('label_send_report')}}</paper-tooltip>
               </div>
              <!-- </gl-grid-col>2122121 -->
              <!-- </gl-grid-row> -->
@@ -106,16 +106,16 @@
             <gl-grid-row width="{{getWidth}}">
              <gl-grid-col width="[[getWidth]]" grid="[[500,4],[700,3]]">
                [[changeString2Num(printReport.*,'ori')]]
-               <gl-form-input allowed-pattern="[0-9||,||.]" label="ORIGINALS" autofocus maxlength="3" format-number="on"  always-float-label placeholder="ORIGINALS" value="{{printReport.ori}}"></gl-form-input>
+               <gl-form-input allowed-pattern="[0-9||,||.]" label="{{localize('label_orignals')}}" autofocus maxlength="3" format-number="on"  always-float-label placeholder="{{localize('label_orignals')}}" value="{{printReport.ori}}"></gl-form-input>
              </gl-grid-col>
              <gl-grid-col width="[[getWidth]]" grid="[[500,6],[700,8]]">
                [[changeString2Num(printReport.*,'nn')]]
-               <gl-form-input allowed-pattern="[0-9||,||.]" label="N/N"  maxlength="3" format-number="on" always-float-label placeholder="N/N" value="{{printReport.nn}}"></gl-form-input>
+               <gl-form-input allowed-pattern="[0-9||,||.]" label="{{localize('label_n_n')}}"  maxlength="3" format-number="on" always-float-label placeholder="{{localize('label_n_n')}}" value="{{printReport.nn}}"></gl-form-input>
              </gl-grid-col>
            </gl-grid-row>
             <div class="buttons">
-              <paper-button class="gl-btn-default" dialog-confirm raised>ปิด</paper-button>
-               <paper-button  class="gl-btn-primary" on-tap="printShipmentReports" dialog-confirm autofocus raised>ออกรายงาน</paper-button>
+              <paper-button class="gl-btn-default" dialog-confirm raised>{{localize('btn_close')}}</paper-button>
+               <paper-button  class="gl-btn-primary" on-tap="printShipmentReports" dialog-confirm autofocus raised>{{localize('label_send_report')}}</paper-button>
               <!-- <paper-button dialog-confirm autofocus>ออกรายงาน</paper-button> -->
 
             </div>
@@ -123,10 +123,11 @@
       <template is="dom-if" if="[[!_isViewing(isViewSeleted)]]">
         <template is="dom-if" if="[[!checkBtnView(data.shm_status)]]">
             <div class="icon_print">
-              <paper-icon-button id="editConfirm" class="crud" icon="create" raised on-tap="editShipment"  hidden="[[data.shm_status]]"></paper-icon-button>
+              <icon-button-management is-input-disabled="[[isInputDisabled]]"></icon-button-management>
+              <!-- <paper-icon-button id="editConfirm" class="crud" icon="create" raised on-tap="editShipment"  hidden="[[data.shm_status]]"></paper-icon-button>
               <paper-tooltip for="editConfirm" offset="0">Edit Shipment</paper-tooltip>
               <paper-icon-button id="deleteConfirm" class="crud" icon="delete" raised on-tap="deleteShipment" hidden="[[data.shm_status]]"></paper-icon-button>
-              <paper-tooltip for="deleteConfirm" offset="0">Delete Shipment</paper-tooltip>
+              <paper-tooltip for="deleteConfirm" offset="0">Delete Shipment</paper-tooltip> -->
             </div>
         </template>
       </template>
@@ -137,7 +138,7 @@
      <gl-grid-row width="{{getWidth}}">
       <gl-grid-col width="[[getWidth]]" grid="[[500,4],[700,3]]">
         [[changeString2Num(data.*,'shm_no')]]
-        <gl-form-input class="required insetShipment"allowed-pattern="[0-9||,||.]" format-number="on" label="ลำดับ" disabled="[[!isInputDisabled]]" always-float-label placeholder="ลำดับที่การส่งมอบสินค้า" value="{{data.shm_no}}"></gl-form-input>
+        <gl-form-input class="required insetShipment"allowed-pattern="[0-9||,||.]" format-number="on" label="{{localize('label_order')}}" disabled="[[!isInputDisabled]]" always-float-label placeholder="{{localize('label_order')}}" error-message="{{localize('label_error_order')}}" value="{{data.shm_no}}"></gl-form-input>
       </gl-grid-col>
       <!-- <gl-grid-col width="[[getWidth]]" grid="[[500,6],[700,8]]">
         <gl-form-input class="required insetShipment" label="ชื่อ" disabled="[[!isInputDisabled]]" always-float-label placeholder="่ชื่องวดการส่งมอบสินค้า" value="{{data.shm_name}}"></gl-form-input>
@@ -146,24 +147,24 @@
     <gl-grid-row width="{{getWidth}}">
      <gl-grid-col width="[[getWidth]]" grid="[[500,4],[700,8]]">
        <gl-combo-box class="required insetShipment" required id="confirmLetterTrue" disabled="[[checkShipmentDetail(isInputDisabled,data.shipment_detail)]]"
-       always-float-label label="กรุณาเลือกชื่อสัญญา" placeholder="ชื่อสัญญา" value="{{data.cl_id}}" >
+       always-float-label label="{{localize('label_contract')}}" placeholder="{{localize('label_contract')}}" value="{{data.cl_id}}" >
      </gl-grid-col>
      </gl-grid-row>
     <template is="dom-if" if="[[_isViewing(isViewSeleted)]]">
       <template is="dom-if" if="[[!_isViewing(insertData)]]">
          <div class="horizontal end-justified layout">
-           <paper-button class="gl-btn-default" on-tap="backPageShipmentList" raised>ย้อนกลับ</paper-button>
-           <!-- <paper-button class="gl-btn-danger" on-tap="calcelContract" raised >ยกเลิก</paper-button> -->
-           <paper-button  class="gl-btn-primary" on-tap="addShimpent" raised>เพิ่ม</paper-button>
+           <paper-button class="gl-btn-default" on-tap="backPageShipmentList" raised>{{localize('btn_back_ward')}}</paper-button>
+           <!-- <paper-button class="gl-btn-danger" on-tap="calcelContract" raised >{{localize('btn_cancel')}}</paper-button> -->
+           <paper-button  class="gl-btn-primary" on-tap="addShimpent" raised>{{localize('btn_add')}}</paper-button>
          </div>
        </template>
      </template>
      <template is="dom-if" if="[[!_isViewing(isViewSeleted)]]">
        <template is="dom-if" if="[[_isViewing(isInputDisabled)]]">
           <div class="horizontal end-justified layout">
-              <paper-button class="gl-btn-default" on-tap="backPageShipmentDetail" raised>ย้อนกลับ</paper-button>
-              <paper-button class="gl-btn-danger" on-tap="calcelShipmentIn" raised >ยกเลิก</paper-button>
-             <paper-button  class="gl-btn-success" on-tap="editShimpent" raised>บันทึก</paper-button>
+              <paper-button class="gl-btn-default" on-tap="backPageShipmentDetail" raised>{{localize('btn_back_ward')}}</paper-button>
+              <paper-button class="gl-btn-danger" on-tap="calcelShipmentIn" raised >{{localize('btn_cancel')}}</paper-button>
+             <paper-button  class="gl-btn-success" on-tap="editShimpent" raised>{{localize('btn_save')}}</paper-button>
           </div>
        </template>
      </template>
@@ -175,8 +176,8 @@
       <!-- </div> -->
 
       <paper-tabs selected="{{pageBl}}" align-bottom no-slide attr-for-selected="name">
-              <paper-tab name="listOfExporter">รายชื่อผู้ส่งออก</paper-tab>
-              <paper-tab name="listOfBl">รายการ Booking</paper-tab>
+              <paper-tab name="listOfExporter">{{localize('text_list_exporter_name')}}</paper-tab>
+              <paper-tab name="listOfBl">{{localize('text_list_booking')}}</paper-tab>
       </paper-tabs>
       <iron-pages selected="[[pageBl]]" attr-for-selected="name">
         <div name="listOfExporter">
@@ -186,17 +187,17 @@
                      <thead class="table-head">
                          <tr>
                            <th></th>
-                           <th>ลำดับที่</th>
-                           <th>B/L No </th>
-                           <th>ผู้ส่งออก</th>
-                           <th>ปริมาณ (ตัน)</th>
-                           <th>Port of Destination </th>
+                           <th>{{localize('label_order')}}ี่</th>
+                           <th>{{localize('label_bill_of_lading')}} </th>
+                           <th>{{localize('text_exporter_name')}}</th>
+                           <th>{{localize('label_quantity')}}</th>
+                           <th>{{localize('label_port_of_destination')}} </th>
                          </tr>
                      </thead>
                      <template is="dom-if" if="[[_isHaveMany(data.shipment_detail,1)]]">
                        <tbody class="table-body">
                          <tr >
-                           <td colspan="6" style="text-align: center;">  ไม่มีข้อมูล</td>
+                           <td colspan="6" style="text-align: center;">  {{localize('text_no_data')}}</td>
                          </tr>
                        </tbody>
                      </template>
@@ -236,11 +237,11 @@
 
                    <gl-form-panel-footer label="" set-padding="10px">
                      <div class="layout horizontal end-justified">
-                       <paper-button  class="gl-btn-primary" raised on-tap="addExporter" name="addShmdt" hidden="[[data.shm_status]]">เพิ่มผู้ส่งออก</paper-button>
+                       <paper-button  class="gl-btn-primary" raised on-tap="addExporter" name="addShmdt" hidden="[[data.shm_status]]">{{localize('btn_add_exporter')}}</paper-button>
                      </div>
                  <div class="horizontal end-justified layout">
-                     <paper-button class="gl-btn-default" raised on-tap="backPageShipmentList" >ย้อนกลับ</paper-button>
-                       <paper-button class="gl-btn-info" raised on-tap="approveShipment" hidden="[[data.shm_status]]">ยืนยันผู้ส่งออก</paper-button>
+                     <paper-button class="gl-btn-default" raised on-tap="backPageShipmentList" >{{localize('btn_back_ward')}}</paper-button>
+                       <paper-button class="gl-btn-info" raised on-tap="approveShipment" hidden="[[data.shm_status]]">{{localize('btn_confirm_exporter')}}</paper-button>
                  </div>
                    </gl-form-panel-footer>
               </div>
@@ -297,6 +298,8 @@
         '_initDataForSelectCl(data.*)'
       ],
       listeners:{
+        'edit-input':'editShipment',
+        'delete-input':'deleteShipment',
         'send-Bl-no':'_lisNerBlNos',
         'edit-bl-detail':'_lisNerBlDetail',
         'editing-bl-detail':'_lisNerBlDetailEdit',

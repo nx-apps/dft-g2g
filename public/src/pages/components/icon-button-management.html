@@ -1,0 +1,30 @@
+<dom-module id="icon-button-management">
+  <style include="iron-flex iron-flex-factors iron-flex-alignment gl-styles">
+    :host {
+      display: block;
+    }
+  </style>
+  <template>
+    <!-- <template is="dom-if" if="[[!checkBtnView(shmStatus)]]"> -->
+      <!-- <template is="dom-if" if="[[_isViewing(isInputDisabled)]]"> -->
+        <div class="horizontal end-justified layout">
+          <paper-icon-button id="edit" class="crud" icon="create" raised on-tap="edit"  disabled="[[isInputDisabled]]"></paper-icon-button>
+          <paper-tooltip for="edit" offset="0">แก้ไข</paper-tooltip>
+          <paper-icon-button id="delete" class="crud" icon="delete" raised on-tap="delete" disabled="[[isInputDisabled]]"></paper-icon-button>
+          <paper-tooltip for="delete" offset="0">ลบ</paper-tooltip>
+         </div>
+      <!-- </template> -->
+    <!-- </template> -->
+  </template>
+  <script>
+    Polymer({
+      is: "icon-button-management",
+      edit:function () {
+        this.fire('edit-input')
+      },
+      delete:function () {
+        this.fire('delete-input')
+      }
+    });
+  </script>
+</dom-module>
