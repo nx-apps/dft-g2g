@@ -36,10 +36,10 @@
     }
   </style>
   <template>
-    <div class="title">การจ่ายเงินให้ผู้ประกอบการในสัญญา [[dataForSelect.nameContract]]</div>
+    <div class="title">{{localize('text_page_total')}}{{localize('text_payment_exporter')}}{{localize('text_of_contract')}} [[dataForSelect.nameContract]]</div>
     <div class="flex searchInput ">
        <div class="horizontal end-justified layout">
-         <div class="labelSearch">เลขใบแจ้งหนี้.</div>{{_searchInArray(searchInput)}}
+         <div class="labelSearch">{{localize('text_invoice_no')}}</div>{{_searchInArray(searchInput)}}
          <paper-input label=" " no-label-float value="{{searchInput}}"></paper-input>
          <paper-icon-button icon="search"></paper-icon-button>
          </paper-input>
@@ -51,8 +51,8 @@
     <table class="gl-table-default">
           <thead class="table-head">
             <tr>
-              <th>เลขที่ใบแจ้งหนี้</th>
-              <th>วันที่</th>
+              <th>{{localize('text_invoice_no')}}</th>
+              <th>{{localize('label_date')}}</th>
             </tr>
           </thead>
           <tbody class="table-body">
@@ -67,7 +67,7 @@
               <!-- </template> -->
               <template is="dom-if" if="[[_isHave(newData)]]">
                   <tr >
-                    <td colspan="2" style="text-align:center">  ไม่มีข้อมูล</td>
+                    <td colspan="2" style="text-align:center">  {{localize('text_no_data')}}</td>
                   </tr>
               </template>
             <!-- </template> -->

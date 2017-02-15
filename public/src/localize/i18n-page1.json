@@ -15,6 +15,18 @@
         "text_list_exporter_name":"รายชื่อผู้ส่งออก",
         "text_list_booking":"รายการเลขการจอง",
         "text_exporter_name":"ผู้ส่งออก",
+        "text_page_total":"หน้ารวม",
+        "text_of_contract":"ของสัญญา",
+        "text_bill_of_lading":"ใบตราส่งสินค้าทางทะเล",
+        "text_invoice":"ใบแจ้งหนี้",
+        "text_invoice_no":"เลขที่ใบแจ้งหนี้",
+        "text_fee":"ค่าธรรมเนียม",
+        "text_cheque_no":"เลขที่เช็ค",
+        "text_payment":"จ่ายเงิน",
+        "text_payment_exporter":"การจ่ายเงินให้ผู้ประกอบการ",
+        "text_payment_company":"เลือกบริษัทที่ต้องการจ่ายเงิน",
+        "text_fee_no":"ครั้งที่คิดค่าธรรมเนียม",
+        "text_check_true":"*กรุณาติ้กเครื่องหมายถูกที่งวดเดียวกัน",
 
         "":"Chart",
         "label_make_contract":"ทำสัญญา",
@@ -73,6 +85,7 @@
         "label_orignals":"ต้นฉบับ",
         "label_n_n":"สำเนา",
 
+        "":"Shm_det",
         "label_tel":"เบอร์โทร",
         "label_confirmation_letter":"จดหมายยืนยัน",
         "label_number_of_containers":"จำนวนตู้คอนเทนเนอร์",
@@ -83,22 +96,6 @@
         "label_gross_weight":"น้ำหนักข้าวรวมบรรจุภัณฑ์ (เมตริกตัน)",
         "label_net_weight":"น้ำหนักข้าว (เมตริกตัน)",
         "label_tare_weight":"น้ำหนักของตู้คอนเทนเนอร์ไม่รวมน้ำหนักข้าว (เมตริกตัน)",
-        
-        "label_":"Contract",
-        "label_":"Contract",
-        "label_":"Contract",
-        "label_":"Contract",
-        "label_":"Contract",
-        "label_":"Contract",
-        "label_":"Contract",
-        "label_":"Contract",
-        "label_":"Contract",
-        "label_":"Contract",
-
-
-
-
-
 
         "":"B/L",
         "label_add_contract":"เพิ่มสัญญา",
@@ -122,6 +119,26 @@
         "label_cut_off_time":"Cut off time",
         "label_production_date":"Production date",
         "label_note":"หมายเหตุ (แก้ใข)",
+
+        "":"list_bl",
+        "label_shm_no":"งวดการส่งมอบ",
+
+        "":"_list_fee",
+        "label_fee_no":"ครั้งที่คิดค่าธรรมเนียม",
+        "label_":"Contract",
+        "label_":"Contract",
+        "label_":"Contract",
+        "label_":"Contract",
+        "label_":"Contract",
+        "label_":"Contract",
+        "label_":"Contract",
+
+
+
+
+
+
+
 
 
         "btn_close":"ปิด",
@@ -149,7 +166,9 @@
         "btn_add_vessel":"เพิ่มเรือ",
         "btn_delete_vessel":"ลบเรือ",
         "btn_add_surveyor":"เพิ่มผู้ตรวจการ",
-        "btn_delete_surveyor":"ลบผู้ตรวจการ"
+        "btn_delete_surveyor":"ลบผู้ตรวจการ",
+
+        "btn_money_receiver":"ได้รับเงิน"
     },
     "en":{
         "test":"test",

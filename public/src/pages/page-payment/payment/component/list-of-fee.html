@@ -26,10 +26,10 @@
     }
   </style>
   <template>
-    <div class="title">รวมค่าธรรมเนียมในสัญญา [[dataForSelect.nameContract]]</div>
+    <div class="title">{{localize('text_page_total')}}{{localize('text_fee')}}{{localize('text_of_contract')}} [[dataForSelect.nameContract]]</div>
     <div class="flex searchInput ">
        <div class="horizontal end-justified layout">
-         <div class="labelSearch">ครั้งที่คิดธรรมเนียม</div>{{_searchInArray(searchInput)}}
+         <div class="labelSearch">{{localize('text_fee_no')}}</div>{{_searchInArray(searchInput)}}
          <paper-input label=" " no-label-float value="{{searchInput}}"></paper-input>
          <paper-icon-button icon="search"></paper-icon-button>
        </div>
@@ -39,8 +39,8 @@
           <thead class="table-head">
             <tr>
               <!-- <th>ชื่อการทำสัญญา</th> -->
-              <th>งวดการส่งมอบ</th>
-              <th>ครั้งที่คิดค่าธรรมเนียม</th>
+              <th>{{localize('label_shm_no')}}</th>
+              <th>{{localize('text_fee_no')}}</th>
 
             </tr>
           </thead>
@@ -57,7 +57,7 @@
             <!-- </template> -->
             <template is="dom-if" if="[[_isHave(newData)]]">
               <tr>
-                <td colspan="5" style="text-align:center">  ไม่มีข้อมูล</td>
+                <td colspan="5" style="text-align:center">  {{localize('text_no_data')}}</td>
               </tr>
             </template>
             <!-- </template> -->

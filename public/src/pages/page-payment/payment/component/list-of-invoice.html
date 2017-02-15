@@ -36,7 +36,7 @@
     }
   </style>
   <template>
-    <div class="title">รวมใบกำกับสินค้าของสัญญา [[dataForSelect.nameContract]]</div>
+    <div class="title">{{localize('text_page_total')}}{{localize('text_invoice')}}{{localize('text_of_contract')}} [[dataForSelect.nameContract]]</div>
     <div class="flex searchInput ">
        <!-- <div class="horizontal end-justified layout">
          <div class="labelSearch">Invoice No.</div>{{searchInput}}
@@ -51,11 +51,11 @@
             <tr>
               <th></th>
               <!--<th>ชื่อการทำสัญญา</th>-->
-              <th>งวดการส่งมอบ</th>
-              <th>เลขที่ใบแจ้งหนี้</th>
-              <th>Port of Delivery </th>
-              <th>Port of Destination </th>
-              <th style="width:3%">Print</th>
+              <th>{{localize('label_shm_no')}}</th>
+              <th>{{localize('text_invoice')}}</th>
+              <th>{{localize('label_place_of_delivery')}} </th>
+              <th>{{localize('label_port_of_destination')}}</th>
+              <th style="width:10%">{{localize('label_send_report')}}</th>
             </tr>
 
           </thead>
@@ -75,7 +75,7 @@
                    <td data="[[item]]" on-tap="getInvoiceDetail">[[item.dest_port_name]]</td>
                    <td>
                      <paper-icon-button id="printShipment" data="[[item]]" class="crud" icon="print" raised on-tap="getInvoiceid"  hidden="[[!data.shm_status]]"></paper-icon-button>
-                     <paper-tooltip for="printShipment" offset="0">Print Shipment</paper-tooltip>
+                     <paper-tooltip for="printShipment" offset="0">{{localize('label_send_report')}}</paper-tooltip>
                    </td>
                   </tr>
                 </template>
@@ -87,31 +87,32 @@
                   <td></td> -->
                   <td colspan="6">
                     <div class="horizontal end-justified layout btnMoney">
-                     <paper-button class="gl-btn-success" raised on-tap="payMoney">ได้รับเงิน</paper-button>
+                     <paper-button class="gl-btn-success" raised on-tap="payMoney">{{localize('btn_money_receiver')}}</paper-button>
                   </div>
                 </td>
                 </tr>
           </template>
 
-
         <!-- </template> -->
         <template is="dom-if" if="[[_isHave(data)]]">
             <tr>
-              <td colspan="6" style="text-align:center">  ไม่มีข้อมูล</td>
+              <td colspan="6" style="text-align:center">  {{localize('text_no_data')}}</td>
             </tr>
         </template>
          </tbody>
       </table>
       </div>
       <div class="worrne">
-        *กรุณาติ้กเครื่องหมายถูกที่งวดเดียวกัน
+        {{localize('text_check_true')}}
       </div>
   </template>
   <script>
     Polymer({
       is: "list-of-invoice",
       behaviors: [
-          g2gCongtroller
+          g2gCongtroller,
+          nylonBehavior,
+          nylonLocalizeBehavior
       ],
       properties: {
         data: {
@@ -122,12 +123,19 @@
           value:''
         }
       },
-      behaviors: [
-          nylonBehavior,
-          nylonLocalizeBehavior
-      ],
       created:function(){
           this.nylonLocalizeImport('/i18n-page1.json');
+      },
+      _isHave: function (data) {
+        if ((typeof data == 'object') && (data !== null)) {
+          if (data.length < 1) {
+            return true;
+          } else {
+            return false
+          }
+        } else {
+          return true
+        }
       },
       // observers:[
       //   '_cleanCheckBox(data.*)'

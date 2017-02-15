@@ -26,10 +26,10 @@
     }
   </style>
   <template>
-    <div class="title">รวมใบตราส่งสินค้าทางทะเลของสัญญา [[dataForSelect.nameContract]]</div>
+    <div class="title">{{localize('text_page_total')}}{{localize('text_bill_of_lading')}}{{localize('text_of_contract')}} [[dataForSelect.nameContract]]</div>
     <div class="flex searchInput ">
        <div class="horizontal end-justified layout">
-         <div class="labelSearch">Lot No.</div>{{_searchInArray(searchInput)}}
+         <div class="labelSearch">{{localize('label_lot_no')}}</div>{{_searchInArray(searchInput)}}
          <paper-input label=" " no-label-float value="{{searchInput}}"></paper-input>
          <paper-icon-button icon="search"></paper-icon-button>
          </paper-input>
@@ -41,11 +41,11 @@
           <thead class="table-head">
             <tr>
               <!-- <th>ชื่อการทำสัญญา</th> -->
-              <th>งวดการส่งมอบ</th>
-              <th>B/L No.</th>
-              <th>Port of Delivery </th>
-              <th>Port of Destination </th>
-              <th>Lot </th>
+              <th>{{localize('label_shm_no')}}</th>
+              <th>{{localize('label_bill_of_lading')}}</th>
+              <th>{{localize('label_place_of_delivery')}} </th>
+              <th>{{localize('label_port_of_destination')}}</th>
+              <th>{{localize('label_lot_no')}}</th>
             </tr>
           </thead>
           <tbody class="table-body">
@@ -65,7 +65,7 @@
               <!-- //[[_isHave(newData)]]// -->
               <template is="dom-if" if="[[_isHave(newData)]]">
                   <tr >
-                    <td colspan="6" style="text-align:center">  ไม่มีข้อมูล</td>
+                    <td colspan="6" style="text-align:center">  {{localize('text_no_data')}}</td>
                   </tr>
               </template>
          </tbody>

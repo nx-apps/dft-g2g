@@ -8,6 +8,8 @@
 <link rel="import" href="payment/component/list-of-fee.html">
 <link rel="import" href="payment/component/list-of-cheque.html">
 <link rel="import" href="payment/component/list-of-payments.html">
+<link rel="import" href="../../nylon-behavior.html">
+<link rel="import" href="../components/icon-button-management.html">
 <!-- <link rel="import" href="payment/component/commercial-invoice.html"> -->
 <!-- <link rel="import" href="payment/component/fee-exports.html"> -->
 <!-- <link rel="import" href="payment/component/payment-export.html"> -->
@@ -19,19 +21,19 @@
       --paper-fab-background: var(--paper-light-blue-500);
       --paper-fab-keyboard-focus-background: var(--paper-light-blue-900);
     }
-    
+
     * {
       font-family: 'CSChatThaiUI', sans-serif;
       -webkit-font-smoothing: antialiased;
     }
-    
+
     paper-fab {
       position: fixed;
       right: 16px;
       bottom: 16px;
       color: var(--gl-white-color);
     }
-    
+
     paper-material {
       margin: 10px;
       background-color: var(--gl-white-color);
@@ -97,7 +99,8 @@
       behaviors: [
         g2gModelBehavior,
         g2gCongtroller,
-        nylonBehavior
+        nylonBehavior,
+        nylonLocalizeBehavior
       ],
       properties: {
         // dataForSelect:{
@@ -155,6 +158,9 @@
         'flipDrawer': '_flipDrawer',
         'close-drawer': '_flipDrawerClose'
       },
+      created:function(){
+          this.nylonLocalizeImport('/i18n-page1.json');
+      },
       ready: function () {
         let contract_id = this._getUrl();
         this._getBlList(contract_id);
@@ -163,13 +169,13 @@
         this._getChequeList(contract_id);
         this._getPaymentsList(contract_id);
       },
-      // nylonPageActive:function() {
-      //   // console.log(111);
-      //   let shmId = this._getUrl();
-      //   this._getBlList(shmId);
-      //   this._getInvoiceList(shmId);
-      //   this._getFeeList(shmId);
-      // },
+      nylonPageActive:function() {
+        console.log(111);
+        // let shmId = this._getUrl();
+        // this._getBlList(shmId);
+        // this._getInvoiceList(shmId);
+        // this._getFeeList(shmId);
+      },
       _getCookie: function (name) {
         var value = "; " + document.cookie;
         var parts = value.split("; " + name + "=");
@@ -178,7 +184,7 @@
       _getUrl: function () {
         this.set('dataForSelect.nameContract', this._getCookie("contractName"));
         this.set('dataForSelect.contract_id', this._getCookie("contract_id"));
-        return this._getCookie("contract_id");  
+        return this._getCookie("contract_id");
       },
       _getBlListFire: function (e) {
         this._getBlList(e.detail.detail);

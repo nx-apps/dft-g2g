@@ -26,7 +26,7 @@
     }
   </style>
   <template>
-    <div class="title">ใส่เลขที่เช็คของสัญญา [[dataForSelect.nameContract]]</div>
+    <div class="title">{{localize('text_page_total')}}{{localize('text_cheque_no')}}{{localize('text_of_contract')}} [[dataForSelect.nameContract]]</div>
     <div class="flex searchInput ">
        <div class="horizontal end-justified layout">
          <div class="labelSearch">รอบการจ่ายเงิน.</div>{{_searchInArray(searchInput)}}
@@ -41,9 +41,9 @@
     <table class="gl-table-default">
           <thead class="table-head">
             <tr>
-              <th>รอบการส่งมอบ</th>
+              <th>{{localize('label_shm_no')}}</th>
               <!-- <th>งวดการส่งมอบ</th> -->
-              <th>รอบการจ่าย</th>
+              <th>{{localize('text_fee_no')}}</th>
               <!-- <th>ชื่อรอบการจ่ายเงิน</th> -->
             </tr>
           </thead>
@@ -61,7 +61,7 @@
               </template>
               <template is="dom-if" if="[[_isHave(newData)]]">
                   <tr >
-                    <td colspan="5" style="text-align:center">  ไม่มีข้อมูล</td>
+                    <td colspan="5" style="text-align:center">  {{localize('text_no_data')}}</td>
                   </tr>
               </template>
             <!-- </template> -->
