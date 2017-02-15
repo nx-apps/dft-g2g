@@ -218,6 +218,8 @@
       behaviors: [
           g2gModelBehavior,
           g2gCongtroller,
+          nylonBehavior,
+          nylonLocalizeBehavior
       ],
       properties: {
         dataForSelect:{
@@ -245,6 +247,9 @@
         '_changeDataContract(data.contract_date)',
         '_getBuyer(dataForSelect.buyer)',
       ],
+      created:function(){
+          this.nylonLocalizeImport('/i18n-page1.json');
+      },
       attached: function() {
         this._typeRiceContract();
       },

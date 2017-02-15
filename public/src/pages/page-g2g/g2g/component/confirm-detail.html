@@ -257,7 +257,9 @@
       is: "confirm-detail",
       behaviors: [
           g2gModelBehavior,
-          g2gCongtroller
+          g2gCongtroller,
+          nylonBehavior,
+          nylonLocalizeBehavior
       ],
       properties: {
         dataForSelect:{
@@ -275,6 +277,9 @@
         '_incotermsConfirm(data.*)',
         '_isHaveForUse(data.cl_type_rice,dataForSelect.contract_type_rice,data.cl_type_rice.*)'
       ],
+      created:function(){
+          this.nylonLocalizeImport('/i18n-page1.json');
+      },
       // attached: function() {
       //   this._typeRiceConfirm();
       //   this._typePackageConfirm();

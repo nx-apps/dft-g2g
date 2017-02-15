@@ -52,8 +52,13 @@
     Polymer({
       is: "fee-management-list",
       behaviors: [
-          g2gCongtroller
+          g2gCongtroller,
+          nylonBehavior,
+          nylonLocalizeBehavior
       ],
+      created:function(){
+          this.nylonLocalizeImport('/i18n-page1.json');
+      },
       getFeeMana:function (e) {
         console.log(e.currentTarget.data);
         this.fire('_get-fee-mana',{data:e.currentTarget.data});

@@ -124,6 +124,13 @@
         observers:[
           'check(totalInvoice.*)'
         ],
+        behaviors: [
+            nylonBehavior,
+            nylonLocalizeBehavior
+        ],
+        created:function(){
+            this.nylonLocalizeImport('/i18n-page1.json');
+        },
         check:function (totalInvoice) {
           // console.log('totalInvoice =>',this.totalInvoice);
           var result=0;

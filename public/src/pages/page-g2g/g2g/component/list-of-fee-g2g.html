@@ -83,7 +83,9 @@
       ],
       behaviors: [
           g2gCongtroller,
-          g2gModelBehavior
+          g2gModelBehavior,
+          nylonBehavior,
+          nylonLocalizeBehavior
       ],
       listeners:{
         'page-change':'_pageChange',
@@ -91,6 +93,7 @@
         'get-new-fee-list':'fdff',
         'get-new-fee-list-detail':'_getFeeDetail',
       },
+
       fdff:function (e) {
         this.fire('toast',{status:'load'});
         console.log(e.detail.data);
@@ -107,6 +110,9 @@
           type:Object,
           value:{dataSelected:'',fee:''}
         }
+      },
+      created:function(){
+          this.nylonLocalizeImport('/i18n-page1.json');
       },
       initDataFee:function (data) {
         // console.log(data);

@@ -72,12 +72,17 @@
         'initDataFee(data)'
       ],
       behaviors: [
-          g2gCongtroller
+          g2gCongtroller,
+          nylonBehavior,
+          nylonLocalizeBehavior
       ],
       properties: {
         newData:{
           type:Object
         }
+      },
+      created:function(){
+          this.nylonLocalizeImport('/i18n-page1.json');
       },
       initDataFee:function (data) {
         // console.log(data);

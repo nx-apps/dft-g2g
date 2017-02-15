@@ -132,7 +132,9 @@
       behaviors: [
                 // gl.behavior.core,
                 // gl.behavior.locales,
-                FormatNumberBehavior
+                FormatNumberBehavior,
+                nylonBehavior,
+                nylonLocalizeBehavior
             ],
       properties: {
         data:{
@@ -154,6 +156,9 @@
           type:Array,
           value:['#5bc0de','#5cb85c']
         }
+      },
+      created:function(){
+          this.nylonLocalizeImport('/i18n-page1.json');
       },
       attached: function() {
         // setInterval(()=>{

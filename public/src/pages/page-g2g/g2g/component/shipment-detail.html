@@ -89,11 +89,11 @@
             <!-- <paper-tooltip for="printShipment" offset="0">Print Shipment</paper-tooltip> -->
             <!-- <gl-grid-row width="{{getWidth}}"> -->
              <!-- <gl-grid-col width="[[getWidth]]" grid="[[500,4],[700,4]]"> -->
-               <gl-combo-box class="required" required always-float-label label="รายงาน" placeholder="รายงาน" value="{{printReport.typeReport}}"  item-label-path="report_name"
+               <gl-combo-box always-float-label label="รายงาน" placeholder="รายงาน" value="{{printReport.typeReport}}"  item-label-path="report_name"
                   item-value-path="report_name_id" items="{{report.report_name}}"></gl-combo-box>
              <!-- </gl-grid-col> -->&nbsp;
              <!-- <gl-grid-col width="[[getWidth]]" grid="[[500,4],[700,4]]"> -->
-               <gl-combo-box class="required" required always-float-label label="รูปแบบ" placeholder="รูปแบบ" value="{{printReport.typeFile}}"  item-label-path="report_type"
+               <gl-combo-box always-float-label label="รูปแบบ" placeholder="รูปแบบ" value="{{printReport.typeFile}}"  item-label-path="report_type"
                   item-value-path="report_type_id" items="{{report.report_type}}"></gl-combo-box>
               <div class="icon_print">
                 <paper-icon-button id="printShipment" class="crud" icon="print" raised on-tap="printShipment"  hidden="[[!data.shm_status]]"></paper-icon-button>
@@ -288,7 +288,9 @@
       behaviors: [
           g2gCongtroller,
           g2gModelBehavior,
-          FormatNumberBehavior
+          FormatNumberBehavior,
+          nylonBehavior,
+          nylonLocalizeBehavior
       ],
       observers:[
         '_getConfirm(confirmLetter)',
@@ -357,6 +359,9 @@
           }
         }
 
+      },
+      created:function(){
+          this.nylonLocalizeImport('/i18n-page1.json');
       },
       _initDataForSelectCl:function (data) {
         // console.log(this.data.cl_id);

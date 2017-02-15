@@ -149,6 +149,13 @@
           ]
         }
       },
+      behaviors: [
+          nylonBehavior,
+          nylonLocalizeBehavior
+      ],
+      created:function(){
+          this.nylonLocalizeImport('/i18n-page1.json');
+      },
       changestep:function (e) {
         var count = Polymer.dom(this.root).querySelectorAll('.flex').length;
 

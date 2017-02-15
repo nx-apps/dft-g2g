@@ -83,7 +83,12 @@
       behaviors: [
           g2gModelBehavior,
           g2gCongtroller,
+          nylonBehavior,
+          nylonLocalizeBehavior
       ],
+      created:function(){
+          this.nylonLocalizeImport('/i18n-page1.json');
+      },
       updateCheque:function (e) {
         // console.log(1111);
         let dataOld = e.currentTarget.data;

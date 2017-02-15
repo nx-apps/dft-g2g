@@ -23,7 +23,12 @@
   <script>
     Polymer({
       is: "chart-bar-g2g",
-      behaviors:[chartControllerBehavior],
+      behaviors:[chartControllerBehavior,
+        nylonBehavior,
+        nylonLocalizeBehavior],
+      created:function(){
+          this.nylonLocalizeImport('/i18n-page1.json');
+      },
       attached: function() {
         // this.chartBar();
       },

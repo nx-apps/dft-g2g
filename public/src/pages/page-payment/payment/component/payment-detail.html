@@ -158,8 +158,13 @@
       behaviors: [
           g2gModelBehavior,
           g2gCongtroller,
-          FormatNumberBehavior
+          FormatNumberBehavior,
+          nylonBehavior,
+          nylonLocalizeBehavior
       ],
+      created:function(){
+          this.nylonLocalizeImport('/i18n-page1.json');
+      },
       toggle: function() {
         this.$.collapse.toggle();
       },

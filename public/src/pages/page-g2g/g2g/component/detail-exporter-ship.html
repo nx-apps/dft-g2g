@@ -268,7 +268,9 @@
       behaviors: [
           g2gCongtroller,
           g2gModelBehavior,
-          g2gShipmentController
+          g2gShipmentController,
+          nylonBehavior,
+          nylonLocalizeBehavior
       ],
       properties: {
         data: {
@@ -294,6 +296,9 @@
         // '_checkpol(pol)',
         '_getShip(data.shipline_id,dataForSelect)'
       ],
+      created:function(){
+          this.nylonLocalizeImport('/i18n-page1.json');
+      },
       _getdata:function (pol) {
         // console.log('pol',pol);
       },

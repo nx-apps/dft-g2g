@@ -3,33 +3,33 @@
     :host {
       display: block;
     }
-    
+
     table.gl-table-default {
       width: 98%;
       border: 1px solid #ddd;
       margin-bottom: 15px;
     }
-    
+
     table.gl-table-default > thead.table-head > tr > th,
     table.gl-table-default > tbody.table-body > tr > td,
     table.gl-table-default > thead.table-head > tr > th {
       text-align: center;
     }
-    
+
     table.gl-table-default > tbody.table-body > tr > td:nth-child(3) {
       text-align: left;
     }
-    
+
     table.gl-table-default > tbody.table-body > tr > td:nth-child(1),
     table.gl-table-default > tbody.table-body > tr > td:nth-child(2) {
       width: 5%;
     }
-    
+
     table.gl-table-default > tbody.table-body > tr > td:nth-child(3),
     table.gl-table-default > tbody.table-body > tr > td:nth-child(4) {
       width: 20%;
     }
-    
+
     table.gl-table-default > tbody.table-body > tr > td:nth-child(5),
     table.gl-table-default > tfoot.table-foot > tr > td:nth-child(3) {
       text-align: right;
@@ -79,13 +79,18 @@
     Polymer({
       is: "payment-detail-by-rice",
       behaviors: [
-        FormatNumberBehavior
+        FormatNumberBehavior,
+        nylonBehavior,
+        nylonLocalizeBehavior
       ],
       properties: {
         data: {
           type: Object,
           value: {}
         }
+      },
+      created:function(){
+          this.nylonLocalizeImport('/i18n-page1.json');
       },
       calR2R: function () {
         // console.log(this.dataFake);

@@ -79,12 +79,17 @@
         'initDatabl(data)'
       ],
       behaviors: [
-          g2gCongtroller
+          g2gCongtroller,
+          nylonBehavior,
+          nylonLocalizeBehavior
       ],
       properties: {
         newData:{
           type:Object,
         }
+      },
+      created:function(){
+          this.nylonLocalizeImport('/i18n-page1.json');
       },
       initDatabl:function (data) {
         // console.log(data);

@@ -292,7 +292,9 @@
       behaviors: [
           g2gModelBehavior,
           g2gCongtroller,
-          FormatNumberBehavior
+          FormatNumberBehavior,
+          nylonBehavior,
+          nylonLocalizeBehavior
       ],
       properties: {
         data: {
@@ -323,6 +325,9 @@
         '_obCheckDataForWrite(data)',
         '_changeDataCommercial(data.invoice_date)'
       ],
+      created:function(){
+          this.nylonLocalizeImport('/i18n-page1.json');
+      },
       _getVessel:function (data) {
         if(typeof data !== 'undefined' && data !== 'undefined'){
           return data.map((e)=> e.ship_name).join(", ");

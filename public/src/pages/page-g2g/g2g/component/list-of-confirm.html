@@ -103,7 +103,9 @@ Polymer({
   is: "list-of-confirm",
   behaviors: [
       g2gCongtroller,
-      FormatNumberBehavior
+      FormatNumberBehavior,
+      nylonBehavior,
+      nylonLocalizeBehavior
   ],
   listeners:{
     'back-page-confirm':'_backPageConfirm',
@@ -128,6 +130,9 @@ Polymer({
     clId:{
       type:String,
     }
+  },
+  created:function(){
+      this.nylonLocalizeImport('/i18n-page1.json');
   },
   _insertRiceType:function (data) {
     //เพิ่มชนิดข้าวลงไป

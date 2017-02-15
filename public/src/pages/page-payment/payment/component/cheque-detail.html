@@ -34,7 +34,12 @@
       behaviors: [
           g2gModelBehavior,
           g2gCongtroller,
+          nylonBehavior,
+          nylonLocalizeBehavior
       ],
+      created:function(){
+          this.nylonLocalizeImport('/i18n-page1.json');
+      },
     });
   </script>
 </dom-module>

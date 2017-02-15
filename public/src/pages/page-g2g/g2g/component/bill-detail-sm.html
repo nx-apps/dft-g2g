@@ -197,7 +197,9 @@
       behaviors: [
           g2gCongtroller,
           g2gShipmentController,
-          g2gModelBehavior
+          g2gModelBehavior,
+          nylonBehavior,
+          nylonLocalizeBehavior
       ],
       properties: {
         data: {
@@ -219,6 +221,9 @@
         '_getPod(dataForSelect)',
         '_changeDataBl(data.etd_date)',
       ],
+      created:function(){
+          this.nylonLocalizeImport('/i18n-page1.json');
+      },
       _changeDataBl:function (dateUn) {
         this.getDateg2g(dateUn,(date)=>{
         //   console.log('date',date);

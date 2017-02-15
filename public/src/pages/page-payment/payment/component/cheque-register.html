@@ -64,9 +64,14 @@
       // observers:[
       //   'initDataFee(data)'
       // ],
-      // behaviors: [
-      //     g2gCongtroller
-      // ],
+      behaviors: [
+          g2gCongtroller,
+          nylonBehavior,
+          nylonLocalizeBehavior
+      ],
+      created:function(){
+          this.nylonLocalizeImport('/i18n-page1.json');
+      },
       // properties: {
       //   newData:{
       //     type:Object

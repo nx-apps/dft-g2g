@@ -93,7 +93,9 @@
       is: "list-of-bill-sm",
       behaviors: [
           g2gShipmentController,
-          g2gCongtroller
+          g2gCongtroller,
+          nylonBehavior,
+          nylonLocalizeBehavior
       ],
       properties: {
         dataSelected: {
@@ -103,6 +105,9 @@
       observers:[
         'check(data)'
       ],
+      created:function(){
+          this.nylonLocalizeImport('/i18n-page1.json');
+      },
       check:function (data) {
         console.log('data=> list-of-bill-sm',data);
       },

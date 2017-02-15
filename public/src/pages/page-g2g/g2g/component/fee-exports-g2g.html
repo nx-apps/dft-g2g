@@ -181,13 +181,18 @@
       },
       behaviors: [
           g2gModelBehavior,
-          g2gCongtroller
+          g2gCongtroller,
+          nylonBehavior,
+          nylonLocalizeBehavior
       ],
       observers:[
         '_invoicePage(data.invoice)',
         '_changeDataFee(data.fee_date_receipt)',
         '_getFeeNo(data.*)'
       ],
+      created:function(){
+          this.nylonLocalizeImport('/i18n-page1.json');
+      },
       _getFeeNo:function (data) {
         try {
           this._setFee(this.data.fee_id);

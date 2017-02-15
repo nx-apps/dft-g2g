@@ -143,13 +143,18 @@
       },
       behaviors: [
           g2gCongtroller,
-          g2gModelBehavior
+          g2gModelBehavior,
+          nylonBehavior,
+          nylonLocalizeBehavior
       ],
       observers:[
         '_averageFee(feeTotal,data)',
         '_oBcheckValue(data.invoice_detail.*)'
         // '_changeDataPayrf(invoiceDetail.invoice_date)'
       ],
+      created:function(){
+          this.nylonLocalizeImport('/i18n-page1.json');
+      },
       _oBcheckValue:function (data) {
         // console.log(data);
       },

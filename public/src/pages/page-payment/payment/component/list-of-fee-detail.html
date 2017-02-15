@@ -96,7 +96,9 @@ Polymer({
   behaviors: [
       g2gCongtroller,
       g2gModelBehavior,
-      FormatNumberBehavior
+      FormatNumberBehavior,
+      nylonBehavior,
+      nylonLocalizeBehavior
   ],
   listeners:{
     'back-page-fee-detail':'_backPageFeedetail',
@@ -114,6 +116,9 @@ Polymer({
     dataSelected: {
       type: Object
     },
+  },
+  created:function(){
+      this.nylonLocalizeImport('/i18n-page1.json');
   },
   _getFeeList:function (e) {
     this.read('./g2g/fee_detail/id/'+e.detail.detail,(data)=>{

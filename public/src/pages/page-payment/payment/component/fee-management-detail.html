@@ -58,8 +58,13 @@
     },
     behaviors: [
         g2gModelBehavior,
-        g2gCongtroller
+        g2gCongtroller,
+        nylonBehavior,
+        nylonLocalizeBehavior
     ],
+    created:function(){
+        this.nylonLocalizeImport('/i18n-page1.json');
+    },
     _checkFeeNoDup:function (fee_no) {
       let feeNo = this.dataForSelect.feeListinShm.filter((feeNo) => feeNo.fee_no == fee_no)
       return feeNo === undefined || feeNo.length == 0

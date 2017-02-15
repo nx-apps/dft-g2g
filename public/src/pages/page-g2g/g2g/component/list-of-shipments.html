@@ -87,7 +87,9 @@ Polymer({
   behaviors: [
       g2gCongtroller,
       g2gModelBehavior,
-      FormatNumberBehavior
+      FormatNumberBehavior,
+      nylonBehavior,
+      nylonLocalizeBehavior
   ],
   listeners:{
     'get-list-shipment-page':'_getListShipmentPage',
@@ -117,6 +119,9 @@ Polymer({
   observers:[
     '_getCml(data.contract_id)',
   ],
+  created:function(){
+      this.nylonLocalizeImport('/i18n-page1.json');
+  },
   createShipment:function () {
       this.pageSelected='cretaeShipment';
   },

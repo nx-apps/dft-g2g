@@ -90,12 +90,17 @@ Polymer({
   is: "list-of-fee-detail-g2g",
   behaviors: [
       g2gCongtroller,
-      FormatNumberBehavior
+      FormatNumberBehavior,
+      nylonBehavior,
+      nylonLocalizeBehavior
   ],
   properties: {
     dataSelected: {
       type: Object
     },
+  },
+  created:function(){
+      this.nylonLocalizeImport('/i18n-page1.json');
   },
   getFeeDetail:function (e) {
     // console.log(e.currentTarget.data.fee_det_id);
