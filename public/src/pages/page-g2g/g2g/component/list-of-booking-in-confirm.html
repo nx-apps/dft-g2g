@@ -1,0 +1,45 @@
+<dom-module id="list-of-booking-in-confirm">
+  <style include="iron-flex iron-flex-factors iron-flex-alignment gl-styles">
+    table.gl-table-default {
+      width: 100%;
+      border: 1px solid #ddd;
+      margin: 20px 0px 10px 0px;
+    }
+  </style>
+  <template>
+
+    <gl-form-panel>
+      <div class="horizontal end-justified layout">
+        <paper-button class="gl-btn-primary" raised>เพิ่ม CL</paper-button>
+      </div>
+      <table class="gl-table-default">
+        <thead class="table-head">
+          <tr>
+            <th>{{localize('label_order')}}</th>
+            <th>{{localize('label_quantity')}}</th>
+          </tr>
+        </thead>
+        <tbody class="table-body">
+          <tr>
+            <td></td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+    </gl-form-panel>
+
+  </template>
+  <script>
+    Polymer({
+      is: "list-of-booking-in-confirm",
+      behaviors: [
+          nylonBehavior,
+          nylonLocalizeBehavior
+      ],
+      created:function(){
+          this.nylonLocalizeImport('/i18n-page1.json');
+      }
+
+    });
+  </script>
+</dom-module>
