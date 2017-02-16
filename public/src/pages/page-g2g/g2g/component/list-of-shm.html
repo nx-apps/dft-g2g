@@ -1,0 +1,55 @@
+<link rel="import" href="shm-det-exporter.html">
+<link rel="import" href="list-of-shm-det.html">
+<dom-module id="list-of-shm">
+  <style include="iron-flex iron-flex-factors iron-flex-alignment gl-styles">
+    table.gl-table-default {
+      width: 100%;
+      border: 1px solid #ddd;
+      margin: 20px 0px 10px 0px;
+    }
+    table.gl-table-default > tbody.table-body > tr > td {
+      cursor: pointer;
+    }
+  </style>
+  <template>
+
+      <iron-pages selected="{{pageSelected}}" attr-for-selected="name">
+        <div name="list-of-shm-det">
+          <list-of-shm-det></list-of-shm-det>
+        </div>
+        <div name="list-of-shm-det-add">
+          <shm-det-exporter></shm-det-exporter>
+        </div>
+        <div name="shm-detail">
+          <shm-det-exporter></shm-det-exporter>
+        </div>
+      </iron-pages>
+
+  </template>
+  <script>
+    Polymer({
+      is: "list-of-shm",
+      behaviors: [
+          nylonBehavior,
+          nylonLocalizeBehavior
+      ],
+      properties: {
+        pageSelected: {
+          type: String,
+          value:'list-of-shm-det'
+        }
+      },
+      created:function(){
+          this.nylonLocalizeImport('/i18n-page1.json');
+      },
+      listeners:{
+        '_change-component-shm':'_changeComponentShm'
+      },
+      _changeComponentShm:function (data) {
+        // console.log(data.detail.detail);
+        this.set('pageSelected',data.detail.detail)
+      }
+
+    });
+  </script>
+</dom-module>

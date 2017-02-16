@@ -16,7 +16,7 @@
         </gl-grid-col>
       </gl-grid-row>
       <div class="horizontal center-justified layout">
-        <paper-button class="gl-btn-success" raised>Create</paper-button>
+        <paper-button class="gl-btn-success" raised on-tap="createBookingConfirm">Create</paper-button>
       </div>
     </gl-form-panel>
 
@@ -30,6 +30,10 @@
       ],
       created:function(){
           this.nylonLocalizeImport('/i18n-page1.json');
+      },
+      createBookingConfirm:function () {
+        console.log(11);
+          this.fire('_change-component-bl',{detail:'list-of-booking-in-confirm'})
       }
 
     });

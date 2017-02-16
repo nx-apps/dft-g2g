@@ -182,33 +182,13 @@
         "label_fee_note_detail":"FE = ค่าธรรมเนียมธนาคาร",
 
         "label_fee_note_avarate":"*สถานะการถัวเงิน ถ้ายืนยันแล้วจะดูได้อย่างเดียว",
-        "label_":"Contract",
-        "label_":"Contract",
-        "label_":"Contract",
-        "label_":"Contract",
-        "label_":"Contract",
-        "label_":"Contract",
-        "label_":"Contract",
-        "label_":"Contract",
-        "label_":"Contract",
-        "label_":"Contract",
-        "label_":"Contract",
-        "label_":"Contract",
-        "label_":"Contract",
-        "label_":"Contract",
-        "label_":"Contract",
-        "label_":"Contract",
-        "label_":"Contract",
-        "label_":"Contract",
-        "label_":"Contract",
 
-
-
-
-
-
-
-
+        "":"report",
+        "label_pnd_53":"ภงด.53",
+        "label_month":"เดือนที่",
+        "label_":"Contract",
+        "label_":"Contract",
+        "label_":"Contract",
 
         "btn_close":"ปิด",
         "btn_back_ward":"ย้อนกลับ",

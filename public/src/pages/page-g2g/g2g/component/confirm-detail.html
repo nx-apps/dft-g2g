@@ -400,7 +400,7 @@
                 el.map((el)=> {el.reset();el.value=''});
                 this._changeDataConfirm('undefined');
               }  else {
-                this.fire('toast',{status:'connectError',text:'ปริมาณข้าวเกินจำนวนที่คงเหลือในสัญญา', //คำสั่งสำหรับเปิด toast error
+                this.fire('toast',{status:'connectError',text:'คุณใส่ปริมาณข้าวที่คงเหลือเกินจำนวน '+this.dataForSelect.contract_quantity_confirm_balance+' ตัน', //คำสั่งสำหรับเปิด toast error
                 callback:function(){
                 }})
               }
@@ -422,7 +422,7 @@
                   data:data // ข้อมูลที่ส่งไป เช่น id ที่จะใช้ลบข้อมูล ใน db
               })
             }  else {
-              this.fire('toast',{status:'connectError',text:'ปริมาณข้าวเกินจำนวนที่คงเหลือในสัญญา', //คำสั่งสำหรับเปิด toast error
+              this.fire('toast',{status:'connectError',text:'คุณใส่ปริมาณข้าวที่คงเหลือเกินจำนวน '+this.dataForSelect.contract_quantity_confirm_balance+' ตัน', //คำสั่งสำหรับเปิด toast error
               callback:function(){
               }})
             }
@@ -459,7 +459,7 @@
                data:data // ข้อมูลที่ส่งไป เช่น id ที่จะใช้ลบข้อมูล ใน db
            })
          }  else {
-           this.fire('toast',{status:'connectError',text:'ปริมาณข้าวเกินจำนวนที่คงเหลือในสัญญา', //คำสั่งสำหรับเปิด toast error
+           this.fire('toast',{status:'connectError',text:'คุณใส่ปริมาณข้าวที่คงเหลือเกินจำนวน '+this.dataForSelect.contract_quantity_confirm_balance+' ตัน', //คำสั่งสำหรับเปิด toast error
            callback:function(){
            }})
          }

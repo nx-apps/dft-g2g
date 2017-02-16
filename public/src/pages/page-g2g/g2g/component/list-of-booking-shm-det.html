@@ -1,0 +1,124 @@
+<dom-module id="list-of-booking-shm-det">
+  <style include="iron-flex iron-flex-factors iron-flex-alignment gl-styles">
+    :host {
+      display: block;
+    }
+    .textinPut {
+      margin-top: 30px;
+    }
+    table {
+      border: 0.16px solid #F1F1F1;
+      margin-bottom: 16px;
+    }
+    table.gl-table-default > thead.table-head > tr > th,
+    table.gl-table-default > tbody.table-body > tr > td {
+      text-align: center;
+    }
+    table.gl-table-default > tbody.table-body > tr > td {
+      cursor: pointer;
+    }
+    table.gl-table-default > thead.table-head > tr > th:nth-child(3),
+    table.gl-table-default > tbody.table-body > tr > td:nth-child(3){
+      width: 33%;
+      text-align: right;
+    }
+  </style>
+  <template>
+    <gl-form-panel set-padding="10px 20px 10px 20px" set-border="1px">
+      <gl-form-panel-head label="" set-padding="10px" set-border="1px">
+          <div class="addconfirm horizontal end-justified layout">
+            <paper-button raised class="gl-btn-primary" on-tap="createBooking">{{localize('btn_add_booking')}}</paper-button>
+          </div>
+            </gl-form-panel-head>
+            <br>
+            <gl-grid-row width="{{getWidth}}">
+              <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
+                <div class="textinPut">
+                  {{localize('text_list_booking')}}
+                </div>
+              </gl-grid-col>
+              <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,5]]">
+                  <gl-form-input disabled label="confirm_letter" value="1"></gl-form-input>
+              </gl-grid-col>
+            </gl-grid-row>
+
+          <table class="gl-table-default">
+            <thead class="table-head">
+              <tr>
+                <th>{{localize('label_booking_no')}}</th>
+                <th>{{localize('label_lot_no')}}</th>
+                <th>{{localize('label_quantity')}}</th>
+              </tr>
+            </thead>
+            <tbody class="table-body">
+                <template is="dom-repeat" items="[[data]]">
+                  <tr on-tap="getShmDetail" data="[[item]]">
+                    <td>  [[item.cl_no]] </td>
+                    <td> [[item.lot_no]]
+                      <!-- [[formatNumberNoZero(item.cl_quantity_total)]]  -->
+                    </td>
+                    <td>
+                      [[item.quantity]]
+                    </td>
+                  </tr>
+                </template>
+              <template is="dom-if" if="[[_isHave(data)]]">
+                  <tr >
+                    <td colspan="3">  {{localize('text_no_data')}}</td>
+                  </tr>
+              </template>
+            </tbody>
+          </table>
+          <!-- </gl-form-panel-body> -->
+          <gl-form-panel-footer set-padding="10px 20px 0px 20px">
+            <paper-button class="gl-btn-default" raised on-tap="backWard2BookingInConfirm">
+                  {{localize('btn_back_ward')}}</paper-button>
+        </gl-form-panel-footer>
+      </gl-form-panel>
+  </template>
+  <script>
+    Polymer({
+      is: "list-of-booking-shm-det",
+      behaviors: [
+          g2gCongtroller,
+          FormatNumberBehavior,
+          nylonBehavior,
+          nylonLocalizeBehavior
+      ],
+      properties: {
+        data: {
+          type: Object,
+          value:[
+            {
+              cl_no:'1',
+              lot_no:'12',
+              quantity:50000
+            },
+            {
+              cl_no:'2',
+              lot_no:'12',
+              quantity:25000
+            },
+            {
+              cl_no:'3',
+              lot_no:'15',
+              quantity:75000
+            }
+          ]
+        }
+      },
+      created:function(){
+          this.nylonLocalizeImport('/i18n-page1.json');
+      },
+      createBooking:function () {
+        this.fire('_change-component-book',{detail:'list-of-booking-add'})
+      },
+      getShmDetail:function () {
+        this.fire('_change-component-book',{detail:'list-of-booking-shm-det'})
+      },
+      backWard2BookingInConfirm:function () {
+        this.fire('_change-component-bl',{detail:'list-of-booking-in-confirm'})
+      }
+    });
+  </script>
+</dom-module>

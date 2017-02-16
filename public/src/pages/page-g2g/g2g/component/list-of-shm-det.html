@@ -1,4 +1,4 @@
-<dom-module id="list-of-booking-in-confirm">
+<dom-module id="list-of-shm-det">
   <style include="iron-flex iron-flex-factors iron-flex-alignment gl-styles">
     table.gl-table-default {
       width: 100%;
@@ -13,7 +13,7 @@
 
     <gl-form-panel>
       <div class="horizontal end-justified layout">
-        <paper-button class="gl-btn-primary" raised on-tap="createBookinConfirm">เพิ่ม CL</paper-button>
+        <paper-button class="gl-btn-primary" raised on-tap="createShmDet">เพิ่มExport</paper-button>
       </div>
       <table class="gl-table-default">
         <thead class="table-head">
@@ -23,18 +23,23 @@
           </tr>
         </thead>
         <tbody class="table-body">
-          <tr on-tap="bookingDetail">
+          <tr on-tap="shmDetail">
             <td>111</td>
             <td>111</td>
           </tr>
         </tbody>
       </table>
+      <gl-form-panel-footer set-padding="10px 20px 0px 20px">
+        <paper-button class="gl-btn-default" raised on-tap="backWard2Booking">
+              {{localize('btn_back_ward')}}</paper-button>
+    </gl-form-panel-footer>
     </gl-form-panel>
+
 
   </template>
   <script>
     Polymer({
-      is: "list-of-booking-in-confirm",
+      is: "list-of-shm-det",
       behaviors: [
           nylonBehavior,
           nylonLocalizeBehavior
@@ -42,11 +47,14 @@
       created:function(){
           this.nylonLocalizeImport('/i18n-page1.json');
       },
-      createBookinConfirm:function () {
-        this.fire('_change-component-bl',{detail:'list-of-booking-in-confirm-add'})
+      createShmDet:function () {
+        this.fire('_change-component-shm',{detail:'list-of-shm-det-add'})
       },
-      bookingDetail:function () {
-        this.fire('_change-component-bl',{detail:'list-of-booking-shm-det'})
+      shmDetail:function () {
+        this.fire('_change-component-shm',{detail:'shm-detail'})
+      },
+      backWard2Booking:function () {
+        this.fire('_change-component-book',{detail:'list-of-booking'})
       }
 
     });

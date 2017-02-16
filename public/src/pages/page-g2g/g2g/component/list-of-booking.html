@@ -1,0 +1,41 @@
+<link rel="import" href="list-of-booking-in-confirm.html">
+<link rel="import" href="list-of-booking-in-confirm-add.html">
+<link rel="import" href="list-of-booking-shm-det.html">
+<link rel="import" href="list-of-booking-detail.html">
+<dom-module id="list-of-booking">
+
+  <template>
+    <iron-pages selected="{{pageSelected}}" attr-for-selected="name">
+      <div name="list-of-booking-in-confirm">
+        <list-of-booking-in-confirm></list-of-booking-in-confirm>
+      </div>
+      <div name="list-of-booking-in-confirm-add">
+        <list-of-booking-in-confirm-add></list-of-booking-in-confirm-add>
+      </div>
+      <div name="list-of-booking-shm-det">
+        <list-of-booking-detail></list-of-booking-detail>
+        <!-- <list-of-booking-shm-det></list-of-booking-shm-det> -->
+      </div>
+    </iron-pages>
+
+  </template>
+  <script>
+    Polymer({
+      is: "list-of-booking",
+      properties: {
+        pageSelected: {
+          type: String,
+          value:'list-of-booking-in-confirm'
+        }
+      },
+      listeners:{
+        '_change-component-bl':'_changeComponentBl'
+      },
+      _changeComponentBl:function (data) {
+        console.log(data.detail.detail);
+        this.set('pageSelected',data.detail.detail)
+      }
+
+    });
+  </script>
+</dom-module>
