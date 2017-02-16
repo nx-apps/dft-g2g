@@ -50,12 +50,12 @@
         <table class="gl-table-default">
           <thead class="table-head">
             <tr>
-              <th>ลำดับที่</th>
-              <th>ชื่อสัญญาย่อย</th>
-              <th>จำนวนใบกำกับสินค้า</th>
-              <th>มูลค่า</th>
-              <th>วันที่รับเช็ค</th>
-              <th>สถานะ</th>
+              <th>{{localize('label_order')}}</th>
+              <th>{{localize('text_invoice_no')}}</th>
+              <th>{{localize('text_invoice_no_count')}}</th>
+              <th>{{localize('text_amount')}}</th>
+              <th>{{localize('label_cheque_date')}}</th>
+              <th>{{localize('label_status')}}</th>
             </tr>
           </thead>
           <tbody class="table-body">
@@ -73,7 +73,7 @@
             </template>
             <template is="dom-if" if="[[_isHave(data.fee_detail)]]">
                 <tr>
-                  <td colspan="6">  ไม่มีข้อมูล</td>
+                  <td colspan="6">  {{localize('text_no_data')}}</td>
                 </tr>
             </template>
           </tbody>

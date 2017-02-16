@@ -44,37 +44,38 @@
       <gl-form-panel-body label="" set-padding="10px" set-border="1px">
 
       <div class="header flex-center-justified">
-       <gl-form-label-input label="" class="inputHeader" value="รายละเอียดค่าข้าวและค่าใช้จ่ายส่งมอบ" ></gl-form-label-input >
+       <gl-form-label-input label="" class="inputHeader" value="{{localize('label_rice_detail_and_payout')}}" ></gl-form-label-input >
      </div>
      <div class="container">
        <gl-grid-row width="{{getWidth}}">
          <gl-grid-col width="[[getWidth]]" grid="[[300,6],[500,2]]">
            <!-- [[changeString2Num(data.*,'fee_no')]] -->
-           <gl-form-input class="required" required allowed-pattern="[0-9||,||.]" format-number="on" disabled label="ครั้งที่" value="{{data.fee_no}}" always-float-label></gl-form-input>
+           <gl-form-input class="required" required allowed-pattern="[0-9||,||.]" format-number="on" disabled label="{{localize('label_fee_no')}}" value="{{data.fee_no}}" always-float-label></gl-form-input>
          </gl-grid-col>
+         <!-- <gl-grid-col width="[[getWidth]]" grid="[[300,6],[500,2]]">
+           <gl-grid-col width="[[getWidth]]" grid="[[300,6],[500,3]]">
+            <gl-combo-box class="required" required disabled="[[isInputDisabled]]"  placeholder="{{localize('label_fee_no')}}" label="{{localize('label_fee_no')}}"
+               item-label-path="fee_no"   item-value-path="fee_id"  value="{{data.fee_id}}" items="[[_filterFee(dataForSelect.feeListinShm)]]">
+          </gl-grid-col>
+         </gl-grid-col> -->
          <gl-grid-col width="[[getWidth]]" grid="[[300,6],[500,3]]">
-           <gl-combo-box class="required" required disabled error-message="กรุณาชื่อรอบการจ่ายเงิน" placeholder="เลือกชื่อรอบการจ่ายเงิน" label="ชื่อรอบการจ่ายเงิน"
-             item-label-path="fee_no"   item-value-path="fee_id" value="{{data.fee_id}}" items="[[dataForSelect.feeListinShm]]" on-value-changed="_getFeeName">
-           </gl-combo-box >
-         </gl-grid-col>
-         <gl-grid-col width="[[getWidth]]" grid="[[300,6],[500,3]]">
-           <vaadin-date-picker class="required" required  disabled label="วันที่ได้รับเงิน" value="{{data.fee_date_receipt}}" always-float-label></vaadin-date-picker>
+           <vaadin-date-picker class="required" required  disabled label="{{localize('label_money_received_date')}}" value="{{data.fee_date_receipt}}" always-float-label></vaadin-date-picker>
          </gl-grid-col>
        </gl-grid-row>
      </div>
      <div class="container">
        <gl-grid-row>
          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-           <gl-form-input disabled format-number="on" label="จำนวนเงินที่ได้รับทั้งหมด (USD)" value="{{data.amount_usd}}" always-float-label></gl-form-input>
+           <gl-form-input disabled format-number="on" label="{{localize('label_money_received_usd')}}" value="{{data.amount_usd}}" always-float-label></gl-form-input>
          </gl-grid-col>
          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
            [[changeString2Num(data.*,'fee_internal')]]
-           <gl-form-input class="required" required  label="ค่า FE ต่างประเทศ (USD)" disabled allowed-pattern="[0-9||,||.]" format-number="on"  value="{{data.fee_internal}}" always-float-label></gl-form-input>
+           <gl-form-input class="required" required  label="{{localize('label_fee_usd')}}" disabled allowed-pattern="[0-9||,||.]" format-number="on"  value="{{data.fee_internal}}" always-float-label></gl-form-input>
          </gl-grid-col>
          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
             [[changeString2Num(data.*,'balanceLessFees')]]
            {{_balanceLessFees(data.amount_usd,data.fee_internal)}}
-           <gl-form-input disabled label="คงเหลือ (USD)" allowed-pattern="[0-9||,||.]" format-number="on" value="{{data.balanceLessFees}}" placeholder="0.00"></gl-form-input>
+           <gl-form-input disabled label="{{localize('label_total_usd')}}" allowed-pattern="[0-9||,||.]" format-number="on" value="{{data.balanceLessFees}}" placeholder="0.00"></gl-form-input>
          </gl-grid-col>
        </gl-grid-row>
      </div>
@@ -82,16 +83,16 @@
        <gl-grid-row>
          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
            [[changeString2Num(data.*,'rate_tt')]]
-           <gl-form-input class="required" required label="อัตราแลกเปลี่ยน T/T" disabled allowed-pattern="[0-9||,||.]" format-number="on" value="{{data.rate_tt}}" ></gl-form-input>
+           <gl-form-input class="required" required label="{{localize('label_exchange_rate')}} [[data.payterm]]" disabled allowed-pattern="[0-9||,||.]" format-number="on" value="{{data.rate_tt}}" ></gl-form-input>
          </gl-grid-col>
          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
            [[changeString2Num(data.*,'rate_bank')]]
-           <gl-form-input class="required" required label="อัตราแลกเปลี่ยนธนาคารเสนอ" disabled allowed-pattern="[0-9||,||.]" format-number="on" value="{{data.rate_bank}}" ></gl-form-input>
+           <gl-form-input class="required" required label="{{localize('label_exchange_rate_bank')}}" disabled allowed-pattern="[0-9||,||.]" format-number="on" value="{{data.rate_bank}}" ></gl-form-input>
          </gl-grid-col>
          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
            [[changeString2Num(data.*,'balanceChangeBath')]]
            {{_balanceChangeBath(data.rate_bank,data.balanceLessFees)}}
-           <gl-form-input disabled label="จำนวนเงินหลังการเปลี่ยนอัตราแลกเปลี่ยน (บาท)" allowed-pattern="[0-9||,||.]" format-number="on" value="[[data.balanceChangeBath]]" placeholder="0.00"></gl-form-input>
+           <gl-form-input disabled label="{{localize('label_amount_after_exchange_rate')}}" allowed-pattern="[0-9||,||.]" format-number="on" value="[[data.balanceChangeBath]]" placeholder="0.00"></gl-form-input>
          </gl-grid-col>
        </gl-grid-row>
      </div>
@@ -99,16 +100,16 @@
        <gl-grid-row>
          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
            [[changeString2Num(data.*,'fee_foreign')]]
-           <gl-form-input class="required" required  disabled allowed-pattern="[0-9||,||.]" format-number="on" label="ค่า FE ในประเทศ (บาท)" value="{{data.fee_foreign}}"  always-float-label></gl-form-input>
+           <gl-form-input class="required" required  disabled allowed-pattern="[0-9||,||.]" format-number="on" label="{{localize('label_fee_bath')}}" value="{{data.fee_foreign}}"  always-float-label></gl-form-input>
          </gl-grid-col>
          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
            [[changeString2Num(data.*,'fee_other')]]
-           <gl-form-input class="required" required  disabled allowed-pattern="[0-9||,||.]" format-number="on" label="ค่าใช้จ่ายอื่นๆ (บาท)" value="{{data.fee_other}}"  always-float-label></gl-form-input>
+           <gl-form-input class="required" required  disabled allowed-pattern="[0-9||,||.]" format-number="on" label="{{localize('label_other_expenses')}}" value="{{data.fee_other}}"  always-float-label></gl-form-input>
          </gl-grid-col>
          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
            {{_feTotal(data.fee_internal,data.fee_foreign,data.fee_other,data.rate_bank)}}
            [[changeString2Num(data.*,'feeTotalWithOutUsd')]]
-           <gl-form-input label="FEE/ ใช้จ่ายทั้งหมด (บาท)" readonly value="[[data.feeTotalWithOutUsd]]" allowed-pattern="[0-9||,||.]" format-number="on" placeholder="0.00" always-float-label></gl-form-input>
+           <gl-form-input label="{{localize('label_total_fee')}}" readonly value="[[data.feeTotalWithOutUsd]]" allowed-pattern="[0-9||,||.]" format-number="on" placeholder="0.00" always-float-label></gl-form-input>
          </gl-grid-col>
        </gl-grid-row>
      </div>
@@ -119,7 +120,7 @@
          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
            [[changeString2Num(data.*,'totalbath')]]
            [[_balanceBath(data.balanceChangeBath,data.feeTotalWithOutUsd)]]
-           <gl-form-input disabled label="จำนวนเงินที่ได้รับทั้งหมด (บาท)" value="[[data.totalbath]]" allowed-pattern="[0-9||,||.]" format-number="on" placeholder="0.00" always-float-label></gl-form-input>
+           <gl-form-input disabled label="{{localize('label_total_bath_expenses')}}" value="[[data.totalbath]]" allowed-pattern="[0-9||,||.]" format-number="on" placeholder="0.00" always-float-label></gl-form-input>
          </gl-grid-col>
        </gl-grid-row>
      </div>
@@ -138,9 +139,9 @@
          <fee-exports-sum-g2g total-invoice="[[data.invoice]]"></fee-exports-sum-g2g>
      </gl-form-panel>
      <div class="container">
-       หมายเหตุ
+       {{localize('label_fee_note')}}
        <ul style="list-style-type:none">
-         <li>FE = ค่าธรรมเนียมธนาคาร</li>
+         <li>{{localize('label_fee_note_detail')}}</li>
        </ul>
      </div>
 
@@ -153,7 +154,7 @@
                <template is="dom-if" if="[[_isViewing(isInputDisabled)]]">
                <paper-button raised on-tap="cancelFeeReturn" class="gl-btn-default" >{{localize('btn_back_ward')}}</paper-button>
                 <template is="dom-if" if="[[!data.fee_det_status]]">
-                 <paper-button raised on-tap="approvePayment" class="gl-btn-success" >ยืนยัน</paper-button>
+                 <paper-button raised on-tap="approvePayment" class="gl-btn-success" >{{localize('btn_confirm')}}</paper-button>
                </template>
                 </template>
                <template is="dom-if" if="[[!_isViewing(isInputDisabled)]]">

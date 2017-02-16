@@ -32,7 +32,7 @@
     <iron-pages selected="[[pageSelected]]" attr-for-selected="name">
       <div name="listOfFee">
         <gl-form-panel set-padding="10px 20px 10px 20px" set-border="1px">
-        <div class="title">รวมค่าธรรมเนียมในสัญญา [[nameContract]]</div>
+        <div class="title">{{localize('text_page_total')}}{{localize('text_fee')}} [[nameContract]]</div>
         <div class="flex searchInput ">
            <div class="horizontal end-justified layout">
              <!-- <div class="labelSearch">ครั้งที่คิดธรรมเนียม</div>{{_searchInArray(searchInput)}}
@@ -44,8 +44,8 @@
               <thead class="table-head">
                 <tr>
                   <!-- <th>ชื่อการทำสัญญา</th> -->
-                  <th>งวดการส่งมอบ</th>
-                  <th>ครั้งที่คิดค่าธรรมเนียม</th>
+                  <th>{{localize('label_shm_no')}}</th>
+                  <th>{{localize('text_fee_no')}}</th>
                 </tr>
               </thead>
               <tbody class="table-body">
@@ -60,7 +60,7 @@
                 </template>
                 <template is="dom-if" if="[[_isHave(newData)]]">
                   <tr>
-                    <td colspan="5" style="text-align:center">  ไม่มีข้อมูล</td>
+                    <td colspan="5" style="text-align:center">   {{localize('text_no_data')}}</td>
                   </tr>
                 </template>
              </tbody>

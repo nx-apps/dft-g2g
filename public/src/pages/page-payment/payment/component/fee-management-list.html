@@ -23,13 +23,13 @@
   </style>
   <template>
     <div class="horizontal end-justified layout">
-         <paper-button raised on-tap="addFeeRound" class="gl-btn-primary" >เพิ่มรอบการจ่ายเงิน</paper-button>
+         <paper-button raised on-tap="addFeeRound" class="gl-btn-primary" >{{localize('btn_add_fee_no')}}</paper-button>
     </div>
     <table class="gl-table-default">
       <thead class="table-head">
         <tr>
-          <th>ครั้งที่</th>
-          <th>สถานะการถัวเงิน</th>
+          <th>{{localize('label_fee_no')}}</th>
+          <th>{{localize('label_status')}}</th>
         </tr>
       </thead>
       <tbody class="table-body">
@@ -41,12 +41,12 @@
         </template>
         <template is="dom-if" if="[[_isHave(data.feeListinShm)]]">
           <tr>
-            <td colspan="5" style="text-align:center">  ไม่มีข้อมูล</td>
+            <td colspan="5" style="text-align:center">  {{localize('label_no_data')}}</td>
           </tr>
         </template>
       </tbody>
     </table>
-    *สถานะการถัวเงิน ถ้ายืนยันแล้วจะดูได้อย่างเดียว
+    {{localize('label_fee_note_avarate')}}
   </template>
   <script>
     Polymer({
@@ -60,7 +60,7 @@
           this.nylonLocalizeImport('/i18n-page1.json');
       },
       getFeeMana:function (e) {
-        console.log(e.currentTarget.data);
+        // console.log(e.currentTarget.data);
         this.fire('_get-fee-mana',{data:e.currentTarget.data});
       },
       addFeeRound:function () {

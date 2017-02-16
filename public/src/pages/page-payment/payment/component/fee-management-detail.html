@@ -11,10 +11,10 @@
     <template is="dom-if" if="[[isInputDisabled]]">
       <div class="horizontal end-justified layout">
         <div class="icon_print">
-          <paper-icon-button id="editFee" class="crud" icon="create" raised on-tap="editFee"  disabled=[[!isInputDisabled]]></paper-icon-button>
-          <paper-tooltip for="editFee" offset="0">Edit Shipment</paper-tooltip>
+          <paper-icon-button id="editFee" class="crud" icon="create" raised on-tap="editInput"  disabled=[[!isInputDisabled]]></paper-icon-button>
+          <paper-tooltip for="editFee" offset="0">Edit Fee</paper-tooltip>
           <paper-icon-button id="deleteFee" class="crud" icon="delete" raised on-tap="deleteFee" disabled=[[!isInputDisabled]]></paper-icon-button>
-          <paper-tooltip for="deleteFee" offset="0">Delete Shipment</paper-tooltip>
+          <paper-tooltip for="deleteFee" offset="0">Delete Fee</paper-tooltip>
         </div>
       </div>
     </template>
@@ -24,7 +24,8 @@
         <gl-grid-col width="[[getWidth]]" grid="[[300,6],[500,2]]">
           [[changeString2Num(data.*,'fee_no')]]
           <!-- disabled="[[isInputDisabled]]" -->
-          <gl-form-input class="required" required disabled="[[isInputDisabled]]" allowed-pattern="[0-9||,||.]" format-number="on"  label="ครั้งที่" value="{{data.fee_no}}" always-float-label error-message="กรุณาใส่ครั้งที่"></gl-form-input>
+          //[[isViewSeleted]]//1424d53
+          <gl-form-input class="required" required disabled="[[isInputDisabled]]" allowed-pattern="[0-9||,||.]" format-number="on"  label="{{localize('label_fee_no')}}" value="{{data.fee_no}}" always-float-label error-message="กรุณาใส่ครั้งที่"></gl-form-input>
         </gl-grid-col>
         <!--<gl-grid-col width="[[getWidth]]" grid="[[300,6],[500,3]]">
           <gl-form-input class="required" required disabled="[[isInputDisabled]]" label="ชื่อรอบการจ่ายเงิน" value="{{data.fee_name}}" always-float-label error-message="กรุณาใส่ชื่อรอบการจ่ายเงิน"></gl-form-input>
@@ -32,8 +33,9 @@
       </gl-grid-row>
     </div>
       <div class="horizontal end-justified layout">
+
+          <paper-button raised on-tap="cancelFee" class="gl-btn-default" hidden="[[!isInputDisabled]]">{{localize('btn_back_ward')}}</paper-button>
         <template is="dom-if" if="[[isViewSeleted]]">
-          <paper-button raised on-tap="cancelFee" class="gl-btn-default" >{{localize('btn_back_ward')}}</paper-button>
           <paper-button raised on-tap="addFee" class="gl-btn-primary" disabled="[[isInputDisabled]]">{{localize('btn_add')}}</paper-button>
         </template>
         <template is="dom-if" if="[[!isViewSeleted]]">
@@ -94,12 +96,7 @@
        this.fire('toast',{status:'connectError',text:'ครั้งที่ซ้ำกับที่มีอยู่', //คำสั่งสำหรับเปิด toast error
                       callback:function(){
         }})
-
       }
-
-    },
-    editFee:function () {
-      this.editInput();
     },
     //ถึงตรงบันทึก
     saveFee:function () {
@@ -124,6 +121,7 @@
               this.fire('_get-list-fee',{data:'_get-list-fee'});
               this.fire('get-fee-list-in-shm-event',{data:data.shm_id});
               this.cancelFeeDetail();
+              this.editInput();
           }
          });
         });

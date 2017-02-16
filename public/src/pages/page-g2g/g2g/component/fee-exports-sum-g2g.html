@@ -65,22 +65,22 @@
   <template>
 
     <gl-form-panel-body set-padding="5px" set-border="0px">
-      สรุปผล
+      {{localize('label_conclude')}}
       <div style="overflow-x:auto;">
     <table class="default">
        <tr>
-        <th>รายการ Invoice</th>
-        <th>จำนวน(ตัน) <br>(1)</th>
-        <th>มูลค่าต่อตัน(USD)<br>(2)</th>
-        <th>รวมเงิน(USD)<br>(3)=(1)*2</th>
-        <th>จำนวนเงิน(บาท)<br>(4)=(3)*34.96</th>
-        <th>หักค่า FE (บาท)<br>(5)</th>
-        <th>หักภาษีรายได้ 1 % (บาท)<br> (6)=((4)-(5))*1%</th>
-        <th>คงเหลือ (บาท)<br> (7)=((4)-(5)-(6))</th>
+        <th>{{localize('text_invoice_list')}}</th>
+        <th>{{localize('label_total_value_ton')}}<br>(1)</th>
+        <th>{{localize('label_total_value_ton_per_usd')}}<br>(2)</th>
+        <th>{{localize('label_total_value_usd')}}<br>(3)=(1)*2</th>
+        <th>{{localize('label_total_value_bath')}}<br>(4)=(3)*34.96</th>
+        <th>{{localize('label_expenses_fee')}}<br>(5)</th>
+        <th>{{localize('label_expenses_one_present')}}<br> (6)=((4)-(5))*1%</th>
+        <th>{{localize('label_total_bath')}}<br> (7)=((4)-(5)-(6))</th>
       </tr>
       <template is="dom-repeat" items="[[totalInvoice]]" as="invoice">
       <tr>
-        <td>รวม (Invoice No : [[invoice.invoice_no]])</td>
+        <td>{{localize('label_sum')}} ({{localize('text_invoice_no')}}: [[invoice.invoice_no]])</td>
         <td><gl-form-input class="number" format-number="on" style="width:140px;" value="[[invoice.totalTonInvoices]]" disabled ></gl-form-input></td>
         <td><gl-form-input format-number="on" style="width:140px;text-align:center;" value="[[invoice.totalPricePerTonUsdInvoices]]" disabled ></gl-form-input></td>
         <td><gl-form-input class="number" format-number="on" style="width:140px;" value="[[invoice.totalAmountUsdInvoices]]" disabled ></gl-form-input></td>
@@ -91,7 +91,7 @@
       </tr>
       </template>
       <tr>
-        <td >รวมทั้งหมด</td>
+        <td >{{localize('label_total_sum')}}</td>
         <td><gl-form-input class="number" style="width:140px;" format-number="on" value="[[data.totalTonInvoices]]" disabled ></gl-form-input></td>
         <td><gl-form-input style="width:140px;text-align:center;" format-number="on" value="[[data.totalPricePerTonUsdInvoices]]" disabled ></gl-form-input></td>
         <td><gl-form-input class="number" style="width:140px;" format-number="on" value="[[data.totalAmountUsdInvoices]]" disabled ></gl-form-input></td>

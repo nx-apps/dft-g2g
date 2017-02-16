@@ -9,8 +9,8 @@
   <template>
     <iron-pages selected="{{pages}}" attr-for-selected="name">
       <fee-management-list data="[[dataForSelect]]" name="fee-management-list"></fee-management-list>
-      <fee-management-detail data=[[dataSelected]] data-shm-id="[[dataShmId]]" data-for-select="[[dataForSelect]]" name="fee-management-detail" is-input-disabled="[[isInputDisabled]]" is-view-seleted="[[!isEdit]]"></fee-management-detail>
-      <fee-management-detail data-shm-id="[[dataShmId]]" data-for-select="[[dataForSelect]]" name="fee-management-detail-add" is-input-disabled="[[!isInputDisabled]]" is-view-seleted="[[isEdit]]"></fee-management-detail>
+      <fee-management-detail data=[[dataSelected]] name="fee-management-detail" data-shm-id="[[dataShmId]]" data-for-select="[[dataForSelect]]"   is-view-seleted="[[!isEdit]]"></fee-management-detail>
+      <fee-management-detail name="fee-management-detail-add" data-shm-id="[[dataShmId]]" data-for-select="[[dataForSelect]]"  is-input-disabled="[[!isInputDisabled]]" is-view-seleted="[[isEdit]]"></fee-management-detail>
     </iron-pages>
   </template>
   <script>
