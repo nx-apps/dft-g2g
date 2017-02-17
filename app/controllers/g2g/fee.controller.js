@@ -260,7 +260,9 @@ exports.approve = function (req, res) {
                     return r.db('g2g2').table('invoice').get(invoice_merge('invoice_id')).pluck('book_id', 'invoice_no', 'invoice_date')
                         .merge(function (book_merge) {
                             return {
-                                shm_id: r.db('g2g2').table('shipment_detail').getAll(book_merge('book_id'), { index: 'book_id' })
+                                cl_id: r.db('g2g2').table('shipment_detail').getAll(book_merge('book_id'), { index: 'book_id' })
+                                    .eqJoin('book_id', r.db('g2g2').table('book')).pluck("left", { right: ["cl_id"] }).zip()
+                                    .coerceTo('array')
                                     .getField('cl_id')
                                     .distinct()(0),
                                 invoice_date: book_merge('invoice_date').split('T')(0)
