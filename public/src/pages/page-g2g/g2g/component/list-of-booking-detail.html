@@ -9,7 +9,7 @@
         <list-of-booking-shm-det data="{{data}}" data-for-selected="[[dataForSelected]]"></list-of-booking-shm-det>
       </div>
       <div name="list-of-booking-add">
-        <booking-detail></booking-detail>
+        <booking-detail data-for-select="[[dataForSelect]]" is-input-disabled="[[!isInputDisabled]]" is-view-seleted="[[!isViewSeleted]]"></booking-detail>
       </div>
       <div name="list-of-booking-shm-det">
         <list-of-shm></list-of-shm>
@@ -21,6 +21,10 @@
   <script>
     Polymer({
       is: "list-of-booking-detail",
+      behaviors: [
+          g2gModelBehavior,
+          g2gCongtroller,
+      ],
       properties: {
         pageSelected: {
           type: String,
