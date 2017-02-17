@@ -145,7 +145,7 @@ exports.getSilo = function (req, res) {
         });
 }
 exports.insert = function (req, res) {
-    var valid = req.ajv.validate('g2g2.payment', req.body);
+    var valid = req.ajv.validate('g2g.payment', req.body);
     var r = req.r;
     var result = { result: false, message: null, id: null };
     if (valid) {

@@ -1,5 +1,5 @@
 exports.insert = function (req, res) {
-    var valid = req.ajv.validate('g2g2.shipment_detail', req.body);
+    var valid = req.ajv.validate('g2g.shipment_detail', req.body);
     var r = req.r;
     var result = { result: false, message: null, id: null };
     if (valid) {

@@ -284,7 +284,7 @@ exports.getById = function (req, res) {
         })
 }
 exports.insert = function (req, res) {
-    var valid = req.ajv.validate('g2g2.invoice', req.body);
+    var valid = req.ajv.validate('g2g.invoice', req.body);
     var r = req.r;
     var result = { result: false, message: null, id: null };
     if (valid) {
