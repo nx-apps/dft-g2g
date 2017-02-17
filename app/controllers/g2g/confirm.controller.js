@@ -76,7 +76,7 @@ exports.insert = function (req, res) {
     var result = { result: false, message: null, id: null };
     if (valid) {
         var obj = Object.assign(req.body, { date_created: new Date().toISOString(), date_updated: new Date().toISOString(), creater: 'admin', updater: 'admin' });
-        r.db("g2g").table("confirm_letter")
+        r.db('g2g2').table("confirm_letter")
             .insert(obj)
             .run()
             .then(function (response) {
@@ -102,7 +102,7 @@ exports.update = function (req, res) {
     if (req.body.id != '' && req.body.id != null && typeof req.body.id != 'undefined') {
         result.id = req.body.id;
         var obj = Object.assign(req.body, { date_updated: new Date().toISOString(), updater: 'admin' });
-        r.db("g2g").table("confirm_letter")
+        r.db('g2g2').table("confirm_letter")
             .get(req.body.id)
             .update(obj)
             .run()

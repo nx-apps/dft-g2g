@@ -187,7 +187,7 @@ exports.update = function (req, res) {
     if (req.body.id != '' && req.body.id != null && typeof req.body.id != 'undefined') {
         result.id = req.body.id;
         var obj = Object.assign(req.body, { date_updated: new Date().toISOString(), updater: 'admin' });
-        r.db("g2g").table("payment")
+        r.db('g2g2').table("payment")
             .get(req.body.id)
             .update(obj)
             .run()
