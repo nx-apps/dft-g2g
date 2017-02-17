@@ -251,9 +251,9 @@ exports.approve = function (req, res) {
     var r = req.r;
     r.db('g2g2').table('fee_detail').getAll(req.params.fee_id, { index: 'fee_id' })
         .merge(function (fee_det_merge) {
-            return r.db('g2g2').table('fee').get(fee_det_merge('fee_id')).pluck('shm_id')
+            return r.db('g2g2').table('fee').get(fee_det_merge('fee_id')).pluck('cl_id')
         })
-        .eqJoin('shm_id', r.db('g2g2').table('shipment')).pluck("left", { right: "contract_id" }).zip()
+        .eqJoin('cl_id', r.db('g2g2').table('confirm_letter')).pluck("left", { right: "contract_id" }).zip()
         .merge(function (fee_det_merge) {
             return {
                 invoice: fee_det_merge('invoice').merge(function (invoice_merge) {
@@ -261,7 +261,7 @@ exports.approve = function (req, res) {
                         .merge(function (book_merge) {
                             return {
                                 shm_id: r.db('g2g2').table('shipment_detail').getAll(book_merge('book_id'), { index: 'book_id' })
-                                    .getField('shm_id')
+                                    .getField('cl_id')
                                     .distinct()(0),
                                 invoice_date: book_merge('invoice_date').split('T')(0)
                             }
@@ -294,7 +294,7 @@ exports.approve = function (req, res) {
                                         invoice_exporter_date: "",
                                         tags: [
                                             fee_det_merge('fee_id'),
-                                            invoice_merge('shm_id'),
+                                            invoice_merge('cl_id'),
                                             fee_det_merge('contract_id')
                                         ],
                                         fee_det_id: fee_det_merge('id'),
