@@ -296,7 +296,7 @@
       addPayment:function () {
         this.data.fee_det_status = false;
         // fee_id
-        this.set('data.tags',[this.dataForSelect.shm_id,this.dataForSelect.cl_id,this.dataForSelect.contract_id]);
+        this.set('data.tags',[this.dataForSelect.cl_id,this.dataForSelect.contract_id]);
         this._clearDatafee(this.data,'insert',(data)=>{
             // data.invoice_status = true;
           //   this.data.invoice.map((el,indexShmid)=>{

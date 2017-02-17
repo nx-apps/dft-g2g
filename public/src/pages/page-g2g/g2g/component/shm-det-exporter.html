@@ -426,7 +426,8 @@
         this.fire('cancel-edit-shipment',{detail:'cancel-insert-shipment'})
      },
      cancelEditShipment:function () {
-       this.cancelInsertShipment();
+      //  this.cancelInsertShipment();
+       this.fire('_change-component-shm',{detail:'list-of-shm-det'})
      },
       _cleanShipmentData:function (data,callback) {
         let el = Polymer.dom(this.root).querySelectorAll('.required');
