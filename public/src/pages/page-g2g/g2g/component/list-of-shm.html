@@ -11,16 +11,16 @@
       cursor: pointer;
     }
   </style>
-  <template>
+  <template>[[!isInputDisabled]]
       <iron-pages selected="{{pageSelected}}" attr-for-selected="name">
         <div name="list-of-shm-det">
           <list-of-shm-det data="{{dataSelected}}"></list-of-shm-det>
         </div>
         <div name="list-of-shm-det-add">
-          <shm-det-exporter is-input-disabled="[[!isInputDisabled]]" data-for-select="[[dataForSelect]]"></shm-det-exporter>
+          <shm-det-exporter is-input-disabled="[[!isInputDisabled]]" data-for-select="[[dataForSelect]]" is-view-seleted="[[!isViewSeleted]]"></shm-det-exporter>
         </div>
         <div name="shm-detail">
-          <shm-det-exporter  data="[[dataEdit]]" is-input-disabled="[[isInputDisabled]]" data-for-select="[[dataForSelect]]"></shm-det-exporter>
+          <shm-det-exporter  data="[[dataEdit]]" is-input-disabled="[[isInputDisabled]]" data-for-select="[[dataForSelect]]" is-view-seleted="[[isViewSeleted]]"></shm-det-exporter>
         </div>
       </iron-pages>
 
