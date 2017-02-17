@@ -49,7 +49,8 @@
       },
       listeners:{
         '_change-component-shm':'_changeComponentShm',
-        '_get-fire-in-book-shm-detail':'_getFireInBookShmDetail'
+        '_get-fire-in-book-shm-detail':'_getFireInBookShmDetail',
+        '_post-approve-book':'_postApproveBook'
       },
       _changeComponentShm:function (data) {
         // console.log(data.detail.detail);
@@ -63,6 +64,12 @@
         this.set('dataEdit',e.detail.detail)
         // console.log(this.dataEdit);
         this.set('pageSelected','shm-detail')
+      },
+      _postApproveBook:function (e) {
+        // console.log(e.detail);
+        this.update('./g2g/book/update/',e.detail ,()=>{
+          console.log(11);
+        });
       }
 
     });

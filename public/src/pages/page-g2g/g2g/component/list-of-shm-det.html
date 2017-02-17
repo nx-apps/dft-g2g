@@ -10,7 +10,6 @@
     }
   </style>
   <template>
-111111111111
     <gl-form-panel>
       <gl-form-panel-head label="{{localize('text_list_exporter_name')}}" set-padding="10px" set-border="1px">
           <paper-button class="gl-btn-primary" raised on-tap="createShmDet">{{localize('btn_add_exporter')}}</paper-button>
@@ -39,6 +38,8 @@
       <gl-form-panel-footer set-padding="10px 20px 0px 20px">
         <paper-button class="gl-btn-default" raised on-tap="backWard2Booking">
               {{localize('btn_back_ward')}}</paper-button>
+        <paper-button class="gl-btn-success" raised dias on-tap="approveBook" disabled="[[_confirmBook(data)]]">
+                    {{localize('btn_confirm')}}</paper-button>
     </gl-form-panel-footer>
     </gl-form-panel>
 
@@ -61,6 +62,18 @@
         // this.fire('_change-component-shm',{detail:'shm-detail'})
         this.fire('_get-fire-in-book-shm-detail',{detail:e.currentTarget.data})
       },
+      _confirmBook:function (data) {
+          if ( (data.every(status => status.book_status == false))) {
+            return false;
+          } else {
+              return true;
+          }
+      },
+      approveBook:function (e) {
+        // console.log(this.data[0].book_id);
+        this.fire('_post-approve-book',{book_id:this.data[0].book_id,book_status:'approve'})
+      },
+
       backWard2Booking:function () {
         this.fire('_change-component-book',{detail:'list-of-booking'})
       }
