@@ -237,8 +237,8 @@
         // console.log(e.detail.data);
         this._getFeeListInShm(e.detail.data);
       },
-      _getFeeListInShm: function (shmId) {
-        this.read('./g2g/fee/shm/id/' + shmId, (data) => {
+      _getFeeListInShm: function (clId) {
+        this.read('./g2g/fee/confirm/id/' + clId, (data) => {
           this.dataForSelect.feeListinShm = data;
           this.notifyPath('dataForSelect.feeListinShm');
           // console.log(this.dataForSelect.feeListinShm);
@@ -309,9 +309,9 @@
       },
       _getInvoiceDetail: function (e) {
         // this.dataSelected = e.detail.detail;
-        let url = '', shmId;
+        let url = '', cl_id;
         e.detail.detail.map((el, index) => {
-          shmId = el.data.shm_id;
+          cl_id = el.data.cl_id;
           if (index == 0) {
             url = url + el.data.invoice_id;
           } else {
@@ -319,13 +319,14 @@
           }
         });
         //เรียกให้อัพเดตรายชื่อ fee ที่อยู่ใน contract
-        this._getFeeListInShm(shmId);
+        this._getFeeListInShm(cl_id);
         //
+        console.log(e.detail.detail);
         this.fire('toast', { status: 'load' });
         this.read('./g2g/fee/invoice/id/' + url, (data) => {
-          // console.log(data);
+          console.log(data);
           // console.log(data.invoice[0]);
-          this.set('dataForSelect.shm_id', data.shm_id);
+          // this.set('dataForSelect.shm_id', data.shm_id);
           this.set('dataForSelect.cl_id', data.cl_id);
           // console.log(this.dataForSelect);
           this.dataSelected.draft = data;
@@ -362,6 +363,7 @@
         this.fire('toast', { status: 'load' });
         // console.log(e.detail.detail.fee_id);
         //เรียกให้อัพเดตรายชื่อ fee ที่อยู่ใน contract
+        console.log(e.detail.detail);
         this._getFeeListInShm(e.detail.detail.shm_id);
         //
         this.read('./g2g/fee/id/' + e.detail.detail.fee_id, (data) => {

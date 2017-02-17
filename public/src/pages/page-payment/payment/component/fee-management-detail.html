@@ -74,16 +74,17 @@
     addFee:function () {
       if (this._checkFeeNoDup(this.data.fee_no)) {
         this.data.fee_status = false;
-        this.data.shm_id = this.dataShmId;
-        this.set('data.tags',[this.dataForSelect.cl_id,this.dataForSelect.contract_id]);
+        this.data.cl_id = this.dataForSelect.cl_id;
+        console.log(this.dataForSelect);
+        this.set('data.tags',[this.dataForSelect.contract_id]);
         this._cleanDataFeeManagement(this.data,(data)=>{
-          // console.log(data);
+          console.log(data);
           this.fire('toast',{status:'load'}); //คำสั่งสำหรับเปิด toast load
           this.insert('./g2g/fee/insert',data, () => {
             this.fire('toast',{status:'success',text:'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
              callback:()=>{
                 let contract_id= this._getUrl();
-                // this.fire('close-drawer',{detail:'close-drawer'});
+                this.fire('close-drawer',{detail:'close-drawer'});
                 this.fire('get-fee-list',{detail:contract_id});
                 this.fire('_get-list-fee',{data:'_get-list-fee'});
                 this.fire('get-fee-list-in-shm-event',{data:data.shm_id});
@@ -177,8 +178,8 @@
       let el = Polymer.dom(this.root).querySelectorAll('.required');
       let stat = el.map((el)=> el.validate());
         if (stat.every(elem => elem == true)) {
-          let {fee_no,fee_status,shm_id} = data
-          let newData ={fee_no,fee_status,shm_id}
+          let {fee_no,fee_status,cl_id} = data
+          let newData ={fee_no,fee_status,cl_id}
           // console.log(data);
           if(typeof data.tags !== 'undefined'){
                 newData.tags = new Array();

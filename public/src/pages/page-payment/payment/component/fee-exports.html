@@ -49,15 +49,17 @@
     </gl-form-panel-head>
       <gl-form-panel-body label="" set-padding="10px" set-border="1px">
         <paper-tabs selected="{{pages}}" align-bottom no-slide attr-for-selected="name">
-          <paper-tab name="averagePage" disabled="[[!isInputDisabled]]">{{localize('label_average_money')}}</paper-tab>
-          <paper-tab name="feeDetail" disabled="[[!isInputDisabled]]">{{localize('label_payout')}}</paper-tab>
+          <!-- <paper-tab name="averagePage" disabled="[[!isInputDisabled]]">{{localize('label_average_money')}}</paper-tab>
+          <paper-tab name="feeDetail" disabled="[[!isInputDisabled]]">{{localize('label_payout')}}</paper-tab> -->
+          <paper-tab name="averagePage" >{{localize('label_average_money')}}</paper-tab>
+          <paper-tab name="feeDetail" >{{localize('label_payout')}}</paper-tab>
         </paper-tabs>
         <iron-pages selected="{{pages}}" align-bottom no-slide attr-for-selected="name">
 
 
         <div name="feeDetail">
 
-          <fee-management data-for-select="[[dataForSelect]]" data-shm-id="[[data.invoice.0.shm_id]]"></fee-management>
+          <fee-management data-for-select="[[dataForSelect]]" data-cl-id="[[data.invoice.0.cl_id]]"></fee-management>
         </div>
     <div name="averagePage">
       <div class="header flex-center-justified">
