@@ -147,7 +147,6 @@ exports.getByClId = function (req, res) {
     var r = req.r;
     r.db('g2g2').table('book')
         .getAll(req.params.cl_id, { index: 'cl_id' })
-        // .eqJoin("shm_id", r.db('g2g2').table("shipment")).without({ right: ["id", "date_created", "date_updated", "creater", "updater", "tags"] }).zip()
         .eqJoin("cl_id", r.db('g2g2').table("confirm_letter")).pluck("left", { right: ["cl_date", "incoterms"] }).zip()
         .eqJoin('carrier_id', r.db('common').table('carrier')).pluck("left", { right: "carrier_name" }).zip()
         .eqJoin('shipline_id', r.db('common').table('shipline')).pluck("left", { right: ["shipline_name", "shipline_tel"] }).zip()
