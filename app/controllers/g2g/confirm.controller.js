@@ -1,7 +1,7 @@
 exports.getByContractId = function (req, res) {
     var r = req.r;
     var orderby = req.query.orderby;
-    r.db('g2g').table("confirm_letter")
+    r.db('g2g2').table("confirm_letter")
         .getAll(req.params.contract_id, { index: "contract_id" })
         .filter({ "cl_status": true })
         .merge(function (row) {
@@ -38,7 +38,7 @@ exports.getByContractId = function (req, res) {
 
 exports.getById = function (req, res) {
     var r = req.r;
-    r.db('g2g').table("confirm_letter")
+    r.db('g2g2').table("confirm_letter")
         .get(req.params.cl_id)
         .merge(function (row) {
             return {
@@ -127,10 +127,10 @@ exports.delete = function (req, res) {
     var result = { result: false, message: null, id: null };
     if (req.params.id != '' || req.params.id != null) {
         result.id = req.params.id;
-        var q = r.db('g2g').table("confirm_letter").get(req.params.id).do(function (result) {
+        var q = r.db('g2g2').table("confirm_letter").get(req.params.id).do(function (result) {
             return r.branch(
                 result('cl_status').eq(false)
-                , r.db('g2g').table("confirm_letter").get(req.params.id).delete()
+                , r.db('g2g2').table("confirm_letter").get(req.params.id).delete()
                 , r.expr("Can't delete because this status = true.")
             )
         })

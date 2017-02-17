@@ -20,7 +20,7 @@
             "price_per_ton": {
                 "type": "number"
             },
-            "shm_id": {
+            "cl_id": {
                 "type": "string"
             },
             "type_rice_id": {
@@ -35,7 +35,7 @@
             "exporter_id",
             "book_id",
             "shm_det_quantity",
-            "shm_id",
+            "cl_id",
             "type_rice_id",
             "num_of_container",
             "price_per_ton"

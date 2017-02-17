@@ -1,13 +1,13 @@
 exports.getByContractId = function (req, res) {
     var r = req.r;
     var orderby = req.query.orderby;
-    r.db('g2g').table('book')
+    r.db('g2g2').table('book')
         .getAll(req.params.contract_id, { index: 'tags' })
         .filter({ book_status: false })
-        .eqJoin("shm_id", r.db('g2g').table("shipment")).pluck("left", { right: ["cl_id", "contract_id", "shm_no", "shm_status"] }).zip()
+        .eqJoin("shm_id", r.db('g2g2').table("shipment")).pluck("left", { right: ["cl_id", "contract_id", "shm_no", "shm_status"] }).zip()
         .filter({ shm_status: true })
-        .eqJoin("cl_id", r.db('g2g').table("confirm_letter")).pluck("left", { right: ["cl_no", "cl_date", "incoterms"] }).zip()
-        .eqJoin("contract_id", r.db('g2g').table("contract")).pluck("left", { right: ["contract_name", "contract_date"] }).zip()
+        .eqJoin("cl_id", r.db('g2g2').table("confirm_letter")).pluck("left", { right: ["cl_no", "cl_date", "incoterms"] }).zip()
+        .eqJoin("contract_id", r.db('g2g2').table("contract")).pluck("left", { right: ["contract_name", "contract_date"] }).zip()
         .eqJoin('carrier_id', r.db('common').table('carrier')).pluck("left", { right: "carrier_name" }).zip()
         .eqJoin('shipline_id', r.db('common').table('shipline')).pluck("left", { right: ["shipline_name", "shipline_tel"] }).zip()
         .eqJoin("load_port_id", r.db('common').table("port")).map(function (port) {
@@ -75,10 +75,10 @@ exports.getByContractId = function (req, res) {
 }
 exports.getByShmId = function (req, res) {
     var r = req.r;
-    r.db('g2g').table('book')
+    r.db('g2g2').table('book')
         .getAll(req.params.shm_id, { index: 'shm_id' })
-        .eqJoin("shm_id", r.db('g2g').table("shipment")).without({ right: ["id", "date_created", "date_updated", "creater", "updater", "tags"] }).zip()
-        .eqJoin("cl_id", r.db('g2g').table("confirm_letter")).pluck("left", { right: ["cl_date", "incoterms"] }).zip()
+        .eqJoin("shm_id", r.db('g2g2').table("shipment")).without({ right: ["id", "date_created", "date_updated", "creater", "updater", "tags"] }).zip()
+        .eqJoin("cl_id", r.db('g2g2').table("confirm_letter")).pluck("left", { right: ["cl_date", "incoterms"] }).zip()
         .eqJoin('carrier_id', r.db('common').table('carrier')).pluck("left", { right: "carrier_name" }).zip()
         .eqJoin('shipline_id', r.db('common').table('shipline')).pluck("left", { right: ["shipline_name", "shipline_tel"] }).zip()
         .eqJoin("load_port_id", r.db('common').table("port")).map(function (port) {
@@ -145,21 +145,21 @@ exports.getByShmId = function (req, res) {
 }
 exports.getById = function (req, res) {
     var r = req.r;
-    r.db('g2g').table('book')
+    r.db('g2g2').table('book')
         .get(req.params.book_id)
         .merge(function (m) {
-            return r.db('g2g').table("shipment").get(m('shm_id')).pluck("cl_id", "contract_id", "shm_no")
+            return r.db('g2g2').table("shipment").get(m('shm_id')).pluck("cl_id", "contract_id", "shm_no")
         })
         .merge(function (m) {
-            return r.db('g2g').table("confirm_letter").get(m('cl_id')).pluck("cl_no", "incoterms", "cl_date")
+            return r.db('g2g2').table("confirm_letter").get(m('cl_id')).pluck("cl_no", "incoterms", "cl_date")
         })
         .merge(function (m) {
-            return r.db('g2g').table("contract").get(m('contract_id')).pluck("contract_date", "contract_name", "buyer_id")
+            return r.db('g2g2').table("contract").get(m('contract_id')).pluck("contract_date", "contract_name", "buyer_id")
         })
         .merge(function (me) {
             return {
                 book_id: me('id'),
-                bl_detail: r.db('g2g').table('shipment_detail')
+                bl_detail: r.db('g2g2').table('shipment_detail')
                     .getAll(req.params.book_id, { index: 'book_id' })
                     .group(function (g) {
                         return g.pluck(
@@ -336,12 +336,12 @@ exports.delete = function (req, res) {
     var result = { result: false, message: null, id: null };
     if (req.params.id != '' || req.params.id != null) {
         result.id = req.params.id;
-        var q = r.db('g2g').table("book").get(req.params.id).do(function (result) {
+        var q = r.db('g2g2').table("book").get(req.params.id).do(function (result) {
             return r.branch(
                 result('book_status').eq(false)
-                , r.db('g2g').table('shipment_detail').getAll(req.params.id, { index: 'book_id' }).delete()
+                , r.db('g2g2').table('shipment_detail').getAll(req.params.id, { index: 'book_id' }).delete()
                     .do(delete_do => {
-                        return r.db('g2g').table('book').get(req.params.id).delete()
+                        return r.db('g2g2').table('book').get(req.params.id).delete()
                     })
                 , r.expr("Can't delete because this status = true.")
             )

@@ -10,13 +10,13 @@
         "fee_status": {
             "type": "boolean"
         },
-        "shm_id": {
+        "cl_id": {
             "type": "string"
         }
     },
     "required": [
         "fee_no",
         "fee_status",
-        "shm_id"
+        "cl_id"
     ]
 }

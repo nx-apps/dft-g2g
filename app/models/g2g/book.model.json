@@ -4,7 +4,7 @@
         "id": {
             "type": "string"
         },
-        "shm_id": {
+        "cl_id": {
             "type": "string"
         },
         "book_no": {
@@ -95,7 +95,7 @@
         }
     },
     "required": [
-        "shm_id",
+        "cl_id",
         "book_no",
         "book_remark",
         "bl_no",

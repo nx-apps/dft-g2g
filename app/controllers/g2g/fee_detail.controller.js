@@ -1,21 +1,21 @@
 exports.getById = function (req, res) {
     var r = req.r;
-    r.db('g2g').table('fee_detail')
+    r.db('g2g2').table('fee_detail')
         .get(req.params.fee_det_id)
         .merge(function (fee_merge) {
             return {
                 invoice: fee_merge('invoice').map(function (fee_map) {
                     return fee_map.merge(function (fee_merge1) {
-                        return r.db('g2g').table('invoice')
+                        return r.db('g2g2').table('invoice')
                             .get(fee_merge1('invoice_id'))
                             .merge(function (m) {
                                 return {
-                                    shipment_detail: r.db('g2g').table('shipment_detail')
+                                    shipment_detail: r.db('g2g2').table('shipment_detail')
                                         .getAll(m('book_id'), { index: 'book_id' })
                                         .coerceTo('array')
                                         .pluck("id", "shm_id", "package_id", "exporter_id", "shm_det_quantity", "type_rice_id")
-                                        .eqJoin("shm_id", r.db('g2g').table("shipment")).without({ right: ["id", "date_created", "date_updated", "creater", "updater"] }).zip()
-                                        .eqJoin("cl_id", r.db('g2g').table("confirm_letter")).without({ right: ['id', 'date_created', 'date_updated', 'creater', 'updater', "cl_date", "cl_quality"] }).zip()
+                                        .eqJoin("shm_id", r.db('g2g2').table("shipment")).without({ right: ["id", "date_created", "date_updated", "creater", "updater"] }).zip()
+                                        .eqJoin("cl_id", r.db('g2g2').table("confirm_letter")).without({ right: ['id', 'date_created', 'date_updated', 'creater', 'updater', "cl_date", "cl_quality"] }).zip()
                                         .eqJoin("package_id", r.db('common').table("package")).without({ right: ["id", "date_created", "date_updated", "creater", "updater"] }).zip()
                                         .eqJoin("exporter_id", r.db('external').table("exporter")).without({ right: ["id", "date_created", "date_updated", "creater", "updater"] }).zip()
                                         // .eqJoin("trader_id", r.db('external').table("trader")).without({ right: ["id", "date_created", "date_updated", "creater", "updater"] }).zip()
@@ -53,7 +53,7 @@ exports.getById = function (req, res) {
                                 }
                             })
                             .merge(function (m) {
-                                return r.db('g2g').table('book').get(m('book_id')).without('id', 'date_created', 'date_updated', 'creater', 'updater', 'tags')
+                                return r.db('g2g2').table('book').get(m('book_id')).without('id', 'date_created', 'date_updated', 'creater', 'updater', 'tags')
                             })
                             .merge(function (m) {
                                 return {
@@ -121,10 +121,10 @@ exports.insert = function (req, res) {
         r.db("g2g").table("fee_detail")
             .insert(obj)
             .do(fee_det_do => {
-                return r.db('g2g').table('fee_detail').get(fee_det_do('generated_keys')(0))
+                return r.db('g2g2').table('fee_detail').get(fee_det_do('generated_keys')(0))
                     .do(update_inv_do => {
                         return update_inv_do('invoice').forEach(inv_each => {
-                            return r.db('g2g').table('invoice').get(inv_each('invoice_id')).update({ invoice_status: true })
+                            return r.db('g2g2').table('invoice').get(inv_each('invoice_id')).update({ invoice_status: true })
                         })
                     })
             })
@@ -177,17 +177,17 @@ exports.delete = function (req, res) {
     var result = { result: false, message: null, id: null };
     if (req.params.id != '' || req.params.id != null) {
         result.id = req.params.id;
-        var q = r.db('g2g').table("fee_detail").get(req.params.id).do(function (result) {
+        var q = r.db('g2g2').table("fee_detail").get(req.params.id).do(function (result) {
             return r.branch(
                 result('fee_det_status').eq(false)
-                , r.db('g2g').table('fee_detail').get(req.params.id)
+                , r.db('g2g2').table('fee_detail').get(req.params.id)
                     .do(fee_det_do => {
                         return fee_det_do('invoice').forEach(inv_each => {
-                            return r.db('g2g').table('invoice').get(inv_each('invoice_id')).update({ invoice_status: false })
+                            return r.db('g2g2').table('invoice').get(inv_each('invoice_id')).update({ invoice_status: false })
                         })
                     })
                     .do(fee_det_do => {
-                        return r.db('g2g').table('fee_detail').get(req.params.id).delete()
+                        return r.db('g2g2').table('fee_detail').get(req.params.id).delete()
                     })
                 , r.expr("Can't delete because this status = true.")
             )

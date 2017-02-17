@@ -1,15 +1,15 @@
 
 exports.getById = function (req, res) {
     var r = req.r;
-    r.db('g2g').table("shipment")
+    r.db('g2g2').table("shipment")
         .get(req.params.shm_id)
         .merge(function (row) {
             return {
                 shm_id: row('id'),
-                shipment_detail: r.db('g2g').table("shipment_detail")
+                shipment_detail: r.db('g2g2').table("shipment_detail")
                     .getAll(row('id'), { index: "shm_id" })
                     .orderBy(r.desc('shm_det_quantity'))
-                    .eqJoin("book_id", r.db('g2g').table("book")).without({ right: ["id", "date_created", "date_updated", "creater", "updater", "tags"] }).zip()
+                    .eqJoin("book_id", r.db('g2g2').table("book")).without({ right: ["id", "date_created", "date_updated", "creater", "updater", "tags"] }).zip()
                     .eqJoin("load_port_id", r.db('common').table("port")).map(function (port) {
                         return port.merge({
                             right: {
@@ -64,13 +64,13 @@ exports.getById = function (req, res) {
                     })
                     .without('id', 'creater', 'updater', 'date_created', 'date_updated', 'tags')
                     .coerceTo('array'),
-                shm_quantity: r.db('g2g').table("shipment_detail")
+                shm_quantity: r.db('g2g2').table("shipment_detail")
                     .getAll(row('id'), { index: "shm_id" })
                     .sum("shm_det_quantity")
             }
         })
         .merge(function (m) {
-            return r.db('g2g').table("confirm_letter").get(m('cl_id')).without('id', "tags")
+            return r.db('g2g2').table("confirm_letter").get(m('cl_id')).without('id', "tags")
                 .merge(function (mm) {
                     return {
                         cl_type_rice: mm('cl_type_rice')
@@ -79,9 +79,9 @@ exports.getById = function (req, res) {
                             })
                             .merge(function (limit) {
                                 return {
-                                    type_rice_quantity_confirm: r.db('g2g').table('shipment_detail')
+                                    type_rice_quantity_confirm: r.db('g2g2').table('shipment_detail')
                                         .getAll(m('cl_id'), { index: 'tags' })
-                                        //.eqJoin("shm_id", r.db('g2g').table("shipment")).without({ right: ["id", "date_created", "date_updated", "creater", "updater", "tags"] }).zip()
+                                        //.eqJoin("shm_id", r.db('g2g2').table("shipment")).without({ right: ["id", "date_created", "date_updated", "creater", "updater", "tags"] }).zip()
                                         .filter({
                                             //cl_id: m('cl_id'),
                                             type_rice_id: limit('type_rice_id')
@@ -180,12 +180,12 @@ exports.delete = function (req, res) {
     var result = { result: false, message: null, id: null };
     if (req.params.id != '' || req.params.id != null) {
         result.id = req.params.id;
-        var q = r.db('g2g').table("shipment").get(req.params.id).do(function (result) {
+        var q = r.db('g2g2').table("shipment").get(req.params.id).do(function (result) {
             return r.branch(
                 result('shm_status').eq(false)
-                , r.db('g2g').table("shipment_detail").getAll(req.params.id, { index: 'shm_id' }).delete()
+                , r.db('g2g2').table("shipment_detail").getAll(req.params.id, { index: 'shm_id' }).delete()
                     .do(delete_do => {
-                        return r.db('g2g').table('shipment').get(req.params.id).delete()
+                        return r.db('g2g2').table('shipment').get(req.params.id).delete()
                     })
                 , r.expr("Can't delete because this status = true.")
             )

@@ -1,6 +1,6 @@
 exports.getByContractId = function (req, res) {
     var r = req.r;
-    r.db('g2g').table('invoice')
+    r.db('g2g2').table('invoice')
         .getAll(req.params.contract_id, { index: 'tags' })
         .filter({ invoice_status: false })
         .merge(function (m) {
@@ -9,7 +9,7 @@ exports.getByContractId = function (req, res) {
             }
         })
         .without('id', 'tags')
-        .eqJoin("book_id", r.db('g2g').table("book")).without({ right: ["id", "date_created", "date_updated", "creater", "updater", "tags"] }).zip()
+        .eqJoin("book_id", r.db('g2g2').table("book")).without({ right: ["id", "date_created", "date_updated", "creater", "updater", "tags"] }).zip()
         .eqJoin("load_port_id", r.db('common').table("port")).map(function (port) {
             return port.merge({
                 right: {
@@ -35,9 +35,9 @@ exports.getByContractId = function (req, res) {
             })
         }).pluck("left", { right: ["deli_port_name", "deli_port_code"] }).zip()
         .eqJoin("shipline_id", r.db('common').table("shipline")).pluck("left", { right: ["shipline_name", "shipline_tel"] }).zip()
-        .eqJoin("shm_id", r.db('g2g').table("shipment")).pluck("left", { right: ["shm_no", "cl_id", "contract_id"] }).zip()
-        .eqJoin("cl_id", r.db('g2g').table("confirm_letter")).pluck("left", { right: ["cl_no", "cl_date"] }).zip()
-        .eqJoin("contract_id", r.db('g2g').table("contract")).pluck("left", { right: ["contract_date"] }).zip()
+        .eqJoin("shm_id", r.db('g2g2').table("shipment")).pluck("left", { right: ["shm_no", "cl_id", "contract_id"] }).zip()
+        .eqJoin("cl_id", r.db('g2g2').table("confirm_letter")).pluck("left", { right: ["cl_no", "cl_date"] }).zip()
+        .eqJoin("contract_id", r.db('g2g2').table("contract")).pluck("left", { right: ["contract_date"] }).zip()
 
         .merge(function (m) {
             return {
@@ -77,7 +77,7 @@ exports.getByContractId = function (req, res) {
 }
 exports.getByShmId = function (req, res) {
     var r = req.r;
-    r.db('g2g').table('invoice')
+    r.db('g2g2').table('invoice')
         .getAll(req.params.shm_id, { index: 'tags' })
         .filter({ invoice_status: false })
         .merge(function (m) {
@@ -86,7 +86,7 @@ exports.getByShmId = function (req, res) {
             }
         })
         .without('id', 'tags')
-        .eqJoin("book_id", r.db('g2g').table("book")).without({ right: ["id", "date_created", "date_updated", "creater", "updater", "tags"] }).zip()
+        .eqJoin("book_id", r.db('g2g2').table("book")).without({ right: ["id", "date_created", "date_updated", "creater", "updater", "tags"] }).zip()
         .eqJoin("load_port_id", r.db('common').table("port")).map(function (port) {
             return port.merge({
                 right: {
@@ -112,9 +112,9 @@ exports.getByShmId = function (req, res) {
             })
         }).pluck("left", { right: ["deli_port_name", "deli_port_code"] }).zip()
         .eqJoin("shipline_id", r.db('common').table("shipline")).pluck("left", { right: ["shipline_name", "shipline_tel"] }).zip()
-        .eqJoin("shm_id", r.db('g2g').table("shipment")).pluck("left", { right: ["shm_no", "cl_id", "contract_id"] }).zip()
-        .eqJoin("cl_id", r.db('g2g').table("confirm_letter")).pluck("left", { right: ["cl_no", "cl_date"] }).zip()
-        .eqJoin("contract_id", r.db('g2g').table("contract")).pluck("left", { right: ["contract_date"] }).zip()
+        .eqJoin("shm_id", r.db('g2g2').table("shipment")).pluck("left", { right: ["shm_no", "cl_id", "contract_id"] }).zip()
+        .eqJoin("cl_id", r.db('g2g2').table("confirm_letter")).pluck("left", { right: ["cl_no", "cl_date"] }).zip()
+        .eqJoin("contract_id", r.db('g2g2').table("contract")).pluck("left", { right: ["contract_date"] }).zip()
 
         .merge(function (m) {
             return {
@@ -138,24 +138,24 @@ exports.getByShmId = function (req, res) {
 }
 exports.getById = function (req, res) {
     var r = req.r;
-    r.db('g2g').table('invoice')
+    r.db('g2g2').table('invoice')
         .get(req.params.invoice_id)
         .merge(function (row) {
-            return r.db('g2g').table('book')
+            return r.db('g2g2').table('book')
                 .get(row('book_id'))
                 .merge(function (m) {
-                    return r.db('g2g').table("shipment").get(m('shm_id')).pluck("cl_id", "contract_id", "date_updated", "creater", "updater")
+                    return r.db('g2g2').table("shipment").get(m('shm_id')).pluck("cl_id", "contract_id", "date_updated", "creater", "updater")
                 })
                 .merge(function (m) {
-                    return r.db('g2g').table("confirm_letter").get(m('cl_id')).pluck("incoterms", "cl_date")
+                    return r.db('g2g2').table("confirm_letter").get(m('cl_id')).pluck("incoterms", "cl_date")
                 })
                 .merge(function (m) {
-                    return r.db('g2g').table("contract").get(m('contract_id')).pluck("contract_date", "buyer_id")
+                    return r.db('g2g2').table("contract").get(m('contract_id')).pluck("contract_date", "buyer_id")
                 })
                 .merge(function (me) {
                     return {
                         book_id: row('book_id'),
-                        bl_detail: r.db('g2g').table('shipment_detail')
+                        bl_detail: r.db('g2g2').table('shipment_detail')
                             .getAll(row('book_id'), { index: 'book_id' })
                             .group(function (g) {
                                 return g.pluck(
@@ -292,9 +292,9 @@ exports.insert = function (req, res) {
         r.db("g2g").table("invoice")
             .insert(obj)
             .do(inv_do => {
-                return r.db('g2g').table('invoice').get(inv_do('generated_keys')(0))
+                return r.db('g2g2').table('invoice').get(inv_do('generated_keys')(0))
                     .do(book_do => {
-                        return r.db('g2g').table('book').get(book_do('book_id')).update({ book_status: true })
+                        return r.db('g2g2').table('book').get(book_do('book_id')).update({ book_status: true })
                     })
             })
             .run()
@@ -346,15 +346,15 @@ exports.delete = function (req, res) {
     var result = { result: false, message: null, id: null };
     if (req.params.id != '' || req.params.id != null) {
         result.id = req.params.id;
-        var q = r.db('g2g').table("invoice").get(req.params.id).do(function (result) {
+        var q = r.db('g2g2').table("invoice").get(req.params.id).do(function (result) {
             return r.branch(
                 result('invoice_status').eq(false)
-                , r.db('g2g').table('invoice').get(req.params.id)
+                , r.db('g2g2').table('invoice').get(req.params.id)
                     .do(inv_do => {
-                        return r.db('g2g').table('book').get(inv_do('book_id')).update({ book_status: false })
+                        return r.db('g2g2').table('book').get(inv_do('book_id')).update({ book_status: false })
                     })
                     .do(inv_do => {
-                        return r.db('g2g').table('invoice').get(req.params.id).delete()
+                        return r.db('g2g2').table('invoice').get(req.params.id).delete()
                     })
                 , r.expr("Can't delete because this status = true.")
             )

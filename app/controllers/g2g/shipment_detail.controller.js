@@ -55,11 +55,11 @@ exports.delete = function (req, res) {
     var result = { result: false, message: null, id: null };
     if (req.params.id != '' || req.params.id != null) {
         result.id = req.params.id;
-        var q = r.db('g2g').table("shipment_detail").get(req.params.id).delete()
+        var q = r.db('g2g2').table("shipment_detail").get(req.params.id).delete()
         // .do(function (result) {
         //     return r.branch(
         //         result('shm_det_status').eq(false)
-        //         , r.db('g2g').table('shipment_detail').get(req.params.id).delete()
+        //         , r.db('g2g2').table('shipment_detail').get(req.params.id).delete()
         //         , r.expr("Can't delete because this status = true.")
         //     )
         // })

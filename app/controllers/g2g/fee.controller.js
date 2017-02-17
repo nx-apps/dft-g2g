@@ -1,22 +1,22 @@
 exports.getByContractId = function (req, res) {
     var r = req.r;
-    r.db('g2g').table('fee')
+    r.db('g2g2').table('fee')
         .getAll(req.params.contract_id, { index: 'tags' }).without('tags')
-        .eqJoin('shm_id', r.db('g2g').table('shipment')).pluck("left", { right: ['shm_no', 'cl_id'] }).zip()
+        .eqJoin('shm_id', r.db('g2g2').table('shipment')).pluck("left", { right: ['shm_no', 'cl_id'] }).zip()
         .filter({ 'fee_status': false })
         .merge(function (m) {
             return {
                 fee_id: m('id'),
-                fee_detail: r.db('g2g').table('fee_detail').getAll(m('id'), { index: 'fee_id' })
+                fee_detail: r.db('g2g2').table('fee_detail').getAll(m('id'), { index: 'fee_id' })
                     .coerceTo('array')
                     .merge(function (inv_merge) {
                         return {
                             invoice: inv_merge('invoice').merge(function (inv_det_merge) {
-                                return r.db('g2g').table('invoice').get(inv_det_merge('invoice_id'))
+                                return r.db('g2g2').table('invoice').get(inv_det_merge('invoice_id'))
                             }).merge(function (inv_det_merge) {
                                 return {
                                     invoice_detail: inv_det_merge('invoice_detail').merge(function (shm_det_merge) {
-                                        return r.db('g2g').table('shipment_detail').get(shm_det_merge('shm_det_id'))
+                                        return r.db('g2g2').table('shipment_detail').get(shm_det_merge('shm_det_id'))
                                             .pluck('package_id', 'type_rice_id', 'price_per_ton', 'shm_det_quantity', 'shm_id')
                                             .merge(function (usd_merge) {
                                                 return {
@@ -64,7 +64,7 @@ exports.getByContractId = function (req, res) {
 
 exports.getByShmID = function (req, res) {
     var r = req.r;
-    r.db('g2g').table('fee')
+    r.db('g2g2').table('fee')
         .getAll(req.params.shm_id, { index: 'shm_id' })
         .merge({
             fee_id: r.row('id'),
@@ -81,21 +81,21 @@ exports.getByShmID = function (req, res) {
 }
 exports.getById = function (req, res) {
     var r = req.r;
-    r.db('g2g').table('fee')
+    r.db('g2g2').table('fee')
         .get(req.params.id)
         .merge(function (fee_merge) {
             return {
                 fee_id: fee_merge('id'),
-                fee_detail: r.db('g2g').table('fee_detail').getAll(fee_merge('id'), { index: 'fee_id' })
+                fee_detail: r.db('g2g2').table('fee_detail').getAll(fee_merge('id'), { index: 'fee_id' })
                     .coerceTo('array')
                     .merge(function (inv_merge) {
                         return {
                             invoice: inv_merge('invoice').merge(function (inv_det_merge) {
-                                return r.db('g2g').table('invoice').get(inv_det_merge('invoice_id'))
+                                return r.db('g2g2').table('invoice').get(inv_det_merge('invoice_id'))
                             }).merge(function (inv_det_merge) {
                                 return {
                                     invoice_detail: inv_det_merge('invoice_detail').merge(function (shm_det_merge) {
-                                        return r.db('g2g').table('shipment_detail').get(shm_det_merge('shm_det_id'))
+                                        return r.db('g2g2').table('shipment_detail').get(shm_det_merge('shm_det_id'))
                                             .pluck('package_id', 'type_rice_id', 'price_per_ton', 'shm_det_quantity', 'shm_id')
                                             .merge(function (usd_merge) {
                                                 return {
@@ -138,18 +138,18 @@ exports.getById = function (req, res) {
 exports.getByInvoiceId = function (req, res) {
     var r = req.r;
     var d = {};
-    r.db('g2g').table('invoice')
+    r.db('g2g2').table('invoice')
         .filter(function (f) {
             return r.expr(req.params.invoice_id.split('_'))
                 .contains(f('id'))
         })
         .merge(function (m) {
             return {
-                invoice_detail: r.db('g2g').table('shipment_detail')
+                invoice_detail: r.db('g2g2').table('shipment_detail')
                     .getAll(m('book_id'), { index: 'book_id' })
                     .coerceTo('array')
                     .pluck("id", "shm_id", "package_id", "exporter_id", "shm_det_quantity", "type_rice_id", "price_per_ton")
-                    .eqJoin("shm_id", r.db('g2g').table("shipment")).without({ right: ["id", "date_created", "date_updated", "creater", "updater"] }).zip()
+                    .eqJoin("shm_id", r.db('g2g2').table("shipment")).without({ right: ["id", "date_created", "date_updated", "creater", "updater"] }).zip()
                     .eqJoin("package_id", r.db('common').table("package")).without({ right: ["id", "date_created", "date_updated", "creater", "updater"] }).zip()
                     .eqJoin("exporter_id", r.db('external').table("exporter")).without({ right: ["id", "date_created", "date_updated", "creater", "updater"] }).zip()
                     // .eqJoin("trader_id", r.db('external').table("trader")).without({ right: ["id", "date_created", "date_updated", "creater", "updater"] }).zip()
@@ -179,7 +179,7 @@ exports.getByInvoiceId = function (req, res) {
                     .without('id', 'cl_type_rice', 'shm_det_quantity')
             }
         })
-        .eqJoin('book_id', r.db('g2g').table('book')).without({ right: ['id'] }).zip()
+        .eqJoin('book_id', r.db('g2g2').table('book')).without({ right: ['id'] }).zip()
         .merge(function (m) {
             return {
                 invoice_id: m('id'),
@@ -201,8 +201,8 @@ exports.getByInvoiceId = function (req, res) {
             }
         })
         .eqJoin("shipline_id", r.db('common').table("shipline")).without({ right: ["id", "date_created", "date_updated", "creater", "updater"] }).zip()
-        .eqJoin("shm_id", r.db('g2g').table("shipment")).pluck("left", { right: ["cl_id", "contract_id"] }).zip()
-        .eqJoin("contract_id", r.db('g2g').table("contract")).pluck("left", { right: ["payterm"] }).zip()
+        .eqJoin("shm_id", r.db('g2g2').table("shipment")).pluck("left", { right: ["cl_id", "contract_id"] }).zip()
+        .eqJoin("contract_id", r.db('g2g2').table("contract")).pluck("left", { right: ["payterm"] }).zip()
         .run()
         .then(function (result) {
             d['invoice'] = result;
@@ -231,18 +231,18 @@ exports.getByInvoiceId = function (req, res) {
 }
 exports.approve = function (req, res) {
     var r = req.r;
-    r.db('g2g').table('fee_detail').getAll(req.params.fee_id, { index: 'fee_id' })
+    r.db('g2g2').table('fee_detail').getAll(req.params.fee_id, { index: 'fee_id' })
         .merge(function (fee_det_merge) {
-            return r.db('g2g').table('fee').get(fee_det_merge('fee_id')).pluck('shm_id')
+            return r.db('g2g2').table('fee').get(fee_det_merge('fee_id')).pluck('shm_id')
         })
-        .eqJoin('shm_id', r.db('g2g').table('shipment')).pluck("left", { right: "contract_id" }).zip()
+        .eqJoin('shm_id', r.db('g2g2').table('shipment')).pluck("left", { right: "contract_id" }).zip()
         .merge(function (fee_det_merge) {
             return {
                 invoice: fee_det_merge('invoice').merge(function (invoice_merge) {
-                    return r.db('g2g').table('invoice').get(invoice_merge('invoice_id')).pluck('book_id', 'invoice_no', 'invoice_date')
+                    return r.db('g2g2').table('invoice').get(invoice_merge('invoice_id')).pluck('book_id', 'invoice_no', 'invoice_date')
                         .merge(function (book_merge) {
                             return {
-                                shm_id: r.db('g2g').table('shipment_detail').getAll(book_merge('book_id'), { index: 'book_id' })
+                                shm_id: r.db('g2g2').table('shipment_detail').getAll(book_merge('book_id'), { index: 'book_id' })
                                     .getField('shm_id')
                                     .distinct()(0),
                                 invoice_date: book_merge('invoice_date').split('T')(0)
@@ -252,7 +252,7 @@ exports.approve = function (req, res) {
                     .merge(function (invoice_merge) {
                         return {
                             invoice_detail: invoice_merge('invoice_detail').merge(function (shm_det_merge) {
-                                return r.db('g2g').table('shipment_detail').get(shm_det_merge('shm_det_id'))
+                                return r.db('g2g2').table('shipment_detail').get(shm_det_merge('shm_det_id'))
                                     .pluck('price_per_ton', 'shm_det_quantity', 'exporter_id')
                                     .merge(function (price_merge) {
                                         return {
@@ -306,15 +306,15 @@ exports.approve = function (req, res) {
             return left.add(right);
         })
         .do(function (delete_do) {
-            return r.db('g2g').table('payment_detail').getAll(req.params.fee_id, { index: 'tags' }).delete()
+            return r.db('g2g2').table('payment_detail').getAll(req.params.fee_id, { index: 'tags' }).delete()
                 .do(function (check_delete_do) {
                     return r.branch(
                         check_delete_do('errors').eq(0),
-                        r.db('g2g').table('payment_detail').insert(delete_do)
+                        r.db('g2g2').table('payment_detail').insert(delete_do)
                             .do(function (insert_do) {
                                 return r.branch(
                                     insert_do('inserted').gt(0),
-                                    r.db('g2g').table('fee').get(req.params.fee_id).update({ fee_status: true })
+                                    r.db('g2g2').table('fee').get(req.params.fee_id).update({ fee_status: true })
                                         .do(function (update_do) {
                                             return update_do('replaced').eq(1).or(update_do('unchanged').eq(1))
                                         }),
@@ -335,25 +335,25 @@ exports.approve = function (req, res) {
 }
 exports.getPayByContractId = function (req, res) {
     var r = req.r;
-    r.db('g2g').table('fee')
+    r.db('g2g2').table('fee')
         .getAll(req.params.contract_id, { index: 'tags' }).without('tags')
-        .eqJoin('shm_id', r.db('g2g').table('shipment')).pluck("left", { right: ['shm_no', 'cl_id'] }).zip()
+        .eqJoin('shm_id', r.db('g2g2').table('shipment')).pluck("left", { right: ['shm_no', 'cl_id'] }).zip()
         .filter({ 'fee_status': true })
         .merge(function (m) {
             return {
                 fee_id: m('id'),
-                fee_detail: r.db('g2g').table('fee_detail').getAll(m('id'), { index: 'fee_id' })
+                fee_detail: r.db('g2g2').table('fee_detail').getAll(m('id'), { index: 'fee_id' })
                     .coerceTo('array')
                     .merge(function (inv_merge) {
                         return {
                             invoice: inv_merge('invoice')
                                 .merge(function (inv_det_merge) {
-                                    return r.db('g2g').table('invoice').get(inv_det_merge('invoice_id'))
+                                    return r.db('g2g2').table('invoice').get(inv_det_merge('invoice_id'))
                                 })
                                 .merge(function (inv_det_merge) {
                                     return {
                                         invoice_detail: inv_det_merge('invoice_detail').merge(function (shm_det_merge) {
-                                            return r.db('g2g').table('shipment_detail').get(shm_det_merge('shm_det_id'))
+                                            return r.db('g2g2').table('shipment_detail').get(shm_det_merge('shm_det_id'))
                                                 .pluck('package_id', 'type_rice_id', 'price_per_ton', 'shm_det_quantity', 'shm_id')
                                                 .merge(function (usd_merge) {
                                                     return {
@@ -455,12 +455,12 @@ exports.delete = function (req, res) {
     var result = { result: false, message: null, id: null };
     if (req.params.id != '' || req.params.id != null) {
         result.id = req.params.id;
-        var q = r.db('g2g').table("fee").get(req.params.id).do(function (result) {
+        var q = r.db('g2g2').table("fee").get(req.params.id).do(function (result) {
             return r.branch(
                 result('fee_status').eq(false)
-                , r.db('g2g').table("fee_detail").getAll(req.params.id, { index: 'fee_id' }).delete()
+                , r.db('g2g2').table("fee_detail").getAll(req.params.id, { index: 'fee_id' }).delete()
                     .do(delete_do => {
-                        return r.db('g2g').table('fee').get(req.params.id).delete()
+                        return r.db('g2g2').table('fee').get(req.params.id).delete()
                     })
                 , r.expr("Can't delete because this status = true.")
             )
