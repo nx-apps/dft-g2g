@@ -86,7 +86,7 @@
               </div>
               <div class="horizontal layout">
                 <div class="flex-8">
-                  <chart-pie id="chartPie" data="[[_computeChartPie(data.contract_quantity_shipment,data.contract_quantity_shipment_balance,nameChart.1)]]" ></chart-pie>
+                  <chart-pie id="chartPie" data="[[_computeChartPie(data.contract_quantity_book,data.contract_quantity_book_balance,nameChart.1)]]" ></chart-pie>
                 </div>
 
                 <div class="flex-8 layout horizontal textSum">
@@ -97,8 +97,8 @@
                   </div>
                   <div class="flex">
                     <div class="flex">[[data.contract_quantity]]</div>
-                    <div class="flex">[[data.contract_quantity_shipment]]</div>
-                    <div class="flex">[[data.contract_quantity_shipment_balance]]</div>
+                    <div class="flex">[[data.contract_quantity_book]]</div>
+                    <div class="flex">[[data.contract_quantity_book_balance]]</div>
                   </div>
                 </div>
               </div>
@@ -207,14 +207,14 @@
         if (seleteChartPie == 0) {
           return this.formatNumberNoZero(data.contract_quantity_confirm);
         }else {
-          return this.formatNumberNoZero(data.contract_quantity_shipment);
+          return this.formatNumberNoZero(data.contract_quantity_book);
         }
       },
       _calTotal:function (seleteChartPie,data) {
         if (seleteChartPie == 0) {
           return this.formatNumberNoZero(data.contract_quantity_confirm_balance);
         }else {
-          return this.formatNumberNoZero(data.contract_quantity_shipment_balance);
+          return this.formatNumberNoZero(data.contract_quantity_book_balance);
         }
       },
       //end_observe
@@ -225,7 +225,7 @@
         this.$$('#titleChart').innerHTML = 'ปริมาณข้าวที่ทำสัญญา';
         this.$.chartContract.icon = 'radio-button-checked';
         this.$.chartShipment.icon = 'radio-button-unchecked';
-        // this.dataChartPie = this._computeChartPie(this.data.contract_quantity_shipment,this.data.contract_quantity_shipment_balance,this.nameChart[1],this.colorPie[1]);
+        // this.dataChartPie = this._computeChartPie(this.data.contract_quantity_book,this.data.contract_quantity_book_balance,this.nameChart[1],this.colorPie[1]);
         this.dataChartPie = this._computeChartPie(this.data.contract_quantity_confirm,this.data.contract_quantity_confirm_balance,this.nameChart[0],this.colorPie[0]);
 
         // console.log(this.dataChartPie);
@@ -235,7 +235,7 @@
         this.$$('#titleChart').innerHTML = 'ปริมาณข้าวที่ส่งมอบ';
         this.$.chartContract.icon = 'radio-button-unchecked';
         this.$.chartShipment.icon = 'radio-button-checked';
-        this.dataChartPie = this._computeChartPie(this.data.contract_quantity_shipment,this.data.contract_quantity_shipment_balance,this.nameChart[1],this.colorPie[1]);
+        this.dataChartPie = this._computeChartPie(this.data.contract_quantity_book,this.data.contract_quantity_book_balance,this.nameChart[1],this.colorPie[1]);
 
         // this.dataChartPie = this._computeChartPie(this.data.contract_quantity_confirm,this.data.contract_quantity_confirm_balance,this.nameChart[0],this.colorPie[0]);
         // console.log(this.dataChartPie);

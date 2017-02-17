@@ -1,5 +1,5 @@
 <dom-module id="list-of-booking-in-confirm">
-  <style include="iron-flex iron-flex-factors iron-flex-alignment gl-styles">
+  <style include="gl-styles">
     table.gl-table-default {
       width: 100%;
       border: 1px solid #ddd;
@@ -12,21 +12,23 @@
   <template>
 
     <gl-form-panel>
-      <div class="horizontal end-justified layout">
-        <paper-button class="gl-btn-primary" raised on-tap="createBookinConfirm">เพิ่ม CL</paper-button>
-      </div>
       <table class="gl-table-default">
         <thead class="table-head">
           <tr>
             <th>{{localize('label_order')}}</th>
             <th>{{localize('label_quantity')}}</th>
+            <th>Book Quantity</th>
           </tr>
         </thead>
         <tbody class="table-body">
-          <tr on-tap="bookingDetail">
-            <td>111</td>
-            <td>111</td>
-          </tr>
+          <template is="dom-repeat" items="[[data.book]]">
+            <tr on-tap="bookingDetail" data="[[item]]">
+              <td>[[item.cl_no]]</td>
+              <td>[[item.cl_quantity_total]]</td>
+              <td>[[item.book_quantity]]</td>
+            </tr>
+          </template>
+
         </tbody>
       </table>
     </gl-form-panel>
@@ -42,11 +44,11 @@
       created:function(){
           this.nylonLocalizeImport('/i18n-page1.json');
       },
-      createBookinConfirm:function () {
-        this.fire('_change-component-bl',{detail:'list-of-booking-in-confirm-add'})
-      },
-      bookingDetail:function () {
+      bookingDetail:function (e) {
+        //สั่งเปลีย่นหน่า
         this.fire('_change-component-bl',{detail:'list-of-booking-shm-det'})
+        //ส่งดาต้า
+        this.fire('_get-booking-detail',{detail:e.currentTarget.data})
       }
 
     });

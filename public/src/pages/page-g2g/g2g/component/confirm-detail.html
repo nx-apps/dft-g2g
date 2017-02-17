@@ -592,14 +592,15 @@
         let el = Polymer.dom(this.root).querySelectorAll('.required');
         let stat = el.map((el)=> el.validate());
           if (stat.every(elem => elem == true)) {
-            let {cl_date,cl_no,cl_quality,cl_status,incoterms} = data;
-            let newData = {cl_date,cl_no,cl_quality,cl_status,incoterms};
+            let {cl_date,cl_no,cl_quality,cl_status} = data;
+            let newData = {cl_date,cl_no,cl_quality,cl_status};
             newData.cl_type_rice=[];
-            // newData.incoterms=[];
+            newData.incoterms=[];
             newData.cl_date= new Date(newData.cl_date);
-            // data.incoterms.map((item) => {
-            //     console.log(item);
-            // })
+            data.incoterms.map((item) => {
+                console.log(item.inct_id);
+                newData.incoterms.push({inct_id:item.inct_id})
+            })
 
             data.cl_type_rice.map((cl_type_rice,index)=>{
               newData.cl_type_rice.push({type_rice_id:cl_type_rice.type_rice_id,

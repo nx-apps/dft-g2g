@@ -69,7 +69,7 @@
           </div>
           <div class="addContract" name="listOfShipment">
             <!-- <list-of-booking-in-confirm></list-of-booking-in-confirm> -->
-            <list-of-booking></list-of-booking>
+            <list-of-booking data="[[dataSelected]]"></list-of-booking>
             <!-- <list-of-shipments  data-for-select="[[dataForSelected.dataForShipment]]" data="[[dataSelected]]" is-input-disabled="[[isInputDisabled]]"></list-of-shipments> -->
           </div>
           <div class="addContract" name="listOfFee">
@@ -346,7 +346,7 @@
               }
             },
             _getListShipment:function (e) {
-              // console.log(e.detail.detail);
+              console.log(e.detail.detail);
               this.g2gPageSeleted = 'listOfShipment';
               this.titlePanelRight = 'การส่งมอบสินค้า';
               if(typeof e.detail.contractId == "undefined") {
@@ -369,8 +369,8 @@
                   this.fire('toast',{status:'load'});
                   this._flipDrawer();
                 }
-
-                // this.dataSelected = e.detail.data;
+                console.log(e.detail.data.book);
+                this.dataSelected = e.detail.data;
                 // this.set('dataForSelected.dataForShipment.contract_id',e.detail.data.contract_id);
                 // this.set('dataForSelected.dataForShipment.buyer_id',e.detail.data.buyer_id);
                 // this.set('dataForSelected.dataForShipment.country_id',e.detail.data.country_id);

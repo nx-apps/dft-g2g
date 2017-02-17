@@ -7,14 +7,13 @@
   <template>
     <iron-pages selected="{{pageSelected}}" attr-for-selected="name">
       <div name="list-of-booking-in-confirm">
-        <list-of-booking-in-confirm></list-of-booking-in-confirm>
+        <list-of-booking-in-confirm  data="{{data}}"></list-of-booking-in-confirm>
       </div>
-      <div name="list-of-booking-in-confirm-add">
+      <!-- <div name="list-of-booking-in-confirm-add">
         <list-of-booking-in-confirm-add></list-of-booking-in-confirm-add>
-      </div>
+      </div> -->
       <div name="list-of-booking-shm-det">
         <list-of-booking-detail></list-of-booking-detail>
-        <!-- <list-of-booking-shm-det></list-of-booking-shm-det> -->
       </div>
     </iron-pages>
 
@@ -29,11 +28,15 @@
         }
       },
       listeners:{
-        '_change-component-bl':'_changeComponentBl'
+        '_change-component-bl':'_changeComponentBl',
+        '_get-booking-detail':'_getBookingDetail'
       },
       _changeComponentBl:function (data) {
         console.log(data.detail.detail);
         this.set('pageSelected',data.detail.detail)
+      },
+      _getBookingDetail:function (e) {
+        console.log(e.detail.detail);
       }
 
     });
