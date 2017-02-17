@@ -47,7 +47,7 @@
           <table class="gl-table-default">
             <thead class="table-head">
               <tr>
-                <th>{{localize('label_booking_no')}}</th>
+                <th>{{localize('label_lot_no')}}</th>
                 <th>{{localize('label_place_of_delivery')}}</th>
                 <th>{{localize('label_port_of_destination')}}</th>
               </tr>
@@ -55,7 +55,7 @@
             <tbody class="table-body">
                 <template is="dom-repeat" items="[[data]]">
                   <tr on-tap="getShmDetail" data="[[item]]">
-                    <td>  [[item.bl_no]] </td>
+                    <td>  [[item.ship_lot_no]] </td>
                     <td> [[item.deli_port_name]]
                       <!-- [[formatNumberNoZero(item.cl_quantity_total)]]  -->
                     </td>
