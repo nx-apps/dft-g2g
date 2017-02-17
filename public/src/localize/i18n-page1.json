@@ -15,6 +15,7 @@
         "text_list_exporter_name":"รายชื่อผู้ส่งออก",
         "text_list_booking":"รายการเลขการจอง",
         "text_exporter_name":"ผู้ส่งออก",
+        "text_confirm_confirm":"ยืนยันทำสัญญาที่ยืนยันแล้ว",
         "text_page_total":"หน้ารวม",
         "text_of_contract":"ของสัญญา",
         "text_bill_of_lading":"ใบตราส่งสินค้าทางทะเล",
@@ -34,9 +35,10 @@
         "text_descriptions":"คำอธิบาย",
         "text_amount":"Amount",
         "text_bags":"BAGS",
+        "text_order_no":"ครั้งที่ ",
 
         "":"Chart",
-        "label_make_contract":"ทำสัญญา",
+        "label_make_tract":"ทำสัญญา",
         "label_make_contract_total":"ทำสัญญา (ตัน)",
         "label_send_rice":"ส่งแล้ว",
         "label_send_rice_total":"ส่งมอบแล้ว (ตัน)",
@@ -94,7 +96,7 @@
 
         "":"Shm_det",
         "label_tel":"เบอร์โทร",
-        "label_confirmation_letter":"จดหมายยืนยัน",
+        "label_confirmation_letter":"ยืนยันทำสัญญา",
         "label_number_of_containers":"จำนวนตู้คอนเทนเนอร์",
         "label_price_usd_mt":"ราคา (ดอลลาร์สหรัฐอเมริกา/เมตริกตัน)",
         "label_weight_sacks_gram_bag":"น้ำหนักกระสอบ (กรัม/ถุง)",

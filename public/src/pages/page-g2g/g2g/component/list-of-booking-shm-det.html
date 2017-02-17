@@ -4,7 +4,7 @@
       display: block;
     }
     .textinPut {
-      margin-top: 30px;
+      margin-bottom: 30px;
     }
     table {
       border: 0.16px solid #F1F1F1;
@@ -25,27 +25,29 @@
   </style>
   <template>
     <gl-form-panel set-padding="10px 20px 10px 20px" set-border="1px">
-      <gl-form-panel-head label="" set-padding="10px" set-border="1px">
+      <gl-form-panel-head label="{{localize('text_list_booking')}}" set-padding="10px" set-border="1px">
           <div class="addconfirm horizontal end-justified layout">
             <paper-button raised class="gl-btn-primary" on-tap="createBooking">{{localize('btn_add_booking')}}</paper-button>
           </div>
-            </gl-form-panel-head>
+      </gl-form-panel-head>
             <br>
             <gl-grid-row width="{{getWidth}}">
-              <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
-                <div class="textinPut">
+              <!-- <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
                   {{localize('text_list_booking')}}
-                </div>
-              </gl-grid-col>
+              </gl-grid-col> -->
               <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,5]]">
-                  <gl-form-input disabled label="{{localize('label_confirmation_letter')}}" value="[[dataForSelect.cl_no]]"></gl-form-input>
+                <div class="textinPut">
+                  {{localize('label_confirmation_letter')}}{{localize('text_order_no')}} : [[dataForSelect.cl_no]]
+                </div>
+
+                  <!-- <gl-form-input disabled label="{{localize('label_confirmation_letter')}}{{localize('text_order_no')}}" value="[[dataForSelect.cl_no]]"></gl-form-input> -->
               </gl-grid-col>
             </gl-grid-row>
 
           <table class="gl-table-default">
             <thead class="table-head">
               <tr>
-                <th>{{localize('label_booking_no')}}</th>
+                <th>{{localize('label_lot_no')}}</th>
                 <th>{{localize('label_place_of_delivery')}}</th>
                 <th>{{localize('label_port_of_destination')}}</th>
               </tr>
@@ -53,7 +55,7 @@
             <tbody class="table-body">
                 <template is="dom-repeat" items="[[data]]">
                   <tr on-tap="getShmDetail" data="[[item]]">
-                    <td>  [[item.bl_no]] </td>
+                    <td>  [[item.ship_lot_no]] </td>
                     <td> [[item.deli_port_name]]
                       <!-- [[formatNumberNoZero(item.cl_quantity_total)]]  -->
                     </td>
