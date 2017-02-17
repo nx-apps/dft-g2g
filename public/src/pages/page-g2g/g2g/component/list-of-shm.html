@@ -20,7 +20,7 @@
           <shm-det-exporter is-input-disabled="[[!isInputDisabled]]" data-for-select="[[dataForSelect]]"></shm-det-exporter>
         </div>
         <div name="shm-detail">
-          <shm-det-exporter  is-input-disabled="[[isInputDisabled]]" data-for-select="[[dataForSelect]]"></shm-det-exporter>
+          <shm-det-exporter  data="[[dataEdit]]" is-input-disabled="[[isInputDisabled]]" data-for-select="[[dataForSelect]]"></shm-det-exporter>
         </div>
       </iron-pages>
 
@@ -29,6 +29,8 @@
     Polymer({
       is: "list-of-shm",
       behaviors: [
+        g2gCongtroller,
+        g2gModelBehavior,
           nylonBehavior,
           nylonLocalizeBehavior
       ],
@@ -36,6 +38,10 @@
         pageSelected: {
           type: String,
           value:'list-of-shm-det'
+        },
+        dataEdit:{
+          type:Object,
+          value:{}
         }
       },
       created:function(){
@@ -51,8 +57,10 @@
         this.set('pageSelected',data.detail.detail)
       },
       _getFireShmDetail:function (e) {
-        console.log(e.detail);
-        this.dataSelected=e.detail.detail;
+        // console.log(e.detail.detail);
+        // this.dataEdit=e.detail.detail;
+        this.set('dataEdit',e.detail.detail)
+        // console.log(this.dataEdit);
         this.set('pageSelected','shm-detail')
       }
 
