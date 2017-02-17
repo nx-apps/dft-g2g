@@ -27,7 +27,7 @@
           <paper-icon-button id="editConfirm" class="crud" icon="create" raised on-tap="editInput"  ></paper-icon-button>
           <paper-tooltip for="editConfirm" offset="0">Edit Booking</paper-tooltip>
           <paper-icon-button id="deleteConfirm" class="crud" icon="delete" raised on-tap="deleteBooking" hidden="[[data.shm_status]]"></paper-icon-button>
-          <paper-tooltip for="deleteConfirm" offset="0">Delete Shipment</paper-tooltip>
+          <paper-tooltip for="deleteConfirm" offset="0">Delete Booking</paper-tooltip>
          </div>
         <!-- <icon-button-management is-input-disabled="[[!isInputDisabled]]"></icon-button-management> -->
       <!-- </template> -->
@@ -252,21 +252,18 @@
       addBl:function () {
         this.data.book_status = false;
         this.data.cl_id = this.dataForSelect.cl_id;
-        // console.log(this.dataForSelect.cl_id ,this.dataForSelect.contract_id);
-        // console.log(this.data);
+        console.log(this.data.cl_id);
         this.set('data.tags',[])
         this.push('data.tags',this.dataForSelect.contract_id);
+
         // console.log(this.data);
         this._cleanDataBl(this.data,(data)=>{
-          // console.log(data);
-          // console.log(data);
           if (data.carrier_id == '' || data.carrier_id == undefined) {
             data.carrier_id = this._checkCarrierIsBlank();
           }
-          console.log(data);
           this.insert('./g2g/book/insert',data, () => {
             this.fire('toast',{status:'load'});
-            // this.fire('get-list-bl',{shm_id:data.shm_id});
+            this.fire('_get-fire-booking-detail',{cl_id:data.cl_id});
             this.fire('toast',{status:'success',text:'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
               callback:()=>{
                   this.cancelInsertShipment();
