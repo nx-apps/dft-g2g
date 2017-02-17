@@ -47,18 +47,18 @@
         this.set('pageSelected',data.detail.detail)
       },
       _getBookingDetail:function (e) {
-        // console.log(e.detail.detail);
+        console.log(e.detail.detail);
         // console.log(this.dataForSelect);
         this.read('./g2g/book/confirm/id/'+e.detail.detail.cl_id,(data)=>{
           this.dataSelected=data;
           this.set('dataForSelect.cl_no',e.detail.detail.cl_no);
           this.set('dataForSelect.cl_id',e.detail.detail.cl_id);
-          console.log(this.dataForSelect);
+          this.set('dataForSelect.cl_type_rice',e.detail.detail.cl_type_rice);
           this.set('pageSelected','list-of-booking-shm-det')
         });
       },
       _getFireBookingDetail:function (e) {
-        console.log(e.detail);
+        // console.log(e.detail);
         this.read('./g2g/book/confirm/id/'+e.detail.cl_id,(data)=>{
           this.dataSelected=data;
         });

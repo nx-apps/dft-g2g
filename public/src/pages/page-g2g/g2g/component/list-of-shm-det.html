@@ -12,7 +12,6 @@
   <template>
 
     <gl-form-panel>
-
       <gl-form-panel-head label="{{localize('text_list_exporter_name')}}" set-padding="10px" set-border="1px">
           <paper-button class="gl-btn-primary" raised on-tap="createShmDet">{{localize('btn_add_exporter')}}</paper-button>
       </gl-form-panel-head>
@@ -26,12 +25,15 @@
           </tr>
         </thead>
         <tbody class="table-body">
-          <tr on-tap="shmDetail">
-            <td>111</td>
-            <td>111</td>
-            <td>111</td>
-            <td>111</td>
-          </tr>
+          <template is="dom-repeat" items="[[data]]">
+            <tr on-tap="shmDetail" data="[[item]]">
+              <td>1</td>
+              <td>[[item.seller_name_en]]</td>
+              <td>[[item.type_rice_name_en]]</td>
+              <td>[[item.shm_det_quantity]]</td>
+            </tr>
+          </template>
+
         </tbody>
       </table>
       <gl-form-panel-footer set-padding="10px 20px 0px 20px">
@@ -55,8 +57,9 @@
       createShmDet:function () {
         this.fire('_change-component-shm',{detail:'list-of-shm-det-add'})
       },
-      shmDetail:function () {
-        this.fire('_change-component-shm',{detail:'shm-detail'})
+      shmDetail:function (e) {
+        // this.fire('_change-component-shm',{detail:'shm-detail'})
+        this.fire('_get-fire-shm-detail',{detail:e.currentTarget.data})
       },
       backWard2Booking:function () {
         this.fire('_change-component-book',{detail:'list-of-booking'})

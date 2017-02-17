@@ -50,20 +50,17 @@
                 <th>{{localize('label_lot_no')}}</th>
                 <th>{{localize('label_port_of_destination')}}</th>
                 <th>{{localize('label_place_of_delivery')}}</th>
-
               </tr>
             </thead>
             <tbody class="table-body">
                 <template is="dom-repeat" items="[[data]]">
                   <tr on-tap="getShmDetail" data="[[item]]">
-                    <td>  [[item.ship_lot_no]] </td>
+                    <td> [[item.ship_lot_no]] </td>
                     <td>
                       [[item.dest_port_name]]
                     </td>
                     <td> [[item.deli_port_name]]
-                      <!-- [[formatNumberNoZero(item.cl_quantity_total)]]  -->
                     </td>
-
                   </tr>
                 </template>
               <template is="dom-if" if="[[_isHave(data)]]">
@@ -102,8 +99,9 @@
       createBooking:function () {
         this.fire('_change-component-book',{detail:'list-of-booking-add'})
       },
-      getShmDetail:function () {
-        this.fire('_change-component-book',{detail:'list-of-booking-shm-det'})
+      getShmDetail:function (e) {
+        // this.fire('_change-component-book',{detail:'list-of-booking-shm-det'});
+        this.fire('_get-shm-detail',{detail:e.currentTarget.data});
       },
       backWard2BookingInConfirm:function () {
         this.fire('_change-component-bl',{detail:'list-of-booking-in-confirm'})

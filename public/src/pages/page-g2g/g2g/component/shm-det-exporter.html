@@ -41,6 +41,7 @@
           <gl-form-input disabled label="{{localize('label_tel')}}"  value="{{data.seller_phone}}" always-float-label></gl-form-input>
         </gl-grid-col>
       </template>
+
       <template is="dom-if" if="[[_isViewing(isViewSeleted)]]">
         <template is="dom-if" if="[[!isInputDisabled]]">
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
@@ -61,120 +62,7 @@
         </template>
       </template>
 
-      <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-        <gl-combo-box  required class="required" label="{{localize('label_booking_no')}}" always-float-label item-label-path="book_no" disabled="[[!isInputDisabled]]"
-           item-value-path="book_no" items="{{blNos}}" value="{{data.book_no}}"></gl-combo-box>
-        <!-- <gl-form-input  disabled required class="required" label="Booking No."always-float-label error-message="{{localize('text_enter_your_detail')}}"   value="{{data.book_no}}"></gl-form-input> -->
-      </gl-grid-col>
 
-      <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-        <gl-form-input  disabled required class="required" label="{{localize('label_bill_of_lading')}}" always-float-label error-message="{{localize('text_enter_your_detail')}}"   value="{{data.bl_no}}" ></gl-form-input>
-        <!-- <gl-combo-box  required class="required" label="B/L No." always-float-label item-label-path="bl_no" disabled="[[!isInputDisabled]]"
-           item-value-path="bl_no" items="{{blNos}}" value="{{data.bl_no}}"></gl-combo-box> -->
-      </gl-grid-col>
-
-
-      <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-        <gl-combo-box disabled  label="{{localize('label_shipping_agent')}}"always-float-label item-label-path="carrier_name"
-           item-value-path="carrier_id" items="{{dataForSelect.carrier}}" value="{{data.carrier_id}}"></gl-combo-box>
-      </gl-grid-col>
-
-      <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-        <gl-combo-box disabled required class="required"label="{{localize('label_shipping_line')}}" always-float-label item-label-path="shipline_name"
-           item-value-path="shipline_id" items="{{dataForSelect.shipline}}" value="{{data.shipline_id}}" ></gl-combo-box>
-      </gl-grid-col>
-      <!-- [[_getShip(data.shipline_id,dataForSelect)]] -->
-      <template is="dom-repeat" items="[[data.ship]]">
-        <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-
-          <!-- <gl-combo-box disabled required class="required"label="Vessel [[_ObcountIndex(index)]]"always-float-label item-label-path="ship_name"
-           item-value-path="ship_id" items="[[_getShip(data.shipline_id,dataForSelect)]]" value="{{item.ship_id}}"></gl-combo-box> -->
-           [[_getShip(data.shipline_id,dataForSelect)]]
-            <gl-combo-box disabled id="ship-[[index]]" required class="required"label="{{localize('label_vessel')}} [[_ObcountIndex(index)]]" always-float-label item-label-path="ship_name" disabled="[[isInputDisabled]]"
-             item-value-path="ship_id" value="{{item.ship_id}}" on-value-changed="_getResetShip"></gl-combo-box>
-        </gl-grid-col>
-        <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-          <gl-form-input disabled required class="required"label="{{localize('label_voy_no')}}"always-float-label  error-message="{{localize('text_enter_your_detail')}}"  value="{{item.ship_voy_no}}"
-          name="voidNo"></gl-form-input>
-        </gl-grid-col>
-        <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]"></gl-grid-col>
-      </template>
-
-    </gl-grid-row>
-    <gl-grid-row width="{{getWidth}}">
-      <template is="dom-repeat" items="[[data.surveyor]]">
-        <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-          <gl-combo-box required class="required" label="{{localize('label_surveyor')}} [[_ObcountIndex(index)]]" always-float-label item-label-path="surveyor_name" disabled
-            item-value-path="surveyor_id" items="{{dataForSelect.surveyor}}" value="{{item.surveyor_id}}"></gl-combo-box>
-        </gl-grid-col>
-        <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]"></gl-grid-col>
-        <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]"></gl-grid-col>
-      </template>
-      <!-- <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-        <gl-combo-box required disabled class="required"label="Surveyor"always-float-label item-label-path="surveyor_name"
-          item-value-path="surveyor_id" items="{{dataForSelect.surveyor}}" value="{{data.surveyor_id}}"></gl-combo-box>
-      </gl-grid-col> -->
-
-      <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-        <gl-form-input disabled required class="required"label="{{localize('label_lot_no')}}"always-float-label  error-message="{{localize('text_enter_your_detail')}}"  value="{{data.ship_lot_no}}"
-        name="lotNo"></gl-form-input>
-      </gl-grid-col>
-
-
-
-      <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-        <gl-combo-box required disabled class="required"label="{{localize('label_port_of_loading')}}" always-float-label item-label-path="port_name"
-           item-value-path="port_id" items="{{pol}}" value="{{data.load_port_id}}"></gl-combo-box>
-
-      </gl-grid-col>
-      <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-        <vaadin-date-picker disabled required class="required" label="{{localize('label_etd')}}" always-float-label  value="{{data.etd_date}}"></vaadin-date-picker>
-      </gl-grid-col>
-      <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-        <vaadin-date-picker disabled required class="required"  label="{{localize('label_eta')}}"always-float-label value="{{data.eta_date}}"></vaadin-date-picker>
-      </gl-grid-col>
-
-      <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-        <gl-combo-box disabled required class="required"label="{{localize('label_port_of_discharge')}}" always-float-label  item-label-path="port_name"
-        item-value-path="port_id" items="{{pod}}"  value="{{data.dest_port_id}}"></gl-combo-box>
-      </gl-grid-col>
-      <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-        <gl-combo-box disabled required class="required"label="{{localize('label_place_of_delivery')}}" always-float-label  item-label-path="port_name"
-        item-value-path="port_id" items="{{pod}}" value="{{data.deli_port_id}}"></gl-combo-box>
-      </gl-grid-col>
-
-
-      <!-- <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-        [[changeString2Num(data.*,'num_of_container')]]
-          <gl-form-input disabled required allowed-pattern="[0-9||,||.]" format-number="on" class="required"label="จำนวนตู้คอนเทนเนอร์"always-float-label error-message="{{localize('text_enter_your_detail')}}"  value="{{data.num_of_container}}"></gl-form-input>
-      </gl-grid-col> -->
-      <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-        [[changeString2Num(data.*,'weight_per_container')]]
-        <gl-form-input disabled required allowed-pattern="[0-9||,||.]" format-number="on" class="required"label="{{localize('label_cabinet')}}"always-float-label error-message="{{localize('text_enter_your_detail')}}"   value="{{data.weight_per_container}}" ></gl-form-input>
-      </gl-grid-col>
-      <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-        <vaadin-date-picker required class="required"label="{{localize('label_packing_date')}}" always-float-label class="requested" value="{{data.packing_date}}" disabled></vaadin-date-picker>
-      </gl-grid-col>
-
-      <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-        <vaadin-date-picker required class="required"label="{{localize('label_cut_off_date')}}" always-float-label class="requested" value="{{data.cut_of_date}}" disabled></vaadin-date-picker>
-      </gl-grid-col>
-
-      <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-        <gl-form-input label="{{localize('label_cut_off_time')}}" always-float-label required class="required" type="time" error-message="{{localize('text_enter_your_detail')}}" placeholder="{{localize('text_your_detail')}}ext_your_detail')}}" value="{{data.cut_of_time}}" disabled></gl-form-input>
-      </gl-grid-col>
-
-      <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-        <vaadin-date-picker disabled label="{{localize('label_production_date')}}" always-float-label required class="required" value="{{data.product_date}}" ></vaadin-date-picker>
-      </gl-grid-col>
-    </gl-grid-row>
-    <gl-grid-row width="{{getWidth}}">
-      <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]"></gl-grid-col>
-      <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]"></gl-grid-col>
-    <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-      <gl-form-input label="{{localize('label_note')}}" always-float-label  value="{{data.book_remark}}" disabled ></gl-form-input>
-    </gl-grid-col>
-  </gl-grid-row>
       </gl-form-panel-body>
 
   <gl-form-panel-body>
@@ -193,7 +81,7 @@
       [[_checkDataInPackage(data.type_rice_id)]]
       <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,8]]">
         <gl-combo-box id="package_id" label="{{localize('label_package')}}" item-label-path="package_name_en" disabled="[[!isInputDisabled]]"
-         class="required" required  item-value-path="package_id" items="[[_getRiceTypeForPackage(data.type_rice_id,dataForSelect,data.book_id,data.exporter_id)]]" value="{{data.package_id}}" always-float-label></gl-combo-box>
+         class="required" required  item-value-path="package_id" items="[[_getRiceTypeForPackage(data.type_rice_id,dataForSelect,data.exporter_id)]]" value="{{data.package_id}}" always-float-label></gl-combo-box>
       </gl-grid-col>
       <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
         [[changeString2Num(data.*,'shm_det_quantity')]]
@@ -296,7 +184,6 @@
         },
       },
       observers:[
-        '_oBcheckBl(data.book_no,dataForSelect)',
         '_obCalWeight(data.shm_det_quantity,dataForSelect,data.*)',
         'check(data)',
         '_dataSelected(dataForSelect)',
@@ -318,57 +205,6 @@
         // this.dataForSelect.olddata = ;
         this.notifyPath('dataOld');
       },
-      _dataSelected:function (dataForSelect) {
-        // console.log('dataForSelect.pol=>',dataForSelect.pol);
-        // if (dataForSelect.pol != undefined) {
-        //   let elements = this.$$('#load_port_id');
-        //   let pol = new Array();
-        //   dataForSelect.pol.map((el,index)=>{
-        //     pol.push({ label:el.port_name, value:el.port_id});
-        //   });
-        //   elements.items = pol;
-        //   console.log(elements.items);
-        // }
-
-      },
-      _oBcheckBl:function (book_no,dataForSelect) {
-        if (book_no) {
-          let dataContract = this.blNos.filter((blNos)=> blNos.book_no == book_no );
-          let blNo =  Object.assign(this.data ,dataContract[0]);
-          // console.log(dataContract[0]);
-
-          this.data = blNo;
-          this.notifyPath('data.book_id');
-          this.notifyPath('data.ship');
-          this.data.ship.map((ships,index)=>{
-            // console.log(ships);
-            this.notifyPath('data.'+index+'.ship_id');
-            this.notifyPath('data.'+index+'.ship_voy_no');
-          });
-          this.notifyPath('data.surveyor');
-          this.data.surveyor.map((surveyors,index)=>{
-            // console.log(surveyors,index);
-            this.notifyPath('data.'+index+'.surveyor_id');
-          });
-          this.notifyPath('data.bl_no');
-          this.notifyPath('data.book_no');
-          this.notifyPath('data.carrier_id');
-          this.notifyPath('data.deli_port_id');
-          this.notifyPath('data.dest_port_id');
-          this.notifyPath('data.eta_date');
-          this.notifyPath('data.etd_date');
-          this.notifyPath('data.load_port_id');
-          // this.notifyPath('data.num_of_container');
-          this.notifyPath('data.packing_date');
-          this.notifyPath('data.cut_of_date');
-          this.notifyPath('data.cut_of_time');
-          this.notifyPath('data.product_date');
-          this.notifyPath('data.ship_lot_no');
-          this.notifyPath('data.shipline_id');
-          // this.notifyPath('data.surveyor_id');
-          this.notifyPath('data.weight_per_container');
-        }
-      },
       _getSellerPhone:function (exporter_id,dataForSelect) {
         if (exporter_id) {
           let tel = this.dataForSelect.seller.filter((exporters)=> exporters.exporter_id == exporter_id );
@@ -377,18 +213,8 @@
           return tel[0].seller_phone;
         }
       },
-      // _checkDataInPackage:function (type_rice_id) {
-      //   try {
-      //     this.dataForSelect.package = new Array();
-      //     this.notifyPath('dataForSelect.package');
-      //     this.data.package_id = '';
-      //     this.notifyPath('data.package_id');
-      //   } catch (e) {
-      //
-      //   }
-      //
-      // },
-      _getRiceTypeForPackage:function (type_rice_id,dataForSelect,book_id,exporter_id) {
+
+      _getRiceTypeForPackage:function (type_rice_id,dataForSelect,exporter_id) {
         if (type_rice_id) {
 
             // let type_rice_id = e.detail.value;
@@ -398,29 +224,29 @@
             //เซ็นลิมิตข้าวลงใน data.shm_det_quantity
             this.set('dataForSelect.type_rice_quantity_limit_max',typeRice[0].type_rice_quantity_limit_max);
             this.notifyPath('dataForSelect.type_rice_quantity_limit_max')
-            let check;
-            newItemPackage = new Array();
-            try {
-              this.dataOld.map((item) => {
-                if (item.book_id == book_id && item.exporter_id == exporter_id && item.type_rice_id == type_rice_id) {
-                  check = true;
-                  this.dataForSelect.package.map((packages)=>{
-                    if (packages.package_id != item.package_id) {
-                        newItemPackage.push(packages);
-                    }
-                  })
-                } else {
-                  check = false;
-                }
-              })
-            } catch (e) {
-
-            }
-            if (check) {
-              return this.dataForSelect.package =  newItemPackage;
-            }else {
+            // let check;
+            // newItemPackage = new Array();
+            // try {
+            //   this.dataOld.map((item) => {
+            //     if (item.book_id == book_id && item.exporter_id == exporter_id && item.type_rice_id == type_rice_id) {
+            //       check = true;
+            //       this.dataForSelect.package.map((packages)=>{
+            //         if (packages.package_id != item.package_id) {
+            //             newItemPackage.push(packages);
+            //         }
+            //       })
+            //     } else {
+            //       check = false;
+            //     }
+            //   })
+            // } catch (e) {
+            //
+            // }
+            // if (check) {
+            //   return this.dataForSelect.package =  newItemPackage;
+            // }else {
               return typeRice[0].package;
-            }
+            // }
 
 
         }
@@ -463,31 +289,35 @@
       },
       addExporter:function () {
         // console.log(this.data);
-        this.data.shm_id=this.dataForSelect.shm_id;
+        this.data.book_id=this.dataForSelect.book_id;
         this.set('data.tags',[])
-        this.push('data.tags',this.dataForSelect.contract_id,this.dataForSelect.cl_id,this.dataForSelect.seller_id,this.dataForSelect.trader_id);
-        if (this.data.shm_det_quantity <=this.dataForSelect.type_rice_quantity_limit_max) {
+        this.push('data.tags',this.dataForSelect.contract_id,this.dataForSelect.cl_id,this.dataForSelect.seller_id);
+        // console.log(this.data);
+
+        // if (this.data.shm_det_quantity <=this.dataForSelect.type_rice_quantity_limit_max) {
           this._cleanShipmentData(this.data,(data)=>{
             this.fire('toast',{status:'load'}); //คำสั่งสำหรับเปิด toast load
             console.log(data);
             this.insert('./g2g/shipment_detail/insert',data, () => {
-              this.fire('refresh-contract',{detail:'refresh-contract'});
-              this.fire('get-list-shipment',{contractId:this.dataForSelect.contract_id});
-              this.fire('get-list-shipment-detail',{sm_id:this.dataForSelect.shm_id});
+              // this.fire('refresh-contract',{detail:'refresh-contract'});
+              this.fire('_get-fire-shm-detail',{book_id:data.book_id});
+              // this.fire('get-list-shipment-detail',{sm_id:this.dataForSelect.shm_id});
               this.fire('toast',{status:'success',text:'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
                 callback:()=>{
                     this.cancelInsertShipment();
+                    let el = Polymer.dom(this.root).querySelectorAll('.required');
+                    el.map((el)=> {el.reset();el.value=''});
+                    this.cancelEditShipment()
                   }
               });
             });
-            let el = Polymer.dom(this.root).querySelectorAll('.required');
-            el.map((el)=> {el.reset();el.value=''});
+
           });
-        }else {
-          this.fire('toast',{status:'connectError',text:'ปริมาณข้าวเกินกำหนด', //คำสั่งสำหรับเปิด toast error
-            callback:function(){
-          }})
-        }
+        // }else {
+        //   this.fire('toast',{status:'connectError',text:'ปริมาณข้าวเกินกำหนด', //คำสั่งสำหรับเปิด toast error
+        //     callback:function(){
+        //   }})
+        // }
       },
       editExporter:function () {
         let sum = this.oldData.shm_det_quantity +this.dataForSelect.type_rice_quantity_limit_max;
@@ -604,8 +434,8 @@
         let stat = el.map((el)=> el.validate());
           if (stat.every(elem => elem == true)) {
             if (data.shm_det_quantity > 0) {
-              let { book_id,num_of_container,type_rice_id,package_id,shm_det_quantity,exporter_id,shm_id,price_per_ton} = data;
-              let newData ={ book_id,num_of_container,type_rice_id,package_id,shm_det_quantity,exporter_id,shm_id,price_per_ton};
+              let { book_id,num_of_container,type_rice_id,package_id,shm_det_quantity,exporter_id,price_per_ton} = data;
+              let newData ={ book_id,num_of_container,type_rice_id,package_id,shm_det_quantity,exporter_id,price_per_ton};
               if(typeof data.tags !== 'undefined'){
                 newData.tags = new Array();
                 data.tags.map((tag)=>{

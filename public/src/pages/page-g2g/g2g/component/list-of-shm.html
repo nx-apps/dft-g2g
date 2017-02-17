@@ -12,16 +12,15 @@
     }
   </style>
   <template>
-
       <iron-pages selected="{{pageSelected}}" attr-for-selected="name">
         <div name="list-of-shm-det">
-          <list-of-shm-det></list-of-shm-det>
+          <list-of-shm-det data="{{dataSelected}}"></list-of-shm-det>
         </div>
         <div name="list-of-shm-det-add">
-          <shm-det-exporter></shm-det-exporter>
+          <shm-det-exporter is-input-disabled="[[!isInputDisabled]]" data-for-select="[[dataForSelect]]"></shm-det-exporter>
         </div>
         <div name="shm-detail">
-          <shm-det-exporter></shm-det-exporter>
+          <shm-det-exporter  is-input-disabled="[[isInputDisabled]]" data-for-select="[[dataForSelect]]"></shm-det-exporter>
         </div>
       </iron-pages>
 
@@ -43,11 +42,18 @@
           this.nylonLocalizeImport('/i18n-page1.json');
       },
       listeners:{
-        '_change-component-shm':'_changeComponentShm'
+        '_change-component-shm':'_changeComponentShm',
+        '_get-fire-shm-detail':'_getFireShmDetail'
       },
       _changeComponentShm:function (data) {
         // console.log(data.detail.detail);
+        console.log(this.dataSelected);
         this.set('pageSelected',data.detail.detail)
+      },
+      _getFireShmDetail:function (e) {
+        console.log(e.detail);
+        this.dataSelected=e.detail.detail;
+        this.set('pageSelected','shm-detail')
       }
 
     });
