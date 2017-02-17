@@ -24,18 +24,18 @@ exports.list = function (req, res) {
                     .orderBy('cl_no')
                     .without('id')
                     .coerceTo('array'),
-                shipment: r.db('g2g2').table('shipment')
-                    .getAll(row('id'), { index: 'contract_id' })
-                    .merge(function (shm) {
+                book: r.db('g2g2').table('book')
+                    .getAll(row('id'), { index: 'tags' })
+                    .merge(function (book) {
                         return {
-                            shm_id: shm('id'),
-                            shm_quantity: r.db('g2g2').table("shipment_detail")
-                                .getAll(shm('id'), { index: "shm_id" })
+                            book_id: book('id'),
+                            book_quantity: r.db('g2g2').table("shipment_detail")
+                                .getAll(book('id'), { index: "book_id" })
                                 .sum("shm_det_quantity"),
-                            shm_status_name: r.branch(shm('shm_status').eq(true), 'อนุมัติ', 'ยังไม่อนุมัติ')
+                            // shm_status_name: r.branch(shm('shm_status').eq(true), 'อนุมัติ', 'ยังไม่อนุมัติ')
                         }
                     })
-                    .orderBy('shm_no')
+                    .orderBy('ship_lot_no')
                     .without('id', "tags")
                     .coerceTo('array')
                     .eqJoin("cl_id", r.db('g2g2').table("confirm_letter")).without({ right: ["id", "date_created", "date_updated", "cl_type_rice", "cl_quality", "tags"] }).zip()
@@ -55,17 +55,17 @@ exports.list = function (req, res) {
                         })
                         .sum('cl_quantity_total')
                 ),
-                contract_quantity_shipment: row('shipment')
-                    .filter(function (f) {
-                        return f('shm_status').eq(true)
-                    })
-                    .sum('shm_quantity'),
-                contract_quantity_shipment_balance: row('contract_quantity').sub(
-                    row('shipment')
-                        .filter(function (f) {
-                            return f('shm_status').eq(true)
-                        })
-                        .sum('shm_quantity')
+                contract_quantity_book: row('book')
+                    // .filter(function (f) {
+                    //     return f('shm_status').eq(true)
+                    // })
+                    .sum('book_quantity'),
+                contract_quantity_book_balance: row('contract_quantity').sub(
+                    row('book')
+                        // .filter(function (f) {
+                        //     return f('shm_status').eq(true)
+                        // })
+                        .sum('book_quantity')
                 )
             }
         })
