@@ -12,9 +12,10 @@
   <template>
 
     <gl-form-panel>
-      <div class="horizontal end-justified layout">
-        <paper-button class="gl-btn-primary" raised on-tap="createShmDet">{{localize('btn_add_exporter')}}</paper-button>
-      </div>
+
+      <gl-form-panel-head label="{{localize('text_list_exporter_name')}}" set-padding="10px" set-border="1px">
+          <paper-button class="gl-btn-primary" raised on-tap="createShmDet">{{localize('btn_add_exporter')}}</paper-button>
+      </gl-form-panel-head>
       <table class="gl-table-default">
         <thead class="table-head">
           <tr>
