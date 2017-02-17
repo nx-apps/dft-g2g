@@ -38,7 +38,7 @@
                 </div>
               </gl-grid-col>
               <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,5]]">
-                  <gl-form-input disabled label="confirm_letter" value="[[dataForSelected.cl_no]]"></gl-form-input>
+                  <gl-form-input disabled label="confirm_letter" value="[[dataForSelect.cl_no]]"></gl-form-input>
               </gl-grid-col>
             </gl-grid-row>
 
@@ -46,19 +46,19 @@
             <thead class="table-head">
               <tr>
                 <th>{{localize('label_booking_no')}}</th>
-                <th>{{localize('label_lot_no')}}</th>
-                <th>{{localize('label_quantity')}}</th>
+                <th>{{localize('label_place_of_delivery')}}</th>
+                <th>{{localize('label_port_of_destination')}}</th>
               </tr>
             </thead>
             <tbody class="table-body">
                 <template is="dom-repeat" items="[[data]]">
                   <tr on-tap="getShmDetail" data="[[item]]">
-                    <td>  [[item.cl_no]] </td>
-                    <td> [[item.lot_no]]
+                    <td>  [[item.bl_no]] </td>
+                    <td> [[item.deli_port_name]]
                       <!-- [[formatNumberNoZero(item.cl_quantity_total)]]  -->
                     </td>
                     <td>
-                      [[item.quantity]]
+                      [[item.dest_port_name]]
                     </td>
                   </tr>
                 </template>

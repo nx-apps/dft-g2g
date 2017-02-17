@@ -6,7 +6,7 @@
   <template>
     <iron-pages selected="{{pageSelected}}" attr-for-selected="name">
       <div name="list-of-booking">
-        <list-of-booking-shm-det data="{{data}}" data-for-selected="[[dataForSelected]]"></list-of-booking-shm-det>
+        <list-of-booking-shm-det data="{{data}}" data-for-select="[[dataForSelect]]"></list-of-booking-shm-det>
       </div>
       <div name="list-of-booking-add">
         <booking-detail data-for-select="[[dataForSelect]]" is-input-disabled="[[!isInputDisabled]]" is-view-seleted="[[!isViewSeleted]]"></booking-detail>
