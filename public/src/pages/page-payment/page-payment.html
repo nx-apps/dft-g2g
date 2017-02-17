@@ -364,7 +364,7 @@
         // console.log(e.detail.detail.fee_id);
         //เรียกให้อัพเดตรายชื่อ fee ที่อยู่ใน contract
         console.log(e.detail.detail);
-        this._getFeeListInShm(e.detail.detail.shm_id);
+        this._getFeeListInShm(e.detail.detail.cl_id);
         //
         this.read('./g2g/fee/id/' + e.detail.detail.fee_id, (data) => {
 
