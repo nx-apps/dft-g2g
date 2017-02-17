@@ -24,7 +24,6 @@
         <gl-grid-col width="[[getWidth]]" grid="[[300,6],[500,2]]">
           [[changeString2Num(data.*,'fee_no')]]
           <!-- disabled="[[isInputDisabled]]" -->
-          //[[isViewSeleted]]//1424d53
           <gl-form-input class="required" required disabled="[[isInputDisabled]]" allowed-pattern="[0-9||,||.]" format-number="on"  label="{{localize('label_fee_no')}}" value="{{data.fee_no}}" always-float-label error-message="กรุณาใส่ครั้งที่"></gl-form-input>
         </gl-grid-col>
         <!--<gl-grid-col width="[[getWidth]]" grid="[[300,6],[500,3]]">
@@ -75,10 +74,8 @@
       if (this._checkFeeNoDup(this.data.fee_no)) {
         this.data.fee_status = false;
         this.data.cl_id = this.dataForSelect.cl_id;
-        console.log(this.dataForSelect);
         this.set('data.tags',[this.dataForSelect.contract_id]);
         this._cleanDataFeeManagement(this.data,(data)=>{
-          console.log(data);
           this.fire('toast',{status:'load'}); //คำสั่งสำหรับเปิด toast load
           this.insert('./g2g/fee/insert',data, () => {
             this.fire('toast',{status:'success',text:'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
