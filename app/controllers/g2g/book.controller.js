@@ -143,6 +143,76 @@ exports.getByShmId = function (req, res) {
             res.json(err)
         })
 }
+exports.getByClId = function (req, res) {
+    var r = req.r;
+    r.db('g2g2').table('book')
+        .getAll(req.params.cl_id, { index: 'cl_id' })
+        // .eqJoin("shm_id", r.db('g2g2').table("shipment")).without({ right: ["id", "date_created", "date_updated", "creater", "updater", "tags"] }).zip()
+        .eqJoin("cl_id", r.db('g2g2').table("confirm_letter")).pluck("left", { right: ["cl_date", "incoterms"] }).zip()
+        .eqJoin('carrier_id', r.db('common').table('carrier')).pluck("left", { right: "carrier_name" }).zip()
+        .eqJoin('shipline_id', r.db('common').table('shipline')).pluck("left", { right: ["shipline_name", "shipline_tel"] }).zip()
+        .eqJoin("load_port_id", r.db('common').table("port")).map(function (port) {
+            return port.merge({
+                right: {
+                    load_port_name: port("right")("port_name"),//r.row["right"]["port_name"]
+                    load_port_code: port("right")("port_code")
+                }
+            })
+        }).pluck("left", { right: ["load_port_name", "load_port_code"] }).zip()
+        .eqJoin("dest_port_id", r.db('common').table("port")).map(function (port) {
+            return port.merge({
+                right: {
+                    dest_port_name: port("right")("port_name"),//r.row["right"]["port_name"]
+                    dest_port_code: port("right")("port_code")
+                }
+            })
+        }).pluck("left", { right: ["dest_port_name", "dest_port_code"] }).zip()
+        .eqJoin("deli_port_id", r.db('common').table("port")).map(function (port) {
+            return port.merge({
+                right: {
+                    deli_port_name: port("right")("port_name"),//r.row["right"]["port_name"]
+                    deli_port_code: port("right")("port_code")
+                }
+            })
+        }).pluck("left", { right: ["deli_port_name", "deli_port_code"] }).zip()
+        .merge(function (m) {
+            return {
+                book_id: m('id'),
+                ship: m('ship').map(function (arr_ship) {
+                    return arr_ship.merge(function (row_ship) {
+                        return r.db('common').table('ship').get(row_ship('ship_id')).pluck('ship_name')
+                    })
+                }),
+                surveyor: m('surveyor').map(function (arr_surveyor) {
+                    return arr_surveyor.merge(function (row_surveyor) {
+                        return r.db('common').table('surveyor').get(row_surveyor('surveyor_id')).pluck('surveyor_name')
+                    })
+                }),
+                incoterms: m('incoterms').map(function (arr_inct) {
+                    return arr_inct.merge(function (row_inct) {
+                        return r.db('common').table('incoterms').get(row_inct('inct_id')).pluck('inct_name')
+                    })
+                }),
+                etd_date: m('etd_date').split('T')(0),
+                eta_date: m('eta_date').split('T')(0),
+                packing_date: m('packing_date').split('T')(0),
+                product_date: m('product_date').split('T')(0),
+                cl_date: m('cl_date').split('T')(0),
+                cut_of_date: m('cut_of_date').split('T')(0),
+                date_created: m('date_created').split('T')(0),
+                date_updated: m('date_updated').split('T')(0)
+            }
+        })
+        .without('id', 'tags')
+        .orderBy(r.desc('date_created'), 'bl_no')
+        .run()
+        .then(function (result) {
+            res.json(result)
+        })
+        .error(function (err) {
+            res.json(err)
+        })
+}
 exports.getById = function (req, res) {
     var r = req.r;
     r.db('g2g2').table('book')
@@ -284,7 +354,7 @@ exports.insert = function (req, res) {
     var r = req.r;
     var result = { result: false, message: null, id: null };
     if (valid) {
-        var obj = Object.assign(req.body, { date_created: new Date().toISOString(), date_updated: new Date().toISOString(),creater: 'admin' ,updater:'admin'});
+        var obj = Object.assign(req.body, { date_created: new Date().toISOString(), date_updated: new Date().toISOString(), creater: 'admin', updater: 'admin' });
         r.db('g2g2').table("book")
             .insert(obj)
             .run()
