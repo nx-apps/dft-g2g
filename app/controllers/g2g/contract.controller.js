@@ -24,21 +24,46 @@ exports.list = function (req, res) {
                     .orderBy('cl_no')
                     .without('id')
                     .coerceTo('array'),
-                book: r.db('g2g2').table('book')
-                    .getAll(row('id'), { index: 'tags' })
-                    .merge(function (book) {
+                book: r.db('g2g2').table('confirm_letter')
+                    .getAll(row('id'), { index: 'contract_id' })
+                    .filter({ cl_status: true })
+                    .map(function (cl) {
                         return {
-                            book_id: book('id'),
-                            book_quantity: r.db('g2g2').table("shipment_detail")
-                                .getAll(book('id'), { index: "book_id" })
-                                .sum("shm_det_quantity"),
-                            book_status_name: r.branch(book('book_status').eq(true), 'อนุมัติ', 'ยังไม่อนุมัติ')
+                            cl_id: cl('id'),
+                            cl_no: cl('cl_no'),
+                            cl_quantity_total: cl('cl_type_rice').sum('type_rice_quantity'),
+                            cl_status:cl('cl_status'),
+                            book_quantity: r.db('g2g2').table('book')
+                                .getAll(row('id'), { index: 'cl_id' })
+                                .pluck('id')
+                                .map((book) => {
+                                    return {
+                                        book_id: book('id'),
+                                        book_quantity: r.db('g2g2').table('shipment_detail')
+                                            .getAll(book('id'), { index: 'book_id' })
+                                            .sum('shm_det_quantity')
+                                    }
+                                })
+                                .sum('book_quantity')
                         }
                     })
-                    .orderBy('ship_lot_no')
-                    .without('id', "tags")
+                    .orderBy('cl_no')
                     .coerceTo('array')
-                    .eqJoin("cl_id", r.db('g2g2').table("confirm_letter")).without({ right: ["id", "date_created", "date_updated", "cl_type_rice", "cl_quality", "tags"] }).zip()
+                // r.db('g2g2').table('book')
+                //     .getAll(row('id'), { index: 'tags' })
+                //     .merge(function (book) {
+                //         return {
+                //             book_id: book('id'),
+                //             book_quantity: r.db('g2g2').table("shipment_detail")
+                //                 .getAll(book('id'), { index: "book_id" })
+                //                 .sum("shm_det_quantity"),
+                //             book_status_name: r.branch(book('book_status').eq(true), 'อนุมัติ', 'ยังไม่อนุมัติ')
+                //         }
+                //     })
+                //     .orderBy('ship_lot_no')
+                //     .without('id', "tags")
+                //     .coerceTo('array')
+                //     .eqJoin("cl_id", r.db('g2g2').table("confirm_letter")).without({ right: ["id", "date_created", "date_updated", "cl_type_rice", "cl_quality", "tags"] }).zip()
             }
         })
         .merge(function (row) {
