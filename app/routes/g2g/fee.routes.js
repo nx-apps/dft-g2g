@@ -1,6 +1,7 @@
 module.exports = function (app) {
     var controller = require('../../controllers/g2g/fee.controller');
     app.get('/contract/id/:contract_id', controller.getByContractId);
+    app.get('/confirm/id/:cl_id', controller.getByClID);
     app.get('/shm/id/:shm_id', controller.getByShmID);
     app.get('/id/:id', controller.getById);
     app.get('/invoice/id/:invoice_id', controller.getByInvoiceId);

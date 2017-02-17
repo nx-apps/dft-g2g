@@ -2,7 +2,7 @@ exports.getByContractId = function (req, res) {
     var r = req.r;
     r.db('g2g2').table('fee')
         .getAll(req.params.contract_id, { index: 'tags' }).without('tags')
-        .eqJoin('shm_id', r.db('g2g2').table('shipment')).pluck("left", { right: ['shm_no', 'cl_id'] }).zip()
+        // .eqJoin('shm_id', r.db('g2g2').table('shipment')).pluck("left", { right: ['shm_no', 'cl_id'] }).zip()
         .filter({ 'fee_status': false })
         .merge(function (m) {
             return {
@@ -66,6 +66,24 @@ exports.getByShmID = function (req, res) {
     var r = req.r;
     r.db('g2g2').table('fee')
         .getAll(req.params.shm_id, { index: 'shm_id' })
+        .merge({
+            fee_id: r.row('id'),
+            fee_status_name: r.branch(r.row('fee_status').eq(true), 'อนุมัติ', 'ยังไม่อนุมัติ')
+        })
+        .without('id')
+        .run()
+        .then(function (result) {
+            res.json(result)
+        })
+        .error(function (err) {
+            res.json(err)
+        })
+}
+
+exports.getByClID = function (req, res) {
+    var r = req.r;
+    r.db('g2g2').table('fee')
+        .getAll(req.params.cl_id, { index: 'cl_id' })
         .merge({
             fee_id: r.row('id'),
             fee_status_name: r.branch(r.row('fee_status').eq(true), 'อนุมัติ', 'ยังไม่อนุมัติ')
@@ -148,8 +166,8 @@ exports.getByInvoiceId = function (req, res) {
                 invoice_detail: r.db('g2g2').table('shipment_detail')
                     .getAll(m('book_id'), { index: 'book_id' })
                     .coerceTo('array')
-                    .pluck("id", "shm_id", "package_id", "exporter_id", "shm_det_quantity", "type_rice_id", "price_per_ton")
-                    .eqJoin("shm_id", r.db('g2g2').table("shipment")).without({ right: ["id", "date_created", "date_updated", "creater", "updater"] }).zip()
+                    .pluck("id", "cl_id", "package_id", "exporter_id", "shm_det_quantity", "type_rice_id", "price_per_ton")
+                    // .eqJoin("shm_id", r.db('g2g2').table("shipment")).without({ right: ["id", "date_created", "date_updated", "creater", "updater"] }).zip()
                     .eqJoin("package_id", r.db('common').table("package")).without({ right: ["id", "date_created", "date_updated", "creater", "updater"] }).zip()
                     .eqJoin("exporter_id", r.db('external').table("exporter")).without({ right: ["id", "date_created", "date_updated", "creater", "updater"] }).zip()
                     // .eqJoin("trader_id", r.db('external').table("trader")).without({ right: ["id", "date_created", "date_updated", "creater", "updater"] }).zip()
@@ -201,7 +219,7 @@ exports.getByInvoiceId = function (req, res) {
             }
         })
         .eqJoin("shipline_id", r.db('common').table("shipline")).without({ right: ["id", "date_created", "date_updated", "creater", "updater"] }).zip()
-        .eqJoin("shm_id", r.db('g2g2').table("shipment")).pluck("left", { right: ["cl_id", "contract_id"] }).zip()
+        .eqJoin("cl_id", r.db('g2g2').table("confirm_letter")).pluck("left", { right: ["contract_id"] }).zip()
         .eqJoin("contract_id", r.db('g2g2').table("contract")).pluck("left", { right: ["payterm"] }).zip()
         .run()
         .then(function (result) {
@@ -209,7 +227,7 @@ exports.getByInvoiceId = function (req, res) {
             d['cl_id'] = result[0].cl_id;
             d['contract_id'] = result[0].contract_id;
             d['payterm'] = result[0].payterm;
-            d['shm_id'] = result[0].shm_id;
+            // d['shm_id'] = result[0].shm_id;
             d['amount_usd'] = Object.keys(result).reduce(function (a, b) {
                 return a + result[b].amount_usd;
             }, 0);
