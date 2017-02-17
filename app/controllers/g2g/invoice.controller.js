@@ -35,8 +35,8 @@ exports.getByContractId = function (req, res) {
             })
         }).pluck("left", { right: ["deli_port_name", "deli_port_code"] }).zip()
         .eqJoin("shipline_id", r.db('common').table("shipline")).pluck("left", { right: ["shipline_name", "shipline_tel"] }).zip()
-        .eqJoin("shm_id", r.db('g2g2').table("shipment")).pluck("left", { right: ["shm_no", "cl_id", "contract_id"] }).zip()
-        .eqJoin("cl_id", r.db('g2g2').table("confirm_letter")).pluck("left", { right: ["cl_no", "cl_date"] }).zip()
+        // .eqJoin("shm_id", r.db('g2g2').table("shipment")).pluck("left", { right: ["shm_no", "cl_id", "contract_id"] }).zip()
+        .eqJoin("cl_id", r.db('g2g2').table("confirm_letter")).pluck("left", { right: ["cl_no", "cl_date", "contract_id"] }).zip()
         .eqJoin("contract_id", r.db('g2g2').table("contract")).pluck("left", { right: ["contract_date"] }).zip()
 
         .merge(function (m) {
@@ -53,14 +53,12 @@ exports.getByContractId = function (req, res) {
         })
         .group(function (g) {
             return g.pluck(
-                "shm_id", "shm_no", "cl_id", "cl_no"
+                "cl_id", "cl_no"
             )
         })
         .ungroup()
         .merge(function (me) {
             return {
-                shm_id: me('group')('shm_id'),
-                shm_no: me('group')('shm_no'),
                 cl_id: me('group')('cl_id'),
                 cl_no: me('group')('cl_no'),
                 invoice_detail: me('reduction')
@@ -112,8 +110,8 @@ exports.getByShmId = function (req, res) {
             })
         }).pluck("left", { right: ["deli_port_name", "deli_port_code"] }).zip()
         .eqJoin("shipline_id", r.db('common').table("shipline")).pluck("left", { right: ["shipline_name", "shipline_tel"] }).zip()
-        .eqJoin("shm_id", r.db('g2g2').table("shipment")).pluck("left", { right: ["shm_no", "cl_id", "contract_id"] }).zip()
-        .eqJoin("cl_id", r.db('g2g2').table("confirm_letter")).pluck("left", { right: ["cl_no", "cl_date"] }).zip()
+        // .eqJoin("shm_id", r.db('g2g2').table("shipment")).pluck("left", { right: ["shm_no", "cl_id", "contract_id"] }).zip()
+        .eqJoin("cl_id", r.db('g2g2').table("confirm_letter")).pluck("left", { right: ["cl_no", "cl_date", 'contract_id'] }).zip()
         .eqJoin("contract_id", r.db('g2g2').table("contract")).pluck("left", { right: ["contract_date"] }).zip()
 
         .merge(function (m) {
@@ -143,11 +141,11 @@ exports.getById = function (req, res) {
         .merge(function (row) {
             return r.db('g2g2').table('book')
                 .get(row('book_id'))
+                // .merge(function (m) {
+                //     return r.db('g2g2').table("shipment").get(m('shm_id')).pluck("cl_id", "contract_id", "date_updated", "creater", "updater")
+                // })
                 .merge(function (m) {
-                    return r.db('g2g2').table("shipment").get(m('shm_id')).pluck("cl_id", "contract_id", "date_updated", "creater", "updater")
-                })
-                .merge(function (m) {
-                    return r.db('g2g2').table("confirm_letter").get(m('cl_id')).pluck("incoterms", "cl_date")
+                    return r.db('g2g2').table("confirm_letter").get(m('cl_id')).pluck("incoterms", "cl_date", 'contract_id')
                 })
                 .merge(function (m) {
                     return r.db('g2g2').table("contract").get(m('contract_id')).pluck("contract_date", "buyer_id")
@@ -288,7 +286,7 @@ exports.insert = function (req, res) {
     var r = req.r;
     var result = { result: false, message: null, id: null };
     if (valid) {
-        var obj = Object.assign(req.body, { date_created: new Date().toISOString(), date_updated: new Date().toISOString(),creater: 'admin' ,updater:'admin'});
+        var obj = Object.assign(req.body, { date_created: new Date().toISOString(), date_updated: new Date().toISOString(), creater: 'admin', updater: 'admin' });
         r.db('g2g2').table("invoice")
             .insert(obj)
             .do(inv_do => {
@@ -351,7 +349,7 @@ exports.delete = function (req, res) {
                 result('invoice_status').eq(false)
                 , r.db('g2g2').table('invoice').get(req.params.id)
                     .do(inv_do => {
-                        return r.db('g2g2').table('book').get(inv_do('book_id')).update({ book_status: false })
+                        return r.db('g2g2').table('book').get(inv_do('book_id')).update({ book_status: 'approve' })
                     })
                     .do(inv_do => {
                         return r.db('g2g2').table('invoice').get(req.params.id).delete()

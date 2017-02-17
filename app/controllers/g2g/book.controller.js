@@ -3,10 +3,8 @@ exports.getByContractId = function (req, res) {
     var orderby = req.query.orderby;
     r.db('g2g2').table('book')
         .getAll(req.params.contract_id, { index: 'tags' })
-        .filter({ book_status: false })
-        .eqJoin("shm_id", r.db('g2g2').table("shipment")).pluck("left", { right: ["cl_id", "contract_id", "shm_no", "shm_status"] }).zip()
-        .filter({ shm_status: true })
-        .eqJoin("cl_id", r.db('g2g2').table("confirm_letter")).pluck("left", { right: ["cl_no", "cl_date", "incoterms"] }).zip()
+        .filter({ book_status: 'approve' })
+        .eqJoin("cl_id", r.db('g2g2').table("confirm_letter")).pluck("left", { right: ["cl_no", "cl_date", "incoterms", "contract_id"] }).zip()
         .eqJoin("contract_id", r.db('g2g2').table("contract")).pluck("left", { right: ["contract_name", "contract_date"] }).zip()
         .eqJoin('carrier_id', r.db('common').table('carrier')).pluck("left", { right: "carrier_name" }).zip()
         .eqJoin('shipline_id', r.db('common').table('shipline')).pluck("left", { right: ["shipline_name", "shipline_tel"] }).zip()
@@ -64,7 +62,7 @@ exports.getByContractId = function (req, res) {
             }
         })
         .without('id', 'tags')
-        .orderBy(r.desc('date_created'), 'bl_no')
+        .orderBy('cl_no', r.row('ship_lot_no').coerceTo('number'))
         .run()
         .then(function (result) {
             res.json(result)
@@ -216,11 +214,11 @@ exports.getById = function (req, res) {
     var r = req.r;
     r.db('g2g2').table('book')
         .get(req.params.book_id)
+        // .merge(function (m) {
+        //     return r.db('g2g2').table("shipment").get(m('shm_id')).pluck("cl_id", "contract_id", "shm_no")
+        // })
         .merge(function (m) {
-            return r.db('g2g2').table("shipment").get(m('shm_id')).pluck("cl_id", "contract_id", "shm_no")
-        })
-        .merge(function (m) {
-            return r.db('g2g2').table("confirm_letter").get(m('cl_id')).pluck("cl_no", "incoterms", "cl_date")
+            return r.db('g2g2').table("confirm_letter").get(m('cl_id')).pluck("cl_no", "incoterms", "cl_date", "contract_id")
         })
         .merge(function (m) {
             return r.db('g2g2').table("contract").get(m('contract_id')).pluck("contract_date", "contract_name", "buyer_id")
