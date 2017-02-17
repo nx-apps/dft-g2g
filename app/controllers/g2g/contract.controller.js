@@ -32,7 +32,7 @@ exports.list = function (req, res) {
                             book_quantity: r.db('g2g2').table("shipment_detail")
                                 .getAll(book('id'), { index: "book_id" })
                                 .sum("shm_det_quantity"),
-                            // shm_status_name: r.branch(shm('shm_status').eq(true), 'อนุมัติ', 'ยังไม่อนุมัติ')
+                            book_status_name: r.branch(book('book_status').eq(true), 'อนุมัติ', 'ยังไม่อนุมัติ')
                         }
                     })
                     .orderBy('ship_lot_no')
@@ -56,15 +56,15 @@ exports.list = function (req, res) {
                         .sum('cl_quantity_total')
                 ),
                 contract_quantity_book: row('book')
-                    // .filter(function (f) {
-                    //     return f('shm_status').eq(true)
-                    // })
+                    .filter(function (f) {
+                        return f('book_status').eq(true)
+                    })
                     .sum('book_quantity'),
                 contract_quantity_book_balance: row('contract_quantity').sub(
                     row('book')
-                        // .filter(function (f) {
-                        //     return f('shm_status').eq(true)
-                        // })
+                        .filter(function (f) {
+                            return f('book_status').eq(true)
+                        })
                         .sum('book_quantity')
                 )
             }
