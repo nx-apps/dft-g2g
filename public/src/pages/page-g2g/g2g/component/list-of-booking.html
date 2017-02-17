@@ -13,7 +13,7 @@
         <list-of-booking-in-confirm-add></list-of-booking-in-confirm-add>
       </div> -->
       <div name="list-of-booking-shm-det">
-        <list-of-booking-detail></list-of-booking-detail>
+        <list-of-booking-detail data="{{dataSelected}}"></list-of-booking-detail>
       </div>
     </iron-pages>
 
@@ -25,8 +25,15 @@
         pageSelected: {
           type: String,
           value:'list-of-booking-in-confirm'
+        },
+        dataSelected:{
+          type:Array
         }
       },
+      behaviors: [
+          g2gModelBehavior,
+          g2gCongtroller,
+      ],
       listeners:{
         '_change-component-bl':'_changeComponentBl',
         '_get-booking-detail':'_getBookingDetail'
@@ -35,8 +42,12 @@
         console.log(data.detail.detail);
         this.set('pageSelected',data.detail.detail)
       },
-      _getBookingDetail:function (e) {
+      _getBookingDetail:function (e,fn) {
         console.log(e.detail.detail);
+        this.read('./g2g/book/confirm/id/'+e.detail.detail.cl_id,(data)=>{
+          this.dataSelected=data;
+          this.set('pageSelected','list-of-booking-shm-det')
+        });
       }
 
     });
