@@ -13,25 +13,24 @@ exports.getById = function (req, res) {
                                     shipment_detail: r.db('g2g2').table('shipment_detail')
                                         .getAll(m('book_id'), { index: 'book_id' })
                                         .coerceTo('array')
-                                        .pluck("id", "shm_id", "package_id", "exporter_id", "shm_det_quantity", "type_rice_id")
-                                        .eqJoin("shm_id", r.db('g2g2').table("shipment")).without({ right: ["id", "date_created", "date_updated", "creater", "updater"] }).zip()
+                                        .pluck("id", "book_id", "package_id", "exporter_id", "shm_det_quantity", "type_rice_id", "price_per_ton")
+                                        .eqJoin("book_id", r.db('g2g2').table("book")).pluck('left', { right: ['cl_id'] }).zip()
                                         .eqJoin("cl_id", r.db('g2g2').table("confirm_letter")).without({ right: ['id', 'date_created', 'date_updated', 'creater', 'updater', "cl_date", "cl_quality"] }).zip()
                                         .eqJoin("package_id", r.db('common').table("package")).without({ right: ["id", "date_created", "date_updated", "creater", "updater"] }).zip()
                                         .eqJoin("exporter_id", r.db('external').table("exporter")).without({ right: ["id", "date_created", "date_updated", "creater", "updater"] }).zip()
-                                        // .eqJoin("trader_id", r.db('external').table("trader")).without({ right: ["id", "date_created", "date_updated", "creater", "updater"] }).zip()
                                         .eqJoin("seller_id", r.db('external').table("seller")).without({ right: ['id', 'date_created', 'date_updated', 'creater', 'updater', "country_id"] }).zip()
                                         .merge(function (m1) {
                                             return {
                                                 shm_det_id: m1('id'),
-                                                price_per_ton: m1('cl_type_rice')
-                                                    .filter(function (tb) {
-                                                        return tb('type_rice_id').eq(m1('type_rice_id'))
-                                                    }).getField("package")(0)
-                                                    .filter(function (f) {
-                                                        return f('package_id').eq(m1('package_id'))
-                                                    })(0)
-                                                    .pluck('price_per_ton')
-                                                    .values()(0),
+                                                // price_per_ton: m1('cl_type_rice')
+                                                //     .filter(function (tb) {
+                                                //         return tb('type_rice_id').eq(m1('type_rice_id'))
+                                                //     }).getField("package")(0)
+                                                //     .filter(function (f) {
+                                                //         return f('package_id').eq(m1('package_id'))
+                                                //     })(0)
+                                                //     .pluck('price_per_ton')
+                                                //     .values()(0),
                                                 quantity_tons: m1('shm_det_quantity'),
                                                 quantity_bags: m1('shm_det_quantity').mul(1000).div(m1('package_kg_per_bag'))
 
@@ -67,8 +66,7 @@ exports.getById = function (req, res) {
                                         return m('shipment_detail').filter({ shm_det_id: map1('shm_det_id') })(0).merge(map1)
                                             .merge(function (m2) {
                                                 return {
-                                                    exporter_date_approve: m2('exporter_date_approve').split('T')(0),
-                                                    // trader_date_approve: m2('trader_date_approve').split('T')(0)
+                                                    exporter_date_approve: m2('exporter_date_approve').split('T')(0)
                                                 }
                                             })
                                             .without('tags')
@@ -117,7 +115,7 @@ exports.insert = function (req, res) {
     var r = req.r;
     var result = { result: false, message: null, id: null };
     if (valid) {
-        var obj = Object.assign(req.body, { date_created: new Date().toISOString(), date_updated: new Date().toISOString(),creater: 'admin' ,updater:'admin'});
+        var obj = Object.assign(req.body, { date_created: new Date().toISOString(), date_updated: new Date().toISOString(), creater: 'admin', updater: 'admin' });
         r.db('g2g2').table("fee_detail")
             .insert(obj)
             .do(fee_det_do => {
