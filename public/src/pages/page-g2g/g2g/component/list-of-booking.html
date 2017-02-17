@@ -50,7 +50,7 @@
         // console.log(this.dataForSelect);
         this.read('./g2g/book/confirm/id/'+e.detail.detail.cl_id,(data)=>{
           this.dataSelected=data;
-          this.set('dataForSelect.cl_id',e.detail.detail.cl_id);
+          this.set('dataForSelect.cl_no',e.detail.detail.cl_no);
           console.log(this.dataForSelect);
           this.set('pageSelected','list-of-booking-shm-det')
         });
