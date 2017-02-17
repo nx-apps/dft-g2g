@@ -13,7 +13,7 @@
         <list-of-booking-in-confirm-add></list-of-booking-in-confirm-add>
       </div> -->
       <div name="list-of-booking-shm-det">
-        <list-of-booking-detail data="{{dataSelected}}"></list-of-booking-detail>
+        <list-of-booking-detail data="{{dataSelected}}" data-for-selected="[[dataForSelected]]"></list-of-booking-detail>
       </div>
     </iron-pages>
 
@@ -28,6 +28,10 @@
         },
         dataSelected:{
           type:Array
+        },
+        dataForSelected:{
+          type:Object,
+          value:{}
         }
       },
       behaviors: [
@@ -39,15 +43,19 @@
         '_get-booking-detail':'_getBookingDetail'
       },
       _changeComponentBl:function (data) {
-        console.log(data.detail.detail);
+        // console.log(data.detail.detail);
         this.set('pageSelected',data.detail.detail)
       },
       _getBookingDetail:function (e,fn) {
-        console.log(e.detail.detail);
+        // console.log(e.detail.detail);
         this.read('./g2g/book/confirm/id/'+e.detail.detail.cl_id,(data)=>{
           this.dataSelected=data;
+          this.set('dataForSelected',e.detail.detail);
+          // Object.assign(this.dataForSelected,e.detail.detail)
+          // console.log(  this.dataForSelected);
           this.set('pageSelected','list-of-booking-shm-det')
         });
+
       }
 
     });
