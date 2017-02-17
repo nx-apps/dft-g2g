@@ -11,7 +11,7 @@
       cursor: pointer;
     }
   </style>
-  <template>[[!isInputDisabled]]
+  <template>
       <iron-pages selected="{{pageSelected}}" attr-for-selected="name">
         <div name="list-of-shm-det">
           <list-of-shm-det data="{{dataSelected}}"></list-of-shm-det>
@@ -49,16 +49,17 @@
       },
       listeners:{
         '_change-component-shm':'_changeComponentShm',
-        '_get-fire-shm-detail':'_getFireShmDetail'
+        '_get-fire-in-book-shm-detail':'_getFireInBookShmDetail'
       },
       _changeComponentShm:function (data) {
         // console.log(data.detail.detail);
         console.log(this.dataSelected);
         this.set('pageSelected',data.detail.detail)
       },
-      _getFireShmDetail:function (e) {
+      _getFireInBookShmDetail:function (e) {
         // console.log(e.detail.detail);
-        // this.dataEdit=e.detail.detail;
+        // console.log(this.dataSelected);
+        this.dataEdit=e.detail.detail;
         this.set('dataEdit',e.detail.detail)
         // console.log(this.dataEdit);
         this.set('pageSelected','shm-detail')
