@@ -31,8 +31,9 @@ exports.list = function (req, res) {
                         return {
                             cl_id: cl('id'),
                             cl_no: cl('cl_no'),
+                            cl_type_rice: cl('cl_type_rice'),
                             cl_quantity_total: cl('cl_type_rice').sum('type_rice_quantity'),
-                            cl_status:cl('cl_status'),
+                            cl_status: cl('cl_status'),
                             book_quantity: r.db('g2g2').table('book')
                                 .getAll(row('id'), { index: 'cl_id' })
                                 .pluck('id')
