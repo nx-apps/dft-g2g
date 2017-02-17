@@ -355,7 +355,7 @@ exports.getPayByContractId = function (req, res) {
     var r = req.r;
     r.db('g2g2').table('fee')
         .getAll(req.params.contract_id, { index: 'tags' }).without('tags')
-        .eqJoin('shm_id', r.db('g2g2').table('shipment')).pluck("left", { right: ['shm_no', 'cl_id'] }).zip()
+        // .eqJoin('shm_id', r.db('g2g2').table('shipment')).pluck("left", { right: ['shm_no', 'cl_id'] }).zip()
         .filter({ 'fee_status': true })
         .merge(function (m) {
             return {
@@ -372,7 +372,7 @@ exports.getPayByContractId = function (req, res) {
                                     return {
                                         invoice_detail: inv_det_merge('invoice_detail').merge(function (shm_det_merge) {
                                             return r.db('g2g2').table('shipment_detail').get(shm_det_merge('shm_det_id'))
-                                                .pluck('package_id', 'type_rice_id', 'price_per_ton', 'shm_det_quantity', 'shm_id')
+                                                .pluck('package_id', 'type_rice_id', 'price_per_ton', 'shm_det_quantity', 'cl_id')
                                                 .merge(function (usd_merge) {
                                                     return {
                                                         usd_value: usd_merge('price_per_ton').mul(usd_merge('shm_det_quantity'))
