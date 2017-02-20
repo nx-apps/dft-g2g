@@ -195,6 +195,8 @@
         "btn_close":"ปิด",
         "btn_back_ward":"ย้อนกลับ",
         "btn_cancel":"ยกเลิก",
+        "btn_edit":"แก้ใข",
+        "btn_detail":"ดูรายละเอียด",
         "btn_delete":"ลบ",
         "btn_add":"เพิ่ม",
         "btn_save":"บันทึก",

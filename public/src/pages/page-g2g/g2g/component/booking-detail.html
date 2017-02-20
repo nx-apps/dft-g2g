@@ -21,18 +21,20 @@
     }
   </style>
   <template>
-    <template is="dom-if" if="[[!checkBtnView(shmStatus)]]">
-      <!-- <template is="dom-if" if="[[_isViewing(isInputDisabled)]]"> -->
-        <div class="horizontal end-justified layout">
-          <paper-icon-button id="editConfirm" class="crud" icon="create" raised on-tap="editInput"  ></paper-icon-button>
-          <paper-tooltip for="editConfirm" offset="0">Edit Booking</paper-tooltip>
-          <paper-icon-button id="deleteConfirm" class="crud" icon="delete" raised on-tap="deleteBooking" hidden="[[data.shm_status]]"></paper-icon-button>
-          <paper-tooltip for="deleteConfirm" offset="0">Delete Booking</paper-tooltip>
-         </div>
-        <!-- <icon-button-management is-input-disabled="[[!isInputDisabled]]"></icon-button-management> -->
-      <!-- </template> -->
-    </template>
+
 <gl-form-panel>
+  <!-- <template is="dom-if" if="[[!checkBtnView(shmStatus)]]"> -->
+  //[[data.book_status]]//
+    <template is="dom-if" if="[[isInputDisabled]]">
+      <div class="horizontal end-justified layout">
+        <paper-icon-button id="editConfirm" class="crud" icon="create" raised on-tap="editInput"  hidden="[[data.book_status]]"></paper-icon-button>
+        <paper-tooltip for="editConfirm" offset="0">Edit Booking</paper-tooltip>
+        <paper-icon-button id="deleteConfirm" class="crud" icon="delete" raised on-tap="deleteBooking" hidden="[[data.book_status]]"></paper-icon-button>
+        <paper-tooltip for="deleteConfirm" offset="0">Delete Booking</paper-tooltip>
+       </div>
+      <!-- <icon-button-management is-input-disabled="[[!isInputDisabled]]"></icon-button-management> -->
+    </template>
+  <!-- </template> -->
       <gl-form-panel-body>
         <div class="title">{{localize('label_booking_no')}}</div>
       </gl-form-panel-body>

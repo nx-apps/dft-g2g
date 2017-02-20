@@ -11,9 +11,11 @@
       <div name="list-of-booking-add">
         <booking-detail data-for-select="[[dataForSelect]]" is-input-disabled="[[!isInputDisabled]]" is-view-seleted="[[!isViewSeleted]]"></booking-detail>
       </div>
+      <div name="list-of-booking-edit">
+        <booking-detail data="{{bookDataEdit}}" data-for-select="[[dataForSelect]]" is-input-disabled="[[isInputDisabled]]" is-view-seleted="[[isViewSeleted]]"></booking-detail>
+      </div>
       <div name="list-of-booking-shm-det">
         <list-of-shm data-selected="{{dataSelected}}" data-for-select="[[dataForSelect]]"></list-of-shm>
-        <!-- <booking-detail></booking-detail> -->
       </div>
     </iron-pages>
 
@@ -34,18 +36,24 @@
       listeners:{
         '_change-component-book':'_changeComponentBook',
         '_get-shm-detail':'_getShmDetail',
-        '_get-fire-shm-detail':'_getFireShmDetail'
+        '_get-fire-shm-detail':'_getFireShmDetail',
+        '_edit-booking-detail':'_editBooking'
       },
       _changeComponentBook:function (data) {
-        console.log(data.detail.detail);
+        // console.log(data.detail.detail);
         this.set('pageSelected',data.detail.detail)
       },
+      _editBooking:function (e) {
+        console.log(e.detail.detail);
+        this.set('bookDataEdit',e.detail.detail)
+        this.set('pageSelected','list-of-booking-edit')
+      },
       _getShmDetail:function (e) {
-        console.log(e.detail.detail.book_id);
+        // console.log(e.detail.detail.book_id);
         this.read('./g2g/shipment_detail/book/id/'+e.detail.detail.book_id,(data)=>{
           this.dataSelected=data;
           this.set('dataForSelect.book_id',e.detail.detail.book_id)
-          console.log(this.dataSelected);
+          // console.log(this.dataSelected);
           this.set('pageSelected','list-of-booking-shm-det')
         });
       },

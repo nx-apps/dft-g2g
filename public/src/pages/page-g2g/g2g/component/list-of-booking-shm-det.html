@@ -1,5 +1,6 @@
+<link rel="import" href="../../../../../bower_components/gl-styles/gl-size.html">
 <dom-module id="list-of-booking-shm-det">
-  <style include="iron-flex iron-flex-factors iron-flex-alignment gl-styles">
+  <style include="iron-flex iron-flex-factors iron-flex-alignment gl-styles gl-size">
     :host {
       display: block;
     }
@@ -16,6 +17,11 @@
     }
     table.gl-table-default > tbody.table-body > tr > td {
       cursor: pointer;
+    }
+    .gl-btn-info{
+      font-family: 'CSChatThaiUI', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      font-size:14px;
     }
     /*table.gl-table-default > thead.table-head > tr > th:nth-child(3),
     table.gl-table-default > tbody.table-body > tr > td:nth-child(3){
@@ -50,17 +56,17 @@
                 <th>{{localize('label_lot_no')}}</th>
                 <th>{{localize('label_port_of_destination')}}</th>
                 <th>{{localize('label_place_of_delivery')}}</th>
+                <th>{{localize('label_action')}}</th>
               </tr>
             </thead>
             <tbody class="table-body">
                 <template is="dom-repeat" items="[[data]]">
-                  <tr on-tap="getShmDetail" data="[[item]]">
-                    <td> [[item.ship_lot_no]] </td>
-                    <td>
-                      [[item.dest_port_name]]
-                    </td>
-                    <td> [[item.deli_port_name]]
-                    </td>
+                  <tr >
+                    <td on-tap="getShmDetail" data="[[item]]"> [[item.ship_lot_no]] </td>
+                    <td on-tap="getShmDetail" data="[[item]]"> [[item.dest_port_name]] </td>
+                    <td on-tap="getShmDetail" data="[[item]]"> [[item.deli_port_name]] </td>
+                    <td><paper-button class="gl-btn-info gl-small" raised on-tap="btnEditBooking" data="[[item]]">
+                          {{localize('btn_detail')}}</paper-button></td>
                   </tr>
                 </template>
               <template is="dom-if" if="[[_isHave(data)]]">
@@ -74,7 +80,7 @@
           <gl-form-panel-footer set-padding="10px 20px 0px 20px">
             <paper-button class="gl-btn-default" raised on-tap="backWard2BookingInConfirm">
                   {{localize('btn_back_ward')}}</paper-button>
-            
+
         </gl-form-panel-footer>
       </gl-form-panel>
   </template>
@@ -104,6 +110,9 @@
       },
       backWard2BookingInConfirm:function () {
         this.fire('_change-component-bl',{detail:'list-of-booking-in-confirm'})
+      },
+      btnEditBooking:function (e) {
+       this.fire('_edit-booking-detail',{detail:e.currentTarget.data});
       }
     });
   </script>
