@@ -348,12 +348,17 @@
         // if (data.cl_quality != null) {
         //   this.cl_quality = data.cl_quality.toUpperCase();
         // }
-        let rice = data.bl_detail;
-        if (this.nameRice.length == 0){
-          rice.map((el)=>{
-            this.nameRice += el.type_rice_name_en.toUpperCase()+', ';
-          })
+        try {
+          let rice = data.bl_detail;
+          if (this.nameRice.length == 0){
+            rice.map((el)=>{
+              this.nameRice += el.type_rice_name_en.toUpperCase()+', ';
+            })
+          }
+        } catch (e) {
+          console.log(e);
         }
+        
       },
 
       printInvoice:function () {

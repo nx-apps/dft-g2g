@@ -67,7 +67,9 @@
       },
       _postApproveBook:function (e) {
         // console.log(e.detail);
+        this.fire('toast',{status:'load'});
         this.update('./g2g/book/update/',e.detail ,()=>{
+          this.fire('toast',{status:'load'});
           console.log(11);
         });
       }

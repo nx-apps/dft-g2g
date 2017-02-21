@@ -26,19 +26,24 @@
         <tbody class="table-body">
           <template is="dom-repeat" items="[[data]]">
             <tr on-tap="shmDetail" data="[[item]]">
-              <td>1</td>
+              <td>[[_ObcountIndex(index)]]</td>
               <td>[[item.seller_name_en]]</td>
               <td>[[item.type_rice_name_en]]</td>
               <td>[[item.shm_det_quantity]]</td>
             </tr>
           </template>
-
+          <template is="dom-if" if="[[_isHave(data)]]">
+                  <tr >
+                    <td colspan="4" style="text-align: center">  {{localize('text_no_data')}}</td>
+                  </tr>
+              </template>
         </tbody>
       </table>
       <gl-form-panel-footer set-padding="10px 20px 0px 20px">
         <paper-button class="gl-btn-default" raised on-tap="backWard2Booking">
               {{localize('btn_back_ward')}}</paper-button>
-        <paper-button class="gl-btn-success" raised dias on-tap="approveBook" disabled="[[_confirmBook(data)]]">
+        
+        <paper-button class="gl-btn-success" raised dias on-tap="approveBook" hidden="[[_isHave(data)]]" disabled="[[_confirmBook(data)]]">
                     {{localize('btn_confirm')}}</paper-button>
     </gl-form-panel-footer>
     </gl-form-panel>
@@ -49,6 +54,7 @@
     Polymer({
       is: "list-of-shm-det",
       behaviors: [
+        g2gCongtroller,
           nylonBehavior,
           nylonLocalizeBehavior
       ],
@@ -71,9 +77,21 @@
       },
       approveBook:function (e) {
         // console.log(this.data[0].book_id);
-        this.fire('_post-approve-book',{book_id:this.data[0].book_id,book_status:'approve'})
-      },
+        this.fire('toast',{  //คำสั่งสำหรับเปิด toast dialog
+              status:'dialog',
+              text:'ต้องการยืนยันข้อมูลใช่หรือไม่ ?',
+              confirmed:this._approveData.bind(this), //function ที่ใช้รับค่า ปุ่ม
+              el: this, // compontents
+          });
+        
 
+      },
+      _approveData:function (result,detail) {
+        if (result == true) {
+           this.fire('_post-approve-book',{id:this.data[0].book_id,book_status:'approve'});
+           this.fire('_get-fire-shm-detail',{book_id:this.data[0].book_id});
+         }
+      },
       backWard2Booking:function () {
         this.fire('_change-component-book',{detail:'list-of-booking'})
       }

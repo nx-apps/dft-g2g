@@ -50,11 +50,14 @@
       },
       _getShmDetail:function (e) {
         // console.log(e.detail.detail.book_id);
+        this.fire('toast',{status:'load'});
         this.read('./g2g/shipment_detail/book/id/'+e.detail.detail.book_id,(data)=>{
+
           this.dataSelected=data;
           this.set('dataForSelect.book_id',e.detail.detail.book_id)
           // console.log(this.dataSelected);
           this.set('pageSelected','list-of-booking-shm-det')
+          this.fire('toast',{status:'load'});
         });
       },
       _getFireShmDetail:function (e) {
