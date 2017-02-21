@@ -40,8 +40,6 @@
     <table class="gl-table-default">
           <thead class="table-head">
             <tr>
-              <!-- <th>ชื่อการทำสัญญา</th> -->
-              <th>{{localize('label_shm_no')}}</th>
               <th>{{localize('label_bill_of_lading')}}</th>
               <th>{{localize('label_place_of_delivery')}} </th>
               <th>{{localize('label_port_of_destination')}}</th>
@@ -53,8 +51,7 @@
             <!-- <template is="dom-if" if="[[!_isHave(newData)]]"> -->
               <template is="dom-repeat" items="[[newData]]" >
                 <tr data="[[item]]" on-tap="getBlDetail" level="primary" >
-                  <!-- <td>[[item.cl_name]]</td> -->
-                  <td>[[item.shm_no]]</td>
+                  
                   <td>[[item.bl_no]]</td>
                   <td>[[item.deli_port_name]]</td>
                  <td>[[item.dest_port_name]]</td>

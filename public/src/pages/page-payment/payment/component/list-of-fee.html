@@ -39,7 +39,6 @@
           <thead class="table-head">
             <tr>
               <!-- <th>ชื่อการทำสัญญา</th> -->
-              <th>{{localize('label_shm_no')}}</th>
               <th>{{localize('text_fee_no')}}</th>
 
             </tr>
@@ -50,7 +49,6 @@
               <template is="dom-repeat" items="[[newData]]" >
                 <tr data="[[item]]" on-tap="getFeeDetail">
                   <!-- <td>[[item.cl_name]]</td> -->
-                  <td>[[item.shm_no]]</td>
                   <td>[[item.fee_no]]</td>
                 </tr>
               </template>

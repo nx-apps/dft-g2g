@@ -49,9 +49,7 @@
     <table class="gl-table-default">
           <thead class="table-head">
             <tr>
-              <th></th>
-              <!--<th>ชื่อการทำสัญญา</th>-->
-              <th>{{localize('label_shm_no')}}</th>
+              <th>#</th>
               <th>{{localize('text_invoice')}}</th>
               <th>{{localize('label_place_of_delivery')}} </th>
               <th>{{localize('label_port_of_destination')}}</th>
@@ -68,8 +66,6 @@
                     <td>
                       <paper-checkbox id="[[paymentIndex]]"class="checkBoxInvoice" data="{{item}}" shm-id="{{payment.shm_id}}" on-tap="checkBoxInvoice" checked="{{item.status}}"></paper-checkbox>
                     </td>
-                    <!--<td data="[[item]]" on-tap="getInvoiceDetail">[[item.cl_name]]</td>-->
-                    <td data="[[item]]" on-tap="getInvoiceDetail">[[payment.shm_no]]</td>
                     <td data="[[item]]" on-tap="getInvoiceDetail">[[item.invoice_no]]</td>
                     <td data="[[item]]" on-tap="getInvoiceDetail">[[item.deli_port_name]]</td>
                    <td data="[[item]]" on-tap="getInvoiceDetail">[[item.dest_port_name]]</td>

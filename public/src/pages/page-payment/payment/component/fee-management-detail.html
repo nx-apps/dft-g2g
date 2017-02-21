@@ -81,7 +81,7 @@
             this.fire('toast',{status:'success',text:'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
              callback:()=>{
                 let contract_id= this._getUrl();
-                this.fire('close-drawer',{detail:'close-drawer'});
+                // this.fire('close-drawer',{detail:'close-drawer'});
                 this.fire('get-fee-list',{detail:contract_id});
                 this.fire('_get-list-fee',{data:'_get-list-fee'});
                 this.fire('get-fee-list-in-shm-event',{data:data.shm_id});
