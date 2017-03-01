@@ -8,7 +8,7 @@ var config = {
     database: {
       max: 10,
       servers: [
-        {host: 'rdb.codeunbug.com', port: 28015}
+        {host: 'rdb.codeunbug.com', port: 28015,username:'admin',password:'next@2017'}
       ],
       db:'oauth'
     },
