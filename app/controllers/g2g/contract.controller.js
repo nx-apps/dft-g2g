@@ -1,7 +1,51 @@
 exports.list = function (req, res) {
     var r = req.r;
+    r.db('g2g2').table('contract')
+        .getAll(true, { index: 'contract_status' })
+        //.filter({ contract_status: true })
+        .merge({ contract_id: r.row('id') })
+        .pluck("buyer_id", "contract_id", "contract_date")
+        .group("buyer_id")
+        .ungroup()
+        .map(function (buyer_map) {
+            return {
+                buyer_id: buyer_map('group'),
+                contract: buyer_map('reduction').orderBy(r.desc('contract_date')).limit(3)
+            }
+        })
+        .eqJoin('buyer_id', r.db('common').table('buyer'))
+        .pluck("left", { right: ["buyer_name", "country_id"] }).zip()
+        .eqJoin('country_id', r.db('common').table('country'))
+        .pluck("left", { right: ["country_name_th", "country_name_en"] }).zip()
+        .merge(function (buyer_merge) {
+            return {
+                contract: buyer_merge('contract').merge(function (contract_merge) {
+                    return {
+                        contract_year: contract_merge('contract_date').split('-')(0).coerceTo('number'),
+                        confirm: r.db('g2g2').table('confirm_letter').getAll(contract_merge('contract_id'), { index: 'contract_id' })
+                            .filter({ cl_status: true })
+                            .coerceTo('array')
+                            .map(function (cl_merge) {
+                                return {
+                                    cl_weight: cl_merge('cl_type_rice').sum('type_rice_quantity')
+                                }
+                            }).sum('cl_weight'),
+                        shipment: r.db('g2g2').table('shipment_detail').getAll(contract_merge('contract_id'), { index: 'tags' }).sum('shm_det_quantity'),
+                        payment: r.db('g2g2').table('payment').getAll(contract_merge('contract_id'), { index: 'tags' }).sum('pay_amount')
+                    }
+                })
+            }
+        })
+        .run()
+        .then(function (data) {
+            res.json(data);
+        })
+}
+exports.buyerId = function (req, res) {
+    var r = req.r;
     var orderby = req.query.orderby;
     r.db('g2g2').table("contract")
+        .getAll(req.params.buyer_id, { index: 'buyer_id' })
         .merge(function (row) {
             return {
                 contract_id: row('id'),
