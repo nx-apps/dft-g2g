@@ -12,7 +12,9 @@
   <template>
     <gl-form-panel>
       <gl-form-panel-head label="{{localize('text_list_exporter_name')}}" set-padding="10px" set-border="1px">
+        <template is="dom-if" if={{_confirmBook(data)}}>
           <paper-button class="gl-btn-primary" raised on-tap="createShmDet">{{localize('btn_add_exporter')}}</paper-button>
+          </template>
       </gl-form-panel-head>
       <table class="gl-table-default">
         <thead class="table-head">
@@ -43,8 +45,12 @@
         <paper-button class="gl-btn-default" raised on-tap="backWard2Booking">
               {{localize('btn_back_ward')}}</paper-button>
         
-        <paper-button class="gl-btn-success" raised dias on-tap="approveBook" hidden="[[_isHave(data)]]" disabled="[[_confirmBook(data)]]">
+        <template is="dom-if" if={{_confirmBook(data)}}>
+          <paper-button class="gl-btn-success" raised dias on-tap="approveBook" hidden="[[_isHave(data)]]" >
                     {{localize('btn_confirm')}}</paper-button>
+        </template>
+        
+        
     </gl-form-panel-footer>
     </gl-form-panel>
 
@@ -69,10 +75,11 @@
         this.fire('_get-fire-in-book-shm-detail',{detail:e.currentTarget.data})
       },
       _confirmBook:function (data) {
+        console.log(data);
           if ( (data.every(status => status.book_status == false))) {
-            return false;
+            return true;
           } else {
-              return true;
+             return false; 
           }
       },
       approveBook:function (e) {
