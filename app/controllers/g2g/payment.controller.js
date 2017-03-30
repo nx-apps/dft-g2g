@@ -130,7 +130,7 @@ exports.getByFeeId = function (req, res) {
 }
 exports.getSilo = function (req, res) {
     req.jdbc.query("mssql",
-        "SELECT bk.Keyword as keyword,bk.Status as statusName,sum(p.weightAll) as weightAll "
+        "SELECT bk.Keyword as keyword,bk.Status as statusName,sum(p.tWeight) as weightAll "
         + " FROM ( "
         + " SELECT s.Keyword ,s.Status ,b.book_id "
         + " FROM  dft_lk_status s "
@@ -141,7 +141,7 @@ exports.getSilo = function (req, res) {
         + " INNER JOIN dft_product p on p.status = bk.book_id "
         + " GROUP BY  bk.Keyword,bk.Status "
         ,
-        ["GG%", "Y%"],
+        ["GG%", "W%"],
         function (err, data) {
             res.send(data);
         });
