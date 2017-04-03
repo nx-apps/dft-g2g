@@ -40,9 +40,9 @@ exports.getByContractId = function (req, res) {
                                 return left.add(' / ', right)
                             }),
                             exporter_name: r.db('external').table('exporter').get(fee_det_merge('exporter_id'))
-                                .getField('seller_id').do(function (seller_do) {
+                                .getField('company_id').do(function (company_do) {
                                     // return r.db('external').table('trader').get(trader_do).getField('seller_id').do(function (seller_do) {
-                                    return r.db('external').table('seller').get(seller_do).getField('seller_name_th')
+                                    return r.db('external').table('company').get(company_do).getField('company_name_th')
                                     // })
                                 }),
                             pay_det_status_name: r.branch(fee_det_merge('pay_det_status').eq(true), 'จ่ายแล้ว', 'ยังไม่ได้จ่าย')
@@ -103,9 +103,9 @@ exports.getByFeeId = function (req, res) {
                                 return left.add(' / ', right)
                             }),
                             exporter_name: r.db('external').table('exporter').get(fee_det_merge('exporter_id'))
-                                .getField('seller_id').do(function (seller_do) {
+                                .getField('company_id').do(function (company_do) {
                                     // return r.db('external').table('trader').get(trader_do).getField('seller_id').do(function (seller_do) {
-                                    return r.db('external').table('seller').get(seller_do).getField('seller_name_th')
+                                    return r.db('external').table('company').get(company_do).getField('company_name_th')
                                     // })
                                 }),
                             pay_det_status_name: r.branch(fee_det_merge('pay_det_status').eq(true), 'จ่ายแล้ว', 'ยังไม่ได้จ่าย')
