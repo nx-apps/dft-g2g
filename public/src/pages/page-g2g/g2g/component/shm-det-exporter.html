@@ -307,7 +307,9 @@
             this.price=packing[0];
             // console.log(packing[0]);
             if (typeof packing[0] != 'undefined' && packing[0] != undefined) {
-              this.data.price_per_ton = this.dataForSelect.book_id;
+              // console.log(this.price);
+              // console.log(this.dataForSelect.book_id);
+              this.data.price_per_ton = packing[0].price_per_ton;
               this.notifyPath('data.price_per_ton');
             }
           },1000);

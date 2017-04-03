@@ -208,6 +208,7 @@
         this._getFeeList(e.detail.detail);
       },
       _getFeeList: function (contractId) {
+        console.log(contractId);
         this.read('./g2g/fee/contract/id/' + contractId, (data) => {
           this.dataListPay.feeList = data;
           this.notifyPath('dataListPay.feeList');
