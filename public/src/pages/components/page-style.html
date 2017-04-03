@@ -1,0 +1,58 @@
+<dom-module id="page-style">
+    <style is="custom-style" include="gl-styles">
+        .page-head {
+            margin: 20px 0px 0px 0px;
+        }
+        
+        .paper-meterial {
+            background-color: var(--gl-white-color);
+            border-radius: 3px;
+        }
+        .margin-meterial{
+            margin: 20px;
+        }
+        .head-meterial,
+        .content-meterial,
+        .foot-meterial {
+            padding: 15px;
+            display: block;
+        }
+        .head-meterial {
+            font: var(--font-size-h3);
+        }
+        .content-meterial {
+            font: var(--font-size-h4);
+        }
+        .foot-meterial {
+            font: var(--font-size-h4);
+        }
+        /*vaadin-date-picker {
+            margin-top: -19px;
+        }*/
+        
+        .xcontainer {
+            margin: auto;
+        }
+        
+        @media screen and (min-width: 1275px) {
+            .xcontainer {
+                width: 85%;
+            }
+        }
+        
+        .tabe-overflow-x {
+            overflow-x: auto;
+            border-right: 1px solid #ddd;
+            border-left: 1px solid #ddd
+        }
+    </style>
+    <template>
+
+    </template>
+    <script>
+        Polymer({
+            is: "page-style",
+
+        });
+    </script>
+</dom-module>

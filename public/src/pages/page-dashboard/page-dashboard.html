@@ -1,0 +1,60 @@
+<link rel="import" href="../page-g2g/g2g/controller/g2gModelbehavior.html">
+<link rel="import" href="../page-g2g/g2g/controller/g2gCongtroller.html">
+<link rel="import" href="../components/format-number-behavior.html">
+<link rel="import" href="./../components/page-style.html">
+<link rel="import" href="./components/country-list.html">
+
+
+<dom-module id="page-dashboard">
+    <template>
+        <style include="page-style">
+             :host {
+                display: block;
+            }
+            
+            * {
+                font-family: 'CSChatThaiUI', sans-serif;
+                -webkit-font-smoothing: antialiased;
+            }
+        </style>
+        <div class="xcontainer ">
+            <country-list data="[[countryList]]"></country-list>
+        </div>
+
+    </template>
+    <script>
+        Polymer({
+            is: 'page-dashboard',
+            behaviors: [
+                g2gModelBehavior,
+                g2gCongtroller,
+                nylonBehavior,
+                nylonLocalizeBehavior
+            ],
+            properties: {
+                countryList: {
+                    type: Object,
+                    value: ''
+                },
+            },
+            listeners: {
+               '_getContractList':'getContractList'
+            },
+            ready: function () {
+                Polymer.RenderStatus.afterNextRender(this, () => {
+                    this._getCountry()
+                });
+            },
+            _getCountry() {
+                this.read('./g2g/contract/list', (data) => {
+                    this.set('countryList', data)
+                });
+            },
+            getContractList(e){
+                // console.log(e.detail.buyer_id);
+                document.cookie = "buyerId="+e.detail.buyer_id
+                this.fire('nylon-change-page',{path:'/g2g'})
+            }
+        });
+    </script>
+</dom-module>

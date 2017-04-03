@@ -1,0 +1,41 @@
+
+
+<dom-module id="country-list">
+    <template>
+        <style include="iron-flex iron-flex-factors iron-flex-alignment page-style">
+             :host {
+                display: block;
+            }
+            
+            .tree {
+                width: 450px
+            }
+        </style>
+        <div class="horizontal layout center-justified  wrap">
+            <template is="dom-repeat" items={{data}} as=item index-as=index>
+                <paper-material elevation="1" class="paper-meterial tree margin-meterial">
+                    <div class="head-meterial">
+                        [[item.buyer_name]] ([[item.country_name_th]])
+                    </div>
+                    <div class="content-meterial">
+                        1212
+                    </div>
+                    <div class="foot-meterial">
+                        
+                        <paper-button raised class="" data="[[item]]" on-tap="getContractList">ดูข้อมูล</paper-button>
+                        
+                    </div>
+                </paper-material>
+            </template>
+        </div>
+    </template>
+    <script>
+        Polymer({
+            is: 'country-list',
+            getContractList(e){
+                // console.log(e.currentTarget.data);
+                this.fire('_getContractList',e.currentTarget.data)
+            }
+        });
+    </script>
+</dom-module>
