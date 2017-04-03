@@ -34,10 +34,10 @@
     <gl-grid-row width="{{getWidth}}">
       <template is="dom-if" if="[[isViewSeleted]]">
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-          <gl-form-input disabled label="{{localize('text_exporter_name')}}"  value="{{data.seller_name_en}}" always-float-label></gl-form-input>
+          <gl-form-input disabled label="{{localize('text_exporter_name')}}"  value="{{data.company_name_th}}" always-float-label></gl-form-input>
         </gl-grid-col>
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,8]]">
-          <gl-form-input disabled label="{{localize('label_tel')}}"  value="{{data.seller_phone}}" always-float-label></gl-form-input>
+          <gl-form-input disabled label="{{localize('label_tel')}}"  value="{{data.company_phone}}" always-float-label></gl-form-input>
         </gl-grid-col>
       </template>
       <template is="dom-if" if="[[!isViewSeleted]]">
@@ -45,10 +45,10 @@
         
         <template is="dom-if" if="[[isInputDisabled]]">
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-            <gl-form-input disabled label="{{localize('text_exporter_name')}}"  value="{{data.seller_name_en}}" always-float-label></gl-form-input>
+            <gl-form-input disabled label="{{localize('text_exporter_name')}}"  value="{{data.company_name_th}}" always-float-label></gl-form-input>
           </gl-grid-col>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,8]]">
-            <gl-form-input disabled label="{{localize('label_tel')}}"  value="{{data.seller_phone}}" always-float-label></gl-form-input>
+            <gl-form-input disabled label="{{localize('label_tel')}}"  value="{{data.company_phone}}" always-float-label></gl-form-input>
           </gl-grid-col>
         </template>
         <template is="dom-if" if="[[!isInputDisabled]]">
@@ -144,8 +144,13 @@
           <iron-icon class="gl-icon-size" icon="save"></iron-icon>{{localize('btn_save')}}</paper-button>
     </template>
   </template>
-  <paper-button class="gl-btn-default" raised on-tap="cancelEditShipment">
+  
+  <template is="dom-if" if={{isInputDisabled}}>
+     <paper-button class="gl-btn-default" raised on-tap="cancelEditShipment">
         {{localize('btn_back_ward')}}</paper-button>
+  </template>
+  
+ 
   <!-- <template is="dom-if" if="[[isInputDisabled]]"> -->
     <template is="dom-if" if="[[!isViewSeleted]]">
       <paper-button class="gl-btn-danger" on-tap="calcelShipmentInsert" raised >{{localize('btn_cancel')}}</paper-button>
@@ -249,6 +254,8 @@
           let tel = this.dataForSelect.seller.filter((exporters)=> exporters.company_id == company_id );
           console.log(tel);
           this.dataForSelect.company_id=tel[0].company_id;
+          this.dataForSelect.exporter_id=tel[0].exporter_id;
+          this.data.exporter_id=tel[0].exporter_id;
           // this.dataForSelect.trader_id=tel[0].trader_id;
           return tel[0].company_phone;
         }
@@ -336,30 +343,30 @@
         this.push('data.tags',this.dataForSelect.contract_id,this.dataForSelect.cl_id,this.dataForSelect.company_id);
         // console.log(this.data);
 
-        // if (this.data.shm_det_quantity <=this.dataForSelect.type_rice_quantity_limit_max) {
-          // this._cleanShipmentData(this.data,(data)=>{
-          //   this.fire('toast',{status:'load'}); //คำสั่งสำหรับเปิด toast load
-          //   // console.log(data);
-          //   this.insert('./g2g/shipment_detail/insert',data, () => {
-          //     // this.fire('refresh-contract',{detail:'refresh-contract'});
-          //     this.fire('_get-fire-shm-detail',{book_id:data.book_id});
-          //     // this.fire('get-list-shipment-detail',{sm_id:this.dataForSelect.shm_id});
-          //     this.fire('toast',{status:'success',text:'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
-          //       callback:()=>{
-          //           this.cancelInsertShipment();
-          //           let el = Polymer.dom(this.root).querySelectorAll('.required');
-          //           el.map((el)=> {el.reset();el.value=''});
-          //           this.cancelEditShipment()
-          //         }
-          //     });
-          //   });
+        if (this.data.shm_det_quantity <=this.dataForSelect.type_rice_quantity_limit_max) {
+          this._cleanShipmentData(this.data,(data)=>{
+            this.fire('toast',{status:'load'}); //คำสั่งสำหรับเปิด toast load
+            // console.log(data);
+            this.insert('./g2g/shipment_detail/insert',data, () => {
+              // this.fire('refresh-contract',{detail:'refresh-contract'});
+              this.fire('_get-fire-shm-detail',{book_id:data.book_id});
+              // this.fire('get-list-shipment-detail',{sm_id:this.dataForSelect.shm_id});
+              this.fire('toast',{status:'success',text:'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
+                callback:()=>{
+                    this.cancelInsertShipment();
+                    let el = Polymer.dom(this.root).querySelectorAll('.required');
+                    el.map((el)=> {el.reset();el.value=''});
+                    this.cancelEditShipment()
+                  }
+              });
+            });
 
-          // });
-        // }else {
-        //   this.fire('toast',{status:'connectError',text:'ปริมาณข้าวเกินกำหนด', //คำสั่งสำหรับเปิด toast error
-        //     callback:function(){
-        //   }})
-        // }
+          });
+        }else {
+          this.fire('toast',{status:'connectError',text:'ปริมาณข้าวเกินกำหนด', //คำสั่งสำหรับเปิด toast error
+            callback:function(){
+          }})
+        }
       },
       editExporter:function () {
         let sum = this.oldData.shm_det_quantity +this.dataForSelect.type_rice_quantity_limit_max;
