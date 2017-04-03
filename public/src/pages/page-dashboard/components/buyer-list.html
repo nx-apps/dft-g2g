@@ -1,6 +1,6 @@
 
 
-<dom-module id="country-list">
+<dom-module id="buyer-list">
     <template>
         <style include="iron-flex iron-flex-factors iron-flex-alignment page-style">
              :host {
@@ -31,7 +31,7 @@
     </template>
     <script>
         Polymer({
-            is: 'country-list',
+            is: 'buyer-list',
             getContractList(e){
                 // console.log(e.currentTarget.data);
                 this.fire('_getContractList',e.currentTarget.data)

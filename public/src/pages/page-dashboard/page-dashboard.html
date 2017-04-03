@@ -2,7 +2,7 @@
 <link rel="import" href="../page-g2g/g2g/controller/g2gCongtroller.html">
 <link rel="import" href="../components/format-number-behavior.html">
 <link rel="import" href="./../components/page-style.html">
-<link rel="import" href="./components/country-list.html">
+<link rel="import" href="./components/buyer-list.html">
 
 
 <dom-module id="page-dashboard">
@@ -16,9 +16,26 @@
                 font-family: 'CSChatThaiUI', sans-serif;
                 -webkit-font-smoothing: antialiased;
             }
+            
+            paper-fab {
+                position: fixed;
+                right: 25px;
+                bottom: 25px;
+                color: #fff;
+            }
         </style>
         <div class="xcontainer ">
-            <country-list data="[[countryList]]"></country-list>
+            <buyer-list data="[[countryList]]"></buyer-list>
+        </div>
+        <nylon-panel-right title="{{titlePanelRight}}" id="drawerRight" set-width="95%">
+            <div class="rightdata" align="left">
+                <contract-detail data-for-select="[[dataForSelected.dataForContract]]" is-view-seleted="[[!isViewSeleted]]" is-edit="[[!isEdit]]"
+                    is-input-disabled="[[!isInputDisabled]]"></contract-detail>
+            </div>
+        </nylon-panel-right>
+        <div class="btnFab">
+            <paper-fab icon="add" title="เพิ่มประเทศ" id="addCountry" on-tap="addCountry"></paper-fab>
+            <paper-tooltip for="addCountry" offset="0">เพิ่มประเทศ</paper-tooltip>
         </div>
 
     </template>
@@ -36,13 +53,30 @@
                     type: Object,
                     value: ''
                 },
+                titlePanelRight: {
+                    type: String,
+                    value: 'การซื้อขายข้าวระหว่างประเทศ'
+                },
+                checkRenderPage: {
+                    type: Object,
+                    value:
+                    {
+                        contractDetail: false,
+                    }
+                },
+                dataForSelected: {
+                    type: Object,
+                    value: { dataForContract: {} }
+                },
             },
             listeners: {
-               '_getContractList':'getContractList'
+                '_getContractList': 'getContractList',
+                'close-drawer': '_flipDrawerClose',
             },
             ready: function () {
                 Polymer.RenderStatus.afterNextRender(this, () => {
                     this._getCountry()
+                    this._getDataForContract()
                 });
             },
             _getCountry() {
@@ -50,11 +84,56 @@
                     this.set('countryList', data)
                 });
             },
-            getContractList(e){
+            getContractList(e) {
                 // console.log(e.detail.buyer_id);
-                document.cookie = "buyerId="+e.detail.buyer_id
-                this.fire('nylon-change-page',{path:'/g2g'})
-            }
+                document.cookie = "buyerId=" + e.detail.buyer_id
+                this.fire('nylon-change-page', { path: '/g2g' })
+            },
+            _getDataForContract: function () {
+                //use data for contract
+                this.read('./common/buyer', (data) => {
+                    this.dataForSelected.dataForContract.buyer = data;
+                    this.notifyPath('dataForSelected.dataForContract.buyer');
+                });
+                this.read('./common/type_rice', (data) => {
+                    this.dataForSelected.dataForContract.typeRice = data;
+                    this.notifyPath('dataForSelected.dataForContract.typeRice');
+                });
+                this.read('./common/incoterms', (data) => {
+                    this.dataForSelected.dataForContract.incoterms = data;
+                    this.notifyPath('dataForSelected.dataForContract.incoterms');
+                });
+                //end use data for contract
+            },
+            addCountry() {
+                this.titlePanelRight = 'เพิ่มสัญญาการซื้อขาย'
+                this.fire('toast', { status: 'load' });
+                if (this.checkRenderPage.contractDetail != true) {
+                    this.async(() => {
+                        this.importHref(
+                            this.resolveUrl('./../page-g2g/g2g/component/contract-detail.html'),
+                            () => {
+                                this.async(() => {
+                                    this.fire('toast', { status: 'load' });
+                                    // console.log(this.dataForSelected.dataForContract);
+                                    this._flipDrawer();
+                                    this.checkRenderPage.contractDetail = true;
+                                }, 500)
+                            }, null, true
+                        );
+                    }, 1000);
+                } else {
+                    this.fire('toast', { status: 'load' });
+                    this._flipDrawer();
+                }
+            },
+            _flipDrawer: function () {
+                // this.$.drawerRight.actionDrawer();
+                Polymer.dom(this.root).querySelector('#drawerRight').open();
+            },
+            _flipDrawerClose: function () {
+                Polymer.dom(this.root).querySelector('#drawerRight').close();
+            },
         });
     </script>
 </dom-module>

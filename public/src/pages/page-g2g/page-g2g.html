@@ -190,14 +190,15 @@
         // console.log('re');
         // console.log(this._getCookie("buyerId"));
         // g2g/contract/buyer/id/
+        this.read('./g2g/contract/buyer/id/'+this._getCookie("buyerId"), (data) => {
+          this.contractList = data;
+          console.log(this.contractList);
+          // console.log(data[0].confirm_letter);
+        });
         // this.read('./g2g/contract/list', (data) => {
         //   this.contractList = data;
         //   // console.log(data[0].confirm_letter);
         // });
-        this.read('./g2g/contract/list', (data) => {
-          this.contractList = data;
-          // console.log(data[0].confirm_letter);
-        });
 
       },
       // attached: function() {
