@@ -32,7 +32,6 @@
 
   <gl-form-panel-body>
     <gl-grid-row width="{{getWidth}}">
-      {{_getdata(dataForSelect)}}
       <template is="dom-if" if="[[isViewSeleted]]">
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
           <gl-form-input disabled label="{{localize('text_exporter_name')}}"  value="{{data.seller_name_en}}" always-float-label></gl-form-input>
@@ -42,6 +41,8 @@
         </gl-grid-col>
       </template>
       <template is="dom-if" if="[[!isViewSeleted]]">
+        
+        
         <template is="dom-if" if="[[isInputDisabled]]">
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
             <gl-form-input disabled label="{{localize('text_exporter_name')}}"  value="{{data.seller_name_en}}" always-float-label></gl-form-input>
@@ -52,11 +53,11 @@
         </template>
         <template is="dom-if" if="[[!isInputDisabled]]">
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-            <gl-combo-box class="required" required  id="exporter_id" label="{{localize('text_exporter_name')}}" always-float-label item-label-path="seller_name_en" disabled="[[isInputDisabled]]"
-             item-value-path="exporter_id"  items="{{dataForSelect.seller}}" value="{{data.exporter_id}}" ></gl-combo-box>
+            <gl-combo-box class="required" required  id="company_id" label="{{localize('text_exporter_name')}}" always-float-label item-label-path="company_name_th" disabled="[[isInputDisabled]]"
+             item-value-path="company_id"  items="{{dataForSelect.seller}}" value="{{data.company_id}}" ></gl-combo-box>
           </gl-grid-col>
            <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,8]]">
-            <gl-form-input disabled label="{{localize('label_tel')}}"  value="{{_getSellerPhone(data.exporter_id,dataForSelect)}}" always-float-label></gl-form-input>
+            <gl-form-input disabled label="{{localize('label_tel')}}"  value="{{_getSellerPhone(data.company_id,dataForSelect)}}" always-float-label></gl-form-input>
           </gl-grid-col>
         </template>
       </template>
@@ -75,12 +76,12 @@
       </gl-grid-col>
       <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,12]]">
         <gl-combo-box id="type_rice_id" label="{{localize('label_rice_type')}}" item-label-path="type_rice_name_en" disabled="[[isInputDisabled]]"
-         class="required" required  item-value-path="type_rice_id" items="[[dataForSelect.cl_type_rice]]" value="{{data.type_rice_id}}" always-float-label></gl-combo-box>
+         class="required" required  item-value-path="type_rice_id" items="[[dataForSelect.cl_type_rice]]" value="{{data.type_rice_id}}" always-float-label ></gl-combo-box>
       </gl-grid-col>
       [[_checkDataInPackage(data.type_rice_id)]]
       <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,8]]">
         <gl-combo-box id="package_id" label="{{localize('label_package')}}" item-label-path="package_name_en" disabled="[[isInputDisabled]]"
-         class="required" required  item-value-path="package_id" items="[[_getRiceTypeForPackage(data.type_rice_id,dataForSelect,data.exporter_id)]]" value="{{data.package_id}}" always-float-label></gl-combo-box>
+         class="required" required  item-value-path="package_id" items="[[dataForSelect.package]]" value="{{data.package_id}}" always-float-label></gl-combo-box>
       </gl-grid-col>
       <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
         [[changeString2Num(data.*,'shm_det_quantity')]]
@@ -194,9 +195,36 @@
       created:function(){
           this.nylonLocalizeImport('/i18n-page1.json');
       },
-      // _getdata:function (pol) {
-      //   // console.log('pol',pol);
-      // },
+      _getdata:function (pol) {
+        // console.log('pol',pol);
+      },
+      _dataSelected:function (dataForSelect) {
+        // console.log('dataForSelect.pol=>',dataForSelect.pol);
+        // if (dataForSelect.pol != undefined) {
+        //   let elements = this.$$('#load_port_id');
+        //   let pol = new Array();
+        //   dataForSelect.pol.map((el,index)=>{
+        //     pol.push({ label:el.port_name, value:el.port_id});
+        //   });
+        //   elements.items = pol;
+        //   console.log(elements.items);
+        // }
+
+      },
+      _checkDataInPackage:function (type_rice_id) {
+        try {
+          console.log(type_rice_id);
+          console.log(this._getRiceTypeForPackage(type_rice_id,'',''));
+          // console.log('dataForSelect>>',this.dataForSelect);
+          // this.dataForSelect.package = new Array();
+          // this.notifyPath('dataForSelect.package');
+          // this.data.package_id = '';
+          // this.notifyPath('data.package_id');
+        } catch (e) {
+      
+        }
+      
+      },
       _confirmBook:function (data) {
         console.log(data);
           if ( data.book_status == false) {
@@ -215,20 +243,23 @@
         // this.dataForSelect.olddata = ;
         // this.notifyPath('dataOld');
       },
-      _getSellerPhone:function (exporter_id,dataForSelect) {
-        if (exporter_id) {
-          let tel = this.dataForSelect.seller.filter((exporters)=> exporters.exporter_id == exporter_id );
-          this.dataForSelect.seller_id=tel[0].seller_id;
-          this.dataForSelect.trader_id=tel[0].trader_id;
-          return tel[0].seller_phone;
+      _getSellerPhone:function (company_id,dataForSelect) {
+        if (company_id) {
+          console.log('exporter_id>',company_id);
+          let tel = this.dataForSelect.seller.filter((exporters)=> exporters.company_id == company_id );
+          console.log(tel);
+          this.dataForSelect.company_id=tel[0].company_id;
+          // this.dataForSelect.trader_id=tel[0].trader_id;
+          return tel[0].company_phone;
         }
       },
 
       _getRiceTypeForPackage:function (type_rice_id,dataForSelect,exporter_id) {
         if (type_rice_id) {
-
+            console.log('>>>>>>>>>>',this.dataForSelect);
             // let type_rice_id = e.detail.value;
             let typeRice = this.dataForSelect.cl_type_rice.filter((typeRices)=> typeRices.type_rice_id == type_rice_id );
+            console.log(typeRice);
             this.dataForSelect.package = typeRice[0].package;
             console.log('fff=>',this.dataForSelect.package);
             this.notifyPath('dataForSelect.package');
@@ -256,7 +287,7 @@
             // if (check) {
             //   return this.dataForSelect.package =  newItemPackage;
             // }else {
-              return typeRice[0].package;
+              // return typeRice[0].package;
             // }
 
 
@@ -300,28 +331,30 @@
         // console.log(this.data);
         this.data.book_id=this.dataForSelect.book_id;
         this.set('data.tags',[])
-        this.push('data.tags',this.dataForSelect.contract_id,this.dataForSelect.cl_id,this.dataForSelect.seller_id);
+        console.log(this.dataForSelect.contract_id+','+this.dataForSelect.cl_id+','+this.dataForSelect.company_id);
+        console.log(this.dataForSelect);
+        this.push('data.tags',this.dataForSelect.contract_id,this.dataForSelect.cl_id,this.dataForSelect.company_id);
         // console.log(this.data);
 
         // if (this.data.shm_det_quantity <=this.dataForSelect.type_rice_quantity_limit_max) {
-          this._cleanShipmentData(this.data,(data)=>{
-            this.fire('toast',{status:'load'}); //คำสั่งสำหรับเปิด toast load
-            // console.log(data);
-            this.insert('./g2g/shipment_detail/insert',data, () => {
-              // this.fire('refresh-contract',{detail:'refresh-contract'});
-              this.fire('_get-fire-shm-detail',{book_id:data.book_id});
-              // this.fire('get-list-shipment-detail',{sm_id:this.dataForSelect.shm_id});
-              this.fire('toast',{status:'success',text:'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
-                callback:()=>{
-                    this.cancelInsertShipment();
-                    let el = Polymer.dom(this.root).querySelectorAll('.required');
-                    el.map((el)=> {el.reset();el.value=''});
-                    this.cancelEditShipment()
-                  }
-              });
-            });
+          // this._cleanShipmentData(this.data,(data)=>{
+          //   this.fire('toast',{status:'load'}); //คำสั่งสำหรับเปิด toast load
+          //   // console.log(data);
+          //   this.insert('./g2g/shipment_detail/insert',data, () => {
+          //     // this.fire('refresh-contract',{detail:'refresh-contract'});
+          //     this.fire('_get-fire-shm-detail',{book_id:data.book_id});
+          //     // this.fire('get-list-shipment-detail',{sm_id:this.dataForSelect.shm_id});
+          //     this.fire('toast',{status:'success',text:'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
+          //       callback:()=>{
+          //           this.cancelInsertShipment();
+          //           let el = Polymer.dom(this.root).querySelectorAll('.required');
+          //           el.map((el)=> {el.reset();el.value=''});
+          //           this.cancelEditShipment()
+          //         }
+          //     });
+          //   });
 
-          });
+          // });
         // }else {
         //   this.fire('toast',{status:'connectError',text:'ปริมาณข้าวเกินกำหนด', //คำสั่งสำหรับเปิด toast error
         //     callback:function(){
@@ -332,7 +365,7 @@
         let sum = this.oldData.shm_det_quantity +this.dataForSelect.type_rice_quantity_limit_max;
         // console.log(sum);
         this.set('data.tags',[])
-        this.push('data.tags',this.dataForSelect.contract_id,this.dataForSelect.cl_id,this.dataForSelect.seller_id,this.dataForSelect.trader_id);
+        this.push('data.tags',this.dataForSelect.contract_id,this.dataForSelect.cl_id,this.dataForSelect.company_id);
         if (this.data.shm_det_quantity <= sum) {
           this._cleanShipmentData(this.data,(data)=>{
               data.shm_id = this.data.shm_id;
