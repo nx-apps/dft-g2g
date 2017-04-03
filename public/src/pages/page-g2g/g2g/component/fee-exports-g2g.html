@@ -319,16 +319,18 @@
          if (result == true) {
            let contract_id= this._getUrl();
           //  console.log(contract_id);
-          //  console.log(detail.data.id);
+           console.log(detail.data);
+           
            this.update('./g2g/fee_detail/update',detail.data, () => {
             //  console.log(detail.data.id);
                this.fire('refresh-contract',{detail:'refresh-contract'});
                this.fire('toast',{status:'success',text:'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
                    callback:()=>{
                     // this.fire('close-drawer',{detail:'close-drawer'})
-                    let contract_id= this._getUrl();
+                    // let contract_id= this._getUrl();
                     this.fire('get-fee-list',{detail:contract_id});
                     // console.log(detail.data.id);
+                    this.fire('get-new-fee-list',detail.data)
                     this.fire('get-new-fee-list-detail',{data:detail.data.id});
                   }
                 });

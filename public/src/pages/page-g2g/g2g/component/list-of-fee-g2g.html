@@ -49,7 +49,7 @@
                 </tr>
               </thead>
               <tbody class="table-body">
-                <template is="dom-if" if="[[!_isHave(newData)]]">
+                <!--<template is="dom-if" if="[[!_isHave(newData)]]">-->
                   <template is="dom-repeat" items="[[newData]]" >
                     <tr data="[[item]]" on-tap="getFeeDetailList">
                       <!-- <td>[[item.cl_name]]</td> -->
@@ -57,7 +57,7 @@
                       <td>[[item.fee_no]]</td>
                     </tr>
                   </template>
-                </template>
+                <!--</template>-->
                 <template is="dom-if" if="[[_isHave(newData)]]">
                   <tr>
                     <td colspan="5" style="text-align:center">   {{localize('text_no_data')}}</td>
@@ -90,14 +90,11 @@
       listeners:{
         'page-change':'_pageChange',
         'get-Fee-Detail':'_getFeeDetail',
-        'get-new-fee-list':'fdff',
+        'get-new-fee-list':'_getFeeListEvent',
         'get-new-fee-list-detail':'_getFeeDetail',
       },
 
-      fdff:function (e) {
-        this.fire('toast',{status:'load'});
-        console.log(e.detail.data);
-      },
+      
       properties: {
         newData:{
           type:Object
@@ -117,6 +114,12 @@
       initDataFee:function (data) {
         // console.log(data);
         this.newData = this.g2gClone(data);
+      },
+      _getFeeListEvent:function (e) {
+        this._getDbFeeDetailList(e.detail.fee_id,(data)=>{
+          this.dataSelected.feeDetail=data;
+          this.notifyPath('dataSelected.feeDetail');
+        })
       },
       _searchInArray:function (searchInput) {
           // console.log(searchInput == '');

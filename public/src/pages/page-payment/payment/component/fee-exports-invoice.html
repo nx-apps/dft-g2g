@@ -93,7 +93,7 @@
           <template is="dom-repeat" items="[[data.invoice_detail]]" as="invoiceDetail">
             <!-- [[_insertInvoiceDetail(invoiceDetail.shm_det_id)]] -->
             <tr>
-              <td><gl-form-input disabled style="width:140px;" value="[[invoiceDetail.seller_name_en]]" ></gl-form-input></td>
+              <td><gl-form-input disabled style="width:140px;" value="[[invoiceDetail.company_name_th]]" ></gl-form-input></td>
                 [[_totalQuantityTons(invoiceDetail.quantity_tons,index)]]
               <td><gl-form-input class="number" format-number="on" style="width:140px;" value="[[invoiceDetail.quantity_tons]]" disabled ></gl-form-input></td>
                 [[_totalPricePerTon(invoiceDetail.price_per_ton,index)]]
