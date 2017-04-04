@@ -260,7 +260,7 @@ exports.buyerId = function (req, res) {
                             cl_quantity_total: cl('cl_type_rice').sum('type_rice_quantity'),
                             cl_status: cl('cl_status'),
                             book_quantity: r.db('g2g2').table('book')
-                                .getAll(row('id'), { index: 'cl_id' })
+                                .getAll(cl('id'), { index: 'cl_id' })
                                 .pluck('id')
                                 .map((book) => {
                                     return {
