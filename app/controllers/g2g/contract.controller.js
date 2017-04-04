@@ -275,20 +275,23 @@ exports.buyerId = function (req, res) {
                     })
                     .orderBy('cl_no')
                     .coerceTo('array'),
-                // exporter: r.table('shipment_detail').getAll(row('id'), { index: 'tags' }).coerceTo('array')
-                //     .group('exporter_id')
-                //     .ungroup()
-                //     .map(function (ex_map) {
-                //         return r.db('external').table('exporter').get(ex_map('group'))
-                //         // r.db('external').table('exporter').get(ex_map('group'))
-                //         // .pluck('company_id', 'exporter_no')
-                //         // .do(function (ex_merge) {
-                //         //     return { exporter_id: ex_map('group') }
-                //         // })
-                //         // .merge(function (com_merge) {
-                //         //     return r.db('external').table('company').get(com_merge('company_id'))
-                //         // })
-                //     })
+                exporter: r.table('shipment_detail').getAll(row('id'), { index: 'tags' }).coerceTo('array')
+                    .group('exporter_id')
+                    .ungroup()
+                    .map(function (ex_map) {
+                        return r.db('external').table('exporter').get(ex_map('group'))
+                            .pluck('company_id', 'exporter_no')
+                            .merge(function (ex_merge) {
+                                return {
+                                    exporter_id: ex_map('group'),
+                                    exporter_no: r.expr("ข.").add(ex_merge('exporter_no').coerceTo('string'))
+                                }
+                            })
+                            .merge(function (com_merge) {
+                                return r.db('external').table('company').get(com_merge('company_id'))
+                                    .pluck('company_name_th', 'company_taxno')
+                            })
+                    })
 
 
                 // r.db('g2g2').table('book')
