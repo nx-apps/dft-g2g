@@ -1,5 +1,3 @@
-
-
 <dom-module id="buyer-list">
     <template>
         <style include="iron-flex iron-flex-factors iron-flex-alignment page-style">
@@ -12,8 +10,9 @@
             }
         </style>
         <div class="horizontal layout center-justified  wrap">
-            <template is="dom-repeat" items={{data}} as=item index-as=index>
-                <paper-material elevation="1" class="paper-meterial tree margin-meterial">
+            <paper-material elevation="1" class="paper-meterial tree margin-meterial">
+                <template is="dom-repeat" items={{data}} as=item index-as=index>
+
                     <div class="head-meterial">
                         [[item.buyer_name]] ([[item.country_name_th]])
                     </div>
@@ -21,20 +20,21 @@
                         1212
                     </div>
                     <div class="foot-meterial">
-                        
+
                         <paper-button raised class="" data="[[item]]" on-tap="getContractList">ดูข้อมูล</paper-button>
-                        
+
                     </div>
-                </paper-material>
-            </template>
+
+                </template>
+            </paper-material>
         </div>
     </template>
     <script>
         Polymer({
             is: 'buyer-list',
-            getContractList(e){
+            getContractList(e) {
                 // console.log(e.currentTarget.data);
-                this.fire('_getContractList',e.currentTarget.data)
+                this.fire('_getContractList', e.currentTarget.data)
             }
         });
     </script>

@@ -70,6 +70,7 @@
         "label_error_order":"กรุณากรอกลำดับที่",
 
         "":"Confrim",
+        "label_ref_no":"เลขสัญญาย่อยที่",
         "label_status":"สถานะ",
         "label_no_data":"ไม่มีข้อมูล",
         "label_detail":"รายละเอียด",

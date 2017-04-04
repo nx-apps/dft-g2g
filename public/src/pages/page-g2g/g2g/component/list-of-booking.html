@@ -37,10 +37,14 @@
           g2gModelBehavior,
           g2gCongtroller,
       ],
+      observers: [
+            'getExport(data)'
+      ],
       listeners:{
         '_change-component-bl':'_changeComponentBl',
         '_get-booking-detail':'_getBookingDetail',
-        '_get-fire-booking-detail':'_getFireBookingDetail'
+        '_get-fire-booking-detail':'_getFireBookingDetail',
+        '_get-fire-group-exporter':'_getFireGroupExporter'
       },
       _changeComponentBl:function (data) {
         // console.log(data.detail.detail);
@@ -57,6 +61,12 @@
           this.set('pageSelected','list-of-booking-shm-det')
           this.fire('toast',{status:'load'});
         });
+      },
+      getExport(data){
+        console.log('>>>>',data);
+      },
+      _getFireGroupExporter(e){
+
       },
       _getFireBookingDetail:function (e) {
         // console.log(e.detail);
