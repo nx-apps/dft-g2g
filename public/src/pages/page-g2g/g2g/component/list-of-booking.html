@@ -70,9 +70,9 @@
           let exporters = []
           data.exporter.map((exporter) => {
             exporters.push({
-              id: exporter.exporter_id,
-              label: exporter.company_name_th + ' / ' + exporter.exporter_no,
-              company_id:exporter.company_id
+              exporter_id: exporter.exporter_id,
+              label: exporter.company_name_th + ' ( ' + exporter.exporter_no + ' )',
+              company_id: exporter.company_id
             })
           })
           // console.log(exporters);
