@@ -1,7 +1,7 @@
 exports.list = function (req, res) {
     var r = req.r;
     var orderby = req.query.orderby;
-     r.db('g2g2').table("contract")
+    r.db('g2g2').table("contract")
         .merge(function (row) {
             return {
                 contract_id: row('id'),
@@ -146,7 +146,7 @@ exports.list = function (req, res) {
 exports.list2 = function (req, res) {
     var r = req.r;
     r.db('g2g2').table('contract')
-        .getAll(true, { index: 'contract_status' })
+        // .getAll(true, { index: 'contract_status' })
         //.filter({ contract_status: true })
         .merge({ contract_id: r.row('id') })
         .pluck("buyer_id", "contract_id", "contract_date")
@@ -274,7 +274,23 @@ exports.buyerId = function (req, res) {
                         }
                     })
                     .orderBy('cl_no')
-                    .coerceTo('array')
+                    .coerceTo('array'),
+                // exporter: r.table('shipment_detail').getAll(row('id'), { index: 'tags' }).coerceTo('array')
+                //     .group('exporter_id')
+                //     .ungroup()
+                //     .map(function (ex_map) {
+                //         return r.db('external').table('exporter').get(ex_map('group'))
+                //         // r.db('external').table('exporter').get(ex_map('group'))
+                //         // .pluck('company_id', 'exporter_no')
+                //         // .do(function (ex_merge) {
+                //         //     return { exporter_id: ex_map('group') }
+                //         // })
+                //         // .merge(function (com_merge) {
+                //         //     return r.db('external').table('company').get(com_merge('company_id'))
+                //         // })
+                //     })
+
+
                 // r.db('g2g2').table('book')
                 //     .getAll(row('id'), { index: 'tags' })
                 //     .merge(function (book) {
