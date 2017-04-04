@@ -363,7 +363,7 @@
           // this.notifyPath('dataForSelected.dataForConfirm.package');
           // console.log(  this.dataSelected);
         } else {
-          // this._getContractList();
+          this._getContractList();
           this.read('./g2g/contract/buyer/id/' + this._getCookie("buyerId"), (data) => {
             let contractId = e.detail.contractId;
             let dataContract = data.filter((contractList) => contractList.contract_id == contractId);
