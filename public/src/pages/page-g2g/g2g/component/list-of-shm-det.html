@@ -14,7 +14,9 @@
     }
   </style>
   <template>
-    <div class="horizontal end-justified layout center">
+    
+    <gl-form-panel>
+<div class="horizontal end-justified layout center">
       <gl-combo-box always-float-label label="{{localize('label_report')}}" placeholder="{{localize('label_report')}}" value="{{printReport.typeReport}}"
         item-label-path="report_name" item-value-path="report_name_id" items="{{report.report_name}}"></gl-combo-box>
       <!-- </gl-grid-col> -->&nbsp;
@@ -46,9 +48,8 @@
         </div>
       </paper-dialog>
     </div>
-    <gl-form-panel>
-
       <gl-form-panel-head label="{{localize('text_list_exporter_name')}}" set-padding="10px" set-border="1px">
+
         <template is="dom-if" if={{_confirmBook(data)}}>
           <paper-button class="gl-btn-primary" raised on-tap="createShmDet">{{localize('btn_add_exporter')}}</paper-button>
         </template>
