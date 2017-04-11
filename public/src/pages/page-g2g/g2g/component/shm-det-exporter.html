@@ -218,20 +218,14 @@
       },
       _checkDataInPackage:function (type_rice_id) {
         try {
-          console.log(type_rice_id);
-          console.log(this._getRiceTypeForPackage(type_rice_id,'',''));
-          // console.log('dataForSelect>>',this.dataForSelect);
-          // this.dataForSelect.package = new Array();
-          // this.notifyPath('dataForSelect.package');
-          // this.data.package_id = '';
-          // this.notifyPath('data.package_id');
+          this._getRiceTypeForPackage(type_rice_id,'','')
         } catch (e) {
       
         }
       
       },
       _confirmBook:function (data) {
-        console.log(data);
+        // console.log(data);
           if ( data.book_status == false) {
             return true;
           } else {
@@ -242,17 +236,20 @@
         this.editInput();
         this.calcelContract();
       },
+      calcelContract(){
+        this.fire('_change-component-shm',{detail:'list-of-shm-det'})
+      },
       check:function (data) {
-        console.log(data);
+        // console.log(data);
         //  this.set('dataOld', JSON.parse(JSON.stringify(data)));
         // this.dataForSelect.olddata = ;
         // this.notifyPath('dataOld');
       },
       _getSellerPhone:function (company_id,dataForSelect) {
         if (company_id) {
-          console.log('exporter_id>',company_id);
+          // console.log('exporter_id>',company_id);
           let tel = this.dataForSelect.seller.filter((exporters)=> exporters.company_id == company_id );
-          console.log(tel);
+          // console.log(tel);
           this.dataForSelect.company_id=tel[0].company_id;
           this.dataForSelect.exporter_id=tel[0].exporter_id;
           this.data.exporter_id=tel[0].exporter_id;
@@ -263,12 +260,12 @@
 
       _getRiceTypeForPackage:function (type_rice_id,dataForSelect,exporter_id) {
         if (type_rice_id) {
-            console.log('>>>>>>>>>>',this.dataForSelect);
+            // console.log('>>>>>>>>>>',this.dataForSelect);
             // let type_rice_id = e.detail.value;
             let typeRice = this.dataForSelect.cl_type_rice.filter((typeRices)=> typeRices.type_rice_id == type_rice_id );
-            console.log(typeRice);
+            // console.log(typeRice);
             this.dataForSelect.package = typeRice[0].package;
-            console.log('fff=>',this.dataForSelect.package);
+            // console.log('fff=>',this.dataForSelect.package);
             this.notifyPath('dataForSelect.package');
             //เซ็นลิมิตข้าวลงใน data.shm_det_quantity
             this.set('dataForSelect.type_rice_quantity_limit_max',typeRice[0].type_rice_quantity_limit_max);

@@ -54,7 +54,7 @@
       },
       _changeComponentShm:function (data) {
         // console.log(data.detail.detail);
-        console.log(this.dataSelected);
+        // console.log(this.dataSelected);
         this.set('pageSelected',data.detail.detail)
       },
       _getFireInBookShmDetail:function (e) {
@@ -62,7 +62,7 @@
         // console.log(this.dataSelected);
         this.dataEdit=e.detail.detail;
         this.set('dataEdit',e.detail.detail)
-        console.log(this.dataEdit);
+        // console.log(this.dataEdit);
         this.set('pageSelected','shm-detail')
       },
       _postApproveBook:function (e) {
@@ -70,7 +70,7 @@
         this.fire('toast',{status:'load'});
         this.update('./g2g/book/update/',e.detail ,()=>{
           this.fire('toast',{status:'load'});
-          console.log(11);
+          // console.log(11);
         });
       }
 

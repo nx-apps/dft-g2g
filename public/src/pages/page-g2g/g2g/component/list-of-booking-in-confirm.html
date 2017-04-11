@@ -51,8 +51,8 @@
           <template is="dom-repeat" items="[[data.book]]">
             <tr on-tap="bookingDetail" data="[[item]]">
               <td>[[item.cl_no]]</td>
-              <td>[[item.cl_quantity_total]]</td>
-              <td>[[item.book_quantity]]</td>
+              <td>[[formatNumberNoZero(item.cl_quantity_total)]]</td>
+              <td>[[formatNumberNoZero(item.book_quantity)]]</td>
             </tr>
           </template>
 
@@ -67,7 +67,8 @@
       behaviors: [
         nylonBehavior,
         nylonLocalizeBehavior,
-        g2gCongtroller
+        g2gCongtroller,
+        FormatNumberBehavior
       ],
       properties: {
         title: {
@@ -97,6 +98,7 @@
             this.fire('_get-fire-group-exporter', data.exporter_id)
           }else {
             this.set('title', 'แสดงปริมาณส่งมอบทั้งหมด')
+            this.fire('_get-fire-group-exporter', '')
           }
           
         } catch (e) {

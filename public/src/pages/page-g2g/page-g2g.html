@@ -377,7 +377,7 @@
         }
       },
       _getListShipment: function (e) {
-        console.log(e.detail.detail);
+        // console.log(e.detail.detail);
         this.g2gPageSeleted = 'listOfShipment';
         this.titlePanelRight = 'การส่งมอบสินค้า';
         if (typeof e.detail.contractId == "undefined") {
@@ -400,11 +400,11 @@
             this.fire('toast', { status: 'load' });
             this._flipDrawer();
           }
-          console.log(e.detail.data.book);
+          // console.log(e.detail.data.book);
           this.dataSelected = e.detail.data;
           this.set('dataForSelected.dataForBooking.contract_id', e.detail.data.contract_id);
           this.set('dataForSelected.dataForBooking.buyer_id', e.detail.data.buyer_id);
-          console.log(this.dataForSelected.dataForBooking);
+          // console.log(this.dataForSelected.dataForBooking);
           this.set('dataForSelected.dataForBooking.country_id', e.detail.data.country_id);
           this.set('dataForSelected.dataForBooking.buyer_masks', e.detail.data.buyer_masks);
         } else {

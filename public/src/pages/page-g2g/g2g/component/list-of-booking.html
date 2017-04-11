@@ -66,7 +66,7 @@
       },
       getExport(data) {
         try {
-          console.log('>>>>', data);
+          // console.log('>>>>', data);
           let exporters = []
           data.exporter.map((exporter) => {
             exporters.push({
@@ -77,7 +77,7 @@
           })
           // console.log(exporters);
           this.set('dataForSelect.exporter', exporters);
-          console.log(this.dataForSelect);
+          // console.log(this.dataForSelect);
         } catch (e) {
 
         }
@@ -86,11 +86,9 @@
       _getFireGroupExporter(exporterId) {
         //
         if (this._checkUndefined(this.oldData)) {
-          // console.log('this.oldData', this.oldData);
           // https://localhost:3001/api/g2g/confirm/exporter?contract_id=37d09c7b-b8b3-407d-abca-89f0cc56da21&exporter_id=ba5526b3-cbfa-482d-b0ac-716df09b47f7
           // console.log('exporterId', exporterId);
           if (exporterId.detail == '') {
-            // console.log(11111111111111111111);
             this.set('data', this.oldData)
             // console.log(this.data);
           } else {
@@ -100,14 +98,11 @@
               this.set('data.book', data)
             });
           }
-
-          // console.log('exporterId',exporterId.detail);
         }
 
 
       },
       _getFireBookingDetail: function (e) {
-        // console.log(e.detail);
         this.read('./g2g/book/confirm/id/' + e.detail.cl_id, (data) => {
           this.dataSelected = data;
         });
