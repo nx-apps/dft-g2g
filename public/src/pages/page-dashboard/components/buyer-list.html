@@ -22,6 +22,9 @@
             iron-icon {
                 cursor: pointer;
             }
+            .title-head{
+                font-size: var(--font-size-h4);
+            }
         </style>
         <div class="horizontal layout center-justified  wrap">
             <!--<template is="dom-repeat" items={{data}} as=item index-as=index>-->
@@ -32,6 +35,10 @@
                         [[data.buyer_name]] ([[data.country_name_th]])
                     </div>
                     <div class="content-meterial">
+                        <div class="horizontal center-justified layout title-head">
+                            [[title]]
+                        </div>
+                        
                         <div class="horizontal layout center">
                             <iron-icon class="chartPiePrevious" icon="chevron-left" item-icon on-tap="chartPiePrevious"></iron-icon>
 
@@ -64,6 +71,10 @@
                 page: {
                     type: Number,
                     value: 0
+                },
+                title:{
+                    type: String,
+                    value:'ปริมาณการส่งมอบ (ตัน)'
                 }
             },
             getContractList(e) {
@@ -75,7 +86,7 @@
                     labels: quantity.map((ed) => ed.contract_year),
                     datasets: [
                         {
-                            label: "ปริมาณการส่งมอบ",
+                            label: "ปริมาณการส่งมอบ (ตัน)",
                             backgroundColor: "rgba(220,220,220,0.2)",
                             borderColor: "rgba(220,220,220,1)",
                             borderWidth: 1,
@@ -89,7 +100,7 @@
                     labels: value.map((ed) => ed.contract_year),
                     datasets: [
                         {
-                            label: "มูลค่า",
+                            label: "มูลค่าการส่งออก (บาท)",
                             backgroundColor: "rgba(220,220,220,0.2)",
                             borderColor: "rgba(220,220,220,1)",
                             borderWidth: 1,
@@ -103,11 +114,13 @@
             },
             chartPiePrevious(e){
                 this.set('page',0)
+                this.set('title','ปริมาณการส่งมอบ (ตัน)')
                 this.$$('#chartQuantity').icon =  'radio-button-checked'
                 this.$$('#chartValue').icon =  'radio-button-unchecked'
             },
             chartPieNext(e){
                 this.set('page',1)
+                this.set('title','มูลค่าการส่งออก (บาท)')
                 this.$$('#chartQuantity').icon =  'radio-button-unchecked'
                 this.$$('#chartValue').icon =  'radio-button-checked'
             }

@@ -155,17 +155,6 @@
           value: { bank_id: 'KTB', bank_branch: 'กระทรวงพาณิชย์' },
           observer: '_setCheckBox'
         },
-        dataFake: {
-          type: Array,
-          value:
-          [
-            { id: 'Rx1234', name: 'ข้าวขาว 5 %', ton: 5000, value: 200000 },
-            { id: 'Rx1235', name: 'ข้าวขาว 15 %', ton: 15000, value: 400000 },
-            { id: 'Rx1236', name: 'ข้าวขาว 25 %', ton: 25000, value: 500000 },
-            { id: 'Rx1237', name: 'ข้าวขาว 35 %', ton: 35000, value: 700000 },
-            { id: 'Rx1238', name: 'ข้าวขาว 45 %', ton: 50000, value: 1050000 },
-          ]
-        }
       },
       behaviors: [
         g2gModelBehavior,
@@ -226,7 +215,7 @@
             status: 'dialog',
             text: 'ต้องการจ่ายใช่หรือไม่ ?',
             confirmed: (result) => {
-              console.log(result, data);
+              // console.log(result, data);
                   this.set('data.tags', []);
                   // if (payDetId.status) {
                   this.push('data.tags', this.data.payment_detail[0].contract_id, this.data.payment_detail[0].invoice_id, this.data.payment_detail[0].cl_id);
