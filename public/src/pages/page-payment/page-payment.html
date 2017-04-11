@@ -208,7 +208,7 @@
         this._getFeeList(e.detail.detail);
       },
       _getFeeList: function (contractId) {
-        console.log(contractId);
+        // console.log(contractId);
         this.read('./g2g/fee/contract/id/' + contractId, (data) => {
           this.dataListPay.feeList = data;
           this.notifyPath('dataListPay.feeList');
@@ -322,10 +322,10 @@
         //เรียกให้อัพเดตรายชื่อ fee ที่อยู่ใน contract
         this._getFeeListInShm(cl_id);
         //
-        console.log(e.detail.detail);
+        // console.log(e.detail.detail);
         this.fire('toast', { status: 'load' });
         this.read('./g2g/fee/invoice/id/' + url, (data) => {
-          console.log(data);
+          // console.log(data);
           // console.log(data.invoice[0]);
           // this.set('dataForSelect.shm_id', data.shm_id);
           this.set('dataForSelect.cl_id', data.cl_id);
@@ -364,7 +364,7 @@
         this.fire('toast', { status: 'load' });
         // console.log(e.detail.detail.fee_id);
         //เรียกให้อัพเดตรายชื่อ fee ที่อยู่ใน contract
-        console.log(e.detail.detail);
+        // console.log(e.detail.detail);
         this._getFeeListInShm(e.detail.detail.cl_id);
         //
         this.read('./g2g/fee/id/' + e.detail.detail.fee_id, (data) => {
@@ -422,7 +422,7 @@
         // console.log(e.detail.detail);
         this.read('g2g/payment/silo', (data) => {
           this.set('dataSelected.silo', data);
-          console.log(this.dataSelected.silo)
+          // console.log(this.dataSelected.silo)
         });
         this.fire('toast', { status: 'load' });
         // this.dataSelected.paymentDetail = e.detail.detail;
