@@ -1,20 +1,23 @@
 <link rel="import" href="../controller/g2gShipmentController.html">
 <dom-module id="booking-detail">
   <style include="iron-flex iron-flex-factors iron-flex-alignment gl-styles page-style">
-    *{
+    * {
       font-family: 'CSChatThaiUI', sans-serif;
       -webkit-font-smoothing: antialiased;
     }
-    .btnVessel{
+    
+    .btnVessel {
       min-height: 32px;
       min-width: 32px;
     }
-    .btnVessel > iron-icon{
+    
+    .btnVessel>iron-icon {
       height: 16px;
       width: 16px;
       margin-right: 8px;
     }
-    div.title{
+    
+    div.title {
       margin-top: 16px;
       text-align: center;
       font-size: var(--font-size-h4);
@@ -22,204 +25,224 @@
   </style>
   <template>
 
-<gl-form-panel>
-  <!-- <template is="dom-if" if="[[!checkBtnView(shmStatus)]]"> -->
-     [[data.book_status]]
-    <template is="dom-if" if="[[isInputDisabled]]">
-     
-      <template is="dom-if" if="[[_checkEdit(data.book_status)]]">
-        <div class="horizontal end-justified layout">
-          <paper-icon-button id="editConfirm" class="crud" icon="create" raised on-tap="editInput" ></paper-icon-button>
-          <paper-tooltip for="editConfirm" offset="0">Edit Booking</paper-tooltip>
-          <paper-icon-button id="deleteConfirm" class="crud" icon="delete" raised on-tap="deleteBooking"></paper-icon-button>
-          <paper-tooltip for="deleteConfirm" offset="0">Delete Booking</paper-tooltip>
-         </div>
-      </template>
+    <gl-form-panel>
+      <!-- <template is="dom-if" if="[[!checkBtnView(shmStatus)]]"> -->
+      <!--[[data.book_status]]-->
+      <template is="dom-if" if="[[isInputDisabled]]">
 
-      <!-- <icon-button-management is-input-disabled="[[!isInputDisabled]]"></icon-button-management> -->
-    </template>
-  <!-- </template> -->
+        <template is="dom-if" if="[[_checkEdit(data.book_status)]]">
+          <div class="horizontal end-justified layout">
+            <paper-icon-button id="editConfirm" class="crud" icon="create" raised on-tap="editInput"></paper-icon-button>
+            <paper-tooltip for="editConfirm" offset="0">Edit Booking</paper-tooltip>
+            <paper-icon-button id="deleteConfirm" class="crud" icon="delete" raised on-tap="deleteBooking"></paper-icon-button>
+            <paper-tooltip for="deleteConfirm" offset="0">Delete Booking</paper-tooltip>
+          </div>
+        </template>
+
+        <!-- <icon-button-management is-input-disabled="[[!isInputDisabled]]"></icon-button-management> -->
+      </template>
+      <!-- </template> -->
       <gl-form-panel-body>
         <div class="title">{{localize('label_booking_no')}}</div>
       </gl-form-panel-body>
-    <gl-form-panel-body>
-    <!-- {{dataForSelect.shm_id}}//shm_id -->
-    <gl-grid-row width="{{getWidth}}">
-      <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-        <gl-form-input  required class="required" label="{{localize('label_booking_no')}}" always-float-label placeholder="{{localize('label_booking_no')}}"  value="{{data.book_no}}" disabled="[[isInputDisabled]]"></gl-form-input>
-      </gl-grid-col>
-      <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-        <gl-form-input  required class="required" label="{{localize('label_bill_of_lading')}}" always-float-label placeholder="{{localize('label_bill_of_lading')}}"  value="{{data.bl_no}}" disabled="[[isInputDisabled]]"></gl-form-input>
-      </gl-grid-col>
+      <gl-form-panel-body>
+        <!-- {{dataForSelect.shm_id}}//shm_id -->
+        <gl-grid-row width="{{getWidth}}">
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+          </gl-grid-col>
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+          </gl-grid-col>
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+            <gl-form-input required class="required" label="{{localize('label_lot_no')}}" always-float-label placeholder="{{localize('text_your_detail')}}"
+              value="{{data.ship_lot_no}}" disabled="[[isInputDisabled]]"></gl-form-input>
+          </gl-grid-col>
+        </gl-grid-row>
+        <gl-grid-row width="{{getWidth}}">
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+            <gl-form-input required class="required" label="{{localize('label_booking_no')}}" always-float-label placeholder="{{localize('label_booking_no')}}"
+              value="{{data.book_no}}" disabled="[[isInputDisabled]]"></gl-form-input>
+          </gl-grid-col>
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+            <gl-form-input required class="required" label="{{localize('label_bill_of_lading')}}" always-float-label placeholder="{{localize('label_bill_of_lading')}}"
+              value="{{data.bl_no}}" disabled="[[isInputDisabled]]"></gl-form-input>
+          </gl-grid-col>
 
-      <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-        <gl-combo-box  label="{{localize('label_shipping_agent')}}"always-float-label item-label-path="carrier_name" disabled="[[isInputDisabled]]"
-           item-value-path="carrier_id" items="{{dataForSelect.carrier}}" value="{{data.carrier_id}}"></gl-combo-box>
-      </gl-grid-col>
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+            <gl-combo-box label="{{localize('label_shipping_agent')}}" always-float-label item-label-path="carrier_name" disabled="[[isInputDisabled]]"
+              item-value-path="carrier_id" items="{{dataForSelect.carrier}}" value="{{data.carrier_id}}"></gl-combo-box>
+          </gl-grid-col>
 
-      <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-        <gl-combo-box required class="required"label="{{localize('label_shipping_line')}}"always-float-label item-label-path="shipline_name" disabled="[[isInputDisabled]]"
-           item-value-path="shipline_id" items="{{dataForSelect.shipline}}" value="{{data.shipline_id}}" ></gl-combo-box>
-      </gl-grid-col>
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+            <gl-combo-box required class="required" label="{{localize('label_shipping_line')}}" always-float-label item-label-path="shipline_name"
+              disabled="[[isInputDisabled]]" item-value-path="shipline_id" items="{{dataForSelect.shipline}}" value="{{data.shipline_id}}"></gl-combo-box>
+          </gl-grid-col>
 
-      <template is="dom-repeat" items="[[data.ship]]">
-        <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-          <!-- <gl-combo-box required class="required"label="Vessel [[_ObcountIndex(index)]]" always-float-label item-label-path="ship_name" disabled="[[isInputDisabled]]"
+          <template is="dom-repeat" items="[[data.ship]]">
+            <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+              <!-- <gl-combo-box required class="required"label="Vessel [[_ObcountIndex(index)]]" always-float-label item-label-path="ship_name" disabled="[[isInputDisabled]]"
            item-value-path="ship_id" items="[[_getShip(data.shipline_id,dataForSelect)]]" value="{{item.ship_id}}"></gl-combo-box> -->
-          [[_getShip(data.shipline_id,dataForSelect)]]
-          <!-- [[_isHaveForUse(index,dataForSelect.ships)]] -->
-           <gl-combo-box id="ship-[[index]]" required class="required"label="{{localize('label_vessel')}} [[_ObcountIndex(index)]]" always-float-label item-label-path="ship_name" disabled="[[isInputDisabled]]"
-            item-value-path="ship_id" value="{{item.ship_id}}" on-value-changed="_getResetShip"></gl-combo-box>
+              [[_getShip(data.shipline_id,dataForSelect)]]
+              <!-- [[_isHaveForUse(index,dataForSelect.ships)]] -->
+              <gl-combo-box id="ship-[[index]]" required class="required" label="{{localize('label_vessel')}} [[_ObcountIndex(index)]]"
+                always-float-label item-label-path="ship_name" disabled="[[isInputDisabled]]" item-value-path="ship_id" value="{{item.ship_id}}"
+                on-value-changed="_getResetShip"></gl-combo-box>
 
 
-        </gl-grid-col>
-        <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-          <gl-form-input required class="required"label="{{localize('label_voy_no')}}"always-float-label placeholder="{{localize('label_voy_no')}}" value="{{item.ship_voy_no}}" disabled="[[isInputDisabled]]"
-          ></gl-form-input>
-        </gl-grid-col>
-        <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]"></gl-grid-col>
-      </template>
-      <!-- <template is="dom-if" if="[[inserVessel(index)]]"> -->
+            </gl-grid-col>
+            <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+              <gl-form-input required class="required" label="{{localize('label_voy_no')}}" always-float-label placeholder="{{localize('label_voy_no')}}"
+                value="{{item.ship_voy_no}}" disabled="[[isInputDisabled]]"></gl-form-input>
+            </gl-grid-col>
+            <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]"></gl-grid-col>
+          </template>
+          <!-- <template is="dom-if" if="[[inserVessel(index)]]"> -->
 
-        <!-- <template is="dom-if" if="[[!isInputDisabled]]"> -->
+          <!-- <template is="dom-if" if="[[!isInputDisabled]]"> -->
           <div class="horizontal end-justified layout">
             <!-- <template is="dom-if" if="[[_isHaveForUse(data.ship,dataForSelect.ships,data.ship.*)]]"> -->
-              <paper-button raised class="gl-btn-primary btnVessel" on-tap="addShip" hidden="[[isInputDisabled]]" disabled="[[!_isHaveForUse(data.ship,dataForSelect.ships,data.ship.*)]]">
+            <paper-button raised class="gl-btn-primary btnVessel" on-tap="addShip" hidden="[[isInputDisabled]]" disabled="[[!_isHaveForUse(data.ship,dataForSelect.ships,data.ship.*)]]">
               <iron-icon icon="add"></iron-icon>{{localize('btn_add_vessel')}}</paper-button>
             <!-- </template> -->
             <paper-button raised class="gl-btn-danger btnVessel" on-tap="deleteShip" hidden="[[isInputDisabled]]" disabled="[[_isHaveForDelete(data.ship,data.ship.*)]]">
               <iron-icon icon="remove"></iron-icon>{{localize('btn_delete_vessel')}}</paper-button>
           </div>
-        <!-- </template> -->
-
-      <!-- </template> -->
-
-    </gl-grid-row>
-    <gl-grid-row width="{{getWidth}}">
-      <template is="dom-repeat" items="[[data.surveyor]]">
-        <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-          [[_getSurveyor(item.surveyor_id,dataForSelect,data.surveyor.*)]]
-           <!-- items="{{dataForSelect.surveyor}}" -->
-          <gl-combo-box required class="required" id="surveyor-[[index]]" label="{{localize('label_surveyor')}} [[_ObcountIndex(index)]]" always-float-label disabled="[[isInputDisabled]]" item-label-path="surveyor_name"
-            item-value-path="surveyor_id" items="{{dataForSelect.surveyor}}" value="{{item.surveyor_id}}"  on-value-changed="_getResetSurveyor"></gl-combo-box>
-        </gl-grid-col>
-        <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]"></gl-grid-col>
-        <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]"></gl-grid-col>
-      </template>
-
-      <!-- <template is="dom-if" if="[[!isInputDisabled]]"> -->
-        <div class="horizontal end-justified layout">
-          <!-- <template is="dom-if" if="[[_isHaveForUse(data.surveyor,dataForSelect.surveyor,data.surveyor.*)]]"> -->
-            <paper-button raised class="gl-btn-primary btnVessel" on-tap="addSurveyor" hidden="[[isInputDisabled]]" disabled="[[!_isHaveForUse(data.surveyor,dataForSelect.surveyor,data.surveyor.*)]]">
-            <iron-icon icon="add"></iron-icon>{{localize('btn_add_surveyor')}}</paper-button>
           <!-- </template> -->
-          <paper-button raised class="gl-btn-danger btnVessel" on-tap="deleteSurveyor" hidden="[[isInputDisabled]]" disabled="[[_isHaveForDelete(data.surveyor,data.surveyor.*)]]">
-            <iron-icon icon="remove"></iron-icon>{{localize('btn_delete_surveyor')}}</paper-button>
-        </div>
-      <!-- </template> -->
-    </gl-grid-row>
 
-    <gl-grid-row width="{{getWidth}}">
-      <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-        <gl-form-input required class="required" label="{{localize('label_lot_no')}}" always-float-label placeholder="{{localize('text_your_detail')}}" value="{{data.ship_lot_no}}" disabled="[[isInputDisabled]]"></gl-form-input>
-      </gl-grid-col>
+          <!-- </template> -->
 
-      <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-        <gl-combo-box required class="required" label="{{localize('label_port_of_loading')}}" always-float-label item-label-path="port_name" disabled="[[isInputDisabled]]"
-         item-value-path="port_id" items="{{dataForSelect.pol}}" value="{{data.load_port_id}}"></gl-combo-box>
-      </gl-grid-col>
-      <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-        <vaadin-date-picker required class="required" label="{{localize('label_etd')}}"always-float-label  value="{{data.etd_date}}" disabled="[[isInputDisabled]]"></vaadin-date-picker>
-      </gl-grid-col>
-      <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-        <vaadin-date-picker required class="required"  label="{{localize('label_eta')}}"always-float-label value="{{data.eta_date}}" disabled="[[isInputDisabled]]"></vaadin-date-picker>
-      </gl-grid-col>
+        </gl-grid-row>
+        <gl-grid-row width="{{getWidth}}">
+          <template is="dom-repeat" items="[[data.surveyor]]">
+            <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+              [[_getSurveyor(item.surveyor_id,dataForSelect,data.surveyor.*)]]
+              <!-- items="{{dataForSelect.surveyor}}" -->
+              <gl-combo-box required class="required" id="surveyor-[[index]]" label="{{localize('label_surveyor')}} [[_ObcountIndex(index)]]"
+                always-float-label disabled="[[isInputDisabled]]" item-label-path="surveyor_name" item-value-path="surveyor_id"
+                items="{{dataForSelect.surveyor}}" value="{{item.surveyor_id}}" on-value-changed="_getResetSurveyor"></gl-combo-box>
+            </gl-grid-col>
+            <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]"></gl-grid-col>
+            <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]"></gl-grid-col>
+          </template>
 
-      <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-        <gl-combo-box required class="required"label="{{localize('label_port_of_discharge')}}"always-float-label  item-label-path="port_name" disabled="[[isInputDisabled]]"
-        item-value-path="port_id" items="{{dataForSelect.pod}}"  value="{{data.dest_port_id}}"></gl-combo-box>
-      </gl-grid-col>
-      <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-        <gl-combo-box required class="required"label="{{localize('label_place_of_delivery')}}"always-float-label  item-label-path="port_name" disabled="[[isInputDisabled]]"
-        item-value-path="port_id" items="{{dataForSelect.pod}}" value="{{data.deli_port_id}}"></gl-combo-box>
-      </gl-grid-col>
+          <!-- <template is="dom-if" if="[[!isInputDisabled]]"> -->
+          <div class="horizontal end-justified layout">
+            <!-- <template is="dom-if" if="[[_isHaveForUse(data.surveyor,dataForSelect.surveyor,data.surveyor.*)]]"> -->
+            <paper-button raised class="gl-btn-primary btnVessel" on-tap="addSurveyor" hidden="[[isInputDisabled]]" disabled="[[!_isHaveForUse(data.surveyor,dataForSelect.surveyor,data.surveyor.*)]]">
+              <iron-icon icon="add"></iron-icon>{{localize('btn_add_surveyor')}}</paper-button>
+            <!-- </template> -->
+            <paper-button raised class="gl-btn-danger btnVessel" on-tap="deleteSurveyor" hidden="[[isInputDisabled]]" disabled="[[_isHaveForDelete(data.surveyor,data.surveyor.*)]]">
+              <iron-icon icon="remove"></iron-icon>{{localize('btn_delete_surveyor')}}</paper-button>
+          </div>
+          <!-- </template> -->
+        </gl-grid-row>
+
+        <gl-grid-row width="{{getWidth}}">
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+            <gl-combo-box required class="required" label="{{localize('label_port_of_loading')}}" always-float-label item-label-path="port_name"
+              disabled="[[isInputDisabled]]" item-value-path="port_id" items="{{dataForSelect.pol}}" value="{{data.load_port_id}}"></gl-combo-box>
+          </gl-grid-col>
+
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+            <vaadin-date-picker required class="required" label="{{localize('label_etd')}}" always-float-label value="{{data.etd_date}}"
+              disabled="[[isInputDisabled]]"></vaadin-date-picker>
+          </gl-grid-col>
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+            <vaadin-date-picker required class="required" label="{{localize('label_eta')}}" always-float-label value="{{data.eta_date}}"
+              disabled="[[isInputDisabled]]"></vaadin-date-picker>
+          </gl-grid-col>
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+            <gl-combo-box required class="required" label="{{localize('label_port_of_discharge')}}" always-float-label item-label-path="port_name"
+              disabled="[[isInputDisabled]]" item-value-path="port_id" items="{{dataForSelect.pod}}" value="{{data.dest_port_id}}"></gl-combo-box>
+          </gl-grid-col>
+
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+            <gl-combo-box required class="required" label="{{localize('label_place_of_delivery')}}" always-float-label item-label-path="port_name"
+              disabled="[[isInputDisabled]]" item-value-path="port_id" items="{{dataForSelect.pod}}" value="{{data.deli_port_id}}"></gl-combo-box>
+          </gl-grid-col>
+          <!--<gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+            
+          </gl-grid-col>-->
 
 
-      <!-- <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+          <!-- <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
         [[changeString2Num(data.*,'num_of_container')]]
           <gl-form-input required class="required" allowed-pattern="[0-9||,||.]" format-number="on" label="จำนวนตู้คอนเทนเนอร์"always-float-label error-message="{{localize('text_enter_your_detail')}}"  placeholder="{{localize('text_your_detail')}}" value="{{data.num_of_container}}" disabled="[[isInputDisabled]]"></gl-form-input>
       </gl-grid-col> -->
 
-      <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-        [[changeString2Num(data.*,'weight_per_container')]]
-        <gl-form-input required class="required" allowed-pattern="[0-9||,||.]" format-number="on"label="{{localize('label_cabinet')}}"always-float-label placeholder="{{localize('text_your_detail')}}" disabled="[[isInputDisabled]]"
-          value="{{data.weight_per_container}}" ></gl-form-input>
-      </gl-grid-col>
-      <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-        <vaadin-date-picker required class="required"label="{{localize('label_packing_date')}}"always-float-label  value="{{data.packing_date}}" disabled="[[isInputDisabled]]"></vaadin-date-picker>
-      </gl-grid-col>
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+            [[changeString2Num(data.*,'weight_per_container')]]
+            <gl-form-input required class="required" allowed-pattern="[0-9||,||.]" format-number="on" label="{{localize('label_cabinet')}}"
+              always-float-label placeholder="{{localize('text_your_detail')}}" disabled="[[isInputDisabled]]" value="{{data.weight_per_container}}"></gl-form-input>
+          </gl-grid-col>
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+            <vaadin-date-picker required class="required" label="{{localize('label_packing_date')}}" always-float-label value="{{data.packing_date}}"
+              disabled="[[isInputDisabled]]"></vaadin-date-picker>
+          </gl-grid-col>
 
-      <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-        <vaadin-date-picker required class="required"label="{{localize('label_cut_off_date')}}"always-float-label  value="{{data.cut_of_date}}" disabled="[[isInputDisabled]]"></vaadin-date-picker>
-      </gl-grid-col>
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+            <vaadin-date-picker required class="required" label="{{localize('label_cut_off_date')}}" always-float-label value="{{data.cut_of_date}}"
+              disabled="[[isInputDisabled]]"></vaadin-date-picker>
+          </gl-grid-col>
 
-      <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-        <gl-form-input label="{{localize('label_cut_off_time')}}" always-float-label required class="required" type="time" placeholder="{{localize('label_cut_off_time')}}" value="{{data.cut_of_time}}" disabled="[[isInputDisabled]]"></gl-form-input>
-      </gl-grid-col>
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+            <gl-form-input label="{{localize('label_cut_off_time')}}" always-float-label required class="required" type="time" placeholder="{{localize('label_cut_off_time')}}"
+              value="{{data.cut_of_time}}" disabled="[[isInputDisabled]]"></gl-form-input>
+          </gl-grid-col>
 
-      <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-        <vaadin-date-picker label="{{localize('label_production_date')}}"always-float-label required class="required" value="{{data.product_date}}" disabled="[[isInputDisabled]]"></vaadin-date-picker>
-      </gl-grid-col>
-      </gl-grid-row>
-      <gl-grid-row width="{{getWidth}}">
-        <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]"></gl-grid-col>
-        <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]"></gl-grid-col>
-      <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-        <gl-form-input label="{{localize('label_note')}}" always-float-label  value="{{data.book_remark}}" disabled="[[isInputDisabled]]" ></gl-form-input>
-      </gl-grid-col>
-    </gl-grid-row>
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+            <vaadin-date-picker label="{{localize('label_production_date')}}" always-float-label required class="required" value="{{data.product_date}}"
+              disabled="[[isInputDisabled]]"></vaadin-date-picker>
+          </gl-grid-col>
+        </gl-grid-row>
+        <gl-grid-row width="{{getWidth}}">
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]"></gl-grid-col>
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]"></gl-grid-col>
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+            <gl-form-input label="{{localize('label_note')}}" always-float-label value="{{data.book_remark}}" disabled="[[isInputDisabled]]"></gl-form-input>
+          </gl-grid-col>
+        </gl-grid-row>
       </gl-form-panel-body>
 
-    <template is="dom-if" if="[[!_isViewing(isViewSeleted)]]">
-    <gl-form-panel-footer>
-      <paper-button class="gl-btn-default" raised on-tap="cancelInsertShipment">     {{localize('btn_back_ward')}}</paper-button>
-      <paper-button class="gl-btn-primary" raised on-tap="addBl">  {{localize('btn_add')}}</paper-button>
-    </gl-form-panel-footer>
-    </template>
-    <template is="dom-if" if="[[_isViewing(isViewSeleted)]]">
-    <gl-form-panel-footer>
-      <paper-button class="gl-btn-default" raised on-tap="cancelInsertShipment" hidden="[[!isInputDisabled]]">
-        {{localize('btn_back_ward')}}</paper-button>
-      <paper-button class="gl-btn-danger" on-tap="calcelBl" raised hidden="[[isInputDisabled]]">{{localize('btn_cancel')}}</paper-button>
-      <paper-button class="gl-btn-success" raised on-tap="editBl" hidden="[[isInputDisabled]]">  {{localize('btn_save')}}</paper-button>
-    </gl-form-panel-footer>
-    <!-- <gl-form-panel> -->
-    </template>
+      <template is="dom-if" if="[[!_isViewing(isViewSeleted)]]">
+        <gl-form-panel-footer>
+          <paper-button class="gl-btn-default" raised on-tap="cancelInsertShipment"> {{localize('btn_back_ward')}}</paper-button>
+          <paper-button class="gl-btn-primary" raised on-tap="addBl"> {{localize('btn_add')}}</paper-button>
+        </gl-form-panel-footer>
+      </template>
+      <template is="dom-if" if="[[_isViewing(isViewSeleted)]]">
+        <gl-form-panel-footer>
+          <paper-button class="gl-btn-default" raised on-tap="cancelInsertShipment" hidden="[[!isInputDisabled]]">
+            {{localize('btn_back_ward')}}</paper-button>
+          <paper-button class="gl-btn-danger" on-tap="calcelBl" raised hidden="[[isInputDisabled]]">{{localize('btn_cancel')}}</paper-button>
+          <paper-button class="gl-btn-success" raised on-tap="editBl" hidden="[[isInputDisabled]]"> {{localize('btn_save')}}</paper-button>
+        </gl-form-panel-footer>
+        <!-- <gl-form-panel> -->
+      </template>
   </template>
   <script>
     Polymer({
       is: "booking-detail",
       behaviors: [
-          g2gCongtroller,
-          g2gShipmentController,
-          g2gModelBehavior,
-          nylonBehavior,
-          nylonLocalizeBehavior
+        g2gCongtroller,
+        g2gShipmentController,
+        g2gModelBehavior,
+        nylonBehavior,
+        nylonLocalizeBehavior
       ],
       properties: {
         data: {
           type: Object,
-          value:{bl_no:'',ship:[{ship_id:'',ship_voy_no:''}],surveyor:[{surveyor_id:''}]},
+          value: { bl_no: '', ship: [{ ship_id: '', ship_voy_no: '' }], surveyor: [{ surveyor_id: '' }] },
           notify: true
         },
-        dataForSelect:{
+        dataForSelect: {
           type: Object,
         },
-        blNoOld:{
-          type:String,
+        blNoOld: {
+          type: String,
         }
       },
-      observers:[
+      observers: [
         '_oBChangeBooking(data.book_no)',
         '_oBChangePod(data.dest_port_id)',
         '_getPod(dataForSelect)',
@@ -229,175 +252,198 @@
         // 'edit-input':'editInput',
         // 'delete-input':'deleteBooking'
       },
-      xxxxx:function () {
+      xxxxx: function () {
         console.log(this.dataForSelect);
       },
-      created:function(){
-          this.nylonLocalizeImport('/i18n-page1.json');
+      created: function () {
+        this.nylonLocalizeImport('/i18n-page1.json');
       },
-      _changeDataBl:function (dateUn) {
-        this.getDateg2g(dateUn,(date)=>{
-        //   console.log('date',date);
+      _changeDataBl: function (dateUn) {
+        this.getDateg2g(dateUn, (date) => {
+          //   console.log('date',date);
           this.set('data.etd_date', date);
-          this.notifyPath('data.etd_date');
+          // this.notifyPath('data.etd_date');
           this.set('data.eta_date', date);
-          this.notifyPath('data.eta_date');
+          // this.notifyPath('data.eta_date');
           this.set('data.packing_date', date);
-          this.notifyPath('data.packing_date');
+          // this.notifyPath('data.packing_date');
           this.set('data.cut_of_date', date);
-          this.notifyPath('data.cut_of_date');
+          // this.notifyPath('data.cut_of_date');
           this.set('data.product_date', date);
-          this.notifyPath('data.product_date');
+          // this.notifyPath('data.product_date');
         });
         // console.log(this.dataForSelect.carrier);
       },
-      _oBcheckCarrier:function (carrier) {
+      _oBcheckCarrier: function (carrier) {
         // console.log('carrier',carrier);
       },
-      _checkEdit:function (edit) {
+      _checkEdit: function (edit) {
         if (edit == false) {
           return true
         }
       },
-      addBl:function () {
-        this.data.book_status = false;
-        this.data.cl_id = this.dataForSelect.cl_id;
-        // console.log(this.data.cl_id);
-        this.set('data.tags',[])
-        this.push('data.tags',this.dataForSelect.contract_id);
+      addBl: function () {
+
 
         // console.log(this.data);
-        this._cleanDataBl(this.data,(data)=>{
-          if (data.carrier_id == '' || data.carrier_id == undefined) {
-            data.carrier_id = this._checkCarrierIsBlank();
-          }
-          this.insert('./g2g/book/insert',data, () => {
-            this.fire('toast',{status:'load'});
-            this.fire('_get-fire-booking-detail',{detail:data});
-            this.fire('toast',{status:'success',text:'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
-              callback:()=>{
-                  this.cancelInsertShipment();
-                  let el = Polymer.dom(this.root).querySelectorAll('.required');
-                  el.map((el)=> {el.value='';});
-                  //ใส่วันปัจจุบันลงไป
-                  this._changeDataBl('undefined');
-                }
-            });
-          });
+        let ship_lot_no = this.data.ship_lot_no
+        let ship_lot = this.dataBookNo.filter((ship_lot) => ship_lot.ship_lot_no == ship_lot_no)
+        // console.log(ship_lot);
+        try {
+          // console.log(ship_lot.length)
+          if (ship_lot.length > 0) {
 
-          // this.cancelInsertShipment();
-        })
+            this.fire('toast', {
+              status: 'connectError', text: 'ลำดับเรือซ้ำกัน', //คำสั่งสำหรับเปิด toast error
+              callback: function () {
+              }
+            })
+          } else {
+            // console.log(11);
+            this.data.book_status = false;
+            this.data.cl_id = this.dataForSelect.cl_id;
+            // console.log(this.data.cl_id);
+            this.set('data.tags', [])
+            this.push('data.tags', this.dataForSelect.contract_id);
+            this._cleanDataBl(this.data, (data) => {
+              if (data.carrier_id == '' || data.carrier_id == undefined) {
+                data.carrier_id = this._checkCarrierIsBlank();
+              }
+
+              this.insert('./g2g/book/insert', data, () => {
+                this.fire('toast', { status: 'load' });
+                this.fire('_get-fire-booking-detail', { detail: data });
+                this.fire('toast', {
+                  status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
+                  callback: () => {
+                    this.cancelInsertShipment();
+                    let el = Polymer.dom(this.root).querySelectorAll('.required');
+                    el.map((el) => { el.value = ''; });
+                    //ใส่วันปัจจุบันลงไป
+                    this._changeDataBl('undefined');
+                  }
+                });
+              });
+
+              this.cancelInsertShipment();
+            })
+          }
+        } catch (e) {
+
+        }
       },
-      deleteBooking:function () {
+
+      deleteBooking: function () {
         let book_id = this.data.book_id;
-        this._cleanDataBl(this.data,(data)=>{
+        this._cleanDataBl(this.data, (data) => {
           data.id = book_id;
-          this.fire('toast',{  //คำสั่งสำหรับเปิด toast dialog
-              status:'dialog',
-              text:'ต้องการลบข้อมูลใช่หรือไม่ ?',
-              confirmed:this._deleteBooking.bind(this), //function ที่ใช้รับค่า ปุ่ม
-              el: this, // compontents
-              data:data // ข้อมูลที่ส่งไป เช่น id ที่จะใช้ลบข้อมูล ใน db
+          this.fire('toast', {  //คำสั่งสำหรับเปิด toast dialog
+            status: 'dialog',
+            text: 'ต้องการลบข้อมูลใช่หรือไม่ ?',
+            confirmed: this._deleteBooking.bind(this), //function ที่ใช้รับค่า ปุ่ม
+            el: this, // compontents
+            data: data // ข้อมูลที่ส่งไป เช่น id ที่จะใช้ลบข้อมูล ใน db
           });
         });
       },
-      _deleteBooking:function (result,detail) {
+      _deleteBooking: function (result, detail) {
         if (result == true) {
-          this.delete('./g2g/book/delete/id/',detail.data.id, () => {
-            this.fire('get-list-bl',{shm_id:detail.data.shm_id});
-            this.fire('toast',{status:'success',text:'ลบข้อมูลสำเร็จ',  // คำสั่งสำหรับเปิด toast success
-              callback:()=>{
-                  this.cancelInsertShipment();
-                  // let el = Polymer.dom(this.root).querySelectorAll('.required');
-                  // el.map((el)=> {el.value='';});
-                }
+          this.delete('./g2g/book/delete/id/', detail.data.id, () => {
+            this.fire('get-list-bl', { shm_id: detail.data.shm_id });
+            this.fire('_get-fire-booking-detail', { detail: detail.data });
+            this.fire('toast', {
+              status: 'success', text: 'ลบข้อมูลสำเร็จ',  // คำสั่งสำหรับเปิด toast success
+              callback: () => {
+                this.cancelInsertShipment();
+                // let el = Polymer.dom(this.root).querySelectorAll('.required');
+                // el.map((el)=> {el.value='';});
+              }
             });
           });
         }
       },
-      addShip:function () {
-        this.push('data.ship',{ship_id:'',ship_voy_no:''});
+      addShip: function () {
+        this.push('data.ship', { ship_id: '', ship_voy_no: '' });
         this.notifyPath('data.ship');
       },
-      addSurveyor:function () {
-        this.push('data.surveyor',{surveyor_id:''});
+      addSurveyor: function () {
+        this.push('data.surveyor', { surveyor_id: '' });
         this.notifyPath('data.surveyor');
       },
-      deleteSurveyor:function () {
-        if (this.data.surveyor.length > 1) {
-          this.pop('data.surveyor');
-        }
+      deleteSurveyor: function () {
+        if (this.data.surveyor.length > 1)
+          this.pop('data.surveyor')
       },
-      calcelBl:function () {
+      calcelBl: function () {
         // let el = Polymer.dom(this.root).querySelectorAll('.required');
         // console.log(151215121541212);
-        // el.map((el)=> {el.reset();});
         this.calcelContract();
       },
-      deleteShip:function () {
-        if (this.data.ship.length > 1) {
-          this.pop('data.ship');
-        }
+      deleteShip: function () {
+        if (this.data.ship.length > 1)
+          this.pop('data.ship')
       },
-      cancelInsertShipment:function () {
-        this.fire('_change-component-book',{detail:'list-of-booking'});
+      cancelInsertShipment: function () {
+        this.fire('_change-component-book', { detail: 'list-of-booking' });
       },
-      editBl:function () {
+      editBl: function () {
         // let blNo = this.data.bl_no;
-        let book_id = this.data.book_id;
-        this.set('data.tags',[])
-        this.fire('toast',{status:'load'});
-        this.push('data.tags',this.dataForSelect.cl_id ,this.dataForSelect.contract_id);
-        this._cleanDataBl(this.data,(data)=>{
-          // console.log(this.dataForSelect.carrier);
-          if (data.carrier_id == '' || data.carrier_id == undefined) {
-            data.carrier_id = this._checkCarrierIsBlank();
-          }
-          data.id = book_id;
-          this.fire('toast',{  //คำสั่งสำหรับเปิด toast dialog
-              status:'dialog',
-              text:'ต้องการแก้ข้อมูลใช่หรือไม่ ?',
-              confirmed:this._editBlExporter.bind(this), //function ที่ใช้รับค่า ปุ่ม
+        let ship_lot_no = this.data.ship_lot_no
+        let book_id = this.data.book_id
+        let ship_lot = this.dataBookNo.filter((ship_lot) => ship_lot.ship_lot_no == ship_lot_no)[0]
+
+        if (ship_lot.book_id != this.data.book_id) {
+
+          this.fire('toast', {
+            status: 'connectError', text: 'ลำดับเรือซ้ำกัน', //คำสั่งสำหรับเปิด toast error
+            callback: function () {
+            }
+          })
+        } else {
+          this.set('data.tags', [])
+          this.fire('toast', { status: 'load' });
+          this.push('data.tags', this.dataForSelect.cl_id, this.dataForSelect.contract_id);
+          this._cleanDataBl(this.data, (data) => {
+            // console.log(this.dataForSelect.carrier);
+            if (data.carrier_id == '' || data.carrier_id == undefined) {
+              data.carrier_id = this._checkCarrierIsBlank();
+            }
+            data.id = book_id;
+            this.fire('toast', {  //คำสั่งสำหรับเปิด toast dialog
+              status: 'dialog',
+              text: 'ต้องการแก้ข้อมูลใช่หรือไม่ ?',
+              confirmed: this._editBlExporter.bind(this), //function ที่ใช้รับค่า ปุ่ม
               el: this, // compontents
-              data:data // ข้อมูลที่ส่งไป เช่น id ที่จะใช้ลบข้อมูล ใน db
+              data: data // ข้อมูลที่ส่งไป เช่น id ที่จะใช้ลบข้อมูล ใน db
+            });
           });
-        });
+        }
+
       },
-      _editBlExporter:function (result,detail) {
+      _editBlExporter: function (result, detail) {
         if (result == true) {
           this.editInput();
-          this.update('./g2g/book/update', detail.data,() => {
+          this.update('./g2g/book/update', detail.data, () => {
             // console.log(detail.data);
-            this.fire('toast',{status:'load'});
+            this.fire('toast', { status: 'load' });
+            this.fire('_get-fire-booking-detail', { detail: detail.data });
             // this.fire('refresh-contract',{detail:'refresh-contract'});
             // this.fire('get-list-shipment',{contractId:this.dataForSelect.contract_id});
             // this.fire('get-list-shipment-detail',{sm_id:this.dataForSelect.shm_id});
             //  this.fire('get-shipMentDetail',{shm_id :data.shm_id,refresh:false ,action:'put'})
             // this.fire('get-list-bl',{shm_id:detail.data.shm_id});
-            this.fire('toast',{status:'success',text:'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
-              callback:function(){
-                  //  detail.el.fire('get-contract-detail',{contractId:detail.data.id});
-                }
+            this.fire('toast', {
+              status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
+              callback: function () {
+                //  detail.el.fire('get-contract-detail',{contractId:detail.data.id});
+              }
             });
           });
         }
       },
-      _changeShipment:function (shipmentDetail) {
-        shipmentDetail.map((data)=>{
-          this.update('./g2g/shipment_detail/update', data,() => {});
-        });
-        this.fire('toast',{status:'success',text:'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
-         callback:()=>{
-            this.fire('refresh-contract',{detail:'refresh-contract'});
-            this.fire('get-list-shipment',{contractId:this.data.contract_id});
-            this.fire('get-list-shipment-detail',{sm_id:this.data.shm_id});
-            this.fire('editing-bl-detail',{shm_id:this.data.shm_id});
-          }
-        });
-      },
-      _oBChangeBooking:function (book_no) {
+      _oBChangeBooking: function (book_no) {
         // console.log(book_no);
-        if (typeof book_no !== 'undefined' && book_no!== 'undefined') {
+        if (typeof book_no !== 'undefined' && book_no !== 'undefined') {
           // console.log('book_no',book_no);
           // console.log(this.data.book_no.length);
           // console.log(this.data.bl_no.length);
@@ -407,74 +453,78 @@
           }
         }
       },
-      _oBChangePod:function (dest_port_id) {
+      _oBChangePod: function (dest_port_id) {
         this.data.deli_port_id = dest_port_id;
         this.notifyPath('data.deli_port_id');
       },
-      _getPod:function (Pod) {
-        let pol = Pod.countryPort.filter((countryport)=>  countryport.country_id == 'THA' );
+      _getPod: function (Pod) {
+        let pol = Pod.countryPort.filter((countryport) => countryport.country_id == 'THA');
         this.dataForSelect.pol = pol;
         this.notifyPath('dataForSelect.pol');
         let county = this.dataForSelect.country_id;
-        let pod = Pod.countryPort.filter((countryport)=>  countryport.country_id == county );
+        let pod = Pod.countryPort.filter((countryport) => countryport.country_id == county);
         this.dataForSelect.pod = pod;
         this.notifyPath('dataForSelect.pod');
         // console.log(pod[0].ship);
       },
-      _checkCarrierIsBlank:function () {
+      _checkCarrierIsBlank: function () {
         var carrierSelete;
-        this.dataForSelect.carrier.map((carrier)=>{
+        this.dataForSelect.carrier.map((carrier) => {
           if (carrier.carrier_name == '') {
             // console.log('carrier',carrier.carrier_name,":",carrier.carrier_id);
-            carrierSelete= carrier.carrier_id;
+            carrierSelete = carrier.carrier_id;
           }
         });
-      return carrierSelete;
+        return carrierSelete;
       },
-      _cleanDataBl:function (data,callback) {
+      _cleanDataBl: function (data, callback) {
         let el = Polymer.dom(this.root).querySelectorAll('.required');
-        let stat = el.map((el)=> el.validate());
-          if (stat.every(elem => elem == true)) {
-            let { bl_no,book_no,carrier_id,deli_port_id,dest_port_id,eta_date,etd_date,
-                  load_port_id,packing_date,cut_of_time,cut_of_date,product_date,
-                  ship_lot_no,shipline_id,weight_per_container,book_status,cl_id} = data;
-            let newData ={ bl_no,book_no,carrier_id,deli_port_id,dest_port_id,eta_date,etd_date,
-                            load_port_id,packing_date,cut_of_time,cut_of_date,product_date,
-                            ship_lot_no,shipline_id,weight_per_container,book_status,cl_id,};
-            // console.log('newData.book_remark',newData.book_remark);
-            newData.book_remark ='';
-            newData.ship = new Array();
-            newData.surveyor = new Array();
-            newData.eta_date = new Date (newData.eta_date).toISOString();
-            newData.etd_date = new Date (newData.etd_date).toISOString();
-            newData.cut_of_date= new Date (newData.cut_of_date).toISOString();
-            newData.packing_date = new Date (newData.packing_date).toISOString();
-            newData.product_date = new Date (newData.product_date).toISOString();
-            data.ship.map((ships)=>{
-              newData.ship.push({ship_id:ships.ship_id,ship_voy_no:ships.ship_voy_no});
+        let stat = el.map((el) => el.validate());
+        if (stat.every(elem => elem == true)) {
+          let { bl_no, book_no, carrier_id, deli_port_id, dest_port_id, eta_date, etd_date,
+            load_port_id, packing_date, cut_of_time, cut_of_date, product_date,
+            ship_lot_no, shipline_id, weight_per_container, book_status, cl_id} = data;
+          let newData = {
+            bl_no, book_no, carrier_id, deli_port_id, dest_port_id, eta_date, etd_date,
+            load_port_id, packing_date, cut_of_time, cut_of_date, product_date,
+            ship_lot_no, shipline_id, weight_per_container, book_status, cl_id,
+          };
+          // console.log('newData.book_remark',newData.book_remark);
+          newData.book_remark = '';
+          newData.ship = new Array();
+          newData.surveyor = new Array();
+          newData.eta_date = new Date(newData.eta_date).toISOString();
+          newData.etd_date = new Date(newData.etd_date).toISOString();
+          newData.cut_of_date = new Date(newData.cut_of_date).toISOString();
+          newData.packing_date = new Date(newData.packing_date).toISOString();
+          newData.product_date = new Date(newData.product_date).toISOString();
+          data.ship.map((ships) => {
+            newData.ship.push({ ship_id: ships.ship_id, ship_voy_no: ships.ship_voy_no });
+          });
+          data.surveyor.map((surveyors) => {
+            newData.surveyor.push({ surveyor_id: surveyors.surveyor_id });
+          });
+          if (typeof data.tags !== 'undefined') {
+            newData.tags = new Array();
+            data.tags.map((tag) => {
+              newData.tags.push(tag);
             });
-            data.surveyor.map((surveyors)=>{
-              newData.surveyor.push({surveyor_id:surveyors.surveyor_id});
-            });
-            if(typeof data.tags !== 'undefined'){
-              newData.tags = new Array();
-              data.tags.map((tag)=>{
-                newData.tags.push(tag);
-              });
-            }
-            // console.log(typeof data.book_remark == 'undefined')
-            if(typeof data.book_remark == 'undefined'){
-              newData.book_remark = '';
-            }else {
-              newData.book_remark = data.book_remark;
-            }
-            el.map((el)=> {el.reset();});
-            callback(newData)
-          } else {
-            this.fire('toast',{status:'connectError',text:'กรุณากรอกให้ครบทุกช่อง', //คำสั่งสำหรับเปิด toast error
-            callback:function(){
-            }})
           }
+          // console.log(typeof data.book_remark == 'undefined')
+          if (typeof data.book_remark == 'undefined') {
+            newData.book_remark = '';
+          } else {
+            newData.book_remark = data.book_remark;
+          }
+          el.map((el) => { el.reset(); });
+          callback(newData)
+        } else {
+          this.fire('toast', {
+            status: 'connectError', text: 'กรุณากรอกให้ครบทุกช่อง', //คำสั่งสำหรับเปิด toast error
+            callback: function () {
+            }
+          })
+        }
       },
     });
   </script>

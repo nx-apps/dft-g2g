@@ -56,22 +56,18 @@
       },
       setTotalRice(e) {
         try {
-        // console.log('ccccc', e);
-        // console.log(this.data);
-        // console.log(this.dataForSelect.cl_id != undefined);
-        if (this.dataForSelect.cl_id != undefined) {
-          let newBooking = this.data.book.filter((rice) => rice.cl_id == this.dataForSelect.cl_id)[0]
-          // console.log(newBooking);
-          newBooking.cl_type_rice.map((set_limit) => {
-            set_limit.type_rice_name_en = set_limit.type_rice_name_en + " (Balance " + this.formatNumberNoZero(set_limit.type_rice_quantity_limit_max) + ' Ton )'
-          })
-          // console.log(newBooking);
-          this.set('dataForSelect.cl_type_rice', newBooking.cl_type_rice);
-        }
+          if (this.dataForSelect.cl_id != undefined) {
+            let newBooking = this.data.book.filter((rice) => rice.cl_id == this.dataForSelect.cl_id)[0]
+            // console.log(newBooking);
+            newBooking.cl_type_rice.map((set_limit) => {
+              set_limit.type_rice_name_en = set_limit.type_rice_name_en + " (Balance " + this.formatNumberNoZero(set_limit.type_rice_quantity_limit_max) + ' Ton )'
+            })
+            // console.log(newBooking);
+            this.set('dataForSelect.cl_type_rice', newBooking.cl_type_rice);
+          }
 
         } catch (e) {
           // console.log(e);
-        // } finally {
 
         }
 
