@@ -70,7 +70,7 @@
 
         "":"Confrim",
         "label_quantity_confirm":"ปริมาณข้าวในสัญญาย่อย (ตัน)",
-        "label_quantity_confirm_delivery":"ปริมาณที่ส่งมอบ (ตัน)",
+        "label_quantity_confirm_delivery":"ปริมาณข้าวในสัญญาย่อยที่ส่งมอบแล้ว (ตัน)",
         
         "label_ref_no":"เลขสัญญาย่อยที่",
         "label_status":"สถานะ",
