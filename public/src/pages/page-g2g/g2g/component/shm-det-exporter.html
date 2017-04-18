@@ -269,6 +269,7 @@
             this.notifyPath('dataForSelect.package');
             //เซ็นลิมิตข้าวลงใน data.shm_det_quantity
             this.set('dataForSelect.type_rice_quantity_limit_max',typeRice[0].type_rice_quantity_limit_max);
+            console.log(typeRice[0].type_rice_quantity_limit_max);
             this.notifyPath('dataForSelect.type_rice_quantity_limit_max')
             // let check;
             // newItemPackage = new Array();
@@ -341,8 +342,8 @@
         // console.log(this.dataForSelect);
         this.push('data.tags',this.dataForSelect.contract_id,this.dataForSelect.cl_id,this.dataForSelect.company_id);
         // console.log(this.data);
-
-        if (this.data.shm_det_quantity <=this.dataForSelect.type_rice_quantity_limit_max) {
+          // console.log(this.dataForSelect.type_rice_quantity_limit_max,this.data.shm_det_quantity);
+        if (this.data.shm_det_quantity <= this.dataForSelect.type_rice_quantity_limit_max) {
           this._cleanShipmentData(this.data,(data)=>{
             this.fire('toast',{status:'load'}); //คำสั่งสำหรับเปิด toast load
             // console.log(data);

@@ -1,6 +1,6 @@
 <link rel="import" href="../controller/g2gShipmentController.html">
 <dom-module id="booking-detail">
-  <style include="iron-flex iron-flex-factors iron-flex-alignment gl-styles">
+  <style include="iron-flex iron-flex-factors iron-flex-alignment gl-styles page-style">
     *{
       font-family: 'CSChatThaiUI', sans-serif;
       -webkit-font-smoothing: antialiased;
@@ -24,7 +24,9 @@
 
 <gl-form-panel>
   <!-- <template is="dom-if" if="[[!checkBtnView(shmStatus)]]"> -->
+     [[data.book_status]]
     <template is="dom-if" if="[[isInputDisabled]]">
+     
       <template is="dom-if" if="[[_checkEdit(data.book_status)]]">
         <div class="horizontal end-justified layout">
           <paper-icon-button id="editConfirm" class="crud" icon="create" raised on-tap="editInput" ></paper-icon-button>

@@ -1,10 +1,9 @@
 <dom-module id="contract-detail">
-  <style include="iron-flex iron-flex-factors iron-flex-alignment gl-styles">
+  <style include="iron-flex iron-flex-factors iron-flex-alignment gl-styles page-style">
     * {
       font-family: 'CSChatThaiUI', sans-serif;
       -webkit-font-smoothing: antialiased;
     }
-    
     gl-form-dropdown-menu {
       width: 100%;
     }
@@ -333,8 +332,8 @@
           this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
           data.contract_status = false;
           this.insert('./g2g/contract/insert', data, () => {
-            this.fire('toast', {              
-status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
+            this.fire('toast', {
+              status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
               callback: () => {
                 this.fire('refresh-contract', { detail: 'refresh-contract' });
                 this.fire('close-drawer', { detail: 'refresh-contract' });
@@ -466,8 +465,8 @@ status: 'success', text: 'บันทึกสำเร็จ',  // คำส�
           el.map((el) => { el.reset(); });
           callback(newData);
         } else {
-          this.fire('toast', {            
-status: 'connectError', text: 'กรุณากรอกข้อมูลให้ครบทุกช่อง', //คำสั่งสำหรับเปิด toast error
+          this.fire('toast', {
+            status: 'connectError', text: 'กรุณากรอกข้อมูลให้ครบทุกช่อง', //คำสั่งสำหรับเปิด toast error
             callback: function () {
             }
           })
