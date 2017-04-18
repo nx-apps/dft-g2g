@@ -2,7 +2,7 @@
 <link rel="import" href="../page-g2g/g2g/controller/g2gModelbehavior.html">
 <link rel="import" href="../page-g2g/g2g/controller/g2gCongtroller.html">
 <link rel="import" href="../components/format-number-behavior.html">
-<link rel="import" href="payment/component/taps-payment.html">
+<!--<link rel="import" href="payment/component/taps-payment.html">-->
 <link rel="import" href="payment/component/list-of-bl-pm.html">
 <link rel="import" href="payment/component/list-of-invoice.html">
 <link rel="import" href="payment/component/list-of-fee.html">
@@ -16,32 +16,155 @@
 <link rel="import" href="payment/component/list-of-fee-detail.html">
 <!--<link rel="import" href="payment/component/cheque-register.html">-->
 <dom-module id="page-payment">
-  <style media="screen" include="iron-flex gl-styles">
-    :host {
+  <style media="screen" include="iron-flex iron-flex-factors iron-flex-alignment gl-styles">
+     :host {
       --paper-fab-background: var(--paper-light-blue-500);
       --paper-fab-keyboard-focus-background: var(--paper-light-blue-900);
     }
-
+    
     * {
       font-family: 'CSChatThaiUI', sans-serif;
       -webkit-font-smoothing: antialiased;
     }
-
+    
     paper-fab {
       position: fixed;
       right: 16px;
       bottom: 16px;
       color: var(--gl-white-color);
     }
-
+    
     paper-material {
-      margin: 10px;
+      /*margin: 10px;*/
       background-color: var(--gl-white-color);
+    }
+    
+    main {
+      /*min-width: 320px;*/
+      /*max-width: 1000px;*/
+      padding: 5px;
+      margin: 0 auto;
+    }
+    
+    section {
+      display: none;
+      /*padding: 20px 0 0;*/
+      border-top: 1px solid #ddd;
+    }
+    
+    input {
+      display: none;
+    }
+    
+    label {
+      display: inline-block;
+      margin: 0 0 -1px;
+      padding: 15px 25px;
+      font-weight: 600;
+      text-align: center;
+      color: #bbb;
+      border: 1px solid transparent;
+      background: #D5D8DC;
+    }
+    
+    label:before {
+      font-family: fontawesome;
+      font-weight: normal;
+      margin-right: 10px;
+    }
+    /*label[for*='1']:before { content: '\f1cb'; }
+            label[for*='2']:before { content: '\f17d'; }*/
+    
+    label:hover {
+      color: #888;
+      cursor: pointer;
+    }
+    
+    input:checked+label {
+      color: #555;
+      border: 1px solid #ddd;
+      border-top: 3px solid orange;
+      border-bottom: 1px solid #fff;
+      background: #fff;
+    }
+    
+    #tab1:checked~#content1,
+    #tab2:checked~#content2,
+    #tab3:checked~#content3,
+    #tab4:checked~#content4,
+    #tab5:checked~#content5 {
+      display: block;
+    }
+    
+    list-of-bl-pm,
+    list-of-invoice,
+    list-of-fee,
+    list-of-cheque,
+    list-of-payments {
+      margin-top: 15px;
+      width: 98%;
     }
   </style>
   <template>
-    <paper-material elevation="1">
-      <taps-payment>
+    <main>
+      <input id="tab1" type="radio" name="tabs" checked>
+      <label for="tab1">1.{{localize('text_bill_of_lading')}}</label>
+
+      <input id="tab2" type="radio" name="tabs">
+      <label for="tab2">2.{{localize('text_invoice')}}</label>
+
+      <input id="tab3" type="radio" name="tabs">
+      <label for="tab3">3.{{localize('text_fee')}}</label>
+
+      <input id="tab4" type="radio" name="tabs">
+      <label for="tab4">4.{{localize('text_cheque_no')}}</label>
+
+      <input id="tab5" type="radio" name="tabs">
+      <label for="tab5">5.{{localize('text_payment')}}</label>
+      <section id="content1">
+        <paper-material elevation="1">
+          <div class="list horizontal center-justified layout">
+            <list-of-bl-pm data="[[dataListPay.blShipment]]" data-for-select="[[dataForSelect]]"></list-of-bl-pm>
+          </div>
+        </paper-material>
+      </section>
+
+      <section id="content2">
+        <paper-material elevation="1">
+          <div class="list horizontal center-justified layout">
+            <list-of-invoice data="[[dataListPay.invoiceList]]" data-for-select="[[dataForSelect]]"></list-of-invoice>
+          </div>
+        </paper-material>
+      </section>
+
+      <section id="content3">
+        <paper-material elevation="1">
+          <div class="list horizontal center-justified layout">
+            <list-of-fee data="[[dataListPay.feeList]]" data-for-select="[[dataForSelect]]"></list-of-fee>
+          </div>
+        </paper-material>
+      </section>
+
+      <section id="content4">
+        <paper-material elevation="1">
+          <div class="list horizontal center-justified layout">
+            <list-of-cheque data="[[dataListPay.chequeList]]" data-for-select="[[dataForSelect]]"></list-of-cheque>
+          </div>
+        </paper-material>
+      </section>
+
+      <section id="content5">
+        <paper-material elevation="1">
+          <div class="list horizontal center-justified layout">
+            <list-of-payments data="[[dataListPay.payments]]" data-for-select="[[dataForSelect]]"></list-of-payments>
+          </div>
+        </paper-material>
+      </section>
+    </main>
+    <!--<paper-material elevation="1">
+      111-->
+
+    <!--<taps-payment>
         <section-content name="bl">
           <list-of-bl-pm data="[[dataListPay.blShipment]]" data-for-select="[[dataForSelect]]"></list-of-bl-pm>
         </section-content>
@@ -53,15 +176,14 @@
         </section-content>
         <section-content name="cheque">
           <list-of-cheque data="[[dataListPay.chequeList]]" data-for-select="[[dataForSelect]]"></list-of-cheque>
-          <!-- <cheque-register data-for-select="[[dataForSelect]]"></cheque-register> -->
         </section-content>
         <section-content name="payment">
           <list-of-payments data="[[dataListPay.payments]]" data-for-select="[[dataForSelect]]"></list-of-payments>
         </section-content>
 
 
-      </taps-payment>
-    </paper-material>
+      </taps-payment>-->
+    <!--</paper-material>-->
 
     <nylon-panel-right title="{{titlePanelRight}}" id="test" set-width="95%">
       <div class="rightdata" align="left">
@@ -78,7 +200,7 @@
           <div name="feePage">
             <list-of-fee-detail data="[[dataSelected.fee]]" data-for-select="[[dataForSelect]]" is-input-disabled="[[isInputDisabled]]"
               is-view-seleted="[[!isViewSeleted]]"></list-of-fee-detail>
-              <!-- <fee-exports data="[[dataSelected.fee]]" is-input-disabled="[[isInputDisabled]]" is-view-seleted="[[!isViewSeleted]]"></fee-exports> -->
+            <!-- <fee-exports data="[[dataSelected.fee]]" is-input-disabled="[[isInputDisabled]]" is-view-seleted="[[!isViewSeleted]]"></fee-exports> -->
           </div>
           <div name="chequePage">
             <cheque-detail data="[[dataSelected.cheque]]"></cheque-detail>
@@ -158,8 +280,8 @@
         'flipDrawer': '_flipDrawer',
         'close-drawer': '_flipDrawerClose'
       },
-      created:function(){
-          this.nylonLocalizeImport('/i18n-page1.json');
+      created: function () {
+        this.nylonLocalizeImport('/i18n-page1.json');
       },
       ready: function () {
         let contract_id = this._getUrl();
@@ -169,7 +291,7 @@
         this._getChequeList(contract_id);
         this._getPaymentsList(contract_id);
       },
-      nylonPageActive:function() {
+      nylonPageActive: function () {
         console.log(111);
         // let shmId = this._getUrl();
         // this._getBlList(shmId);
@@ -285,6 +407,7 @@
       _getBlInvoiceDetail: function (e) {
         this.titlePanelRight = 'รายละเอียดใบกำกับสินค้า'
         this.fire('toast', { status: 'load' });
+        console.log(1)
         this.read('./g2g/invoice/id/' + e.detail.detail.invoice_id, (data) => {
           this.dataSelected = data;
           this.paymentsPageSeleted = 'invoicePage';
@@ -304,8 +427,10 @@
             );
           }, 1000);
         } else {
-          this.fire('toast', { status: 'load' });
-          this._flipDrawer();
+          this.async(() => {
+            this.fire('toast', { status: 'load' });
+            this._flipDrawer();
+          }, 500)
         }
       },
       _getInvoiceDetail: function (e) {
