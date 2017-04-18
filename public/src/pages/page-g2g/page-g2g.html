@@ -180,7 +180,7 @@
       },
       _getUrl: function () {
 
-        console.log(this._getCookie("buyerId"));
+        this._getCookie("buyerId")
         // this.set('dataForSelect.nameContract', this._getCookie("contractName"));
         // this.set('dataForSelect.contract_id', this._getCookie("contract_id"));
         // return this._getCookie("contract_id");
@@ -352,7 +352,7 @@
           }
 
           this.dataSelected = e.detail.data;
-          console.log('>>>>>1111', this.dataSelected);
+          // console.log('>>>>>1111', this.dataSelected);
           this.set('dataForSelected.dataForConfirm.buyer_id', e.detail.data.buyer_id);
           this.set('dataForSelected.dataForConfirm.country_id', e.detail.data.country_id)
           // console.log(e.detail.data.buyer_id);
@@ -377,7 +377,7 @@
         }
       },
       _getListShipment: function (e) {
-        console.log(e.detail.detail);
+        // console.log(e.detail.detail);
         this.g2gPageSeleted = 'listOfShipment';
         this.titlePanelRight = 'การส่งมอบสินค้า';
         if (typeof e.detail.contractId == "undefined") {
@@ -400,11 +400,11 @@
             this.fire('toast', { status: 'load' });
             this._flipDrawer();
           }
-          console.log(e.detail.data.book);
+          // console.log(e.detail.data.book);
           this.dataSelected = e.detail.data;
           this.set('dataForSelected.dataForBooking.contract_id', e.detail.data.contract_id);
           this.set('dataForSelected.dataForBooking.buyer_id', e.detail.data.buyer_id);
-          console.log(this.dataForSelected.dataForBooking);
+          // console.log(this.dataForSelected.dataForBooking);
           this.set('dataForSelected.dataForBooking.country_id', e.detail.data.country_id);
           this.set('dataForSelected.dataForBooking.buyer_masks', e.detail.data.buyer_masks);
         } else {

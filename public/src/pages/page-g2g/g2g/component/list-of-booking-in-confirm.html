@@ -1,5 +1,5 @@
 <dom-module id="list-of-booking-in-confirm">
-  <style include="gl-styles">
+  <style include="gl-styles iron-flex iron-flex-factors iron-flex-alignment">
     table.gl-table-default {
       width: 100%;
       border: 1px solid #ddd;
@@ -9,16 +9,36 @@
     table.gl-table-default>tbody.table-body>tr>td {
       cursor: pointer;
     }
+    
+    .combo-box {
+      width: 350px;
+    }
+    
+    .title {
+      font-size: var(--font-size-h3);
+      text-align: center;
+    }
   </style>
   <template>
 
     <gl-form-panel>
 
-      <gl-form-panel-head label="{{localize('text_confirm_confirm')}}" set-padding="10px" set-border="1px">
-        12121212
-        <gl-combo-box class="combo-box" placeholder="แสดง" value="{{dataSearch.sortBy}}" items="{{sortBy}}" item-label-path="label"
-          item-value-path="id"></gl-combo-box>
-      </gl-form-panel-head>
+      <!--<gl-form-panel-head label="{{localize('text_confirm_confirm')}}" set-padding="10px" set-border="1px">-->
+        <div class="title">
+          [[title]]
+        </div>
+      <div class="horizontal layout wrap">
+        <div class="flex-2">
+        </div>
+        <div class="flex">
+          <gl-combo-box class="combo-box" placeholder="ผู้ส่งออกทั้งหมด" items="{{dataForSelect.exporter}}" item-label-path="label" label="ผู้ส่งออก"
+            item-value-path="company_id" on-value-changed="getShowByExport"></gl-combo-box>
+        </div>
+      </div>
+      <!--<gl-combo-box class="combo-box" placeholder="ผู้ส่งออกทั้งหมด" items="{{dataForSelect.exporter}}" item-label-path="label"
+        item-value-path="company_id" on-value-changed="getShowByExport"></gl-combo-box>-->
+
+      <!--</gl-form-panel-head>-->
       <table class="gl-table-default">
         <thead class="table-head">
           <tr>
@@ -31,8 +51,8 @@
           <template is="dom-repeat" items="[[data.book]]">
             <tr on-tap="bookingDetail" data="[[item]]">
               <td>[[item.cl_no]]</td>
-              <td>[[item.cl_quantity_total]]</td>
-              <td>[[item.book_quantity]]</td>
+              <td>[[formatNumberNoZero(item.cl_quantity_total)]]</td>
+              <td>[[formatNumberNoZero(item.book_quantity)]]</td>
             </tr>
           </template>
 
@@ -46,17 +66,45 @@
       is: "list-of-booking-in-confirm",
       behaviors: [
         nylonBehavior,
-        nylonLocalizeBehavior
+        nylonLocalizeBehavior,
+        g2gCongtroller,
+        FormatNumberBehavior
       ],
+      properties: {
+        title: {
+          type: String,
+          value:'แสดงปริมาณส่งมอบทั้งหมด'
+        }
+      },
       created: function () {
         this.nylonLocalizeImport('/i18n-page1.json');
       },
       bookingDetail: function (e) {
-        console.log(e.currentTarget.data);
+        // console.log(e.currentTarget.data);
         //สั่งเปลีย่นหน่า
         // this.fire('_change-component-bl',{detail:'list-of-booking-shm-det'})
         //ส่งดาต้า
         this.fire('_get-booking-detail', { detail: e.currentTarget.data })
+      },
+      getShowByExport(e) {
+        // console.log(e.currentTarget.value);
+        try {
+          if (e.currentTarget.value != '') {
+            let exporter = this.g2gClone(this.dataForSelect.exporter)
+            // console.log(exporter);
+            let data = exporter.filter((exporterid) => exporterid.company_id == e.currentTarget.value)[0]
+            // console.log(data);
+            this.set('title', 'แสดงปริมาณส่งมอบของ'+ data.label)
+            this.fire('_get-fire-group-exporter', data.exporter_id)
+          }else {
+            this.set('title', 'แสดงปริมาณส่งมอบทั้งหมด')
+            this.fire('_get-fire-group-exporter', '')
+          }
+          
+        } catch (e) {
+          console.log(e);
+        } 
+
       }
 
     });

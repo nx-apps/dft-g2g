@@ -5,44 +5,54 @@
       border: 1px solid #ddd;
       margin: 20px 0px 10px 0px;
     }
-    table.gl-table-default > tbody.table-body > tr > td {
+    
+    table.gl-table-default>tbody.table-body>tr>td {
       cursor: pointer;
+    }
+    .icon_print {
+      margin-top: 15px;
     }
   </style>
   <template>
+    
     <gl-form-panel>
-      <gl-combo-box always-float-label label="{{localize('label_report')}}" placeholder="{{localize('label_report')}}" value="{{printReport.typeReport}}"  item-label-path="report_name"
-                  item-value-path="report_name_id" items="{{report.report_name}}"></gl-combo-box>
-             <!-- </gl-grid-col> -->&nbsp;
-             <!-- <gl-grid-col width="[[getWidth]]" grid="[[500,4],[700,4]]"> -->
-               <gl-combo-box always-float-label label="{{localize('label_report_type')}}" placeholder="{{localize('label_report_type')}}" value="{{printReport.typeFile}}"  item-label-path="report_type"
-                  item-value-path="report_type_id" items="{{report.report_type}}"></gl-combo-box>
-              <div class="icon_print">
-                <paper-icon-button id="printShipment" class="crud" icon="print" raised on-tap="printShipment"  hidden="[[!data.shm_status]]"></paper-icon-button>
-                <paper-tooltip for="printShipment" offset="0">{{localize('label_send_report')}}</paper-tooltip>
-              </div>
-              <paper-dialog id="printShipmentReport">
-            <gl-grid-row width="{{getWidth}}">
-             <gl-grid-col width="[[getWidth]]" grid="[[500,4],[700,3]]">
-               [[changeString2Num(printReport.*,'ori')]]
-               <gl-form-input allowed-pattern="[0-9||,||.]" label="{{localize('label_orignals')}}" autofocus maxlength="3" format-number="on"  always-float-label placeholder="{{localize('label_orignals')}}" value="{{printReport.ori}}"></gl-form-input>
-             </gl-grid-col>
-             <gl-grid-col width="[[getWidth]]" grid="[[500,6],[700,8]]">
-               [[changeString2Num(printReport.*,'nn')]]
-               <gl-form-input allowed-pattern="[0-9||,||.]" label="{{localize('label_n_n')}}"  maxlength="3" format-number="on" always-float-label placeholder="{{localize('label_n_n')}}" value="{{printReport.nn}}"></gl-form-input>
-             </gl-grid-col>
-           </gl-grid-row>
-            <div class="buttons">
-              <paper-button class="gl-btn-default" dialog-confirm raised>{{localize('btn_close')}}</paper-button>
-               <paper-button  class="gl-btn-primary" on-tap="printShipmentReports" dialog-confirm autofocus raised>{{localize('label_send_report')}}</paper-button>
-              <!-- <paper-button dialog-confirm autofocus>ออกรายงาน</paper-button> -->
+<div class="horizontal end-justified layout center">
+      <gl-combo-box always-float-label label="{{localize('label_report')}}" placeholder="{{localize('label_report')}}" value="{{printReport.typeReport}}"
+        item-label-path="report_name" item-value-path="report_name_id" items="{{report.report_name}}"></gl-combo-box>
+      <!-- </gl-grid-col> -->&nbsp;
+      <!-- <gl-grid-col width="[[getWidth]]" grid="[[500,4],[700,4]]"> -->
+      <gl-combo-box always-float-label label="{{localize('label_report_type')}}" placeholder="{{localize('label_report_type')}}"
+        value="{{printReport.typeFile}}" item-label-path="report_type" item-value-path="report_type_id" items="{{report.report_type}}"></gl-combo-box>
+      <div class="icon_print">
+        <paper-icon-button id="printShipment" class="crud" icon="print" raised on-tap="printShipment" hidden="[[!data.shm_status]]"></paper-icon-button>
+        <paper-tooltip for="printShipment" offset="0">{{localize('label_send_report')}}</paper-tooltip>
+      </div>
+      <paper-dialog id="printShipmentReport">
+        <gl-grid-row width="{{getWidth}}">
+          <gl-grid-col width="[[getWidth]]" grid="[[500,4],[700,3]]">
+            [[changeString2Num(printReport.*,'ori')]]
+            <gl-form-input allowed-pattern="[0-9||,||.]" label="{{localize('label_orignals')}}" autofocus maxlength="3" format-number="on"
+              always-float-label placeholder="{{localize('label_orignals')}}" value="{{printReport.ori}}"></gl-form-input>
+          </gl-grid-col>
+          <gl-grid-col width="[[getWidth]]" grid="[[500,6],[700,8]]">
+            [[changeString2Num(printReport.*,'nn')]]
+            <gl-form-input allowed-pattern="[0-9||,||.]" label="{{localize('label_n_n')}}" maxlength="3" format-number="on" always-float-label
+              placeholder="{{localize('label_n_n')}}" value="{{printReport.nn}}"></gl-form-input>
+          </gl-grid-col>
+        </gl-grid-row>
+        <div class="buttons">
+          <paper-button class="gl-btn-default" dialog-confirm raised>{{localize('btn_close')}}</paper-button>
+          <paper-button class="gl-btn-primary" on-tap="printShipmentReports" dialog-confirm autofocus raised>{{localize('label_send_report')}}</paper-button>
+          <!-- <paper-button dialog-confirm autofocus>ออกรายงาน</paper-button> -->
 
-            </div>
-          </paper-dialog>
+        </div>
+      </paper-dialog>
+    </div>
       <gl-form-panel-head label="{{localize('text_list_exporter_name')}}" set-padding="10px" set-border="1px">
+
         <template is="dom-if" if={{_confirmBook(data)}}>
           <paper-button class="gl-btn-primary" raised on-tap="createShmDet">{{localize('btn_add_exporter')}}</paper-button>
-          </template>
+        </template>
       </gl-form-panel-head>
       <table class="gl-table-default">
         <thead class="table-head">
@@ -59,27 +69,27 @@
               <td>[[_ObcountIndex(index)]]</td>
               <td>[[item.company_name_th]]</td>
               <td>[[item.type_rice_name_en]]</td>
-              <td>[[item.shm_det_quantity]]</td>
+              <td>[[formatNumberNoZero(item.shm_det_quantity)]]</td>
             </tr>
           </template>
           <template is="dom-if" if="[[_isHave(data)]]">
-                  <tr >
-                    <td colspan="4" style="text-align: center">  {{localize('text_no_data')}}</td>
-                  </tr>
-              </template>
+            <tr>
+              <td colspan="4" style="text-align: center"> {{localize('text_no_data')}}</td>
+            </tr>
+          </template>
         </tbody>
       </table>
       <gl-form-panel-footer set-padding="10px 20px 0px 20px">
         <paper-button class="gl-btn-default" raised on-tap="backWard2Booking">
-              {{localize('btn_back_ward')}}</paper-button>
-        
+          {{localize('btn_back_ward')}}</paper-button>
+
         <template is="dom-if" if={{_confirmBook(data)}}>
-          <paper-button class="gl-btn-success" raised dias on-tap="approveBook" hidden="[[_isHave(data)]]" >
-                    {{localize('btn_confirm')}}</paper-button>
+          <paper-button class="gl-btn-success" raised dias on-tap="approveBook" hidden="[[_isHave(data)]]">
+            {{localize('btn_confirm')}}</paper-button>
         </template>
-        
-        
-    </gl-form-panel-footer>
+
+
+      </gl-form-panel-footer>
     </gl-form-panel>
 
 
@@ -89,86 +99,88 @@
       is: "list-of-shm-det",
       behaviors: [
         g2gCongtroller,
-          nylonBehavior,
-          nylonLocalizeBehavior
+        nylonBehavior,
+        nylonLocalizeBehavior,
+        FormatNumberBehavior
       ],
       properties: {
-        printReport:{
-          type:Object,
-          value:{ori:3,nn:12,typeReport:'0',typeFile:'pdf'}
+        printReport: {
+          type: Object,
+          value: { ori: 3, nn: 12, typeReport: '0', typeFile: 'pdf' }
         },
-        report:{
-          type:Object,
+        report: {
+          type: Object,
           value:
           {
             report_name:
-              [
-                {report_name:'รายงานการซื้อขายข้าว',report_name_id:'0'},
-                {report_name:'รายงานการซื้อขายข้าว2',report_name_id:'1'},
-                {report_name:'รายงานการซื้อขายข้าว3',report_name_id:'2'}
-              ],
+            [
+              { report_name: 'รายงานการซื้อขายข้าว', report_name_id: '0' },
+              { report_name: 'รายงานการซื้อขายข้าว2', report_name_id: '1' },
+              { report_name: 'รายงานการซื้อขายข้าว3', report_name_id: '2' }
+            ],
             report_type:
-              [
-                {report_type:'PDF',report_type_id:'pdf'},
-                {report_type:'WORD',report_type_id:'word'},
-                {report_type:'EXCEL',report_type_id:'excel'}
-              ]
+            [
+              { report_type: 'PDF', report_type_id: 'pdf' },
+              { report_type: 'WORD', report_type_id: 'word' },
+              { report_type: 'EXCEL', report_type_id: 'excel' }
+            ]
           }
         }
 
       },
-      printShipment:function () {
+      printShipment: function () {
         if (this.printReport.typeReport == '0') {
           // console.log('&export='+this.printReport.report_type_id);
-           window.open('https://localhost:8080/api/shipment/report1?shm_id='+this.data.shm_id+'&export='+this.printReport.typeFile,'1');
-        }else if (this.printReport.typeReport == '1') {
+          console.log();
+          window.open('https://localhost:8080/api/shipment/report1/'+this.data[0].book_id+'?export=' + this.printReport.typeFile, '1');
+        } else if (this.printReport.typeReport == '1') {
           this.$.printShipmentReport.toggle();
-        }else if (this.printReport.typeReport == '2') {
-           window.open('https://localhost:8080/api/shipment/report3?shm_id='+this.data.shm_id+'&export='+this.printReport.typeFile,'1');
+        } else if (this.printReport.typeReport == '2') {
+          window.open('https://localhost:8080/api/shipment/report3?book_id=' +this.data[0].book_id + '&export=' + this.printReport.typeFile, '1');
         }
       },
-      printShipmentReports:function () {
+      printShipmentReports: function () {
         // window.open('https://localhost:8080/api/shipment/report1?shm_id='+this.data.shm_id+'&ori='+this.printReport.ori+'&nn='+this.printReport.nn,'1');
-        window.open('https://localhost:8080/api/shipment/report2?shm_id='+this.data.shm_id+'&ori='+this.printReport.ori+'&nn='+this.printReport.nn+'&export='+this.printReport.typeFile,'1');
+        window.open('https://localhost:8080/api/shipment/report2/'+this.data[0].book_id +'?ori=' + this.printReport.ori + '&nn=' + this.printReport.nn + '&export=' + this.printReport.typeFile, '1');
       },
-      created:function(){
-          this.nylonLocalizeImport('/i18n-page1.json');
+      created: function () {
+        this.nylonLocalizeImport('/i18n-page1.json');
       },
-      createShmDet:function () {
-        this.fire('_change-component-shm',{detail:'list-of-shm-det-add'})
+      createShmDet: function () {
+        this.fire('_change-component-shm', { detail: 'list-of-shm-det-add' })
       },
-      shmDetail:function (e) {
-        // this.fire('_change-component-shm',{detail:'shm-detail'})
-        console.log(this.data)
-        this.fire('_get-fire-in-book-shm-detail',{detail:e.currentTarget.data})
+      shmDetail: function (e) {
+        this.fire('_change-component-shm',{detail:'shm-detail'})
+        // console.log(this.data)
+        this.fire('_get-fire-in-book-shm-detail', { detail: e.currentTarget.data })
       },
-      _confirmBook:function (data) {
-        console.log(data);
-          if ( (data.every(status => status.book_status == false))) {
-            return true;
-          } else {
-             return false; 
-          }
+      _confirmBook: function (data) {
+        // console.log(data);
+        if ((data.every(status => status.book_status == false))) {
+          return true;
+        } else {
+          return false;
+        }
       },
-      approveBook:function (e) {
+      approveBook: function (e) {
         // console.log(this.data[0].book_id);
-        this.fire('toast',{  //คำสั่งสำหรับเปิด toast dialog
-              status:'dialog',
-              text:'ต้องการยืนยันข้อมูลใช่หรือไม่ ?',
-              confirmed:this._approveData.bind(this), //function ที่ใช้รับค่า ปุ่ม
-              el: this, // compontents
-          });
-        
+        this.fire('toast', {  //คำสั่งสำหรับเปิด toast dialog
+          status: 'dialog',
+          text: 'ต้องการยืนยันข้อมูลใช่หรือไม่ ?',
+          confirmed: this._approveData.bind(this), //function ที่ใช้รับค่า ปุ่ม
+          el: this, // compontents
+        });
+
 
       },
-      _approveData:function (result,detail) {
+      _approveData: function (result, detail) {
         if (result == true) {
-           this.fire('_post-approve-book',{id:this.data[0].book_id,book_status:'approve'});
-           this.fire('_get-fire-shm-detail',{book_id:this.data[0].book_id});
-         }
+          this.fire('_post-approve-book', { id: this.data[0].book_id, book_status: 'approve' });
+          this.fire('_get-fire-shm-detail', { book_id: this.data[0].book_id });
+        }
       },
-      backWard2Booking:function () {
-        this.fire('_change-component-book',{detail:'list-of-booking'})
+      backWard2Booking: function () {
+        this.fire('_change-component-book', { detail: 'list-of-booking' })
       }
 
     });

@@ -7,7 +7,7 @@
   <template>
     <iron-pages selected="{{pageSelected}}" attr-for-selected="name">
       <div name="list-of-booking-in-confirm">
-        <list-of-booking-in-confirm  data="{{data}}"></list-of-booking-in-confirm>
+        <list-of-booking-in-confirm data="{{data}}" data-for-select="{{dataForSelect}}"></list-of-booking-in-confirm>
       </div>
       <!-- <div name="list-of-booking-in-confirm-add">
         <list-of-booking-in-confirm-add></list-of-booking-in-confirm-add>
@@ -24,54 +24,87 @@
       properties: {
         pageSelected: {
           type: String,
-          value:'list-of-booking-in-confirm'
+          value: 'list-of-booking-in-confirm'
         },
-        dataSelected:{
-          type:Array
+        dataSelected: {
+          type: Array,
+
         },
-        dataForSelected:{
-          type:Object,
+        dataForSelect: {
+          type: Object,
+          value: { exporter: [] }
         }
       },
       behaviors: [
-          g2gModelBehavior,
-          g2gCongtroller,
+        g2gModelBehavior,
+        g2gCongtroller,
       ],
       observers: [
-            'getExport(data)'
+        'getExport(data)'
       ],
-      listeners:{
-        '_change-component-bl':'_changeComponentBl',
-        '_get-booking-detail':'_getBookingDetail',
-        '_get-fire-booking-detail':'_getFireBookingDetail',
-        '_get-fire-group-exporter':'_getFireGroupExporter'
+      listeners: {
+        '_change-component-bl': '_changeComponentBl',
+        '_get-booking-detail': '_getBookingDetail',
+        '_get-fire-booking-detail': '_getFireBookingDetail',
+        '_get-fire-group-exporter': '_getFireGroupExporter'
       },
-      _changeComponentBl:function (data) {
+      _changeComponentBl: function (data) {
         // console.log(data.detail.detail);
-        this.set('pageSelected',data.detail.detail)
+        this.set('pageSelected', data.detail.detail)
       },
-      _getBookingDetail:function (e) {
-        console.log(e.detail.detail);
-        this.fire('toast',{status:'load'});
-        this.read('./g2g/book/confirm/id/'+e.detail.detail.cl_id,(data)=>{
-          this.dataSelected=data;
-          this.set('dataForSelect.cl_no',e.detail.detail.cl_no);
-          this.set('dataForSelect.cl_id',e.detail.detail.cl_id);
-          this.set('dataForSelect.cl_type_rice',e.detail.detail.cl_type_rice);
-          this.set('pageSelected','list-of-booking-shm-det')
-          this.fire('toast',{status:'load'});
+      _getBookingDetail: function (e) {
+        // console.log(e.detail.detail);
+        this.fire('toast', { status: 'load' });
+        this.read('./g2g/book/confirm/id/' + e.detail.detail.cl_id, (data) => {
+          this.dataSelected = data;
+          this.set('dataForSelect.cl_no', e.detail.detail.cl_no);
+          this.set('dataForSelect.cl_id', e.detail.detail.cl_id);
+          this.set('dataForSelect.cl_type_rice', e.detail.detail.cl_type_rice);
+          this.set('pageSelected', 'list-of-booking-shm-det')
+          this.fire('toast', { status: 'load' });
         });
       },
-      getExport(data){
-        console.log('>>>>',data);
-      },
-      _getFireGroupExporter(e){
+      getExport(data) {
+        try {
+          // console.log('>>>>', data);
+          let exporters = []
+          data.exporter.map((exporter) => {
+            exporters.push({
+              exporter_id: exporter.exporter_id,
+              label: exporter.company_name_th + ' ( ' + exporter.exporter_no + ' )',
+              company_id: exporter.company_id
+            })
+          })
+          // console.log(exporters);
+          this.set('dataForSelect.exporter', exporters);
+          // console.log(this.dataForSelect);
+        } catch (e) {
+
+        }
 
       },
-      _getFireBookingDetail:function (e) {
-        // console.log(e.detail);
-        this.read('./g2g/book/confirm/id/'+e.detail.cl_id,(data)=>{
-          this.dataSelected=data;
+      _getFireGroupExporter(exporterId) {
+        //
+        if (this._checkUndefined(this.oldData)) {
+          // https://localhost:3001/api/g2g/confirm/exporter?contract_id=37d09c7b-b8b3-407d-abca-89f0cc56da21&exporter_id=ba5526b3-cbfa-482d-b0ac-716df09b47f7
+          // console.log('exporterId', exporterId);
+          if (exporterId.detail == '') {
+            this.set('data', this.oldData)
+            // console.log(this.data);
+          } else {
+            this.read('./g2g/confirm/exporter?contract_id=' + this.oldData.contract_id + '&exporter_id=' + exporterId.detail, (data) => {
+              // this.data=data;
+              // console.log();
+              this.set('data.book', data)
+            });
+          }
+        }
+
+
+      },
+      _getFireBookingDetail: function (e) {
+        this.read('./g2g/book/confirm/id/' + e.detail.cl_id, (data) => {
+          this.dataSelected = data;
         });
       }
 
