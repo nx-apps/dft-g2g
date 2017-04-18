@@ -399,15 +399,17 @@
             );
           }, 1000);
         } else {
-          this.fire('toast', { status: 'load' });
-          this._flipDrawer();
+          this.async(() => {
+            this.fire('toast', { status: 'load' });
+            this._flipDrawer();
+          }, 500)
         }
 
       },
       _getBlInvoiceDetail: function (e) {
         this.titlePanelRight = 'รายละเอียดใบกำกับสินค้า'
         this.fire('toast', { status: 'load' });
-        console.log(1)
+        // console.log(1)
         this.read('./g2g/invoice/id/' + e.detail.detail.invoice_id, (data) => {
           this.dataSelected = data;
           this.paymentsPageSeleted = 'invoicePage';
@@ -479,8 +481,10 @@
               );
             }, 1000);
           } else {
-            this.fire('toast', { status: 'load' });
-            this._flipDrawer();
+            this.async(() => {
+              this.fire('toast', { status: 'load' });
+              this._flipDrawer();
+            }, 500)
           }
 
         });
@@ -511,8 +515,10 @@
               );
             }, 1000);
           } else {
-            this.fire('toast', { status: 'load' });
-            this._flipDrawer();
+            this.async(() => {
+              this.fire('toast', { status: 'load' });
+              this._flipDrawer();
+            }, 500)
           }
         });
       },
@@ -538,8 +544,10 @@
               );
             }, 1000);
           } else {
-            this.fire('toast', { status: 'load' });
-            this._flipDrawer();
+            this.async(() => {
+              this.fire('toast', { status: 'load' });
+              this._flipDrawer();
+            }, 500)
           }
         });
       },
@@ -570,8 +578,10 @@
             );
           }, 1000);
         } else {
-          this.fire('toast', { status: 'load' });
-          this._flipDrawer();
+          this.async(() => {
+            this.fire('toast', { status: 'load' });
+            this._flipDrawer();
+          }, 500)
         }
       },
       _flipDrawer: function () {

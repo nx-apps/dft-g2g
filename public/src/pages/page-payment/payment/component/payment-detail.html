@@ -173,8 +173,12 @@
       //   '_oBCheckBoxDisabled(data.payment_detail.*)'
       // ],
       _setCheckBox(data) {
+        try {
+          return data.payment_detail.map((CheckBox) => CheckBox.status = false)
+        } catch (e) {
+          // console.log(e);
+        } 
         
-        return data.payment_detail.map((CheckBox) => CheckBox.status = false)
       },
       checkData: function (e) {
         // console.log(this.data.payment_detail);
