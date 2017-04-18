@@ -273,7 +273,7 @@
           }
           this.insert('./g2g/book/insert',data, () => {
             this.fire('toast',{status:'load'});
-            this.fire('_get-fire-booking-detail',{cl_id:data.cl_id});
+            this.fire('_get-fire-booking-detail',{detail:data});
             this.fire('toast',{status:'success',text:'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
               callback:()=>{
                   this.cancelInsertShipment();

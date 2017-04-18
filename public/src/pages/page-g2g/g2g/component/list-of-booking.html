@@ -38,9 +38,11 @@
       behaviors: [
         g2gModelBehavior,
         g2gCongtroller,
+        FormatNumberBehavior
       ],
       observers: [
-        'getExport(data)'
+        'getExport(data)',
+        'setTotalRice(data)'
       ],
       listeners: {
         '_change-component-bl': '_changeComponentBl',
@@ -52,14 +54,43 @@
         // console.log(data.detail.detail);
         this.set('pageSelected', data.detail.detail)
       },
+      setTotalRice(e) {
+        try {
+        // console.log('ccccc', e);
+        // console.log(this.data);
+        // console.log(this.dataForSelect.cl_id != undefined);
+        if (this.dataForSelect.cl_id != undefined) {
+          let newBooking = this.data.book.filter((rice) => rice.cl_id == this.dataForSelect.cl_id)[0]
+          // console.log(newBooking);
+          newBooking.cl_type_rice.map((set_limit) => {
+            set_limit.type_rice_name_en = set_limit.type_rice_name_en + " (Balance " + this.formatNumberNoZero(set_limit.type_rice_quantity_limit_max) + ' Ton )'
+          })
+          // console.log(newBooking);
+          this.set('dataForSelect.cl_type_rice', newBooking.cl_type_rice);
+        }
+
+        } catch (e) {
+          // console.log(e);
+        // } finally {
+
+        }
+
+      },
       _getBookingDetail: function (e) {
-        // console.log(e.detail.detail);
+        console.log(e.detail.detail);
         this.fire('toast', { status: 'load' });
         this.read('./g2g/book/confirm/id/' + e.detail.detail.cl_id, (data) => {
           this.dataSelected = data;
           this.set('dataForSelect.cl_no', e.detail.detail.cl_no);
           this.set('dataForSelect.cl_id', e.detail.detail.cl_id);
+          // console.log(e.detail.detail.cl_id);
+          // console.log('this.dataSelected', this.dataSelected);
+          e.detail.detail.cl_type_rice.map((set_limit) => {
+            set_limit.type_rice_name_en = set_limit.type_rice_name_en + " (Balance " + this.formatNumberNoZero(set_limit.type_rice_quantity_limit_max) + ' Ton )'
+          })
           this.set('dataForSelect.cl_type_rice', e.detail.detail.cl_type_rice);
+
+          // console.log('lll', this.dataForSelect.cl_type_rice);
           this.set('pageSelected', 'list-of-booking-shm-det')
           this.fire('toast', { status: 'load' });
         });
@@ -103,7 +134,7 @@
 
       },
       _getFireBookingDetail: function (e) {
-        this.read('./g2g/book/confirm/id/' + e.detail.cl_id, (data) => {
+        this.read('./g2g/book/confirm/id/' + e.detail.detail.cl_id, (data) => {
           this.dataSelected = data;
         });
       }
