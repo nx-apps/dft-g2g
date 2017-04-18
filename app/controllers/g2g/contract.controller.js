@@ -119,13 +119,13 @@ exports.list = function (req, res) {
                 ),
                 contract_quantity_book: row('book')
                     .filter(function (f) {
-                        return f('book_status').eq(true)
+                        return f('cl_status').eq(true)
                     })
                     .sum('book_quantity'),
                 contract_quantity_book_balance: row('contract_quantity').sub(
                     row('book')
                         .filter(function (f) {
-                            return f('book_status').eq(true)
+                            return f('cl_status').eq(true)
                         })
                         .sum('book_quantity')
                 )
@@ -327,13 +327,13 @@ exports.buyerId = function (req, res) {
                 ),
                 contract_quantity_book: row('book')
                     .filter(function (f) {
-                        return f('book_status').eq(true)
+                        return f('cl_status').eq(true)
                     })
                     .sum('book_quantity'),
                 contract_quantity_book_balance: row('contract_quantity').sub(
                     row('book')
                         .filter(function (f) {
-                            return f('book_status').eq(true)
+                            return f('cl_status').eq(true)
                         })
                         .sum('book_quantity')
                 )
