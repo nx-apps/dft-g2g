@@ -9,7 +9,8 @@
     <template>
         <style include="page-style">
              :host {
-                display: block;
+                --paper-fab-background: var(--paper-light-blue-500);
+                --paper-fab-keyboard-focus-background: var(--paper-light-blue-900);
             }
             
             * {
@@ -23,8 +24,9 @@
                 bottom: 25px;
                 color: #fff;
             }
-            nylon-panel-right{
-                --app-toolbar-style:{
+            
+            nylon-panel-right {
+                --app-toolbar-style: {
                     background-color: #FF5000;
                 }
             }
