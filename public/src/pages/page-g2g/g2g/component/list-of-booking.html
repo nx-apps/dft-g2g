@@ -13,7 +13,7 @@
         <list-of-booking-in-confirm-add></list-of-booking-in-confirm-add>
       </div> -->
       <div name="list-of-booking-shm-det">
-        <list-of-booking-detail data="{{dataSelected}}" data-for-select="[[dataForSelect]]"></list-of-booking-detail>
+        <list-of-booking-detail page-selected="{{subPageSelected}}" data="{{dataSelected}}" data-for-select="[[dataForSelect]]"></list-of-booking-detail>
       </div>
     </iron-pages>
 
@@ -24,7 +24,9 @@
       properties: {
         pageSelected: {
           type: String,
-          value: 'list-of-booking-in-confirm'
+          value: 'list-of-booking-in-confirm',
+          notify:true,
+          observer:'setPageseleted' 
         },
         dataSelected: {
           type: Array,
@@ -49,6 +51,10 @@
         '_get-booking-detail': '_getBookingDetail',
         '_get-fire-booking-detail': '_getFireBookingDetail',
         '_get-fire-group-exporter': '_getFireGroupExporter'
+      },
+      setPageseleted(e){
+        // console.log(1);
+        this.set('subPageSelected','list-of-booking')
       },
       _changeComponentBl: function (data) {
         // console.log(data.detail.detail);

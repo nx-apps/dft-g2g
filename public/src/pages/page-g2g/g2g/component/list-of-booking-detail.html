@@ -15,7 +15,7 @@
         <booking-detail data-book-no={{data}} data="{{bookDataEdit}}" data-for-select="[[dataForSelect]]" is-input-disabled="[[isInputDisabled]]" is-view-seleted="[[isViewSeleted]]"></booking-detail>
       </div>
       <div name="list-of-booking-shm-det">
-        <list-of-shm data-selected="{{dataSelected}}" data-for-select="[[dataForSelect]]"></list-of-shm>
+        <list-of-shm page-selected="{{subPageSelected}}" data-selected="{{dataSelected}}" data-for-select="[[dataForSelect]]"></list-of-shm>
       </div>
     </iron-pages>
 
@@ -30,7 +30,9 @@
       properties: {
         pageSelected: {
           type: String,
-          value:'list-of-booking'
+          value:'list-of-booking',
+          notify:true,
+          observer:'setPageseleted' 
         }
       },
       listeners:{
@@ -38,6 +40,9 @@
         '_get-shm-detail':'_getShmDetail',
         '_get-fire-shm-detail':'_getFireShmDetail',
         '_edit-booking-detail':'_editBooking'
+      },
+      setPageseleted(){
+        this.set('subPageSelected','list-of-shm-det')
       },
       _changeComponentBook:function (data) {
         // console.log(data.detail.detail);
