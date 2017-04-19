@@ -45,6 +45,12 @@
       padding: 7.5px;
       /*border: 1px solid var(--gl-gray-light-color);*/
     }
+    
+    nylon-panel-right {
+      --app-toolbar-style: {
+        background-color: #FF5000;
+      }
+    }
   </style>
   <template>
     <!-- <list-of-booking></list-of-booking> -->
@@ -72,7 +78,8 @@
               is-edit="[[isEdit]]" is-input-disabled="[[isInputDisabled]]"></contract-detail>
           </div>
           <div class="addContract" name="listOfConfirm">
-            <list-of-confirm page-selected="{{pageSelected}}" data-for-select="[[dataForSelected.dataForConfirm]]" data="[[dataSelected]]" is-input-disabled="[[!isInputDisabled]]">
+            <list-of-confirm page-selected="{{pageSelected}}" data-for-select="[[dataForSelected.dataForConfirm]]" data="[[dataSelected]]"
+              is-input-disabled="[[!isInputDisabled]]">
             </list-of-confirm>
           </div>
           <div class="addContract" name="listOfShipment">
@@ -194,7 +201,7 @@
         // g2g/contract/buyer/id/
         this.read('./g2g/contract/buyer/id/' + this._getCookie("buyerId"), (data) => {
           // this.contractList = data;
-          this.set('contractList',data)
+          this.set('contractList', data)
           // console.log(this.contractList);
           // console.log(data[0].confirm_letter);
         });
@@ -329,7 +336,7 @@
         }
       },
       _getListConfirm: function (e) {
-        this.set('pageSelected','listOfConfirm')
+        this.set('pageSelected', 'listOfConfirm')
         // listOfConfirm
         // console.log('1212=>',e.detail);
         this.titlePanelRight = 'การยืนยันทำสัญญา'
@@ -381,7 +388,7 @@
         }
       },
       _getListShipment: function (e) {
-        this.set('pageSelected','list-of-booking-in-confirm')
+        this.set('pageSelected', 'list-of-booking-in-confirm')
         // console.log(e.detail.detail);
         this.g2gPageSeleted = 'listOfShipment';
         this.titlePanelRight = 'การส่งมอบสินค้า';
@@ -417,9 +424,9 @@
           console.log(111);
           let contractId = e.detail.contractId;
           console.log(contractId);
-          this.read('./g2g/contract/buyer/id/' + this._getCookie("buyerId"),(data)=>{
-            let dataContract = data.filter((contractList)=> contractList.contract_id == contractId );
-                this.dataSelected = dataContract[0];
+          this.read('./g2g/contract/buyer/id/' + this._getCookie("buyerId"), (data) => {
+            let dataContract = data.filter((contractList) => contractList.contract_id == contractId);
+            this.dataSelected = dataContract[0];
           });
         }
       },
