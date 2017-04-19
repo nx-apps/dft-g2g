@@ -229,6 +229,7 @@
         this.read('./common/type_rice', (data) => {
           this.dataForSelected.dataForContract.typeRice = data;
           this.notifyPath('dataForSelected.dataForContract.typeRice');
+          console.log(this.dataForSelected.dataForContract);
         });
         this.read('./common/incoterms', (data) => {
           this.dataForSelected.dataForContract.incoterms = data;

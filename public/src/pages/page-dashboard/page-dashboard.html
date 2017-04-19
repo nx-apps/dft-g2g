@@ -36,8 +36,8 @@
         </div>
         <nylon-panel-right title="{{titlePanelRight}}" id="drawerRight" set-width="95%">
             <div class="rightdata" align="left">
-                <contract-detail data-for-select="[[dataForSelected.dataForContract]]" is-view-seleted="[[!isViewSeleted]]" is-edit="[[!isEdit]]"
-                    is-input-disabled="[[!isInputDisabled]]"></contract-detail>
+                <contract-detail-dash data-for-select="[[dataForSelected.dataForContract]]" is-view-seleted="[[!isViewSeleted]]" is-edit="[[!isEdit]]"
+                    is-input-disabled="[[!isInputDisabled]]"></contract-detail-dash>
             </div>
         </nylon-panel-right>
         <div class="btnFab">
@@ -105,6 +105,7 @@
                 this.read('./common/type_rice', (data) => {
                     this.dataForSelected.dataForContract.typeRice = data;
                     this.notifyPath('dataForSelected.dataForContract.typeRice');
+                    // console.log(this.dataForSelected);
                 });
                 this.read('./common/incoterms', (data) => {
                     this.dataForSelected.dataForContract.incoterms = data;
@@ -118,7 +119,7 @@
                 if (this.checkRenderPage.contractDetail != true) {
                     this.async(() => {
                         this.importHref(
-                            this.resolveUrl('./../page-g2g/g2g/component/contract-detail.html'),
+                            this.resolveUrl('./components/contract-detail-dash.html'),
                             () => {
                                 this.async(() => {
                                     this.fire('toast', { status: 'load' });
