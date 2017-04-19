@@ -395,7 +395,8 @@
           this.insert('./g2g/invoice/insert', data, () => {
 
 
-            this.fire('toast', { status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
+            this.fire('toast', {
+              status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
               callback: () => {
                 this.fire('close-drawer', { detail: 'close-drawer' })
                 this.fire('get-bl-list', { detail: contract_id });
@@ -424,8 +425,8 @@
           this.update('./g2g/invoice/update', detail.data, () => {
             // console.log('=>',detail.data);
             this.fire('get-invoice-list', { detail: detail.data.contract_id });
-            this.fire('toast', {              
-status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
+            this.fire('toast', {
+              status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
               callback: () => {
                 this.editInput();
                 //  detail.el.fire('get-contract-detail',{contractId:detail.data.id});

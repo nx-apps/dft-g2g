@@ -1,9 +1,10 @@
 <dom-module id="fee-management-detail">
   <style include="iron-flex iron-flex-factors iron-flex-alignment gl-styles">
-    :host {
+     :host {
       display: block;
     }
-    div.content{
+    
+    div.content {
       margin: 15px 0px;
     }
   </style>
@@ -11,7 +12,7 @@
     <template is="dom-if" if="[[isInputDisabled]]">
       <div class="horizontal end-justified layout">
         <div class="icon_print">
-          <paper-icon-button id="editFee" class="crud" icon="create" raised on-tap="editInput"  disabled=[[!isInputDisabled]]></paper-icon-button>
+          <paper-icon-button id="editFee" class="crud" icon="create" raised on-tap="editInput" disabled=[[!isInputDisabled]]></paper-icon-button>
           <paper-tooltip for="editFee" offset="0">Edit Fee</paper-tooltip>
           <paper-icon-button id="deleteFee" class="crud" icon="delete" raised on-tap="deleteFee" disabled=[[!isInputDisabled]]></paper-icon-button>
           <paper-tooltip for="deleteFee" offset="0">Delete Fee</paper-tooltip>
@@ -24,170 +25,195 @@
         <gl-grid-col width="[[getWidth]]" grid="[[300,6],[500,2]]">
           [[changeString2Num(data.*,'fee_no')]]
           <!-- disabled="[[isInputDisabled]]" -->
-          <gl-form-input class="required" required disabled="[[isInputDisabled]]" allowed-pattern="[0-9||,||.]" format-number="on"  label="{{localize('label_fee_no')}}" value="{{data.fee_no}}" always-float-label error-message="กรุณาใส่ครั้งที่"></gl-form-input>
+          <gl-form-input class="required" required disabled="[[isInputDisabled]]" allowed-pattern="[0-9||,||.]" format-number="on"
+            label="{{localize('label_fee_no')}}" value="{{data.fee_no}}" always-float-label error-message="กรุณาใส่ครั้งที่"></gl-form-input>
         </gl-grid-col>
         <!--<gl-grid-col width="[[getWidth]]" grid="[[300,6],[500,3]]">
           <gl-form-input class="required" required disabled="[[isInputDisabled]]" label="ชื่อรอบการจ่ายเงิน" value="{{data.fee_name}}" always-float-label error-message="กรุณาใส่ชื่อรอบการจ่ายเงิน"></gl-form-input>
         </gl-grid-col>-->
       </gl-grid-row>
     </div>
-      <div class="horizontal end-justified layout">
+    <div class="horizontal end-justified layout">
 
-          <paper-button raised on-tap="cancelFee" class="gl-btn-default" hidden="[[!isInputDisabled]]">{{localize('btn_back_ward')}}</paper-button>
-        <template is="dom-if" if="[[isViewSeleted]]">
-          <paper-button raised on-tap="addFee" class="gl-btn-primary" disabled="[[isInputDisabled]]">{{localize('btn_add')}}</paper-button>
+      <paper-button raised on-tap="cancelFee" class="gl-btn-default" hidden="[[!isInputDisabled]]">{{localize('btn_back_ward')}}</paper-button>
+      <template is="dom-if" if="[[isViewSeleted]]">
+        <paper-button raised on-tap="cancelFee" class="gl-btn-default" hidden="[[isInputDisabled]]">{{localize('btn_back_ward')}}</paper-button>
+        <paper-button raised on-tap="addFee" class="gl-btn-primary" disabled="[[isInputDisabled]]">{{localize('btn_add')}}</paper-button>
+      </template>
+      <template is="dom-if" if="[[!isViewSeleted]]">
+        <!-- <paper-button raised on-tap="cancelFee" class="gl-btn-default" >{{localize('btn_back_ward')}}</paper-button> -->
+        <template is="dom-if" if="[[!isInputDisabled]]">
+          <paper-button raised on-tap="cancelFeede" class="gl-btn-danger">{{localize('btn_cancel')}}</paper-button>
+          <paper-button raised on-tap="saveFee" class="gl-btn-success">{{localize('btn_save')}}</paper-button>
         </template>
-        <template is="dom-if" if="[[!isViewSeleted]]">
-          <!-- <paper-button raised on-tap="cancelFee" class="gl-btn-default" >{{localize('btn_back_ward')}}</paper-button> -->
-          <template is="dom-if" if="[[!isInputDisabled]]">
-            <paper-button raised on-tap="cancelFeede" class="gl-btn-danger" >{{localize('btn_cancel')}}</paper-button>
-            <paper-button raised on-tap="saveFee" class="gl-btn-success" >{{localize('btn_save')}}</paper-button>
-          </template>
 
-        </template>
+      </template>
 
-      </div>
+    </div>
   </template>
   <script>
-  Polymer({
-    is: "fee-management-detail",
-    properties: {
-      data: {
-        type: Object,
-        value:{},
+    Polymer({
+      is: "fee-management-detail",
+      properties: {
+        data: {
+          type: Object,
+          value: {},
+        },
       },
-    },
-    behaviors: [
+      behaviors: [
         g2gModelBehavior,
         g2gCongtroller,
         nylonBehavior,
         nylonLocalizeBehavior
-    ],
-    created:function(){
+      ],
+      created: function () {
         this.nylonLocalizeImport('/i18n-page1.json');
-    },
-    _checkFeeNoDup:function (fee_no) {
-      let feeNo = this.dataForSelect.feeListinShm.filter((feeNo) => feeNo.fee_no == fee_no)
-      return feeNo === undefined || feeNo.length == 0
-    },
-    addFee:function () {
-      if (this._checkFeeNoDup(this.data.fee_no)) {
-        this.data.fee_status = false;
-        this.data.cl_id = this.dataForSelect.cl_id;
-        this.set('data.tags',[this.dataForSelect.contract_id]);
-        let contract_id = this.dataForSelect.contract_id
-        this._cleanDataFeeManagement(this.data,(data)=>{
-          this.fire('toast',{status:'load'}); //คำสั่งสำหรับเปิด toast load
-          this.insert('./g2g/fee/insert',data, () => {
-            this.fire('toast',{status:'success',text:'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
-             callback:()=>{
-                // this.fire('close-drawer',{detail:'close-drawer'});
-                console.log();
-                this.fire('get-fee-list',{detail:contract_id});
-                this.fire('_get-list-fee',{data:'_get-list-fee'});
-                this.fire('get-fee-list-in-shm-event',{data:data.cl_id});
-                this.cancelFeeDetail();
-            }
-           });
+      },
+      _checkFeeNoDup: function (fee_no) {
+        let feeNo = this.dataForSelect.feeListinShm.filter((feeNo) => feeNo.fee_no == fee_no)
+        if (feeNo.length > 0 ) {
+          let id = this.data.fee_id
+          // console.log(id);
+          // console.log(feeNo);
+          // this.data.fee_id  == feeNo
+          let checkfeeNo = feeNo.map((fee_id)=>fee_id.fee_id == id)
+          return checkfeeNo.every(elem => elem == true)
+        }else {
+          return feeNo === undefined || feeNo.length == 0
+        }
+        
+      },
+      addFee: function () {
+        if (this._checkFeeNoDup(this.data.fee_no)) {
+          this.data.fee_status = false;
+          this.data.cl_id = this.dataForSelect.cl_id;
+          this.set('data.tags', [this.dataForSelect.contract_id]);
+          let contract_id = this.dataForSelect.contract_id
+          this._cleanDataFeeManagement(this.data, (data) => {
+            this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
+            this.insert('./g2g/fee/insert', data, () => {
+              this.fire('toast', {
+                status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
+                callback: () => {
+                  // this.fire('close-drawer',{detail:'close-drawer'});
+                  console.log();
+                  this.fire('get-fee-list', { detail: contract_id });
+                  this.fire('_get-list-fee', { data: '_get-list-fee' });
+                  this.fire('get-fee-list-in-shm-event', { data: data.cl_id });
+                  this.cancelFeeDetail();
+                }
+              });
+            });
           });
-        });
-      } else {
-       this.fire('toast',{status:'connectError',text:'ครั้งที่ซ้ำกับที่มีอยู่', //คำสั่งสำหรับเปิด toast error
-                      callback:function(){
-        }})
-      }
-    },
-    //ถึงตรงบันทึก
-    saveFee:function () {
-      // console.log(this.data.fee_id);
-      this.fire('toast',{  //คำสั่งสำหรับเปิด toast dialog
-          status:'dialog',
-          text:'ต้องการแก้ไขข้อมูลใช่หรือไม่ ?',
-          confirmed:this._editDataFee.bind(this), //function ที่ใช้รับค่า ปุ่ม
+        } else {
+          this.fire('toast', {
+            status: 'connectError', text: 'ครั้งที่ซ้ำกับที่มีอยู่', //คำสั่งสำหรับเปิด toast error
+            callback: function () {
+            }
+          })
+        }
+      },
+      //ถึงตรงบันทึก
+      saveFee: function () {
+        // console.log(this.data.fee_id);
+        this.fire('toast', {  //คำสั่งสำหรับเปิด toast dialog
+          status: 'dialog',
+          text: 'ต้องการแก้ไขข้อมูลใช่หรือไม่ ?',
+          confirmed: this._editDataFee.bind(this), //function ที่ใช้รับค่า ปุ่ม
           el: this, // compontents
-          data:this.data // ข้อมูลที่ส่งไป เช่น id ที่จะใช้ลบข้อมูล ใน db
-      })
-    },
-    _editDataFee:function (result,detail) {
-      this._cleanDataFeeManagement(this.data,(data)=>{
-        data.id=this.data.fee_id;
-        let contract_id = this.dataForSelect.contract_id
-        this.fire('toast',{status:'load'}); //คำสั่งสำหรับเปิด toast load
-        this.update('./g2g/fee/update',data, () => {
-          this.fire('toast',{status:'success',text:'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
-           callback:()=>{
-              // let contract_id= this._getUrl();
-              // this.fire('close-drawer',{detail:'close-drawer'});
-              this.fire('get-fee-list',{detail:contract_id});
-              this.fire('_get-list-fee',{data:'_get-list-fee'});
-              this.fire('get-fee-list-in-shm-event',{data:data.cl_id});
-              this.cancelFeeDetail();
-              this.editInput();
-          }
-         });
-        });
-      });
-    },
-    deleteFee:function () {
-      // console.log(this.data.fee_id);
-      this.fire('toast',{  //คำสั่งสำหรับเปิด toast dialog
-          status:'dialog',
-          text:'ต้องการลบข้อมูลใช่หรือไม่ ?',
-          confirmed:this._deleteDataFee.bind(this), //function ที่ใช้รับค่า ปุ่ม
-          el: this, // compontents
-          data:this.data // ข้อมูลที่ส่งไป เช่น id ที่จะใช้ลบข้อมูล ใน db
-      })
-    },
-    _deleteDataFee:function (result,detail) {
-      if (result == true) {
-        this.delete('./g2g/fee/delete/id/',detail.data.fee_id, () => {
-          this.fire('get-fee-list-in-shm-event',{data:detail.data.cl_id});
-          this.cancelFee();
-        });
-      }
-    },
-    cancelFeeDetail:function () {
-      let el = Polymer.dom(this.root).querySelectorAll('.required');
-      el.map((el)=> {el.reset();el.value=''});
+          data: this.data // ข้อมูลที่ส่งไป เช่น id ที่จะใช้ลบข้อมูล ใน db
+        })
+      },
+      _editDataFee: function (result, detail) {
+        if (this._checkFeeNoDup(this.data.fee_no)) {
 
-    },
-    cancelFee:function () {
-      // this.cancelFeeDetail();
-      // this.editInput();
-      this.fire('_get-list-fee',{data:'_get-list-fee'});
-    },
-    cancelFeede:function () {
-      this.fire('toast',{  //คำสั่งสำหรับเปิด toast dialog
-          status:'dialog',
-          text:'ต้องการยกเลิกการแก้ไขข้อมูลใช่หรือไม่ ?',
-          confirmed:this._cancelFeedetail.bind(this), //function ที่ใช้รับค่า ปุ่ม
+          this._cleanDataFeeManagement(this.data, (data) => {
+            data.id = this.data.fee_id;
+            let contract_id = this.dataForSelect.contract_id
+            this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
+            this.update('./g2g/fee/update', data, () => {
+              this.fire('toast', {
+                status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
+                callback: () => {
+                  // let contract_id= this._getUrl();
+                  // this.fire('close-drawer',{detail:'close-drawer'});
+                  this.fire('get-fee-list', { detail: contract_id });
+                  this.fire('_get-list-fee', { data: '_get-list-fee' });
+                  this.fire('get-fee-list-in-shm-event', { data: data.cl_id });
+                  this.cancelFeeDetail();
+                  this.editInput();
+                }
+              });
+            });
+          });
+        } else {
+          this.fire('toast', {
+            status: 'connectError', text: 'ครั้งที่ซ้ำกับที่มีอยู่', //คำสั่งสำหรับเปิด toast error
+            callback: function () {
+            }
+          })
+        }
+      },
+      deleteFee: function () {
+        // console.log(this.data.fee_id);
+        this.fire('toast', {  //คำสั่งสำหรับเปิด toast dialog
+          status: 'dialog',
+          text: 'ต้องการลบข้อมูลใช่หรือไม่ ?',
+          confirmed: this._deleteDataFee.bind(this), //function ที่ใช้รับค่า ปุ่ม
           el: this, // compontents
-          data:this.data // ข้อมูลที่ส่งไป เช่น id ที่จะใช้ลบข้อมูล ใน db
-      })
-    },
-    _cancelFeedetail:function (result,detail) {
-      if (result == true) {
-        this.data = this.oldData;
-        this.editInput();
+          data: this.data // ข้อมูลที่ส่งไป เช่น id ที่จะใช้ลบข้อมูล ใน db
+        })
+      },
+      _deleteDataFee: function (result, detail) {
+        if (result == true) {
+          this.delete('./g2g/fee/delete/id/', detail.data.fee_id, () => {
+            this.fire('get-fee-list-in-shm-event', { data: detail.data.cl_id });
+            this.cancelFee();
+          });
+        }
+      },
+      cancelFeeDetail: function () {
         let el = Polymer.dom(this.root).querySelectorAll('.required');
-        el.map((el)=> {el.reset();});
-        this.fire('_get-list-fee',{data:'_get-list-fee'});
-      }
-    },
-    _cleanDataFeeManagement:function (data,callback) {
-      let el = Polymer.dom(this.root).querySelectorAll('.required');
-      let stat = el.map((el)=> el.validate());
+        el.map((el) => { el.reset(); el.value = '' });
+
+      },
+      cancelFee: function () {
+        // this.cancelFeeDetail();
+        // this.editInput();
+        this.fire('_get-list-fee', { data: '_get-list-fee' });
+      },
+      cancelFeede: function () {
+        this.fire('toast', {  //คำสั่งสำหรับเปิด toast dialog
+          status: 'dialog',
+          text: 'ต้องการยกเลิกการแก้ไขข้อมูลใช่หรือไม่ ?',
+          confirmed: this._cancelFeedetail.bind(this), //function ที่ใช้รับค่า ปุ่ม
+          el: this, // compontents
+          data: this.data // ข้อมูลที่ส่งไป เช่น id ที่จะใช้ลบข้อมูล ใน db
+        })
+      },
+      _cancelFeedetail: function (result, detail) {
+        if (result == true) {
+          this.data = this.oldData;
+          this.editInput();
+          let el = Polymer.dom(this.root).querySelectorAll('.required');
+          el.map((el) => { el.reset(); });
+          this.fire('_get-list-fee', { data: '_get-list-fee' });
+        }
+      },
+      _cleanDataFeeManagement: function (data, callback) {
+        let el = Polymer.dom(this.root).querySelectorAll('.required');
+        let stat = el.map((el) => el.validate());
         if (stat.every(elem => elem == true)) {
-          let {fee_no,fee_status,cl_id} = data
-          let newData ={fee_no,fee_status,cl_id}
+          let {fee_no, fee_status, cl_id} = data
+          let newData = { fee_no, fee_status, cl_id }
           // console.log(data);
-          if(typeof data.tags !== 'undefined'){
-                newData.tags = new Array();
-                data.tags.map((tag)=>{
-                  newData.tags.push(tag);
-                });
-              }
-            callback(newData);
+          if (typeof data.tags !== 'undefined') {
+            newData.tags = new Array();
+            data.tags.map((tag) => {
+              newData.tags.push(tag);
+            });
+          }
+          callback(newData);
         }
 
       }
