@@ -448,7 +448,7 @@
           this.read('./g2g/fee/contract/id/' + e.detail.data.contract_id, (data) => {
             //ปัญหาตรงนี้
             this.feeList = data;
-            this.titlePanelRight = 'การถัวเงิน : '+ e.detail.data.contract_name
+            this.titlePanelRight = 'ค่าธรรมเนียม : '+ e.detail.data.contract_name
             this.dataForSelected.dataForFee.feeListinShm = data;
             this.notifyPath('dataForSelected.dataForFee.feeListinShm');
             this.g2gPageSeleted = 'listOfFee';
