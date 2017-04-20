@@ -286,14 +286,13 @@
       calcelShipmentInsert: function () {
        
         //  Object.assign(this.data,this.oldData)
-        //  this.data = this.oldData
+        
        for (var variable in this.data) {
          if (this.data.hasOwnProperty(variable)) {
           //  console.log(variable);
            this.set('data.'+variable,this.oldData[variable])
          }
        }
-        // console.log(this.data);
          this.editInput();
         // this.calcelContract();
       },
