@@ -2,6 +2,7 @@
 <link rel="import" href="g2g/controller/g2gModelbehavior.html">
 <link rel="import" href="g2g/controller/g2gCongtroller.html">
 <link rel="import" href="../components/format-number-behavior.html">
+<link rel="import" href="../components/month-behavior.html">
 <!--<link rel="import" href="g2g/component/chart-bar-g2g.html">-->
 <link rel="import" href="g2g/component/chart-pie-g2g.html">
 <!--<link rel="import" href="g2g/component/taps-g2g.html">-->
@@ -228,6 +229,10 @@
           this.notifyPath('dataForSelected.dataForContract.buyer');
         });
         this.read('./common/type_rice', (data) => {
+          
+           data.map((set_name)=>{
+            set_name.type_rice_name_th = set_name.type_rice_name_th+' '+ set_name.type_rice_id
+          })
           this.dataForSelected.dataForContract.typeRice = data;
           this.notifyPath('dataForSelected.dataForContract.typeRice');
           // console.log(this.dataForSelected.dataForContract);
@@ -241,6 +246,9 @@
       _getDataForShipment: function () {
         // call data
         this.read('./external/exporter?exporter_status=true', (data) => {
+          data.map((set_name)=>{
+            set_name.company_name_th = set_name.company_name_th+' '+ set_name.company_taxno
+          })
           this.dataForSelected.dataForBooking.seller = data;
           this.notifyPath('dataForSelected.dataForBooking.seller');
           // console.log(this.common.seller);
@@ -286,7 +294,7 @@
       //addContract
       addContract: function () {
         this.g2gPageSeleted = 'addContract';
-        this.titlePanelRight = 'เพิ่มสัญญาการซื้อขาย'
+        this.titlePanelRight = 'เพิ่มข้อมูลผู้สั่งซื้อ'
         this.fire('toast', { status: 'load' });
         if (this.checkRenderPage.contractDetail != true) {
           this.async(() => {
@@ -309,7 +317,7 @@
       },
       _getContractDetail: function (e) {
         this.g2gPageSeleted = 'contractDetail';
-        this.titlePanelRight = 'รายละเอียดสัญญาการซื้อขาย'
+        this.titlePanelRight = 'ข้อมูลผู้สั่งซื้อ : '+ e.detail.data.contract_name
         if (typeof e.detail.contractId == "undefined") {
           this.fire('toast', { status: 'load' });
           if (this.checkRenderPage.contractDetail != true) {
@@ -341,9 +349,10 @@
         this.set('pageSelected', 'listOfConfirm')
         // listOfConfirm
         // console.log('1212=>',e.detail);
-        this.titlePanelRight = 'การยืนยันทำสัญญา'
+        
         this.g2gPageSeleted = 'listOfConfirm';
         if (typeof e.detail.contractId == "undefined") {
+          this.titlePanelRight = 'รายละเอียดสัญญา : ' + e.detail.data.contract_name
           this.fire('toast', { status: 'load' });
           if (this.checkRenderPage.listOfConfirm != true) {
             this.async(() => {
@@ -390,12 +399,13 @@
         }
       },
       _getListShipment: function (e) {
-        this.set('pageSelected', 'list-of-booking-in-confirm')
+        // this.set('pageSelected', 'list-of-booking-in-confirm')
         // console.log(e.detail.detail);
         this.g2gPageSeleted = 'listOfShipment';
-        this.titlePanelRight = 'การส่งมอบสินค้า';
-        console.log(e.detail.contractId);
+        
+        // console.log(e.detail.contractId);
         if (typeof e.detail.contractId == "undefined") {
+          this.titlePanelRight = 'รายการส่งมอบสินค้า : '+ e.detail.data.contract_name
           this.fire('toast', { status: 'load' });
           if (this.checkRenderPage.listOfShipment != true) {
             this.async(() => {
@@ -437,7 +447,7 @@
           this.read('./g2g/fee/contract/id/' + e.detail.data.contract_id, (data) => {
             //ปัญหาตรงนี้
             this.feeList = data;
-            this.titlePanelRight = 'การถัวเงิน';
+            this.titlePanelRight = 'การถัวเงิน : '+ e.detail.data.contract_name
             this.dataForSelected.dataForFee.feeListinShm = data;
             this.notifyPath('dataForSelected.dataForFee.feeListinShm');
             this.g2gPageSeleted = 'listOfFee';

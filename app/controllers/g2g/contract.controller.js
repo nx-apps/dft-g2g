@@ -313,6 +313,11 @@ exports.buyerId = function (req, res) {
         })
         .merge(function (row) {
             return {
+                book: row('book').merge(function (bk_merge) {
+                    return {
+                        cl_quantity_tolerance: bk_merge('book_quantity').sub(bk_merge('cl_quantity_total'))
+                    }
+                }),
                 contract_quantity_confirm: row('confirm_letter')
                     .filter(function (f) {
                         return f('cl_status').eq(true)

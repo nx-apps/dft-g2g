@@ -66,7 +66,7 @@
             let newBooking = this.data.book.filter((rice) => rice.cl_id == this.dataForSelect.cl_id)[0]
             // console.log(newBooking);
             newBooking.cl_type_rice.map((set_limit) => {
-              set_limit.type_rice_name_en = set_limit.type_rice_name_en + " (Balance " + this.formatNumberNoZero(set_limit.type_rice_quantity_limit_max) + ' Ton )'
+               set_limit.type_rice_name_en = set_limit.type_rice_name_en +' ('+set_limit.type_rice_id+ ' )' 
             })
             // console.log(newBooking);
             this.set('dataForSelect.cl_type_rice', newBooking.cl_type_rice);
@@ -79,7 +79,7 @@
 
       },
       _getBookingDetail: function (e) {
-        console.log(e.detail.detail);
+        // console.log(e.detail.detail);
         this.fire('toast', { status: 'load' });
         this.read('./g2g/book/confirm/id/' + e.detail.detail.cl_id, (data) => {
           this.dataSelected = data;
@@ -87,8 +87,9 @@
           this.set('dataForSelect.cl_id', e.detail.detail.cl_id);
           // console.log(e.detail.detail.cl_id);
           // console.log('this.dataSelected', this.dataSelected);
+        // console.log(e.detail.detail);
           e.detail.detail.cl_type_rice.map((set_limit) => {
-            set_limit.type_rice_name_en = set_limit.type_rice_name_en + " (Balance " + this.formatNumberNoZero(set_limit.type_rice_quantity_limit_max) + ' Ton )'
+            set_limit.type_rice_name_en = set_limit.type_rice_name_en +' ('+set_limit.type_rice_id+ ' )' 
           })
           this.set('dataForSelect.cl_type_rice', e.detail.detail.cl_type_rice);
 

@@ -51,11 +51,11 @@
     <iron-pages selected="{{pageSelected}}" attr-for-selected="name">
       <div name="listOfConfirm">
         <gl-form-panel set-padding="10px 20px 10px 20px" set-border="1px">
-          <gl-form-panel-head label="" set-padding="10px" set-border="1px">
+          <!--<gl-form-panel-head label="" set-padding="10px" set-border="1px">-->
             <div class="addconfirm horizontal end-justified layout">
               <paper-button raised class="gl-btn-primary" on-tap="createConfirm">{{localize('btn_add')}}</paper-button>
             </div>
-          </gl-form-panel-head>
+          <!--</gl-form-panel-head>-->
           <br>
           <!-- <gl-form-panel-body label="" set-padding="10px" set-border="1px"> -->
           <!-- [[data.contract_quantity_confirm_balance]] -->
@@ -65,6 +65,7 @@
                 <th>{{localize('label_ref_no')}}</th>
                 <!-- <th>ชื่อสัญญาย่อย</th> -->
                 <th>{{localize('label_quantity')}}</th>
+                <th>{{localize('label_date')}}</th> 
                 <th>{{localize('text_status')}}</th>
               </tr>
             </thead>
@@ -75,6 +76,7 @@
                     <td> [[item.cl_no]] </td>
                     <!-- <td> [[item.cl_name]]</td> -->
                     <td> [[formatNumberNoZero(item.cl_quantity_total)]] </td>
+                     <td> [[toThaiDate(item.cl_date)]]</td> 
                     <td style="text-align: center;"> [[item.cl_status_name]]</td>
                   </tr>
                 </template>
@@ -105,7 +107,8 @@
         g2gCongtroller,
         FormatNumberBehavior,
         nylonBehavior,
-        nylonLocalizeBehavior
+        nylonLocalizeBehavior,
+        MonthBehavior
       ],
       listeners: {
         'back-page-confirm': '_backPageConfirm',
