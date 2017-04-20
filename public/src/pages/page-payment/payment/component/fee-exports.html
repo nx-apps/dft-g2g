@@ -102,6 +102,9 @@
     }
   </style>
   <template>
+    <template is="dom-if" if="[[_isViewing(isInputDisabled)]]">
+      <paper-button raised on-tap="cancelFeeReturn" class="gl-btn-default">{{localize('btn_back_ward')}}</paper-button>
+    </template>
     <div class="content-fee">
       <input id="tab1" type="radio" name="tabs" checked>
       <label for="tab1">1.{{localize('label_average_money')}}</label>
@@ -110,13 +113,13 @@
       <label for="tab2">2.{{localize('label_payout')}}</label>
       <!--<gl-form-panel set-padding="10px 20px 10px 20px" set-border="1px">-->
       <!--<gl-form-panel-head label="" set-padding="10px" set-border="1px">-->
-      <template is="dom-if" if="[[!isViewSeleted]]">
-        <!-- <paper-icon-button icon="create" id="editExporter" raised on-tap="editInput" title="Edit" disabled="[[!isInputDisabled]]"></paper-icon-button>
+      <!--<template is="dom-if" if="[[!isViewSeleted]]">-->
+      <!-- <paper-icon-button icon="create" id="editExporter" raised on-tap="editInput" title="Edit" disabled="[[!isInputDisabled]]"></paper-icon-button>
         <paper-tooltip for="editExporter" offset="0">Edit Exporter</paper-tooltip>
         <paper-icon-button icon="delete" id="delFee" raised on-tap="deleteFee" title="Delete" disabled="[[!isInputDisabled]]"></paper-icon-button>
         <paper-tooltip for="delFee" offset="0">Delete Exporter</paper-tooltip> -->
-        <icon-button-management is-input-disabled="[[!isInputDisabled]]"></icon-button-management>
-      </template>
+      <!--<icon-button-management is-input-disabled="[[!isInputDisabled]]"></icon-button-management>
+      </template>-->
       <!--</gl-form-panel-head>-->
       <!--<gl-form-panel-body label="" set-padding="10px" set-border="1px">-->
       <!--<paper-tabs selected="{{pages}}" align-bottom no-slide attr-for-selected="name">-->
@@ -244,7 +247,7 @@
 
 
                   <template is="dom-if" if="[[_isViewing(isInputDisabled)]]">
-                    <paper-button raised on-tap="cancelFeeReturn" class="gl-btn-default">{{localize('btn_back_ward')}}</paper-button>
+                    <!--<paper-button raised on-tap="cancelFeeReturn" class="gl-btn-default">{{localize('btn_back_ward')}}</paper-button>-->
                     <template is="dom-if" if="[[data.fee_det_status]]">
                       <paper-button raised on-tap="approvePayment" class="gl-btn-danger">{{localize('btn_cancel')}}{{localize('btn_confirm')}}</paper-button>
                     </template>

@@ -90,7 +90,7 @@
             <!-- <list-of-shipments  data-for-select="[[dataForSelected.dataForBooking]]" data="[[dataSelected]]" is-input-disabled="[[isInputDisabled]]"></list-of-shipments> -->
           </div>
           <div class="addContract" name="listOfFee">
-            <list-of-fee-g2g data-for-select="[[dataForSelected.dataForFee]]" data="[[feeList]]"></list-of-fee-g2g>
+            <list-of-fee-g2g page-selected="{{pageSelected}}" data-for-select="[[dataForSelected.dataForFee]]" data="[[feeList]]"></list-of-fee-g2g>
           </div>
         </iron-pages>
       </div>
@@ -447,12 +447,14 @@
         try {
           this.read('./g2g/fee/contract/id/' + e.detail.data.contract_id, (data) => {
             //ปัญหาตรงนี้
+            this.set('pageSelected', 'listOfFee')
             this.feeList = data;
             this.titlePanelRight = 'ค่าธรรมเนียม : '+ e.detail.data.contract_name
             this.dataForSelected.dataForFee.feeListinShm = data;
             this.notifyPath('dataForSelected.dataForFee.feeListinShm');
             this.g2gPageSeleted = 'listOfFee';
             if (this.checkRenderPage.listOfFee != true) {
+              
               this.fire('toast', { status: 'load' });
               this.async(() => {
                 this.importHref(

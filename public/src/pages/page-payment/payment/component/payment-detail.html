@@ -91,8 +91,8 @@
         <gl-grid-row width="{{getWidth}}">
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,2]]"></gl-grid-col>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-            <gl-form-input class="required" required label="{{localize('text_amount')}} :" placeholder="{{localize('text_amount')}}" readonly
-              value="{{formatNumber(data.pay_amount)}}"></gl-form-input>
+            <gl-form-input class="required" required label="{{localize('text_amount')}} :" placeholder="{{localize('text_amount')}}"
+              readonly value="{{formatNumber(data.pay_amount)}}"></gl-form-input>
           </gl-grid-col>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
             <gl-form-input class="required" required label="{{localize('label_order')}} :" placeholder="{{localize('label_order')}}"
@@ -177,8 +177,8 @@
           return data.payment_detail.map((CheckBox) => CheckBox.status = false)
         } catch (e) {
           // console.log(e);
-        } 
-        
+        }
+
       },
       checkData: function (e) {
         // console.log(this.data.payment_detail);
@@ -219,35 +219,38 @@
             status: 'dialog',
             text: 'ต้องการจ่ายใช่หรือไม่ ?',
             confirmed: (result) => {
-              // console.log(result, data);
-                  this.set('data.tags', []);
-                  // if (payDetId.status) {
-                  this.push('data.tags', this.data.payment_detail[0].contract_id, this.data.payment_detail[0].invoice_id, this.data.payment_detail[0].cl_id);
-                  // this._cleanDataPayment(this.data, (data) => {
-                    // console.log(data);
-                    let contract_id = this._getUrl();
-                    // window.open('https://localhost:8080/api/shipment/report1?paymentId=','_blank');
-                    this.insertCall('./g2g/payment/insert', data, () => {
-                      this.fire('toast', {
-                        status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
-                        callback: () => {
-                          //
-                          this.fire('get-payment-list', { detail: contract_id });
-                          let el = Polymer.dom(this.root).querySelectorAll('.required');
-                          el.map((el) => { el.reset(); });
-                        }
-                      });
-                    }, (data) => {
-                      window.open('https://localhost:3000/api/payment/report5/' + data.id[0], '_blank');
-                      this.fire('close-drawer', { detail: 'close-drawer' });
-                      // console.log('data=>', data.id[0]);
-                      let checkDisabled = Polymer.dom(this.root).querySelectorAll('paper-checkbox.checkBoxPay[aria-disabled="true"]');
-                      checkDisabled.map((el) => {
-                        el.disabled = false;
-                        el.parentNode.parentNode.style.backgroundColor = '#FFFFFF';
-                      })
-                    });
-                  // });
+              if (result) {
+                // console.log(result, data);
+                this.set('data.tags', []);
+                // if (payDetId.status) {
+                this.push('data.tags', this.data.payment_detail[0].contract_id, this.data.payment_detail[0].invoice_id, this.data.payment_detail[0].cl_id);
+                // this._cleanDataPayment(this.data, (data) => {
+                // console.log(data);
+                let contract_id = this._getUrl();
+                // window.open('https://localhost:8080/api/shipment/report1?paymentId=','_blank');
+                this.insertCall('./g2g/payment/insert', data, () => {
+                  this.fire('toast', {
+                    status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
+                    callback: () => {
+                      //
+                      this.fire('get-payment-list', { detail: contract_id });
+                      let el = Polymer.dom(this.root).querySelectorAll('.required');
+                      el.map((el) => { el.reset(); });
+                    }
+                  });
+                }, (data) => {
+                  window.open('https://localhost:3000/api/payment/report5/' + data.id[0], '_blank');
+                  this.fire('close-drawer', { detail: 'close-drawer' });
+                  // console.log('data=>', data.id[0]);
+                  let checkDisabled = Polymer.dom(this.root).querySelectorAll('paper-checkbox.checkBoxPay[aria-disabled="true"]');
+                  checkDisabled.map((el) => {
+                    el.disabled = false;
+                    el.parentNode.parentNode.style.backgroundColor = '#FFFFFF';
+                  })
+                });
+                // });
+              }
+
             }, //function ที่ใช้รับค่า ปุ่ม
             el: this, // compontents
             data: this.data // ข้อมูลที่ส่งไป เช่น id ที่จะใช้ลบข้อมูล ใน db

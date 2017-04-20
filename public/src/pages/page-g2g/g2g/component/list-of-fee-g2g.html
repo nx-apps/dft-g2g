@@ -29,7 +29,7 @@
   </style>
   <template>
 
-    <iron-pages selected="[[pageSelected]]" attr-for-selected="name">
+    <iron-pages selected="{{pageSelected}}" attr-for-selected="name">
       <div name="listOfFee">
         <gl-form-panel set-padding="10px 20px 10px 20px" set-border="1px">
         <div class="title">{{localize('text_page_total')}}{{localize('text_fee')}} [[nameContract]]</div>
@@ -101,7 +101,8 @@
         },
         pageSelected:{
           type:String,
-          value:'listOfFee'
+          value:'listOfFee',
+          notify:true
         },
         dataSelected:{
           type:Object,
