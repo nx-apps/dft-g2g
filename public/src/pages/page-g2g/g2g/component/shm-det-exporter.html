@@ -174,7 +174,7 @@
         <template is="dom-if" if="[[!isInputDisabled]]">
 
           <template is="dom-if" if="[[isViewSeleted]]">
-            <paper-button class="gl-btn-danger" on-tap="calcelContract" raised>{{localize('btn_cancel')}}</paper-button>
+            <paper-button class="gl-btn-danger" on-tap="calcelShipmentInsert" raised>{{localize('btn_cancel')}}</paper-button>
             <paper-button class="gl-btn-success" raised on-tap="editExporter">
               <iron-icon class="gl-icon-size" icon="save"></iron-icon>{{localize('btn_save')}}</paper-button>
           </template>
@@ -284,8 +284,18 @@
         }
       },
       calcelShipmentInsert: function () {
-        this.editInput();
-        this.calcelContract();
+       
+        //  Object.assign(this.data,this.oldData)
+        //  this.data = this.oldData
+       for (var variable in this.data) {
+         if (this.data.hasOwnProperty(variable)) {
+          //  console.log(variable);
+           this.set('data.'+variable,this.oldData[variable])
+         }
+       }
+        // console.log(this.data);
+         this.editInput();
+        // this.calcelContract();
       },
       calcelContract() {
         this.fire('_change-component-shm', { detail: 'list-of-shm-det' })
