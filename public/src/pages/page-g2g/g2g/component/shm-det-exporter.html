@@ -12,6 +12,19 @@
     }
   </style>
   <template>
+    <!--[[isInputDisabled]]//-->
+
+
+
+    <!-- <template is="dom-if" if="[[isInputDisabled]]"> -->
+    <template is="dom-if" if="[[!isViewSeleted]]">
+      <paper-button class="gl-btn-default" raised on-tap="cancelEditShipment">
+        {{localize('btn_back_ward')}}</paper-button>
+    </template>
+    <template is="dom-if" if={{isInputDisabled}}>
+      <paper-button class="gl-btn-default" raised on-tap="cancelEditShipment">
+        {{localize('btn_back_ward')}}</paper-button>
+    </template>
 
     <gl-form-panel set-padding="10px 20px 10px 20px">
       <div class="horizontal end-justified layout">
@@ -69,7 +82,7 @@
               <!--<gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,8]]">
                 <gl-form-input disabled label="{{localize('label_tel')}}" value="{{_getSellerPhone(data.company_id,dataForSelect)}}" always-float-label></gl-form-input>
               </gl-grid-col>-->
-              
+
               <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,8]]">
                 <gl-form-textarea rows="2" disabled label="{{localize('label_exporter_address')}}" value="{{data.company_address}}" always-float-label></gl-form-textarea>
               </gl-grid-col>
@@ -106,7 +119,7 @@
             <gl-form-input class="required" required allowed-pattern="[0-9||,||.]" format-number="on" label="{{localize('label_quantity')}}"
               value="{{data.shm_det_quantity}}" always-float-label disabled="[[isInputDisabled]]">
               <div suffix>/{{dataForSelect.type_rice_quantity_limit_max_label}}</div>
-              </gl-form-input>
+            </gl-form-input>
           </gl-grid-col>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
             [[changeString2Num(data.*,'num_of_container')]]
@@ -167,15 +180,15 @@
           </template>
         </template>
 
-        <template is="dom-if" if={{isInputDisabled}}>
+        <!--<template is="dom-if" if={{isInputDisabled}}>
           <paper-button class="gl-btn-default" raised on-tap="cancelEditShipment">
             {{localize('btn_back_ward')}}</paper-button>
-        </template>
+        </template>-->
 
 
         <!-- <template is="dom-if" if="[[isInputDisabled]]"> -->
         <template is="dom-if" if="[[!isViewSeleted]]">
-          <paper-button class="gl-btn-danger" on-tap="calcelShipmentInsert" raised>{{localize('btn_cancel')}}</paper-button>
+          <!--<paper-button class="gl-btn-danger" on-tap="calcelShipmentInsert" raised>{{localize('btn_cancel')}}</paper-button>-->
           <paper-button class="gl-btn-success" raised on-tap="addExporter"> {{localize('btn_add')}}</paper-button>
           <!-- </template> -->
         </template>
@@ -208,7 +221,7 @@
         },
         dataForSelect: {
           type: Object,
-          value:{type_rice_quantity_limit_max_label:0}
+          value: { type_rice_quantity_limit_max_label: 0 }
         },
         dataOld: {
           type: Object,
@@ -408,8 +421,8 @@
                   let el = Polymer.dom(this.root).querySelectorAll('.required');
                   el.map((el) => { el.reset(); el.value = '' });
                   this.cancelEditShipment()
-                   this.set('data.company_address', '')
-                  this.set('dataForSelect.type_rice_quantity_limit_max_label',0)
+                  this.set('data.company_address', '')
+                  this.set('dataForSelect.type_rice_quantity_limit_max_label', 0)
                 }
               });
             });

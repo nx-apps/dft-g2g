@@ -50,10 +50,10 @@
         </thead>
         <tbody class="table-body">
           <template is="dom-repeat" items="[[data.book]]">
-            <tr  data="[[item]]">
-              <td on-tap="bookingDetail">[[item.cl_no]]</td>
-              <td on-tap="bookingDetail">[[formatNumberNoZero(item.cl_quantity_total)]]</td>
-              <td on-tap="bookingDetail">[[formatNumberNoZero(item.book_quantity)]] [[checkMInus(item.cl_quantity_tolerance)]]</td>
+            <tr  >
+              <td on-tap="bookingDetail" data="[[item]]">[[item.cl_no]]</td>
+              <td on-tap="bookingDetail" data="[[item]]">[[formatNumberNoZero(item.cl_quantity_total)]]</td>
+              <td on-tap="bookingDetail" data="[[item]]">[[formatNumberNoZero(item.book_quantity)]] [[checkMInus(item.cl_quantity_tolerance)]]</td>
               <td>
                 <paper-icon-button id="printShipment" class="crud" icon="print" raised on-tap="printVesel" data="[[item]]"></paper-icon-button>
               </td>
@@ -85,13 +85,14 @@
       },
       printVesel(e){
         window.open('https://localhost:8080/api/shipment/report4/'+e.currentTarget.data.cl_id, '1');
-        console.log(e.currentTarget.data);
+        // console.log(e.currentTarget.data);
       },
       bookingDetail: function (e) {
         // console.log(e.currentTarget.data);
         //สั่งเปลีย่นหน่า
         // this.fire('_change-component-bl',{detail:'list-of-booking-shm-det'})
         //ส่งดาต้า
+        // console.log(e.currentTarget.data);
         this.fire('_get-booking-detail', { detail: e.currentTarget.data })
       },
       checkMInus(cl_quantity_tolerance) {

@@ -14,7 +14,8 @@
     }
   </style>
   <template>
-    
+    <paper-button class="gl-btn-default" raised on-tap="backWard2Booking">
+          {{localize('btn_back_ward')}}</paper-button>
     <gl-form-panel>
 <div class="horizontal end-justified layout center">
       <gl-combo-box always-float-label label="{{localize('label_report')}}" placeholder="{{localize('label_report')}}" value="{{printReport.typeReport}}"
@@ -80,8 +81,7 @@
         </tbody>
       </table>
       <gl-form-panel-footer set-padding="10px 20px 0px 20px">
-        <paper-button class="gl-btn-default" raised on-tap="backWard2Booking">
-          {{localize('btn_back_ward')}}</paper-button>
+        
 
         <template is="dom-if" if={{_confirmBook(data)}}>
           <paper-button class="gl-btn-success" raised dias on-tap="approveBook" hidden="[[_isHave(data)]]">

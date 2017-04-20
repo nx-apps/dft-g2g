@@ -79,7 +79,8 @@
 
       },
       _getBookingDetail: function (e) {
-        // console.log(e.detail.detail);
+        // console.log(e.detail);
+         this.set('dataForSelect.cl_type_rice','')
         this.fire('toast', { status: 'load' });
         this.read('./g2g/book/confirm/id/' + e.detail.detail.cl_id, (data) => {
           this.dataSelected = data;
