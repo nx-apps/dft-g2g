@@ -106,40 +106,26 @@
       <paper-button raised on-tap="cancelFeeReturn" class="gl-btn-default">{{localize('btn_back_ward')}}</paper-button>
     </template>
     <div class="content-fee">
+
+
       <input id="tab1" type="radio" name="tabs" checked>
       <label for="tab1">1.{{localize('label_average_money')}}</label>
-
-      <input id="tab2" type="radio" name="tabs">
-      <label for="tab2">2.{{localize('label_payout')}}</label>
-      <!--<gl-form-panel set-padding="10px 20px 10px 20px" set-border="1px">-->
-      <!--<gl-form-panel-head label="" set-padding="10px" set-border="1px">-->
-      <!--<template is="dom-if" if="[[!isViewSeleted]]">-->
-      <!-- <paper-icon-button icon="create" id="editExporter" raised on-tap="editInput" title="Edit" disabled="[[!isInputDisabled]]"></paper-icon-button>
-        <paper-tooltip for="editExporter" offset="0">Edit Exporter</paper-tooltip>
-        <paper-icon-button icon="delete" id="delFee" raised on-tap="deleteFee" title="Delete" disabled="[[!isInputDisabled]]"></paper-icon-button>
-        <paper-tooltip for="delFee" offset="0">Delete Exporter</paper-tooltip> -->
-      <!--<icon-button-management is-input-disabled="[[!isInputDisabled]]"></icon-button-management>
-      </template>-->
-      <!--</gl-form-panel-head>-->
-      <!--<gl-form-panel-body label="" set-padding="10px" set-border="1px">-->
-      <!--<paper-tabs selected="{{pages}}" align-bottom no-slide attr-for-selected="name">-->
-      <!-- <paper-tab name="averagePage" disabled="[[!isInputDisabled]]">{{localize('label_average_money')}}</paper-tab>
-          <paper-tab name="feeDetail" disabled="[[!isInputDisabled]]">{{localize('label_payout')}}</paper-tab> -->
-      <!--<paper-tab name="averagePage">{{localize('label_average_money')}}</paper-tab>
-        <paper-tab name="feeDetail">{{localize('label_payout')}}</paper-tab>
-      </paper-tabs>-->
-
-
-      <!--<iron-pages selected="{{pages}}" align-bottom no-slide attr-for-selected="name">-->
-
-
-      <!--<div name="feeDetail">-->
+      <template is="dom-repeat" items={{!data.fee_det_status}}>
+        <input id="tab2" type="radio" name="tabs">
+        <label for="tab2">2.{{localize('label_payout')}}</label>
+      </template>
+      
       <section id="content1">
         <paper-material elevation="1" class="paper-meterial">
           <div class="horizontal center-justified layout wrap">
             <gl-form-panel set-padding="0px 0px 0px 0px" set-border="0px">
               <template is="dom-if" if="[[!isViewSeleted]]">
-                <icon-button-management is-input-disabled="[[!isInputDisabled]]"></icon-button-management>
+
+                <template is="dom-repeat" items={{data.fee_det_status}}>
+                  <icon-button-management is-input-disabled="[[!isInputDisabled]]"></icon-button-management>
+                </template>
+
+
               </template>
               <div name="averagePage">
                 <div class="header flex-center-justified">
@@ -148,7 +134,7 @@
                 <div class="container">
                   <gl-grid-row width="{{getWidth}}">
                     <gl-grid-col width="[[getWidth]]" grid="[[300,6],[500,3]]">
-                      <gl-combo-box class="required" required disabled="[[isInputDisabled]]" placeholder="{{localize('label_fee_no')}}" label="{{localize('label_fee_no')}}"
+                      <gl-combo-box class="required" required disabled="[[isInputDisabled]]" placeholder="{{localize('label_payout')}}" label="{{localize('label_payout')}}"
                         item-label-path="fee_no" item-value-path="fee_id" value="{{data.fee_id}}" items="[[_filterFee(dataForSelect.feeListinShm)]]">
                     </gl-grid-col>
                     <gl-grid-col width="[[getWidth]]" grid="[[300,6],[500,5]]">
@@ -189,7 +175,7 @@
                     <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
                       [[changeString2Num(data.*,'balanceChangeBath')]] {{_balanceChangeBath(data.rate_bank,data.balanceLessFees)}}
                       <gl-form-input disabled label="{{localize('label_amount_after_exchange_rate')}}" allowed-pattern="[0-9||,||.]" format-number="on"
-                        value="[[data.balanceChangeBath]]" placeholder="0.00" always-float-label></gl-form-input>
+                        value="[[formatNumber(data.balanceChangeBath)]]" placeholder="0.00" always-float-label></gl-form-input>
                     </gl-grid-col>
                   </gl-grid-row>
                 </div>
@@ -217,7 +203,7 @@
                     <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,8]]"></gl-grid-col>
                     <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
                       [[changeString2Num(data.*,'totalbath')]] [[_balanceBath(data.balanceChangeBath,data.feeTotalWithOutUsd)]]
-                      <gl-form-input disabled label="{{localize('label_total_bath_expenses')}}" value="[[data.totalbath]]" allowed-pattern="[0-9||,||.]"
+                      <gl-form-input disabled label="{{localize('label_total_bath_expenses')}}" value="[[formatNumber(data.totalbath)]]" allowed-pattern="[0-9||,||.]"
                         format-number="on" placeholder="0.00" always-float-label></gl-form-input>
                     </gl-grid-col>
                   </gl-grid-row>
@@ -233,12 +219,12 @@
                 <gl-form-panel>
                   <fee-exports-sum total-invoice="[[data.invoice]]"></fee-exports-sum>
                 </gl-form-panel>
-                <div class="container">
+                <!--<div class="container">
                   {{localize('label_fee_note')}}
                   <ul style="list-style-type:none">
                     <li>{{localize('label_fee_note_detail')}}</li>
                   </ul>
-                </div>
+                </div>-->
 
                 <!--</gl-form-panel-body>-->
                 <!-- <div name="averagePage"> -->
@@ -298,7 +284,8 @@
         g2gModelBehavior,
         g2gCongtroller,
         nylonBehavior,
-        nylonLocalizeBehavior
+        nylonLocalizeBehavior,
+        FormatNumberBehavior
       ],
       observers: [
         '_invoicePage(data.invoice)',

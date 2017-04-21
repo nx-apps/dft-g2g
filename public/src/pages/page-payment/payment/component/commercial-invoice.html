@@ -72,16 +72,16 @@
       </template>
       <gl-form-panel-body>
 
-        <div class="text">{{localize('text_invoice')}}</div>
+        <div class="text">{{localize('label_cm_invoice')}}</div>
         <!-- [[data.tags]] -->
         <gl-grid-row width="{{getWidth}}">
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,2]]">
-            <gl-form-input class="required" required disabled="[[isInputDisabled]]" label="{{localize('text_invoice_no')}} :" placeholder="{{localize('text_your_detail')}}"
+            <gl-form-input class="required" required disabled="[[isInputDisabled]]" label="{{localize('label_invoice_no')}} :" placeholder="{{localize('text_your_detail')}}"
               error-message="{{localize('text_enter_your_detail')}}" value="{{data.invoice_no}}"></gl-form-input>
           </gl-grid-col>
           <gl-grid-col width="[[getWidth]]" grid="[[300,0],[500,8]]"></gl-grid-col>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,2]]">
-            <vaadin-date-picker class="required" required disabled="[[isInputDisabled]]" label="{{localize('label_date')}}" value="{{data.invoice_date}}"></vaadin-date-picker>
+            <vaadin-date-picker class="required" required disabled="[[isInputDisabled]]" label="{{localize('label_invoice_date')}}" value="{{data.invoice_date}}"></vaadin-date-picker>
           </gl-grid-col>
         </gl-grid-row>
 
@@ -96,7 +96,7 @@
         <gl-grid-row>
 
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,8]]">
-            <gl-form-input disabled value="[[_getVessel(data.ship)]]" label="{{localize('label_shippped_per')}} : [[_ObcountIndex(index)]]"></gl-form-input>
+            <gl-form-input disabled value="[[_getVessel(data.ship)]]" label="{{localize('label_shippped_per_invoice')}} : [[_ObcountIndex(index)]]"></gl-form-input>
           </gl-grid-col>
           <!-- <template is="dom-repeat" items="[[data.ship]]">
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
@@ -105,26 +105,26 @@
         </template> -->
 
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-            <gl-form-input disabled value="[[data.load_port_name]],[[data.load_country_name_en]]" label="{{localize('label_port_of_loading')}} :"></gl-form-input>
+            <gl-form-input disabled value="[[data.load_port_name]],[[data.load_country_name_en]]" label="{{localize('label_port_of_loading_invoice')}} :"></gl-form-input>
           </gl-grid-col>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-            <gl-form-textarea disabled value="[[data.deli_port_name]],[[data.deli_country_fullname_en]]" label="{{localize('label_port_of_discharge')}}:"></gl-form-label-textarea>
+            <gl-form-textarea disabled value="[[data.deli_port_name]],[[data.deli_country_fullname_en]]" label="{{localize('label_port_of_discharge_invoice')}}:"></gl-form-label-textarea>
           </gl-grid-col>
 
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-            <gl-form-textarea disabled value="[[data.dest_port_name]],[[data.dest_country_fullname_en]]" label="{{localize('label_place_of_delivery')}} :"></gl-form-textarea>
+            <gl-form-textarea disabled value="[[data.dest_port_name]],[[data.dest_country_fullname_en]]" label="{{localize('label_place_of_delivery_invoice')}} :"></gl-form-textarea>
           </gl-grid-col>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
             <gl-form-input disabled value="[[data.bl_no]]" label="{{localize('label_bill_of_lading')}}:"></gl-form-input>
           </gl-grid-col>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-            <vaadin-date-picker disabled label="{{localize('label_date')}}" value="[[data.etd_date]]"></vaadin-date-picker>
+            <vaadin-date-picker disabled label="{{localize('label_invoice_date')}}" value="[[data.etd_date]]"></vaadin-date-picker>
           </gl-grid-col>
         </gl-grid-row>
 
         <gl-grid-row>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,8]]">
-            <gl-form-textarea disabled value="[[data.buyer_address]]" label="{{localize('label_buyer_address')}} :"></gl-form-textarea>
+            <gl-form-textarea disabled value="[[data.buyer_address]]" label="{{localize('label_buyer_address_invoice')}} :"></gl-form-textarea>
           </gl-grid-col>
         </gl-grid-row>
 
@@ -142,9 +142,9 @@
             <thead class="table-head">
               <tr>
                 <th>{{localize('text_marks_no')}}</th>
-                <th>{{localize('text_quantity')}}</th>
-                <th>{{localize('text_descriptions')}}</th>
-                <th>{{localize('text_amount')}}</th>
+                <th>{{localize('label_quantity_invoice')}}</th>
+                <th>{{localize('label_descriptions_invoice')}}</th>
+                <th>{{localize('label_amount_invoice')}}</th>
               </tr>
             </thead>
             <tbody class="table-body">

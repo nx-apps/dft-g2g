@@ -103,6 +103,8 @@
         try {
           // console.log('>>>>', data);
           let exporters = []
+          this.set('dataForSelect.exporter','');
+          console.log(this.dataForSelect.exporter);
           data.exporter.map((exporter) => {
             exporters.push({
               exporter_id: exporter.exporter_id,
@@ -112,7 +114,7 @@
           })
           // console.log(exporters);
           this.set('dataForSelect.exporter', exporters);
-          // console.log(this.dataForSelect);
+          console.log(this.dataForSelect);
         } catch (e) {
 
         }

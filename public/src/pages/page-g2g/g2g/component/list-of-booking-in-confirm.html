@@ -43,6 +43,7 @@
         <thead class="table-head">
           <tr>
             <th>{{localize('label_ref_no')}}</th>
+            <th>{{localize('label_quantity_ship')}}</th>
             <th>{{localize('label_quantity_confirm')}}</th>
             <th>{{localize('label_quantity_confirm_delivery')}}</th>
             <th>#</th>
@@ -52,6 +53,7 @@
           <template is="dom-repeat" items="[[data.book]]">
             <tr  >
               <td on-tap="bookingDetail" data="[[item]]">[[item.cl_no]]</td>
+              <td on-tap="bookingDetail" data="[[item]]">[[item.ship_lot_no_lastest]]</td>
               <td on-tap="bookingDetail" data="[[item]]">[[formatNumberNoZero(item.cl_quantity_total)]]</td>
               <td on-tap="bookingDetail" data="[[item]]">[[formatNumberNoZero(item.book_quantity)]] [[checkMInus(item.cl_quantity_tolerance)]]</td>
               <td>

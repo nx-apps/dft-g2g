@@ -21,7 +21,7 @@
     
     .title {
       margin: 16px;
-      text-align: center;
+      text-align: left;
       font-size: var(--font-size-h4);
     }
     
@@ -42,24 +42,26 @@
     }
   </style>
   <template>
-    <div class="title">{{localize('text_page_total')}}{{localize('text_invoice')}}{{localize('text_of_contract')}} [[dataForSelect.nameContract]]</div>
-    <div class="flex searchInput ">
-      <!-- <div class="horizontal end-justified layout">
-         <div class="labelSearch">Invoice No.</div>{{searchInput}}
-         <paper-input label=" " no-label-float value="{{searchInput}}"></paper-input>
-         <paper-icon-button icon="search"></paper-icon-button>
-       </div> -->
+    <div class="flex searchInput horizontal center-justified layout">
+      <div class="flex title">{{localize('text_of_contract')}} : [[dataForSelect.nameContract]]</div>
+       <!--<div class="horizontal end-justified layout">-->
+      <div class="flex horizontal end-justified layout">
+        <!--<div class="labelSearch">{{localize('label_lot_no')}}</div>{{_searchInArray(searchInput)}}
+        <paper-input label=" " no-label-float value="{{searchInput}}"></paper-input>
+        <paper-icon-button icon="search"></paper-icon-button>
+        </paper-input>-->
+      </div>
     </div>
 
     <div class="horizontal center-justified layout">
       <table class="gl-table-default">
         <thead class="table-head">
           <tr>
-            <th>#</th>
-            <th>{{localize('text_invoice')}}</th>
+            <th>{{localize('text_check_box')}}</th>
+            <th>{{localize('text_invoice_no')}}</th>
             <th>{{localize('label_place_of_delivery')}} </th>
-            <th>{{localize('label_port_of_destination')}}</th>
-            <th style="width:10%">{{localize('label_send_report')}}</th>
+            <th>{{localize('label_port_of_discharge')}}</th>
+            <th style="width:10%">{{localize('label_report_invoice')}}</th>
           </tr>
 
         </thead>
@@ -74,8 +76,8 @@
                     checked="{{item.status}}"></paper-checkbox>
                 </td>
                 <td data="[[item]]" on-tap="getInvoiceDetail">[[item.invoice_no]]</td>
-                <td data="[[item]]" on-tap="getInvoiceDetail">[[item.deli_port_name]]</td>
-                <td data="[[item]]" on-tap="getInvoiceDetail">[[item.dest_port_name]]</td>
+                <td data="[[item]]" on-tap="getInvoiceDetail">[[item.deli_port_name]] ([[item.deli_country_name]])</td>
+                <td data="[[item]]" on-tap="getInvoiceDetail">[[item.dest_port_name]] ([[item.dest_country_name]])</td>
                 <td>
                   <paper-icon-button id="printShipment" data="[[item]]" class="crud" icon="print" raised on-tap="getInvoiceid" hidden="[[!data.shm_status]]"></paper-icon-button>
                   <paper-tooltip for="printShipment" offset="0">{{localize('label_send_report')}}</paper-tooltip>

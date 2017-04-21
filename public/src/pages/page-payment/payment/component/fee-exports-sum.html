@@ -109,7 +109,7 @@
               <td>
                 <gl-form-input class="number" format-number="on" style="width:140px;" value="[[invoice.totalBathInvoices]]" disabled></gl-form-input>
               </td>
-              <td>
+              <td>[[ch(invoice.totalFeeInvoices)]]
                 <gl-form-input class="number" format-number="on" style="width:140px;" value="[[invoice.totalFeeInvoices]]" disabled></gl-form-input>
               </td>
               <td>
@@ -175,56 +175,79 @@
       created: function () {
         this.nylonLocalizeImport('/i18n-page1.json');
       },
-      check: function (totalInvoice) {
-        try {
-          // return items.filter((item) => item.fee_status == false);
+      ch(data) {
+        // console.log(typeof data == 'number');
+        // console.log(this.totalInvoice);
+        // if (typeof data == 'number') {
+        //   return data
+        // }
 
-          // console.log('totalInvoice =>',this.totalInvoice);
-          var result = 0;
-          this.totalInvoice.map((el) => {
-            result += el.totalTonInvoices;
-          });
-          this.data.totalTonInvoices = result
-          this.notifyPath('data.totalTonInvoices');
-          result = 0;
-          this.totalInvoice.map((el) => {
-            result += el.totalPricePerTonUsdInvoices;
-          });
-          this.data.totalPricePerTonUsdInvoices = result
-          this.notifyPath('data.totalPricePerTonUsdInvoices');
-          result = 0;
-          this.totalInvoice.map((el) => {
-            result += el.totalAmountUsdInvoices;
-          });
-          this.data.totalAmountUsdInvoices = result
-          this.notifyPath('data.totalAmountUsdInvoices');
-          result = 0;
-          this.totalInvoice.map((el) => {
-            result += el.totalBathInvoices;
-          });
-          this.data.totalBathInvoices = result
-          this.notifyPath('data.totalBathInvoices');
-          result = 0;
-          this.totalInvoice.map((el) => {
-            result += el.totalFeeInvoices;
-          });
-          this.data.totalFeeInvoices = result
-          this.notifyPath('data.totalFeeInvoices');
-          result = 0;
-          this.totalInvoice.map((el) => {
-            result += el.totalIncomeTaxInvoices;
-          });
-          this.data.totalIncomeTaxInvoices = result
-          this.notifyPath('data.totalIncomeTaxInvoices');
-          result = 0;
-          this.totalInvoice.map((el) => {
-            result += el.totalMoneyBathInvoices;
-          });
-          this.data.totalMoneyBathInvoices = result
-          this.notifyPath('data.totalMoneyBathInvoices');
-        } catch (e) {
-          // console.log(e)
-        }
+      },
+      check: function (totalInvoice) {
+        this.async(() => {
+          try {
+            // return items.filter((item) => item.fee_status == false);
+
+            // console.log('totalInvoice =>',this.totalInvoice);
+            var result = 0;
+            this.totalInvoice.map((el) => {
+              result += el.totalTonInvoices;
+            });
+            this.set('data.totalTonInvoices', result)
+            // this.data.totalTonInvoices = result
+            // this.notifyPath('data.totalTonInvoices');
+
+            result = 0;
+            this.totalInvoice.map((el) => {
+              result += el.totalPricePerTonUsdInvoices;
+            });
+            this.set('data.totalPricePerTonUsdInvoices', result)
+            // this.data.totalPricePerTonUsdInvoices = result
+            // this.notifyPath('data.totalPricePerTonUsdInvoices');
+
+            result = 0;
+            this.totalInvoice.map((el) => {
+              result += el.totalAmountUsdInvoices;
+            });
+            this.set('data.totalAmountUsdInvoices', result)
+            // this.data.totalAmountUsdInvoices = result
+            // this.notifyPath('data.totalAmountUsdInvoices');
+
+            result = 0;
+            this.totalInvoice.map((el) => {
+              result += el.totalBathInvoices;
+            });
+            this.set('data.totalBathInvoices', result)
+            // this.data.totalBathInvoices = result
+            // this.notifyPath('data.totalBathInvoices');
+
+            result = 0;
+            this.totalInvoice.map((el) => {
+              result += el.totalFeeInvoices;
+            });
+            this.set('data.totalFeeInvoices', result)
+            // this.data.totalFeeInvoices = result
+            // this.notifyPath('data.totalFeeInvoices');
+
+            result = 0;
+            this.totalInvoice.map((el) => {
+              result += el.totalIncomeTaxInvoices;
+            });
+            this.set('data.totalIncomeTaxInvoices', result)
+            // this.data.totalIncomeTaxInvoices = result
+            // this.notifyPath('data.totalIncomeTaxInvoices');
+
+            result = 0;
+            this.totalInvoice.map((el) => {
+              result += el.totalMoneyBathInvoices;
+            });
+            this.set('data.totalMoneyBathInvoices', result)
+            // this.data.totalMoneyBathInvoices = result
+            // this.notifyPath('data.totalMoneyBathInvoices');
+          } catch (e) {
+            // console.log(e)
+          }
+        }, 500)
       },
     });
   </script>

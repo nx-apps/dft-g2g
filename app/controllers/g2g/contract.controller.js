@@ -259,6 +259,14 @@ exports.buyerId = function (req, res) {
                                 }),
                             cl_quantity_total: cl('cl_type_rice').sum('type_rice_quantity'),
                             cl_status: cl('cl_status'),
+                            ship_lot_no_lastest :r.db('g2g2').table('book')
+                                .getAll(cl('id'), { index: 'cl_id' })
+                                .orderBy(r.desc('ship_lot_no'))
+                                .limit(1)
+                                .getField('ship_lot_no')
+                                .reduce(function(l,r){
+                                    return l.add(r)
+                                }).default(0),
                             book_quantity: r.db('g2g2').table('book')
                                 .getAll(cl('id'), { index: 'cl_id' })
                                 .pluck('id')

@@ -1,122 +1,131 @@
 <dom-module id="list-of-payments">
   <style include="iron-flex iron-flex-factors iron-flex-alignment gl-styles">
-    :host {
+     :host {
       display: block;
     }
-    *{
+    
+    * {
       font-family: 'CSChatThaiUI', sans-serif;
       -webkit-font-smoothing: antialiased;
     }
-    .labelSearch{
-    font-size: var(--font-size-h4);
-    margin: 10px 10px 10px 10px;
+    
+    .labelSearch {
+      font-size: var(--font-size-h4);
+      margin: 10px 10px 10px 10px;
     }
-    .table-body >tr > td{
-      cursor:pointer;
+    
+    .table-body>tr>td {
+      cursor: pointer;
     }
+    
     .title {
       margin: 16px;
-      text-align: center;
+      text-align: left;
       font-size: var(--font-size-h4);
     }
+    
     table.gl-table-default {
       width: 98%;
       border: 1px solid #ddd;
       margin-bottom: 15px;
     }
-    table.gl-table-default > thead.table-head > tr > th,
-    table.gl-table-default > tbody.table-body > tr > td:nth-child(2) {
+    
+    table.gl-table-default>thead.table-head>tr>th,
+    table.gl-table-default>tbody.table-body>tr>td:nth-child(2) {
       text-align: center;
     }
-    table.gl-table-default > thead.table-head > tr > th:nth-child(1) {
+    
+    table.gl-table-default>thead.table-head>tr>th:nth-child(1) {
       width: 80%;
     }
-    table.gl-table-default > thead.table-head > tr > th:nth-child(2) {
+    
+    table.gl-table-default>thead.table-head>tr>th:nth-child(2) {
       width: 20%;
     }
   </style>
   <template>
-    <div class="title">{{localize('text_page_total')}}{{localize('text_payment_exporter')}}{{localize('text_of_contract')}} [[dataForSelect.nameContract]]</div>
-    <div class="flex searchInput ">
-       <div class="horizontal end-justified layout">
-         <div class="labelSearch">{{localize('text_invoice_no')}}</div>{{_searchInArray(searchInput)}}
-         <paper-input label=" " no-label-float value="{{searchInput}}"></paper-input>
-         <paper-icon-button icon="search"></paper-icon-button>
-         </paper-input>
-         <!-- <paper-icon-button icon="search"></paper-icon-button> -->
-       </div>
-   </div>
-
-<div class="horizontal center-justified layout">
-    <table class="gl-table-default">
-          <thead class="table-head">
-            <tr>
-              <th>{{localize('text_invoice_no')}}</th>
-              <th>{{localize('label_date')}}</th>
-            </tr>
-          </thead>
-          <tbody class="table-body">
-            <!-- <template is="dom-repeat" items="[[data]]" as="contract"> -->
-            <!-- <template is="dom-if" if="[[!_isHave(newData)]]"> -->
-              <template is="dom-repeat" items="[[newData]]" >
-                <tr data="[[item]]" on-tap="getChequeDetail" level="primary" >
-                  <td>[[item.invoice_no]]</td>
-                  <td>[[changeDateCC(item.invoice_date)]]</td>
-                </tr>
-              </template>
-              <!-- </template> -->
-              <template is="dom-if" if="[[_isHave(newData)]]">
-                  <tr >
-                    <td colspan="2" style="text-align:center">  {{localize('text_no_data')}}</td>
-                  </tr>
-              </template>
-            <!-- </template> -->
-         </tbody>
-      </table>
+    <div class="flex searchInput horizontal center-justified layout">
+      <div class="flex title">{{localize('text_of_contract')}} : [[dataForSelect.nameContract]]</div> 
+      
+      <!--<div class="horizontal end-justified layout">-->
+      <div class="flex horizontal end-justified layout">
+        <div class="labelSearch">{{localize('text_invoice_no')}}</div>{{_searchInArray(searchInput)}}
+        <paper-input label=" " no-label-float value="{{searchInput}}"></paper-input>
+        <paper-icon-button icon="search"></paper-icon-button>
+        </paper-input>
       </div>
+    </div>
+
+    <div class="horizontal center-justified layout">
+      <table class="gl-table-default">
+        <thead class="table-head">
+          <tr>
+            <th>{{localize('text_invoice_no')}}</th>
+            <th>{{localize('label_date')}}</th>
+          </tr>
+        </thead>
+        <tbody class="table-body">
+          <!-- <template is="dom-repeat" items="[[data]]" as="contract"> -->
+          <!-- <template is="dom-if" if="[[!_isHave(newData)]]"> -->
+          <template is="dom-repeat" items="[[newData]]">
+            <tr data="[[item]]" on-tap="getChequeDetail" level="primary">
+              <td>[[item.invoice_no]]</td>
+              <td>[[changeDateCC(item.invoice_date)]]</td>
+            </tr>
+          </template>
+          <!-- </template> -->
+          <template is="dom-if" if="[[_isHave(newData)]]">
+            <tr>
+              <td colspan="2" style="text-align:center"> {{localize('text_no_data')}}</td>
+            </tr>
+          </template>
+          <!-- </template> -->
+        </tbody>
+      </table>
+    </div>
   </template>
   <script>
     Polymer({
       is: "list-of-payments",
-      observers:[
+      observers: [
         'initDatabl(data)'
       ],
       behaviors: [
-          g2gCongtroller,
-          nylonBehavior,
-          nylonLocalizeBehavior
+        g2gCongtroller,
+        nylonBehavior,
+        nylonLocalizeBehavior
       ],
       properties: {
-        newData:{
-          type:Object
+        newData: {
+          type: Object
         }
       },
-      created:function(){
-          this.nylonLocalizeImport('/i18n-page1.json');
+      created: function () {
+        this.nylonLocalizeImport('/i18n-page1.json');
       },
-      initDatabl:function (data) {
+      initDatabl: function (data) {
         // console.log(data);
         this.newData = this.g2gClone(data);
         // console.log('clone new==>',this.newData);
         // console.log('org==>',this.data);
       },
-      _searchInArray:function (searchInput) {
-          // console.log(searchInput == '');
-          if (searchInput != '') {
-            let arr=[];
-            this.data.map((el)=>{
-              if (String(el.invoice_no).search(searchInput) > -1) {
-                  arr.push(el);
-              }
-            });
-            this.newData=arr;
-          }else{
-            this.initDatabl(this.data);
-          }
+      _searchInArray: function (searchInput) {
+        // console.log(searchInput == '');
+        if (searchInput != '') {
+          let arr = [];
+          this.data.map((el) => {
+            if (String(el.invoice_no).search(searchInput) > -1) {
+              arr.push(el);
+            }
+          });
+          this.newData = arr;
+        } else {
+          this.initDatabl(this.data);
+        }
       },
-      getChequeDetail:function (e) {
+      getChequeDetail: function (e) {
         // console.log(e.currentTarget.data);
-        this.fire('get-payment-detail',{detail:e.currentTarget.data});
+        this.fire('get-payment-detail', { detail: e.currentTarget.data });
       }
     });
   </script>

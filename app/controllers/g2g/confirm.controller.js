@@ -123,7 +123,25 @@ exports.getByExporterId = function (req, res) {
                     .filter(function (f) {
                         return f('tags').contains(cl('id'))
                     })
-                    .sum('shm_det_quantity')
+                    .sum('shm_det_quantity'),
+                ship_lot_no_lastest: r.table('shipment_detail')
+                    .getAll(req.query.exporter_id, { index: 'exporter_id' })
+                    .filter(function (ship_filter) {
+                        return ship_filter('tags').contains(cl('id'))
+                    })
+                    .pluck('book_id')
+                    .distinct()
+                    .count()
+
+                // r.db('g2g2').table('book')
+                //     .getAll(cl('id'), { index: 'cl_id' })
+                //     .orderBy(r.desc('ship_lot_no'))
+                //     .limit(1)
+                //     .getField('ship_lot_no')
+                //     .reduce(function (l, r) {
+                //         return l.add(r)
+                //     }).default("-")
+
             }
         })
         .orderBy('cl_no')

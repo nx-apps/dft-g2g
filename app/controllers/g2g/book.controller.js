@@ -20,18 +20,20 @@ exports.getByContractId = function (req, res) {
             return port.merge({
                 right: {
                     dest_port_name: port("right")("port_name"),//r.row["right"]["port_name"]
-                    dest_port_code: port("right")("port_code")
+                    dest_port_code: port("right")("port_code"),
+                    dest_country_name:r.db('common').table('country').get(port("right")("country_id")).getField('country_name_en').upcase()
                 }
             })
-        }).pluck("left", { right: ["dest_port_name", "dest_port_code"] }).zip()
+        }).pluck("left", { right: ["dest_port_name", "dest_port_code","dest_country_name"] }).zip()
         .eqJoin("deli_port_id", r.db('common').table("port")).map(function (port) {
             return port.merge({
                 right: {
                     deli_port_name: port("right")("port_name"),//r.row["right"]["port_name"]
-                    deli_port_code: port("right")("port_code")
+                    deli_port_code: port("right")("port_code"),
+                    deli_country_name:r.db('common').table('country').get(port("right")("country_id")).getField('country_name_en').upcase()
                 }
             })
-        }).pluck("left", { right: ["deli_port_name", "deli_port_code"] }).zip()
+        }).pluck("left", { right: ["deli_port_name", "deli_port_code","deli_country_name"] }).zip()
         .merge(function (m) {
             return {
                 book_id: m('id'),

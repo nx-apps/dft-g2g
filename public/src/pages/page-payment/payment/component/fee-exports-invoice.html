@@ -98,7 +98,7 @@
               <!-- <th>เลขที่ใบแจ้งหนี้</th> -->
               <!-- <th>วันที่ใบแจ้งหนี้</th> -->
               <th>{{localize('label_total_value_ton')}}<br>(1)</th>
-              <th>ม{{localize('label_total_value_ton_per_usd')}}<br>(2)</th>
+              <th>{{localize('label_total_value_ton_per_usd')}}<br>(2)</th>
               <th>{{localize('label_total_value_usd')}}<br>(3)=(1)*2</th>
               <th>{{localize('label_total_value_bath')}}<br>(4)=(3)*[[rateBank]]</th>
               <th>{{localize('label_expenses_fee')}}<br>(5)</th>
@@ -113,18 +113,15 @@
                 </td>
                 [[_totalQuantityTons(invoiceDetail.quantity_tons,index)]]
                 <td>
-                  <gl-form-input class="number" format-number="on" style="width:140px;" value="[[invoiceDetail.quantity_tons]]"
-                    disabled></gl-form-input>
+                  <gl-form-input class="number" format-number="on" style="width:140px;" value="[[invoiceDetail.quantity_tons]]" disabled></gl-form-input>
                 </td>
                 [[_totalPricePerTon(invoiceDetail.price_per_ton,index)]]
                 <td>
-                  <gl-form-input format-number="on" style="width:140px;text-align:center;" value="[[invoiceDetail.price_per_ton]]"
-                    disabled></gl-form-input>
+                  <gl-form-input format-number="on" style="width:140px;text-align:center;" value="[[invoiceDetail.price_per_ton]]" disabled></gl-form-input>
                 </td>
                 [[_totalAmountUsd(invoiceDetail.amount_usd,index)]]
                 <td>
-                  <gl-form-input class="number" format-number="on" style="width:140px;" value="[[invoiceDetail.amount_usd]]"
-                    disabled></gl-form-input>
+                  <gl-form-input class="number" format-number="on" style="width:140px;" value="[[invoiceDetail.amount_usd]]" disabled></gl-form-input>
                 </td>
                 <td>
                   <gl-form-input class="number" format-number="on" style="width:140px;" value="[[_totalBath(invoiceDetail.quantity_tons,invoiceDetail.price_per_ton,rateBank,index)]]"
@@ -269,65 +266,75 @@
       // (3)*34.96
       // (7)=((4)-(5)-(6))<
       _totalMoneyInvoice: function (quantity_tons, price_per_ton, rate_bank, invoice_fee, index) {
-        var moneyInvoice = ((parseFloat(quantity_tons) * parseFloat(price_per_ton)) * parseFloat(rate_bank) - parseFloat(invoice_fee)) - (((((parseFloat(quantity_tons) + parseFloat(price_per_ton)) * parseFloat(rate_bank)) - parseFloat(invoice_fee)) * 1) / 100);
-        this.set('data.invoice_detail.' + index + '.moneyInvoice', moneyInvoice);
-        // console.log("moneyInvoice =>",this.data.invoice_detail[index].moneyInvoice);
-        return moneyInvoice;
+
+        try {
+          let incomeTax = ((((parseFloat(quantity_tons) * parseFloat(price_per_ton)) * parseFloat(rate_bank)) - parseFloat(invoice_fee)) * 1) / 100
+
+          var moneyInvoice = ((parseFloat(quantity_tons) * parseFloat(price_per_ton)) * parseFloat(rate_bank) - parseFloat(invoice_fee)) - incomeTax
+          this.set('data.invoice_detail.' + index + '.moneyInvoice', moneyInvoice);
+          // console.log("moneyInvoice =>",this.data.invoice_detail[index].moneyInvoice);
+          return moneyInvoice;
+        } catch (e) {
+          // console.log(e);
+        }
       },
       _totalTonInvoices: function (index, test) {
         var result = 0;
-        test.base.invoice_detail.map(function (item) {
+        test.base.invoice_detail.map((item)=> {
           result += item.quantity_tons;
-        }.bind(this));
+        })
         this.set('data.totalTonInvoices', result);
         return result;
       },
       _totalPricePerTonUsdInvoices: function (index, test) {
         var result = 0;
-        test.base.invoice_detail.map(function (item) {
+        test.base.invoice_detail.map((item)=> {
           result += item.price_per_ton;
-        }.bind(this));
+        })
         this.set('data.totalPricePerTonUsdInvoices', result);
         return result;
       },
       _totalAmountUsdInvoices: function (index, test) {
         var result = 0;
-        test.base.invoice_detail.map(function (item) {
+        test.base.invoice_detail.map((item)=> {
           result += item.amountUsd;
-        }.bind(this));
+        })
         this.set('data.totalAmountUsdInvoices', result);
         return result.toString();
       },
       _totalBathInvoices: function (index, test) {
         var result = 0;
-        test.base.invoice_detail.map(function (item) {
+        test.base.invoice_detail.map((item)=> {
           result += item.testza;
-        }.bind(this));
-        this.set('data.totalBathInvoices', result);
+        });
+       
         if (isNaN(result)) {
           return ''
         } else {
+           this.set('data.totalBathInvoices', result);
           return result;
         }
       },
       _totalFeeInvoices: function (index, test) {
         var result = 0;
-        test.base.invoice_detail.map(function (item) {
+        test.base.invoice_detail.map((item)=>{
           result += item.invoice_fee;
-        }.bind(this));
-        this.set('data.totalFeeInvoices', result);
+          // console.log(result);
+        })
         if (isNaN(result)) {
           return ''
         } else {
+          this.set('data.totalFeeInvoices', result)
           return result;
         }
       },
       _totalIncomeTaxInvoices: function (index, test) {
         var result = 0;
-        test.base.invoice_detail.map(function (item) {
+        test.base.invoice_detail.map((item)=> {
           result += item.incomeTax;
-        }.bind(this));
+        });
         this.set('data.totalIncomeTaxInvoices', result);
+        
         if (isNaN(result)) {
           return ''
         } else {
@@ -336,14 +343,15 @@
       },
       _totalMoneyBathInvoices: function (index, test) {
         var result = 0;
-        test.base.invoice_detail.map(function (item) {
+        test.base.invoice_detail.map((item)=> {
           // console.log('item.moneyInvoice  =>',item.moneyInvoice);
           result += item.moneyInvoice;
-        }.bind(this));
-        this.set('data.totalMoneyBathInvoices', result);
+        })
+        
         if (isNaN(result)) {
           return ''
         } else {
+          this.set('data.totalMoneyBathInvoices', result);
           return result;
         }
       },

@@ -46,6 +46,7 @@
                   <!-- <th>ชื่อการทำสัญญา</th> -->
                   <!--<th>{{localize('label_shm_no')}}</th>-->
                   <th>{{localize('text_fee_no')}}</th>
+                  <th>{{localize('label_total_value_bath')}}</th>
                 </tr>
               </thead>
               <tbody class="table-body">
@@ -55,6 +56,7 @@
                       <!-- <td>[[item.cl_name]]</td> -->
                       <!--<td>[[item.shm_no]]</td>-->
                       <td>[[item.fee_no]]</td>
+                      <td>[[formatNumber(item.bath_balance)]]</td>
                     </tr>
                   </template>
                 <!--</template>-->
@@ -85,7 +87,8 @@
           g2gCongtroller,
           g2gModelBehavior,
           nylonBehavior,
-          nylonLocalizeBehavior
+          nylonLocalizeBehavior,
+          FormatNumberBehavior
       ],
       listeners:{
         'page-change':'_pageChange',

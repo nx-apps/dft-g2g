@@ -53,7 +53,7 @@
         <table class="gl-table-default">
           <thead class="table-head">
             <tr>
-              <th>#</th>
+              <th>{{localize('text_check_box')}}</th>
               <th>{{localize('label_order')}}</th>
               <th>{{localize('label_componey')}}</th>
               <th>{{localize('text_invoice_no')}}</th>
@@ -227,7 +227,6 @@
                 // this._cleanDataPayment(this.data, (data) => {
                 // console.log(data);
                 let contract_id = this._getUrl();
-                // window.open('https://localhost:8080/api/shipment/report1?paymentId=','_blank');
                 this.insertCall('./g2g/payment/insert', data, () => {
                   this.fire('toast', {
                     status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success

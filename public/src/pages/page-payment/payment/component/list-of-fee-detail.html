@@ -113,20 +113,23 @@
       properties: {
         pageSelected: {
           type: String,
-          value: 'listOfFeedetail'
+          value: 'listOfFeedetail',
+          notify:true
         },
         dataForSelect: {
           type: Object,
           value: {}
         },
         dataSelected: {
-          type: Object
+          type: Object,
+          value:{}
         },
       },
       created: function () {
         this.nylonLocalizeImport('/i18n-page1.json');
       },
       _getFeeList: function (e) {
+        this.set('dataSelected',{})
         this.read('./g2g/fee_detail/id/' + e.detail.detail, (data) => {
           this.dataSelected = data;
           this.notifyPath('dataSelected');

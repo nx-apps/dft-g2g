@@ -16,7 +16,7 @@
     }
     .title {
       margin: 16px;
-      text-align: center;
+      text-align: left;
       font-size: var(--font-size-h4);
     }
     table.gl-table-default {
@@ -26,21 +26,23 @@
     }
   </style>
   <template>
-    <div class="title">{{localize('text_page_total')}}{{localize('text_fee')}}{{localize('text_of_contract')}} [[dataForSelect.nameContract]]</div>
-    <div class="flex searchInput ">
-       <div class="horizontal end-justified layout">
-         <div class="labelSearch">{{localize('text_fee_no')}}</div>{{_searchInArray(searchInput)}}
+    <div class="flex searchInput horizontal center-justified layout">
+      <div class="flex title">{{localize('text_of_contract')}} : [[dataForSelect.nameContract]]
+        </div> 
+        <!--<div class="horizontal end-justified layout">-->
+      <div class="flex horizontal end-justified layout">
+        <div class="labelSearch">{{localize('text_fee_no')}}</div>{{_searchInArray(searchInput)}}
          <paper-input label=" " no-label-float value="{{searchInput}}"></paper-input>
          <paper-icon-button icon="search"></paper-icon-button>
-       </div>
-   </div>
+      </div>
+    </div>
    <div class="horizontal center-justified layout">
     <table class="gl-table-default">
           <thead class="table-head">
             <tr>
               <!-- <th>ชื่อการทำสัญญา</th> -->
               <th>{{localize('text_fee_no')}}</th>
-
+              <th>{{localize('label_total_value_bath')}}</th>
             </tr>
           </thead>
           <tbody class="table-body">
@@ -50,6 +52,7 @@
                 <tr data="[[item]]" on-tap="getFeeDetail">
                   <!-- <td>[[item.cl_name]]</td> -->
                   <td>[[item.fee_no]]</td>
+                  <td>[[formatNumber(item.bath_balance)]]</td>
                 </tr>
               </template>
             <!-- </template> -->
@@ -72,7 +75,8 @@
       behaviors: [
           g2gCongtroller,
           nylonBehavior,
-          nylonLocalizeBehavior
+          nylonLocalizeBehavior,
+          FormatNumberBehavior
       ],
       properties: {
         newData:{

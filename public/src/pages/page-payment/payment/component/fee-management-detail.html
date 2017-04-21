@@ -64,7 +64,8 @@
         g2gModelBehavior,
         g2gCongtroller,
         nylonBehavior,
-        nylonLocalizeBehavior
+        nylonLocalizeBehavior,
+        FormatNumberBehavior
       ],
       created: function () {
         this.nylonLocalizeImport('/i18n-page1.json');
@@ -107,7 +108,7 @@
           });
         } else {
           this.fire('toast', {
-            status: 'connectError', text: 'ครั้งที่ซ้ำกับที่มีอยู่', //คำสั่งสำหรับเปิด toast error
+            status: 'connectError', text: 'ครั้งที่ซ้ำ!', //คำสั่งสำหรับเปิด toast error
             callback: function () {
             }
           })
@@ -148,7 +149,7 @@
           });
         } else {
           this.fire('toast', {
-            status: 'connectError', text: 'ครั้งที่ซ้ำกับที่มีอยู่', //คำสั่งสำหรับเปิด toast error
+            status: 'connectError', text: 'ครั้งที่ซ้ำ!', //คำสั่งสำหรับเปิด toast error
             callback: function () {
             }
           })

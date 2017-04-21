@@ -129,6 +129,7 @@
 
       <input id="tab5" type="radio" name="tabs">
       <label for="tab5">5.{{localize('text_payment')}}</label>
+    
       <section id="content1">
         <paper-material elevation="1">
           <div class="list horizontal center-justified layout">
@@ -169,29 +170,6 @@
         </paper-material>
       </section>
     </main>
-    <!--<paper-material elevation="1">
-      111-->
-
-    <!--<taps-payment>
-        <section-content name="bl">
-          <list-of-bl-pm data="[[dataListPay.blShipment]]" data-for-select="[[dataForSelect]]"></list-of-bl-pm>
-        </section-content>
-        <section-content name="invoice">
-          <list-of-invoice data="[[dataListPay.invoiceList]]" data-for-select="[[dataForSelect]]"></list-of-invoice>
-        </section-content>
-        <section-content name="fee">
-          <list-of-fee data="[[dataListPay.feeList]]" data-for-select="[[dataForSelect]]"></list-of-fee>
-        </section-content>
-        <section-content name="cheque">
-          <list-of-cheque data="[[dataListPay.chequeList]]" data-for-select="[[dataForSelect]]"></list-of-cheque>
-        </section-content>
-        <section-content name="payment">
-          <list-of-payments data="[[dataListPay.payments]]" data-for-select="[[dataForSelect]]"></list-of-payments>
-        </section-content>
-
-
-      </taps-payment>-->
-    <!--</paper-material>-->
 
     <nylon-panel-right title="{{titlePanelRight}}" id="test" set-width="95%">
       <div class="rightdata" align="left">
@@ -206,9 +184,8 @@
             <fee-exports data="[[dataSelected.draft]]" data-for-select="[[dataForSelect]]" is-input-disabled="[[!isInputDisabled]]" is-view-seleted="[[isViewSeleted]]"></fee-exports>
           </div>
           <div name="feePage">
-            <list-of-fee-detail data="[[dataSelected.fee]]" data-for-select="[[dataForSelect]]" is-input-disabled="[[isInputDisabled]]"
+            <list-of-fee-detail page-selected="{{pageSelected}}" data="[[dataSelected.fee]]" data-for-select="[[dataForSelect]]" is-input-disabled="[[isInputDisabled]]"
               is-view-seleted="[[!isViewSeleted]]"></list-of-fee-detail>
-            <!-- <fee-exports data="[[dataSelected.fee]]" is-input-disabled="[[isInputDisabled]]" is-view-seleted="[[!isViewSeleted]]"></fee-exports> -->
           </div>
           <div name="chequePage">
             <cheque-detail data="[[dataSelected.cheque]]"></cheque-detail>
@@ -498,7 +475,9 @@
         });
       },
       _getFeeDetail: function (e) {
+        this.set('pageSelected', 'listOfFeedetail')
         this.fire('toast', { status: 'load' });
+        this.titlePanelRight = 'รอบที่คิดค่าธรรมเนียมครั้งที่ ' + e.detail.detail.fee_no
         // console.log(e.detail.detail.fee_id);
         //เรียกให้อัพเดตรายชื่อ fee ที่อยู่ใน contract
         // console.log(e.detail.detail);
@@ -531,7 +510,8 @@
         });
       },
       _getChequeDetail: function (e) {
-        // console.log(e.detail.detail);
+        console.log(e.detail.detail);
+        this.titlePanelRight = 'เช็ค' 
         this.fire('toast', { status: 'load' });
         this.read('./g2g/payment/fee/id/' + e.detail.detail.fee_id, (data) => {
           // console.log(data);
@@ -560,7 +540,7 @@
         });
       },
       _getPaymentDetail: function (e) {
-        // console.log(e.detail.detail);
+        console.log(e.detail.detail);
         this.read('g2g/payment/silo', (data) => {
           this.set('dataSelected.silo', data);
           // console.log(this.dataSelected.silo)
