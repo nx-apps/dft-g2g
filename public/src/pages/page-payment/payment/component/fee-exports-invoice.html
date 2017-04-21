@@ -309,7 +309,7 @@
         });
        
         if (isNaN(result)) {
-          return ''
+          return '0'
         } else {
            this.set('data.totalBathInvoices', result);
           return result;
@@ -322,7 +322,7 @@
           // console.log(result);
         })
         if (isNaN(result)) {
-          return ''
+          return '0'
         } else {
           this.set('data.totalFeeInvoices', result)
           return result;
@@ -336,7 +336,7 @@
         this.set('data.totalIncomeTaxInvoices', result);
         
         if (isNaN(result)) {
-          return ''
+          return '0'
         } else {
           return result;
         }
@@ -349,7 +349,7 @@
         })
         
         if (isNaN(result)) {
-          return ''
+          return '0'
         } else {
           this.set('data.totalMoneyBathInvoices', result);
           return result;

@@ -219,17 +219,18 @@
         // console.log(data);
       },
       _changeDataPayrf: function (dateUn, index) {
-        this.getDateg2g(dateUn, (date) => {
+        // this.getDateg2g(dateUn, (date) => {
           // console.log(date,index);
           // return date;
           // this.set('invoiceDetail.invoice_date', date);
           // console.log(this.invoiceDetail.invoice_date);
           // this.notifyPath('invoiceDetail.invoice_date');
-        });
+        // });
       },
       _countPage: function (invoiceIndex) {
         return invoiceIndex + 1;
       },
+      // numeral().format('0,0.00')
       _totalQuantityTons: function (quantity_tons, index) {
         this.set('data.invoice_detail.' + index + '.quantity_tons', parseFloat(quantity_tons));
       },
@@ -248,12 +249,14 @@
       },
       _averageFee: function (feeTotal, invoice) {
         try {
-          if (this.data.invoice_detail[0].invoice_fee == undefined) {
-            var invoice_fee = invoice.invoice_detail.length;
-            for (var i = 0; i < invoice.invoice_detail.length; i++) {
-              this.set('data.invoice_detail.' + i + '.invoice_fee', feeTotal / invoice_fee);
-            }
+          // console.log(this.data.invoice_detail[0].invoice_fee );
+          // console.log(this.data.invoice_detail[0].invoice_fee == undefined);
+          // if (this.data.invoice_detail[0].invoice_fee == undefined) {
+          var invoice_fee = invoice.invoice_detail.length;
+          for (var i = 0; i < invoice.invoice_detail.length; i++) {
+            this.set('data.invoice_detail.' + i + '.invoice_fee', feeTotal / invoice_fee);
           }
+          // }
         } catch (e) {
           console.log(e);
         }
@@ -270,6 +273,7 @@
       // (3)*34.96
       // (7)=((4)-(5)-(6))<
       _totalMoneyInvoice: function (quantity_tons, price_per_ton, rate_bank, invoice_fee, index) {
+
         try {
           let incomeTax = ((((parseFloat(quantity_tons) * parseFloat(price_per_ton)) * parseFloat(rate_bank)) - parseFloat(invoice_fee)) * 1) / 100
 
@@ -280,78 +284,81 @@
         } catch (e) {
           // console.log(e);
         }
-
       },
       _totalTonInvoices: function (index, test) {
         var result = 0;
-        test.base.invoice_detail.map(function (item) {
+        test.base.invoice_detail.map((item)=> {
           result += item.quantity_tons;
-        }.bind(this));
+        })
         this.set('data.totalTonInvoices', result);
         return result;
       },
       _totalPricePerTonUsdInvoices: function (index, test) {
         var result = 0;
-        test.base.invoice_detail.map(function (item) {
+        test.base.invoice_detail.map((item)=> {
           result += item.price_per_ton;
-        }.bind(this));
+        })
         this.set('data.totalPricePerTonUsdInvoices', result);
         return result;
       },
       _totalAmountUsdInvoices: function (index, test) {
         var result = 0;
-        test.base.invoice_detail.map(function (item) {
+        test.base.invoice_detail.map((item)=> {
           result += item.amountUsd;
-        }.bind(this));
+        })
         this.set('data.totalAmountUsdInvoices', result);
         return result.toString();
       },
       _totalBathInvoices: function (index, test) {
         var result = 0;
-        test.base.invoice_detail.map(function (item) {
+        test.base.invoice_detail.map((item)=> {
           result += item.testza;
-        }.bind(this));
-        this.set('data.totalBathInvoices', result);
+        });
+       
         if (isNaN(result)) {
-          return ''
+          return '0'
         } else {
+           this.set('data.totalBathInvoices', result);
           return result;
         }
       },
       _totalFeeInvoices: function (index, test) {
         var result = 0;
-        test.base.invoice_detail.map(function (item) {
+        test.base.invoice_detail.map((item)=>{
           result += item.invoice_fee;
-        }.bind(this));
-        this.set('data.totalFeeInvoices', result);
+          // console.log(result);
+        })
         if (isNaN(result)) {
-          return ''
+          return '0'
         } else {
+          this.set('data.totalFeeInvoices', result)
           return result;
         }
       },
       _totalIncomeTaxInvoices: function (index, test) {
         var result = 0;
-        test.base.invoice_detail.map(function (item) {
+        test.base.invoice_detail.map((item)=> {
           result += item.incomeTax;
-        }.bind(this));
+        });
         this.set('data.totalIncomeTaxInvoices', result);
+        
         if (isNaN(result)) {
-          return ''
+          return '0'
         } else {
           return result;
         }
       },
       _totalMoneyBathInvoices: function (index, test) {
         var result = 0;
-        test.base.invoice_detail.map(function (item) {
+        test.base.invoice_detail.map((item)=> {
           // console.log('item.moneyInvoice  =>',item.moneyInvoice);
           result += item.moneyInvoice;
-        }.bind(this));
-        this.set('data.totalMoneyBathInvoices', result);
+        })
+        
         if (isNaN(result)) {
-          return ''
+          return '0'
         } else {
+          this.set('data.totalMoneyBathInvoices', result);
           return result;
         }
       },
