@@ -58,7 +58,7 @@
                 <th>{{localize('label_order')}}</th>
                 <th>{{localize('text_invoice_no')}}</th>
                 <th>{{localize('text_invoice_no_count')}}</th>
-                <th>{{localize('text_amount')}}</th>
+                <th>{{localize('label_total_bath_expenses')}}</th>
                 <th>{{localize('label_cheque_date')}}</th>
                 <th>{{localize('label_status')}}</th>
               </tr>
@@ -70,7 +70,7 @@
                   <td>[[_ObcountIndex(index)]] </td>
                   <td>[[item.invoice_no]]</td>
                   <td>[[item.invoice_count]]</td>
-                  <td>[[formatNumberNoZero(item.usd_value)]]</td>
+                  <td>[[formatNumber(item.bath_value_balance)]]</td>
                   <td>[[changeDateCC(item.fee_date_receipt)]]</td>
                   <td>[[item.fee_det_status_name]]</td>
                 </tr>

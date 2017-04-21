@@ -109,29 +109,19 @@
               <!-- [[_insertInvoiceDetail(invoiceDetail.shm_det_id)]] -->
               <tr>
                 <td>
-                  <gl-form-input disabled style="width:140px;" value="[[invoiceDetail.seller_name_en]]"></gl-form-input>
+                  <gl-form-input disabled style="width:140px;" value="[[invoiceDetail.company_name_th]]"></gl-form-input>
                 </td>
-                <!-- <td>
-                <gl-form-input disabled="[[isInputDisabled]]" style="width:140px;" value="{{invoiceDetail.invoice_no}}" ></gl-form-input>
-              </td> -->
-                <!-- <td>
-                [[_changeDataPayrf(invoiceDetail.*,invoiceDetail.invoice_date)]]
-                <vaadin-date-picker disabled="[[isInputDisabled]]" style="width:110px;" label="" value="{{invoiceDetail.invoice_date}}" ></vaadin-date-picker>
-              </td> -->
                 [[_totalQuantityTons(invoiceDetail.quantity_tons,index)]]
                 <td>
-                  <gl-form-input class="number" format-number="on" style="width:140px;" value="[[invoiceDetail.quantity_tons]]"
-                    disabled></gl-form-input>
+                  <gl-form-input class="number" format-number="on" style="width:140px;" value="[[invoiceDetail.quantity_tons]]" disabled></gl-form-input>
                 </td>
                 [[_totalPricePerTon(invoiceDetail.price_per_ton,index)]]
                 <td>
-                  <gl-form-input format-number="on" style="width:140px;text-align:center;" value="[[invoiceDetail.price_per_ton]]"
-                    disabled></gl-form-input>
+                  <gl-form-input format-number="on" style="width:140px;text-align:center;" value="[[invoiceDetail.price_per_ton]]" disabled></gl-form-input>
                 </td>
                 [[_totalAmountUsd(invoiceDetail.amount_usd,index)]]
                 <td>
-                  <gl-form-input class="number" format-number="on" style="width:140px;" value="[[invoiceDetail.amount_usd]]"
-                    disabled></gl-form-input>
+                  <gl-form-input class="number" format-number="on" style="width:140px;" value="[[invoiceDetail.amount_usd]]" disabled></gl-form-input>
                 </td>
                 <td>
                   <gl-form-input class="number" format-number="on" style="width:140px;" value="[[_totalBath(invoiceDetail.quantity_tons,invoiceDetail.price_per_ton,rateBank,index)]]"
@@ -220,11 +210,11 @@
       },
       _changeDataPayrf: function (dateUn, index) {
         // this.getDateg2g(dateUn, (date) => {
-          // console.log(date,index);
-          // return date;
-          // this.set('invoiceDetail.invoice_date', date);
-          // console.log(this.invoiceDetail.invoice_date);
-          // this.notifyPath('invoiceDetail.invoice_date');
+        // console.log(date,index);
+        // return date;
+        // this.set('invoiceDetail.invoice_date', date);
+        // console.log(this.invoiceDetail.invoice_date);
+        // this.notifyPath('invoiceDetail.invoice_date');
         // });
       },
       _countPage: function (invoiceIndex) {
@@ -287,7 +277,7 @@
       },
       _totalTonInvoices: function (index, test) {
         var result = 0;
-        test.base.invoice_detail.map((item)=> {
+        test.base.invoice_detail.map((item) => {
           result += item.quantity_tons;
         })
         this.set('data.totalTonInvoices', result);
@@ -295,7 +285,7 @@
       },
       _totalPricePerTonUsdInvoices: function (index, test) {
         var result = 0;
-        test.base.invoice_detail.map((item)=> {
+        test.base.invoice_detail.map((item) => {
           result += item.price_per_ton;
         })
         this.set('data.totalPricePerTonUsdInvoices', result);
@@ -303,7 +293,7 @@
       },
       _totalAmountUsdInvoices: function (index, test) {
         var result = 0;
-        test.base.invoice_detail.map((item)=> {
+        test.base.invoice_detail.map((item) => {
           result += item.amountUsd;
         })
         this.set('data.totalAmountUsdInvoices', result);
@@ -311,20 +301,20 @@
       },
       _totalBathInvoices: function (index, test) {
         var result = 0;
-        test.base.invoice_detail.map((item)=> {
+        test.base.invoice_detail.map((item) => {
           result += item.testza;
         });
-       
+
         if (isNaN(result)) {
           return '0'
         } else {
-           this.set('data.totalBathInvoices', result);
+          this.set('data.totalBathInvoices', result);
           return result;
         }
       },
       _totalFeeInvoices: function (index, test) {
         var result = 0;
-        test.base.invoice_detail.map((item)=>{
+        test.base.invoice_detail.map((item) => {
           result += item.invoice_fee;
           // console.log(result);
         })
@@ -337,11 +327,11 @@
       },
       _totalIncomeTaxInvoices: function (index, test) {
         var result = 0;
-        test.base.invoice_detail.map((item)=> {
+        test.base.invoice_detail.map((item) => {
           result += item.incomeTax;
         });
         this.set('data.totalIncomeTaxInvoices', result);
-        
+
         if (isNaN(result)) {
           return '0'
         } else {
@@ -350,11 +340,11 @@
       },
       _totalMoneyBathInvoices: function (index, test) {
         var result = 0;
-        test.base.invoice_detail.map((item)=> {
+        test.base.invoice_detail.map((item) => {
           // console.log('item.moneyInvoice  =>',item.moneyInvoice);
           result += item.moneyInvoice;
         })
-        
+
         if (isNaN(result)) {
           return '0'
         } else {

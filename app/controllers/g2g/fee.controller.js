@@ -60,7 +60,8 @@ exports.getByContractId = function (req, res) {
         .merge(function (m) {
             return {
                 usd_value: m('fee_detail').sum('usd_value'),
-                bath_value: m('fee_detail').sum('bath_value_balance'),
+                bath_value: m('fee_detail').sum('bath_value'),
+                invoice_fee: m('fee_detail').sum('invoice_fee'),
                 tax1percent: m('fee_detail').sum('bath_value_balance').mul(0.01),
                 bath_balance: m('fee_detail').sum('bath_value_balance').sub(
                     m('fee_detail').sum('bath_value_balance').mul(0.01)
@@ -68,7 +69,7 @@ exports.getByContractId = function (req, res) {
 
             }
         })
-        .without('id')//, 'fee_detail')
+        .without('id', 'fee_detail')
         .run()
         .then(function (result) {
             res.json(result)
@@ -136,13 +137,14 @@ exports.getById = function (req, res) {
                                                     usd_value: usd_merge('price_per_ton').mul(usd_merge('shm_det_quantity'))
                                                 }
                                             })
-                                    })
+                                    }),
+                                    invoice_fee: inv_det_merge('invoice_detail').sum('invoice_fee')
                                 }
                             })
                                 .merge(function (inv_det_merge) {
                                     return { usd_value: inv_det_merge('invoice_detail').sum('usd_value') }
                                 })
-                                .pluck('usd_value', 'invoice_no'),
+                                .pluck('usd_value', 'invoice_no', 'invoice_fee'),
                             fee_det_id: inv_merge('id')
                         }
                     })
@@ -154,8 +156,25 @@ exports.getById = function (req, res) {
                                 }),
                             invoice_count: inv_merge('invoice').getField('invoice_no').count(),
                             usd_value: inv_merge('invoice').sum('usd_value'),
+                            bath_value: inv_merge('invoice').sum('usd_value').mul(inv_merge('rate_bank')),
                             fee_date_receipt: inv_merge('fee_date_receipt').split('T')(0),
-                            fee_det_status_name: r.branch(inv_merge('fee_det_status').eq(true), 'อนุมัติ', 'ยังไม่อนุมัติ')
+                            fee_det_status_name: r.branch(inv_merge('fee_det_status').eq(true), 'อนุมัติ', 'ยังไม่อนุมัติ'),
+                            invoice_fee: inv_merge('invoice').sum('invoice_fee')
+                        }
+                    })
+                    .merge(function (inv_merge) {
+                        return {
+                            bath_value_balance: inv_merge('bath_value').sub(inv_merge('invoice_fee'))
+                        }
+                    })
+                    .merge(function (inv_merge) {
+                        return {
+                            tax1percent: inv_merge('bath_value_balance').mul(0.01)
+                        }
+                    })
+                    .merge(function (inv_merge) {
+                        return {
+                            bath_balance: inv_merge('bath_value_balance').sub(inv_merge('tax1percent'))
                         }
                     })
                     .without('invoice', 'id', 'tags')

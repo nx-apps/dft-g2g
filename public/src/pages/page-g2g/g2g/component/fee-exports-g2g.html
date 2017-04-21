@@ -56,32 +56,65 @@
         </div>
         <div class="container">
           <gl-grid-row width="{{getWidth}}">
-            <gl-grid-col width="[[getWidth]]" grid="[[300,6],[500,2]]">
+            <gl-grid-col width="[[getWidth]]" grid="[[300,6],[500,3]]">
               <!-- [[changeString2Num(data.*,'fee_no')]] -->
               <gl-form-input class="required" required allowed-pattern="[0-9||,||.]" format-number="on" disabled label="{{localize('label_fee_no')}}"
                 value="{{data.fee_no}}" always-float-label></gl-form-input>
             </gl-grid-col>
-            <!-- <gl-grid-col width="[[getWidth]]" grid="[[300,6],[500,2]]">
-           <gl-grid-col width="[[getWidth]]" grid="[[300,6],[500,3]]">
-            <gl-combo-box class="required" required disabled="[[isInputDisabled]]"  placeholder="{{localize('label_fee_no')}}" label="{{localize('label_fee_no')}}"
-               item-label-path="fee_no"   item-value-path="fee_id"  value="{{data.fee_id}}" items="[[_filterFee(dataForSelect.feeListinShm)]]">
-          </gl-grid-col>
-         </gl-grid-col> -->
             <gl-grid-col width="[[getWidth]]" grid="[[300,6],[500,3]]">
               <vaadin-date-picker class="required" required disabled label="{{localize('label_money_received_date')}}" value="{{data.fee_date_receipt}}"
                 always-float-label></vaadin-date-picker>
+            </gl-grid-col>
+            <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
+              [[changeString2Num(data.*,'rate_tt')]]
+              <gl-form-input class="required" required label="{{localize('label_exchange_rate')}} [[data.payterm]]" disabled allowed-pattern="[0-9||,||.]"
+                format-number="on" value="{{formatNumber(data.rate_tt)}}"></gl-form-input>
+            </gl-grid-col>
+            <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
+              [[changeString2Num(data.*,'rate_bank')]]
+              <gl-form-input class="required" required label="{{localize('label_exchange_rate_bank')}}" disabled allowed-pattern="[0-9||,||.]"
+                format-number="on" value="{{formatNumber(data.rate_bank)}}"></gl-form-input>
             </gl-grid-col>
           </gl-grid-row>
         </div>
         <div class="container">
           <gl-grid-row>
             <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+              [[changeString2Num(data.*,'fee_internal')]]
+              <gl-form-input class="required" required label="{{localize('label_fee_usd')}}" disabled allowed-pattern="[0-9||,||.]" format-number="on"
+                value="{{formatNumber(data.fee_internal)}}" always-float-label></gl-form-input>
+            </gl-grid-col>
+            <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+              [[changeString2Num(data.*,'fee_foreign')]]
+              <gl-form-input class="required" required disabled allowed-pattern="[0-9||,||.]" format-number="on" label="{{localize('label_fee_bath')}}"
+                value="{{formatNumber(data.fee_foreign)}}" always-float-label></gl-form-input>
+            </gl-grid-col>
+            <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+              [[changeString2Num(data.*,'fee_other')]]
+              <gl-form-input class="required" required disabled allowed-pattern="[0-9||,||.]" format-number="on" label="{{localize('label_other_expenses')}}"
+                value="{{formatNumber(data.fee_other)}}" always-float-label></gl-form-input>
+            </gl-grid-col>
+          </gl-grid-row>
+        </div>
+        <hr>
+        <div class="container">
+          <gl-grid-row>
+            <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
               <gl-form-input disabled format-number="on" label="{{localize('label_money_received_usd')}}" value="{{data.amount_usd}}" always-float-label></gl-form-input>
             </gl-grid-col>
             <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-              [[changeString2Num(data.*,'fee_internal')]]
-              <gl-form-input class="required" required label="{{localize('label_fee_usd')}}" disabled allowed-pattern="[0-9||,||.]" format-number="on"
-                value="{{data.fee_internal}}" always-float-label></gl-form-input>
+              <gl-form-input disabled format-number="on" label="{{localize('label_money_received_thb')}}" value="{{calBath(data.rate_bank,data.amount_usd)}}" always-float-label></gl-form-input>
+            </gl-grid-col>
+            <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+              <gl-form-input disabled format-number="on" label="{{localize('label_fee_total')}}" value="{{calRep(data.rate_bank,data.fee_internal,data.fee_foreign,data.fee_other)}}" always-float-label></gl-form-input>
+            </gl-grid-col>
+          </gl-grid-row>
+        </div>
+
+        <!--<div class="container">
+          <gl-grid-row>
+            <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+              <gl-form-input disabled format-number="on" label="{{localize('label_money_received_usd')}}" value="{{data.amount_usd}}" always-float-label></gl-form-input>
             </gl-grid-col>
             <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
               [[changeString2Num(data.*,'balanceLessFees')]] {{_balanceLessFees(data.amount_usd,data.fee_internal)}}
@@ -89,56 +122,61 @@
                 placeholder="0.00"></gl-form-input>
             </gl-grid-col>
           </gl-grid-row>
-        </div>
-        <div class="container">
+        </div>-->
+        <!--<div class="container">
           <gl-grid-row>
-            <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-              [[changeString2Num(data.*,'rate_tt')]]
-              <gl-form-input class="required" required label="{{localize('label_exchange_rate')}} [[data.payterm]]" disabled allowed-pattern="[0-9||,||.]"
-                format-number="on" value="{{data.rate_tt}}"></gl-form-input>
-            </gl-grid-col>
-            <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-              [[changeString2Num(data.*,'rate_bank')]]
-              <gl-form-input class="required" required label="{{localize('label_exchange_rate_bank')}}" disabled allowed-pattern="[0-9||,||.]"
-                format-number="on" value="{{data.rate_bank}}"></gl-form-input>
-            </gl-grid-col>
+
             <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
               [[changeString2Num(data.*,'balanceChangeBath')]] {{_balanceChangeBath(data.rate_bank,data.balanceLessFees)}}
               <gl-form-input disabled label="{{localize('label_amount_after_exchange_rate')}}" allowed-pattern="[0-9||,||.]" format-number="on"
                 value="[[data.balanceChangeBath]]" placeholder="0.00"></gl-form-input>
             </gl-grid-col>
           </gl-grid-row>
-        </div>
-        <div class="container">
+        </div>-->
+        <!--<div class="container">
           <gl-grid-row>
-            <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-              [[changeString2Num(data.*,'fee_foreign')]]
-              <gl-form-input class="required" required disabled allowed-pattern="[0-9||,||.]" format-number="on" label="{{localize('label_fee_bath')}}"
+            <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">-->
+              <!--[[changeString2Num(data.*,'fee_foreign')]]-->
+              <!--<gl-form-input class="required" required disabled allowed-pattern="[0-9||,||.]" format-number="on" label="{{localize('label_fee_bath')}}"
                 value="{{data.fee_foreign}}" always-float-label></gl-form-input>
             </gl-grid-col>
-            <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-              [[changeString2Num(data.*,'fee_other')]]
-              <gl-form-input class="required" required disabled allowed-pattern="[0-9||,||.]" format-number="on" label="{{localize('label_other_expenses')}}"
+            <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">-->
+              <!--[[changeString2Num(data.*,'fee_other')]]-->
+              <!--<gl-form-input class="required" required disabled allowed-pattern="[0-9||,||.]" format-number="on" label="{{localize('label_other_expenses')}}"
                 value="{{data.fee_other}}" always-float-label></gl-form-input>
             </gl-grid-col>
-            <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
+            <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">-->
               {{_feTotal(data.fee_internal,data.fee_foreign,data.fee_other,data.rate_bank)}} [[changeString2Num(data.*,'feeTotalWithOutUsd')]]
-              <gl-form-input label="{{localize('label_total_fee')}}" readonly value="[[data.feeTotalWithOutUsd]]" allowed-pattern="[0-9||,||.]"
+              <!--<gl-form-input label="{{localize('label_total_fee')}}" readonly value="[[data.feeTotalWithOutUsd]]" allowed-pattern="[0-9||,||.]"
                 format-number="on" placeholder="0.00" always-float-label></gl-form-input>
             </gl-grid-col>
           </gl-grid-row>
         </div>
         <div class="container">
           <gl-grid-row>
+            <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+            </gl-grid-col>
             <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]"></gl-grid-col>
+            <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">-->
+              <!--[[changeString2Num(data.*,'totalbath')]] [[_balanceBath(data.balanceChangeBath,data.feeTotalWithOutUsd)]]-->
+              <!--<gl-form-input disabled label="{{localize('label_total_bath_expenses')}}" value="[[data.totalbath]]" allowed-pattern="[0-9||,||.]"
+                format-number="on" placeholder="0.00" always-float-label></gl-form-input>
+            </gl-grid-col>
+          </gl-grid-row>
+        </div>
+        <div class="container">
+          <gl-grid-row>
+            <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+              <gl-form-input disabled label="{{localize('label_total_bath_expenses')}}" value="[[data.totalbath]]" allowed-pattern="[0-9||,||.]"
+                format-number="on" placeholder="0.00" always-float-label></gl-form-input>
+            </gl-grid-col>
             <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]"></gl-grid-col>
             <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
-              [[changeString2Num(data.*,'totalbath')]] [[_balanceBath(data.balanceChangeBath,data.feeTotalWithOutUsd)]]
               <gl-form-input disabled label="{{localize('label_total_bath_expenses')}}" value="[[data.totalbath]]" allowed-pattern="[0-9||,||.]"
                 format-number="on" placeholder="0.00" always-float-label></gl-form-input>
             </gl-grid-col>
           </gl-grid-row>
-        </div>
+        </div>-->
         <template is="dom-repeat" items="{{data.invoice}}" as="invoice">
           <fee-exports-invoice-g2g data="{{invoice}}" rate-bank="{{data.rate_bank}}" is-input-disabled="[[isInputDisabled]]" invoice-index="[[_ObcountIndex(index)]]"
             fee-total="[[_countFee(data.feeTotal)]] " invoice-page="[[data.invoicePage]]" id="dcxxx"></fee-exports-invoice-g2g>
@@ -194,7 +232,8 @@
         g2gModelBehavior,
         g2gCongtroller,
         nylonBehavior,
-        nylonLocalizeBehavior
+        nylonLocalizeBehavior,
+        FormatNumberBehavior
       ],
       observers: [
         '_invoicePage(data.invoice)',
@@ -226,6 +265,12 @@
       _balanceLessFees(amount_usd, fee_internal) {
         this.data.balanceLessFees = amount_usd - fee_internal
         this.notifyPath('data.balanceLessFees');
+      },
+      calBath(rate_bank,amount_usd){
+        return this.formatNumber(rate_bank*amount_usd)
+      },
+      calRep(rate_bank,fee_internal,fee_foreign,fee_other){
+        return this.formatNumber((rate_bank*fee_internal)+fee_foreign+fee_other)
       },
       _changeDataFee: function (dateUn) {
         this.getDateg2g(dateUn, (date) => {
@@ -287,8 +332,8 @@
               data: data // ข้อมูลที่ส่งไป เช่น id ที่จะใช้ลบข้อมูล ใน db
             })
           } else {
-            this.fire('toast', {              
-status: 'connectError', text: 'ค่า FEE เกินจาก ' + this.data.feeTotal + ' บาท', //คำสั่งสำหรับเปิด toast error
+            this.fire('toast', {
+              status: 'connectError', text: 'ค่า FEE เกินจาก ' + this.data.feeTotal + ' บาท', //คำสั่งสำหรับเปิด toast error
               callback() { }
             })
           }
@@ -303,8 +348,8 @@ status: 'connectError', text: 'ค่า FEE เกินจาก ' + this.data
           this.update('./g2g/fee_detail/update', detail.data, () => {
             let contract_id = this._getUrl();
             this.fire('get-fee-list', { detail: contract_id });
-            this.fire('toast', {              
-status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
+            this.fire('toast', {
+              status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
               callback: () => {
                 this.editInput();
                 let el = Polymer.dom(this.root).querySelectorAll('.required');
@@ -337,8 +382,8 @@ status: 'success', text: 'บันทึกสำเร็จ',  // คำส�
           this.update('./g2g/fee_detail/update', detail.data, () => {
             //  console.log(detail.data.id);
             this.fire('refresh-contract', { detail: 'refresh-contract' });
-            this.fire('toast', {              
-status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
+            this.fire('toast', {
+              status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
               callback: () => {
                 // this.fire('close-drawer',{detail:'close-drawer'})
                 // let contract_id= this._getUrl();
