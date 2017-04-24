@@ -56,8 +56,8 @@
               <th>{{localize('text_check_box')}}</th>
               <th>{{localize('label_order')}}</th>
               <th>{{localize('label_componey')}}</th>
-              <th>{{localize('text_invoice_no')}}</th>
-              <th>{{localize('text_amount')}}</th>
+              <th>{{localize('text_cheque_no')}}</th>
+              <th>{{localize('label_total_value_bath')}}</th>
             </tr>
             </tr>
           </thead>
@@ -95,7 +95,7 @@
               readonly value="{{formatNumber(data.pay_amount)}}"></gl-form-input>
           </gl-grid-col>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-            <gl-form-input class="required" required label="{{localize('label_order')}} :" placeholder="{{localize('label_order')}}"
+            <gl-form-input class="required" required label="{{localize('label_order')}} :" placeholder="{{localize('label_pay_times')}}"
               value="{{data.pay_times}}"></gl-form-input>
           </gl-grid-col>
         </gl-grid-row>
@@ -238,7 +238,8 @@
                     }
                   });
                 }, (data) => {
-                  window.open('https://localhost:3000/api/payment/report5/' + data.id[0], '_blank');
+                  console.log(data);
+                  window.open('https://localhost:3000/api/payment/report6/' + data.id[0], '_blank');
                   this.fire('close-drawer', { detail: 'close-drawer' });
                   // console.log('data=>', data.id[0]);
                   let checkDisabled = Polymer.dom(this.root).querySelectorAll('paper-checkbox.checkBoxPay[aria-disabled="true"]');

@@ -420,8 +420,8 @@ exports.getPayByContractId = function (req, res) {
                                 })
                                 .merge(function (inv_det_merge) {
                                     return { usd_value: inv_det_merge('invoice_detail').sum('usd_value') }
-                                })
-                                .pluck('usd_value', 'invoice_no'),
+                                }),
+                                // .pluck('usd_value', 'invoice_no'),
                             fee_det_id: inv_merge('id')
                         }
                     })
@@ -436,7 +436,7 @@ exports.getPayByContractId = function (req, res) {
                             fee_date_receipt: inv_merge('fee_date_receipt').split('T')(0)
                         }
                     })
-                    .without('invoice', 'id')
+                    // .without('invoice', 'id')
             }
         })
         .merge(function (m) {
@@ -444,7 +444,7 @@ exports.getPayByContractId = function (req, res) {
                 usd_value: m('fee_detail').sum('usd_value')
             }
         })
-        .without('id', 'fee_detail')
+        // .without('id', 'fee_detail')
         .run()
         .then(function (result) {
             res.json(result)

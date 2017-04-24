@@ -109,7 +109,9 @@
               <!-- [[_insertInvoiceDetail(invoiceDetail.shm_det_id)]] -->
               <tr>
                 <td>
-                  <gl-form-input disabled style="width:140px;" value="[[invoiceDetail.company_name_th]]"></gl-form-input>
+                  <div style="margin-top: 15px;">
+                    [[invoiceDetail.company_name_th]]
+                  </div>
                 </td>
                 [[_totalQuantityTons(invoiceDetail.quantity_tons,index)]]
                 <td>

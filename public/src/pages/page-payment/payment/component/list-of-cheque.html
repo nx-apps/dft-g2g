@@ -30,7 +30,7 @@
       <div class="flex title">{{localize('text_of_contract')}} : [[dataForSelect.nameContract]]</div>
        <!--<div class="horizontal end-justified layout">-->
       <div class="flex horizontal end-justified layout">
-       <div class="labelSearch">รอบการจ่ายเงิน.</div>{{_searchInArray(searchInput)}}
+       <div class="labelSearch">{{localize('text_fee_no')}}.</div>{{_searchInArray(searchInput)}}
          <paper-input label=" " no-label-float value="{{searchInput}}"></paper-input>
          <paper-icon-button icon="search"></paper-icon-button>
          </paper-input>
@@ -43,7 +43,7 @@
             <tr>
               <!-- <th>งวดการส่งมอบ</th> -->
               <th>{{localize('text_fee_no')}}</th>
-              <!-- <th>ชื่อรอบการจ่ายเงิน</th> -->
+               <!--<th>{{localize('text_pay_amounts')}}</th> -->
             </tr>
           </thead>
           <tbody class="table-body">
@@ -53,7 +53,7 @@
                 <tr data="[[item]]" on-tap="getChequeDetail" level="primary" >
                   <!-- <td>[[item.shm_name]]</td> -->
                   <td>[[item.fee_no]]</td>
-                  <!-- <td>[[item.fee_name]]</td> -->
+                   <!--<td>[[item.pay_amounts]]</td> -->
                 </tr>
               </template>
               </template>

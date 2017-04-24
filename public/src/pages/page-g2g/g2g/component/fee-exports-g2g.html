@@ -46,9 +46,9 @@
     </template>
     <gl-form-panel set-padding="10px 20px 10px 20px" set-border="1px">
       <gl-form-panel-head label="" set-padding="10px" set-border="1px">
-         <template is="dom-if" if="[[!data.fee_det_status]]">
-        <paper-icon-button icon="create" id="editExporter" raised on-tap="editInput" title="Edit" disabled="[[!isInputDisabled]]"></paper-icon-button>
-        <paper-tooltip for="editExporter" offset="0">Edit Exporter</paper-tooltip>
+        <template is="dom-if" if="[[!data.fee_det_status]]">
+          <paper-icon-button icon="create" id="editExporter" raised on-tap="editInput" title="Edit" disabled="[[!isInputDisabled]]"></paper-icon-button>
+          <paper-tooltip for="editExporter" offset="0">Edit Exporter</paper-tooltip>
         </template>
       </gl-form-panel-head>
       <gl-form-panel-body label="" set-padding="10px" set-border="1px">
@@ -57,67 +57,67 @@
           <gl-form-label-input label="" class="inputHeader" value="{{localize('label_rice_detail_and_payout')}}"></gl-form-label-input>
         </div>
         <div class="container">
-                  <gl-grid-row width="{{getWidth}}">
-                    <gl-grid-col width="[[getWidth]]" grid="[[300,6],[500,3]]">
-                      <gl-combo-box class="required" required disabled placeholder="{{localize('label_fee_no')}}" label="{{localize('label_fee_no')}}"
-                        item-label-path="fee_no" item-value-path="fee_id" value="{{data.fee_id}}" items="[[_filterFee(dataForSelect.feeListinShm)]]">
-                    </gl-grid-col>
-                    <gl-grid-col width="[[getWidth]]" grid="[[300,6],[500,3]]">
-                      <vaadin-date-picker class="required" required disabled label="{{localize('label_money_received_date')}}"
-                        value="{{data.fee_date_receipt}}" always-float-label></vaadin-date-picker>
-                    </gl-grid-col>
-                    <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
-                      [[changeString2Num(data.*,'rate_tt')]]
-                      <gl-form-input class="required" required label="{{localize('label_exchange_rate')}} [[data.payterm]]" disabled 
-                        allowed-pattern="[0-9||,||.]" format-number="on" value="{{data.rate_tt}}" always-float-label></gl-form-input>
-                    </gl-grid-col>
-                    <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
-                      [[changeString2Num(data.*,'rate_bank')]]
-                      <gl-form-input class="required" required label="{{localize('label_exchange_rate_bank')}}" disabled 
-                        allowed-pattern="[0-9||,||.]" format-number="on" value="{{data.rate_bank}}" always-float-label></gl-form-input>
-                    </gl-grid-col>
-                  </gl-grid-row>
-                </div>
-                <div class="container">
-                  <gl-grid-row>
-                    <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-                      [[changeString2Num(data.*,'fee_internal')]]
-                      <gl-form-input class="required" required label="{{localize('label_fee_usd')}}" disabled  allowed-pattern="[0-9||,||.]"
-                        format-number="on" value="{{data.fee_internal}}" always-float-label></gl-form-input>
+          <gl-grid-row width="{{getWidth}}">
+            <gl-grid-col width="[[getWidth]]" grid="[[300,6],[500,3]]">
+              <gl-combo-box class="required" required disabled placeholder="{{localize('label_fee_no')}}" label="{{localize('label_fee_no')}}"
+                item-label-path="fee_no" item-value-path="fee_id" value="{{data.fee_id}}" items="[[_filterFee(dataForSelect.feeListinShm)]]">
+            </gl-grid-col>
+            <gl-grid-col width="[[getWidth]]" grid="[[300,6],[500,3]]">
+              <vaadin-date-picker class="required" required disabled label="{{localize('label_money_received_date')}}" value="{{data.fee_date_receipt}}"
+                always-float-label></vaadin-date-picker>
+            </gl-grid-col>
+            <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
+              [[changeString2Num(data.*,'rate_tt')]]
+              <gl-form-input class="required" required label="{{localize('label_exchange_rate')}} [[data.payterm]]" disabled allowed-pattern="[0-9||,||.]"
+                format-number="on" value="{{data.rate_tt}}" always-float-label></gl-form-input>
+            </gl-grid-col>
+            <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
+              [[changeString2Num(data.*,'rate_bank')]]
+              <gl-form-input class="required" required label="{{localize('label_exchange_rate_bank')}}" disabled allowed-pattern="[0-9||,||.]"
+                format-number="on" value="{{data.rate_bank}}" always-float-label></gl-form-input>
+            </gl-grid-col>
+          </gl-grid-row>
+        </div>
+        <div class="container">
+          <gl-grid-row>
+            <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+              [[changeString2Num(data.*,'fee_internal')]]
+              <gl-form-input class="required" required label="{{localize('label_fee_usd')}}" disabled allowed-pattern="[0-9||,||.]" format-number="on"
+                value="{{data.fee_internal}}" always-float-label></gl-form-input>
 
-                    </gl-grid-col>
-                    <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-                      [[changeString2Num(data.*,'fee_foreign')]]
-                      <gl-form-input class="required" required disabled allowed-pattern="[0-9||,||.]" format-number="on"
-                        label="{{localize('label_fee_bath')}}" value="{{data.fee_foreign}}" always-float-label></gl-form-input>
-                    </gl-grid-col>
-                    <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-                      [[changeString2Num(data.*,'fee_other')]]
-                      <gl-form-input class="required" required disabled allowed-pattern="[0-9||,||.]" format-number="on"
-                        label="{{localize('label_other_expenses')}}" value="{{data.fee_other}}" always-float-label></gl-form-input>
-                    </gl-grid-col>
-                  </gl-grid-row>
-                </div>
-                <!--<hr>-->
-                <div class="container">
-                  <gl-grid-row>
-                    <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-                      <gl-form-input disabled format-number="on" label="{{localize('label_money_received_usd')}}" value="{{data.amount_usd}}" always-float-label></gl-form-input>
-                    </gl-grid-col>
-                    <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-                      <gl-form-input disabled format-number="on" label="{{localize('label_money_received_thb')}}" value="{{calBath(data.rate_bank,data.amount_usd)}}"
-                        always-float-label></gl-form-input>
-                    </gl-grid-col>
-                    <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-                      <gl-form-input disabled format-number="on" label="{{localize('label_fee_total')}}" value="{{calRep(data.rate_bank,data.fee_internal,data.fee_foreign,data.fee_other)}}"
-                        always-float-label></gl-form-input>
-                    </gl-grid-col>
-                  </gl-grid-row>
-                </div>
-                <!--[[changeString2Num(data.*,'fee_internal')]]-->
-                [[changeString2Num(data.*,'balanceLessFees')]] {{_balanceLessFees(data.amount_usd,data.fee_internal)}} [[changeString2Num(data.*,'balanceChangeBath')]]
-                {{_balanceChangeBath(data.rate_bank,data.balanceLessFees)}} {{_feTotal(data.fee_internal,data.fee_foreign,data.fee_other,data.rate_bank)}}
-                [[changeString2Num(data.*,'feeTotalWithOutUsd')]] [[changeString2Num(data.*,'totalbath')]] [[_balanceBath(data.balanceChangeBath,data.feeTotalWithOutUsd)]]
+            </gl-grid-col>
+            <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+              [[changeString2Num(data.*,'fee_foreign')]]
+              <gl-form-input class="required" required disabled allowed-pattern="[0-9||,||.]" format-number="on" label="{{localize('label_fee_bath')}}"
+                value="{{data.fee_foreign}}" always-float-label></gl-form-input>
+            </gl-grid-col>
+            <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+              [[changeString2Num(data.*,'fee_other')]]
+              <gl-form-input class="required" required disabled allowed-pattern="[0-9||,||.]" format-number="on" label="{{localize('label_other_expenses')}}"
+                value="{{data.fee_other}}" always-float-label></gl-form-input>
+            </gl-grid-col>
+          </gl-grid-row>
+        </div>
+        <!--<hr>-->
+        <div class="container">
+          <gl-grid-row>
+            <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+              <gl-form-input disabled format-number="on" label="{{localize('label_money_received_usd')}}" value="{{data.amount_usd}}" always-float-label></gl-form-input>
+            </gl-grid-col>
+            <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+              <gl-form-input disabled format-number="on" label="{{localize('label_money_received_thb')}}" value="{{calBath(data.rate_bank,data.amount_usd)}}"
+                always-float-label></gl-form-input>
+            </gl-grid-col>
+            <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+              <gl-form-input disabled format-number="on" label="{{localize('label_fee_total')}}" value="{{calRep(data.rate_bank,data.fee_internal,data.fee_foreign,data.fee_other)}}"
+                always-float-label></gl-form-input>
+            </gl-grid-col>
+          </gl-grid-row>
+        </div>
+        <!--[[changeString2Num(data.*,'fee_internal')]]-->
+        [[changeString2Num(data.*,'balanceLessFees')]] {{_balanceLessFees(data.amount_usd,data.fee_internal)}} [[changeString2Num(data.*,'balanceChangeBath')]]
+        {{_balanceChangeBath(data.rate_bank,data.balanceLessFees)}} {{_feTotal(data.fee_internal,data.fee_foreign,data.fee_other,data.rate_bank)}}
+        [[changeString2Num(data.*,'feeTotalWithOutUsd')]] [[changeString2Num(data.*,'totalbath')]] [[_balanceBath(data.balanceChangeBath,data.feeTotalWithOutUsd)]]
         <template is="dom-repeat" items="{{data.invoice}}" as="invoice">
           <fee-exports-invoice-g2g data="{{invoice}}" rate-bank="{{data.rate_bank}}" is-input-disabled="[[isInputDisabled]]" invoice-index="[[_ObcountIndex(index)]]"
             fee-total="[[_countFee(data.feeTotal)]] " invoice-page="[[data.invoicePage]]" id="dcxxx"></fee-exports-invoice-g2g>
@@ -213,11 +213,13 @@
         this.data.balanceLessFees = amount_usd - fee_internal
         this.notifyPath('data.balanceLessFees');
       },
-      calBath(rate_bank,amount_usd){
-        return this.formatNumber(rate_bank*amount_usd)
+      calBath(rate_bank, amount_usd) {
+        return this.formatNumber(rate_bank * amount_usd)
       },
-      calRep(rate_bank,fee_internal,fee_foreign,fee_other){
-        return this.formatNumber(Number(rate_bank)*Number(fee_internal)+Number(fee_foreign)+Number(fee_other))
+      calRep(rate_bank, fee_internal, fee_foreign, fee_other) {
+        let fee = this.formatNumber(Number(rate_bank) * Number(fee_internal) + Number(fee_foreign) + Number(fee_other))
+        this.set('dataForSelect.feeLimit', numeral().unformat(fee))
+        return fee
       },
       _changeDataFee: function (dateUn) {
         this.getDateg2g(dateUn, (date) => {
@@ -270,7 +272,7 @@
           })
           // console.log(invoice_total.reduce((previous, current) => previous+current, 0));
           // console.log(this.data.feeTotal);
-          if (invoice_total.reduce((previous, current) => previous + current, 0) <= this.data.feeTotal) {
+          
             this.fire('toast', {  //คำสั่งสำหรับเปิด toast dialog
               status: 'dialog',
               text: 'ต้องการแก้ไขข้อมูลใช่หรือไม่ ?',
@@ -278,12 +280,6 @@
               el: this, // compontents
               data: data // ข้อมูลที่ส่งไป เช่น id ที่จะใช้ลบข้อมูล ใน db
             })
-          } else {
-            this.fire('toast', {
-              status: 'connectError', text: 'ค่า FEE เกินจาก ' + this.data.feeTotal + ' บาท', //คำสั่งสำหรับเปิด toast error
-              callback() { }
-            })
-          }
 
 
         });
@@ -323,9 +319,6 @@
       _approvePayment: function (result, detail) {
         if (result == true) {
           let contract_id = this._getUrl();
-          //  console.log(contract_id);
-          //  console.log(detail.data);
-
           this.update('./g2g/fee_detail/update', detail.data, () => {
             //  console.log(detail.data.id);
             this.fire('refresh-contract', { detail: 'refresh-contract' });
@@ -344,34 +337,47 @@
         }
       },
       _clearDatafee: function (data, action, callback) {
-        let el = Polymer.dom(this.root).querySelectorAll('.required');
-        let stat = el.map((el) => el.validate());
-        if (stat.every(elem => elem == true)) {
-          let {rate_bank, rate_tt, fee_other, fee_internal, fee_foreign, fee_det_status, fee_date_receipt, fee_id} = data;
-          let newData = { rate_bank, rate_tt, fee_other, fee_internal, fee_foreign, fee_det_status, fee_date_receipt, fee_id };
-          newData.invoice = [];
-          if (typeof data.tags !== 'undefined') {
-            newData.tags = new Array();
-            data.tags.map((tag) => {
-              newData.tags.push(tag);
-            });
-          }
-          newData.fee_date_receipt = new Date(newData.fee_date_receipt);
-          this.data.invoice.map((el, indexShmid) => {
-            newData.invoice.push({ invoice_id: el.invoice_id, invoice_detail: [] });
-            el.invoice_detail.map((shmDet, indexshmdet) => {
-              newData.invoice[indexShmid].invoice_detail.push({
-                shm_det_id: shmDet.shm_det_id,
-                // invoice_no:shmDet.invoice_no,
-                // invoice_date:new Date (shmDet.invoice_date),
-                invoice_fee: shmDet.invoice_fee,
+        try {
+          let el = Polymer.dom(this.root).querySelectorAll('.required');
+          let stat = el.map((el) => el.validate());
+          let dataConunt = data.invoice
+          if (stat.every(elem => elem == true) && 
+          Object.keys(dataConunt).reduce((previous, current) => previous + dataConunt[current].totalFeeInvoices, 0) >= this.dataForSelect.feeLimit) {
+            let {rate_bank, rate_tt, fee_other, fee_internal, fee_foreign, fee_det_status, fee_date_receipt, fee_id} = data;
+            let newData = { rate_bank, rate_tt, fee_other, fee_internal, fee_foreign, fee_det_status, fee_date_receipt, fee_id };
+            newData.invoice = [];
+            if (typeof data.tags !== 'undefined') {
+              newData.tags = new Array();
+              data.tags.map((tag) => {
+                newData.tags.push(tag);
+              });
+            }
+            newData.fee_date_receipt = new Date(newData.fee_date_receipt);
+            this.data.invoice.map((el, indexShmid) => {
+              newData.invoice.push({ invoice_id: el.invoice_id, invoice_detail: [] });
+              el.invoice_detail.map((shmDet, indexshmdet) => {
+                newData.invoice[indexShmid].invoice_detail.push({
+                  shm_det_id: shmDet.shm_det_id,
+                  // invoice_no:shmDet.invoice_no,
+                  // invoice_date:new Date (shmDet.invoice_date),
+                  invoice_fee: shmDet.invoice_fee,
+                });
               });
             });
-          });
-          // el.map((el)=> {el.reset();});
+            // el.map((el)=> {el.reset();});
 
-          callback(newData);
+            callback(newData);
+          } else {
+            this.fire('toast', {
+              status: 'connectError', text: 'จำนวนค่าธรรมเนียมที่ต้องไม่ถูกต้อง', //คำสั่งสำหรับเปิด toast error
+              callback: function () {
+              }
+            })
+          }
+        } catch (e) {
+
         }
+
       },
 
     });

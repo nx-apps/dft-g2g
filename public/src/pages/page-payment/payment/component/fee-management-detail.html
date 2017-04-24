@@ -78,6 +78,7 @@
           // console.log(feeNo);
           // this.data.fee_id  == feeNo
           let checkfeeNo = feeNo.map((fee_id)=>fee_id.fee_id == id)
+          console.log('checkfeeNo>>>',checkfeeNo);
           return checkfeeNo.every(elem => elem == true)
         }else {
           return feeNo === undefined || feeNo.length == 0

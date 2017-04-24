@@ -348,7 +348,10 @@
       _getFeeListInShm: function (clId) {
         this.read('./g2g/fee/confirm/id/' + clId, (data) => {
           this.dataForSelect.feeListinShm = data;
+          this.dataForSelect.feeListinShmCombobox = this.g2gClone(data);
+          // this.push('dataForSelect.feeListinShm',{fee_no :'เพิ่ม ID',fee_id:0})
           this.notifyPath('dataForSelect.feeListinShm');
+          this.notifyPath('dataForSelect.feeListinShmCombobox');
           // console.log(this.dataForSelect.feeListinShm);
           // this._getFeeList(this._getUrl());
         });
@@ -484,8 +487,9 @@
         this._getFeeListInShm(e.detail.detail.cl_id);
         //
         this.read('./g2g/fee/id/' + e.detail.detail.fee_id, (data) => {
-
+          this.set('dataForSelect.cl_id', data.cl_id);
           this.dataSelected.fee = data;
+          // this.dataForSelect.checked = true
           this.notifyPath('dataSelected.fee');
           this.paymentsPageSeleted = 'feePage';
           if (this.checkRenderPage.feeExports != true) {
@@ -510,7 +514,7 @@
         });
       },
       _getChequeDetail: function (e) {
-        console.log(e.detail.detail);
+        // console.log(e.detail.detail);
         this.titlePanelRight = 'เช็ค' 
         this.fire('toast', { status: 'load' });
         this.read('./g2g/payment/fee/id/' + e.detail.detail.fee_id, (data) => {
@@ -540,7 +544,7 @@
         });
       },
       _getPaymentDetail: function (e) {
-        console.log(e.detail.detail);
+        // console.log(e.detail.detail);
         this.read('g2g/payment/silo', (data) => {
           this.set('dataSelected.silo', data);
           // console.log(this.dataSelected.silo)

@@ -54,7 +54,9 @@ exports.getByContractId = function (req, res) {
         .pluck("left", { right: ['invoice_no', 'invoice_date'] }).zip()
         .merge(inv_merge => {
             return {
-                invoice_date: inv_merge('invoice_date').split('T')(0)
+                invoice_date: inv_merge('invoice_date').split('T')(0),
+                // pay_amounts: inv_merge('payment_detail').sum('pay_amount')
+
             }
         })
         .run()

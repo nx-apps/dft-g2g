@@ -135,7 +135,8 @@
                   <gl-grid-row width="{{getWidth}}">
                     <gl-grid-col width="[[getWidth]]" grid="[[300,6],[500,3]]">
                       <gl-combo-box class="required test" required disabled="[[isInputDisabled]]" placeholder="{{localize('label_fee_no')}}" label="{{localize('label_fee_no')}}"
-                        item-label-path="fee_no" item-value-path="fee_id" value="{{data.fee_id}}" items="[[_filterFee(dataForSelect.feeListinShm)]]">
+                        item-label-path="fee_no" item-value-path="fee_id" value="{{data.fee_id}}" items="[[_filterFee(dataForSelect.feeListinShmCombobox)]]">
+                        [[addFeeno(data.fee_id)]]
                     </gl-grid-col>
                     <gl-grid-col width="[[getWidth]]" grid="[[300,6],[500,3]]">
                       <vaadin-date-picker class="required test" required disabled="[[isInputDisabled]]" label="{{localize('label_money_received_date')}}"
@@ -190,14 +191,9 @@
                   </gl-grid-row>
                 </div>
                 <!--[[changeString2Num(data.*,'fee_internal')]]-->
-                [[changeString2Num(data.*,'balanceLessFees')]] 
-                {{_balanceLessFees(data.amount_usd,data.fee_internal)}} 
-                [[changeString2Num(data.*,'balanceChangeBath')]]
-                {{_balanceChangeBath(data.rate_bank,data.balanceLessFees)}} 
-                {{_feTotal(data.fee_internal,data.fee_foreign,data.fee_other,data.rate_bank)}}
-                [[changeString2Num(data.*,'feeTotalWithOutUsd')]] 
-                [[changeString2Num(data.*,'totalbath')]] 
-                [[_balanceBath(data.balanceChangeBath,data.feeTotalWithOutUsd)]]
+                [[changeString2Num(data.*,'balanceLessFees')]] {{_balanceLessFees(data.amount_usd,data.fee_internal)}} [[changeString2Num(data.*,'balanceChangeBath')]]
+                {{_balanceChangeBath(data.rate_bank,data.balanceLessFees)}} {{_feTotal(data.fee_internal,data.fee_foreign,data.fee_other,data.rate_bank)}}
+                [[changeString2Num(data.*,'feeTotalWithOutUsd')]] [[changeString2Num(data.*,'totalbath')]] [[_balanceBath(data.balanceChangeBath,data.feeTotalWithOutUsd)]]
 
                 <template is="dom-repeat" items="{{data.invoice}}" as="invoice">
                   <fee-exports-invoice fee-total="[[_countFee(data.feeTotal)]] " data="{{invoice}}" rate-bank="{{data.rate_bank}}" invoice-index="[[_ObcountIndex(index)]]"
@@ -295,8 +291,22 @@
       },
       _filterFee: function (items) {
         try {
+          // console.log(items)
+          let checkZero = items.filter((item) => item.fee_id == 0)
+          if (checkZero.length < 1) {
+            items.unshift({ fee_no: 'เพิ่มครั้งที่ใหม่', fee_id: 0, fee_status: false })
+          }
+          
+          // this.push('dataForSelect.feeListinShm',)
+          // log
           return items.filter((item) => item.fee_status == false);
         } catch (e) {
+        }
+      },
+      addFeeno(id) {
+        if (id == 0) {
+          this.$$('#tab1').checked = false
+          this.$$('#tab2').checked = true
         }
       },
       _balanceLessFees(amount_usd, fee_internal) {
@@ -404,7 +414,7 @@
           //  console.log(detail.data);
           //  console.log(detail.data);
           this.update('./g2g/fee_detail/update', detail.data, () => {
-            
+
             let contract_id = this._getUrl();
             this.fire('get-fee-list', { detail: contract_id });
             this.fire('toast', {
@@ -475,7 +485,8 @@
       _clearDatafee: function (data, action, callback) {
         let el = Polymer.dom(this.root).querySelectorAll('.required');
         let stat = el.map((el) => el.validate());
-        if (stat.every(elem => elem == true)) {
+        // console.log(stat.every(elem => elem == true) && data.fee_id != 0)
+        if (stat.every(elem => elem == true) && data.fee_id != 0) {
           let {rate_bank, rate_tt, fee_other, fee_internal, fee_foreign, fee_det_status, fee_date_receipt, fee_id} = data;
           let newData = { rate_bank, rate_tt, fee_other, fee_internal, fee_foreign, fee_det_status, fee_date_receipt, fee_id };
           newData.invoice = [];
@@ -498,6 +509,13 @@
           // el.map((el)=> {el.reset();});
 
           callback(newData);
+        } else {
+          this.fire('toast', {
+            status: 'error', text: 'กรุณาเลือก'+this.localize('text_fee_no'),
+            callback: function () {
+            }
+          }
+          )
         }
       },
 
