@@ -419,9 +419,12 @@ exports.getPayByContractId = function (req, res) {
                                     }
                                 })
                                 .merge(function (inv_det_merge) {
-                                    return { usd_value: inv_det_merge('invoice_detail').sum('usd_value') }
+                                    return {
+                                        usd_value: inv_det_merge('invoice_detail').sum('usd_value'),
+                                        baht_fee: inv_det_merge('invoice_detail').sum('invoice_fee')
+                                    }
                                 }),
-                                // .pluck('usd_value', 'invoice_no'),
+                            // .pluck('usd_value', 'invoice_no'),
                             fee_det_id: inv_merge('id')
                         }
                     })
@@ -433,18 +436,37 @@ exports.getPayByContractId = function (req, res) {
                                 }),
                             invoice_count: inv_merge('invoice').getField('invoice_no').count(),
                             usd_value: inv_merge('invoice').sum('usd_value'),
+                            baht_all_value: inv_merge('invoice').sum('usd_value').mul(inv_merge('rate_bank')),
+                            baht_fee: inv_merge('invoice').sum('baht_fee'),
                             fee_date_receipt: inv_merge('fee_date_receipt').split('T')(0)
                         }
                     })
-                    // .without('invoice', 'id')
+                    .merge(function (inv_merge) {
+                        return {
+                            baht_fee_value: inv_merge('baht_all_value').sub(inv_merge('baht_fee')),
+                            baht_tax_value: inv_merge('baht_all_value').sub(inv_merge('baht_fee')).mul(0.01)
+                        }
+                    })
+                    .merge(function (inv_merge) {
+                        return {
+                            baht_net_value: inv_merge('baht_fee_value').sub(inv_merge('baht_tax_value'))
+                        }
+                    })
+                    .without('invoice', 'id')
             }
         })
         .merge(function (m) {
             return {
-                usd_value: m('fee_detail').sum('usd_value')
+                baht_net_value: m('fee_detail').sum('baht_net_value'),
+                baht_pay_value: r.db('g2g2').table('payment').getAll(m('fee_id'), { index: 'fee_id' }).sum('pay_amount')
             }
         })
-        // .without('id', 'fee_detail')
+        .merge(function (m) {
+            return {
+                baht_balance_value: m('baht_net_value').sub(m('baht_pay_value'))
+            }
+        })
+        .without('id', 'fee_detail')
         .run()
         .then(function (result) {
             res.json(result)
