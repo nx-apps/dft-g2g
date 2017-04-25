@@ -97,7 +97,10 @@ exports.getById = function (req, res) {
                 amount_usd: fee_merge('invoice').sum('amount_usd'),
                 weight_gross: fee_merge('invoice').sum('weight_gross'),
                 weight_net: fee_merge('invoice').sum('weight_net'),
-                weight_tare: fee_merge('invoice').sum('weight_tare')
+                weight_tare: fee_merge('invoice').sum('weight_tare'),
+                payterm: r.db('g2g2').table('contract').get(
+                    r.db('g2g2').table('fee').get(fee_merge('fee_id')).getField('tags')(0)
+                ).getField('payterm')
             }
         })
         .without('id', 'tags')
