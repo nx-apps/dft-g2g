@@ -233,7 +233,7 @@
       <section id="content2">
         <paper-material elevation="1" class="paper-meterial">
           <div class="horizontal center-justified layout wrap">
-            <fee-management data-for-select="[[dataForSelect]]" data-cl-id="[[data.invoice.0.cl_id]]"></fee-management>
+            <fee-management id="fee-management" data-for-select="[[dataForSelect]]" data-cl-id="[[data.invoice.0.cl_id]]"></fee-management>
           </div>
         </paper-material>
       </section>
@@ -307,6 +307,7 @@
         if (id == 0) {
           this.$$('#tab1').checked = false
           this.$$('#tab2').checked = true
+          console.log(this.$$('#fee-management')._getInsertFee());
         }
       },
       _balanceLessFees(amount_usd, fee_internal) {
