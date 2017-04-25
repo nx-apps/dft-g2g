@@ -275,7 +275,7 @@
           <paper-button class="gl-btn-info" raised on-tap="confirmConfirm" hidden="[[data.cl_status]]">{{localize('btn_confirm')}}</paper-button>
         </template>
         <template is="dom-if" if="[[_isViewing(isViewSeleted)]]">
-          <paper-button class="gl-btn-danger" on-tap="calcelContract" raised hidden="[[isInputDisabled]]">{{localize('btn_cancel')}}</paper-button>
+          <paper-button class="gl-btn" on-tap="calcelContract" raised hidden="[[isInputDisabled]]">{{localize('btn_cancel')}}</paper-button>
           <paper-button class="gl-btn-success" on-tap="saveConfirm" raised hidden="[[isInputDisabled]]">{{localize('btn_save')}}</paper-button>
         </template>
       </div>

@@ -29,6 +29,18 @@
       border: 1px solid #ddd;
       margin-bottom: 15px;
     }
+    
+    table.gl-table-default>thead.table-head>tr>th {
+      text-align: center;
+    }
+    
+    table.gl-table-default>thead.table-head>tr>th:nth-child(1) {
+      width: 20%;
+    }
+    
+    table.gl-table-default>tbody.table-body>tr>td:not(:first-child) {
+      text-align: right;
+    }
   </style>
   <template>
     <div class="flex searchInput horizontal center-justified layout">

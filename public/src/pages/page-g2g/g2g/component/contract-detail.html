@@ -230,7 +230,7 @@
             <paper-button class="gl-btn-primary" on-tap="insertContract" raised hidden="[[_isViewing(data.contract_status)]]">{{localize('btn_add')}}</paper-button>
           </template>
           <template is="dom-if" if="[[_isViewing(isViewSeleted)]]">
-            <paper-button class="gl-btn-danger" on-tap="calcelContract" raised hidden="[[_isViewing(isInputDisabled)]]">{{localize('btn_cancel')}}</paper-button>
+            <paper-button class="gl-btn" on-tap="calcelContract" raised hidden="[[_isViewing(isInputDisabled)]]">{{localize('btn_cancel')}}</paper-button>
             <paper-button class="gl-btn-success" on-tap="saveContract" raised hidden="[[_isViewing(isInputDisabled)]]">{{localize('btn_save')}}</paper-button>
           </template>
           <template is="dom-if" if="[[_isViewing(isInputDisabled)]]">

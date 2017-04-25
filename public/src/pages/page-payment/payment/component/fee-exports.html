@@ -210,15 +210,15 @@
 
                   <template is="dom-if" if="[[_isViewing(isInputDisabled)]]">
                     <template is="dom-if" if="[[data.fee_det_status]]">
-                      <paper-button raised on-tap="approvePayment" class="gl-btn-danger">{{localize('btn_cancel')}}{{localize('btn_confirm')}}</paper-button>
+                      <paper-button raised on-tap="approvePayment" class="gl-btn">{{localize('btn_cancel')}}{{localize('btn_confirm')}}</paper-button>
                     </template>
                   </template>
                   <template is="dom-if" if="[[!_isViewing(isInputDisabled)]]">
-                    <paper-button raised class="gl-btn-danger" on-tap="cancelFee" hidden="[[!isViewSeleted]]">{{localize('btn_cancel')}}</paper-button>
+                    <paper-button raised class="gl-btn" on-tap="cancelFee" hidden="[[!isViewSeleted]]">{{localize('btn_cancel')}}</paper-button>
                     <paper-button raised on-tap="addPayment" class="gl-btn-success" hidden="[[!isViewSeleted]]">{{localize('btn_add')}}</paper-button>
                   </template>
                   <template is="dom-if" if="[[!_isViewing(isInputDisabled)]]">
-                    <paper-button raised class="gl-btn-danger" on-tap="calcelContract" hidden="[[isViewSeleted]]">{{localize('btn_cancel')}}</paper-button>
+                    <paper-button raised class="gl-btn" on-tap="calcelContract" hidden="[[isViewSeleted]]">{{localize('btn_cancel')}}</paper-button>
                     <paper-button raised on-tap="savePayment" class="gl-btn-success" hidden="[[isViewSeleted]]">{{localize('btn_save')}}</paper-button>
                   </template>
                 </div>
@@ -307,7 +307,7 @@
         if (id == 0) {
           this.$$('#tab1').checked = false
           this.$$('#tab2').checked = true
-          console.log(this.$$('#fee-management')._getInsertFee());
+          this.$$('#fee-management')._getInsertFee()
         }
       },
       _balanceLessFees(amount_usd, fee_internal) {

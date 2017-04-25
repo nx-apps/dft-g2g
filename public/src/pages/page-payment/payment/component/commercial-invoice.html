@@ -288,7 +288,7 @@
 
           <paper-button class="gl-btn-primary" raised on-tap="createInvoice" hidden="[[!isViewSeleted]]">{{localize('btn_add_invoice')}}</paper-button>
           <template is="dom-if" if="[[!_isViewing(isInputDisabled)]]">
-            <paper-button class="gl-btn-danger" on-tap="calcelContract" raised hidden="[[isViewSeleted]]">{{localize('btn_cancel')}}</paper-button>
+            <paper-button class="gl-btn" on-tap="calcelContract" raised hidden="[[isViewSeleted]]">{{localize('btn_cancel')}}</paper-button>
             <paper-button class="gl-btn-success" raised on-tap="saveInvoice" hidden="[[isViewSeleted]]">{{localize('btn_save_invoice')}}</paper-button>
           </template>
         </gl-form-panel-footer>

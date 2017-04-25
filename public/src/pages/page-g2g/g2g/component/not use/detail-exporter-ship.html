@@ -249,7 +249,7 @@
   <gl-form-panel-footer set-padding="10px 20px 0px 20px">
   <template is="dom-if" if="[[_isViewing(isInputDisabled)]]">
     <template is="dom-if" if="[[!_isViewing(isViewSeleted)]]">
-      <paper-button class="gl-btn-danger" on-tap="calcelContract" raised >{{localize('btn_cancel')}}</paper-button>
+      <paper-button class="gl-btn" on-tap="calcelContract" raised >{{localize('btn_cancel')}}</paper-button>
       <paper-button  class="gl-btn-success" raised on-tap="editExporter" >
           <iron-icon class="gl-icon-size" icon="save"></iron-icon>{{localize('btn_save')}}</paper-button>
     </template>
@@ -258,7 +258,7 @@
   <template is="dom-if" if="[[_isViewing(isViewSeleted)]]">
     <paper-button class="gl-btn-default" raised on-tap="cancelEditShipment">
           {{localize('btn_back_ward')}}</paper-button>
-    <paper-button class="gl-btn-danger" on-tap="calcelShipmentInsert" raised >{{localize('btn_cancel')}}</paper-button>
+    <paper-button class="gl-btn" on-tap="calcelShipmentInsert" raised >{{localize('btn_cancel')}}</paper-button>
     <paper-button class="gl-btn-success" raised on-tap="addExporter">
         {{localize('btn_add')}}</paper-button>
   </template>
