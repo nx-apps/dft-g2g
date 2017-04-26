@@ -4,6 +4,8 @@
 <link rel="import" href="./../components/page-style.html">
 <link rel="import" href="./components/buyer-list.html">
 
+<link rel="import" href="./components/test-bar-c3.html">
+
 
 <dom-module id="page-dashboard">
     <template>
@@ -32,6 +34,7 @@
             }
         </style>
         <div class="xcontainer ">
+            <!--<test-bar-c3></test-bar-c3>-->
             <template is="dom-repeat" items={{countryList}} index-as=index>
                 <buyer-list data="[[item]]"></buyer-list>
             </template>
