@@ -148,8 +148,8 @@ exports.list2 = function (req, res) {
     r.db('g2g2').table('contract')
         // .getAll(true, { index: 'contract_status' })
         //.filter({ contract_status: true })
-        .merge({ contract_id: r.row('id') })
-        .pluck("buyer_id", "contract_id", "contract_date")
+        .merge({ contract_id: r.row('id'), contract: r.row('contract_quantity') })
+        .pluck("buyer_id", "contract_id", "contract_date", "contract")
         .group("buyer_id")
         .ungroup()
         .map(function (buyer_map) {
@@ -167,6 +167,7 @@ exports.list2 = function (req, res) {
                 contract: buyer_merge('contract').merge(function (contract_merge) {
                     return {
                         contract_year: contract_merge('contract_date').split('-')(0).coerceTo('number'),
+                        //contract:
                         confirm: r.db('g2g2').table('confirm_letter').getAll(contract_merge('contract_id'), { index: 'contract_id' })
                             .filter({ cl_status: true })
                             .coerceTo('array')
@@ -259,12 +260,12 @@ exports.buyerId = function (req, res) {
                                 }),
                             cl_quantity_total: cl('cl_type_rice').sum('type_rice_quantity'),
                             cl_status: cl('cl_status'),
-                            ship_lot_no_lastest :r.db('g2g2').table('book')
+                            ship_lot_no_lastest: r.db('g2g2').table('book')
                                 .getAll(cl('id'), { index: 'cl_id' })
                                 .orderBy(r.desc('ship_lot_no'))
                                 .limit(1)
                                 .getField('ship_lot_no')
-                                .reduce(function(l,r){
+                                .reduce(function (l, r) {
                                     return l.add(r)
                                 }).default(0),
                             book_quantity: r.db('g2g2').table('book')
