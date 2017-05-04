@@ -4,3 +4,4 @@
 /app/routes/external
 /app/models/exporter
 debug.log
+**.log
