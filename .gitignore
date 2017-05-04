@@ -1,7 +1,5 @@
-
 /public/bower_components
 /app/controllers/external
 /app/routes/external
 /app/models/exporter
 debug.log
-**.log
