@@ -242,7 +242,7 @@
                     }
                   });
                 }, (data) => {
-                  console.log(data);
+                  // console.log(data);
                   window.open('https://localhost:3000/api/payment/report6/' + data.id[0], '_blank');
                   this.fire('close-drawer', { detail: 'close-drawer' });
                   // console.log('data=>', data.id[0]);
