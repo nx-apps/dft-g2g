@@ -346,6 +346,7 @@
         this._getFeeListInShm(e.detail.data);
       },
       _getFeeListInShm: function (clId) {
+        // console.log(clId,'11111');
         this.read('./g2g/fee/confirm/id/' + clId, (data) => {
           this.dataForSelect.feeListinShm = data;
           this.dataForSelect.feeListinShmCombobox = this.g2gClone(data);
@@ -435,7 +436,10 @@
           }
         });
         //เรียกให้อัพเดตรายชื่อ fee ที่อยู่ใน contract
-        this._getFeeListInShm(cl_id);
+        if (cl_id !== undefined ) {
+          this._getFeeListInShm(cl_id);
+        }
+        
         //
         // console.log(e.detail.detail);
         this.fire('toast', { status: 'load' });
@@ -484,7 +488,10 @@
         // console.log(e.detail.detail.fee_id);
         //เรียกให้อัพเดตรายชื่อ fee ที่อยู่ใน contract
         // console.log(e.detail.detail);
-        this._getFeeListInShm(e.detail.detail.cl_id);
+        if (e.detail.detail.cl_id !== undefined ) {
+          this._getFeeListInShm(e.detail.detail.cl_id);
+        }
+        
         //
         this.read('./g2g/fee/id/' + e.detail.detail.fee_id, (data) => {
           this.set('dataForSelect.cl_id', data.cl_id);

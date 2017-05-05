@@ -214,16 +214,16 @@
 
                   <template is="dom-if" if="[[_isViewing(isInputDisabled)]]">
                     <template is="dom-if" if="[[data.fee_det_status]]">
-                      <paper-button raised on-tap="approvePayment" class="gl-btn">{{localize('btn_cancel')}}{{localize('btn_confirm')}}</paper-button>
+                      <paper-button raised on-tap="approvePayment" class="gl-btn-default" hidden="[[data.fee_det_status]]">{{localize('btn_cancel')}}{{localize('btn_confirm')}}</paper-button>
                     </template>
                   </template>
-                  <template is="dom-if" if="[[!_isViewing(isInputDisabled)]]">
-                    <paper-button raised class="gl-btn" on-tap="cancelFee" hidden="[[!isViewSeleted]]">{{localize('btn_cancel')}}</paper-button>
+                  <template is="dom-if" if="[[!_isViewing(isInputDisabled)]]">2
+                    <paper-button raised class="gl-btn-default" on-tap="cancelFee" hidden="[[!isViewSeleted]]">{{localize('btn_cancel')}}</paper-button>
                     <paper-button raised on-tap="addPayment" class="gl-btn-success" hidden="[[!isViewSeleted]]">{{localize('btn_add')}}</paper-button>
                   </template>
-                  <template is="dom-if" if="[[!_isViewing(isInputDisabled)]]">
-                    <paper-button raised class="gl-btn" on-tap="calcelContract" hidden="[[isViewSeleted]]">{{localize('btn_cancel')}}</paper-button>
-                    <paper-button raised on-tap="savePayment" class="gl-btn-success" hidden="[[isViewSeleted]]">{{localize('btn_save')}}</paper-button>
+                  <template is="dom-if" if="[[!_isViewing(isInputDisabled)]]">3
+                    <paper-button raised class="gl-btn-default" on-tap="calcelContract" hidden="[[isViewSeleted]]">{{localize('btn_cancel')}}</paper-button>
+                    <paper-button raised class="gl-btn-success" on-tap="savePayment" hidden="[[isViewSeleted]]">{{localize('btn_save')}}</paper-button>
                   </template>
                 </div>
                 <!--</gl-form-panel-footer>-->
@@ -305,10 +305,13 @@
           // log
           return items.filter((item) => item.fee_status == false);
         } catch (e) {
+          // console.log(e);
         }
       },
       addFeeno(id) {
-        if (id == 0) {
+        // console.log(id != '');
+        if (id == 0 && id != '') {
+          // console.log(id);
           this.$$('#tab1').checked = false
           this.$$('#tab2').checked = true
           this.$$('#fee-management')._getInsertFee()
