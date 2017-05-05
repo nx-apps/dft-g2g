@@ -245,7 +245,7 @@
       },
       _getDataForShipment: function () {
         // call data
-        this.read('./external/exporter?exporter_status=true', (data) => {
+        this.read('./external/exporter', (data) => {
           data.map((set_name)=>{
             set_name.company_name_th = set_name.company_name_th+' '+ set_name.company_taxno
           })
@@ -375,7 +375,7 @@
 
           this.dataSelected = e.detail.data;
           // console.log('>>>>>1111', this.dataSelected);
-          console.log(e.detail.data.contract_status);
+          // console.log(e.detail.data.contract_status);
           this.set('dataForSelected.dataForConfirm.contract_status', e.detail.data.contract_status);
           this.set('dataForSelected.dataForConfirm.buyer_id', e.detail.data.buyer_id);
           this.set('dataForSelected.dataForConfirm.country_id', e.detail.data.country_id)
