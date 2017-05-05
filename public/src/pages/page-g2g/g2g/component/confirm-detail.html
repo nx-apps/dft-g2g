@@ -116,13 +116,13 @@
             <gl-grid-row>
               <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,6]]">
 
-                <!-- <gl-combo-box id="riceType" class="required" required  disabled="[[isInputDisabled]]" error-message="กรุณาเลือกชนิดข้าว" placeholder="เลือกชนิดข้าว" name="type_rice_name" label="ชนิดข้าว"
-            item-label-path="type_rice_name_th"   item-value-path="type_rice_id" value="{{item.type_rice_id}}" items="{{dataForSelect.contract_type_rice}}" >
-              </gl-combo-box > -->
                 <!-- [[_isHaveForUse(data.cl_type_rice,dataForSelect.contract_type_rice)]] -->
                 <gl-combo-box id="riceType-[[index]]" class="required" required disabled="[[isInputDisabled]]" error-message="{{localize('label_error_rice_type')}}"
                   placeholder="{{localize('label_rice_type')}}" name="type_rice_name" label="{{localize('label_rice_type')}}"
                   item-label-path="type_rice_name_th" item-value-path="type_rice_id" value="{{item.type_rice_id}}" on-value-changed="_typeRiceConfirm">
+                <template>
+              [[item.type_rice_name_th]]
+            </template>
                 </gl-combo-box>
 
               </gl-grid-col>
@@ -190,13 +190,14 @@
                   <tr>
                     <td>
 
-                      <!-- <gl-combo-box id="riceType" class="required InTable" required  disabled="[[isInputDisabled]]" error-message="กรุณาเลือกชนิดขนาดบรรจุภัณฑ์" placeholder="เลือกประเภท" name="package_name"
-                item-label-path="package_name_th"   item-value-path="package_id" value="{{packageitem.package_id}}" items="{{dataForSelect.package}}" >
-                  </gl-combo-box > -->
+                     
                       <!-- items="{{dataForSelect.package}}"  -->
                       <gl-combo-box id="package-[[index]]-[[indexpackeage]]" class="required InTable" required disabled="[[isInputDisabled]]" error-message="{{localize('label_error_package')}}"
                         placeholder="{{localize('label_package')}}" item-label-path="package_name_th" item-value-path="package_id"
                         value="{{packageitem.package_id}}" on-value-changed="_typePackageConfirm">
+                        <template>
+              [[item.package_name_th]]
+            </template>
                       </gl-combo-box>
 
                     </td>
@@ -247,6 +248,9 @@
             <gl-combo-box id="incoterms-[[index]]" class="required" required disabled="[[isInputDisabled]]" label="{{localize('label_incoterms')}} [[_ObcountIndex(index)]]"
               error-message="{{localize('label_error_incoterms')}} [[_ObcountIndex(index)]]" placeholder="{{localize('label_incoterms')}} [[_ObcountIndex(index)]]"
               item-label-path="inct_name" item-value-path="inct_id" value="{{item.inct_id}}" on-value-changed="_incotermsConfirm">
+            <template>
+              [[item.inct_name]]
+            </template>
             </gl-combo-box>
           </template>
         </gl-grid-col>

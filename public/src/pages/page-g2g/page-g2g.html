@@ -375,6 +375,8 @@
 
           this.dataSelected = e.detail.data;
           // console.log('>>>>>1111', this.dataSelected);
+          console.log(e.detail.data.contract_status);
+          this.set('dataForSelected.dataForConfirm.contract_status', e.detail.data.contract_status);
           this.set('dataForSelected.dataForConfirm.buyer_id', e.detail.data.buyer_id);
           this.set('dataForSelected.dataForConfirm.country_id', e.detail.data.country_id)
           // console.log(e.detail.data.buyer_id);

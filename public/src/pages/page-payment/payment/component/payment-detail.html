@@ -103,7 +103,11 @@
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,2]]"></gl-grid-col>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
             <gl-combo-box class="required" required id="bank" label="ธนาคาร" item-label-path="bank_name_th" item-value-path="bank_id"
-              items="[[dataForSelect.dataBank]]" value="{{data.bank_id}}"></gl-combo-box>
+              items="[[dataForSelect.dataBank]]" value="{{data.bank_id}}">
+              <template>
+                [[item.bank_name_th]]
+              </template>
+            </gl-combo-box>
           </gl-grid-col>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
             <gl-form-input class="required" required label="{{localize('label_bank_branch')}} :" placeholder="{{localize('label_bank_branch')}}"
@@ -265,7 +269,7 @@
         let el = Polymer.dom(this.root).querySelectorAll('.required');
         let stat = el.map((el) => el.validate());
         if (stat.every(elem => elem == true)) {
-          let {bank_branch, bank_id, exporter_id, fee_id, pay_amount, pay_date, pay_no, pay_times} = data;
+          let { bank_branch, bank_id, exporter_id, fee_id, pay_amount, pay_date, pay_no, pay_times } = data;
           let newData = { bank_branch, bank_id, exporter_id, fee_id, pay_amount, pay_date, pay_no, pay_times };
           newData.payment_detail = new Array();
           data.payment_detail.map((payDetId) => {

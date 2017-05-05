@@ -53,7 +53,7 @@
         <gl-form-panel set-padding="10px 20px 10px 20px" set-border="1px">
           <!--<gl-form-panel-head label="" set-padding="10px" set-border="1px">-->
             <div class="addconfirm horizontal end-justified layout">
-              <paper-button raised class="gl-btn-primary" on-tap="createConfirm">{{localize('btn_add')}}</paper-button>
+              <paper-button raised class="gl-btn-primary" disabled="[[!dataForSelect.contract_status]]" on-tap="createConfirm">{{localize('btn_add')}}</paper-button>
             </div>
           <!--</gl-form-panel-head>-->
           <br>
@@ -154,7 +154,7 @@
           let dataContract = this.data.confirm_letter.filter((confirmList) => confirmList.cl_id == this.clId);
           this.dataSelected = dataContract[0];
         } catch (e) {
-          console.log(e);
+          // console.log(e);
         }
       },
       createConfirm: function () {

@@ -1,3 +1,4 @@
+
 <dom-module id="list-of-booking-in-confirm">
   <style include="gl-styles iron-flex iron-flex-factors iron-flex-alignment">
     table.gl-table-default {
@@ -30,13 +31,15 @@
       <div class="horizontal layout wrap">
         <!--<div class="flex-2">
         </div>-->
-        <div class="flex">
-          <gl-combo-box class="combo-box" placeholder="ผู้ส่งออกทั้งหมด" items="{{dataForSelect.exporter}}" item-label-path="label"
-            label="ผู้ส่งออก" item-value-path="company_id" on-value-changed="getShowByExport"></gl-combo-box>
+        <div id="combox" class="flex">
+          <gl-combo-box placeholder="ผู้ส่งออกทั้งหมด" items="{{dataForSelect.exporter}}" item-label-path="label"
+            label="ผู้ส่งออก" item-value-path="company_id" on-value-changed="getShowByExport">
+            <template>
+               [[item.label]] <b>[[item.value]]</b>
+            </template>
+          </gl-combo-box>
         </div>
       </div>
-      <!--<gl-combo-box class="combo-box" placeholder="ผู้ส่งออกทั้งหมด" items="{{dataForSelect.exporter}}" item-label-path="label"
-        item-value-path="company_id" on-value-changed="getShowByExport"></gl-combo-box>-->
 
       <!--</gl-form-panel-head>-->
       <table class="gl-table-default">
@@ -51,7 +54,7 @@
         </thead>
         <tbody class="table-body">
           <template is="dom-repeat" items="[[data.book]]">
-            <tr  >
+            <tr>
               <td on-tap="bookingDetail" data="[[item]]">[[item.cl_no]]</td>
               <td on-tap="bookingDetail" data="[[item]]">[[item.ship_lot_no_lastest]]</td>
               <td on-tap="bookingDetail" data="[[item]]">[[formatNumberNoZero(item.cl_quantity_total)]]</td>
@@ -61,7 +64,11 @@
               </td>
             </tr>
           </template>
-
+          <template is="dom-if" if="[[_isHave(data.book)]]">
+            <tr>
+              <td colspan="5" style=" text-align: center;"> {{localize('text_no_data')}}</td>
+            </tr>
+          </template>
         </tbody>
       </table>
     </gl-form-panel>
@@ -85,8 +92,8 @@
       created: function () {
         this.nylonLocalizeImport('/i18n-page1.json');
       },
-      printVesel(e){
-        window.open('https://localhost:8080/api/shipment/report4/'+e.currentTarget.data.cl_id, '1');
+      printVesel(e) {
+        window.open('https://localhost:8080/api/shipment/report4/' + e.currentTarget.data.cl_id, '1');
         // console.log(e.currentTarget.data);
       },
       bookingDetail: function (e) {
@@ -104,7 +111,7 @@
         return typeof cl_quantity_tolerance === "undefined" ? '' : "(" + str + ")";
       },
       getShowByExport(e) {
-        // console.log(e.currentTarget.value);
+        // console.log(e);
         try {
           this.set('title', 'แสดงปริมาณการส่งมอบ')
           if (e.currentTarget.value != '') {
@@ -115,7 +122,7 @@
             // this.set('title', 'แสดงปริมาณการส่งมอบ' )
             this.fire('_get-fire-group-exporter', data.exporter_id)
           } else {
-            
+
             this.fire('_get-fire-group-exporter', '')
           }
 

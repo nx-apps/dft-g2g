@@ -51,7 +51,11 @@
           <div class="horizontal end-justified layout report">
             <template is="dom-if" if="[[_checkUndefined(data.invoice_id)]]">
               <gl-combo-box class="required" required always-float-label label="รูปแบบ" placeholder="รูปแบบ" value="{{printReport.typeFile}}"
-                item-label-path="report_type" item-value-path="report_type_id" items="{{report.report_type}}"></gl-combo-box>
+                item-label-path="report_type" item-value-path="report_type_id" items="{{report.report_type}}">
+                 <template>
+                  [[item.report_type]]
+                </template>
+                </gl-combo-box>
               <div class="icon_print">
                 <paper-icon-button id="printInvoice" class="crud" icon="print" raised on-tap="printInvoice"></paper-icon-button>
                 <paper-tooltip for="printInvoice" offset="0">Print Invoice</paper-tooltip>

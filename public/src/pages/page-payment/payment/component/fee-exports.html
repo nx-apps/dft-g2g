@@ -136,7 +136,11 @@
                     <gl-grid-col width="[[getWidth]]" grid="[[300,6],[500,3]]">
                       <gl-combo-box class="required test" required disabled="[[isInputDisabled]]" placeholder="{{localize('label_fee_no')}}" label="{{localize('label_fee_no')}}"
                         item-label-path="fee_no" item-value-path="fee_id" value="{{data.fee_id}}" items="[[_filterFee(dataForSelect.feeListinShmCombobox)]]">
-                        [[addFeeno(data.fee_id)]]
+                        <template>
+                          [[item.fee_no]]
+                        </template>
+                      </gl-combo-box>
+                      [[addFeeno(data.fee_id)]]
                     </gl-grid-col>
                     <gl-grid-col width="[[getWidth]]" grid="[[300,6],[500,3]]">
                       <vaadin-date-picker class="required test" required disabled="[[isInputDisabled]]" label="{{localize('label_money_received_date')}}"
@@ -296,7 +300,7 @@
           if (checkZero.length < 1) {
             items.unshift({ fee_no: 'เพิ่มครั้งที่ใหม่', fee_id: 0, fee_status: false })
           }
-          
+
           // this.push('dataForSelect.feeListinShm',)
           // log
           return items.filter((item) => item.fee_status == false);
@@ -488,7 +492,7 @@
         let stat = el.map((el) => el.validate());
         // console.log(stat.every(elem => elem == true) && data.fee_id != 0)
         if (stat.every(elem => elem == true) && data.fee_id != 0) {
-          let {rate_bank, rate_tt, fee_other, fee_internal, fee_foreign, fee_det_status, fee_date_receipt, fee_id} = data;
+          let { rate_bank, rate_tt, fee_other, fee_internal, fee_foreign, fee_det_status, fee_date_receipt, fee_id } = data;
           let newData = { rate_bank, rate_tt, fee_other, fee_internal, fee_foreign, fee_det_status, fee_date_receipt, fee_id };
           newData.invoice = [];
           if (typeof data.tags !== 'undefined') {
@@ -512,7 +516,7 @@
           callback(newData);
         } else {
           this.fire('toast', {
-            status: 'error', text: 'กรุณาเลือก'+this.localize('text_fee_no'),
+            status: 'error', text: 'กรุณาเลือก' + this.localize('text_fee_no'),
             callback: function () {
             }
           }

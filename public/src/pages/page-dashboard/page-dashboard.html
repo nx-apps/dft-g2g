@@ -108,6 +108,9 @@
                     this.notifyPath('dataForSelected.dataForContract.buyer');
                 });
                 this.read('./common/type_rice', (data) => {
+                    data.map((set_name) => {
+                        set_name.type_rice_name_th = set_name.type_rice_name_th + ' ' + set_name.type_rice_id
+                    })
                     this.dataForSelected.dataForContract.typeRice = data;
                     this.notifyPath('dataForSelected.dataForContract.typeRice');
                     // console.log(this.dataForSelected);

@@ -19,11 +19,19 @@
     <gl-form-panel>
 <div class="horizontal end-justified layout center">
       <gl-combo-box always-float-label label="{{localize('label_report')}}" placeholder="{{localize('label_report')}}" value="{{printReport.typeReport}}"
-        item-label-path="report_name" item-value-path="report_name_id" items="{{report.report_name}}"></gl-combo-box>
+        item-label-path="report_name" item-value-path="report_name_id" items="{{report.report_name}}">
+        <template>
+                  [[item.report_name]]
+                </template>
+        </gl-combo-box>
       <!-- </gl-grid-col> -->&nbsp;
       <!-- <gl-grid-col width="[[getWidth]]" grid="[[500,4],[700,4]]"> -->
       <gl-combo-box always-float-label label="{{localize('label_report_type')}}" placeholder="{{localize('label_report_type')}}"
-        value="{{printReport.typeFile}}" item-label-path="report_type" item-value-path="report_type_id" items="{{report.report_type}}"></gl-combo-box>
+        value="{{printReport.typeFile}}" item-label-path="report_type" item-value-path="report_type_id" items="{{report.report_type}}">
+        <template>
+                  [[item.report_type]]
+                </template>
+        </gl-combo-box>
       <div class="icon_print">
         <paper-icon-button id="printShipment" class="crud" icon="print" raised on-tap="printShipment" hidden="[[!data.shm_status]]"></paper-icon-button>
         <paper-tooltip for="printShipment" offset="0">{{localize('label_send_report')}}</paper-tooltip>

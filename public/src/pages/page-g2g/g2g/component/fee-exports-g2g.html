@@ -61,6 +61,10 @@
             <gl-grid-col width="[[getWidth]]" grid="[[300,6],[500,3]]">
               <gl-combo-box class="required" required disabled placeholder="{{localize('label_fee_no')}}" label="{{localize('label_fee_no')}}"
                 item-label-path="fee_no" item-value-path="fee_id" value="{{data.fee_id}}" items="[[_filterFee(dataForSelect.feeListinShm)]]">
+                <template>
+                  [[item.fee_no]]
+                </template>
+              </gl-combo-box>
             </gl-grid-col>
             <gl-grid-col width="[[getWidth]]" grid="[[300,6],[500,3]]">
               <vaadin-date-picker class="required" required disabled label="{{localize('label_money_received_date')}}" value="{{data.fee_date_receipt}}"
@@ -272,14 +276,14 @@
           })
           // console.log(invoice_total.reduce((previous, current) => previous+current, 0));
           // console.log(this.data.feeTotal);
-          
-            this.fire('toast', {  //คำสั่งสำหรับเปิด toast dialog
-              status: 'dialog',
-              text: 'ต้องการแก้ไขข้อมูลใช่หรือไม่ ?',
-              confirmed: this._editFee.bind(this), //function ที่ใช้รับค่า ปุ่ม
-              el: this, // compontents
-              data: data // ข้อมูลที่ส่งไป เช่น id ที่จะใช้ลบข้อมูล ใน db
-            })
+
+          this.fire('toast', {  //คำสั่งสำหรับเปิด toast dialog
+            status: 'dialog',
+            text: 'ต้องการแก้ไขข้อมูลใช่หรือไม่ ?',
+            confirmed: this._editFee.bind(this), //function ที่ใช้รับค่า ปุ่ม
+            el: this, // compontents
+            data: data // ข้อมูลที่ส่งไป เช่น id ที่จะใช้ลบข้อมูล ใน db
+          })
 
 
         });
@@ -341,9 +345,9 @@
           let el = Polymer.dom(this.root).querySelectorAll('.required');
           let stat = el.map((el) => el.validate());
           let dataConunt = data.invoice
-          if (stat.every(elem => elem == true) && 
-          Object.keys(dataConunt).reduce((previous, current) => previous + dataConunt[current].totalFeeInvoices, 0) >= this.dataForSelect.feeLimit) {
-            let {rate_bank, rate_tt, fee_other, fee_internal, fee_foreign, fee_det_status, fee_date_receipt, fee_id} = data;
+          if (stat.every(elem => elem == true) &&
+            Object.keys(dataConunt).reduce((previous, current) => previous + dataConunt[current].totalFeeInvoices, 0) >= this.dataForSelect.feeLimit) {
+            let { rate_bank, rate_tt, fee_other, fee_internal, fee_foreign, fee_det_status, fee_date_receipt, fee_id } = data;
             let newData = { rate_bank, rate_tt, fee_other, fee_internal, fee_foreign, fee_det_status, fee_date_receipt, fee_id };
             newData.invoice = [];
             if (typeof data.tags !== 'undefined') {

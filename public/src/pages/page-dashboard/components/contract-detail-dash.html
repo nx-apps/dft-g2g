@@ -122,6 +122,9 @@
             <gl-combo-box class="required" required disabled="[[_checkArrayTrue(isInputDisabled,data.contract_status)]]" label="{{localize('label_payment_type')}}"
               error-message="{{localize('label_error_payment_type')}}" placeholder="{{localize('label_payment_type')}}" items="[[payterms]]"
               item-label-path="payterms_Name" item-value-path="payterms_Id" value="{{data.payterm}}">
+              <template>
+                [[item.payterms_Name]]
+              </template>
             </gl-combo-box>
           </gl-grid-col>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">[[changeString2Num(data.*,'contract_quantity')]]
@@ -144,6 +147,9 @@
             <gl-combo-box class="required" always-float-label required id="buyer_id" disabled="[[_checkArrayTrue(isInputDisabled,data.contract_status)]]"
               label="{{localize('label_buyer')}}" error-message="{{localize('label_error_buyer')}}" value="{{data.buyer_id}}"
               on-value-changed="_getBuyerAddress">
+              <template>
+                [[item.label]]
+              </template>
             </gl-combo-box>
           </gl-grid-col>
         </gl-grid-row>
@@ -193,12 +199,12 @@
                     </td>
                     <td>
                       <div class="upGlComboBox">
-                        <!-- <gl-combo-box id="riceSelected" class="required" required  disabled="[[isInputDisabled]]" error-message="กรุณาเลือกชนิดข้าว" placeholder="เลือกประเภท" name="type_rice_name"
-                 item-label-path="type_rice_name_th"   item-value-path="type_rice_id" value="{{item.type_rice_id}}" items="{{dataForSelect.typeRice}}" >
-                   </gl-combo-box > -->
                         <gl-combo-box id="rice-[[index]]" class="required" required disabled="[[isInputDisabled]]" error-message="{{localize('label_error_rice_type')}}"
                           placeholder="{{localize('label_rice_type')}}" name="type_rice_name" item-label-path="type_rice_name_th"
                           item-value-path="type_rice_id" value="{{item.type_rice_id}}" on-value-changed="_typeRiceContract">
+                          <template>
+                            [[item.type_rice_name_th]]
+                          </template>
                         </gl-combo-box>
                       </div>
                     </td>
@@ -456,8 +462,8 @@
         let el = Polymer.dom(this.root).querySelectorAll('.required');
         let stat = el.map((el) => el.validate());
         if (stat.every(elem => elem == true)) {
-          let {buyer_id, contract_date, contract_desc, contract_name, contract_status, payterm} = data;
-          let {contract_quantity} = data;
+          let { buyer_id, contract_date, contract_desc, contract_name, contract_status, payterm } = data;
+          let { contract_quantity } = data;
           let newData = { buyer_id, contract_date, contract_desc, contract_name, contract_quantity, contract_status, payterm };
           newData.contract_type_rice = [];
           newData.contract_date = new Date(newData.contract_date);

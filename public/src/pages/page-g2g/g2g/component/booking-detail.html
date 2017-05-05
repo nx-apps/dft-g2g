@@ -70,6 +70,9 @@
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
             <gl-combo-box label="{{localize('label_shipping_agent')}}" always-float-label item-label-path="carrier_name" disabled="[[isInputDisabled]]"
               item-value-path="carrier_id" items="{{dataForSelect.carrier}}" value="{{data.carrier_id}}"></gl-combo-box>
+            <template>
+              [[item.carrier_name]]
+            </template>
           </gl-grid-col>
 
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
@@ -79,13 +82,15 @@
 
           <template is="dom-repeat" items="[[data.ship]]">
             <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-              <!-- <gl-combo-box required class="required"label="Vessel [[_ObcountIndex(index)]]" always-float-label item-label-path="ship_name" disabled="[[isInputDisabled]]"
-           item-value-path="ship_id" items="[[_getShip(data.shipline_id,dataForSelect)]]" value="{{item.ship_id}}"></gl-combo-box> -->
               [[_getShip(data.shipline_id,dataForSelect)]]
               <!-- [[_isHaveForUse(index,dataForSelect.ships)]] -->
               <gl-combo-box id="ship-[[index]]" required class="required" label="{{localize('label_vessel')}} [[_ObcountIndex(index)]]"
                 always-float-label item-label-path="ship_name" disabled="[[isInputDisabled]]" item-value-path="ship_id" value="{{item.ship_id}}"
-                on-value-changed="_getResetShip"></gl-combo-box>
+                on-value-changed="_getResetShip">
+                <template>
+                  [[item.ship_name]]
+                </template>
+              </gl-combo-box>
 
 
             </gl-grid-col>
@@ -118,7 +123,11 @@
               <!-- items="{{dataForSelect.surveyor}}" -->
               <gl-combo-box required class="required" id="surveyor-[[index]]" label="{{localize('label_surveyor')}} [[_ObcountIndex(index)]]"
                 always-float-label disabled="[[isInputDisabled]]" item-label-path="surveyor_name" item-value-path="surveyor_id"
-                items="{{dataForSelect.surveyor}}" value="{{item.surveyor_id}}" on-value-changed="_getResetSurveyor"></gl-combo-box>
+                items="{{dataForSelect.surveyor}}" value="{{item.surveyor_id}}" on-value-changed="_getResetSurveyor">
+                 <template>
+              [[item.surveyor_name]]
+            </template>
+                </gl-combo-box>
             </gl-grid-col>
             <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]"></gl-grid-col>
             <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]"></gl-grid-col>
@@ -139,7 +148,11 @@
         <gl-grid-row width="{{getWidth}}">
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
             <gl-combo-box required class="required" label="{{localize('label_port_of_loading')}}" always-float-label item-label-path="port_name"
-              disabled="[[isInputDisabled]]" item-value-path="port_id" items="{{dataForSelect.pol}}" value="{{data.load_port_id}}"></gl-combo-box>
+              disabled="[[isInputDisabled]]" item-value-path="port_id" items="{{dataForSelect.pol}}" value="{{data.load_port_id}}">
+              <template>
+              [[item.port_name]]
+            </template>
+              </gl-combo-box>
           </gl-grid-col>
 
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
@@ -152,12 +165,18 @@
           </gl-grid-col>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
             <gl-combo-box required class="required" label="{{localize('label_port_of_discharge')}}" always-float-label item-label-path="port_name"
-              disabled="[[isInputDisabled]]" item-value-path="port_id" items="{{dataForSelect.pod}}" value="{{data.dest_port_id}}"></gl-combo-box>
+              disabled="[[isInputDisabled]]" item-value-path="port_id" items="{{dataForSelect.pod}}" value="{{data.dest_port_id}}">
+              <template>
+              [[item.port_name]]
+            </template></gl-combo-box>
           </gl-grid-col>
 
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
             <gl-combo-box required class="required" label="{{localize('label_place_of_delivery')}}" always-float-label item-label-path="port_name"
-              disabled="[[isInputDisabled]]" item-value-path="port_id" items="{{dataForSelect.pod}}" value="{{data.deli_port_id}}"></gl-combo-box>
+              disabled="[[isInputDisabled]]" item-value-path="port_id" items="{{dataForSelect.pod}}" value="{{data.deli_port_id}}">
+              <template>
+              [[item.port_name]]
+            </template></gl-combo-box>
           </gl-grid-col>
           <!--<gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
             
@@ -483,7 +502,7 @@
         if (stat.every(elem => elem == true)) {
           let { bl_no, book_no, carrier_id, deli_port_id, dest_port_id, eta_date, etd_date,
             load_port_id, packing_date, cut_of_time, cut_of_date, product_date,
-            ship_lot_no, shipline_id, weight_per_container, book_status, cl_id} = data;
+            ship_lot_no, shipline_id, weight_per_container, book_status, cl_id } = data;
           let newData = {
             bl_no, book_no, carrier_id, deli_port_id, dest_port_id, eta_date, etd_date,
             load_port_id, packing_date, cut_of_time, cut_of_date, product_date,

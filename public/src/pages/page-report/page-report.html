@@ -24,6 +24,9 @@
           <div class="layout horizontal center-justified">
             <gl-combo-box always-float-label   error-message="กรุณาเลือกเดือนที่ต้องการดูรายงาน"
              items="[[getMonth()]]" item-label-path="name"   item-value-path="id"  value="{{data.month}}"  >
+             <template>
+                [[item.name]]
+              </template>
             </gl-combo-box>
           </div>
           <div class="btn-search">

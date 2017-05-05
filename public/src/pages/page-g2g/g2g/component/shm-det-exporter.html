@@ -77,7 +77,11 @@
             <template is="dom-if" if="[[!isInputDisabled]]">
               <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,8]]">
                 <gl-combo-box class="required" required id="company_id" label="{{localize('text_exporter_name')}}" always-float-label item-label-path="company_name_th"
-                  disabled="[[isInputDisabled]]" item-value-path="company_id" items="{{dataForSelect.seller}}" value="{{data.company_id}}"></gl-combo-box>
+                  disabled="[[isInputDisabled]]" item-value-path="company_id" items="{{dataForSelect.seller}}" value="{{data.company_id}}">
+                   <template>
+                  [[item.company_name_th]]
+                </template>
+                  </gl-combo-box>
               </gl-grid-col>
               <!--<gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,8]]">
                 <gl-form-input disabled label="{{localize('label_tel')}}" value="{{_getSellerPhone(data.company_id,dataForSelect)}}" always-float-label></gl-form-input>
@@ -105,13 +109,21 @@
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,12]]">
             <gl-combo-box id="type_rice_id" label="{{localize('label_rice_type')}}" item-label-path="type_rice_name_en" disabled="[[isInputDisabled]]"
               class="required" required item-value-path="type_rice_id" items="[[dataForSelect.cl_type_rice]]" value="{{data.type_rice_id}}"
-              always-float-label></gl-combo-box>
+              always-float-label>
+              <template>
+                  [[item.type_rice_name_en]]
+                </template>
+              </gl-combo-box>
           </gl-grid-col>
           [[_checkDataInPackage(data.type_rice_id)]]
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,8]]">
             <gl-combo-box id="package_id" label="{{localize('label_package')}}" item-label-path="package_name_en" disabled="[[isInputDisabled]]"
               class="required" required item-value-path="package_id" items="[[dataForSelect.package]]" value="{{data.package_id}}"
-              always-float-label></gl-combo-box>
+              always-float-label>
+              <template>
+                  [[item.package_name_en]]
+                </template>
+              </gl-combo-box>
           </gl-grid-col>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
             [[changeString2Num(data.*,'shm_det_quantity')]]
