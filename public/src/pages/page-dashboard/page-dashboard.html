@@ -90,6 +90,38 @@
                     this._getCountry()
                     this._getDataForContract()
                 });
+                let date = [
+                    {date:'2017-05-08T02:16:12.878Z'},
+                    {date:'2017-05-08T07:16:12.878Z'}
+                ]
+
+                console.log(this.changeTime(date),5)
+                // console.log(date);
+                // let time = new Date(date)
+                // let timeZone = 7
+                // time.setHours(time.getHours() + timeZone)
+                // console.log(time.toISOString());
+            },
+            changeTime(data,timeZone) {
+
+                let newdata = []
+                let dates
+                let timeZone = 7
+                data.map((item,index) => {
+                    for (var prop in item) {
+                        // console.log(prop.indexOf('date'));
+                        if (prop.indexOf('date') >= 0 && prop !== 'updater') {
+                            console.log(`item.${prop} = ${item[prop]}`);
+                            dates = new Date(item[prop])
+                            console.log(prop);
+                            console.log(data[index][prop]);
+                            data[index][prop] = dates.setHours(dates.getHours() + timeZone)
+                            // console.log(dates.toISOString);
+                        }
+
+                    }
+                })
+                return data
             },
             _getCountry() {
                 this.read('./g2g/contract/list', (data) => {
@@ -116,17 +148,25 @@
                     // console.log(this.dataForSelected);
                 });
                 this.read('./common/incoterms', (data) => {
-                    // let newdata = []
-                    data.map((item) => {
-                        for (var prop in item) {
-                            // console.log(prop.indexOf('date'));
-                            if (prop.indexOf('date') >= 0 && prop !== 'updater') {
-                               console.log(`item.${prop} = ${item[prop]}`); 
-                               console.log(new Date(item[prop]));
-                            }
-                            
-                        }
-                    })
+                    // let date = '2017-05-08T02:16:12.878Z'
+                    // console.log(date);
+                    // let time = new Date(date)
+                    // let timeZone = 7
+                    // time.setHours(time.getHours() + timeZone)
+                    // console.log(time.toISOString());
+                    // // let newdata = []
+                    // // let dates
+                    // // data.map((item) => {
+                    // //     for (var prop in item) {
+                    // //         // console.log(prop.indexOf('date'));
+                    // //         if (prop.indexOf('date') >= 0 && prop !== 'updater') {
+                    // //            console.log(`item.${prop} = ${item[prop]}`); 
+                    // //            dates = new Date(item[prop])
+                    // //            console.log(dates.toISOString);
+                    // //         }
+
+                    // //     }
+                    // // })
                     this.dataForSelected.dataForContract.incoterms = data;
                     this.notifyPath('dataForSelected.dataForContract.incoterms');
                 });

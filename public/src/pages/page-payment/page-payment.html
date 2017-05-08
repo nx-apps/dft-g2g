@@ -275,6 +275,7 @@
         this._getFeeList(contract_id);
         this._getChequeList(contract_id);
         this._getPaymentsList(contract_id);
+        this._getBank()
       },
       nylonPageActive: function () {
         console.log(111);
@@ -291,6 +292,7 @@
       _getUrl: function () {
         this.set('dataForSelect.nameContract', this._getCookie("contractName"));
         this.set('dataForSelect.contract_id', this._getCookie("contract_id"));
+        this.set('dataForSelect.buyer_id', this._getCookie("buyer_id"));
         return this._getCookie("contract_id");
       },
       _getBlListFire: function (e) {
@@ -552,15 +554,22 @@
       },
       _getPaymentDetail: function (e) {
         // console.log(e.detail.detail);
+        this.set('dataSelected.paymentDetail', e.detail.detail);
         this.read('g2g/payment/silo', (data) => {
           this.set('dataSelected.silo', data);
           // console.log(this.dataSelected.silo)
         });
+        this.read('g2g/payment/checkno/buyer/id/'+this.dataForSelect.buyer_id, (data) => {
+          // this.dataSelected.pay_no = data.check_no
+          this.set('dataSelected.paymentDetail.pay_no',data.check_no)
+        });
+        
         this.fire('toast', { status: 'load' });
-        // this.dataSelected.paymentDetail = e.detail.detail;
-        this.set('dataSelected.paymentDetail', e.detail.detail);
-        // console.log(this.dataSelected.paymentDetail);
-        this._getBank();
+        this.set('dataSelected.paymentDetail.bank_id','KTB')
+        this.set('dataSelected.paymentDetail.bank_branch','กระทรวงพาณิชย์')
+        
+        // console.log(this.dataSelected);
+        // this._getBank();
         this.paymentsPageSeleted = 'paymentDetail';
         if (this.checkRenderPage.paymentDetail != true) {
           this.async(() => {

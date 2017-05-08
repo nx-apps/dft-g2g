@@ -1,0 +1,151 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../gl-font/gl-cschatthai-font.html">
+<link rel="import" href="gl-color.html">
+<dom-module id="gl-styles">
+<style is="custom-style">
+    :root {
+
+
+       --font-size-default:          16px;
+       --font-size-large:         calc(var(--font-size-default) * 1.25);/*// ~20px*/
+       --font-size-small:         calc(var(--font-size-default) * 0.85); /*// ~14px*/
+
+
+       --font-size-h1:            calc(var(--font-size-default) * 2.6);  /*// ~42px*/
+       --font-size-h2:            calc(var(--font-size-default) * 2.15); /*// ~34px*/
+       --font-size-h3:            calc(var(--font-size-default) * 1.7); /*// ~27px*/
+       --font-size-h4:            calc(var(--font-size-default) * 1.25); /*// ~20px*/
+       --font-size-h5:            var(--font-size-default);               /*// ~16px*/
+       --font-size-h6:            var(--font-size-small);                /*// ~14px*/
+
+       --gl-font-family: {
+         font-family: 'CSChatThaiUI','tahoma', sans-serif;
+         -webkit-font-smoothing: antialiased;
+        }
+        --gl-margin: {
+            margin: 1px;
+        }
+
+    }
+     /*bg*/
+      .gl-bg-primary,.gl-bg-success,
+      .gl-bg-info,.gl-bg-warning,
+      .gl-bg-danger {
+        color: var(--gl-white-color);
+        padding: var(--gl-padding);
+      }
+      /* coror and btn*/
+      .gl-bg-primary,.gl-btn-primary {
+        background-color: var(--gl-primary-color);
+      }
+      .gl-bg-success,.gl-btn-success {
+        background-color: var(--gl-success-color);
+      }
+      .gl-bg-info,.gl-btn-info {
+        background-color: var(--gl-info-color);
+      }
+      .gl-bg-warning,.gl-btn-warning {
+        background-color: var(--gl-warning-color);
+      }
+      .gl-bg-danger,.gl-btn-danger {
+        background-color: var(--gl-danger-color);
+      }
+       /*end bg */
+      /*btn*/
+      .gl-btn-default,.gl-btn-primary,
+      .gl-btn-success,.gl-btn-info,
+      .gl-btn-warning,.gl-btn-danger {
+        color: var(--gl-white-color);
+        min-height:var(--gl-btn-min-hight);
+        min-width:var(--gl-btn-min-width);
+        margin: var(--gl-btn-margin);
+      }
+      .gl-btn-default {
+        background-color: var(--gl-white-color);
+        color: black;
+      }
+      /*btn disabled*/
+      .gl-btn-default[disabled],.gl-btn-primary[disabled],
+      .gl-btn-success[disabled],.gl-btn-info[disabled],
+      .gl-btn-warning[disabled],.gl-btn-danger[disabled] {
+        background-color: #eaeaea;
+        color: #a8a8a8;
+      }
+      .gl-btn-disabled{
+        background-color: var(--gl-disabled-color);
+        color: var(--gl-white-color);
+        min-height:var(--gl-btn-min-hight);
+        min-width:var(--gl-btn-min-width);
+        margin: var(--gl-btn-margin);
+        --paper-button-disabled:{
+           cursor:not-allowed;
+        }
+      }
+       /*end btn*/
+      .gl-icon-size {
+        height:var(--gl-icon-hight);
+        width:var(--gl-icon-width);
+        padding-right: 5px;
+       }
+
+    table.gl-table-default {
+        border-collapse: collapse;
+        width: 100%;
+        overflow-x: auto;
+    }
+
+    table.gl-table-default,
+    table.gl-table-default > thead > tr > th,
+    table.gl-table-default > tbody > tr > td,
+    table.gl-table-default > tfoot > tr > td  {
+        border-bottom: 1px solid #ddd;
+    }
+
+    table.gl-table-default > thead > tr > th,
+    table.gl-table-default > tbody > tr > td,
+    table.gl-table-default > tfoot > tr > td  {
+        padding: 15px;
+    }
+
+    table.gl-table-default > thead > tr > th {
+        text-align: left;
+        background-color: #F1F1F1;
+    }
+
+    table.gl-table-default > tbody > tr > td {
+        text-align: left;
+    }
+
+    table.gl-table-default > tbody > tr:hover {
+        background-color: #F1F1F1;
+    }
+    /*end table */
+    /* gl-panel */
+
+    div.gl-panel-default {
+        border: 1px solid #ddd;
+    }
+
+    div.gl-panel-default > div.gl-panel-default-header {
+        background-color: orange;
+        padding: 8px 10px 8px 10px;
+        color: white;
+        font-size: 18px;
+        text-align: left;
+    }
+
+    div.gl-panel-default > div.gl-panel-default-content {
+        padding: 20px;
+    }
+    /*end gl-panel */
+</style>
+  <template>
+
+  </template>
+  <script>
+    Polymer({
+      is: "gl-styles",
+
+    });
+  </script>
+</dom-module>

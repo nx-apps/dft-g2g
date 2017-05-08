@@ -259,6 +259,8 @@
       listPayment:function () {
         document.cookie = "contract_id="+this.data.contract_id;
         document.cookie = "contractName="+this.data.contract_name;
+        document.cookie = "buyer_id="+this.data.buyer_id;
+        // console.log(this.data);
         this.fire('nylon-change-page',{path:'/payment'})
       },
     });

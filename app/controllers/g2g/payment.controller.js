@@ -132,7 +132,7 @@ exports.getByFeeId = function (req, res) {
 }
 exports.getSilo = function (req, res) {
     req.jdbc.query("mssql",
-   `  SELECT bk.Keyword as keyword,bk.Status as statusName,sum(p.tWeight) as weightAll 
+        `  SELECT bk.Keyword as keyword,bk.Status as statusName,sum(p.tWeight) as weightAll 
          FROM ( 
          SELECT s.Keyword ,s.Status ,b.book_id 
          FROM  dft_lk_status s 
@@ -147,6 +147,17 @@ exports.getSilo = function (req, res) {
         function (err, data) {
             res.send(data);
         });
+}
+exports.getCheckNoByBuyerId = function (req, res) {
+    var r = req.r;
+    r.db('g2g2').table('payment').getAll(req.params.buyer_id, { index: 'tags' })
+        .map(function (m) {
+            return m('pay_no').coerceTo('number')
+        }).max().add(1)
+        .run()
+        .then(function (data) {
+            res.json({ check_no: data });
+        })
 }
 exports.insert = function (req, res) {
     var valid = req.ajv.validate('g2g.payment', req.body);

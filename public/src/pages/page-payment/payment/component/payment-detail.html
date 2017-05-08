@@ -91,13 +91,15 @@
         <gl-grid-row width="{{getWidth}}">
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,2]]"></gl-grid-col>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-            <gl-form-input class="required" required label="{{localize('text_amount')}} :" placeholder="{{localize('text_amount')}}"
-              readonly value="{{formatNumber(data.pay_amount)}}"></gl-form-input>
-          </gl-grid-col>
-          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
             <gl-form-input class="required" required label="{{localize('label_order')}} :" placeholder="{{localize('label_pay_times')}}"
               value="{{data.pay_times}}"></gl-form-input>
           </gl-grid-col>
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+            <gl-form-input class="required" required label="{{localize('text_cheque_no')}} :" allowed-pattern="[0-9||,||.]" placeholder="{{localize('text_cheque_no')}}"
+              value="{{data.pay_no}}"></gl-form-input>
+          </gl-grid-col>
+
+
         </gl-grid-row>
         <gl-grid-row>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,2]]"></gl-grid-col>
@@ -116,12 +118,13 @@
         </gl-grid-row>
         <gl-grid-row>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,2]]"></gl-grid-col>
-          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-            <gl-form-input class="required" required label="{{localize('text_cheque_no')}} :" allowed-pattern="[0-9||,||.]" placeholder="{{localize('text_cheque_no')}}"
-              value="{{data.pay_no}}"></gl-form-input>
-          </gl-grid-col>
+
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
             <vaadin-date-picker class="required" required label="{{localize('label_cheque_date')}}" value="{{data.pay_date}}"></vaadin-date-picker>
+          </gl-grid-col>
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+            <gl-form-input class="required" required label="{{localize('text_amount')}} :" placeholder="{{localize('text_amount')}}"
+              readonly value="{{formatNumber(data.pay_amount)}}"></gl-form-input>
           </gl-grid-col>
         </gl-grid-row>
         <gl-grid-row>
@@ -156,7 +159,7 @@
       properties: {
         data: {
           type: Object,
-          value: { bank_id: 'KTB', bank_branch: 'กระทรวงพาณิชย์' },
+          value: {},
           observer: '_setCheckBox'
         },
       },
@@ -217,6 +220,14 @@
         this.set('data.pay_amount', 0);
       },
       addPayment: function () {
+        // / console.log(result, data);
+        this.set('data.tags', []);
+        // if (payDetId.status) {
+        this.push('data.tags', this.data.payment_detail[0].contract_id,
+          this.data.payment_detail[0].invoice_id,
+          this.data.payment_detail[0].cl_id,
+          this.data.payment_detail[0].book_id,
+          this.dataForSelect.buyer_id);
         this._cleanDataPayment(this.data, (data) => {
           // console.log(data);
           this.fire('toast', {  //คำสั่งสำหรับเปิด toast dialog
@@ -224,13 +235,12 @@
             text: 'ต้องการจ่ายใช่หรือไม่ ?',
             confirmed: (result) => {
               if (result) {
-                // console.log(result, data);
-                this.set('data.tags', []);
-                // if (payDetId.status) {
-                this.push('data.tags', this.data.payment_detail[0].contract_id, this.data.payment_detail[0].invoice_id, this.data.payment_detail[0].cl_id);
+                // /
                 // this._cleanDataPayment(this.data, (data) => {
-                // console.log(data);
+                console.log(data);
                 let contract_id = this._getUrl();
+
+
                 this.insertCall('./g2g/payment/insert', data, () => {
                   this.fire('toast', {
                     status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
