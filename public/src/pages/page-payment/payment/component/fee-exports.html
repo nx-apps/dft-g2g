@@ -122,7 +122,11 @@
             <gl-form-panel set-padding="0px 0px 0px 0px" set-border="0px">
               <template is="dom-if" if="[[!isViewSeleted]]">
                 <template is="dom-if" if={{data.fee_det_status}}>
-                  <icon-button-management is-input-disabled="[[!isInputDisabled]]"></icon-button-management>
+                  <div class="horizontal end-justified layout">
+                  <paper-icon-button id="edit" class="crud" icon="create" raised on-tap="editInput" disabled="[[!isInputDisabled]]"></paper-icon-button>
+                  <paper-tooltip for="edit" offset="0">แก้ไข</paper-tooltip>
+                  </div>
+                  <!--<icon-button-management is-input-disabled="[[!isInputDisabled]]" delete="false"></icon-button-management>-->
                 </template>
 
 
@@ -139,8 +143,7 @@
                         <template>
                           [[item.fee_no]]
                         </template>
-                      </gl-combo-box>
-                      [[addFeeno(data.fee_id)]]
+                      </gl-combo-box> [[addFeeno(data.fee_id)]]
                     </gl-grid-col>
                     <gl-grid-col width="[[getWidth]]" grid="[[300,6],[500,3]]">
                       <vaadin-date-picker class="required test" required disabled="[[isInputDisabled]]" label="{{localize('label_money_received_date')}}"
@@ -217,13 +220,19 @@
                       <paper-button raised on-tap="approvePayment" class="gl-btn-default" hidden="[[data.fee_det_status]]">{{localize('btn_cancel')}}{{localize('btn_confirm')}}</paper-button>
                     </template>
                   </template>
-                  <template is="dom-if" if="[[!_isViewing(isInputDisabled)]]">2
+                  <template is="dom-if" if="[[!_isViewing(isInputDisabled)]]">
                     <paper-button raised class="gl-btn-default" on-tap="cancelFee" hidden="[[!isViewSeleted]]">{{localize('btn_cancel')}}</paper-button>
                     <paper-button raised on-tap="addPayment" class="gl-btn-success" hidden="[[!isViewSeleted]]">{{localize('btn_add')}}</paper-button>
                   </template>
-                  <template is="dom-if" if="[[!_isViewing(isInputDisabled)]]">3
+                  <template is="dom-if" if="[[!_isViewing(isInputDisabled)]]">
                     <paper-button raised class="gl-btn-default" on-tap="calcelContract" hidden="[[isViewSeleted]]">{{localize('btn_cancel')}}</paper-button>
                     <paper-button raised class="gl-btn-success" on-tap="savePayment" hidden="[[isViewSeleted]]">{{localize('btn_save')}}</paper-button>
+                  </template>
+
+                  <template is="dom-if" if="[[data.fee_det_status]]">
+                    <template is="dom-if" if="[[isInputDisabled]]">
+                      <paper-button raised class="gl-btn-danger" on-tap="editFee" hidden="[[isViewSeleted]]">{{localize('btn_cancer_confirm')}}</paper-button>
+                    </template>
                   </template>
                 </div>
                 <!--</gl-form-panel-footer>-->
@@ -309,13 +318,22 @@
         }
       },
       addFeeno(id) {
-        // console.log(id != '');
-        if (id == 0 && id != '') {
-          // console.log(id);
-          this.$$('#tab1').checked = false
-          this.$$('#tab2').checked = true
-          this.$$('#fee-management')._getInsertFee()
+        try {
+          console.log(id);
+          // console.log(id == 0);
+          // console.log(id != '');
+          // console.log(typeof id !=='undefined');
+          console.log(id == 0 && typeof id !== 'undefined');
+          if (id == 0 && typeof id !== 'undefined') {
+            console.log(id);
+            this.$$('#tab1').checked = false
+            this.$$('#tab2').checked = true
+            this.$$('#fee-management')._getInsertFee()
+          }
+        } catch (e) {
+          // console.log(e);
         }
+
       },
       _balanceLessFees(amount_usd, fee_internal) {
         this.data.balanceLessFees = amount_usd - fee_internal
@@ -411,13 +429,13 @@
           this.fire('toast', {  //คำสั่งสำหรับเปิด toast dialog
             status: 'dialog',
             text: 'การแก้ไขข้อมูลจะเป็นการยกเลิกการยืนยัน ต้องการแก้ไขข้อมูลต่อใช่หรือไม่ ?',
-            confirmed: this._editFee.bind(this), //function ที่ใช้รับค่า ปุ่ม
+            confirmed: this._savePayment.bind(this), //function ที่ใช้รับค่า ปุ่ม
             el: this, // compontents
             data: data // ข้อมูลที่ส่งไป เช่น id ที่จะใช้ลบข้อมูล ใน db
           })
         });
       },
-      _editFee: function (result, detail) {
+      _savePayment: function (result, detail) {
         if (result == true) {
           //  console.log(detail.data);
           //  console.log(detail.data);
@@ -435,6 +453,42 @@
                 this.fire('get-fee-list-detail', { detail: detail.data.id });
                 let el = Polymer.dom(this.root).querySelectorAll('.required');
                 el.map((el) => { el.reset(); });
+              }
+            });
+          });
+        }
+      },
+      editFee: function () {
+        this._clearDatafee(this.data, 'update', (data) => {
+          data.fee_det_status = this.approve(data.fee_det_status);
+          data.id = this.data.fee_det_id;
+          this.fire('toast', {  //คำสั่งสำหรับเปิด toast dialog
+            status: 'dialog',
+            text: 'ต้องการยกเลิกการยืนยันใช่หรือไม่ ?',
+            confirmed: this._editFee.bind(this), //function ที่ใช้รับค่า ปุ่ม
+            el: this, // compontents
+            data: data // ข้อมูลที่ส่งไป เช่น id ที่จะใช้ลบข้อมูล ใน db
+          })
+        });
+      },
+      _editFee: function (result, detail) {
+        if (result == true) {
+          //  console.log(detail.data);
+          //  console.log(detail.data);
+          this.update('./g2g/fee_detail/update', detail.data, () => {
+
+            let contract_id = this._getUrl();
+            this.fire('get-fee-list', { detail: contract_id });
+            this.fire('toast', {
+              status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
+              callback: () => {
+                // ไปหน้า page-payment
+                this.fire('get-fee-detail', { detail: { fee_id: detail.data.fee_id } })
+                //ไปหน้า list-of-fee-detail
+                this.fire('get-fee-list-detail', { detail: detail.data.id });
+                let el = Polymer.dom(this.root).querySelectorAll('.required');
+                el.map((el) => { el.reset(); });
+                this.$$('#tab1').checked = true
               }
             });
           });
