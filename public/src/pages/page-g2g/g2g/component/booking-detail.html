@@ -304,9 +304,6 @@
         // 'edit-input':'editInput',
         // 'delete-input':'deleteBooking'
       },
-      xxxxx: function () {
-        // console.log(this.dataForSelect);
-      },
       getShippingId: function () {
         try {
           // console.log(this.dataForSelect.carrier);
@@ -322,24 +319,20 @@
           }
           this.set('data.shipline_name', this.data.shipline_name.toUpperCase())
         } catch (error) {
-          console.log(error);
+          // console.log(error);
         }
       },
       getShipId: function (e) {
-        console.log(1111);
+        // console.log(1111);
         try {
           let index = e.currentTarget.index
           // this.set('data.ship['+index+'].ship_name',this.data.ship[index].ship_name.toUpperCase())
           this.data.ship[index].ship_name = this.data.ship[index].ship_name.toUpperCase()
-          // console.log(this.data.ship[index].ship_name);
           this.notifyPath('data.ship.'+index+'.ship_name');
-          // console.log(this.data.ship[index].ship_name);
           if (this.data.shipline_id != '') {
             
             let source = this.$$('#shipline-suggestions-' + index).source
             let ship_name = this.data.ship[index].ship_name
-            
-            
             var resulte = source.filter((item, index) => ship_name == item.text.toUpperCase())
             // console.log(resulte);
             if (resulte.length > 0) {
@@ -349,7 +342,7 @@
             } else {
               // console.log(this.data.ship);
               // this.set('data.shipline_name',this.data.shipline_name)
-              this.set('data.ship[' + index + '].ship_id', '')
+              this.set('data.ship.' + index + '..ship_id', '')
             }
           }else {
             // console.log(4444);
@@ -365,22 +358,6 @@
       created: function () {
         this.nylonLocalizeImport('/i18n-page1.json');
       },
-      // _changeDataBl: function (dateUn) {
-      //   this.getDateg2g(dateUn, (date) => {
-      //     //   console.log('date',date);
-      //     this.set('data.etd_date', date);
-      //     // this.notifyPath('data.etd_date');
-      //     this.set('data.eta_date', date);
-      //     // this.notifyPath('data.eta_date');
-      //     this.set('data.packing_date', date);
-      //     // this.notifyPath('data.packing_date');
-      //     this.set('data.cut_of_date', date);
-      //     // this.notifyPath('data.cut_of_date');
-      //     this.set('data.product_date', date);
-      //     // this.notifyPath('data.product_date');
-      //   });
-      //   // console.log(this.dataForSelect.carrier);
-      // },
       _oBcheckCarrier: function (carrier) {
         // console.log('carrier',carrier);
       },
@@ -414,7 +391,7 @@
               if (data.carrier_id == '' || data.carrier_id == undefined) {
                 data.carrier_id = this._checkCarrierIsBlank();
               }
-              console.log(this.data);
+              // console.log(this.data);
               this.insert('./g2g/book/insert', data, () => {
                 this.fire('toast', { status: 'load' });
                 this.fire('_get-fire-booking-detail', { detail: data });

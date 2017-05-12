@@ -186,7 +186,7 @@
         <template is="dom-if" if="[[!isInputDisabled]]">
 
           <template is="dom-if" if="[[isViewSeleted]]">
-            <paper-button class="gl-btn" on-tap="calcelShipmentInsert" raised>{{localize('btn_cancel')}}</paper-button>
+            <paper-button class="gl-btn-default" on-tap="calcelShipmentInsert" raised>{{localize('btn_cancel')}}</paper-button>
             <paper-button class="gl-btn-success" raised on-tap="editExporter">
               <iron-icon class="gl-icon-size" icon="save"></iron-icon>{{localize('btn_save')}}</paper-button>
           </template>
@@ -338,6 +338,7 @@
           // console.log('>>>>>>>>>>',this.dataForSelect);
           // let type_rice_id = e.detail.value;
           let typeRice = this.dataForSelect.cl_type_rice.filter((typeRices) => typeRices.type_rice_id == type_rice_id);
+          console.log(typeRice[0]);
           // console.log(typeRice);
           this.dataForSelect.package = typeRice[0].package;
           // console.log('fff=>', this.dataForSelect.package);

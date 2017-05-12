@@ -236,6 +236,7 @@
         "btn_add":"เพิ่ม",
         "btn_save":"บันทึก",
         "btn_confirm":"ยืนยัน",
+        "btn_cancer_confirm":"ยกเลิกการยืนยัน",
 
         "btn_contract_detail":"ข้อมูลผู้ซื้อ",
         "btn_add_confirm_detail":"เพิ่มสัญญา",

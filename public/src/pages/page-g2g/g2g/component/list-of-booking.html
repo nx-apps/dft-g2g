@@ -34,7 +34,7 @@
         },
         dataForSelect: {
           type: Object,
-          value: { exporter: [] }
+          value: { exporter: [] ,cl_type_rice:[]}
         },
         dataDefault: {
           type: Object,
@@ -65,73 +65,73 @@
         this.set('pageSelected', data.detail.detail)
       },
       setTotalRice(e) {
-        try {
-          if (this.dataForSelect.cl_id != undefined) {
-            let newBooking = this.data.book.filter((rice) => rice.cl_id == this.dataForSelect.cl_id)[0]
-            // console.log(newBooking);
-            newBooking.cl_type_rice.map((set_limit) => {
-              set_limit.type_rice_name_en = set_limit.type_rice_name_en + ' (' + set_limit.type_rice_id + ' )'
-            })
-            // console.log(newBooking);
-            this.set('dataForSelect.cl_type_rice', newBooking.cl_type_rice);
-          }
-        } catch (e) {
-          // console.log(e);
-        }
+        // try {
+        //   if (this.dataForSelect.cl_id != undefined) {
+        //     console.log('>>>>>1', this.dataForSelect.cl_type_rice.length);
+        //     this.set('dataForSelect.cl_type_rice', []);
+        //     let newBooking = this.data.book.filter((rice) => rice.cl_id == this.dataForSelect.cl_id)[0]
+        //     // console.log(newBooking);
+        //     if (this.dataForSelect.cl_type_rice.length < 1) {
+        //       newBooking.cl_type_rice.map((set_name) => {
+        //         set_name.type_rice_name_th = '(' + set_name.type_rice_id + ') ' + set_name.type_rice_name_th
+        //         set_name.type_rice_name_en = '(' + set_name.type_rice_id + ') ' + set_name.type_rice_name_en
+        //       })
+        //       // console.log(newBooking);
+        //       console.log(1);
+        //       this.set('dataForSelect.cl_type_rice', newBooking.cl_type_rice);
+        //     }
+        //   }
+        // } catch (e) {
+        //   // console.log(e);
+        // }
       },
       _getBookingDetail: function (e) {
         // console.log(e.detail);
         try {
-          this.set('dataForSelect.cl_type_rice', '')
-        this.fire('toast', { status: 'load' });
-        this.read('./g2g/book/confirm/id/' + e.detail.detail.cl_id, (data) => {
-          this.dataSelected = data;
-          this.set('dataForSelect.listbooking', data);
-          // console.log(data.length);
-          // console.log(this.dataSelected[data.length - 1].ship_lot_no);
-          let ship_lot_no 
-          if(this.dataSelected.length > 0) {
-            ship_lot_no = Number(this.dataSelected[0].ship_lot_no) + 1 
-          }
-            ship_lot_no = 1
-          // console.log(data.length);
-          // console.log(this.dataSelected[0]);
-          // console.log(ship_lot_no);
-          this.set('dataDefault.ship_lot_no', ship_lot_no);
-          this._changeDataBl('undefined');
-          // console.log(this.dataDefault);
-          this.set('dataForSelect.cl_no', e.detail.detail.cl_no);
-          this.set('dataForSelect.cl_id', e.detail.detail.cl_id);
-          // console.log(this.dataForSelect);
-          e.detail.detail.cl_type_rice.map((set_limit) => {
-            set_limit.type_rice_name_en = set_limit.type_rice_name_en + ' (' + set_limit.type_rice_id + ' )'
-          })
-          this.set('dataForSelect.cl_type_rice', e.detail.detail.cl_type_rice);
-
-          // console.log('lll', this.dataForSelect.cl_type_rice);
-          this.set('pageSelected', 'list-of-booking-shm-det')
+          // this.set('dataForSelect.cl_type_rice', '')
           this.fire('toast', { status: 'load' });
-        });
+          this.read('./g2g/book/confirm/id/' + e.detail.detail.cl_id, (data) => {
+            this.dataSelected = data;
+            this.set('dataForSelect.listbooking', data);
+            // console.log(data.length);
+            // console.log(this.dataSelected[data.length - 1].ship_lot_no);
+            let ship_lot_no
+            if (this.dataSelected.length > 0) {
+              ship_lot_no = Number(this.dataSelected[0].ship_lot_no) + 1
+            } else {
+              ship_lot_no = 1
+            }
+            this.set('dataDefault.ship_lot_no', ship_lot_no);
+            this._changeDataBl('undefined');
+            // console.log(this.dataDefault);
+            this.set('dataForSelect.cl_no', e.detail.detail.cl_no);
+            this.set('dataForSelect.cl_id', e.detail.detail.cl_id);
+            // console.log(e.detail.detail.cl_type_rice);
+            // console.log(2);
+
+            // this.set('dataForSelect.cl_type_rice', []);
+            // console.log('>>>>>2', this.dataForSelect.cl_type_rice.length);
+            if (typeof this.dataForSelect.cl_type_rice === 'undefined') {
+              e.detail.detail.cl_type_rice.map((set_name) => {
+                set_name.type_rice_name_th = '(' + set_name.type_rice_id + ') ' + set_name.type_rice_name_th
+                set_name.type_rice_name_en = '(' + set_name.type_rice_id + ') ' + set_name.type_rice_name_en
+              })
+              this.set('dataForSelect.cl_type_rice', e.detail.detail.cl_type_rice);
+            }
+
+            // console.log('>>>>>3', this.dataForSelect.cl_type_rice.length);
+            this.set('pageSelected', 'list-of-booking-shm-det')
+            this.fire('toast', { status: 'load' });
+          });
         } catch (e) {
-          
-        } 
-        
+
+        }
+
       },
       getExport(data) {
         try {
-          // console.log('>>>>', data);
-          let exporters = []
           this.set('dataForSelect.exporter', '');
-          // console.log(this.dataForSelect.exporter);
-          data.exporter.map((exporter) => {
-            exporters.push({
-              exporter_id: exporter.exporter_id,
-              label: exporter.company_name_th + ' ( ' + exporter.exporter_no + ' )',
-              company_id: exporter.company_id
-            })
-          })
-          // console.log(exporters);
-          this.set('dataForSelect.exporter', exporters);
+          this.set('dataForSelect.exporter', data.exporter);
           // console.log(this.dataForSelect);
         } catch (e) {
 
@@ -157,6 +157,7 @@
       },
       _getFireBookingDetail: function (e) {
         try {
+          // console.log(e.detail.detail.cl_id);
           this.read('./g2g/book/confirm/id/' + e.detail.detail.cl_id, (data) => {
             this.dataSelected = data;
             let ship_lot_no = Number(this.dataSelected[data.length - 1].ship_lot_no) + 1
@@ -165,7 +166,7 @@
           });
         } catch (e) {
           // console.log(e);
-        } 
+        }
 
       },
       _changeDataBl: function (dateUn) {

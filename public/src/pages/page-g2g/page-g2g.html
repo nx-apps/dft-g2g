@@ -38,7 +38,7 @@
       right: 25px;
       bottom: 25px;
       color: #fff;
-       /*--paper-fab-background: var(--paper-light-blue-500);*/
+      /*--paper-fab-background: var(--paper-light-blue-500);*/
     }
     
     .addContract {
@@ -229,10 +229,12 @@
           this.notifyPath('dataForSelected.dataForContract.buyer');
         });
         this.read('./common/type_rice', (data) => {
-          
-           data.map((set_name)=>{
-            set_name.type_rice_name_th = set_name.type_rice_name_th+' '+ set_name.type_rice_id
+
+          data.map((set_name) => {
+            set_name.type_rice_name_th = '(' + set_name.type_rice_id + ') ' + set_name.type_rice_name_th
+            set_name.type_rice_name_en = '(' + set_name.type_rice_id + ') ' + set_name.type_rice_name_en
           })
+          // console.log(data);
           this.dataForSelected.dataForContract.typeRice = data;
           this.notifyPath('dataForSelected.dataForContract.typeRice');
           // console.log(this.dataForSelected.dataForContract);
@@ -246,32 +248,33 @@
       _getDataForShipment: function () {
         // call data
         this.read('./external/exporter', (data) => {
-          data.map((set_name)=>{
-            set_name.company_name_th = set_name.company_name_th+' '+ set_name.company_taxno
+          data.map((set_name) => {
+            set_name.company_name_th = '( ' + set_name.exporter_no_name + ' ' + set_name.company_taxno + ') ' + set_name.company_name_th
           })
+          // console.log(data);
           this.dataForSelected.dataForBooking.seller = data;
           this.notifyPath('dataForSelected.dataForBooking.seller');
           // console.log(this.common.seller);
         });
         this.read('./common/carrier', (data) => {
-          
+
           // console.log(data);
           this.dataForSelected.dataForBooking.carrier = data;
           this.notifyPath('dataForSelected.dataForBooking.carrier');
         });
         //shipline_id
         this.read('./common/shipline/', (data) => {
-          data.map((item,index)=>{
+          data.map((item, index) => {
             item.text = item.shipline_name
           })
-          
+
           this.dataForSelected.dataForBooking.shipline = data;
           this.notifyPath('dataForSelected.dataForBooking.shipline');
         });
         //ship in shipline
         this.read('./common/shipline/ship', (data) => {
-          data.map((item,index)=>{
-             item.ship.map((sp)=>{
+          data.map((item, index) => {
+            item.ship.map((sp) => {
               sp.text = sp.ship_name
             })
           })
@@ -330,9 +333,9 @@
       _getContractDetail: function (e) {
         this.g2gPageSeleted = 'contractDetail';
         // console.log(typeof e.detail.data === 'undefined');
-        if (typeof e.detail.data !== 'undefined') 
-           this.titlePanelRight = 'ข้อมูลผู้สั่งซื้อ : '+ e.detail.data.contract_name
-        
+        if (typeof e.detail.data !== 'undefined')
+          this.titlePanelRight = 'ข้อมูลผู้สั่งซื้อ : ' + e.detail.data.contract_name
+
         if (typeof e.detail.contractId === "undefined") {
           this.fire('toast', { status: 'load' });
           if (this.checkRenderPage.contractDetail != true) {
@@ -364,7 +367,7 @@
         this.set('pageSelected', 'listOfConfirm')
         // listOfConfirm
         // console.log('1212=>',e.detail);
-        
+
         this.g2gPageSeleted = 'listOfConfirm';
         if (typeof e.detail.contractId == "undefined") {
           this.titlePanelRight = 'รายละเอียดสัญญา : ' + e.detail.data.contract_name
@@ -419,11 +422,11 @@
         // 
         // console.log(e.detail.detail);
         this.g2gPageSeleted = 'listOfShipment';
-        
+
         // console.log(e.detail.contractId);
         if (typeof e.detail.contractId == "undefined") {
           this.set('pageSelected', 'list-of-booking-in-confirm')
-          this.titlePanelRight = 'รายการส่งมอบสินค้า : '+ e.detail.data.contract_name
+          this.titlePanelRight = 'รายการส่งมอบสินค้า : ' + e.detail.data.contract_name
           this.fire('toast', { status: 'load' });
           if (this.checkRenderPage.listOfShipment != true) {
             this.async(() => {
@@ -443,17 +446,23 @@
             this.fire('toast', { status: 'load' });
             this._flipDrawer();
           }
-          // console.log(e.detail.data.book);
+          e.detail.data.exporter.map((exporters)=>{
+            
+                exporters.exporter_id= exporters.exporter_id,
+              exporters.label= '( ' + exporters.exporter_no + ' ' + exporters.company_taxno + ') ' + exporters.company_name_th,
+              exporters.company_id= exporters.company_id
+          })
           this.dataSelected = e.detail.data;
+          console.log(this.dataSelected);
           this.set('dataForSelected.dataForBooking.contract_id', e.detail.data.contract_id);
           this.set('dataForSelected.dataForBooking.buyer_id', e.detail.data.buyer_id);
           // console.log(this.dataForSelected.dataForBooking);
           this.set('dataForSelected.dataForBooking.country_id', e.detail.data.country_id);
           this.set('dataForSelected.dataForBooking.buyer_masks', e.detail.data.buyer_masks);
         } else {
-          console.log(111);
+          // console.log(111);
           let contractId = e.detail.contractId;
-          console.log(contractId);
+          // console.log(contractId);
           this.read('./g2g/contract/buyer/id/' + this._getCookie("buyerId"), (data) => {
             let dataContract = data.filter((contractList) => contractList.contract_id == contractId);
             this.dataSelected = dataContract[0];
@@ -466,12 +475,12 @@
             //ปัญหาตรงนี้
             this.set('pageSelected', 'listOfFee')
             this.feeList = data;
-            this.titlePanelRight = 'ค่าธรรมเนียม : '+ e.detail.data.contract_name
+            this.titlePanelRight = 'ค่าธรรมเนียม : ' + e.detail.data.contract_name
             this.dataForSelected.dataForFee.feeListinShm = data;
             this.notifyPath('dataForSelected.dataForFee.feeListinShm');
             this.g2gPageSeleted = 'listOfFee';
             if (this.checkRenderPage.listOfFee != true) {
-              
+
               this.fire('toast', { status: 'load' });
               this.async(() => {
                 this.importHref(

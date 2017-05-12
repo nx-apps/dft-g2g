@@ -15,7 +15,7 @@
   <template>
     <iron-pages selected="{{pageSelected}}" attr-for-selected="name">
       <div name="list-of-shm-det">
-        <list-of-shm-det data="{{dataSelected}}"></list-of-shm-det>
+        <list-of-shm-det data="{{dataSelected}}" data-for-select="[[dataForSelect]]"></list-of-shm-det>
       </div>
       <div name="list-of-shm-det-add">
         <shm-det-exporter is-input-disabled=[[setFalse]] data-for-select="[[dataForSelect]]" is-view-seleted="[[!isViewSeleted]]"></shm-det-exporter>
@@ -59,23 +59,18 @@
         '_post-approve-book': '_postApproveBook'
       },
       _changeComponentShm: function (data) {
-        // console.log(data.detail.detail);
-        // console.log(this.dataSelected);
         this.set('pageSelected', data.detail.detail)
       },
       _getFireInBookShmDetail: function (e) {
-        // console.log(e.detail.detail);
-        // console.log(this.dataSelected);
         this.dataEdit = e.detail.detail;
         this.set('dataEdit', e.detail.detail)
-        // console.log(this.dataEdit);
         this.set('pageSelected', 'shm-detail')
       },
       _postApproveBook: function (e) {
         // console.log(e.detail);
-        this.fire('toast', { status: 'load' });
+        // this.fire('toast', { status: 'load' });
         this.update('./g2g/book/update/', e.detail, () => {
-          this.fire('toast', { status: 'load' });
+          // this.fire('toast', { status: 'load' });
           // console.log(11);
         });
       }

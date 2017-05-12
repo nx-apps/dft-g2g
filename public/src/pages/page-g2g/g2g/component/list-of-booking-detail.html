@@ -65,7 +65,9 @@
         this.read('./g2g/shipment_detail/book/id/' + e.detail.detail.book_id, (data) => {
 
           this.dataSelected = data;
+          // console.log(this.dataSelected);
           this.set('dataForSelect.book_id', e.detail.detail.book_id)
+          // console.log(this.dataForSelect);
           this.set('pageSelected', 'list-of-booking-shm-det')
           this.fire('toast', { status: 'load' });
         });
@@ -73,6 +75,14 @@
       _getFireShmDetail: function (e) {
         // console.log(e.detail.detail.book_id);
         this.read('./g2g/shipment_detail/book/id/' + e.detail.book_id, (data) => {
+          // ตั่งค่าลิมิตข้าวใหม่ทุกรอบที่มีการ เพิ่ม หรือ ลบผู้ส่งออก
+          if(data.length > 0) {
+            // console.log(data[0].cl_type_rice);
+            this.set('dataForSelect.cl_type_rice',data[0].cl_type_rice)
+          }
+          // console.log(this.dataForSelect.cl_type_rice);
+          // console.log(data);
+          // console.log('zzzzzzzzzzzzzzzzzz');
           this.dataSelected = data;
         });
       },
