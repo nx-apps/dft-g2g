@@ -120,9 +120,9 @@
                 <gl-combo-box id="riceType-[[index]]" class="required" required disabled="[[isInputDisabled]]" error-message="{{localize('label_error_rice_type')}}"
                   placeholder="{{localize('label_rice_type')}}" name="type_rice_name" label="{{localize('label_rice_type')}}"
                   item-label-path="type_rice_name_th" item-value-path="type_rice_id" value="{{item.type_rice_id}}" on-value-changed="_typeRiceConfirm">
-                <template>
-              [[item.type_rice_name_th]]
-            </template>
+                  <template>
+                    [[item.type_rice_name_th]]
+                  </template>
                 </gl-combo-box>
 
               </gl-grid-col>
@@ -190,14 +190,14 @@
                   <tr>
                     <td>
 
-                     
+
                       <!-- items="{{dataForSelect.package}}"  -->
                       <gl-combo-box id="package-[[index]]-[[indexpackeage]]" class="required InTable" required disabled="[[isInputDisabled]]" error-message="{{localize('label_error_package')}}"
                         placeholder="{{localize('label_package')}}" item-label-path="package_name_th" item-value-path="package_id"
                         value="{{packageitem.package_id}}" on-value-changed="_typePackageConfirm">
                         <template>
-              [[item.package_name_th]]
-            </template>
+                          [[item.package_name_th]]
+                        </template>
                       </gl-combo-box>
 
                     </td>
@@ -248,9 +248,9 @@
             <gl-combo-box id="incoterms-[[index]]" class="required" required disabled="[[isInputDisabled]]" label="{{localize('label_incoterms')}} [[_ObcountIndex(index)]]"
               error-message="{{localize('label_error_incoterms')}} [[_ObcountIndex(index)]]" placeholder="{{localize('label_incoterms')}} [[_ObcountIndex(index)]]"
               item-label-path="inct_name" item-value-path="inct_id" value="{{item.inct_id}}" on-value-changed="_incotermsConfirm">
-            <template>
-              [[item.inct_name]]
-            </template>
+              <template>
+                [[item.inct_name]]
+              </template>
             </gl-combo-box>
           </template>
         </gl-grid-col>
@@ -279,7 +279,7 @@
           <paper-button class="gl-btn-info" raised on-tap="confirmConfirm" hidden="[[data.cl_status]]">{{localize('btn_confirm')}}</paper-button>
         </template>
         <template is="dom-if" if="[[_isViewing(isViewSeleted)]]">
-          <paper-button class="gl-btn" on-tap="calcelContract" raised hidden="[[isInputDisabled]]">{{localize('btn_cancel')}}</paper-button>
+          <paper-button class="gl-btn-default" on-tap="calcelContract" raised hidden="[[isInputDisabled]]">{{localize('btn_cancel')}}</paper-button>
           <paper-button class="gl-btn-success" on-tap="saveConfirm" raised hidden="[[isInputDisabled]]">{{localize('btn_save')}}</paper-button>
         </template>
       </div>
@@ -399,7 +399,7 @@
         }
       },
       backPage: function () {
-        // console.log(this.isInputDisabled );
+        console.log(this.isInputDisabled);
         if (this.isInputDisabled == false) {
           this.editInput();
         }
@@ -420,10 +420,11 @@
             this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
             // console.log(data);
             this.insert('./g2g/confirm/insert', data, () => {
+              this.fire('get-list-confirm', { contractId: data.contract_id });
               this.fire('toast', {
                 status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
                 callback: () => {
-                  this.fire('get-list-confirm', { contractId: data.contract_id });
+                  
                   this.fire('back-page-confirm', { detail: '_back-page-confirm' });
                 }
               });
@@ -531,13 +532,19 @@
       },
       _deleteDataConfirm: function (result, detail) {
         if (result == true) {
+          // console.log(detail.data.cl_id);
           this.delete('./g2g/confirm/delete/id/', detail.data.cl_id, () => {
+            detail.el.fire('get-list-confirm', { contractId: detail.data.contract_id });
             this.fire('toast', {
               status: 'success', text: 'ลบสำเร็จ',  // คำสั่งสำหรับเปิด toast success
               callback: function () {
-                this.fire('get-list-confirm', { contractId: detail.data.contract_id });
-                //  this.oldData={};
-                this.backPage();
+                
+                //        //  detail.el.editInput();
+                detail.el.fire('back-page-confirm', { detail: '_back-page-confirm' });
+                // this.fire('get-confirm-detail', { clId: detail.data.id });
+                //       // detail.el.data = detail.data;
+                //       //  this.oldData={};
+                // this.backPage();
               }
             });
 
@@ -638,7 +645,7 @@
         let el = Polymer.dom(this.root).querySelectorAll('.required');
         let stat = el.map((el) => el.validate());
         if (stat.every(elem => elem == true)) {
-          let {cl_date, cl_no, cl_quality, cl_status} = data;
+          let { cl_date, cl_no, cl_quality, cl_status } = data;
           let newData = { cl_date, cl_no, cl_quality, cl_status };
           newData.cl_type_rice = [];
           newData.incoterms = [];

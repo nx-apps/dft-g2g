@@ -329,8 +329,11 @@
       },
       _getContractDetail: function (e) {
         this.g2gPageSeleted = 'contractDetail';
-        this.titlePanelRight = 'ข้อมูลผู้สั่งซื้อ : '+ e.detail.data.contract_name
-        if (typeof e.detail.contractId == "undefined") {
+        // console.log(typeof e.detail.data === 'undefined');
+        if (typeof e.detail.data !== 'undefined') 
+           this.titlePanelRight = 'ข้อมูลผู้สั่งซื้อ : '+ e.detail.data.contract_name
+        
+        if (typeof e.detail.contractId === "undefined") {
           this.fire('toast', { status: 'load' });
           if (this.checkRenderPage.contractDetail != true) {
             this.async(() => {
