@@ -13,16 +13,6 @@
     _getResetShip:function (e) {
       this._getShip(this.data.shipline_id,this.dataForSelect);
     },
-    _getCheckShipline:function(shipline){
-      // console.log(121212);
-      // console.log(this.data.shipline_id);
-      if(this.data.shipline_id != ''){
-        this._getResetShip(1)
-        let shipline_id = this.data.shipline_id
-        // console.log(this.dataForSelect.shipInShipline.filter((shipline)=>shipline.shipline_id == shipline_id )[0].ship);
-      }
-
-    },  
     _getShip:function (shipline_id,dataForSelect) {
       // console.log(shipline_id, dataForSelect);
       // console.log(this.data);
@@ -48,11 +38,9 @@
                  }
                }
              });
-             comboboxs = Polymer.dom(this.root).querySelector('#shipline-suggestions-'+i);
+             comboboxs = Polymer.dom(this.root).querySelector('#ship-'+i);
             //  console.log(comboboxs);
-               comboboxs.source = arrForItem;
-            //  console.log(comboboxs.source);
-             
+             comboboxs.items = arrForItem;
            }
         },1);
       }

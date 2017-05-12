@@ -342,7 +342,9 @@
             this.fire('toast', {
               status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
               callback: () => {
-                this.fire('refresh-contract', { detail: 'refresh-contract' });
+                
+                this.fire('_getContractreload', { detail: '_getContractreload' });
+                // this.fire('refresh-contract', { detail: 'refresh-contract' });
                 this.fire('close-drawer', { detail: 'refresh-contract' });
               }
             });

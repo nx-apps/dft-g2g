@@ -61,6 +61,7 @@
               <td on-tap="bookingDetail" data="[[item]]">[[formatNumberNoZero(item.book_quantity)]] [[checkMInus(item.cl_quantity_tolerance)]]</td>
               <td>
                 <paper-icon-button id="printShipment" class="crud" icon="print" raised on-tap="printVesel" data="[[item]]"></paper-icon-button>
+                <paper-tooltip for="printShipment" offset="0">Print Invoice</paper-tooltip>
               </td>
             </tr>
           </template>

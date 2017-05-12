@@ -64,11 +64,11 @@ exports.getById = function (req, res) {
                                     invoice_date: m('invoice_date').split('T')(0),
                                     invoice_detail: fee_merge1('invoice_detail').map(function (map1) {
                                         return m('shipment_detail').filter({ shm_det_id: map1('shm_det_id') })(0).merge(map1)
-                                            .merge(function (m2) {
-                                                return {
-                                                    exporter_date_approve: m2('exporter_date_approve').split('T')(0)
-                                                }
-                                            })
+                                            // .merge(function (m2) {
+                                            //     return {
+                                            //         exporter_date_approve: m2('exporter_date_approve').split('T')(0)
+                                            //     }
+                                            // })
                                             .without('tags')
                                     })
                                 }

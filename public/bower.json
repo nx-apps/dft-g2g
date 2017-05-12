@@ -50,6 +50,7 @@
     "paper-badge": "PolymerElements/paper-badge#^1.1.4",
     "rxjs": "^4.1.0",
     "c3": "^0.4.11",
-    "d3": "^4.8.0"
+    "d3": "^4.8.0",
+    "paper-autocomplete": "^2.5.1"
   }
 }

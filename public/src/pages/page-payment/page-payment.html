@@ -446,9 +446,10 @@
         // console.log(e.detail.detail);
         this.fire('toast', { status: 'load' });
         this.read('./g2g/fee/invoice/id/' + url, (data) => {
-          // console.log(data);
+          console.log(data);
           // console.log(data.invoice[0]);
           // this.set('dataForSelect.shm_id', data.shm_id);
+          console.log(this.dataForSelect);
           this.set('dataForSelect.cl_id', data.cl_id);
           // console.log(this.dataForSelect);
           this.dataSelected.draft = data;

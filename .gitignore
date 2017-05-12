@@ -2,4 +2,5 @@
 /app/controllers/external
 /app/routes/external
 /app/models/exporter
+/node_modules
 **.log

@@ -254,16 +254,28 @@
           // console.log(this.common.seller);
         });
         this.read('./common/carrier', (data) => {
+          
+          // console.log(data);
           this.dataForSelected.dataForBooking.carrier = data;
           this.notifyPath('dataForSelected.dataForBooking.carrier');
         });
         //shipline_id
         this.read('./common/shipline/', (data) => {
+          data.map((item,index)=>{
+            item.text = item.shipline_name
+          })
+          
           this.dataForSelected.dataForBooking.shipline = data;
           this.notifyPath('dataForSelected.dataForBooking.shipline');
         });
         //ship in shipline
         this.read('./common/shipline/ship', (data) => {
+          data.map((item,index)=>{
+             item.ship.map((sp)=>{
+              sp.text = sp.ship_name
+            })
+          })
+          // console.log(data);
           this.dataForSelected.dataForBooking.shipInShipline = data;
           this.notifyPath('dataForSelected.dataForBooking.shipInShipline');
         });

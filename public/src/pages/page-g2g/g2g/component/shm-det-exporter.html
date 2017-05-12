@@ -323,8 +323,8 @@
           let tel = this.dataForSelect.seller.filter((exporters) => exporters.company_id == company_id);
           // console.log(tel);
           this.dataForSelect.company_id = tel[0].company_id;
-          this.dataForSelect.exporter_id = tel[0].exporter_id;
-          this.data.exporter_id = tel[0].exporter_id;
+          this.dataForSelect.exporter_id = tel[0].id;
+          this.data.exporter_id = tel[0].id;
           // this.dataForSelect.trader_id=tel[0].trader_id;
           let address = tel[0].company_address_th + ' ' + tel[0].company_province_th
           // console.log(tel[0]);

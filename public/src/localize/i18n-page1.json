@@ -168,6 +168,7 @@
 
         "label_":"fee",
         "label_cheque_date":"วันที่รับเช็ค",
+        "label_cheque_date_approve":"วันที่เช็ค",
         "":"check",
         "label_componey":"ชื่อบริษัท",
 

@@ -56,7 +56,7 @@
               <th>{{localize('text_check_box')}}</th>
               <th>{{localize('label_order')}}</th>
               <th>{{localize('label_componey')}}</th>
-              <th>{{localize('text_cheque_no')}}</th>
+              <th>{{localize('text_invoice_no')}}</th>
               <th>{{localize('label_total_value_bath')}}</th>
             </tr>
             </tr>
@@ -120,7 +120,7 @@
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,2]]"></gl-grid-col>
 
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-            <vaadin-date-picker class="required" required label="{{localize('label_cheque_date')}}" value="{{data.pay_date}}"></vaadin-date-picker>
+            <vaadin-date-picker class="required" required label="{{localize('label_cheque_date_approve')}}" value="{{data.pay_date}}"></vaadin-date-picker>
           </gl-grid-col>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
             <gl-form-input class="required" required label="{{localize('text_amount')}} :" placeholder="{{localize('text_amount')}}"

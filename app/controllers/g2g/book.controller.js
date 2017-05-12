@@ -21,19 +21,19 @@ exports.getByContractId = function (req, res) {
                 right: {
                     dest_port_name: port("right")("port_name"),//r.row["right"]["port_name"]
                     dest_port_code: port("right")("port_code"),
-                    dest_country_name:r.db('common').table('country').get(port("right")("country_id")).getField('country_name_en').upcase()
+                    dest_country_name: r.db('common').table('country').get(port("right")("country_id")).getField('country_name_en').upcase()
                 }
             })
-        }).pluck("left", { right: ["dest_port_name", "dest_port_code","dest_country_name"] }).zip()
+        }).pluck("left", { right: ["dest_port_name", "dest_port_code", "dest_country_name"] }).zip()
         .eqJoin("deli_port_id", r.db('common').table("port")).map(function (port) {
             return port.merge({
                 right: {
                     deli_port_name: port("right")("port_name"),//r.row["right"]["port_name"]
                     deli_port_code: port("right")("port_code"),
-                    deli_country_name:r.db('common').table('country').get(port("right")("country_id")).getField('country_name_en').upcase()
+                    deli_country_name: r.db('common').table('country').get(port("right")("country_id")).getField('country_name_en').upcase()
                 }
             })
-        }).pluck("left", { right: ["deli_port_name", "deli_port_code","deli_country_name"] }).zip()
+        }).pluck("left", { right: ["deli_port_name", "deli_port_code", "deli_country_name"] }).zip()
         .merge(function (m) {
             return {
                 book_id: m('id'),
@@ -203,7 +203,7 @@ exports.getByClId = function (req, res) {
             }
         })
         .without('id', 'tags')
-        .orderBy(r.desc('date_created'), 'bl_no')
+        .orderBy(r.desc('ship_lot_no'))
         .run()
         .then(function (result) {
             res.json(result)
@@ -227,6 +227,7 @@ exports.getById = function (req, res) {
         })
         .merge(function (me) {
             return {
+                aaa: me('ship_lot_no'),
                 book_id: me('id'),
                 bl_detail: r.db('g2g2').table('shipment_detail')
                     .getAll(req.params.book_id, { index: 'book_id' })
@@ -304,13 +305,13 @@ exports.getById = function (req, res) {
             return {
                 buyer_country_id: r.db('common').table("buyer").get(m('buyer_id')).getField('country_id'),
                 dest_port_name: r.db('common').table("port").get(m('dest_port_id')).getField('port_name'),
-                dest_port_code: r.db('common').table("port").get(m('dest_port_id')).getField('port_code'),
+                // dest_port_code: r.db('common').table("port").get(m('dest_port_id')).getField('port_code'),
                 dest_country_id: r.db('common').table("port").get(m('dest_port_id')).getField('country_id'),
                 deli_port_name: r.db('common').table("port").get(m('deli_port_id')).getField('port_name'),
-                deli_port_code: r.db('common').table("port").get(m('deli_port_id')).getField('port_code'),
+                // deli_port_code: r.db('common').table("port").get(m('deli_port_id')).getField('port_code'),
                 deli_country_id: r.db('common').table("port").get(m('deli_port_id')).getField('country_id'),
                 load_port_name: r.db('common').table("port").get(m('load_port_id')).getField('port_name'),
-                load_port_code: r.db('common').table("port").get(m('load_port_id')).getField('port_code'),
+                // load_port_code: r.db('common').table("port").get(m('load_port_id')).getField('port_code'),
                 load_country_id: r.db('common').table("port").get(m('load_port_id')).getField('country_id')
             }
         })
@@ -340,8 +341,13 @@ exports.getById = function (req, res) {
             return r.db('common').table("carrier").get(m('carrier_id')).pluck('carrier_name')
         })
         .without('id', 'tags')
+        // .orderBy('ship_lot_no')
         .run()
         .then(function (result) {
+
+            // result.map((m) => {
+            //     console.log(m.ship_lot_no);
+            // });
             res.json(result)
         })
         .error(function (err) {
@@ -349,56 +355,199 @@ exports.getById = function (req, res) {
         })
 }
 exports.insert = function (req, res) {
-    var valid = req.ajv.validate('g2g.book', req.body);
+    var async = require('async');
     var r = req.r;
     var result = { result: false, message: null, id: null };
-    if (valid) {
-        var obj = Object.assign(req.body, { date_created: new Date().toISOString(), date_updated: new Date().toISOString(), creater: 'admin', updater: 'admin' });
-        r.db('g2g2').table("book")
-            .insert(obj)
-            .run()
-            .then(function (response) {
-                result.message = response;
-                if (response.errors == 0) {
-                    result.result = true;
-                    result.id = response.generated_keys;
+    var ship = [];
+    async.waterfall([
+        function (callback) {
+            if (!req.body.hasOwnProperty('shipline_id')) {
+                r.db('common').table('shipline').insert({
+                    shipline_name: req.body.shipline_name,
+                    date_created: new Date().toISOString(),
+                    date_updated: new Date().toISOString()
+                })
+                    .run()
+                    .then(function (data) {
+                        delete req.body.shipline_name;
+                        callback(null, data.generated_keys[0]);
+                    })
+            } else {
+                callback(null, req.body.shipline_id);
+            }
+        },
+        function (shiplineid, callback) {
+            async.eachSeries(req.body.ship, function (i, next) {
+                if (!i.hasOwnProperty('ship_id')) {
+                    r.db('common').table('ship').insert(
+                        {
+                            shipline_id: shiplineid,
+                            ship_name: i.ship_name,
+                            date_created: new Date().toISOString(),
+                            date_updated: new Date().toISOString()
+                        })
+                        .run()
+                        .then(function (data) {
+                            ship.push({
+                                ship_id: data.generated_keys[0],
+                                ship_voy_no: i.ship_voy_no
+
+                            });
+                            next();
+                        })
+                } else {
+                    ship.push(i);
+                    next();
                 }
-                res.json(result);
-            })
-            .error(function (err) {
-                result.message = err;
-                res.json(result);
-            })
-    } else {
-        result.message = req.ajv.errorsText()
-        res.json(result);
-    }
+
+            }, function (err) {
+                if (!err) {
+                    callback(null, shiplineid, ship);
+                }
+            });
+        }
+    ], function (err, shipline_id, ship) {
+        // var dataz = { shipline_id: shipline_id, ship: ship };
+        req.body.shipline_id = shipline_id;
+        req.body.ship = ship;
+        var valid = req.ajv.validate('g2g.book', req.body);
+        // res.json(req.body);
+        if (valid) {
+            var obj = Object.assign(req.body, { date_created: new Date().toISOString(), date_updated: new Date().toISOString(), creater: 'admin', updater: 'admin' });
+            r.db('g2g2').table("book")
+                .insert(obj)
+                .run()
+                .then(function (response) {
+                    result.message = response;
+                    if (response.errors == 0) {
+                        result.result = true;
+                        result.id = response.generated_keys;
+                    }
+                    res.json(result);
+                })
+                .error(function (err) {
+                    result.message = err;
+                    res.json(result);
+                })
+        } else {
+            result.message = req.ajv.errorsText()
+            res.json(result);
+        }
+    });
+
+
+
+
 }
 exports.update = function (req, res) {
+    var async = require('async');
     var r = req.r;
     var result = { result: false, message: null, id: null };
-    if (req.body.id != '' && req.body.id != null && typeof req.body.id != 'undefined') {
-        result.id = req.body.id;
-        var obj = Object.assign(req.body, { date_updated: new Date().toISOString(), updater: 'admin' });
-        r.db('g2g2').table("book")
-            .get(req.body.id)
-            .update(obj)
-            .run()
-            .then(function (response) {
-                result.message = response;
-                if (response.errors == 0) {
-                    result.result = true;
-                }
-                res.json(result);
-            })
-            .error(function (err) {
-                result.message = err;
-                res.json(result);
-            })
+    if (req.body.book_status == "approve") {
+        if (req.body.id != '' && req.body.id != null && typeof req.body.id != 'undefined') {
+            result.id = req.body.id;
+            var obj = Object.assign(req.body, { date_updated: new Date().toISOString(), updater: 'admin' });
+            r.db('g2g2').table("book")
+                .get(req.body.id)
+                .update(obj)
+                .run()
+                .then(function (response) {
+                    result.message = response;
+                    if (response.errors == 0) {
+                        result.result = true;
+                    }
+                    res.json(result);
+                })
+                .error(function (err) {
+                    result.message = err;
+                    res.json(result);
+                })
+        } else {
+            result.message = 'require field id';
+            res.json(result);
+        }
     } else {
-        result.message = 'require field id';
-        res.json(result);
+        var ship = [];
+        async.waterfall([
+            function (callback) {
+                if (!req.body.hasOwnProperty('shipline_id')) {
+                    r.db('common').table('shipline').insert({
+                        shipline_name: req.body.shipline_name,
+                        date_created: new Date().toISOString(),
+                        date_updated: new Date().toISOString()
+                    })
+                        .run()
+                        .then(function (data) {
+                            delete req.body.shipline_name;
+                            callback(null, data.generated_keys[0]);
+                        })
+                } else {
+                    callback(null, req.body.shipline_id);
+                }
+            },
+            function (shiplineid, callback) {
+                async.eachSeries(req.body.ship, function (i, next) {
+                    if (!i.hasOwnProperty('ship_id')) {
+                        r.db('common').table('ship').insert({
+                            shipline_id: shiplineid,
+                            ship_name: i.ship_name,
+                            date_created: new Date().toISOString(),
+                            date_updated: new Date().toISOString()
+                        })
+                            .run()
+                            .then(function (data) {
+                                ship.push({
+                                    ship_id: data.generated_keys[0],
+                                    ship_voy_no: i.ship_voy_no
+
+                                });
+                                next();
+                            })
+                    } else {
+                        ship.push(i);
+                        next();
+                    }
+
+                }, function (err) {
+                    if (!err) {
+                        callback(null, shiplineid, ship);
+                    }
+                });
+            }
+        ], function (err, shipline_id, ship) {
+            // var dataz = { shipline_id: shipline_id, ship: ship };
+            req.body.shipline_id = shipline_id;
+            req.body.ship = ship;
+            var valid = req.ajv.validate('g2g.book', req.body);
+            // res.json(req.body);
+            // var r = req.r;
+            // var result = { result: false, message: null, id: null };
+            if (req.body.id != '' && req.body.id != null && typeof req.body.id != 'undefined') {
+                result.id = req.body.id;
+                var obj = Object.assign(req.body, { date_updated: new Date().toISOString(), updater: 'admin' });
+                r.db('g2g2').table("book")
+                    .get(req.body.id)
+                    .update(obj)
+                    .run()
+                    .then(function (response) {
+                        result.message = response;
+                        if (response.errors == 0) {
+                            result.result = true;
+                        }
+                        res.json(result);
+                    })
+                    .error(function (err) {
+                        result.message = err;
+                        res.json(result);
+                    })
+            } else {
+                result.message = 'require field id';
+                res.json(result);
+            }
+        });
     }
+
+
 }
 exports.delete = function (req, res) {
     var r = req.r;

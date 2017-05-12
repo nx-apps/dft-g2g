@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/nx-apps/dft-g2g/issues"
   },
-  "homepage": "https://github.com/nx-apps/dft-g2g#readme"
+  "homepage": "https://github.com/nx-apps/dft-g2g#readme",
+  "dependencies": {
+    "async": "^2.4.0"
+  }
 }

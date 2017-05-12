@@ -1,6 +1,6 @@
 <link rel="import" href="list-of-booking-in-confirm.html">
 <!--<link rel="import" href="list-of-booking-in-confirm-add.html">-->
-<link rel="import" href="list-of-booking-shm-det.html">
+<!--<link rel="import" href="list-of-booking-shm-det.html">-->
 <link rel="import" href="list-of-booking-detail.html">
 <dom-module id="list-of-booking">
 
@@ -13,7 +13,7 @@
         <list-of-booking-in-confirm-add></list-of-booking-in-confirm-add>
       </div> -->
       <div name="list-of-booking-shm-det">
-        <list-of-booking-detail page-selected="{{subPageSelected}}" data="{{dataSelected}}" data-for-select="[[dataForSelect]]"></list-of-booking-detail>
+        <list-of-booking-detail data-default="[[dataDefault]]" page-selected="{{subPageSelected}}" data="{{dataSelected}}" data-for-select="[[dataForSelect]]"></list-of-booking-detail>
       </div>
     </iron-pages>
 
@@ -25,8 +25,8 @@
         pageSelected: {
           type: String,
           value: 'list-of-booking-in-confirm',
-          notify:true,
-          observer:'setPageseleted' 
+          notify: true,
+          observer: 'setPageseleted'
         },
         dataSelected: {
           type: Array,
@@ -35,6 +35,10 @@
         dataForSelect: {
           type: Object,
           value: { exporter: [] }
+        },
+        dataDefault: {
+          type: Object,
+          value: { bl_no: '', ship: [{ ship_id: '', ship_voy_no: '' }], surveyor: [{ surveyor_id: '' }] },
         }
       },
       behaviors: [
@@ -52,9 +56,9 @@
         '_get-fire-booking-detail': '_getFireBookingDetail',
         '_get-fire-group-exporter': '_getFireGroupExporter'
       },
-      setPageseleted(e){
+      setPageseleted(e) {
         // console.log(1);
-        this.set('subPageSelected','list-of-booking')
+        this.set('subPageSelected', 'list-of-booking')
       },
       _changeComponentBl: function (data) {
         // console.log(data.detail.detail);
@@ -66,31 +70,41 @@
             let newBooking = this.data.book.filter((rice) => rice.cl_id == this.dataForSelect.cl_id)[0]
             // console.log(newBooking);
             newBooking.cl_type_rice.map((set_limit) => {
-               set_limit.type_rice_name_en = set_limit.type_rice_name_en +' ('+set_limit.type_rice_id+ ' )' 
+              set_limit.type_rice_name_en = set_limit.type_rice_name_en + ' (' + set_limit.type_rice_id + ' )'
             })
             // console.log(newBooking);
             this.set('dataForSelect.cl_type_rice', newBooking.cl_type_rice);
           }
-
         } catch (e) {
           // console.log(e);
-
         }
-
       },
       _getBookingDetail: function (e) {
         // console.log(e.detail);
-         this.set('dataForSelect.cl_type_rice','')
+        try {
+          this.set('dataForSelect.cl_type_rice', '')
         this.fire('toast', { status: 'load' });
         this.read('./g2g/book/confirm/id/' + e.detail.detail.cl_id, (data) => {
           this.dataSelected = data;
+          this.set('dataForSelect.listbooking', data);
+          // console.log(data.length);
+          // console.log(this.dataSelected[data.length - 1].ship_lot_no);
+          let ship_lot_no 
+          if(this.dataSelected.length > 0) {
+            ship_lot_no = Number(this.dataSelected[0].ship_lot_no) + 1 
+          }
+            ship_lot_no = 1
+          // console.log(data.length);
+          // console.log(this.dataSelected[0]);
+          // console.log(ship_lot_no);
+          this.set('dataDefault.ship_lot_no', ship_lot_no);
+          this._changeDataBl('undefined');
+          // console.log(this.dataDefault);
           this.set('dataForSelect.cl_no', e.detail.detail.cl_no);
           this.set('dataForSelect.cl_id', e.detail.detail.cl_id);
-          // console.log(e.detail.detail.cl_id);
-          // console.log('this.dataSelected', this.dataSelected);
-        // console.log(e.detail.detail);
+          // console.log(this.dataForSelect);
           e.detail.detail.cl_type_rice.map((set_limit) => {
-            set_limit.type_rice_name_en = set_limit.type_rice_name_en +' ('+set_limit.type_rice_id+ ' )' 
+            set_limit.type_rice_name_en = set_limit.type_rice_name_en + ' (' + set_limit.type_rice_id + ' )'
           })
           this.set('dataForSelect.cl_type_rice', e.detail.detail.cl_type_rice);
 
@@ -98,13 +112,17 @@
           this.set('pageSelected', 'list-of-booking-shm-det')
           this.fire('toast', { status: 'load' });
         });
+        } catch (e) {
+          
+        } 
+        
       },
       getExport(data) {
         try {
           // console.log('>>>>', data);
           let exporters = []
-          this.set('dataForSelect.exporter','');
-          console.log(this.dataForSelect.exporter);
+          this.set('dataForSelect.exporter', '');
+          // console.log(this.dataForSelect.exporter);
           data.exporter.map((exporter) => {
             exporters.push({
               exporter_id: exporter.exporter_id,
@@ -136,14 +154,31 @@
             });
           }
         }
-
-
       },
       _getFireBookingDetail: function (e) {
-        this.read('./g2g/book/confirm/id/' + e.detail.detail.cl_id, (data) => {
-          this.dataSelected = data;
+        try {
+          this.read('./g2g/book/confirm/id/' + e.detail.detail.cl_id, (data) => {
+            this.dataSelected = data;
+            let ship_lot_no = Number(this.dataSelected[data.length - 1].ship_lot_no) + 1
+            this.set('dataDefault.ship_lot_no', ship_lot_no);
+            this._changeDataBl('undefined');
+          });
+        } catch (e) {
+          // console.log(e);
+        } 
+
+      },
+      _changeDataBl: function (dateUn) {
+        this.getDateg2g(dateUn, (date) => {
+          // console.log('date',date);
+          // this.set('data.ship', { ship_id: '', ship_voy_no: '' })
+          this.set('dataDefault.etd_date', date);
+          this.set('dataDefault.eta_date', date);
+          this.set('dataDefault.packing_date', date);
+          this.set('dataDefault.cut_of_date', date);
+          this.set('dataDefault.product_date', date);
         });
-      }
+      },
 
     });
   </script>

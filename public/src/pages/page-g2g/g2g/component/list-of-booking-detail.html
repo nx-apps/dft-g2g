@@ -9,10 +9,12 @@
         <list-of-booking-shm-det data="{{data}}" data-for-select="[[dataForSelect]]"></list-of-booking-shm-det>
       </div>
       <div name="list-of-booking-add">
-        <booking-detail  data-book-no={{data}} data-for-select="[[dataForSelect]]" is-input-disabled="[[!isInputDisabled]]" is-view-seleted="[[!isViewSeleted]]"></booking-detail>
+        <booking-detail data-book-no={{data}} data="[[dataDefault]]" data-for-select="[[dataForSelect]]" is-input-disabled="[[!isInputDisabled]]"
+          is-view-seleted="[[!isViewSeleted]]"></booking-detail>
       </div>
       <div name="list-of-booking-edit">
-        <booking-detail data-book-no={{data}} data="{{bookDataEdit}}" data-for-select="[[dataForSelect]]" is-input-disabled="[[isInputDisabled]]" is-view-seleted="[[isViewSeleted]]"></booking-detail>
+        <booking-detail data-book-no={{data}} data="{{bookDataEdit}}" data-for-select="[[dataForSelect]]" is-input-disabled="[[isInputDisabled]]"
+          is-view-seleted="[[isViewSeleted]]"></booking-detail>
       </div>
       <div name="list-of-booking-shm-det">
         <list-of-shm page-selected="{{subPageSelected}}" data-selected="{{dataSelected}}" data-for-select="[[dataForSelect]]"></list-of-shm>
@@ -24,52 +26,57 @@
     Polymer({
       is: "list-of-booking-detail",
       behaviors: [
-          g2gModelBehavior,
-          g2gCongtroller,
+        g2gModelBehavior,
+        g2gCongtroller,
       ],
       properties: {
         pageSelected: {
           type: String,
-          value:'list-of-booking',
-          notify:true,
-          observer:'setPageseleted' 
-        }
+          value: 'list-of-booking',
+          notify: true,
+          observer: 'setPageseleted'
+        },
+        dataForSelect: {
+          type: Object,
+          // observer: 'setDefaultDate'
+        },
       },
-      listeners:{
-        '_change-component-book':'_changeComponentBook',
-        '_get-shm-detail':'_getShmDetail',
-        '_get-fire-shm-detail':'_getFireShmDetail',
-        '_edit-booking-detail':'_editBooking'
+      listeners: {
+        '_change-component-book': '_changeComponentBook',
+        '_get-shm-detail': '_getShmDetail',
+        '_get-fire-shm-detail': '_getFireShmDetail',
+        '_edit-booking-detail': '_editBooking'
       },
-      setPageseleted(){
-        this.set('subPageSelected','list-of-shm-det')
+      setPageseleted: function () {
+        this.set('subPageSelected', 'list-of-shm-det')
       },
-      _changeComponentBook:function (data) {
+      _changeComponentBook: function (data) {
         // console.log(data.detail.detail);
-        this.set('pageSelected',data.detail.detail)
+        this.set('pageSelected', data.detail.detail)
       },
-      _editBooking:function (e) {
+      _editBooking: function (e) {
         // console.log(e.detail.detail);
-        this.set('bookDataEdit',e.detail.detail)
-        this.set('pageSelected','list-of-booking-edit')
+        this.set('bookDataEdit', e.detail.detail)
+        this.set('pageSelected', 'list-of-booking-edit')
       },
-      _getShmDetail:function (e) {
+      _getShmDetail: function (e) {
         // console.log(e.detail.detail.book_id);
-        this.fire('toast',{status:'load'});
-        this.read('./g2g/shipment_detail/book/id/'+e.detail.detail.book_id,(data)=>{
+        this.fire('toast', { status: 'load' });
+        this.read('./g2g/shipment_detail/book/id/' + e.detail.detail.book_id, (data) => {
 
-          this.dataSelected=data;
-          this.set('dataForSelect.book_id',e.detail.detail.book_id)
-          this.set('pageSelected','list-of-booking-shm-det')
-          this.fire('toast',{status:'load'});
+          this.dataSelected = data;
+          this.set('dataForSelect.book_id', e.detail.detail.book_id)
+          this.set('pageSelected', 'list-of-booking-shm-det')
+          this.fire('toast', { status: 'load' });
         });
       },
-      _getFireShmDetail:function (e) {
+      _getFireShmDetail: function (e) {
         // console.log(e.detail.detail.book_id);
-        this.read('./g2g/shipment_detail/book/id/'+e.detail.book_id,(data)=>{
-          this.dataSelected=data;
+        this.read('./g2g/shipment_detail/book/id/' + e.detail.book_id, (data) => {
+          this.dataSelected = data;
         });
-      }
+      },
+      
 
     });
   </script>

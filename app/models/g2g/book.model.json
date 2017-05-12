@@ -82,7 +82,7 @@
             }
         },
         "ship_lot_no": {
-            "type": "string"
+            "type": "number"
         },
         "shipline_id": {
             "type": "string"

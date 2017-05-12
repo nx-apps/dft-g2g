@@ -87,6 +87,7 @@
       },
       addFee: function () {
         if (this._checkFeeNoDup(this.data.fee_no)) {
+          console.log(this.dataForSelect);
           this.data.fee_status = false;
           this.data.cl_id = this.dataForSelect.cl_id;
           this.set('data.tags', [this.dataForSelect.contract_id]);
