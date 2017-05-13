@@ -448,7 +448,7 @@
           e.detail.data.exporter.map((exporters) => {
 
             exporters.exporter_id = exporters.exporter_id,
-              exporters.label =  '' + exporters.exporter_no + ' [' + exporters.company_taxno + '] ' + exporters.company_name_th,
+              exporters.label = '' + exporters.exporter_no + ' [' + exporters.company_taxno + '] ' + exporters.company_name_th,
               exporters.company_id = exporters.company_id
           })
           // console.log(e.detail.data);
@@ -470,6 +470,17 @@
           this.read('./g2g/contract/buyer/id/' + this._getCookie("buyerId"), (data) => {
             let contractId = e.detail.contractId;
             let dataContract = data.filter((contractList) => contractList.contract_id == contractId);
+            // console.log();
+            // try {
+              dataContract[0].exporter.map((exporters) => {
+              exporters.exporter_id = exporters.exporter_id,
+                exporters.label = '' + exporters.exporter_no + ' [' + exporters.company_taxno + '] ' + exporters.company_name_th,
+                exporters.company_id = exporters.company_id
+            })
+            // } catch (e) {
+            //   // console.log(e);
+            // } 
+            
             this.dataSelected = dataContract[0];
           });
           // this.read('./g2g/contract/list', (data) => {
@@ -488,8 +499,8 @@
         if (typeof e.detail.contractId == "undefined") {
           this.set('pageSelected', 'list-of-booking-in-confirm')
           this.titlePanelRight = 'รายการส่งมอบสินค้า : ' + e.detail.data.contract_name
-          this.set('dataForSelected.dataForBooking.contract_name',e.detail.data.contract_name)
-         
+          this.set('dataForSelected.dataForBooking.contract_name', e.detail.data.contract_name)
+
           let datass = [
             {
               label: e.detail.data.contract_name,
@@ -552,18 +563,18 @@
             this.titlePanelRight = 'ค่าธรรมเนียม : ' + e.detail.data.contract_name
             this.dataForSelected.dataForFee.feeListinShm = data;
             this.notifyPath('dataForSelected.dataForFee.feeListinShm');
-             let datass = [
-            {
-              label: e.detail.data.contract_name,
-              href: ''
-            },
-            {
-              label: 'รายการค่าธรรมเนียม',
-              href: ''
-            },
-          ]
-          this.set('dataForSelected.dataForFee.contract_name',e.detail.data.contract_name);
-          this.setBreadcrumbs(datass)
+            let datass = [
+              {
+                label: e.detail.data.contract_name,
+                href: ''
+              },
+              {
+                label: 'รายการค่าธรรมเนียม',
+                href: ''
+              },
+            ]
+            this.set('dataForSelected.dataForFee.contract_name', e.detail.data.contract_name);
+            this.setBreadcrumbs(datass)
             this.g2gPageSeleted = 'listOfFee';
             if (this.checkRenderPage.listOfFee != true) {
 
