@@ -147,7 +147,7 @@
       },
       getFeeDetail: function (e) {
         // console.log(this.dataForSelect);
-        // console.log(e.currentTarget.data.fee_det_id);
+        // console.log(e.currentTarget.data.invoice_no);
         let fee_det_id = e.currentTarget.data.fee_det_id;
         this.fire('toast', { status: 'load' });
         this.async(() => {
@@ -158,9 +158,44 @@
             this.pageSelected = 'feeDetail';
           });
         }, 500);
+        // console.log(this.dataForSelect.nameContract);
+        let breadcrumbs = datass = [
+          {
+            label: this.dataForSelect.nameContract,
+            href: ''
+          },
+          {
+            label: 'รอบที่คิดค่าธรรมเนียมครั้งที่ '+ this.data.fee_no,
+            href: ''
+          },
+          {
+            label: 'เลขที่ใบแจ้งหนี้	 '+ e.currentTarget.data.invoice_no,
+            href: ''
+          },
+        ]
+        this.set('dataForSelect.fee_no',this.data.fee_no)
+        // th
+        // console.log(this.data);
+        // console.log(breadcrumbs);
+        this.fire('_set-breadcrumbs', breadcrumbs)
       },
       _backPageFeedetail: function (data) {
         this.pageSelected = 'listOfFeedetail';
+        
+        let breadcrumbs = datass = [
+          {
+            label: this.dataForSelect.nameContract,
+            href: ''
+          },
+          {
+            label: 'รอบที่คิดค่าธรรมเนียมครั้งที่ '+ this.data.fee_no,
+            href: ''
+          },
+        ]
+        // th
+        // console.log(this.data);
+        // console.log(breadcrumbs);
+        this.fire('_set-breadcrumbs', breadcrumbs)
       },
       approveFee: function () {
         this._cleanDataFee(this.data, (data) => {
@@ -174,7 +209,6 @@
             data: data // ข้อมูลที่ส่งไป เช่น id ที่จะใช้ลบข้อมูล ใน db
           });
         })
-
       },
       _approveFee: function (result, detail) {
         if (result == true) {
@@ -192,15 +226,6 @@
             });
 
           });
-          // this.update('./g2g/fee/approve/id/',detail.data, () => {
-          //   this.fire('toast',{status:'success',text:'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
-          //    callback:()=>{
-          //       this.fire('close-drawer',{detail:'close-drawer'});
-          //       let contract_id= this._getUrl();
-          //         this.fire('get-fee-list',{detail:contract_id});
-          //     }
-          //   });
-          //  });
         }
       },
       _cleanDataFee: function (data, callback) {

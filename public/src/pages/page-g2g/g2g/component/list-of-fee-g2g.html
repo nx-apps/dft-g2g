@@ -77,7 +77,7 @@
         </gl-form-panel>
       </div>
       <div name="feeDetailList">
-        <list-of-fee-detail-g2g data="[[dataSelected.feeDetail]]"></list-of-fee-detail-g2g>
+        <list-of-fee-detail-g2g data="[[dataSelected.feeDetail]]"  data-for-select="{{dataForSelect}}"></list-of-fee-detail-g2g>
       </div>
       <div name="feeDetail">
         <fee-exports-g2g data="[[dataSelected.fee]]" data-for-select="[[dataForSelect]]" is-input-disabled="[[isInputDisabled]]"></fee-exports-g2g>
@@ -159,6 +159,22 @@
           this.notifyPath('dataSelected.feeDetail');
           this.pageSelected = 'feeDetailList';
         })
+        let breadcrumbs = datass = [
+          {
+            label: this.dataForSelect.contract_name,
+            href: ''
+          },
+          {
+            label: 'รายการค่าธรรมเนียมครั้งที่ '+e.currentTarget.data.fee_no,
+            href: ''
+          },
+        ]
+        this.set('dataForSelect.fee_no', e.currentTarget.data.fee_no)
+        // th
+        // console.log(breadcrumbs);
+        this.fire('_set-breadcrumbs', breadcrumbs)
+        // console.log(this.dataForSelect);
+        // console.log(e.currentTarget.data);
       },
       _getFeeDetail: function (e) {
         // console.log(e.detail.data);
