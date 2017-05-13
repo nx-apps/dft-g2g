@@ -85,7 +85,7 @@
 
         <iron-pages selected="{{g2gPageSeleted}}" attr-for-selected="name">
           <div class="addContract" name="addContract">
-            <contract-detail data-for-select="[[dataForSelected.dataForContract]]" is-view-seleted="[[!isViewSeleted]]" is-edit="[[!isEdit]]"
+            <contract-detail data="[[dataSelected]]" data-for-select="[[dataForSelected.dataForContract]]" is-view-seleted="[[!isViewSeleted]]" is-edit="[[!isEdit]]"
               is-input-disabled="[[!isInputDisabled]]"></contract-detail>
           </div>
           <div class="addContract" name="contractDetail">
@@ -340,6 +340,12 @@
         ]
         this.setBreadcrumbs(datass)
         // console.log(1222);
+        console.log(this._getCookie("buyerId"));
+        // this.dataSelected.buyer_id  = this._getCookie("buyerId")
+        // this.dataSelected = {}
+        this.set('dataSelected.buyer_id','')
+        console.log(this.dataSelected);
+        // console.log(this.dataSelected.buyer_id);
         this.g2gPageSeleted = 'addContract';
         this.titlePanelRight = 'เพิ่มข้อมูลผู้สั่งซื้อ'
         this.fire('toast', { status: 'load' });
