@@ -51,6 +51,7 @@
     "rxjs": "^4.1.0",
     "c3": "^0.4.11",
     "d3": "^4.8.0",
-    "paper-autocomplete": "^2.5.1"
+    "paper-autocomplete": "^2.5.1",
+    "plutonium-breadcrumbs": "lordoftheflies/plutonium-breadcrumbs#^0.1.2"
   }
 }

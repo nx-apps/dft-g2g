@@ -11,6 +11,9 @@
 <link rel="import" href="../components/page-style.html">
 
 <link rel="import" href="../components/icon-button-management.html">
+
+<link rel="import" href="../../../bower_components/plutonium-breadcrumbs/plutonium-breadcrumbs.html">
+
 <!-- <link rel="import" href="g2g/component/list-of-fee-g2g.html"> -->
 <!-- <link rel="import" href="g2g/component/contract-detail.html">
 <link rel="import" href="g2g/component/print-files.html">
@@ -53,6 +56,12 @@
         background-color: #FF5000;
       }
     }
+    
+    .breadcrumbs {
+      margin: 38px 38px 0px 38px;
+      border-bottom: 1px solid #ccc!important;
+      padding: 10px;
+    }
   </style>
   <template>
     <!-- <list-of-booking></list-of-booking> -->
@@ -70,6 +79,10 @@
     <nylon-panel-right title="{{titlePanelRight}}" id="drawerRight" set-width="95%">
 
       <div class="rightdata" align="left">
+        <div class="breadcrumbs">
+          <plutonium-breadcrumbs crumbs="{{crumbs}}" selected-crumb="{{crumb}}"></plutonium-breadcrumbs>
+        </div>
+
         <iron-pages selected="{{g2gPageSeleted}}" attr-for-selected="name">
           <div class="addContract" name="addContract">
             <contract-detail data-for-select="[[dataForSelected.dataForContract]]" is-view-seleted="[[!isViewSeleted]]" is-edit="[[!isEdit]]"
@@ -118,9 +131,14 @@
         'get-list-Fee': '_getlistFee',
         'flipDrawer': '_flipDrawer',
         'close-drawer': '_flipDrawerClose',
-        'name-panel-right': '_namePanelRight'
+        'name-panel-right': '_namePanelRight',
+        '_set-breadcrumbs': 'setEventBreadcrumbs'
       },
       properties: {
+        crumbs: {
+          type: Array,
+          value: []
+        },
         contractList: {
           type: Object
         },
@@ -247,9 +265,9 @@
       },
       _getDataForShipment: function () {
         // call data
-        this.read('./external/exporter', (data) => {
+        this.read('https://localhost:8081/api/external/exporter', (data) => {
           data.map((set_name) => {
-            set_name.company_name_th = '( ' + set_name.exporter_no_name + ' ' + set_name.company_taxno + ') ' + set_name.company_name_th
+            set_name.company_name_th = '' + set_name.exporter_no_name + ' [' + set_name.company_taxno + '] ' + set_name.company_name_th
           })
           // console.log(data);
           this.dataForSelected.dataForBooking.seller = data;
@@ -306,8 +324,22 @@
           this.notifyPath('dataForSelected.dataForConfirm.incoterms');
         });
       },
+      setEventBreadcrumbs: function (data) {
+        this.setBreadcrumbs(data.detail)
+      },
+      setBreadcrumbs: function (data) {
+        this.set('crumbs', data)
+      },
       //addContract
       addContract: function () {
+        let datass = [
+          {
+            label: 'เพิ่มสัญญา',
+            href: ''
+          },
+        ]
+        // this.setBreadcrumbs(datass)
+        // console.log(1222);
         this.g2gPageSeleted = 'addContract';
         this.titlePanelRight = 'เพิ่มข้อมูลผู้สั่งซื้อ'
         this.fire('toast', { status: 'load' });
@@ -331,11 +363,24 @@
         }
       },
       _getContractDetail: function (e) {
+
+        // console.log(222);
         this.g2gPageSeleted = 'contractDetail';
         // console.log(typeof e.detail.data === 'undefined');
-        if (typeof e.detail.data !== 'undefined')
+        if (typeof e.detail.data !== 'undefined') {
           this.titlePanelRight = 'ข้อมูลผู้สั่งซื้อ : ' + e.detail.data.contract_name
-
+          let datass = [
+            {
+              label: e.detail.data.contract_name,
+              href: ''
+            },
+            {
+              label: 'รายละเอียดสัญญา',
+              href: ''
+            },
+          ]
+          this.setBreadcrumbs(datass)
+        }
         if (typeof e.detail.contractId === "undefined") {
           this.fire('toast', { status: 'load' });
           if (this.checkRenderPage.contractDetail != true) {
@@ -367,10 +412,20 @@
         this.set('pageSelected', 'listOfConfirm')
         // listOfConfirm
         // console.log('1212=>',e.detail);
-
         this.g2gPageSeleted = 'listOfConfirm';
         if (typeof e.detail.contractId == "undefined") {
           this.titlePanelRight = 'รายละเอียดสัญญา : ' + e.detail.data.contract_name
+          let datass = [
+            {
+              label: e.detail.data.contract_name,
+              href: ''
+            },
+            {
+              label: 'รายการสัญญาย่อย',
+              href: ''
+            },
+          ]
+          this.setBreadcrumbs(datass)
           this.fire('toast', { status: 'load' });
           if (this.checkRenderPage.listOfConfirm != true) {
             this.async(() => {
@@ -390,7 +445,13 @@
             this.fire('toast', { status: 'load' });
             this._flipDrawer();
           }
+          e.detail.data.exporter.map((exporters) => {
 
+            exporters.exporter_id = exporters.exporter_id,
+              exporters.label =  '' + exporters.exporter_no + ' [' + exporters.company_taxno + '] ' + exporters.company_name_th,
+              exporters.company_id = exporters.company_id
+          })
+          console.log(e.detail.data);
           this.dataSelected = e.detail.data;
           // console.log('>>>>>1111', this.dataSelected);
           // console.log(e.detail.data.contract_status);
@@ -446,12 +507,12 @@
             this.fire('toast', { status: 'load' });
             this._flipDrawer();
           }
-          e.detail.data.exporter.map((exporters)=>{
-            
-                exporters.exporter_id= exporters.exporter_id,
-              exporters.label= '( ' + exporters.exporter_no + ' ' + exporters.company_taxno + ') ' + exporters.company_name_th,
-              exporters.company_id= exporters.company_id
-          })
+          // e.detail.data.exporter.map((exporters) => {
+
+          //   exporters.exporter_id = exporters.exporter_id,
+          //     exporters.label = '( ' + exporters.exporter_no + ' ' + exporters.company_taxno + ') ' + exporters.company_name_th,
+          //     exporters.company_id = exporters.company_id
+          // })
           this.dataSelected = e.detail.data;
           console.log(this.dataSelected);
           this.set('dataForSelected.dataForBooking.contract_id', e.detail.data.contract_id);

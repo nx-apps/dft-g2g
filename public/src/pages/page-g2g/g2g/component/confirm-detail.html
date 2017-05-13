@@ -399,7 +399,18 @@
         }
       },
       backPage: function () {
-        console.log(this.isInputDisabled);
+        let breadcrumbs = datass = [
+          {
+            label: this.dataForSelect.contract_name,
+            href: ''
+          },
+          {
+            label: 'รายการสัญญาย่อย',
+            href: ''
+          },
+        ]
+        // console.log(breadcrumbs);
+        this.fire('_set-breadcrumbs',breadcrumbs)
         if (this.isInputDisabled == false) {
           this.editInput();
         }

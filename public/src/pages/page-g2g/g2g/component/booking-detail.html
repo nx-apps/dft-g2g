@@ -56,6 +56,7 @@
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
           </gl-grid-col>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+            [[changeString2Num(data.*,'ship_lot_no')]]
             <gl-form-input required class="required" label="{{localize('label_lot_no')}}" always-float-label placeholder="{{localize('text_your_detail')}}"
               value="{{data.ship_lot_no}}" disabled="[[isInputDisabled]]" type="number" min="0"></gl-form-input>
           </gl-grid-col>
