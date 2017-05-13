@@ -107,7 +107,7 @@
       },
       checkMInus(cl_quantity_tolerance) {
         var str = this.formatNumberNoZero(cl_quantity_tolerance);
-        console.log(this.formatNumberNoZero(0));
+        // console.log(this.formatNumberNoZero(0));
         if (cl_quantity_tolerance > 0) str = "+" + str;
         return typeof cl_quantity_tolerance === "undefined" ? '' : "(" + str + ")";
       },

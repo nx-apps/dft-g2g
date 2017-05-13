@@ -98,7 +98,7 @@
             this.fire('toast', { status: 'load' });
             this.read('./g2g/book/confirm/id/' + e.detail.detail.cl_id, (data) => {
               this.dataSelected = data;
-              console.log(data);
+              // console.log(data);
               // console.log('this.data.book',this.data.book);
               // e.detail.detail = this.data.book.filter((item) => item.cl_id == e.detail.detail)[0]
               // console.log(e.detail.detail);
@@ -138,14 +138,19 @@
           this.set('dataForSelect.exporter', '');
           this.set('dataForSelect.exporter', data.exporter);
           // console.log(this.data.confirm_letter);
+          this.set('dataForSelect.conFirmApprove', '');
           let conFirmApprove = this.data.confirm_letter.filter((status) => status.cl_status == true)
+          let arr = []
           conFirmApprove.map((data) => {
-            data.cl_no = 'สัญญาที่ ' + data.cl_no + ' ปริมาณข้าว ' + this.formatNumberNoZero(data.cl_quantity_total) + ' ตัน'
-            data.cl_no_name = data.cl_no 
+            // data.cl_no_name = data.cl_no 
+            arr.push({cl_no: 'สัญญาที่ ' + data.cl_no + ' ปริมาณข้าว ' + this.formatNumberNoZero(data.cl_quantity_total) + ' ตัน',
+            cl_id:data.cl_id})
+            // data.cl_no = 'สัญญาที่ ' + data.cl_no + ' ปริมาณข้าว ' + this.formatNumberNoZero(data.cl_quantity_total) + ' ตัน'
+            
           })
-          // console.log(conFirmApprove);
-          // this.set('dataForSelect.conFirmApprove', '');
-          this.set('dataForSelect.conFirmApprove', conFirmApprove);
+          console.log(arr);
+          
+          this.set('dataForSelect.conFirmApprove', arr);
           this.set('dataForSelect.bookBl', this.data.book);
           // console.log(this.data);
           // console.log(this.dataForSelect);

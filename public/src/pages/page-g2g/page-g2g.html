@@ -85,7 +85,7 @@
 
         <iron-pages selected="{{g2gPageSeleted}}" attr-for-selected="name">
           <div class="addContract" name="addContract">
-            <contract-detail  data-for-select="[[dataForSelected.dataForContract]]" is-view-seleted="[[!isViewSeleted]]" is-edit="[[!isEdit]]"
+            <contract-detail data-for-select="[[dataForSelected.dataForContract]]" is-view-seleted="[[!isViewSeleted]]" is-edit="[[!isEdit]]"
               is-input-disabled="[[!isInputDisabled]]"></contract-detail>
           </div>
           <div class="addContract" name="contractDetail">
@@ -452,11 +452,16 @@
             this._flipDrawer();
           }
           e.detail.data.exporter.map((exporters) => {
-
+            exporters.label = '';
+            exporters.company_id = '';
+            exporters.exporter_id = '';
             exporters.exporter_id = exporters.exporter_id,
               exporters.label = '' + exporters.exporter_no + ' [' + exporters.company_taxno + '] ' + exporters.company_name_th,
               exporters.company_id = exporters.company_id
           })
+          // for (var i = 0; i < e.detail.data.exporter.length; i++) {
+          //   e.detail.data.exporter[i]
+          // }
           // console.log(e.detail.data);
           this.dataSelected = e.detail.data;
           // console.log('>>>>>1111', this.dataSelected);
@@ -478,15 +483,18 @@
             let dataContract = data.filter((contractList) => contractList.contract_id == contractId);
             // console.log();
             // try {
-              dataContract[0].exporter.map((exporters) => {
-              exporters.exporter_id = exporters.exporter_id,
-                exporters.label = '' + exporters.exporter_no + ' [' + exporters.company_taxno + '] ' + exporters.company_name_th,
+            dataContract[0].exporter.map((exporters) => {
+              exporters.label = '';
+              exporters.company_id = '';
+              exporters.exporter_id = '';
+              exporters.exporter_id = exporters.exporter_id;
+              exporters.label = '' + exporters.exporter_no + ' [' + exporters.company_taxno + '] ' + exporters.company_name_th,
                 exporters.company_id = exporters.company_id
             })
             // } catch (e) {
             //   // console.log(e);
             // } 
-            
+
             this.dataSelected = dataContract[0];
           });
           // this.read('./g2g/contract/list', (data) => {
