@@ -184,7 +184,15 @@ exports.insert = function (req, res) {
     var r = req.r;
     var result = { result: false, message: null, id: null };
     if (valid) {
-        var obj = Object.assign(req.body, { date_created: new Date().toISOString(), date_updated: new Date().toISOString(), creater: 'admin', updater: 'admin' });
+        var obj = Object.assign(req.body, {
+            runing_no: r.branch(r.db('g2g2').table('payment').count().eq(0),
+                1,
+                r.db('g2g2').table('payment').max('runing_no').add(1)
+            ),
+            date_created: new Date().toISOString(),
+            date_updated: new Date().toISOString(),
+            creater: 'admin', updater: 'admin'
+        });
         r.db('g2g2').table('payment')
             .insert(obj)
             .do(after_insert_do => {
