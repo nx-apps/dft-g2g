@@ -65,7 +65,11 @@ exports.getByContractId = function (req, res) {
                 tax1percent: m('fee_detail').sum('bath_value_balance').mul(0.01),
                 bath_balance: m('fee_detail').sum('bath_value_balance').sub(
                     m('fee_detail').sum('bath_value_balance').mul(0.01)
-                )
+                ),
+                noti_fee_detail: r.table('fee_detail')
+                    .getAll(m('id'), { index: 'fee_id' })
+                    .filter({ fee_det_status: true })
+                    .count()
 
             }
         })
