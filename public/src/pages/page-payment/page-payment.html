@@ -179,7 +179,7 @@
       <section id="content6">
         <paper-material elevation="1">
           <div class="list horizontal center-justified layout">
-            <list-of-history data="[[dataListPay.payments]]" data-for-select="[[dataForSelect]]"></list-of-history>
+            <list-of-history data="[[dataListPay.history]]" data-for-select="[[dataForSelect]]"></list-of-history>
           </div>
         </paper-material>
       </section>
@@ -208,7 +208,7 @@
             <payment-detail data="[[dataSelected.paymentDetail]]" data-silo="[[dataSelected.silo]]" data-for-select="[[dataForSelect]]"></payment-detail>
           </div>
           <div name="historyDetail">
-            <history-detail data="[[dataSelected.paymentDetail]]" data-silo="[[dataSelected.silo]]" data-for-select="[[dataForSelect]]"></history-detail>
+            <history-detail data="[[dataSelected.historyDetail]]"></history-detail>
           </div>
         </iron-pages>
       </div>
@@ -279,6 +279,7 @@
         'get-Cheque-list': '_getChequeListFire',
         'get-cheque-detail': '_getChequeDetail',
         'get-payment-list': '_getPaymentsFire',
+        'get-history-list': '_getHistoryList',
         'get-payment-detail': '_getPaymentDetail',
         'get-history-detail' : '_getHistoryDetail',
         'flipDrawer': '_flipDrawer',
@@ -294,6 +295,7 @@
         this._getFeeList(contract_id);
         this._getChequeList(contract_id);
         this._getPaymentsList(contract_id);
+        this._getHistoryList(contract_id);
         this._getBank()
       },
       nylonPageActive: function () {
@@ -360,6 +362,12 @@
           this.dataListPay.payments = data;
           this.notifyPath('dataListPay.payments');
           // console.log(this.dataListPay.chequeList);
+        });
+      },
+      _getHistoryList: function (contractId) {
+        this.read('./g2g/paid/contract/id/' + contractId, (data) => {
+          this.dataListPay.history = data;
+          this.notifyPath('dataListPay.history');
         });
       },
       _getFeeListInShmEvent: function (e) {
@@ -613,17 +621,12 @@
         }
       },
       _getHistoryDetail: function (e){
-        this.set('dataSelected.paymentDetail', e.detail.detail);
-        this.read('g2g/payment/silo', (data) => {
-          this.set('dataSelected.silo', data);
-        });
-        this.read('g2g/payment/checkno/buyer/id/'+this.dataForSelect.buyer_id, (data) => {
-          this.set('dataSelected.paymentDetail.pay_no',data.check_no)
-        });
-        
+        this.set('dataSelected.historyDetail', e.detail.detail);
         this.fire('toast', { status: 'load' });
-        this.set('dataSelected.paymentDetail.bank_id','KTB')
-        this.set('dataSelected.paymentDetail.bank_branch','กระทรวงพาณิชย์')
+        this.titlePanelRight = 'ประวัติการจ่ายเงิน '
+        // this.read('g2g/payment/checkno/buyer/id/'+this.dataForSelect.buyer_id, (data) => {
+        //   this.set('dataSelected.paymentDetail.pay_no',data.check_no)
+        // });
 
         this.paymentsPageSeleted = 'historyDetail';
         if (this.checkRenderPage.historyDetail != true) {
