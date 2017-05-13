@@ -124,7 +124,7 @@
         }
       },
       getChequeDetail: function (e) {
-        // console.log(e.currentTarget.data);
+        // console.log(e.currentTarget.data.invoice_no);
         this.fire('get-payment-detail', { detail: e.currentTarget.data });
       }
     });

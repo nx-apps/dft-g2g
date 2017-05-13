@@ -220,7 +220,7 @@
             <payment-detail data="[[dataSelected.paymentDetail]]" data-silo="[[dataSelected.silo]]" data-for-select="[[dataForSelect]]"></payment-detail>
           </div>
           <div name="historyDetail">
-            <history-detail data="[[dataSelected.historyDetail]]"></history-detail>
+            <history-detail data="[[dataSelected.historyDetail]]"  data-for-select="[[dataForSelect]]"></history-detail>
           </div>
         </iron-pages>
       </div>
@@ -239,9 +239,9 @@
         nylonLocalizeBehavior
       ],
       properties: {
-        dataForSelect:{
+        dataForSelect: {
           type: Object,
-          value:{}
+          value: {}
         },
         crumbs: {
           type: Array,
@@ -295,7 +295,7 @@
         'get-Cheque-list': '_getChequeListFire',
         'get-cheque-detail': '_getChequeDetail',
         'get-payment-list': '_getPaymentsFire',
-        'get-history-list': '_getHistoryList',
+        'get-history-payment-list': '_getHistoryList',
         'get-payment-detail': '_getPaymentDetail',
         'get-history-detail': '_getHistoryDetail',
         'flipDrawer': '_flipDrawer',
@@ -463,7 +463,7 @@
         this.titlePanelRight = 'รายละเอียดใบกำกับสินค้า'
         this.fire('toast', { status: 'load' });
         // console.log(1)
-      console.log(e.detail.detail);
+        console.log(e.detail.detail);
         let datass = [
           {
             label: this.dataForSelect.nameContract,
@@ -502,7 +502,7 @@
       },
       _getInvoiceDetail: function (e) {
         // this.dataSelected = e.detail.detail;
-        window.nameContract = this.dataForSelect.nameContract 
+        // window.nameContract = this.dataForSelect.nameContract 
         let datass = [
           {
             label: this.dataForSelect.nameContract,
@@ -578,7 +578,7 @@
         //เรียกให้อัพเดตรายชื่อ fee ที่อยู่ใน contract
         // console.log(e.detail.detail);
         // this.set('dataSelected.fee_no',e.detail.detail.fee_no)
-        
+
         if (e.detail.detail.cl_id !== undefined) {
           this._getFeeListInShm(e.detail.detail.cl_id);
         }
@@ -588,17 +588,17 @@
           this.set('dataForSelect.cl_id', data.cl_id);
           this.dataSelected.fee = data;
           let datass = [
-          {
-            label: this.dataForSelect.nameContract,
-            href: ''
-          },
-          {
-            label: 'รอบที่คิดค่าธรรมเนียมครั้งที่ '+ this.dataSelected.fee.fee_no,
-            href: ''
-          },
-        ]
-        // console.log(this.dataSelected);
-        this.setBreadcrumbs(datass)
+            {
+              label: this.dataForSelect.nameContract,
+              href: ''
+            },
+            {
+              label: 'รอบที่คิดค่าธรรมเนียมครั้งที่ ' + this.dataSelected.fee.fee_no,
+              href: ''
+            },
+          ]
+          // console.log(this.dataSelected);
+          this.setBreadcrumbs(datass)
           // console.log();
           // this.dataForSelect.checked = true
           this.notifyPath('dataSelected.fee');
@@ -625,12 +625,23 @@
         });
       },
       _getChequeDetail: function (e) {
-        // console.log(e.detail.detail);
+        // console.log(e.detail.detail.fee_no);
         this.titlePanelRight = 'เช็ค'
         this.fire('toast', { status: 'load' });
         this.read('./g2g/payment/fee/id/' + e.detail.detail.fee_id, (data) => {
           // console.log(data);
           this.set('dataSelected.cheque', data);
+          let datass = [
+            {
+              label: this.dataForSelect.nameContract,
+              href: ''
+            },
+            {
+              label: 'รอบที่คิดค่าธรรมเนียมครั้งที่ ' + e.detail.detail.fee_no,
+              href: ''
+            },
+          ]
+          this.setBreadcrumbs(datass)
           // console.log('lll=>',this.dataSelected.cheque);
           this.paymentsPageSeleted = 'chequePage';
           if (this.checkRenderPage.chequeDetail != true) {
@@ -669,7 +680,18 @@
         this.fire('toast', { status: 'load' });
         this.set('dataSelected.paymentDetail.bank_id', 'KTB')
         this.set('dataSelected.paymentDetail.bank_branch', 'กระทรวงพาณิชย์')
-
+        // console.log(e.detail.detail);
+        let datass = [
+          {
+            label: this.dataForSelect.nameContract,
+            href: ''
+          },
+          {
+            label: 'ใบแจ้งหนี้ ' + e.detail.detail.invoice_no,
+            href: ''
+          },
+        ]
+        this.setBreadcrumbs(datass)
         // console.log(this.dataSelected);
         // this._getBank();
         this.paymentsPageSeleted = 'paymentDetail';
@@ -701,7 +723,17 @@
         // this.read('g2g/payment/checkno/buyer/id/'+this.dataForSelect.buyer_id, (data) => {
         //   this.set('dataSelected.paymentDetail.pay_no',data.check_no)
         // });
-
+        let datass = [
+          {
+            label: this.dataForSelect.nameContract,
+            href: ''
+          },
+          {
+            label: 'ใบแจ้งหนี้ ' + e.detail.detail.invoice_no,
+            href: ''
+          },
+        ]
+        this.setBreadcrumbs(datass)
         this.paymentsPageSeleted = 'historyDetail';
         if (this.checkRenderPage.historyDetail != true) {
           this.async(() => {

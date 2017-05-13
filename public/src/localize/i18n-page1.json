@@ -219,6 +219,8 @@
         "label_fee_note_avarate":"*สถานะการถัวเงิน ถ้ายืนยันแล้วจะดูได้อย่างเดียว",
 
         "label_pay_times":"ครั้งที่จ่ายเงิน",
+        "label_total_value_pay_full":"จำนวนเงินทั่งหมด",
+        "label_total_value_pay_tax":"ภาษี",
 
         "":"report",
         "label_pnd_53":"ภงด.53",

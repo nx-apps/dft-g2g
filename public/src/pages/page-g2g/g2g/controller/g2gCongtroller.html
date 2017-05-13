@@ -110,6 +110,9 @@
         return true
       }
     },
+    toNumberFormat: function (number){
+        return numeral(number).format('0,0.00');
+      },
     _isHaveMany: function (data, count) {
       // console.log(data.length);
       if (data.length < count) {

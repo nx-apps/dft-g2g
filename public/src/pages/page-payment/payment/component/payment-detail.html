@@ -57,6 +57,8 @@
               <th>{{localize('label_order')}}</th>
               <th>{{localize('label_componey')}}</th>
               <th>{{localize('text_invoice_no')}}</th>
+              <th>{{localize('label_total_value_pay_full')}}</th>
+              <th>{{localize('label_total_value_pay_tax')}}</th>
               <th>{{localize('label_total_value_bath')}}</th>
             </tr>
             </tr>
@@ -70,7 +72,9 @@
                 <td>[[_ObcountIndex(index)]]</td>
                 <td>[[item.exporter_name]]</td>
                 <td>[[item.invoice_exporter_no]]</td>
-                <td>[[formatNumber(item.pay_amount)]]</td>
+                <td>[[toNumberFormat(item.pay_full)]]</td>
+                <td>[[toNumberFormat(item.pay_tax)]]</td>
+                <td>[[toNumberFormat(item.pay_amount)]]</td>
               </tr>
             </template>
           </tbody>
@@ -187,11 +191,14 @@
         }
 
       },
+
       checkData: function (e) {
         // console.log(this.data.payment_detail);
         let dataPay = this.data.payment_detail.filter((item) => item.status == true);
         this.set('data.pay_amount', 0);
         this.set('data.pay_amount', Object.keys(dataPay).reduce((previous, current) => previous + dataPay[current].pay_amount, 0));
+        this.set('data.pay_full', Object.keys(dataPay).reduce((previous, current) => previous + dataPay[current].pay_full, 0));
+        this.set('data.pay_tax', Object.keys(dataPay).reduce((previous, current) => previous + dataPay[current].pay_tax, 0));
         //ปิดการไม่ให้เลือกอันอื่นที่ไม่ตรงกับเลือกอันแรก
         this._checkBoxDisabled(e.currentTarget.exporterId);
         this._checkBoxEabled(dataPay);
@@ -237,7 +244,7 @@
               if (result) {
                 // /
                 // this._cleanDataPayment(this.data, (data) => {
-                console.log(data);
+                // console.log(data);
                 let contract_id = this._getUrl();
 
 
@@ -247,13 +254,15 @@
                     callback: () => {
                       //
                       this.fire('get-payment-list', { detail: contract_id });
+                      this.fire('get-history-payment-list', { detail: contract_id });
+                      _getHistoryList
                       let el = Polymer.dom(this.root).querySelectorAll('.required');
                       el.map((el) => { el.reset(); });
                     }
                   });
                 }, (data) => {
                   // console.log(data);
-                  window.open('https://localhost:3000/api/payment/report6/' + data.id[0], '_blank');
+                  window.open('https://localhost:8080/api/payment/report6/' + data.id[0], '_blank');
                   this.fire('close-drawer', { detail: 'close-drawer' });
                   // console.log('data=>', data.id[0]);
                   let checkDisabled = Polymer.dom(this.root).querySelectorAll('paper-checkbox.checkBoxPay[aria-disabled="true"]');
@@ -279,8 +288,8 @@
         let el = Polymer.dom(this.root).querySelectorAll('.required');
         let stat = el.map((el) => el.validate());
         if (stat.every(elem => elem == true)) {
-          let { bank_branch, bank_id, exporter_id, fee_id, pay_amount, pay_date, pay_no, pay_times } = data;
-          let newData = { bank_branch, bank_id, exporter_id, fee_id, pay_amount, pay_date, pay_no, pay_times };
+          let { bank_branch, bank_id, exporter_id, fee_id, pay_amount, pay_date, pay_no, pay_times,pay_full,pay_tax } = data;
+          let newData = { bank_branch, bank_id, exporter_id, fee_id, pay_amount, pay_date, pay_no, pay_times,pay_full,pay_tax  };
           newData.payment_detail = new Array();
           data.payment_detail.map((payDetId) => {
             if (payDetId.status) {
@@ -292,7 +301,7 @@
               });
             }
           });
-          newData.pay_date = new Date(newData.pay_date).toISOString();
+          newData.pay_date = new Date(newData.pay_date+'T00:00:00+07:00').toISOString();
           if (typeof data.tags !== 'undefined') {
             newData.tags = new Array();
             data.tags.map((tag) => {
