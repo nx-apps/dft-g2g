@@ -295,7 +295,7 @@
         'get-Cheque-list': '_getChequeListFire',
         'get-cheque-detail': '_getChequeDetail',
         'get-payment-list': '_getPaymentsFire',
-        'get-history-payment-list': '_getHistoryList',
+        'get-history-payment-list': '_getHistoryListFire',
         'get-payment-detail': '_getPaymentDetail',
         'get-history-detail': '_getHistoryDetail',
         'flipDrawer': '_flipDrawer',
@@ -386,6 +386,9 @@
           this.notifyPath('dataListPay.payments');
           // console.log(this.dataListPay.chequeList);
         });
+      },
+      _getHistoryListFire: function (e) {
+        this._getHistoryList(e.detail.detail);
       },
       _getHistoryList: function (contractId) {
         this.read('./g2g/paid/contract/id/' + contractId, (data) => {

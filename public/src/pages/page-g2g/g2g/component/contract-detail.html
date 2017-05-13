@@ -91,7 +91,6 @@
   </style>
   <template>
     <gl-form-panel set-padding="10px 20px 10px 20px" set-border="1px">
-
       <template is="dom-if" if="[[_isViewing(isViewSeleted)]]">
         <!--<gl-form-panel-head label="" set-padding="10px" set-border="1px">-->
         <!-- <div class="horizontal end-justified layout"> -->
@@ -144,8 +143,8 @@
       <gl-grid-row>
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,9]]">
           [[_getBuyerAddressFromData(data)]]
-          <gl-combo-box class="required" always-float-label required id="buyer_id" disabled="[[_checkArrayTrue(isInputDisabled,data.contract_status)]]"
-            label="{{localize('label_buyer')}}" error-message="{{localize('label_error_buyer')}}" value="{{data.buyer_id}}"
+          <gl-combo-box class="required" always-float-label required id="buyer_id" 
+            label="{{localize('label_buyer')}}" disabled error-message="{{localize('label_error_buyer')}}" value="{{data.buyer_id}}"
             on-value-changed="_getBuyerAddress">
             <template>
               [[item.label]]
@@ -292,8 +291,21 @@
       attached: function () {
         this._typeRiceContract();
       },
+      _getCookie: function (name) {
+        var value = "; " + document.cookie;
+        var parts = value.split("; " + name + "=");
+        if (parts.length == 2) return parts.pop().split(";").shift();
+      },
+      _getUrl: function () {
+
+          console.log(this._getCookie("buyerId"));
+          
+        },
+
       _getBuyer: function (buyers) {
         try {
+          // console.log(this._getCookie("buyerId"));
+          this.set('data.buyer_id',this._getCookie("buyerId"))
           let elements = this.$$('#buyer_id');
           let buyer = new Array();
           buyers.map((el, index) => {

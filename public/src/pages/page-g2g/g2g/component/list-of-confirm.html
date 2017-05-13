@@ -127,7 +127,8 @@
             <gl-combo-box placeholder="ผู้ส่งออกทั้งหมด" items="{{data.exporter}}" item-label-path="label" label="ผู้ส่งออก" item-value-path="exporter_id"
               on-value-changed="getShowByExport">
               <template>
-                [[item.label]] <b>[[item.value]]</b>
+                [[item.exporter_no]] [ [[item.company_taxno]] ]   [[item.company_name_th]]
+                <!--[[item.label]] <b>[[item.value]]</b>-->
               </template>
             </gl-combo-box>
           </div>
@@ -192,8 +193,11 @@
       },
       observers: [
         '_insertRiceType(data)',
-        // '_changeConfirm(data)'
+        '_changeConfirm(data.exporter)'
       ],
+      _changeConfirm(data){
+        console.log(data);
+      },
       properties: {
         title: {
           type: String,
