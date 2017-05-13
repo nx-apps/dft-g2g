@@ -251,7 +251,7 @@
             }
           }
           var data = str + "&contract_id=" + this.dataForSelect.contract_id;
-          console.log(data);
+          // console.log(data);
           switch (this.printReport.typeReport) {
             case '0':
               window.open('https://localhost:8080/api/payment/report11' + data+'&export=' + this.printReport.typeFile, '_blank');

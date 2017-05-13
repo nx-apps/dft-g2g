@@ -78,7 +78,7 @@
           // console.log(feeNo);
           // this.data.fee_id  == feeNo
           let checkfeeNo = feeNo.map((fee_id)=>fee_id.fee_id == id)
-          console.log('checkfeeNo>>>',checkfeeNo);
+          // console.log('checkfeeNo>>>',checkfeeNo);
           return checkfeeNo.every(elem => elem == true)
         }else {
           return feeNo === undefined || feeNo.length == 0
@@ -87,7 +87,7 @@
       },
       addFee: function () {
         if (this._checkFeeNoDup(this.data.fee_no)) {
-          console.log(this.dataForSelect);
+          // console.log(this.dataForSelect);
           this.data.fee_status = false;
           this.data.cl_id = this.dataForSelect.cl_id;
           this.set('data.tags', [this.dataForSelect.contract_id]);
@@ -99,7 +99,7 @@
                 status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
                 callback: () => {
                   // this.fire('close-drawer',{detail:'close-drawer'});
-                  console.log();
+                  // console.log();
                   this.fire('get-fee-list', { detail: contract_id });
                   this.fire('_get-list-fee', { data: '_get-list-fee' });
                   this.fire('get-fee-list-in-shm-event', { data: data.cl_id });

@@ -269,7 +269,7 @@
       _incomeTax: function (quantity_tons, price_per_ton, rate_bank, invoice_fee, index) {
         var incomeTax = ((((parseFloat(quantity_tons) * parseFloat(price_per_ton)) * parseFloat(rate_bank)) - parseFloat(invoice_fee)) * 1) / 100;
         // console.log(this.toNumberFormat(incomeTax));
-        console.log(incomeTax);
+        // console.log(incomeTax);
         this.set('data.invoice_detail.' + index + '.incomeTax', incomeTax);
         return incomeTax;
       },

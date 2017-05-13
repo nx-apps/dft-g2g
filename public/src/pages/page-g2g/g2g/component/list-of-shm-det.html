@@ -161,8 +161,8 @@
       },
       printShipmentReports: function () {
         let book_id = this.dataForSelect.book_id
-        console.log(this.dataForSelect.book_id);
-        console.log(book_id);
+        // console.log(this.dataForSelect.book_id);
+        // console.log(book_id);
         // window.open('https://localhost:8080/api/shipment/report1?shm_id='+this.data.shm_id+'&ori='+this.printReport.ori+'&nn='+this.printReport.nn,'1');
         window.open('https://localhost:8080/api/shipment/report2/' + book_id + '?ori=' + this.printReport.ori + '&nn=' + this.printReport.nn + '&export=' + this.printReport.typeFile, '1');
       },
@@ -200,7 +200,7 @@
             status: 'success', text: 'การยืนยันสำเร็จ',  // คำสั่งสำหรับเปิด toast success
             callback: () => {
               this.fire('_post-approve-book', { id: this.data[0].book_id, book_status: 'approve' });
-              console.log(this.data[0].cl_id);
+              // console.log(this.data[0].cl_id);
               // _get-fire-booking-detail  cl_id
               this.fire('_get-fire-booking-detail', { detail: { cl_id: this.data[0].cl_id } });
               this.fire('_get-fire-shm-detail', { book_id: this.data[0].book_id });
