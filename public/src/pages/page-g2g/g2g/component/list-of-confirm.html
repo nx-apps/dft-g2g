@@ -146,11 +146,11 @@
           </thead>
           <tbody class="table-body">
             <template is="dom-repeat" items="[[data.book]]">
-              <tr on-tap="getConfirmDetail" data="[[item]]">
-                <td on-tap="bookingDetail" data="[[item]]">[[item.cl_no]]</td>
-                <td on-tap="bookingDetail" data="[[item]]">[[item.ship_lot_no_lastest]]</td>
-                <td on-tap="bookingDetail" data="[[item]]">[[formatNumberNoZero(item.cl_quantity_total)]]</td>
-                <td on-tap="bookingDetail" data="[[item]]">[[formatNumberNoZero(item.book_quantity)]] [[checkMInus(item.cl_quantity_tolerance)]]</td>
+              <tr>
+                <td on-tap="getConfirmDetail" data="[[item]]">[[item.cl_no]]</td>
+                <td on-tap="getConfirmDetail" data="[[item]]">[[item.ship_lot_no_lastest]]</td>
+                <td on-tap="getConfirmDetail" data="[[item]]">[[formatNumberNoZero(item.cl_quantity_total)]]</td>
+                <td on-tap="getConfirmDetail" data="[[item]]">[[formatNumberNoZero(item.book_quantity)]] [[checkMInus(item.cl_quantity_tolerance)]]</td>
                 <td>
                   <paper-icon-button id="printShipment" class="crud" icon="print" raised on-tap="printVesel" data="[[item]]"></paper-icon-button>
                   <paper-tooltip for="printShipment" offset="0">Print Invoice</paper-tooltip>
@@ -239,6 +239,7 @@
         this.pageSelected = 'addConfirm';
       },
       getConfirmDetail: function (e) {
+        this.fire('toast', { status: 'load' });
         this.dataForSelect.contract_quantity_confirm_balance = this.data.contract_quantity_confirm_balance;
         let confirm_letter = this.g2gClone(this.data.confirm_letter)
         let data = confirm_letter.filter((cl) => cl.cl_id == e.currentTarget.data.cl_id)[0]
@@ -263,8 +264,9 @@
         this.fire('_set-breadcrumbs', breadcrumbs)
         this.notifyPath('dataForSelect.contract_quantity_confirm_balance');
         this.dataSelected = data;
-        console.log(e.currentTarget.data.cl_id);
+        // console.log(e.currentTarget.data.cl_id);
         this.pageSelected = 'confirmDetail';
+        this.fire('toast', { status: 'load' });
       },
       _getConfirmDetail: function (data) {
         // แทนค่าใส่ properties เพื่อรอ _insertRiceType ไปทำงานอีกรอบ
@@ -273,24 +275,34 @@
       _backPageConfirm: function (data) {
         this.pageSelected = 'listOfConfirm';
       },
+
+      printVesel: function (e) {
+        window.open('https://localhost:8080/api/shipment/report4/' + e.currentTarget.data.cl_id, '1');
+        // console.log(e.currentTarget.data);
+      },
+      checkMInus(cl_quantity_tolerance) {
+        var str = this.formatNumberNoZero(cl_quantity_tolerance);
+        // console.log(this.formatNumberNoZero(0));
+        if (cl_quantity_tolerance > 0) str = "+" + str;
+        return typeof cl_quantity_tolerance === "undefined" ? '' : "(" + str + ")";
+      },
       getShowByExport(e) {
         // console.log(e);
         try {
           this.set('title', 'แสดงปริมาณการส่งมอบ')
           if (e.currentTarget.value != '') {
-            // let exporter = this.g2gClone(this.data.book)
-            this.set('data.oldbook',this.g2gClone(this.data.book))
-              // this.set('data', this.oldData)
-              this.read('./g2g/confirm/exporter?contract_id=' + this.data.contract_id + '&exporter_id=' + e.detail.value, (data) => {
-                // this.data=data;
-                // console.log();
-                this.set('data.book', data)
-              });
+            // this.set('data', this.oldData)
+            this.read('./g2g/confirm/exporter?contract_id=' + this.data.contract_id + '&exporter_id=' + e.detail.value, (data) => {
+              // this.data=data;
+              // console.log();
+              this.set('data.book', data)
+            });
           } else {
-            this.set('data.book', this.data.oldbook)
+            // console.log(this.oldData);
+            this.set('data.book', this.oldData.book)
           }
         } catch (e) {
-          console.log(e);
+          // console.log(e);
         }
       }
 

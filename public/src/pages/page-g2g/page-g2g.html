@@ -488,6 +488,17 @@
         if (typeof e.detail.contractId == "undefined") {
           this.set('pageSelected', 'list-of-booking-in-confirm')
           this.titlePanelRight = 'รายการส่งมอบสินค้า : ' + e.detail.data.contract_name
+          let datass = [
+            {
+              label: e.detail.data.contract_name,
+              href: ''
+            },
+            {
+              label: 'รายการลำเรือ',
+              href: ''
+            },
+          ]
+          this.setBreadcrumbs(datass)
           this.fire('toast', { status: 'load' });
           if (this.checkRenderPage.listOfShipment != true) {
             this.async(() => {
