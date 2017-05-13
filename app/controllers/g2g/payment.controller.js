@@ -1,3 +1,23 @@
+exports.getNotiByContractId = function (req, res) {
+    var r = req.r;
+    r.expr({
+        noti_bl: r.table('book').getAll(req.params.contract_id, { index: 'tags' })
+            .filter({ book_status: 'approve' }).count(),
+        noti_fee: r.table('fee').getAll(req.params.contract_id, { index: 'tags' })
+            .filter({ fee_status: false })
+            .map(function (fee_map) {
+                return r.table('fee_detail').getAll(fee_map('id'), { index: 'fee_id' })
+                    .filter({ fee_det_status: true }).count()
+            })
+            .filter(function (fee_filter) {
+                return fee_filter.gt(0)
+            }).count()
+    })
+        .run()
+        .then(function (data) {
+            res.json(data);
+        })
+}
 exports.getByContractId = function (req, res) {
     var r = req.r;
     r.db('g2g2').table('payment_detail')

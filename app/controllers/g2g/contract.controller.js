@@ -350,7 +350,9 @@ exports.buyerId = function (req, res) {
                             return f('cl_status').eq(true)
                         })
                         .sum('book_quantity')
-                )
+                ),
+                noti_fee_detail: r.table('fee_detail').getAll(row('contract_id'), { index: 'tags' })
+                    .filter({ fee_det_status: false }).count()
             }
         })
         .without('id', 'tags', 'tolerance_rate')
