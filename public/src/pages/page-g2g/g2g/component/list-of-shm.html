@@ -15,7 +15,7 @@
   <template>
     <iron-pages selected="{{pageSelected}}" attr-for-selected="name">
       <div name="list-of-shm-det">
-        <list-of-shm-det data="{{dataSelected}}" data-for-select="[[dataForSelect]]"></list-of-shm-det>
+        <list-of-shm-det data="{{dataSelected}}" data-for-select="{{dataForSelect}}"></list-of-shm-det>
       </div>
       <div name="list-of-shm-det-add">
         <shm-det-exporter is-input-disabled=[[setFalse]] data-for-select="[[dataForSelect]]" is-view-seleted="[[!isViewSeleted]]"></shm-det-exporter>

@@ -488,6 +488,7 @@
         if (typeof e.detail.contractId == "undefined") {
           this.set('pageSelected', 'list-of-booking-in-confirm')
           this.titlePanelRight = 'รายการส่งมอบสินค้า : ' + e.detail.data.contract_name
+          this.set('dataForSelected.dataForBooking.contract_name',e.detail.data.contract_name)
           let datass = [
             {
               label: e.detail.data.contract_name,
@@ -525,7 +526,7 @@
           //     exporters.company_id = exporters.company_id
           // })
           this.dataSelected = e.detail.data;
-          console.log(this.dataSelected);
+          // console.log(this.dataSelected);
           this.set('dataForSelected.dataForBooking.contract_id', e.detail.data.contract_id);
           this.set('dataForSelected.dataForBooking.buyer_id', e.detail.data.buyer_id);
           // console.log(this.dataForSelected.dataForBooking);

@@ -307,9 +307,7 @@
       },
       getShippingId: function () {
         try {
-          // console.log(this.dataForSelect.carrier);
           var resilte = this.dataForSelect.shipline.filter((item, index) => this.data.shipline_name.toUpperCase() == item.text.toUpperCase())
-          // console.log(resilte.length);
           if (resilte.length > 0) {
             // console.log(resilte[0].shipline_id);
             this.set('data.shipline_id', resilte[0].shipline_id)
@@ -387,7 +385,7 @@
             this.data.cl_id = this.dataForSelect.cl_id;
             // console.log(this.data.cl_id);
             this.set('data.tags', [])
-            this.push('data.tags', this.dataForSelect.contract_id);
+            this.push('data.tags', this.dataForSelect.cl_id, this.dataForSelect.contract_id);
             this._cleanDataBl(this.data, (data) => {
               if (data.carrier_id == '' || data.carrier_id == undefined) {
                 data.carrier_id = this._checkCarrierIsBlank();

@@ -170,7 +170,7 @@
         this.fire('_get-fire-in-book-shm-detail', { detail: e.currentTarget.data })
       },
       _confirmBook: function (data) {
-        console.log(data);
+        // console.log(data);
         if ((data.every(status => status.book_status == false))) {
           return true;
         } else {
@@ -194,7 +194,7 @@
               this.fire('_post-approve-book', { id: this.data[0].book_id, book_status: 'approve' });
               console.log(this.data[0].cl_id);
               // _get-fire-booking-detail  cl_id
-              this.fire('_get-fire-booking-detail', { detail:{cl_id:this.data[0].cl_id} });
+              this.fire('_get-fire-booking-detail', { detail: { cl_id: this.data[0].cl_id } });
               this.fire('_get-fire-shm-detail', { book_id: this.data[0].book_id });
             }
           });
@@ -215,7 +215,7 @@
             status: 'success', text: 'ยกเลิกการยืนยันสำเร็จ',  // คำสั่งสำหรับเปิด toast success
             callback: () => {
               this.fire('_post-approve-book', { id: this.data[0].book_id, book_status: false });
-              this.fire('_get-fire-booking-detail', { detail:{cl_id:this.data[0].cl_id} });
+              this.fire('_get-fire-booking-detail', { detail: { cl_id: this.data[0].cl_id } });
               this.fire('_get-fire-shm-detail', { book_id: this.data[0].book_id });
             }
           });
@@ -223,7 +223,9 @@
         }
       },
       backWard2Booking: function () {
+        // console.log(this.dataForSelect);
         this.fire('_change-component-book', { detail: 'list-of-booking' })
+        this.fire('_set-breadcrumbs', this.dataForSelect.breadcrumbs)
       }
 
     });

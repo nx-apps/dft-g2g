@@ -6,7 +6,7 @@
   <template>
     <iron-pages selected="{{pageSelected}}" attr-for-selected="name">
       <div name="list-of-booking">
-        <list-of-booking-shm-det data="{{data}}" data-for-select="[[dataForSelect]]"></list-of-booking-shm-det>
+        <list-of-booking-shm-det data="{{data}}" data-for-select="{{dataForSelect}}"></list-of-booking-shm-det>
       </div>
       <div name="list-of-booking-add">
         <booking-detail data-book-no={{data}} data="[[dataDefault]]" data-for-select="[[dataForSelect]]" is-input-disabled="[[!isInputDisabled]]"
@@ -17,7 +17,7 @@
           is-view-seleted="[[isViewSeleted]]"></booking-detail>
       </div>
       <div name="list-of-booking-shm-det">
-        <list-of-shm page-selected="{{subPageSelected}}" data-selected="{{dataSelected}}" data-for-select="[[dataForSelect]]"></list-of-shm>
+        <list-of-shm page-selected="{{subPageSelected}}" data-selected="{{dataSelected}}" data-for-select="{{dataForSelect}}"></list-of-shm>
       </div>
     </iron-pages>
 
