@@ -50,7 +50,7 @@ exports.getByContractId = function (req, res) {
                         return {
                             amount_usd: fee_det_merge('shm_det_quantity').mul(fee_det_merge('price_per_ton')),
                             amount_bath: fee_det_merge('shm_det_quantity').mul(fee_det_merge('price_per_ton')).mul(fee_det_merge('rate_bank')),
-                            amount_bath_fee: fee_det_merge('pay_amount').mul(100).div(99),
+                            // amount_bath_fee: fee_det_merge('pay_amount').mul(100).div(99),
                             fee_date_receipt: fee_det_merge('fee_date_receipt').split('T')(0),
                             ship: fee_det_merge('ship').map(ship_map => {
                                 return r.db('common').table('ship').get(ship_map('ship_id')).getField('ship_name')
