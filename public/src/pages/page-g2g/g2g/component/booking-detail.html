@@ -79,25 +79,20 @@
             </template>
           </gl-grid-col>
 
-          <!--<gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
             <gl-combo-box required class="required" label="{{localize('label_shipping_line')}}" always-float-label item-label-path="shipline_name"
               disabled="[[isInputDisabled]]" item-value-path="shipline_id" items="{{dataForSelect.shipline}}" value="{{data.shipline_id}}"></gl-combo-box>
-          </gl-grid-col>-->
-          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+          </gl-grid-col>
+          <!--<gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
             <div class="autocomplete-wrapper">
               <gl-form-input id="shipline" required class="required" disabled="[[isInputDisabled]]" always-float-label label="{{localize('label_shipping_line')}}"
                 value="{{data.shipline_name}}" on-blur="getShippingId" on-tap="getShiplineSuggestions"></gl-form-input>
 
               <paper-autocomplete-suggestions id="shipline-suggestions" is-open for="shipline" source="{{dataForSelect.shipline}}">
 
-                <!--<template autocomplete-custom-template>
-          <paper-item role="option" aria-selected="false">
-            [[item.text]]// [[item.value]]
-          </paper-item>
-        </template>-->
               </paper-autocomplete-suggestions>
             </div>
-          </gl-grid-col>
+          </gl-grid-col>-->
 
 
           <template is="dom-repeat" items="[[data.ship]]">
