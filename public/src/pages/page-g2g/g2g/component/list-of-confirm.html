@@ -196,7 +196,13 @@
         '_changeConfirm(data.exporter)'
       ],
       _changeConfirm(data){
-        console.log(data);
+        // console.log(
+          return data.map((exporters) => {
+              exporters.exporter_id = exporters.exporter_id,
+                exporters.label = '' + exporters.exporter_no + ' [' + exporters.company_taxno + '] ' + exporters.company_name_th,
+                exporters.company_id = exporters.company_id
+            })
+
       },
       properties: {
         title: {

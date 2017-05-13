@@ -194,7 +194,9 @@
           // console.log(this.dataForSelect.conFirmApprove);
           if ((e.detail.value !== undefined && e.detail.value !== '') &&
             (this.dataForSelect.bookBl !== undefined && this.dataForSelect.bookBl !== '')) {
+              console.log(e.detail.value);
             this.book = this.dataForSelect.bookBl.filter((item) => item.cl_id == e.detail.value)[0]
+            console.log(this.book);
             // console.log(book);
             this.fire('_get-booking-detail', { detail: this.book })
             // console.log(this.dataForSelect.contract_name);

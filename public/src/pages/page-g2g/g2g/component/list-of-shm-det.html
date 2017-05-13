@@ -127,9 +127,11 @@
           {
             report_name:
             [
-              { report_name: 'ลิสต์เรือ', report_name_id: '0' },
+              { report_name: 'รายการเรือ', report_name_id: '0' },
               { report_name: 'แบบร่าง BL', report_name_id: '1' },
               { report_name: 'หนังสือการส่งมอบข้าวรัฐบาล', report_name_id: '2' },
+              { report_name: 'ใบปะหน้าแจ้งการรับเงิน', report_name_id: '3' },
+              // { report_name: 'รายละเอียดแจ้งการรับเงิน', report_name_id: '4' },
               // { report_name: 'ตารางเรือ', report_name_id: '3' }
             ],
             report_type:
@@ -145,15 +147,17 @@
       printShipment: function () {
         let book_id = this.dataForSelect.book_id
         if (this.printReport.typeReport == '0') {
-          // console.log('&export='+this.printReport.report_type_id);
-          // console.log(this.dataForSelect.book_id);
-          
           window.open('https://localhost:8080/api/shipment/report1/' + book_id + '?export=' + this.printReport.typeFile, '1');
         } else if (this.printReport.typeReport == '1') {
           this.$.printShipmentReport.toggle();
         } else if (this.printReport.typeReport == '2') {
           window.open('https://localhost:8080/api/shipment/report3?book_id=' + book_id + '&export=' + this.printReport.typeFile, '1');
+        }else if (this.printReport.typeReport == '3') {
+          window.open('https://localhost:8080/api/shipment/report3_1/' + book_id + '?export=' + this.printReport.typeFile, '1');
+        }else if (this.printReport.typeReport == '4') {
+          window.open('https://localhost:8080/api/shipment/report3_2/' + book_id + '?export=' + this.printReport.typeFile, '1');
         }
+        
       },
       printShipmentReports: function () {
         let book_id = this.dataForSelect.book_id

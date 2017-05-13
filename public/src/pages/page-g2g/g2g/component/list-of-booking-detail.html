@@ -4,8 +4,10 @@
 <dom-module id="list-of-booking-detail">
 
   <template>
+    <!--{{pageSelected}}/////-->
     <iron-pages selected="{{pageSelected}}" attr-for-selected="name">
       <div name="list-of-booking">
+        <!--ddddddd-->
         <list-of-booking-shm-det data="{{data}}" data-for-select="{{dataForSelect}}"></list-of-booking-shm-det>
       </div>
       <div name="list-of-booking-add">
@@ -82,7 +84,6 @@
           }
           // console.log(this.dataForSelect.cl_type_rice);
           // console.log(data);
-          // console.log('zzzzzzzzzzzzzzzzzz');
           this.dataSelected = data;
         });
       },

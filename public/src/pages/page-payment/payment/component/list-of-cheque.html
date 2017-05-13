@@ -63,19 +63,23 @@
             <th>{{localize('label_total_money')}}</th>
             <th>{{localize('label_total_payed')}}</th>
             <th>{{localize('label_balance_money')}}</th>
+            <th style="width:10%">Print</th>
           </tr>
         </thead>
         <tbody class="table-body">
           <!-- <template is="dom-repeat" items="[[data]]" as="contract"> -->
           <!--<template is="dom-if" if="[[!_isHave(newData)]]">-->
           <template is="dom-repeat" items="[[newData]]">
-            <tr data="[[item]]" on-tap="getChequeDetail" level="primary">
+            <tr  level="primary">
               <!-- <td>[[item.shm_name]]</td> -->
-              <td>[[item.fee_no]]</td>
-              <td>[[formatNumber(item.baht_net_value)]]</td>
-              <td>[[formatNumber(item.baht_pay_value)]]</td>
-              <td>[[formatNumber(item.baht_balance_value)]]</td>
-              <!--<td>[[item.pay_amounts]]</td> -->
+              <td data="[[item]]" on-tap="getChequeDetail">[[item.fee_no]]</td>
+              <td data="[[item]]" on-tap="getChequeDetail">[[formatNumber(item.baht_net_value)]]</td>
+              <td data="[[item]]" on-tap="getChequeDetail">[[formatNumber(item.baht_pay_value)]]</td>
+              <td data="[[item]]" on-tap="getChequeDetail">[[formatNumber(item.baht_balance_value)]]</td>
+              <td>
+                <paper-icon-button id="printCheque" data="[[item]]" class="crud" icon="print" raised on-tap="getCheque" hidden="[[!data.shm_status]]"></paper-icon-button>
+                  <paper-tooltip for="printCheque" offset="0">{{localize('label_send_report')}}</paper-tooltip>
+                </td> 
             </tr>
           </template>
           <!--</template>-->
@@ -132,7 +136,11 @@
       getChequeDetail: function (e) {
         // console.log(e.currentTarget.data);
         this.fire('get-cheque-detail', { detail: e.currentTarget.data });
-      }
+      },
+      getCheque: function (e) {
+        // console.log(e.currentTarget.data);
+        window.open('https://localhost:8080/api/payment/report10/' + e.currentTarget.data.fee_id, '1');
+      },
     });
   </script>
 </dom-module>
