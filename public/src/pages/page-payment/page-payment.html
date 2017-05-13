@@ -8,6 +8,7 @@
 <link rel="import" href="payment/component/list-of-fee.html">
 <link rel="import" href="payment/component/list-of-cheque.html">
 <link rel="import" href="payment/component/list-of-payments.html">
+<link rel="import" href="payment/component/list-of-history.html">
 <link rel="import" href="../../nylon-behavior.html">
 <link rel="import" href="../components/icon-button-management.html">
 <link rel="import" href="../components/page-style.html">
@@ -100,7 +101,8 @@
     #tab2:checked~#content2,
     #tab3:checked~#content3,
     #tab4:checked~#content4,
-    #tab5:checked~#content5 {
+    #tab5:checked~#content5,
+    #tab6:checked~#content6 {
       display: block;
     }
     
@@ -108,7 +110,8 @@
     list-of-invoice,
     list-of-fee,
     list-of-cheque,
-    list-of-payments {
+    list-of-payments,
+    list-of-history {
       margin-top: 15px;
       width: 98%;
     }
@@ -129,6 +132,9 @@
 
       <input id="tab5" type="radio" name="tabs">
       <label for="tab5">5.{{localize('text_payment')}}</label>
+
+      <input id="tab6" type="radio" name="tabs">
+      <label for="tab6">6.ประวัติการจ่ายเงิน</label>
     
       <section id="content1">
         <paper-material elevation="1">
@@ -169,6 +175,14 @@
           </div>
         </paper-material>
       </section>
+
+      <section id="content6">
+        <paper-material elevation="1">
+          <div class="list horizontal center-justified layout">
+            <list-of-history data="[[dataListPay.payments]]" data-for-select="[[dataForSelect]]"></list-of-history>
+          </div>
+        </paper-material>
+      </section>
     </main>
 
     <nylon-panel-right title="{{titlePanelRight}}" id="test" set-width="95%">
@@ -192,6 +206,9 @@
           </div>
           <div name="paymentDetail">
             <payment-detail data="[[dataSelected.paymentDetail]]" data-silo="[[dataSelected.silo]]" data-for-select="[[dataForSelect]]"></payment-detail>
+          </div>
+          <div name="historyDetail">
+            <history-detail data="[[dataSelected.paymentDetail]]" data-silo="[[dataSelected.silo]]" data-for-select="[[dataForSelect]]"></history-detail>
           </div>
         </iron-pages>
       </div>
@@ -238,6 +255,7 @@
             feeExports: false,
             chequeDetail: false,
             paymentDetail: false,
+            historyDetail: false,
           }
         },
         titlePanelRight: {
@@ -262,6 +280,7 @@
         'get-cheque-detail': '_getChequeDetail',
         'get-payment-list': '_getPaymentsFire',
         'get-payment-detail': '_getPaymentDetail',
+        'get-history-detail' : '_getHistoryDetail',
         'flipDrawer': '_flipDrawer',
         'close-drawer': '_flipDrawerClose'
       },
@@ -592,6 +611,40 @@
             this._flipDrawer();
           }, 500)
         }
+      },
+      _getHistoryDetail: function (e){
+        this.set('dataSelected.paymentDetail', e.detail.detail);
+        this.read('g2g/payment/silo', (data) => {
+          this.set('dataSelected.silo', data);
+        });
+        this.read('g2g/payment/checkno/buyer/id/'+this.dataForSelect.buyer_id, (data) => {
+          this.set('dataSelected.paymentDetail.pay_no',data.check_no)
+        });
+        
+        this.fire('toast', { status: 'load' });
+        this.set('dataSelected.paymentDetail.bank_id','KTB')
+        this.set('dataSelected.paymentDetail.bank_branch','กระทรวงพาณิชย์')
+
+        this.paymentsPageSeleted = 'historyDetail';
+        if (this.checkRenderPage.historyDetail != true) {
+            this.async(() => {
+              this.importHref(
+                this.resolveUrl('./payment/component/history-detail.html'),
+                () => {
+                  this.async(() => {
+                    this.fire('toast', { status: 'load' });
+                    this._flipDrawer();
+                    this.checkRenderPage.historyDetail = true;
+                  }, 500)
+                }, null, true
+              );
+            }, 1000);
+          } else {
+            this.async(() => {
+              this.fire('toast', { status: 'load' });
+              this._flipDrawer();
+            }, 500)
+          }
       },
       _flipDrawer: function () {
         Polymer.dom(this.root).querySelector('#test').open();
