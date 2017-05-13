@@ -170,10 +170,13 @@ exports.getSilo = function (req, res) {
 }
 exports.getCheckNoByBuyerId = function (req, res) {
     var r = req.r;
-    r.db('g2g2').table('payment').getAll(req.params.buyer_id, { index: 'tags' })
-        .map(function (m) {
-            return m('pay_no').coerceTo('number')
-        }).max().add(1)
+    r.branch(r.db('g2g2').table('payment').getAll(req.params.buyer_id, { index: 'tags' }).count().eq(0),
+        1,
+        r.db('g2g2').table('payment').getAll(req.params.buyer_id, { index: 'tags' })
+            .map(function (m) {
+                return m('pay_no').coerceTo('number')
+            }).max().add(1)
+    )
         .run()
         .then(function (data) {
             res.json({ check_no: data });
