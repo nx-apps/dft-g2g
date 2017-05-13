@@ -55,11 +55,11 @@
       <paper-dialog id="printReport" modal>
           <div class="container">
               <div class="gl-default fontCSC">เลือกรายงาน</div>
-              <gl-combo-box class="required" required label="ปี"
+              <gl-combo-box class="required" required label="ปี" error-message="กรุณาเลือกปี"
                 placeholder="เลือกปี" items="[[years]]"
                 item-label-path="year" item-value-path="year" value="{{dataSelect.year}}">
               </gl-combo-box>
-              <gl-combo-box class="required" required label="เดือน"
+              <gl-combo-box class="required" required label="เดือน" error-message="กรุณาเลือกเดือน"
                 placeholder="เลือกเดือน" items="[[months]]"
                 item-label-path="name_th" item-value-path="month" value="{{dataSelect.month}}">
               </gl-combo-box>
@@ -67,7 +67,7 @@
           </div>
           <div class="buttons">
               <paper-button dialog-confirm autofocus>close</paper-button>
-              <paper-button class="gl-btn-success" on-tap="_print" dialog-confirm autofocus>print</paper-button>
+              <paper-button class="gl-btn-success" on-tap="_print" autofocus>print</paper-button>
           </div>
       </paper-dialog>
       
@@ -131,18 +131,18 @@
         months: {
           type: Array,
           value: [ 
-            {month:'1',name_th:"มกราคม",name_en:"January"},
-            {month:'2',name_th:"กุมภาพันธ",name_en:"February"},
-            {month:'3',name_th:"มีนาคม",name_en:"March"},
-            {month:'4',name_th:"เมษายน",name_en:"April"},
-            {month:'5',name_th:"พฤษภาคม",name_en:"May"},
-            {month:'6',name_th:"มิถุนายน",name_en:"June"},
-            {month:'7',name_th:"กรกฎาคม",name_en:"July"},
-            {month:'8',name_th:"สิงหาคม",name_en:"August"},
-            {month:'9',name_th:"กันยายน",name_en:"September"},
-            {month:'10',name_th:"ตุลาคม",name_en:"October"},
-            {month:'11',name_th:"พฤศจิกายน",name_en:"November"},
-            {month:'12',name_th:"ธันวาคม",name_en:"December"}
+            {month:1, name_th:"มกราคม", name_en:"January"},
+            {month:2, name_th:"กุมภาพันธ", name_en:"February"},
+            {month:3, name_th:"มีนาคม", name_en:"March"},
+            {month:4, name_th:"เมษายน", name_en:"April"},
+            {month:5, name_th:"พฤษภาคม", name_en:"May"},
+            {month:6, name_th:"มิถุนายน", name_en:"June"},
+            {month:7, name_th:"กรกฎาคม", name_en:"July"},
+            {month:8, name_th:"สิงหาคม", name_en:"August"},
+            {month:9, name_th:"กันยายน", name_en:"September"},
+            {month:10, name_th:"ตุลาคม", name_en:"October"},
+            {month:11, name_th:"พฤศจิกายน", name_en:"November"},
+            {month:12, name_th:"ธันวาคม", name_en:"December"}
             ]
         }
       },
@@ -178,6 +178,10 @@
       },
       _printReport:function(){
         this.$.printReport.toggle();
+        this.dataSelect = {
+          year :new Date().getFullYear(),
+          month : new Date().getMonth()
+        }
       },
       createYear:function(){
         var currentYear = new Date().getFullYear(), years = [];
@@ -188,11 +192,21 @@
         this.years = years.reverse();
       },
       _print:function(){
-        var data = "?year="+this.dataSelect.year+"&month="+this.dataSelect.month+"&contract_id="+this.dataForSelect.contract_id;
-        console.log(data);
-        window.open('https://localhost:8080/api/payment/report11/' + data, '_blank');
-        // console.log(this.dataSelect);
-        // console.log(this.dataForSelect.contract_id);
+        let el = Polymer.dom(this.root).querySelectorAll('.required');
+        let stat = el.map((el) => el.validate());
+        if (stat.every(elem => elem == true)) {
+          var str = '';
+          for(var key in this.dataSelect){
+            if (this.dataSelect[key] != '' && this.dataSelect[key] != null) {
+              if (str == '') { str += '?' } else { str += '&' }
+              str += key + '=' + this.dataSelect[key];
+              // console.log(str);
+            }
+          }
+          var data = str+"&contract_id="+this.dataForSelect.contract_id;
+          // console.log(data);
+          window.open('https://localhost:8080/api/payment/report11' + data, '_blank'); 
+        }
       }
     });
   </script>
