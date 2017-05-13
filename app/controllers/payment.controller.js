@@ -407,10 +407,11 @@ exports.report7 = function (req, res, next) {
             }
         })
         .merge(function (m) {
-            return r.db('external').table('exporter').get(m('exporter_id')).pluck('seller_id')
+            return r.db('external').table('exporter').get(m('exporter_id')).pluck('company_id')
         })
         // .merge(r.db('external_f3').table('trader').get(r.row('trader_id')).pluck('seller_id'))
-        .merge(r.db('external').table('seller').get(r.row('seller_id')).pluck('seller_tax_id', 'seller_name_th', 'seller_address_th'))
+        .merge(r.db('external').table('company').get(r.row('company_id')).pluck('company_taxno', 'company_name_th', 'company_address_th'))
+        // .merge(r.db('external').table('seller').get(r.row('seller_id')).pluck('seller_tax_id', 'seller_name_th', 'seller_address_th'))
         .without('payment_detail', 'tags')  
         .pluck('TOTAL','pay_amount','pay_date')  
    .merge(function (r1){
