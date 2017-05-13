@@ -338,7 +338,7 @@
             href: ''
           },
         ]
-        // this.setBreadcrumbs(datass)
+        this.setBreadcrumbs(datass)
         // console.log(1222);
         this.g2gPageSeleted = 'addContract';
         this.titlePanelRight = 'เพิ่มข้อมูลผู้สั่งซื้อ'
@@ -489,6 +489,7 @@
           this.set('pageSelected', 'list-of-booking-in-confirm')
           this.titlePanelRight = 'รายการส่งมอบสินค้า : ' + e.detail.data.contract_name
           this.set('dataForSelected.dataForBooking.contract_name',e.detail.data.contract_name)
+         
           let datass = [
             {
               label: e.detail.data.contract_name,
@@ -551,6 +552,18 @@
             this.titlePanelRight = 'ค่าธรรมเนียม : ' + e.detail.data.contract_name
             this.dataForSelected.dataForFee.feeListinShm = data;
             this.notifyPath('dataForSelected.dataForFee.feeListinShm');
+             let datass = [
+            {
+              label: e.detail.data.contract_name,
+              href: ''
+            },
+            {
+              label: 'รายการค่าธรรมเนียม',
+              href: ''
+            },
+          ]
+          this.set('dataForSelected.dataForFee.contract_name',e.detail.data.contract_name);
+          this.setBreadcrumbs(datass)
             this.g2gPageSeleted = 'listOfFee';
             if (this.checkRenderPage.listOfFee != true) {
 

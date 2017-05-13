@@ -15,6 +15,7 @@
 <!-- <link rel="import" href="payment/component/commercial-invoice.html"> -->
 <!-- <link rel="import" href="payment/component/fee-exports.html"> -->
 <!-- <link rel="import" href="payment/component/payment-export.html"> -->
+<link rel="import" href="../../../bower_components/plutonium-breadcrumbs/plutonium-breadcrumbs.html">
 <link rel="import" href="payment/component/list-of-fee-detail.html">
 <!--<link rel="import" href="payment/component/cheque-register.html">-->
 
@@ -43,11 +44,13 @@
       /*margin: 10px;*/
       background-color: var(--gl-white-color);
     }
-    nylon-panel-right{
-                --app-toolbar-style:{
-                    background-color: #FF5000;
-                }
-            }
+    
+    nylon-panel-right {
+      --app-toolbar-style: {
+        background-color: #FF5000;
+      }
+    }
+    
     main {
       /*min-width: 320px;*/
       /*max-width: 1000px;*/
@@ -115,6 +118,12 @@
       margin-top: 15px;
       width: 98%;
     }
+    
+    .breadcrumbs {
+      margin: 38px 38px 0px 38px;
+      border-bottom: 1px solid #ccc!important;
+      padding: 10px;
+    }
   </style>
   <template>
     <main>
@@ -135,7 +144,7 @@
 
       <input id="tab6" type="radio" name="tabs">
       <label for="tab6">6.ประวัติการจ่ายเงิน</label>
-    
+
       <section id="content1">
         <paper-material elevation="1">
           <div class="list horizontal center-justified layout">
@@ -187,6 +196,9 @@
 
     <nylon-panel-right title="{{titlePanelRight}}" id="test" set-width="95%">
       <div class="rightdata" align="left">
+        <div class="breadcrumbs">
+          <plutonium-breadcrumbs crumbs="{{crumbs}}" selected-crumb="{{crumb}}"></plutonium-breadcrumbs>
+        </div>
         <iron-pages selected="{{paymentsPageSeleted}}" attr-for-selected="name">
           <div name="blPage">
             <commercial-invoice data="[[dataSelected]]" is-input-disabled="[[!isInputDisabled]]" is-view-seleted="[[isViewSeleted]]"></commercial-invoice>
@@ -227,10 +239,14 @@
         nylonLocalizeBehavior
       ],
       properties: {
-        // dataForSelect:{
-        //   type: Object,
-        //   value:{}
-        // },
+        dataForSelect:{
+          type: Object,
+          value:{}
+        },
+        crumbs: {
+          type: Array,
+          value: []
+        },
         dataListPay: {
           type: Object,
           value: {}
@@ -281,9 +297,10 @@
         'get-payment-list': '_getPaymentsFire',
         'get-history-list': '_getHistoryList',
         'get-payment-detail': '_getPaymentDetail',
-        'get-history-detail' : '_getHistoryDetail',
+        'get-history-detail': '_getHistoryDetail',
         'flipDrawer': '_flipDrawer',
-        'close-drawer': '_flipDrawerClose'
+        'close-drawer': '_flipDrawerClose',
+        '_set-breadcrumbs': 'setEventBreadcrumbs'
       },
       created: function () {
         this.nylonLocalizeImport('/i18n-page1.json');
@@ -304,6 +321,12 @@
         // this._getBlList(shmId);
         // this._getInvoiceList(shmId);
         // this._getFeeList(shmId);
+      },
+      setEventBreadcrumbs: function (data) {
+        this.setBreadcrumbs(data.detail)
+      },
+      setBreadcrumbs: function (data) {
+        this.set('crumbs', data)
       },
       _getCookie: function (name) {
         var value = "; " + document.cookie;
@@ -395,7 +418,19 @@
       },
       _getBlDetail: function (e) {
         let book_id = e.detail.detail.book_id;
-        this.titlePanelRight = 'รายละเอียดใบตราส่งสินค้าทางทะเล'
+        // console.log(e.detail.detail);
+        this.titlePanelRight = 'รายละเอียดใบ Invoice'
+        let datass = [
+          {
+            label: this.dataForSelect.nameContract,
+            href: ''
+          },
+          {
+            label: 'รายละเอียดใบ Invoice',
+            href: ''
+          },
+        ]
+        this.setBreadcrumbs(datass)
         this.fire('toast', { status: 'load' });
         this.read('./g2g/book/id/' + book_id, (data) => {
           this.dataSelected = data;
@@ -428,6 +463,18 @@
         this.titlePanelRight = 'รายละเอียดใบกำกับสินค้า'
         this.fire('toast', { status: 'load' });
         // console.log(1)
+      console.log(e.detail.detail);
+        let datass = [
+          {
+            label: this.dataForSelect.nameContract,
+            href: ''
+          },
+          {
+            label: 'รายละเอียดใบ Invoice',
+            href: ''
+          },
+        ]
+        this.setBreadcrumbs(datass)
         this.read('./g2g/invoice/id/' + e.detail.detail.invoice_id, (data) => {
           this.dataSelected = data;
           this.paymentsPageSeleted = 'invoicePage';
@@ -455,6 +502,18 @@
       },
       _getInvoiceDetail: function (e) {
         // this.dataSelected = e.detail.detail;
+        window.nameContract = this.dataForSelect.nameContract 
+        let datass = [
+          {
+            label: this.dataForSelect.nameContract,
+            href: ''
+          },
+          {
+            label: 'รายละเอียดการคำนวนการถัวเฉลี่ย',
+            href: ''
+          },
+        ]
+        this.setBreadcrumbs(datass)
         let url = '', cl_id;
         e.detail.detail.map((el, index) => {
           cl_id = el.data.cl_id;
@@ -465,10 +524,10 @@
           }
         });
         //เรียกให้อัพเดตรายชื่อ fee ที่อยู่ใน contract
-        if (cl_id !== undefined ) {
+        if (cl_id !== undefined) {
           this._getFeeListInShm(cl_id);
         }
-        
+
         //
         // console.log(e.detail.detail);
         this.fire('toast', { status: 'load' });
@@ -518,14 +577,29 @@
         // console.log(e.detail.detail.fee_id);
         //เรียกให้อัพเดตรายชื่อ fee ที่อยู่ใน contract
         // console.log(e.detail.detail);
-        if (e.detail.detail.cl_id !== undefined ) {
+        // this.set('dataSelected.fee_no',e.detail.detail.fee_no)
+        
+        if (e.detail.detail.cl_id !== undefined) {
           this._getFeeListInShm(e.detail.detail.cl_id);
         }
-        
+
         //
         this.read('./g2g/fee/id/' + e.detail.detail.fee_id, (data) => {
           this.set('dataForSelect.cl_id', data.cl_id);
           this.dataSelected.fee = data;
+          let datass = [
+          {
+            label: this.dataForSelect.nameContract,
+            href: ''
+          },
+          {
+            label: 'รอบที่คิดค่าธรรมเนียมครั้งที่ '+ this.dataSelected.fee.fee_no,
+            href: ''
+          },
+        ]
+        // console.log(this.dataSelected);
+        this.setBreadcrumbs(datass)
+          // console.log();
           // this.dataForSelect.checked = true
           this.notifyPath('dataSelected.fee');
           this.paymentsPageSeleted = 'feePage';
@@ -552,7 +626,7 @@
       },
       _getChequeDetail: function (e) {
         // console.log(e.detail.detail);
-        this.titlePanelRight = 'เช็ค' 
+        this.titlePanelRight = 'เช็ค'
         this.fire('toast', { status: 'load' });
         this.read('./g2g/payment/fee/id/' + e.detail.detail.fee_id, (data) => {
           // console.log(data);
@@ -587,15 +661,15 @@
           this.set('dataSelected.silo', data);
           // console.log(this.dataSelected.silo)
         });
-        this.read('g2g/payment/checkno/buyer/id/'+this.dataForSelect.buyer_id, (data) => {
+        this.read('g2g/payment/checkno/buyer/id/' + this.dataForSelect.buyer_id, (data) => {
           // this.dataSelected.pay_no = data.check_no
-          this.set('dataSelected.paymentDetail.pay_no',data.check_no)
+          this.set('dataSelected.paymentDetail.pay_no', data.check_no)
         });
-        
+
         this.fire('toast', { status: 'load' });
-        this.set('dataSelected.paymentDetail.bank_id','KTB')
-        this.set('dataSelected.paymentDetail.bank_branch','กระทรวงพาณิชย์')
-        
+        this.set('dataSelected.paymentDetail.bank_id', 'KTB')
+        this.set('dataSelected.paymentDetail.bank_branch', 'กระทรวงพาณิชย์')
+
         // console.log(this.dataSelected);
         // this._getBank();
         this.paymentsPageSeleted = 'paymentDetail';
@@ -620,7 +694,7 @@
           }, 500)
         }
       },
-      _getHistoryDetail: function (e){
+      _getHistoryDetail: function (e) {
         this.set('dataSelected.historyDetail', e.detail.detail);
         this.fire('toast', { status: 'load' });
         this.titlePanelRight = 'ประวัติการจ่ายเงิน '
@@ -630,24 +704,24 @@
 
         this.paymentsPageSeleted = 'historyDetail';
         if (this.checkRenderPage.historyDetail != true) {
-            this.async(() => {
-              this.importHref(
-                this.resolveUrl('./payment/component/history-detail.html'),
-                () => {
-                  this.async(() => {
-                    this.fire('toast', { status: 'load' });
-                    this._flipDrawer();
-                    this.checkRenderPage.historyDetail = true;
-                  }, 500)
-                }, null, true
-              );
-            }, 1000);
-          } else {
-            this.async(() => {
-              this.fire('toast', { status: 'load' });
-              this._flipDrawer();
-            }, 500)
-          }
+          this.async(() => {
+            this.importHref(
+              this.resolveUrl('./payment/component/history-detail.html'),
+              () => {
+                this.async(() => {
+                  this.fire('toast', { status: 'load' });
+                  this._flipDrawer();
+                  this.checkRenderPage.historyDetail = true;
+                }, 500)
+              }, null, true
+            );
+          }, 1000);
+        } else {
+          this.async(() => {
+            this.fire('toast', { status: 'load' });
+            this._flipDrawer();
+          }, 500)
+        }
       },
       _flipDrawer: function () {
         Polymer.dom(this.root).querySelector('#test').open();

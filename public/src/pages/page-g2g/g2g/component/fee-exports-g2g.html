@@ -264,7 +264,22 @@
         return fee / this.data.invoice.length;
       },
       cancelFeeReturn: function () {
+        // console.log(this.dataForSelect);
         this.fire('page-change', { page: 'feeDetailList' });
+        let breadcrumbs = datass = [
+          {
+            label: this.dataForSelect.contract_name,
+            href: ''
+          },
+          {
+            label: 'รายการค่าธรรมเนียมครั้งที่ ' + this.dataForSelect.fee_no,
+            href: ''
+          },
+        ]
+        // this.set('dataForSelect.fee_no', e.currentTarget.data.fee_no)
+        // th
+        // console.log(breadcrumbs);
+        this.fire('_set-breadcrumbs', breadcrumbs)
       },
       savePayment: function () {
         this._clearDatafee(this.data, 'update', (data) => {

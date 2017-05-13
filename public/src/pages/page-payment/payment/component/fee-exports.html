@@ -123,8 +123,8 @@
               <template is="dom-if" if="[[!isViewSeleted]]">
                 <template is="dom-if" if={{data.fee_det_status}}>
                   <div class="horizontal end-justified layout">
-                  <paper-icon-button id="edit" class="crud" icon="create" raised on-tap="editInput" disabled="[[!isInputDisabled]]"></paper-icon-button>
-                  <paper-tooltip for="edit" offset="0">แก้ไข</paper-tooltip>
+                    <paper-icon-button id="edit" class="crud" icon="create" raised on-tap="editInput" disabled="[[!isInputDisabled]]"></paper-icon-button>
+                    <paper-tooltip for="edit" offset="0">แก้ไข</paper-tooltip>
                   </div>
                   <!--<icon-button-management is-input-disabled="[[!isInputDisabled]]" delete="false"></icon-button-management>-->
                 </template>
@@ -373,8 +373,13 @@
         this.set('data.feeTotalWithOutUsd', fee_foreign + fee_other);
       },
       _balanceBath(balanceChangeBath, feeTotalWithOutUsd) {
-        this.data.totalbath = balanceChangeBath - feeTotalWithOutUsd;
-        this.notifyPath('data.totalbath');
+        try {
+          this.data.totalbath = balanceChangeBath - feeTotalWithOutUsd;
+          this.notifyPath('data.totalbath');
+        } catch (e) {
+          // console.log(e);
+        }
+
       },
       //นับหน้า
       _invoicePage: function (invoice = 1) {
