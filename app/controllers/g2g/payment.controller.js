@@ -190,7 +190,7 @@ exports.insert = function (req, res) {
         var obj = Object.assign(req.body, {
             runing_no: r.branch(r.db('g2g2').table('payment').count().eq(0),
                 1,
-                r.db('g2g2').table('payment').max('runing_no').add(1)
+                r.db('g2g2').table('payment').max('runing_no').getField('runing_no').add(1)
             ),
             date_created: new Date().toISOString(),
             date_updated: new Date().toISOString(),
