@@ -26,7 +26,7 @@ exports.list = function (req, res) {
                     .coerceTo('array'),
                 book: r.db('g2g2').table('confirm_letter')
                     .getAll(row('id'), { index: 'contract_id' })
-                    .filter({ cl_status: true })
+                    // .filter({ cl_status: true })
                     .map(function (cl) {
                         return {
                             cl_id: cl('id'),
