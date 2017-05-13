@@ -187,6 +187,7 @@ exports.insert = function (req, res) {
     var r = req.r;
     var result = { result: false, message: null, id: null };
     if (valid) {
+        req.body.pay_date = r.ISO8601(req.body.pay_date);
         var obj = Object.assign(req.body, {
             runing_no: r.branch(r.db('g2g2').table('payment').count().eq(0),
                 1,
