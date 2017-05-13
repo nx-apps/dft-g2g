@@ -26,7 +26,7 @@ exports.list = function (req, res) {
                     .coerceTo('array'),
                 book: r.db('g2g2').table('confirm_letter')
                     .getAll(row('id'), { index: 'contract_id' })
-                    // .filter({ cl_status: true })
+                    .filter({ cl_status: true })
                     .map(function (cl) {
                         return {
                             cl_id: cl('id'),
@@ -86,21 +86,6 @@ exports.list = function (req, res) {
                     })
                     .orderBy('cl_no')
                     .coerceTo('array')
-                // r.db('g2g2').table('book')
-                //     .getAll(row('id'), { index: 'tags' })
-                //     .merge(function (book) {
-                //         return {
-                //             book_id: book('id'),
-                //             book_quantity: r.db('g2g2').table("shipment_detail")
-                //                 .getAll(book('id'), { index: "book_id" })
-                //                 .sum("shm_det_quantity"),
-                //             book_status_name: r.branch(book('book_status').eq(true), 'อนุมัติ', 'ยังไม่อนุมัติ')
-                //         }
-                //     })
-                //     .orderBy('ship_lot_no')
-                //     .without('id', "tags")
-                //     .coerceTo('array')
-                //     .eqJoin("cl_id", r.db('g2g2').table("confirm_letter")).without({ right: ["id", "date_created", "date_updated", "cl_type_rice", "cl_quality", "tags"] }).zip()
             }
         })
         .merge(function (row) {
@@ -216,7 +201,7 @@ exports.buyerId = function (req, res) {
                     .coerceTo('array'),
                 book: r.db('g2g2').table('confirm_letter')
                     .getAll(row('id'), { index: 'contract_id' })
-                    .filter({ cl_status: true })
+                    // .filter({ cl_status: true })
                     .map(function (cl) {
                         return {
                             cl_id: cl('id'),
