@@ -25,6 +25,12 @@
         "pay_amount": {
             "type": "number"
         },
+        "pay_full": {
+            "type": "number"
+        },
+        "pay_tax": {
+            "type": "number"
+        },
         "shm_det_id": {
             "type": "string"
         }
