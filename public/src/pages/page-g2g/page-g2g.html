@@ -487,9 +487,9 @@
         } else {
           this._getContractList();
           this.read('./g2g/contract/buyer/id/' + this._getCookie("buyerId"), (data) => {
-            console.log(e.detail)
+            // console.log(e.detail)
             let contractId = e.detail.contractId;
-            console.log(contractId)
+            // console.log(contractId)
             let dataContract = data.filter((contractList) => contractList.contract_id == contractId);
             // console.log();
             // try {
