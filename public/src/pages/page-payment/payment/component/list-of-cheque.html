@@ -139,7 +139,7 @@
       },
       getCheque: function (e) {
         // console.log(e.currentTarget.data);
-        window.open('https://localhost:8080/api/payment/report10/' + e.currentTarget.data.fee_id, '1');
+        window.open(window._config.reportServer+'/api/payment/report10/' + e.currentTarget.data.fee_id, '1');
       },
     });
   </script>

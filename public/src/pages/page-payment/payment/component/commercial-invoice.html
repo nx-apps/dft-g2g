@@ -376,7 +376,7 @@
 
       printInvoice: function () {
         // report.report_type
-        window.open('https://localhost:8080/api/payment/report1?invoice_id=' + this.data.invoice_id + '&export=' + this.printReport.typeFile, '1');
+        window.open(window._config.reportServer+'/api/payment/report1?invoice_id=' + this.data.invoice_id + '&export=' + this.printReport.typeFile, '1');
       },
       createInvoice: function () {
         let book_id = this.data.book_id;

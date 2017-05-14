@@ -254,31 +254,31 @@
           // console.log(data);
           switch (this.printReport.typeReport) {
             case '0':
-              window.open('https://localhost:8080/api/payment/report11' + data+'&export=' + this.printReport.typeFile, '_blank');
+              window.open(window._config.reportServer+'/api/payment/report11' + data+'&export=' + this.printReport.typeFile, '_blank');
               break;
             case '1':
-              window.open('https://localhost:8080/api/payment/report7' + str+'&export=' + this.printReport.typeFile, '_blank');
+              window.open(window._config.reportServer+'/api/payment/report7' + str+'&export=' + this.printReport.typeFile, '_blank');
               break;
             case '2':
-              window.open('https://localhost:8080/api/payment/report8' + str+'&export=' + this.printReport.typeFile, '_blank');
+              window.open(window._config.reportServer+'/api/payment/report8' + str+'&export=' + this.printReport.typeFile, '_blank');
               break;
 
           }
-          // window.open('https://localhost:8080/api/payment/report11' + data, '_blank');
+          // window.open(window._config.reportServer+'/api/payment/report11' + data, '_blank');
         }
       },
       printShipment: function () {
         let book_id = this.dataForSelect.book_id
         if (this.printReport.typeReport == '0') {
-          window.open('https://localhost:8080/api/shipment/report1/' + book_id + '?export=' + this.printReport.typeFile, '1');
+          window.open(window._config.reportServer+'/api/shipment/report1/' + book_id + '?export=' + this.printReport.typeFile, '1');
         } else if (this.printReport.typeReport == '1') {
           this.$.printShipmentReport.toggle();
         } else if (this.printReport.typeReport == '2') {
-          window.open('https://localhost:8080/api/shipment/report3?book_id=' + book_id + '&export=' + this.printReport.typeFile, '1');
+          window.open(window._config.reportServer+'/api/shipment/report3?book_id=' + book_id + '&export=' + this.printReport.typeFile, '1');
         } else if (this.printReport.typeReport == '3') {
-          window.open('https://localhost:8080/api/shipment/report3_1/' + book_id + '?export=' + this.printReport.typeFile, '1');
+          window.open(window._config.reportServer+'/api/shipment/report3_1/' + book_id + '?export=' + this.printReport.typeFile, '1');
         } else if (this.printReport.typeReport == '4') {
-          window.open('https://localhost:8080/api/shipment/report3_2/' + book_id + '?export=' + this.printReport.typeFile, '1');
+          window.open(window._config.reportServer+'/api/shipment/report3_2/' + book_id + '?export=' + this.printReport.typeFile, '1');
         }
 
       },

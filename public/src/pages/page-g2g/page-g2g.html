@@ -265,7 +265,7 @@
       },
       _getDataForShipment: function () {
         // call data
-        this.read('https://localhost:8081/api/external/exporter', (data) => {
+        this.read(window._config.externalServer+'/api/external/exporter', (data) => {
           data.map((set_name) => {
             set_name.company_name_th = '' + set_name.exporter_no_name + ' [' + set_name.company_taxno + '] ' + set_name.company_name_th
           })

@@ -94,7 +94,7 @@
         this.nylonLocalizeImport('/i18n-page1.json');
       },
       printVesel(e) {
-        window.open('https://localhost:8080/api/shipment/report4/' + e.currentTarget.data.cl_id, '1');
+        window.open(window._config.reportServer+'/api/shipment/report4/' + e.currentTarget.data.cl_id, '1');
         // console.log(e.currentTarget.data);
       },
       bookingDetail: function (e) {

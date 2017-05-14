@@ -262,7 +262,7 @@
                   });
                 }, (data) => {
                   // console.log(data);
-                  window.open('https://localhost:8080/api/payment/report6/' + data.id[0], '_blank');
+                  window.open(window._config.reportServer+'/api/payment/report6/' + data.id[0], '_blank');
                   this.fire('close-drawer', { detail: 'close-drawer' });
                   // console.log('data=>', data.id[0]);
                   let checkDisabled = Polymer.dom(this.root).querySelectorAll('paper-checkbox.checkBoxPay[aria-disabled="true"]');

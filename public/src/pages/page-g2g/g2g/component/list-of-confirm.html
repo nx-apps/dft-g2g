@@ -287,7 +287,7 @@
       },
 
       printVesel: function (e) {
-        window.open('https://localhost:8080/api/shipment/report4/' + e.currentTarget.data.cl_id, '1');
+        window.open(window._config.reportServer+'/api/shipment/report4/' + e.currentTarget.data.cl_id, '1');
         // console.log(e.currentTarget.data);
       },
       checkMInus(cl_quantity_tolerance) {
