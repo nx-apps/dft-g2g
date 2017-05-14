@@ -363,7 +363,7 @@
       addBl: function () {
 
         let ship_lot_no = this.data.ship_lot_no
-        console.log(this.dataBookNo);
+        // console.log(this.dataBookNo);
         let ship_lot = this.dataBookNo.filter((ship_lot) => ship_lot.ship_lot_no == ship_lot_no)
         // console.log(this.dataForSelect.listbooking);
         try {
@@ -444,7 +444,7 @@
           this.push('data.ship', { ship_id: '', ship_voy_no: '' });
           this.notifyPath('data.ship');
         } catch (e) {
-          console.log(e);
+          // console.log(e);
         } finally {
           
         }
@@ -560,7 +560,7 @@
             carrierSelete = carrier.carrier_id;
           }
         });
-        console.log(carrierSelete);
+        // console.log(carrierSelete);
         return carrierSelete;
       },
       _cleanDataBl: function (data, callback) {
