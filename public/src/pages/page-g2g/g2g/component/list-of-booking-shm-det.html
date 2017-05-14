@@ -38,6 +38,7 @@
     <!--<paper-button class="gl-btn-default" raised on-tap="backWard2BookingInConfirm">
       {{localize('btn_back_ward')}}</paper-button>-->
     <!--{{dataForSelect.conFirmApprove}}-->
+    <!--{{cl_id}}///-->
     <gl-combo-box placeholder="สัญญาย่อย" items="{{dataForSelect.conFirmApprove}}" item-label-path="cl_no" label="สัญญาย่อย"
       item-value-path="cl_id" value="{{cl_id}}" on-value-changed="getShowByBook">
       <template>
@@ -47,7 +48,7 @@
     <gl-form-panel set-padding="10px 20px 10px 20px" set-border="1px">
       <gl-form-panel-head set-padding="10px" set-border="1px">
         <div class="addconfirm horizontal end-justified layout">
-          <paper-button raised class="gl-btn-primary" disabled="[[_isHave(dataForSelect.conFirmApprove)]]" on-tap="createBooking">{{localize('btn_add_booking')}}</paper-button>
+          <paper-button raised class="gl-btn-primary" disabled="[[_isSeleted(cl_id)]]" on-tap="createBooking">{{localize('btn_add_booking')}}</paper-button>
         </div>
       </gl-form-panel-head>
       <br>
@@ -112,7 +113,7 @@
       properties: {
         data: {
           type: Object,
-          value: []
+          value: [],
         },
         dataForSelect: {
           type: Object,
@@ -120,17 +121,17 @@
         }
       },
       observers: [
-        '_checkConfirm(dataForSelect.conFirmApprove)',
-        '_changeGetBook(dataForSelect.bookBl.*)',
+        // '_checkConfirm(dataForSelect.conFirmApprove)',
+        // '_changeGetBook(dataForSelect.bookBl.*)',
         '_setDefalseData(dataForSelect.conFirmApprove,dataForSelect.bookBl)'
       ],
       _setDefalseData(conFirmApprove, bookBl) {
-        // console.log(conFirmApprove);
-        // console.log(bookBl);
         this.set('cl_id', '')
         this.set('data', '')
-        // [[data]]
         // console.log(this.cl_id);
+      },
+      _isSeleted(data){
+       return data === ''
       },
       setLabel(data) {
         try {
@@ -228,6 +229,8 @@
             ]
             this.set('dataForSelect.breadcrumbs', breadcrumbs)
             this.fire('_set-breadcrumbs', breadcrumbs)
+          } else {
+            this.set('data', '')
           }
         } catch (e) {
           // console.log(e);

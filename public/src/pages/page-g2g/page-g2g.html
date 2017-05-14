@@ -420,6 +420,7 @@
         // console.log('1212=>',e.detail);
         this.g2gPageSeleted = 'listOfConfirm';
         if (typeof e.detail.contractId == "undefined") {
+          // console.log(e.detail.data)
           this.titlePanelRight = 'รายละเอียดสัญญา : ' + e.detail.data.contract_name
           let datass = [
             {
@@ -451,14 +452,18 @@
             this.fire('toast', { status: 'load' });
             this._flipDrawer();
           }
+          let exporter = []
           e.detail.data.exporter.map((exporters) => {
-            exporters.label = '';
-            exporters.company_id = '';
-            exporters.exporter_id = '';
-            exporters.exporter_id = exporters.exporter_id,
-              exporters.label = '' + exporters.exporter_no + ' [' + exporters.company_taxno + '] ' + exporters.company_name_th,
-              exporters.company_id = exporters.company_id
+            // exporters.exporter_id = exporters.exporter_id,
+            //   exporters.label = '' + exporters.exporter_no + ' [' + exporters.company_taxno + '] ' + exporters.company_name_th,
+            //   exporters.company_id = exporters.company_id
+              exporter.push({
+                exporter_id: exporters.exporter_id,
+                label : '' + exporters.exporter_no + ' [' + exporters.company_taxno + '] ' + exporters.company_name_th,
+              company_id : exporters.company_id
+              })
           })
+          // console.log(e.detail)
           // for (var i = 0; i < e.detail.data.exporter.length; i++) {
           //   e.detail.data.exporter[i]
           // }
@@ -466,6 +471,9 @@
           this.dataSelected = e.detail.data;
           // console.log('>>>>>1111', this.dataSelected);
           // console.log(e.detail.data.contract_status);
+          
+          this.set('dataForSelected.dataForConfirm.contract_id', e.detail.data.contract_id);
+          this.set('dataForSelected.dataForConfirm.exporters', exporter);
           this.set('dataForSelected.dataForConfirm.contract_status', e.detail.data.contract_status);
           this.set('dataForSelected.dataForConfirm.buyer_id', e.detail.data.buyer_id);
           this.set('dataForSelected.dataForConfirm.country_id', e.detail.data.country_id)
@@ -479,23 +487,32 @@
         } else {
           this._getContractList();
           this.read('./g2g/contract/buyer/id/' + this._getCookie("buyerId"), (data) => {
+            console.log(e.detail)
             let contractId = e.detail.contractId;
+            console.log(contractId)
             let dataContract = data.filter((contractList) => contractList.contract_id == contractId);
             // console.log();
             // try {
+              let exporter = []
             dataContract[0].exporter.map((exporters) => {
-              exporters.label = '';
-              exporters.company_id = '';
-              exporters.exporter_id = '';
-              exporters.exporter_id = exporters.exporter_id;
-              exporters.label = '' + exporters.exporter_no + ' [' + exporters.company_taxno + '] ' + exporters.company_name_th,
-                exporters.company_id = exporters.company_id
+              // exporters.label = '';
+              // exporters.company_id = '';
+              // exporters.exporter_id = '';
+              // exporters.exporter_id = exporters.exporter_id;
+              // exporters.label = '' + exporters.exporter_no + ' [' + exporters.company_taxno + '] ' + exporters.company_name_th,
+              //   exporters.company_id = exporters.company_id
+              exporter.push({
+                exporter_id: exporters.exporter_id,
+                label : '' + exporters.exporter_no + ' [' + exporters.company_taxno + '] ' + exporters.company_name_th,
+              company_id : exporters.company_id
+              })
             })
             // } catch (e) {
             //   // console.log(e);
             // } 
 
             this.dataSelected = dataContract[0];
+            this.set('dataForSelected.dataForConfirm.exporters', exporter);
           });
           // this.read('./g2g/contract/list', (data) => {
           //   let contractId = e.detail.contractId;
