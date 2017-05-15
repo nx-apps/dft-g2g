@@ -139,6 +139,7 @@
            </gl-form-input>
        </gl-grid-col> -->
 
+       
 
       <gl-grid-row>
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,9]]">
@@ -150,6 +151,13 @@
               [[item.label]]
             </template>
           </gl-combo-box>
+        </gl-grid-col>
+      </gl-grid-row>
+
+      <gl-grid-row>
+        <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,9]]">
+          <gl-form-input disabled 
+            label="FAX" value="{{data.buyer_fax}}" placeholder="FAX"></gl-form-input>
         </gl-grid-col>
       </gl-grid-row>
       <gl-grid-row>
@@ -320,17 +328,35 @@
       _getBuyerAddress: function (e) {
         if (e.detail.value) {
           this._getAddCondation(e.detail.value);
-
+        }
+        if (e.detail.value === '') {
+          try {
+            this._getAddCondation(e.detail.value);
+            this.data.buyer_fax = '';
+            this.data.buyerAddress = '';
+            this.notifyPath('data.buyer_fax');
+            this.notifyPath('data.buyerAddress');
+          } catch (e) {
+            // console.log(e);
+          } 
         }
       },
       _getAddCondation: function (buyerId) {
-        let buyer_id = this.dataForSelect.buyer.filter((buyer) => buyer.buyer_id == buyerId);
-        this.data.buyerAddress = buyer_id[0].buyer_address;
-        this.data.country_id = buyer_id[0].country_id;
-        this.notifyPath('data.buyerAddress');
+        try {
+          let buyer_id = this.dataForSelect.buyer.filter((buyer) => buyer.buyer_id == buyerId);
+          this.data.buyerAddress = buyer_id[0].buyer_address;
+          this.data.buyer_fax = buyer_id[0].buyer_fax;
+          this.data.country_id = buyer_id[0].country_id;
+          this.notifyPath('data.buyerAddress');
+          this.notifyPath('data.buyer_fax');
+        } catch (e) {
+          // console.log(e);
+        } 
       },
       _getBuyerAddressFromData: function (data) {
+        this.data.buyer_fax = data.buyer_fax;
         this.data.buyerAddress = data.buyer_address;
+        this.notifyPath('data.buyer_fax');
         this.notifyPath('data.buyerAddress');
       },
       _changeDataContract: function (contract_date) {
