@@ -110,9 +110,9 @@
         return true
       }
     },
-    toNumberFormat: function (number){
-        return numeral(number).format('0,0.00');
-      },
+    toNumberFormat: function (number) {
+      return numeral(number).format('0,0.00');
+    },
     _isHaveMany: function (data, count) {
       // console.log(data.length);
       if (data.length < count) {
@@ -237,6 +237,34 @@
         }
       }
     },
+    change2MsSql: function(data) {
+      //ฟั่งชั่นแปลงค่า date จาก 2017-01-01 เป็น 2017/01/01 เพื่อให่เวลาเป็น gmt+7(แบบเก่า+0)
+      let newdata 
+      // Object.getOwnPropertyNames(data).map((date) => {
+        // console.log(date.indexOf("date"));
+        // if (date.indexOf("date") > -1) {
+          newdata = data.replace("-", "/").replace("-", "/");
+      //   } else {
+      //     newdata[date] = data[date];
+      //   }
+      // })
+      return newdata
+    },
+    genUrl: function(url) {
+      let data = new String()
+      let url_length = Object.getOwnPropertyNames(url).length
+      let count = new Number()
+      // console.log(url);
+      for (var variable in url) {
+        if (url[variable] != '') {
+          data = data + variable + "=" + url[variable];
+          (count < url_length - 1) ? data += '&' : '';
+        }
+        count++
+      }
+      // console.log(data);
+      return data
+    }
   }
 
 </script>

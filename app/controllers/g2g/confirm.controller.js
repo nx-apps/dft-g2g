@@ -150,6 +150,32 @@ exports.getByExporterId = function (req, res) {
             res.json(result);
         })
 }
+exports.getFP = function (req, res) {
+    var j = req.jdbc;
+    j.query("mssql", `
+        select
+            oldPrice as fp4,
+            oldNewPrice as fp3,
+            newPrice as fp2
+        from fn_rice_price_avg(?,?) price
+        left join dft_lk_type lkt on lkt.Id = price.riceTypeId
+        where lkt.hmcode = ?
+     `, [
+            req.query.startDate,
+            req.query.endDate,
+            req.query.hmcode
+        ],
+        function (err, data) {
+            data = JSON.parse(data);
+            if (data.length == 0) {
+                data = [{
+                    fp2: 0, fp3: 0, fp4: 0
+                }];
+            }
+            res.json(data)
+            // res.json(data)
+        })
+}
 exports.insert = function (req, res) {
     var valid = req.ajv.validate('g2g.confirm_letter', req.body);
     var r = req.r;

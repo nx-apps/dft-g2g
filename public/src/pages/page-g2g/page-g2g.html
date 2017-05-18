@@ -246,7 +246,7 @@
           this.dataForSelected.dataForContract.buyer = data;
           this.notifyPath('dataForSelected.dataForContract.buyer');
         });
-        this.read('./common/type_rice', (data) => {
+        this.read(window._config.externalServerCommon+'/api/harmonize?group=g2g', (data) => {
 
           data.map((set_name) => {
             set_name.type_rice_name_th = '(' + set_name.type_rice_id + ') ' + set_name.type_rice_name_th

@@ -92,7 +92,7 @@
                     this._getDataForContract()
                 });
                 let date = [
-                    {date:'2017-05-08T02:16:12.878Z'},
+                    {date:'2017-05-08'},
                     {
                         date:'2017-05-08T07:16:12.878Z',
                         fu:[
@@ -107,12 +107,9 @@
                         ]
                     }
                 ]
-
-                // console.log(this.changeTime(date,5))
+                console.log(this.changeTime(date,-5))
             },
-            changeTime(data,timeZone) {
-
-                let newdata = []
+            changeTime:function(data,timeZone) {
                 let time
                 data.map((item,index) => {
                     for (var prop in item) {

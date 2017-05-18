@@ -4,59 +4,59 @@
       font-family: 'CSChatThaiUI', sans-serif;
       -webkit-font-smoothing: antialiased;
     }
-    
+
     .top {
       margin-top: 15px;
       font-size: var(--font-size-h5);
     }
-    
+
     table.gl-table-default {
       width: 98%;
       border: 1px solid #ddd;
       margin-bottom: 15px;
     }
-    
+
     paper-button {
       margin-top: 10px;
     }
-    
+
     gl-form-textarea {
       word-break: break-all;
     }
-    
+
     paper-icon-button {
       margin-top: 10px;
     }
-    
+
     paper-icon-button.crud {
       margin: 5px 5px 5px 5px;
     }
-    
+
     paper-icon-button.crud:hover {
       background-color: var(--paper-grey-200);
       border-radius: 5px;
       box-shadow: inset 0 0 3px 3px rgba(0, 0, 0, .2);
     }
-    
+
     paper-button.btnInTable {
       --paper-button: {
         margin-top: 0px;
         height: 30px;
       }
     }
-    
+
     gl-combo-box.InTable {
       margin-top: -20px;
     }
-    
+
     .numberBack {
       text-align: right;
     }
-    
+
     .btnCenter {
       text-align: center;
     }
-    
+
     iron-icon {
       height: 16px;
       width: 16px;
@@ -129,12 +129,12 @@
               <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
 
                 [[changeString2Num(item.*,'type_rice_quantity')]] [[_obCalcWeight(item.*,'type_rice_quantity')]]
-                <gl-form-input class="required" required allowed-pattern="[0-9||,||.]" format-number="on" disabled="[[isInputDisabled]]"
+                <gl-form-input class="required" id="[[index]]" required allowed-pattern="[0-9||,||.]" format-number="on" disabled="[[isInputDisabled]]"
                   label="{{localize('label_quantity')}}" placeholder="{{localize('label_quantity')}}" error-message="{{localize('label_error_quantity')}}"
-                  value="{{item.type_rice_quantity}}" name="type_rice_quantity"></gl-form-input>
+                  value="{{item.type_rice_quantity}}" name="type_rice_quantity" on-value-changed="getCostPrice"></gl-form-input>
 
               </gl-grid-col>
-              <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,2]]">[[changeString2Num(item.*,'tolerance_rate')]]
+              <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">[[changeString2Num(item.*,'tolerance_rate')]]
                 <gl-form-input class="required number" required maxlength="3" allowed-pattern="[0-9||,||.]" error-message="{{localize('label_error_tolerance_rate')}}"
                   disabled="[[isInputDisabled]]" label="{{localize('label_tolerance_rate')}}" value="{{item.tolerance_rate}}"
                   placeholder="{{localize('label_tolerance_rate')}}" error-message="{{localize('label_error_tolerance_rate')}}"
@@ -146,13 +146,21 @@
             </gl-grid-row>
 
             <gl-grid-row>
-              <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,6]]">
+              <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
                 <gl-form-input class="required" required disabled="[[isInputDisabled]]" label="{{localize('label_project_th')}}" placeholder="{{localize('label_project_th')}}"
                   value="{{item.project_th}}" error-message="{{localize('label_error_project_en')}}"></gl-form-input>
               </gl-grid-col>
-              <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,6]]">
+              <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
                 <gl-form-input class="required" required disabled="[[isInputDisabled]]" label="{{localize('label_project_en')}}" placeholder="{{localize('label_project_en')}}"
                   value="{{item.project_en}}" error-message="{{localize('label_error_project_en')}}"></gl-form-input>
+              </gl-grid-col>
+              <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
+                [[changeString2Num(item.*,'costpriceton')]]
+                <gl-form-input disabled format-number="on" label="{{localize('label_cost_price_ton')}}" placeholder="{{localize('label_cost_price_ton')}}" value="{{item.costpriceton}}"></gl-form-input>
+              </gl-grid-col>
+              <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
+                [[changeString2Num(item.*,'costprice')]]
+                <gl-form-input disabled format-number="on" label="{{localize('label_cost_price')}}" placeholder="{{localize('label_cost_price')}}" value="{{item.costprice}}"></gl-form-input>
               </gl-grid-col>
               <!-- <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
               <gl-form-input class="required" required disabled="[[isInputDisabled]]" label="ฤูดกาล (ไทย)" placeholder="กรุณาใส่ฤูดกาล" value="{{item.season_th}}"  name="season_th"></gl-form-input>
@@ -247,7 +255,7 @@
           <template is="dom-repeat" items="[[data.incoterms]]">
             <gl-combo-box id="incoterms-[[index]]" class="required" required disabled="[[isInputDisabled]]" label="{{localize('label_incoterms')}} [[_ObcountIndex(index)]]"
               error-message="{{localize('label_error_incoterms')}} [[_ObcountIndex(index)]]" placeholder="{{localize('label_incoterms')}} [[_ObcountIndex(index)]]"
-              item-label-path="inct_name" item-value-path="inct_id" value="{{item.inct_id}}" on-value-changed="_incotermsConfirm">
+              item-label-path="inct_name" item-value-path="inct_id" value="{{item.inct_id}}" on-blur="_incotermsConfirm">
               <template>
                 [[item.inct_name]]
               </template>
@@ -257,6 +265,20 @@
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
           <gl-form-input class="numberBack" disabled allowed-pattern="[0-9||,||.]" format-number="on" always-float-label label="{{localize('label_total_ton')}}"
             value="{{dataForSelect.cl_total_quantity}}"></gl-form-input>
+        </gl-grid-col>
+        <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
+          <gl-form-input class="numberBack" disabled allowed-pattern="[0-9||,||.]" format-number="on" always-float-label label="{{localize('label_total_cost_price_ton')}}"
+            value="{{data.cl_total_costpriceton}}"></gl-form-input>
+        </gl-grid-col>
+        <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,5]]">
+          <!--1-->
+        </gl-grid-col>
+        <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
+          <!--1-->
+        </gl-grid-col>
+        <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
+          <gl-form-input class="numberBack" disabled allowed-pattern="[0-9||,||.]" format-number="on" always-float-label label="{{localize('label_total_cost_price')}}"
+            value="{{data.cl_total_costprice}}"></gl-form-input>
         </gl-grid-col>
       </gl-grid-row>
       <gl-grid-row>
@@ -301,7 +323,7 @@
         },
         data: {
           type: Object,
-          value: { type_rice_quantity: 0, cl_type_rice: [{ package: [{ package_id: '', price_per_ton: 0, }] }], incoterms: [{ inct_id: 'd' }] }
+          value: { cl_total_costPrice: 0, type_rice_quantity: 0, cl_type_rice: [{ package: [{ package_id: '', price_per_ton: 0, }] }], incoterms: [{ inct_id: 'd' }] }
         },
       },
       observers: [
@@ -356,13 +378,48 @@
         let datas = this.data.cl_type_rice;
         for (index in datas) {
           total += parseFloat(datas[index].type_rice_quantity);
+
         }
         // console.log('total',total);
 
         // this.cl_total_quantity=this._isNan(total);
         this.dataForSelect.cl_total_quantity = this._isNan(total);
         this.notifyPath('dataForSelect.cl_total_quantity');
+
         // this.cl_total_quantity = numeral(total).format('0,0');
+
+      },
+      getCostPrice: function (e) {
+        try {
+          // const setData = (date)=> 
+          let index = e.currentTarget.id
+          let oldDate = new Date(this.data.cl_date)
+          let type_rice_quantity = e.model.item.type_rice_quantity
+          // console.log();
+          oldDate.setMonth(oldDate.getMonth() - 3)
+          let dataSend = {
+            startDate: oldDate.toISOString().split('T')[0],
+            endDate: this.data.cl_date,
+            hmcode: e.model.item.type_rice_id
+          }
+          this.read('./g2g/confirm/fp?' + this.genUrl(dataSend), (data) => {
+            let price = type_rice_quantity * data[0].fp3  * 1000
+            let ton = type_rice_quantity * data[0].fp3
+            // console.log(price);
+            // console.log(ton);
+            this.set('data.cl_type_rice.' + index + '.costpriceton', ton)
+             this.set('data.cl_type_rice.' + index + '.costprice', price)
+            let plus = this.data.cl_type_rice
+            // if(this.data.cl_total_costprice === undefined || this.data.cl_total_costprice === '')
+            //     this.data.cl_total_costprice = 0
+            let newCOse = Object.keys(plus).reduce((previous, current) => previous + plus[current].costpriceton, 0)
+            this.set('data.cl_total_costpriceton', newCOse)
+            let newCOses = Object.keys(plus).reduce((previous, current) => previous + plus[current].costprice, 0)
+            this.set('data.cl_total_costprice', newCOses)
+          })
+        } catch (e) {
+          // console.log(e);
+        } 
 
       },
       addNewTypeRice: function () {
@@ -410,7 +467,7 @@
           },
         ]
         // console.log(breadcrumbs);
-        this.fire('_set-breadcrumbs',breadcrumbs)
+        this.fire('_set-breadcrumbs', breadcrumbs)
         if (this.isInputDisabled == false) {
           this.editInput();
         }
@@ -435,7 +492,7 @@
               this.fire('toast', {
                 status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
                 callback: () => {
-                  
+
                   this.fire('back-page-confirm', { detail: '_back-page-confirm' });
                 }
               });
@@ -549,7 +606,7 @@
             this.fire('toast', {
               status: 'success', text: 'ลบสำเร็จ',  // คำสั่งสำหรับเปิด toast success
               callback: function () {
-                
+
                 //        //  detail.el.editInput();
                 detail.el.fire('back-page-confirm', { detail: '_back-page-confirm' });
                 // this.fire('get-confirm-detail', { clId: detail.data.id });
@@ -673,6 +730,8 @@
               tolerance_rate: cl_type_rice.tolerance_rate,
               project_th: cl_type_rice.project_th,
               project_en: cl_type_rice.project_en,
+              costpriceton: cl_type_rice.costpriceton,
+              costprice: cl_type_rice.costprice,
               // season_th:cl_type_rice.season_th,
               // season_en:cl_type_rice.season_en,
               //description_th:cl_type_rice.description_th,

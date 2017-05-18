@@ -3,6 +3,7 @@ module.exports = function (app) {
     app.get('/contract/id/:contract_id', controller.getByContractId);
     app.get('/id/:cl_id', controller.getById);
     app.get('/exporter', controller.getByExporterId)
+    app.get('/fp',controller.getFP);
     app.post('/insert', controller.insert);
     app.put('/update', controller.update);
     app.delete('/delete/id/:id', controller.delete);
