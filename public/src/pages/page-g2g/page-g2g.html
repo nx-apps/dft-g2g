@@ -242,11 +242,12 @@
       // },
       _getDataForContract: function () {
         //use data for contract
-        this.read('./common/buyer', (data) => {
+        this.read(window._config.externalServerCommon+'/api/buyer', (data) => {
           this.dataForSelected.dataForContract.buyer = data;
           this.notifyPath('dataForSelected.dataForContract.buyer');
+          console.log(11111111111);
         });
-        this.read(window._config.externalServerCommon+'/api/harmonize?group=g2g', (data) => {
+        this.read(window._config.externalServerCommon+'/api/hamonize?group=g2g', (data) => {
 
           data.map((set_name) => {
             set_name.type_rice_name_th = '(' + set_name.type_rice_id + ') ' + set_name.type_rice_name_th
@@ -257,7 +258,7 @@
           this.notifyPath('dataForSelected.dataForContract.typeRice');
           // console.log(this.dataForSelected.dataForContract);
         });
-        this.read('./common/incoterms', (data) => {
+        this.read(window._config.externalServerCommon+'/api/incoterms', (data) => {
           this.dataForSelected.dataForContract.incoterms = data;
           this.notifyPath('dataForSelected.dataForContract.incoterms');
         });
@@ -274,14 +275,14 @@
           this.notifyPath('dataForSelected.dataForBooking.seller');
           // console.log(this.common.seller);
         });
-        this.read('./common/carrier', (data) => {
+        this.read(window._config.externalServerCommon+'/api/carrier', (data) => {
 
           // console.log(data);
           this.dataForSelected.dataForBooking.carrier = data;
           this.notifyPath('dataForSelected.dataForBooking.carrier');
         });
         //shipline_id
-        this.read('./common/shipline/', (data) => {
+        this.read(window._config.externalServerCommon+'/api/shipline/', (data) => {
           data.map((item, index) => {
             item.text = item.shipline_name
           })
@@ -290,7 +291,7 @@
           this.notifyPath('dataForSelected.dataForBooking.shipline');
         });
         //ship in shipline
-        this.read('./common/shipline/ship', (data) => {
+        this.read(window._config.externalServerCommon+'/api/shipline/ship', (data) => {
           data.map((item, index) => {
             item.ship.map((sp) => {
               sp.text = sp.ship_name
@@ -301,12 +302,12 @@
           this.notifyPath('dataForSelected.dataForBooking.shipInShipline');
         });
         //get surveyor_id
-        this.read('./common/surveyor', (data) => {
+        this.read(window._config.externalServerCommon+'/api/surveyor', (data) => {
           this.dataForSelected.dataForBooking.surveyor = data;
           this.notifyPath('dataForSelected.dataForBooking.surveyor');
         });
         // list port
-        this.read('./common/port/', (data) => {
+        this.read(window._config.externalServerCommon+'/api/port/', (data) => {
           this.dataForSelected.dataForBooking.countryPort = data;
           this.notifyPath('dataForSelected.dataForBooking.countryport');
         });
@@ -315,11 +316,11 @@
       // end_getContractList
       _getDataForConfirm: function () {
         //ชนิดข้าวเอามาจากสัญญา
-        this.read('./common/package', (data) => {
+        this.read(window._config.externalServerCommon+'/api/package', (data) => {
           this.dataForSelected.dataForConfirm.package = data;
           this.notifyPath('dataForSelected.dataForConfirm.package');
         });
-        this.read('./common/incoterms', (data) => {
+        this.read(window._config.externalServerCommon+'/api/incoterms', (data) => {
           this.dataForSelected.dataForConfirm.incoterms = data;
           this.notifyPath('dataForSelected.dataForConfirm.incoterms');
         });

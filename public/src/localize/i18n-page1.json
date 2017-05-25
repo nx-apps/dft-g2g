@@ -71,6 +71,7 @@
         "label_error_order":"กรุณากรอกลำดับที่",
 
         "":"Confrim",
+        "label_cl_close":"ปิดยอดการชำระ",
         "label_quantity_confirm":"ปริมาณทั้งหมด (ตัน)",
         "label_quantity_confirm_delivery":"ปริมาณที่ส่งมอบ (ตัน)",
         "label_quantity_tolerance":"ปริมาณที่ขาด/เกิน (ตัน)",

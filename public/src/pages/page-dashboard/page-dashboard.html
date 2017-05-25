@@ -138,11 +138,11 @@
             },
             _getDataForContract: function () {
                 //use data for contract
-                this.read('./common/buyer', (data) => {
+                this.read(window._config.externalServerCommon+'/api/buyer', (data) => {
                     this.dataForSelected.dataForContract.buyer = data;
                     this.notifyPath('dataForSelected.dataForContract.buyer');
                 });
-                this.read('./common/type_rice', (data) => {
+                this.read(window._config.externalServerCommon+'/api/hamonize?group=g2g', (data) => {
                     data.map((set_name) => {
                         set_name.type_rice_name_th = '('+ set_name.type_rice_id+ ') ' +set_name.type_rice_name_th
                         set_name.type_rice_name_en = '('+ set_name.type_rice_id+ ') ' +set_name.type_rice_name_en
@@ -151,7 +151,7 @@
                     this.notifyPath('dataForSelected.dataForContract.typeRice');
                     // console.log(this.dataForSelected);
                 });
-                this.read('./common/incoterms', (data) => {
+                this.read(window._config.externalServerCommon+'/api/incoterms', (data) => {
                     this.dataForSelected.dataForContract.incoterms = data;
                     this.notifyPath('dataForSelected.dataForContract.incoterms');
                 });

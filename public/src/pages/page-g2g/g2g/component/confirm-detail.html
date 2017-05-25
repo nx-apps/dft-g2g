@@ -71,6 +71,9 @@
       <paper-button raised on-tap="backPageInsert" class="gl-btn-default" hidden="[[isViewSeleted]]">{{localize('btn_back_ward')}}</paper-button>
     </template>
     <gl-form-panel set-padding="10px 20px 10px 20px" set-border="1px">
+      <div class="horizontal end-justified layout">
+        <paper-button class="gl-btn-success" on-tap="" raised hidden="[[data.cl_close]]">{{localize('label_cl_close')}}</paper-button>
+      </div>
       <template is="dom-if" if="[[!data.cl_status]]">
         <template is="dom-if" if="[[isViewSeleted]]">
           <!--<gl-form-panel-head label="" set-padding="10px" set-border="1px">-->
@@ -380,7 +383,6 @@
           total += parseFloat(datas[index].type_rice_quantity);
 
         }
-        // console.log('total',total);
 
         // this.cl_total_quantity=this._isNan(total);
         this.dataForSelect.cl_total_quantity = this._isNan(total);
@@ -405,8 +407,6 @@
           this.read('./g2g/confirm/fp?' + this.genUrl(dataSend), (data) => {
             let price = type_rice_quantity * data[0].fp3  * 1000
             let ton = type_rice_quantity * data[0].fp3
-            // console.log(price);
-            // console.log(ton);
             this.set('data.cl_type_rice.' + index + '.costpriceton', ton)
              this.set('data.cl_type_rice.' + index + '.costprice', price)
             let plus = this.data.cl_type_rice
@@ -482,6 +482,7 @@
         // console.log(this.dataForSelect);
         this.set('data.tags', [this.dataForSelect.buyer_id, this.dataForSelect.country_id]);
         // console.log(this.data);
+        this.data.cl_close = false
         this._clearnDataConfirm(this.data, (data) => {
           if (this.dataForSelect.cl_total_quantity <= this.dataForSelect.contract_quantity_confirm_balance) {
             data.contract_id = this.dataForSelect.contract_id;
@@ -621,11 +622,6 @@
         }
       },
       _typeRiceConfirm: function () {
-        // try {
-        //   console.log('this.data.cl_type_rice',this.data.cl_type_rice);
-        // } catch (e) {
-        //   console.log(e);
-        // }
         // console.log('this.data.cl_type_rice',this.data.cl_type_rice);
         this.async(() => {
           let comboboxs, arrForItem, itemif;
@@ -713,8 +709,8 @@
         let el = Polymer.dom(this.root).querySelectorAll('.required');
         let stat = el.map((el) => el.validate());
         if (stat.every(elem => elem == true)) {
-          let { cl_date, cl_no, cl_quality, cl_status } = data;
-          let newData = { cl_date, cl_no, cl_quality, cl_status };
+          let { cl_date, cl_no, cl_quality, cl_status,cl_close } = data;
+          let newData = { cl_date, cl_no, cl_quality, cl_status,cl_close };
           newData.cl_type_rice = [];
           newData.incoterms = [];
           newData.cl_date = new Date(newData.cl_date);

@@ -79,6 +79,9 @@
         },
         "cl_status": {
             "type": "boolean"
+        },
+        "cl_close": {
+            "type": "boolean"
         }
     },
     "required": [
@@ -86,6 +89,7 @@
         "cl_date",
         "cl_type_rice",
         "incoterms",
-        "cl_status"
+        "cl_status",
+        "cl_close"
     ]
 }
