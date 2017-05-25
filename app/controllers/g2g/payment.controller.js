@@ -163,7 +163,7 @@ exports.getSilo = function (req, res) {
          INNER JOIN dft_product p on p.status = bk.book_id 
          GROUP BY  bk.Keyword,bk.Status `
         ,
-        ["GG%", "W%"],
+        ["GG%", "R3%"],
         function (err, data) {
             res.send(data);
         });

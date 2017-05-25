@@ -43,11 +43,17 @@
           // observer: 'setDefaultDate'
         },
       },
+      observers:[
+        'check(data)'
+      ],
       listeners: {
         '_change-component-book': '_changeComponentBook',
         '_get-shm-detail': '_getShmDetail',
         '_get-fire-shm-detail': '_getFireShmDetail',
         '_edit-booking-detail': '_editBooking'
+      },
+      check(data){
+        // console.log(data);
       },
       setPageseleted: function () {
         this.set('subPageSelected', 'list-of-shm-det')

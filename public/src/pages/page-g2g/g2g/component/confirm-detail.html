@@ -71,9 +71,9 @@
       <paper-button raised on-tap="backPageInsert" class="gl-btn-default" hidden="[[isViewSeleted]]">{{localize('btn_back_ward')}}</paper-button>
     </template>
     <gl-form-panel set-padding="10px 20px 10px 20px" set-border="1px">
-      <div class="horizontal end-justified layout">
+      <!--<div class="horizontal end-justified layout">
         <paper-button class="gl-btn-success" on-tap="" raised hidden="[[data.cl_close]]">{{localize('label_cl_close')}}</paper-button>
-      </div>
+      </div>-->
       <template is="dom-if" if="[[!data.cl_status]]">
         <template is="dom-if" if="[[isViewSeleted]]">
           <!--<gl-form-panel-head label="" set-padding="10px" set-border="1px">-->
@@ -482,7 +482,7 @@
         // console.log(this.dataForSelect);
         this.set('data.tags', [this.dataForSelect.buyer_id, this.dataForSelect.country_id]);
         // console.log(this.data);
-        this.data.cl_close = false
+        // this.data.cl_close = false
         this._clearnDataConfirm(this.data, (data) => {
           if (this.dataForSelect.cl_total_quantity <= this.dataForSelect.contract_quantity_confirm_balance) {
             data.contract_id = this.dataForSelect.contract_id;
@@ -709,8 +709,8 @@
         let el = Polymer.dom(this.root).querySelectorAll('.required');
         let stat = el.map((el) => el.validate());
         if (stat.every(elem => elem == true)) {
-          let { cl_date, cl_no, cl_quality, cl_status,cl_close } = data;
-          let newData = { cl_date, cl_no, cl_quality, cl_status,cl_close };
+          let { cl_date, cl_no, cl_quality, cl_status } = data;
+          let newData = { cl_date, cl_no, cl_quality, cl_status };
           newData.cl_type_rice = [];
           newData.incoterms = [];
           newData.cl_date = new Date(newData.cl_date);

@@ -34,7 +34,7 @@
     "paper-button": "PolymerElements/paper-button#^1.0.14",
     "paper-fab": "PolymerElements/paper-fab#^1.2.1",
     "paper-tooltip": "PolymerElements/paper-tooltip#^1.1.3",
-    "nylon-toast": "^0.0.2",
+    "nylon-toast": "^0.0.5",
     "vaadin-date-picker": "glon-gl-date-picker#^0.0.6",
     "gl-grid": "glon-gl-grid#^0.1.2",
     "gl-form": "9lon/gl-form#^0.4.2",

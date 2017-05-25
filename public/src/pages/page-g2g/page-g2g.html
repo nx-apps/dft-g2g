@@ -245,7 +245,7 @@
         this.read(window._config.externalServerCommon+'/api/buyer', (data) => {
           this.dataForSelected.dataForContract.buyer = data;
           this.notifyPath('dataForSelected.dataForContract.buyer');
-          console.log(11111111111);
+          // console.log(11111111111);
         });
         this.read(window._config.externalServerCommon+'/api/hamonize?group=g2g', (data) => {
 
@@ -532,7 +532,8 @@
           this.set('pageSelected', 'list-of-booking')
           this.titlePanelRight = 'รายการส่งมอบสินค้า : ' + e.detail.data.contract_name
           this.set('dataForSelected.dataForBooking.contract_name', e.detail.data.contract_name)
-
+          // console.log(this.dataForSelected.dataForBooking)
+          // console.log(e.detail.data.book);
           let datass = [
             {
               label: e.detail.data.contract_name,
@@ -571,6 +572,7 @@
           // })
           this.dataSelected = e.detail.data;
           // console.log(this.dataSelected);
+          this.set('dataForSelected.dataForBooking.book', e.detail.data.book);
           this.set('dataForSelected.dataForBooking.contract_id', e.detail.data.contract_id);
           this.set('dataForSelected.dataForBooking.buyer_id', e.detail.data.buyer_id);
           // console.log(this.dataForSelected.dataForBooking);

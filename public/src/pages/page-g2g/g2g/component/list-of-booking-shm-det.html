@@ -4,35 +4,34 @@
      :host {
       display: block;
     }
-    
+
     .textinPut {
       margin-bottom: 30px;
     }
-    
+
     table {
       border: 0.16px solid #F1F1F1;
       margin-bottom: 16px;
     }
-    
+
     table.gl-table-default>thead.table-head>tr>th,
     table.gl-table-default>tbody.table-body>tr>td {
       text-align: center;
     }
-    
+
     table.gl-table-default>tbody.table-body>tr>td {
       cursor: pointer;
     }
-    
+
     .gl-btn-info {
       font-family: 'CSChatThaiUI', sans-serif;
       -webkit-font-smoothing: antialiased;
       font-size: 14px;
     }
-    /*table.gl-table-default > thead.table-head > tr > th:nth-child(3),
-    table.gl-table-default > tbody.table-body > tr > td:nth-child(3){
-      width: 33%;
-      text-align: right;
-    }*/
+   .title-ber {
+     font-size: 35px;
+     font-weight: bold;
+   }
   </style>
   <template>
     <!--<paper-button class="gl-btn-default" raised on-tap="backWard2BookingInConfirm">
@@ -47,9 +46,18 @@
     </gl-combo-box>
     <gl-form-panel set-padding="10px 20px 10px 20px" set-border="1px">
       <gl-form-panel-head set-padding="10px" set-border="1px">
-        <div class="addconfirm horizontal end-justified layout">
-          <paper-button raised class="gl-btn-primary" disabled="[[_isSeleted(cl_id)]]" on-tap="createBooking">{{localize('btn_add_booking')}}</paper-button>
-        </div>
+
+          <div class="addconfirm horizontal end-justified layout">
+            
+            <div class="title-ber" hidden="{{!cl_close}}">
+              ปิดยอดการชำระ
+            </div>
+
+            <paper-button raised class="gl-btn-primary" disabled="[[_isSeleted(cl_id)]]" on-tap="createBooking" hidden="{{cl_close}}">{{localize('btn_add_booking')}}</paper-button>
+          </div>
+
+
+
       </gl-form-panel-head>
       <br>
       <gl-grid-row width="{{getWidth}}">
@@ -118,27 +126,57 @@
         dataForSelect: {
           type: Object,
           notify: true
+        },
+        cl_close: {
+          type: Boolean,
+          value: false
         }
       },
       observers: [
         // '_checkConfirm(dataForSelect.conFirmApprove)',
         // '_changeGetBook(dataForSelect.bookBl.*)',
-        '_setDefalseData(dataForSelect.conFirmApprove,dataForSelect.bookBl)'
+        '_setDefalseData(dataForSelect.conFirmApprove,dataForSelect.bookBl)',
+        'checkCl_close(cl_id)'
       ],
       _setDefalseData(conFirmApprove, bookBl) {
         this.set('cl_id', '')
         this.set('data', '')
         // console.log(this.cl_id);
       },
-      _isSeleted(data){
-       return data === ''
+      checkCl_close(cl_id) {
+        try {
+          // let x = this.dataForSelect.conFirmApprove.find((id) => id.cl_id = cl_id)
+          // console.log(this.dataForSelect);
+          // console.log(cl_id);
+          // console.log(this.dataForSelect.bookApp);
+          let sets = this.dataForSelect.bookApp.find((item) => item.cl_id === cl_id)
+          // console.log('xxxxx',sets);
+          // console.log(11111,sets.cl_quantity_total);
+          let sum = sets.cl_quantity_total - sets.book_quantity
+          // console.log(sum);
+          if (sum <= 0) {
+            this.set('cl_close',true)
+          }else {
+            this.set('cl_close',false)
+            // console.log(this.cl_close);
+          }
+          // console.log(sets);
+        } catch (e) {
+
+        } finally {
+
+        }
+
+      },
+      _isSeleted(data) {
+        return data === ''
       },
       setLabel(data) {
         try {
           // console.log(111111);
           // console.log(data);
-          let con =  data.map((data) => data.cl_no = 'สัญญาที่ ' + data.cl_no + ' ปริมาณข้าว ' + this.formatNumberNoZero(data.cl_quantity_total) + ' ตัน'
-         )
+          let con = data.map((data) => data.cl_no = 'สัญญาที่ ' + data.cl_no + ' ปริมาณข้าว ' + this.formatNumberNoZero(data.cl_quantity_total) + ' ตัน'
+          )
           // console.log(con);
         } catch (e) {
 
@@ -176,6 +214,8 @@
         this.nylonLocalizeImport('/i18n-page1.json');
       },
       createBooking: function () {
+        // console.log(this.data);
+        // console.log(this.dataForSelect.bookApp);
         this.fire('_change-component-book', { detail: 'list-of-booking-add' })
       },
       getShmDetail: function (e) {

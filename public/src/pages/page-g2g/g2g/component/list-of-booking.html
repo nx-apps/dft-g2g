@@ -15,8 +15,8 @@
       </div> -->
     <!--<div name="list-of-booking-shm-det">-->
 
-    <list-of-booking-detail data-default="[[dataDefault]]" page-selected="{{pageSelected}}"  data="{{dataSelected}}" data-for-select="[[dataForSelect]]"></list-of-booking-detail>
-    
+    <list-of-booking-detail data-default="[[dataDefault]]" page-selected="{{pageSelected}}" data="{{dataSelected}}" data-for-select="[[dataForSelect]]"></list-of-booking-detail>
+
     <!--</div>
     </iron-pages>-->
 
@@ -115,11 +115,11 @@
               this.set('dataForSelect.cl_id', e.detail.detail.cl_id);
               // console.log(11111111111);
               // if (typeof this.dataForSelect.cl_type_rice === 'undefined') {
-                // e.detail.detail.cl_type_rice.map((set_name) => {
-                //   set_name.type_rice_name_th = '(' + set_name.type_rice_id + ') ' + set_name.type_rice_name_th
-                //   set_name.type_rice_name_en = '(' + set_name.type_rice_id + ') ' + set_name.type_rice_name_en
-                // })
-                this.set('dataForSelect.cl_type_rice', e.detail.detail.cl_type_rice);
+              // e.detail.detail.cl_type_rice.map((set_name) => {
+              //   set_name.type_rice_name_th = '(' + set_name.type_rice_id + ') ' + set_name.type_rice_name_th
+              //   set_name.type_rice_name_en = '(' + set_name.type_rice_id + ') ' + set_name.type_rice_name_en
+              // })
+              this.set('dataForSelect.cl_type_rice', e.detail.detail.cl_type_rice);
               // }
 
               // console.log('>>>>>3', this.dataForSelect.cl_type_rice.length);
@@ -142,14 +142,16 @@
           let conFirmApprove = this.data.confirm_letter.filter((status) => status.cl_status == true)
           let arr = []
           conFirmApprove.map((data) => {
-            // data.cl_no_name = data.cl_no 
-            arr.push({cl_no: 'สัญญาที่ ' + data.cl_no + ' ปริมาณข้าว ' + this.formatNumberNoZero(data.cl_quantity_total) + ' ตัน',
-            cl_id:data.cl_id})
-            // data.cl_no = 'สัญญาที่ ' + data.cl_no + ' ปริมาณข้าว ' + this.formatNumberNoZero(data.cl_quantity_total) + ' ตัน'
-            
+          //  console.log(data);
+            arr.push({
+              cl_no: 'สัญญาที่ ' + data.cl_no + ' ปริมาณข้าว ' + this.formatNumberNoZero(data.cl_quantity_total) + ' ตัน',
+              cl_id: data.cl_id
+            })
           })
+          let bookApp = this.dataForSelect.book.filter((status) => status.cl_status == true)
           // console.log(arr);
-          
+          // console.log(bookApp);
+          this.set('dataForSelect.bookApp', bookApp);
           this.set('dataForSelect.conFirmApprove', arr);
           this.set('dataForSelect.bookBl', this.data.book);
           // console.log(this.data);
