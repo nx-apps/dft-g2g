@@ -158,12 +158,14 @@
                   value="{{item.project_en}}" error-message="{{localize('label_error_project_en')}}"></gl-form-input>
               </gl-grid-col>
               <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
-                [[changeString2Num(item.*,'costpriceton')]]
-                <gl-form-input disabled format-number="on" label="{{localize('label_cost_price_ton')}}" placeholder="{{localize('label_cost_price_ton')}}" value="{{item.costpriceton}}"></gl-form-input>
+                [[changeString2Num(item.*,'costpriceton')]] 
+                <gl-form-input disabled format-number="on" value="[[item.costpriceton]]" label="{{localize('label_cost_price_ton')}}"></gl-form-input>
+               <!--{{item.costpriceton}}-->
               </gl-grid-col>
               <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
-                [[changeString2Num(item.*,'costprice')]]
-                <gl-form-input disabled format-number="on" label="{{localize('label_cost_price')}}" placeholder="{{localize('label_cost_price')}}" value="{{item.costprice}}"></gl-form-input>
+                [[changeString2Num(item.*,'costprice')]] 
+                <gl-form-input disabled format-number="on" value="[[item.costprice]]" label="{{localize('label_cost_price')}}" ></gl-form-input>
+              <!--{{item.costprice}}-->
               </gl-grid-col>
               <!-- <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
               <gl-form-input class="required" required disabled="[[isInputDisabled]]" label="ฤูดกาล (ไทย)" placeholder="กรุณาใส่ฤูดกาล" value="{{item.season_th}}"  name="season_th"></gl-form-input>
@@ -270,8 +272,7 @@
             value="{{dataForSelect.cl_total_quantity}}"></gl-form-input>
         </gl-grid-col>
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
-          <gl-form-input class="numberBack" disabled allowed-pattern="[0-9||,||.]" format-number="on" always-float-label label="{{localize('label_total_cost_price_ton')}}"
-            value="{{data.cl_total_costpriceton}}"></gl-form-input>
+          <gl-form-input class="numberBack" disabled  format-number="on" label="{{localize('label_total_cost_price_ton')}}" value="[[data.cl_total_costpriceton]]"></gl-form-input>
         </gl-grid-col>
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,5]]">
           <!--1-->
@@ -280,8 +281,7 @@
           <!--1-->
         </gl-grid-col>
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
-          <gl-form-input class="numberBack" disabled allowed-pattern="[0-9||,||.]" format-number="on" always-float-label label="{{localize('label_total_cost_price')}}"
-            value="{{data.cl_total_costprice}}"></gl-form-input>
+          <gl-form-input class="numberBack" disabled  format-number="on" label="{{localize('label_total_cost_price')}}"value="[[data.cl_total_costprice]]"></gl-form-input>
         </gl-grid-col>
       </gl-grid-row>
       <gl-grid-row>
@@ -396,7 +396,7 @@
           // const setData = (date)=> 
           let index = e.currentTarget.id
           let oldDate = new Date(this.data.cl_date)
-          let type_rice_quantity = e.model.item.type_rice_quantity
+          let type_rice_quantity = JSON.parse(JSON.stringify(e.model.item.type_rice_quantity))
           // console.log();
           oldDate.setMonth(oldDate.getMonth() - 3)
           let dataSend = {
@@ -405,17 +405,22 @@
             hmcode: e.model.item.type_rice_id
           }
           this.read('./g2g/confirm/fp?' + this.genUrl(dataSend), (data) => {
-            let price = type_rice_quantity * data[0].fp3  * 1000
-            let ton = type_rice_quantity * data[0].fp3
+            // JSON.parse(JSON.stringify(this.dataForSelect.contract_type_rice));
+            let price = (type_rice_quantity* 1000) * data[0].fp3
+            let ton = data[0].fp3
+            // console.log(price,ton);
+            this.set('costprice',price)
+            this.set('costpriceton',ton)
+            // console.log('costprice',this.costprice,'costpriceton',this.costpriceton);
+            this.set('data.cl_type_rice.' + index + '.costprice', price)
             this.set('data.cl_type_rice.' + index + '.costpriceton', ton)
-             this.set('data.cl_type_rice.' + index + '.costprice', price)
             let plus = this.data.cl_type_rice
-            // if(this.data.cl_total_costprice === undefined || this.data.cl_total_costprice === '')
-            //     this.data.cl_total_costprice = 0
-            let newCOse = Object.keys(plus).reduce((previous, current) => previous + plus[current].costpriceton, 0)
-            this.set('data.cl_total_costpriceton', newCOse)
-            let newCOses = Object.keys(plus).reduce((previous, current) => previous + plus[current].costprice, 0)
-            this.set('data.cl_total_costprice', newCOses)
+
+            let costpriceton = Object.keys(plus).reduce((previous, current) => previous + plus[current].costpriceton, 0)
+            this.set('data.cl_total_costpriceton', this.costpriceton)
+
+            let costpricex = Object.keys(plus).reduce((previous, current) => previous + plus[current].costprice, 0)
+            this.set('data.cl_total_costprice', this.costprice)
           })
         } catch (e) {
           // console.log(e);
