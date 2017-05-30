@@ -283,115 +283,34 @@
   <script>
     Polymer({
       is: "page-admin-exporter",
-      properties: {
-        layerContent: {
-          type: String,
-          value: "detailRegExporter"
-        },
-        dataSelected: {
-          type: Object,
-          value: {}
-        },
-        localize:{
-          statePath : 'i18n.exporter'
-        },
-        exporters:{
-          statePath : 'exporter.list'
-        },
-        typeLic:{
-          statePath : 'exporter.typeLic'
-        }
-        // activeItem: {
-        //   observer: '_activeItemChanged'
-        // }
-      },
+      // properties: {
+      //   layerContent: {
+      //     type: String,
+      //     value: "detailRegExporter"
+      //   },
+      //   dataSelected: {
+      //     type: Object,
+      //     value: {}
+      //   },
+      //   localize:{
+      //     statePath : 'i18n.exporter'
+      //   },
+      //   exporters:{
+      //     statePath : 'exporter.list'
+      //   },
+      //   typeLic:{
+      //     statePath : 'exporter.typeLic'
+      //   }
+      //   // activeItem: {
+      //   //   observer: '_activeItemChanged'
+      //   // }
+      // },
       behaviors: [ReduxBehavior, nylonBehavior, i18nAction, exporterAction, uploadAction],
       nylonPageActive: function () {
-        this.dispatchAction('EXPORTER_GET_DATA');
-        this.dispatchAction('EXPORTER_GET_TYPE_LIC');
+        // this.dispatchAction('EXPORTER_GET_DATA');
+        // this.dispatchAction('EXPORTER_GET_TYPE_LIC');
       },
-      _register: function (e) {
-        window.open('./admin-confirm');
-      },
-      _selectData: function (e) {
-        var companyId = e.currentTarget.data.company_id;
-        this.dispatchAction('EXPORTER_GET_FILE_DELETE',companyId);
-        var exporterId = e.currentTarget.data.id;
-        this.dispatchAction('EXPORTER_GET_DATA_ID',exporterId);
-        this.dispatchAction('EXPORTER_GET_TYPE_LIC');
-        this.dispatchAction('EXPORTER_GET_DOC_TYPE');
-        this.layerContent = "detailRegExporter";
-        this.titleName = 'ข้อมูลผู้ส่งออก';
-        this.$$('panel-right').open();
-        this.$$('member-page')._backpage();
-      },
-      _checkID:function(id){
-        if(id.detail.value !== "" && typeof id.detail.value !== 'undefined'){
-          var id = id.detail.value;
-        this.dispatchAction('EXPORTER_GET_DATA_ID',id);
-        this.dispatchAction('EXPORTER_GET_TYPE_LIC');
-        this.dispatchAction('EXPORTER_GET_DOC_TYPE');
-        this.layerContent = "detailRegExporter";
-        this.titleName = 'ข้อมูลผู้ส่งออก';
-        this.$$('panel-right').open();
-        this.$$('member-page')._backpage();
-        var searchId = this.exporters.filter((item) => {
-                            return item.id == id
-                          })
-        var companyId = searchId[0].company_id;
-        this.dispatchAction('EXPORTER_GET_FILE_DELETE',companyId);
-
-        }
-      },
-      _search: function () {
-        this.fire('toast', { status: 'load' })
-        // console.log(this.dataSelected);
-        var str = '';
-        for (key in this.dataSelected) {
-          if (this.dataSelected[key] != '' && this.dataSelected[key] != null) {
-            if (str == '') { str += '?' } else { str += '&' }
-            str += key + '=' + this.dataSelected[key];
-          }
-        }
-        if (this.dataSelected.date_start != undefined && this.dataSelected.date_start != '' && (this.dataSelected.date_end == undefined || this.dataSelected.date_end == '')) {
-          this.fire('toast', { status: 'connectError', text: 'กรุณาใส่วันที่สิ้นสุดค้นหา' })
-        }
-        else if (this.dataSelected.date_end != undefined && this.dataSelected.date_end != '' && (this.dataSelected.date_start == undefined || this.dataSelected.date_start == '')) {
-          this.fire('toast', { status: 'connectError', text: 'กรุณาใส่วันที่เริ่มต้นค้นหา' })
-        }
-        // console.log(str);
-        this.dispatchAction('EXPORTER_SEARCH', str);
-        // this.read('./external/exporter' + str, (data) => {
-        //   data.map((item) => {
-        //     for (var key in item) {
-        //       if (item[key] === '') {
-        //         item[key] = '-';
-        //       }
-        //     }
-        //   })
-        //   this.exporters = data;
-        //   this.fire('toast', { status: 'success', text: 'ค้นหาข้อมูลสำเร็จ', callback:function(){} })
-        // })
-        return str;
-      },
-      _report: function (e) {
-        var str = this._search();
-        window.open('./api/external/report_exporter/' + e.target.getAttribute('report') + (str != '' ? str : ''), '_blank');
-      },
-      _checkData:function(val){
-        if(val.length > 0){
-          return false
-        }
-        else{
-          return true
-        }
-      },
-      toIndex:function(index){
-        return index+1;
-      }
-      // _activeItemChanged: function(item) {
-      //   console.log(item);
-      //   }
+      
     });
   </script>
 </dom-module>

@@ -1,0 +1,32 @@
+
+<link rel="import" href="./../../layout/page-style.html">
+
+<dom-module id="page-buyer-list">
+    <template>
+        <style include="page-style">
+             :host {
+                display: block;
+            }
+        </style>
+        <div class="material">
+            page-buyer-list ddd
+        </div>
+
+    </template>
+    <script>
+        Polymer({
+            is: 'page-buyer-list',
+            behaviors: [ReduxBehavior, nylonBehavior, i18nAction,],
+            properties: {
+                layerContent: {
+                    type: String,
+                    value: "detailRegExporter"
+                },
+            },
+            nylonPageActive: function () {
+                // this.dispatchAction('EXPORTER_GET_DATA');
+                // this.dispatchAction('EXPORTER_GET_TYPE_LIC');
+            },
+        });
+    </script>
+</dom-module>

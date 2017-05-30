@@ -1,0 +1,27 @@
+
+<dom-module id="page-contract-list">
+    <template>
+        <style>
+            :host {
+                display: block;
+            }
+        </style>
+        page-contract-list
+    </template>
+    <script>
+        Polymer({
+            is: 'page-contract-list',
+            behaviors: [ReduxBehavior, nylonBehavior, i18nAction,],
+            properties: {
+                layerContent: {
+                    type: String,
+                    value: "detailRegExporter"
+                },
+            },
+            nylonPageActive: function () {
+                // this.dispatchAction('EXPORTER_GET_DATA');
+                // this.dispatchAction('EXPORTER_GET_TYPE_LIC');
+            },
+        });
+    </script>
+</dom-module>
