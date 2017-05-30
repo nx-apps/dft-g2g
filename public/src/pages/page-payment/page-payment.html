@@ -413,7 +413,7 @@
         });
       },
       _getBank: function () {
-        this.read('./common/bank', (data) => {
+        this.read(window._config.externalServerCommon+'/api/bank', (data) => {
           this.dataForSelect.dataBank = data;
           this.notifyPath('dataForSelect.dataBank');
           // console.log(this.dataForSelect.dataBank);

@@ -30,12 +30,12 @@
       --paper-fab-background: var(--paper-light-blue-500);
       --paper-fab-keyboard-focus-background: var(--paper-light-blue-900);
     }
-    
+
     * {
       font-family: 'CSChatThaiUI', sans-serif;
       -webkit-font-smoothing: antialiased;
     }
-    
+
     paper-fab {
       position: fixed;
       right: 25px;
@@ -43,20 +43,20 @@
       color: #fff;
       /*--paper-fab-background: var(--paper-light-blue-500);*/
     }
-    
+
     .addContract {
       margin: 16px;
       margin-bottom: 80px;
       padding: 7.5px;
       /*border: 1px solid var(--gl-gray-light-color);*/
     }
-    
+
     nylon-panel-right {
       --app-toolbar-style: {
         background-color: #FF5000;
       }
     }
-    
+
     .breadcrumbs {
       margin: 38px 38px 0px 38px;
       border-bottom: 1px solid #ccc!important;
@@ -242,12 +242,12 @@
       // },
       _getDataForContract: function () {
         //use data for contract
-        this.read(window._config.externalServerCommon+'/api/buyer', (data) => {
+        this.read(window._config.externalServerCommon + '/api/buyer', (data) => {
           this.dataForSelected.dataForContract.buyer = data;
           this.notifyPath('dataForSelected.dataForContract.buyer');
           // console.log(11111111111);
         });
-        this.read(window._config.externalServerCommon+'/api/hamonize?group=g2g', (data) => {
+        this.read(window._config.externalServerCommon + '/api/hamonize?group=g2g', (data) => {
 
           data.map((set_name) => {
             set_name.type_rice_name_th = '(' + set_name.type_rice_id + ') ' + set_name.type_rice_name_th
@@ -258,7 +258,7 @@
           this.notifyPath('dataForSelected.dataForContract.typeRice');
           // console.log(this.dataForSelected.dataForContract);
         });
-        this.read(window._config.externalServerCommon+'/api/incoterms', (data) => {
+        this.read(window._config.externalServerCommon + '/api/incoterms', (data) => {
           this.dataForSelected.dataForContract.incoterms = data;
           this.notifyPath('dataForSelected.dataForContract.incoterms');
         });
@@ -266,7 +266,7 @@
       },
       _getDataForShipment: function () {
         // call data
-        this.read(window._config.externalServer+'/api/external/exporter', (data) => {
+        this.read(window._config.externalServer + '/api/external/exporter', (data) => {
           data.map((set_name) => {
             set_name.company_name_th = '' + set_name.exporter_no_name + ' [' + set_name.company_taxno + '] ' + set_name.company_name_th
           })
@@ -275,14 +275,14 @@
           this.notifyPath('dataForSelected.dataForBooking.seller');
           // console.log(this.common.seller);
         });
-        this.read(window._config.externalServerCommon+'/api/carrier', (data) => {
+        this.read(window._config.externalServerCommon + '/api/carrier', (data) => {
 
           // console.log(data);
           this.dataForSelected.dataForBooking.carrier = data;
           this.notifyPath('dataForSelected.dataForBooking.carrier');
         });
         //shipline_id
-        this.read(window._config.externalServerCommon+'/api/shipline/', (data) => {
+        this.read(window._config.externalServerCommon + '/api/shipline/', (data) => {
           data.map((item, index) => {
             item.text = item.shipline_name
           })
@@ -291,7 +291,7 @@
           this.notifyPath('dataForSelected.dataForBooking.shipline');
         });
         //ship in shipline
-        this.read(window._config.externalServerCommon+'/api/shipline/ship', (data) => {
+        this.read(window._config.externalServerCommon + '/api/shipline/ship', (data) => {
           data.map((item, index) => {
             item.ship.map((sp) => {
               sp.text = sp.ship_name
@@ -302,12 +302,12 @@
           this.notifyPath('dataForSelected.dataForBooking.shipInShipline');
         });
         //get surveyor_id
-        this.read(window._config.externalServerCommon+'/api/surveyor', (data) => {
+        this.read(window._config.externalServerCommon + '/api/surveyor', (data) => {
           this.dataForSelected.dataForBooking.surveyor = data;
           this.notifyPath('dataForSelected.dataForBooking.surveyor');
         });
         // list port
-        this.read(window._config.externalServerCommon+'/api/port/', (data) => {
+        this.read(window._config.externalServerCommon + '/api/port/', (data) => {
           this.dataForSelected.dataForBooking.countryPort = data;
           this.notifyPath('dataForSelected.dataForBooking.countryport');
         });
@@ -316,11 +316,11 @@
       // end_getContractList
       _getDataForConfirm: function () {
         //ชนิดข้าวเอามาจากสัญญา
-        this.read(window._config.externalServerCommon+'/api/package', (data) => {
+        this.read(window._config.externalServerCommon + '/api/package', (data) => {
           this.dataForSelected.dataForConfirm.package = data;
           this.notifyPath('dataForSelected.dataForConfirm.package');
         });
-        this.read(window._config.externalServerCommon+'/api/incoterms', (data) => {
+        this.read(window._config.externalServerCommon + '/api/incoterms', (data) => {
           this.dataForSelected.dataForConfirm.incoterms = data;
           this.notifyPath('dataForSelected.dataForConfirm.incoterms');
         });
@@ -458,11 +458,11 @@
             // exporters.exporter_id = exporters.exporter_id,
             //   exporters.label = '' + exporters.exporter_no + ' [' + exporters.company_taxno + '] ' + exporters.company_name_th,
             //   exporters.company_id = exporters.company_id
-              exporter.push({
-                exporter_id: exporters.exporter_id,
-                label : '' + exporters.exporter_no + ' [' + exporters.company_taxno + '] ' + exporters.company_name_th,
-              company_id : exporters.company_id
-              })
+            exporter.push({
+              exporter_id: exporters.exporter_id,
+              label: '' + exporters.exporter_no + ' [' + exporters.company_taxno + '] ' + exporters.company_name_th,
+              company_id: exporters.company_id
+            })
           })
           // console.log(e.detail)
           // for (var i = 0; i < e.detail.data.exporter.length; i++) {
@@ -472,7 +472,7 @@
           this.dataSelected = e.detail.data;
           // console.log('>>>>>1111', this.dataSelected);
           // console.log(e.detail.data.contract_status);
-          
+
           this.set('dataForSelected.dataForConfirm.contract_id', e.detail.data.contract_id);
           this.set('dataForSelected.dataForConfirm.exporters', exporter);
           this.set('dataForSelected.dataForConfirm.contract_status', e.detail.data.contract_status);
@@ -494,7 +494,7 @@
             let dataContract = data.filter((contractList) => contractList.contract_id == contractId);
             // console.log();
             // try {
-              let exporter = []
+            let exporter = []
             dataContract[0].exporter.map((exporters) => {
               // exporters.label = '';
               // exporters.company_id = '';
@@ -504,8 +504,8 @@
               //   exporters.company_id = exporters.company_id
               exporter.push({
                 exporter_id: exporters.exporter_id,
-                label : '' + exporters.exporter_no + ' [' + exporters.company_taxno + '] ' + exporters.company_name_th,
-              company_id : exporters.company_id
+                label: '' + exporters.exporter_no + ' [' + exporters.company_taxno + '] ' + exporters.company_name_th,
+                company_id: exporters.company_id
               })
             })
             // } catch (e) {
@@ -545,6 +545,16 @@
             },
           ]
           this.setBreadcrumbs(datass)
+          this.dataSelected = e.detail.data;
+          // console.log('>>>>>>',e.detail.data.book);
+          // console.log(this.dataSelected);
+          this.set('dataForSelected.dataForBooking.book', e.detail.data.book);
+          console.log(this.dataForSelected.dataForBooking.book);
+          this.set('dataForSelected.dataForBooking.contract_id', e.detail.data.contract_id);
+          this.set('dataForSelected.dataForBooking.buyer_id', e.detail.data.buyer_id);
+          // console.log(this.dataForSelected.dataForBooking);
+          this.set('dataForSelected.dataForBooking.country_id', e.detail.data.country_id);
+          this.set('dataForSelected.dataForBooking.buyer_masks', e.detail.data.buyer_masks);
           this.fire('toast', { status: 'load' });
           if (this.checkRenderPage.listOfShipment != true) {
             this.async(() => {
@@ -561,23 +571,14 @@
               );
             }, 1000);
           } else {
-            this.fire('toast', { status: 'load' });
-            this._flipDrawer();
+            this.async(() => {
+              this.fire('toast', { status: 'load' });
+              this._flipDrawer();
+            }, 1000);
           }
           // e.detail.data.exporter.map((exporters) => {
 
-          //   exporters.exporter_id = exporters.exporter_id,
-          //     exporters.label = '( ' + exporters.exporter_no + ' ' + exporters.company_taxno + ') ' + exporters.company_name_th,
-          //     exporters.company_id = exporters.company_id
-          // })
-          this.dataSelected = e.detail.data;
-          // console.log(this.dataSelected);
-          this.set('dataForSelected.dataForBooking.book', e.detail.data.book);
-          this.set('dataForSelected.dataForBooking.contract_id', e.detail.data.contract_id);
-          this.set('dataForSelected.dataForBooking.buyer_id', e.detail.data.buyer_id);
-          // console.log(this.dataForSelected.dataForBooking);
-          this.set('dataForSelected.dataForBooking.country_id', e.detail.data.country_id);
-          this.set('dataForSelected.dataForBooking.buyer_masks', e.detail.data.buyer_masks);
+
         } else {
           // console.log(111);
           let contractId = e.detail.contractId;

@@ -8,7 +8,7 @@
     <iron-pages selected="{{pageSelected}}" attr-for-selected="name">
       <div name="list-of-booking">
         <!--ddddddd-->
-        <list-of-booking-shm-det data="{{data}}" data-for-select="{{dataForSelect}}"></list-of-booking-shm-det>
+        <list-of-booking-shm-det data="{{data}}" cl-close="{{dataForSelect.cl_close}}" data-for-select="{{dataForSelect}}"></list-of-booking-shm-det>
       </div>
       <div name="list-of-booking-add">
         <booking-detail data-book-no={{data}} data="[[dataDefault]]" data-for-select="[[dataForSelect]]" is-input-disabled="[[!isInputDisabled]]"

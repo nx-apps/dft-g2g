@@ -28,10 +28,11 @@
       -webkit-font-smoothing: antialiased;
       font-size: 14px;
     }
-   .title-ber {
-     font-size: 35px;
-     font-weight: bold;
-   }
+
+    .title-ber {
+      font-size: 35px;
+      font-weight: bold;
+    }
   </style>
   <template>
     <!--<paper-button class="gl-btn-default" raised on-tap="backWard2BookingInConfirm">
@@ -47,14 +48,19 @@
     <gl-form-panel set-padding="10px 20px 10px 20px" set-border="1px">
       <gl-form-panel-head set-padding="10px" set-border="1px">
 
-          <div class="addconfirm horizontal end-justified layout">
-            
-            <div class="title-ber" hidden="{{!cl_close}}">
-              ปิดยอดการชำระ
-            </div>
+        <div class="addconfirm horizontal end-justified layout">
 
-            <paper-button raised class="gl-btn-primary" disabled="[[_isSeleted(cl_id)]]" on-tap="createBooking" hidden="{{cl_close}}">{{localize('btn_add_booking')}}</paper-button>
-          </div>
+          <!---->
+
+          <template is="dom-if" if={{clClose}}>
+            <div class="title-ber" hidden="[[_isSeleted(cl_id)]]">
+              ปิดบัญชี
+            </div>
+          </template>
+
+
+          <paper-button raised class="gl-btn-primary" disabled="[[_isSeleted(cl_id)]]" on-tap="createBooking" hidden="{{clClose}}">{{localize('btn_add_booking')}}</paper-button>
+        </div>
 
 
 
@@ -127,7 +133,7 @@
           type: Object,
           notify: true
         },
-        cl_close: {
+        clClose: {
           type: Boolean,
           value: false
         }
@@ -144,29 +150,27 @@
         // console.log(this.cl_id);
       },
       checkCl_close(cl_id) {
-        try {
-          // let x = this.dataForSelect.conFirmApprove.find((id) => id.cl_id = cl_id)
-          // console.log(this.dataForSelect);
-          // console.log(cl_id);
-          // console.log(this.dataForSelect.bookApp);
-          let sets = this.dataForSelect.bookApp.find((item) => item.cl_id === cl_id)
-          // console.log('xxxxx',sets);
-          // console.log(11111,sets.cl_quantity_total);
-          let sum = sets.cl_quantity_total - sets.book_quantity
-          // console.log(sum);
-          if (sum <= 0) {
-            this.set('cl_close',true)
-          }else {
-            this.set('cl_close',false)
-            // console.log(this.cl_close);
+        this.async(() => {
+          try {
+
+            // console.log(cl_id);
+            // console.log(this.dataForSelect.bookApp);
+            let sets = this.dataForSelect.bookApp.find((item) => item.cl_id === cl_id)
+            let sum = sets.cl_quantity_total - sets.book_quantity
+            // console.log(sum);
+            // console.log(this.clClose);
+            if (sum <= 0) {
+              this.set('clClose', true)
+            } else {
+              this.set('clClose', false)
+              // console.log(this.clClose);
+            }
+
+            // console.log(sets);
+          } catch (e) {
+
           }
-          // console.log(sets);
-        } catch (e) {
-
-        } finally {
-
-        }
-
+        }, 50);
       },
       _isSeleted(data) {
         return data === ''
