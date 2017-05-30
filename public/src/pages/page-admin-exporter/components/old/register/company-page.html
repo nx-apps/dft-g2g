@@ -1,0 +1,167 @@
+<link rel="import" href="components/detail-company.html">
+<link rel="import" href="components/fileup-company.html">
+
+<dom-module id="company-page">
+  <style is="custom-style" include="iron-flex iron-flex-factors iron-flex-alignment gl-size gl-color gl-table gl-toast">
+    .title {
+      text-align: center;
+      font-size: var(--font-size-h4);
+      font-family: 'rsubold', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      margin: 20px 0px 20px 0px;
+    }
+    .searchBox {
+      padding: 5px;
+      background-color: var(--gl-gray-lighter-color);
+    }
+    .searchBorder {
+      border: 1px solid var(--gl-gray-light-color);
+      margin: 15px;
+      border-radius: 3px
+    }
+    paper-tabs {
+      background-color: #f7941e;
+      margin: 15px;
+      color: #F2F2F2;
+      --paper-tabs-selection-bar: {
+        height: 5px;
+        background-color: var(--gl-info-color);
+      }
+    }
+    paper-tab:focus>div.tab-content {
+      background-color: yellow;
+      opacity: 1;
+      font-weight: 0;
+    }
+    paper-tab:not(:last-of-type) {
+      border-right: 3px solid var(--gl-gray-light-color);
+      font-size: var(--font-size-h5);
+    }
+    paper-tabs paper-tab.iron-selected {
+      font-size: var(--font-size-h5);
+      color: var(--gl-white-color);
+      background-color: var(--gl-info-color);
+    }
+  </style>
+  <template>
+    [[checkStatus(data.approve_status)]]
+    <div class="horizontal end-justified layout" style="margin:10px">
+      <paper-button id="btn-register" raised class="gl-btn-primary" on-tap="_register" hidden>
+        <iron-icon icon="add"></iron-icon>ลงทะเบียนผู้ส่งออก</paper-button>
+      <paper-button id="btn-reject" raised class="gl-btn-primary" on-tap="_reject" hidden>
+        <iron-icon icon="add"></iron-icon>ส่งเอกสารใหม่</paper-button>
+    </div>
+
+    <div>
+      <paper-tabs selected="{{pages}}" align-bottom no-slide>
+        <paper-tab>รายละเอียด</paper-tab>
+        <paper-tab id="tabFile">เอกสารหลักฐาน</paper-tab>
+      </paper-tabs>
+      <gl-form-panel>
+        <iron-pages selected="{{pages}}">
+          <detail-company data="[[data]]"></detail-company>
+          <fileup-company doc-type="[[docType]]" data="[[data]]"></fileup-company>
+        </iron-pages>
+      </gl-form-panel>
+    </div>
+  </template>
+  <script>
+    Polymer({
+      is: "company-page",
+      behaviors: [dataBehavior, nylonBehavior],
+      properties: {
+        pages: {
+          type: Number,
+          notify: true,
+          value: 0
+        },
+        data: {
+          type: Object,
+          value: {}
+        }
+      },
+      listeners: {
+        'refresh-exporterTrader': 'getExporterTrader'
+      },
+      checkStatus: function (val) {
+        if (typeof val != 'undefined' && val != undefined) {
+          if (val == 'reject') {
+            this.$$('#btn-reject').removeAttribute("hidden");
+            this.$$('#btn-register').setAttribute("hidden", "hidden");
+          }
+          else if(val == 'request'){
+            this.$$('#btn-register').setAttribute("hidden", "hidden");
+            this.$$('#btn-reject').setAttribute("hidden", "hidden");
+          }
+          else if(val == 'register'){
+            this.$$('#btn-register').removeAttribute("hidden");
+            this.$$('#btn-reject').setAttribute("hidden", "hidden");
+          }
+          else{
+            this.$$('#btn-reject').setAttribute("hidden", "hidden");
+            this.$$('#btn-reject').setAttribute("hidden", "hidden");
+            this.$$('#btn-register').setAttribute("hidden", "hidden");
+          }
+        }
+      },
+      _register: function () {
+        var data = {
+          approve_status: 'request',
+          company_id: this.data.id,
+        }
+        this.fire('toast', {
+          status: 'dialog',
+          text: 'คุณต้องการจะลงทะเบียนผู้ส่งออกใช่หรือไม่ ?',
+          confirmed: this._confirm.bind(this),
+          datas: data
+        });
+      },
+      _confirm: function (result, detail) {
+        if (result == true) {
+          // console.log(detail.datas);
+          this.fire('toast', { status: 'load', text: 'กำลังบันทึกข้อมูล...' })
+          this.insert('./external/confirm_exporter/register', detail.datas, () => {
+            this.fire('toast', {
+              status: 'success', text: 'บันทึกสำเร็จ', callback: () => {
+                this.fire('refresh-company');
+                this.fire('back_page');
+                this.fire('clearData');
+                this.$$('#btn-register').setAttribute("hidden", "hidden");
+                console.log('success');
+              }
+            });
+          })
+        }
+      },
+      _reject: function () {
+        var data = {
+          approve_status: 'request',
+          id: this.data.id
+        }
+        this.fire('toast', {
+          status: 'dialog',
+          text: 'คุณต้องการจะลงทะเบียนผู้ส่งออกใช่หรือไม่ ?',
+          confirmed: this._confirmReject.bind(this),
+          datas: data
+        });
+      },
+      _confirmReject: function (result, detail) {
+        if (result == true) {
+          // console.log(detail.datas);
+          this.fire('toast', { status: 'load', text: 'กำลังบันทึกข้อมูล...' })
+          this.update('./external/confirm_exporter/reject', detail.datas, () => {
+            this.fire('toast', {
+              status: 'success', text: 'บันทึกสำเร็จ', callback: () => {
+                this.fire('refresh-company');
+                this.fire('back_page');
+                this.fire('clearData');
+                this.$$('#btn-reject').setAttribute("hidden", "hidden");
+                console.log('success');
+              }
+            });
+          })
+        }
+      }
+    });
+  </script>
+</dom-module>

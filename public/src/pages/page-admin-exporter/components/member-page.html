@@ -1,0 +1,268 @@
+<link rel="import" href="../../../../../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../../components/dataBehavior.html">
+<link rel="import" href="member/member-manage.html">
+<link rel="import" href="member/member-fileup.html">
+<link rel="import" href="member/member-fileDelete.html">
+<link rel="import" href="../../components/panel-right/panel-right.html">
+<dom-module id="member-page">
+  <style is="custom-style" include="iron-flex iron-flex-factors iron-flex-alignment gl-size gl-color gl-toast">
+    * {
+      font-family: 'CSChatThaiUI', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    .title {
+      text-align: center;
+       font-size: var(--font-size-h3);
+        color: white;
+    }
+    .boxNortify{
+      border: 2px solid red;
+      background-color: red;
+      padding: 5px;
+    }
+    .boxChange_status{
+      border: 2px solid #6699FF;
+      background-color: #6699FF;
+      padding: 5px;
+    }
+    .tabs{
+      background-color: #f7941e;
+      margin : 0px 15px 0px 15px;
+      color: #F2F2F2;
+      --paper-tabs-selection-bar:{
+        height: 5px;
+        background-color: var(--gl-info-color);
+      }
+    }
+    .tab:focus > div.tab-content{
+      background-color: yellow;
+      opacity: 1;
+      font-weight: 0;
+    }
+    .tab:not(:last-of-type) {
+      border-right: 3px solid var(--gl-gray-light-color);
+      font-size: var(--font-size-h5);
+    }
+    .tabs .tab.iron-selected {
+      font-size: var(--font-size-h5);
+      color: var(--gl-white-color);
+      background-color: var(--gl-info-color);
+    }
+  </style>
+  <template>
+    [[cloneDatas(data)]]
+    <gl-form-panel set-border="0px">
+      <template is="dom-if" if={{!data.expire_status}}>
+        <div id="titleBg" class="boxNortify">
+          <div id="titleExporter" class="title"><iron-icon icon="icons:info"></iron-icon>  {{localize('change_expire')}}</div>
+        </div>
+      </template>
+
+      <template is="dom-if" if={{data.expire_status}}>
+        <template is="dom-if" if={{!data.export_status}}>
+          <div id="titleBg" class="boxNortify">
+            <div id="titleExporter" class="title"><iron-icon icon="icons:info"></iron-icon>  {{localize('exporter_expire')}}</div>
+          </div>
+          <div class="horizontal end-justified layout">
+            <paper-button id="buttomActive" raised class="gl-btn-warning button" on-tap="_dialogRemark" title="{{localize('bt_exporter_extend')}}">{{localize('bt_exporter_extend')}}</paper-button>
+          </div>
+        </template>
+      </template>
+      
+      <template is="dom-if" if={{data.export_status}}>
+        <template is="dom-if" if={{data.change_status}}>
+          <div id="titleBg" class="boxChange_status">
+            <div id="titleExporter" class="title"><iron-icon icon="icons:info"></iron-icon>  {{localize('change_status')}}</div>
+          </div>
+        </template>
+      </template>
+      <template is="dom-if" if={{data.expire_status}}>
+        <template is="dom-if" if={{data.export_status}}>
+          <div class="horizontal end-justified layout">
+            <div hidden="[[isEnabled]]"><paper-icon-button icon="create" on-tap="editChange" title="{{localize('edit_data')}}"></paper-icon-button></div>
+          </div>
+        </template>
+      </template>
+          <div class="bd">
+              <gl-form-panel>
+                <paper-tabs selected="{{pages}}" align-bottom no-slide class="tabs">
+                  <paper-tab class="tab">{{localize('detail')}}</paper-tab>
+                  <paper-tab id="tabFile" class="tab" on-tap="refreshFile">{{localize('doc_ev')}}</paper-tab>
+                </paper-tabs>
+                <iron-pages selected="{{pages}}">
+                  <member-manage data="{{data}}" type-lic="{{typeLic}}" is-enabled="[[!isEnabled]]"></member-manage>
+                  <member-fileup data="{{data}}" doc-type="[[docType]]"></member-fileup>
+                  <member-fileDelete data="{{listFiles}}"></member-fileDelete>
+                </iron-pages>
+              </gl-form-panel>
+          </div>
+      <div class="horizontal layout justified">
+        <div style="margin-left:20px;">
+          <!--{{localize('bt_print_data')}}<paper-icon-button icon="print" on-tap="_print" title="{{localize('bt_print_data')}}"></paper-icon-button>-->
+          <iron-icon icon="print"></iron-icon>
+          <paper-dropdown-menu style="width:300px" placeholder="{{localize('select_report')}}" no-label-float name="report">
+            <paper-tabs class="dropdown-content" attr-for-selected="report" selected="{{report}}">
+              <paper-tab on-tap="_print" report="report1">{{localize('bt_print_data')}}</paper-tab>
+              <paper-tab on-tap="_print" report="report2">{{localize('confirmation')}}</paper-tab>
+            </paper-tabs>
+          </paper-dropdown-menu>
+        </div>
+        <div hidden="[[!isEnabled]]">
+          <paper-button on-tap="_cancel" raised title="{{localize('cancle_edit')}}">{{localize('bt_back')}}</paper-button>
+          <paper-button class="gl-btn-success" on-tap="save" raised title="{{localize('save_data')}}">{{localize('bt_save')}}</paper-button> 
+        </div>
+      </div>
+    </gl-form-panel>
+
+    <paper-dialog id="dialog" style="width:60%;">
+      <gl-grid-row width="{{getWidth}}">
+        <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,12]]">
+          <gl-form-textarea label="{{localize('note')}} : " always-float-label value="{{exporter_remark}}"></gl-form-textarea>
+        </gl-grid-col>
+      </gl-grid-row>
+      <div>
+        <paper-button class="gl-btn-danger button-size" raised on-tap="_dialogcancle">{{localize('bt_cancel')}}</paper-button>
+        <paper-button id="active" class="gl-btn-primary button-size" raised on-tap="_active">{{localize('bt_save')}}</paper-button>
+      </div>
+    </paper-dialog>
+
+<!--<panel-right></panel-right>-->
+  </template>
+  <script>
+    Polymer({
+      is: "member-page",
+      behaviors: [dataBehavior, nylonLocalizeBehavior, nylonBehavior],
+      properties: {
+        pages:{
+            type:Number,
+            notify:true,
+            value: 0
+        },
+        isEnabled:{
+          type:Boolean,
+          value:false
+        },
+        test:{
+          type:Boolean,
+          value:true
+        }
+      },
+      created:function(){
+          this.nylonLocalizeImport('/i18n-page-admin-exporter.json');
+      },
+      listeners:{
+        'pageFileDelete' : 'fileDelete'
+      },
+      cloneDatas:function(val){
+        this.cloneData = JSON.parse(JSON.stringify(val));
+      },
+      _print:function(e) {
+        // console.log(this.data);
+        if(e.target.getAttribute('report') == 'report1'){
+          window.open('./api/external/report_exporter/exporter_detail/'+this.data.id,'_blank');
+        }else{
+          window.open('./api/external/report_exporter/approve_general_2/'+this.data.confirm_id,'_blank');
+        }
+      },
+      refreshFile:function(){
+        this.$$('member-fileup').checkFunction();
+      },
+      fileDelete: function(){
+        this.pages = 2;
+      },
+      editChange:function(e){
+        this.isEnabled = true;
+        this.pages = 0;
+      },
+      _backpage:function(e){
+        this.isEnabled = false;
+        this.pages = 0;
+      },
+      save:function(e) {
+        this.fire('toast',{status:'dialog',
+        text:'คุณต้องการแก้ไขข้อมูลใช่หรือไม่ ?',
+        confirmed : this._confirmSave.bind(this),
+        datas : this.data
+        });
+      },
+      _confirmSave:function(result,detail){
+        if(result == true){
+          if(detail.datas.type_lic_id == this.cloneData.type_lic_id){
+            // console.log('ตัวเดิม');
+            let{id, exporter_status} = detail.datas;
+            let newData = {id,exporter_status};
+            this.fire('toast',{status:'load',text:'กำลังบันทึกข้อมูล...'})
+            this.update('./external/exporter/update', newData, () => {
+              this.fire('toast',{status:'success',text:'บันทึกสำเร็จ',callback: () => {
+                this.fire('refresh-exporter');
+                this.pages = 0;
+                this.isEnabled = false;
+                this.fire('refresh-edit',newData.id);
+              }});
+            });
+          }
+          else{
+            // console.log('เปลี่ยนแล้ว');
+            let{confirm_id, type_lic_id} = detail.datas;
+            let newData = {type_lic_id};
+            newData.id = detail.datas.confirm_id,
+            newData.change_status = true,
+            newData.approve_status = 'process'
+            // console.log(newData);
+            this.fire('toast',{status:'load',text:'กำลังบันทึกข้อมูล...'})
+            this.update('./external/confirm_exporter/update', newData, () => {
+              this.fire('toast',{status:'success',text:'บันทึกสำเร็จ',callback: () => {
+                this.fire('refresh-exporter');
+                this.pages = 0;
+                this.isEnabled = false;
+                this.fire('refresh-edit',detail.datas.id);
+              }});
+            });
+          }
+        }
+      },
+      _cancel:function() {
+        this.isEnabled = false;
+        this.pages = 0;
+        this.fire('refresh-edit',this.data.id);
+      },
+      _dialogRemark: function(){
+        this.$.dialog.toggle();
+      },
+      _active: function(){
+        this.fire('toast',{status:'dialog',
+        text:'คุณต้องการจะต่ออายุผู้ส่งออกใช่หรือไม่ ?',
+        confirmed : this._confirmToast.bind(this),
+        datas : this.data
+        });
+      },
+      _confirmToast:function(result,detail){
+        if(result == true){
+          let newData = {};
+          newData.id = detail.datas.confirm_id;
+          newData.approve_status = 'process';
+          let dataDate = {};
+          dataDate.id = detail.datas.id;
+          dataDate.expire_status = false;
+          // console.log(dataDate);
+          
+          this.fire('toast',{status:'load',text:'กำลังบันทึกข้อมูล...'})
+          this.update('./external/confirm_exporter/update', newData, () => {
+            this.update('./external/exporter/update', dataDate, () => {
+              this.fire('toast',{status:'success',text:'บันทึกสำเร็จ',callback: () => {
+                this.$.dialog.toggle();
+                this.fire('refresh-edit',detail.datas.id);
+                this.fire('refresh-exporter');
+              }});
+            });
+          });
+        }
+      },
+      _dialogcancle:function() {
+        this.$.dialog.toggle();
+        this.exporter_remark = "";
+      }
+    });
+  </script>
+</dom-module>
+

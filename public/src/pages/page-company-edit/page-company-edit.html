@@ -1,0 +1,214 @@
+<link rel="import" href="../components/dataBehavior.html">
+<link rel="import" href="components/company-manage.html">
+<link rel="import" href="./../components/panel-right/panel-right.html">
+<link rel="import" href="./../../nylon-behavior.html">
+
+<dom-module id="page-company-edit">
+  <style is="custom-style" include="iron-flex iron-flex-factors iron-flex-alignment gl-size gl-color gl-table gl-toast">
+    * {
+      font-family: 'CSChatThaiUI', sans-serif !important;
+      -webkit-font-smoothing: antialiased;
+    }
+    .title {
+      text-align: center;
+      font-size: var(--font-size-h3);
+    }
+    .text-table {
+      text-align: center;
+      font-size: var(--font-size-h5);
+    }
+    .searchBox {
+      padding: 5px;
+      background-color: var(--gl-gray-lighter-color);
+    }
+    .elevation {
+      border-radius: 5px;
+      margin: 10px;
+      padding: 5px;
+    }
+    .searchBorder {
+      border: 1px solid var(--gl-gray-light-color);
+      margin: 15px;
+      border-radius: 3px;
+    }
+    .gl-table-default {
+      border-collapse: collapse;
+      width: 100%;
+      white-space: nowrap;
+    }
+    paper-material {
+      background-color: var(--gl-white-color);
+    }
+    table.gl-table-default>thead.table-head>tr>th:nth-child(1) {
+      width: 5%;
+    }
+    table.gl-table-default>thead.table-head>tr>th:nth-child(2) {
+      width: 10%;
+    }
+  </style>
+  <template>
+
+    <paper-material elevation="1" class="elevation">
+
+      <div class="layout horizontal end-justified">
+        <paper-button raised class="gl-btn-primary" style="margin-right:15px;" on-tap="_add" title="{{localize('bt_add_company')}}">
+        <iron-icon icon="add"></iron-icon>{{localize('bt_add_company')}}</paper-button>
+      </div>
+
+      <div class="horizontal center-justified layout">
+        <gl-combo-box label="{{localize('tax_no')}}" placeholder="{{localize('insert_taxno')}}" items="{{company}}" 
+        item-label-path="company_name" item-value-path="company_taxno"
+        on-value-changed="_checkID" style="width:600px; margin-top:10px;">
+        <template>[[item.company_name]]</template>
+        </gl-combo-box>
+      </div>
+
+      <div class="searchBorder" style="overflow-x:auto;">
+          <table class="gl-table-default">
+            <thead class="table-head">
+              <tr>
+                <th><div class="text-table">{{localize('No')}}</div></th>
+                <th><div class="text-table">{{localize('tax_no')}}</div></th>
+                <th><div class="text-table">{{localize('name_company')}}</div></th>
+                <th><div class="text-table">{{localize('country')}}</div></th>
+              </tr>
+            </thead>
+            
+            <template is="dom-repeat" items="{{company}}">
+              <tbody>
+                <tr id="detailRegExporter" on-tap="_selectData" data="[[item]]" style="cursor:pointer;">
+                  <td><div class="text-table">[[toIndex(index)]]</div></td>
+                  <td><div class="text-table">{{item.company_taxno}}</div></td>
+                  <td><div>{{item.company_name_th}}</div></td>
+                  <td><div>{{item.company_country_th}}</div></td>
+                </tr>
+              </template>
+              <template is="dom-if" if={{_checkData(company)}}>
+                <tr>
+                    <td colspan="4"><div class="text-table" style="margin:20px">{{localize('not_found')}}</div></td>
+                </tr>
+              </template>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </paper-material>
+
+    <panel-right title="{{titleName}}">
+      <company-manage data="[[data]]" is-enabled="{{isEnabled}}" enabled="{{enabled}}" status-action="[[statusAction]]"></company-manage>
+    </panel-right>
+
+  </template>
+  <script>
+    Polymer({
+      is: "page-company-edit",
+      behaviors: [nylonBehavior, dataBehavior, nylonLocalizeBehavior],
+      properties: {
+        pages: {
+          type: Number,
+          notify: true,
+          value: 0
+        },
+        data: {
+          type: Object,
+          value: {}
+        }
+      },
+      listeners: {
+        'get-company': 'getCompany',
+        'refresh-company': 'listCompany',
+        'back-page': '_backPage'
+      },
+      created: function () {
+        this.nylonLocalizeImport('/i18n-page-admin-exporter.json');
+      },
+      ready: function () {
+        this.getCompany();
+        this.listCompany();
+      },
+      getCompany: function (id) {
+        if(typeof id !== 'undefined'){
+          if(typeof id.detail === 'undefined'){
+            this.read('./external/company/' + id, (data) => {
+              for(var key in data[0]){
+                // console.log(data[key]);
+                if(data[0][key] === ''){
+                  data[0][key] = "-";
+                }
+              }
+              this.data = data[0];
+            })
+          }else{
+            this.read('./external/company/' + id.detail, (data) => {
+              for(var key in data[0]){
+                // console.log(data[key]);
+                if(data[0][key] === ''){
+                  data[0][key] = "-";
+                }
+              }
+              this.data = data[0];
+            })
+          }
+
+        }
+      },
+      listCompany:function(){
+        this.read('./external/company', (data) => {
+          data.map((val) => {
+            for(var key in val){
+              if(val[key] === ''){
+                val[key] = "-";
+              }
+            }
+            return val.company_name = '('+val.company_taxno+ ') ' + val.company_name_th +' '+ val.company_name_en;
+          })
+          // console.log(data);
+          this.company = data;
+        })
+      },
+      _checkID:function(id){
+        if(id.detail.value !== ''){
+          // console.log(id.detail.value);
+          this.statusAction = 'edit';
+          this.$$('panel-right').open();
+          this.getCompany(id.detail.value);
+          this.isEnabled = false;
+          this.enabled = true;
+          this.$$('company-manage').clearData(id.detail.value);
+          this.titleName = 'แก้ไขข้อมูล';
+        }
+      },
+      toIndex:function(index){
+        return index+1;
+      },
+      _selectData:function(e){
+        this.statusAction = 'edit';
+        this.$$('panel-right').open();
+        this.data = e.currentTarget.data;
+        this.isEnabled = false;
+        this.enabled = true;
+        var company_tax = e.currentTarget.data.company_taxno;
+        this.$$('company-manage').clearData(company_tax);
+        this.titleName = 'แก้ไขข้อมูล';
+      },
+      _add:function(){
+        this.statusAction = 'add';
+        this.isEnabled = true;
+        this.enabled = false;
+        this.$$('panel-right').open();
+        this.titleName = 'เพิ่มข้อมูล';
+        this.data = {company_agent:[]};
+      },
+      _backPage:function(){
+        this.$$('panel-right').close();
+      },
+      _checkData:function(val){
+        if(val.length > 0){
+          return false
+        }else{
+          return true
+        }
+      }
+    });
+  </script>
+</dom-module>

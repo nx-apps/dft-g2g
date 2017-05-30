@@ -1,0 +1,428 @@
+<link rel="import" href="components/member-page.html">
+<!--<link rel="import" href="components/register-pageRegister.html">-->
+<link rel="import" href="../components/dataBehavior.html">
+<link rel="import" href="../components/panel-right/panel-right.html">
+<link rel="import" href="../../nylon-behavior.html">
+
+<dom-module id="page-admin-exporter">
+  <style is="custom-style" include="iron-flex iron-flex-factors iron-flex-alignment gl-size gl-color gl-table gl-toast">
+    * {
+      font-family: 'CSChatThaiUI', sans-serif !important;
+      -webkit-font-smoothing: antialiased;
+    }
+    .bg-title{
+      --vaadin-date-picker-overlay:{
+        color: red;
+      }
+    }
+    .title {
+      text-align: center;
+      font-size: var(--font-size-h3);
+    }
+    .text-table {
+      text-align: center;
+      font-size: var(--font-size-h5);
+    }
+    .searchBox {
+      padding: 5px;
+      background-color: var(--gl-gray-lighter-color);
+    }
+    .elevation {
+      border-radius: 5px;
+      margin: 10px;
+      padding: 5px;
+    }
+    .searchBorder {
+      border: 1px solid var(--gl-gray-light-color);
+      margin: 15px;
+      border-radius: 3px;
+    }
+    .gl-table-default {
+      border-collapse: collapse;
+      width: 100%;
+      white-space: nowrap;
+    }
+    paper-material {
+      background-color: var(--gl-white-color);
+    }
+    gl-search-input {
+      margin: 30px 0px 0px 0px;
+      width: 60%;
+    }
+  </style>
+  <template>
+    <paper-material elevation="1" class="elevation">
+
+      <div class="layout vertical" style="margin: 20px;">
+        <div class="layout horizontal end-justified">
+          <paper-button raised class="gl-btn-primary" on-tap="_register" title="{{localize('add_exporter')}}" id="addRedRegExporter">
+          <iron-icon icon="add"></iron-icon>{{localize('add_exporter')}}</paper-button>
+        </div>
+
+        <div class="flex title">
+          {{localize('title_exporter')}}
+        </div>
+
+        <div class="searchBox searchBorder">
+          <gl-grid-row width="{{getWidth}}">
+            <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]"></gl-grid-col>
+            <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,6]]">
+              <gl-combo-box label="{{localize('name_exporter')}}" items="{{exporter_id}}" item-label-path="company_name" item-value-path="id"
+                value="{{dataSelected.id}}" on-value-changed="_checkID">
+                <template>[[item.company_name]]</template>
+                </gl-combo-box>
+            </gl-grid-col>
+          </gl-grid-row>
+
+          <gl-grid-row>
+            <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]"></gl-grid-col>
+            <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,2]]">
+                <gl-form-dropdown-menu label="{{localize('type_license')}}" placeholder="{{localize('all')}}">
+                  <paper-menu class="dropdown-content" attr-for-selected="value" selected="{{dataSelected.type_lic_id}}" name="type_lic_id">
+                    <paper-item>{{localize('all')}}</paper-item>
+                    <template is="dom-repeat" items={{typeLic}}>
+                      <paper-item value="[[item.type_lic_id]]">{{item.type_lic_name}}</paper-item>
+                    </template>
+                  </paper-menu>
+                </gl-form-dropdown-menu>
+              </gl-grid-col>
+            <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,2]]">
+              <gl-form-dropdown-menu label="{{localize('status_export')}}" placeholder="{{localize('all')}}">
+                <paper-menu class="dropdown-content" attr-for-selected="value" selected="{{dataSelected.exporter_status}}" name="exporter_status">
+                  <paper-item>{{localize('all')}}</paper-item>
+                  <paper-item value="yes">{{localize('member')}}</paper-item>
+                  <paper-item value="no">{{localize('no_member')}}</paper-item>
+                </paper-menu>
+              </gl-form-dropdown-menu>
+            </gl-grid-col>
+            <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,2]]">
+              <gl-form-dropdown-menu label="{{localize('status_exporter')}}" placeholder="{{localize('all')}}">
+                <paper-menu class="dropdown-content" attr-for-selected="value" selected="{{dataSelected.export_status}}" name="exporter_active">
+                  <paper-item>{{localize('all')}}</paper-item>
+                  <paper-item value="true">{{localize('normally')}}</paper-item>
+                  <paper-item value="false">{{localize('expire')}}</paper-item>
+                </paper-menu>
+              </gl-form-dropdown-menu>
+            </gl-grid-col>
+          </gl-grid-row>
+
+          <gl-grid-row>
+            <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]"></gl-grid-col>
+            <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,1]]">
+              <div style="margin-top:30px; text-align:right;">{{localize('register')}}</div>
+            </gl-grid-col>
+            <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,2]]">
+              <vaadin-date-picker class="bg-title" label="{{localize('date')}}" value="{{dataSelected.date_start}}" name="date_start"></vaadin-date-picker>
+            </gl-grid-col>
+            <div style="margin-top:30px;"> {{localize('to')}} </div>
+            <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,2]]">
+              <vaadin-date-picker label="{{localize('date')}}" value="{{dataSelected.date_end}}" name="date_end"></vaadin-date-picker>
+            </gl-grid-col>
+          </gl-grid-row>
+          <gl-grid-row>
+            <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,5]]"></gl-grid-col>
+            <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
+              <paper-button class="gl-btn-info" style="margin: 30px 0px 10px 50px;" on-tap="_search" title="{{localize('bt_search')}}" raised>{{localize('bt_search')}}</paper-button>
+            </gl-grid-col>
+          </gl-grid-row>
+        </div>
+
+        <div class="horizontal layout end-justified">
+            <div style="margin:30px 10px 0px 20px;"><iron-icon icon="print"></iron-icon></div>
+            <gl-form-dropdown-menu style="width:250px; margin-right:20px;" placeholder="{{localize('select_report')}}" name="report">
+              <paper-menu class="dropdown-content" attr-for-selected="report" selected="{{report}}">
+                <paper-item on-tap="_report" report="report1">{{localize('report1')}}</paper-item>
+                <paper-item on-tap="_report" report="report2">{{localize('report2')}}</paper-item>
+                <paper-item on-tap="_report" report="report3">{{localize('report3')}}</paper-item>
+              </paper-menu>
+            </gl-form-dropdown-menu>
+          </div>
+
+        <div class="searchBorder" style="overflow-x:auto;">
+          <table class="gl-table-default">
+            <thead class="table-head">
+              <tr>
+                <th><div class="text-table">{{localize('No')}}</div></th>
+                <th><div class="text-table">{{localize('no_exporter')}}</div></th>
+                <th><div class="text-table">{{localize('no_tax')}}</div></th>
+                <th><div class="text-table">{{localize('name_company')}}</div></th>
+                <th><div class="text-table">{{localize('type_license')}}</div></th>
+                <th><div class="text-table">{{localize('status_export')}}</div></th>
+                <th><div class="text-table">{{localize('status_exporter')}}</div></th>
+                <th><div class="text-table">{{localize('date_expire')}}</div></th>
+              </tr>
+            </thead>
+            
+            <template is="dom-repeat" items="{{exporters}}">
+              <tbody>
+                <tr id="detailRegExporter" on-tap="_selectData" data="[[item]]" style="cursor:pointer;">
+                  <td><div class="text-table">[[toIndex(index)]]</div></td>
+                  <td><div class="text-table">{{item.exporter_no_name}}</div></td>
+                  <td><div class="text-table">{{item.company_taxno}}</div></td>
+                  <td><div>{{item.company_name_th}}</div></td>
+                  <td><div>{{item.type_lic_name}}</div></td>
+                  <td><div class="text-table">{{item.exporter_status_name}}</div></td>
+                  <td><div class="text-table">{{item.export_status_name}}</div></td>
+                  <td><div class="text-table">{{item.export_date_expire}}</div></td>
+                </tr>
+              </template>
+
+              <template is="dom-if" if={{_checkData(exporters)}}>
+                <tr>
+                    <td colspan="8"><div class="text-table" style="margin:20px">{{localize('not_found')}}</div></td>
+                </tr>
+              </template>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!--<div class="searchBox searchBorder">
+        <template is="dom-if" if={{_checkData(exporters)}}>
+          <div class="searchBorder">
+            <vaadin-grid id="grid" active-item="{{activeItem}}" items="{{exporters}}">
+
+              <vaadin-grid-column width="50px" flex-grow="0">
+                <template class="header">{{localize('No')}}</div></template>
+                <template><div class="text-table" style="cursor:pointer;">[[toIndex(index)]]</div></template>
+              </vaadin-grid-column>
+
+              <vaadin-grid-column width="100px">
+                <template class="header"><div class="text-table">{{localize('no_exporter')}}</div></template>
+                <template><div class="text-table" style="cursor:pointer;">[[item.exporter_no_name]]</div></template>
+              </vaadin-grid-column>
+
+              <vaadin-grid-column width="150px">
+                <template class="header"><div class="text-table">{{localize('no_tax')}}</div></template>
+                <template><div class="text-table" style="cursor:pointer;">[[item.company_taxno]]</div></template>
+              </vaadin-grid-column>
+
+              <vaadin-grid-column width="500px">
+                <template class="header"><div class="text-table">{{localize('name_company')}}</div></template>
+                <template><div style="cursor:pointer;">[[item.company_name_th]]</div></template>
+              </vaadin-grid-column>
+
+              <vaadin-grid-column width="250px">
+                <template class="header"><div class="text-table">{{localize('type_license')}}</div></template>
+                <template><div style="cursor:pointer;">[[item.type_lic_name]]</div></template>
+              </vaadin-grid-column>
+
+              <vaadin-grid-column width="200px">
+                <template class="header"><div class="text-table">{{localize('status_export')}}</div></template>
+                <template><div class="text-table" style="cursor:pointer;">[[item.exporter_status_name]]</div></template>
+              </vaadin-grid-column>
+
+              <vaadin-grid-column width="200px">
+                <template class="header"><div class="text-table">{{localize('status_exporter')}}</div></template>
+                <template><div class="text-table" style="cursor:pointer;">[[item.export_status_name]]</div></template>
+              </vaadin-grid-column>
+
+              <vaadin-grid-column width="150px">
+                <template class="header"><div class="text-table">{{localize('date_expire')}}</div></template>
+                <template><div class="text-table" style="cursor:pointer;">[[item.export_date_expire]]</div></template>
+              </vaadin-grid-column>
+
+            </vaadin-grid>
+          </div>
+        </template>
+
+        <template is="dom-if" if={{!_checkData(exporters)}}>
+          <div class="searchBorder">
+            <table class="gl-table-default">
+              <thead class="table-head">
+                <tr>
+                  <th><div class="text-table">{{localize('No')}}</div></th>
+                  <th><div class="text-table">{{localize('no_exporter')}}</div></th>
+                  <th><div class="text-table">{{localize('no_tax')}}</div></th>
+                  <th><div class="text-table">{{localize('name_company')}}</div></th>
+                  <th><div class="text-table">{{localize('type_license')}}</div></th>
+                  <th><div class="text-table">{{localize('status_export')}}</div></th>
+                  <th><div class="text-table">{{localize('status_exporter')}}</div></th>
+                  <th><div class="text-table">{{localize('date_expire')}}</div></th>
+                </tr>
+              </thead>
+              
+              <tbody>
+                <tr>
+                  <td colspan="8"><div class="text-table" style="margin:20px">{{localize('not_found')}}</div></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </template>
+      </div>-->
+
+    </paper-material>
+
+    <panel-right title="{{titleName}}">
+      <div class="left">
+        <iron-pages selected="{{layerContent}}" attr-for-selected="name">
+          <div name="addRedRegExporter">
+            <register-pageRegister companys="[[companys]]" doc-type="[[docType]]" list-company="[[listCompany]]"></register-pageRegister>
+          </div>
+          <div name="detailRegExporter">
+            <member-page data="{{dataSelect}}" doc-type="[[docType]]" list-files="{{listFiles}}" type-lic="{{typeLic}}"></member-page>
+          </div>
+        </iron-pages>
+      </div>
+    </panel-right>
+
+  </template>
+  <script>
+    Polymer({
+      is: "page-admin-exporter",
+      properties: {
+        layerContent: {
+          type: String,
+          value: "detailRegExporter"
+        },
+        dataSelected: {
+          type: Object,
+          value: {}
+        },
+        activeItem: {
+          observer: '_activeItemChanged'
+        }
+      },
+      behaviors: [dataBehavior, nylonBehavior, nylonLocalizeBehavior],
+      listeners: {
+        'refresh-exporter': 'getExporters',
+        'getFiles': 'getFile',
+        'refresh-edit': 'refreshEdit'
+      },
+      created: function () {
+        this.nylonLocalizeImport('/i18n-page-admin-exporter.json');
+      },
+      nylonPageActive: function () {
+        this.getExporters();
+        this.getFile();
+      },
+      _register: function (e) {
+        window.open('./admin-confirm');
+      },
+      getExporters: function () {
+        this.exporter_id = this.exporter_id || this.$.exporter_id;
+        this.read('./external/exporter', (data) => {
+          data.map((item) => {
+            for (var key in item) {
+              if(item[key] === ""){
+                item[key] = '-';
+              }
+            }
+            return item.company_name = '('+item.company_taxno+ ') ' + item.company_name_th +' '+ item.company_name_en;
+          })
+          this.exporters = data;
+          this.exporter_id = data;
+        });
+
+        this.read('./external/type_license', (data) => {
+          this.typeLic = data;
+        })
+      },
+      _search: function () {
+        this.fire('toast', { status: 'load' })
+        // console.log(this.dataSelected);
+        var str = '';
+        for (key in this.dataSelected) {
+          if (this.dataSelected[key] != '' && this.dataSelected[key] != null) {
+            if (str == '') { str += '?' } else { str += '&' }
+            str += key + '=' + this.dataSelected[key];
+          }
+        }
+        if (this.dataSelected.date_start != undefined && this.dataSelected.date_start != '' && (this.dataSelected.date_end == undefined || this.dataSelected.date_end == '')) {
+          this.fire('toast', { status: 'connectError', text: 'กรุณาใส่วันที่สิ้นสุดค้นหา' })
+        }
+        else if (this.dataSelected.date_end != undefined && this.dataSelected.date_end != '' && (this.dataSelected.date_start == undefined || this.dataSelected.date_start == '')) {
+          this.fire('toast', { status: 'connectError', text: 'กรุณาใส่วันที่เริ่มต้นค้นหา' })
+        }
+        // console.log(str);
+        this.read('./external/exporter' + str, (data) => {
+          data.map((item) => {
+            for (var key in item) {
+              if (item[key] === '') {
+                item[key] = '-';
+              }
+            }
+          })
+          this.exporters = data;
+          this.fire('toast', { status: 'success', text: 'ค้นหาข้อมูลสำเร็จ', callback:function(){} })
+        })
+        return str;
+      },
+      _report: function (e) {
+        var str = this._search();
+        window.open('./api/external/report_exporter/' + e.target.getAttribute('report') + (str != '' ? str : ''), '_blank');
+      },
+      _selectData: function (e) {
+        this.layerContent = "detailRegExporter";
+        this.titleName = 'ข้อมูลผู้ส่งออก';
+        this.$$('panel-right').toggle();
+        this.$$('panel-right').open();
+        this.dataSelect = e.currentTarget.data;
+        this.$$('member-page')._backpage();
+        this.getFile();
+      },
+      getFile: function () {
+        if (typeof this.dataSelect != 'undefined' && this.dataSelect != '') {
+          var companyId = this.dataSelect.company_id;
+          if (companyId != '' && companyId != undefined) {
+            axios.get('/external/upload/list/' + companyId)
+              .then((response) => {
+                // console.log(response);
+                this.listFiles = response.data;
+              })
+              .catch(function (error) {
+                // console.log(error);
+              });
+              this.read('./external/document_type', (data) => {
+                this.docType = data;
+              })
+          }
+        }
+      },
+      _checkData:function(val){
+        if(val.length > 0){
+          return false
+        }
+        else{
+          return true
+        }
+      },
+      toIndex:function(index){
+        return index+1;
+      },
+      refreshEdit: function(val){
+        var id = '';
+        if(typeof val.detail !== 'undefined'){
+          id = val.detail;
+        }else{
+          id = val;
+        }
+        this.read('./external/exporter/id/'+id, (data) => {
+          data.map((item) => {
+            for (var key in item) {
+              if(item[key] === ""){
+                item[key] = '-';
+              }
+            }
+          })
+          this.dataSelect = data[0];
+        })
+      },
+      _checkID:function(id){
+        if(id.detail.value !== "" && typeof id.detail.value !== 'undefined'){
+          this.refreshEdit(id.detail.value);
+          this.layerContent = "detailRegExporter";
+          this.titleName = 'ข้อมูลผู้ส่งออก';
+          this.$$('panel-right').toggle();
+          this.$$('panel-right').open();
+          this.$$('member-page')._backpage();
+          this.getFile();
+        }
+      },
+      _activeItemChanged: function(item) {
+        console.log(item);
+        }
+    });
+  </script>
+</dom-module>

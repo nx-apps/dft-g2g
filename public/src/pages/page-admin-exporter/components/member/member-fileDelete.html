@@ -1,0 +1,82 @@
+<dom-module id="member-fileDelete">
+  <style is="custom-style" include="iron-flex iron-flex-factors iron-flex-alignment gl-size gl-color gl-table gl-toast">
+  * {
+      font-family: 'CSChatThaiUI', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+  .gl-table-default{
+       border-collapse: collapse;
+       width: 100%;
+       white-space: nowrap;
+   }
+   .text-table{
+      font-size: var(--font-size-h4);
+   }
+   .table-head > tr > th:nth-child(2) {
+     width: 5%;
+   }
+  </style>
+  <template>
+    <gl-form-panel set-border="0px" set-padding="0px">
+      <table class="gl-table-default">
+        <thead class="table-head">
+          <tr>
+            <th><div class="text-table">{{localize('file_name')}}</div></th>
+            <th></th>
+          </tr>
+        </thead>
+
+        <template is="dom-repeat" items="{{data}}">
+          <tbody>
+            <tr style="cursor:pointer;" data="[[item]]">
+              <td on-tap="_selectData" data="[[item]]"><div class="text-table">{{item.name}}</div></td>
+              <td on-tap="recovery" data="[[item]]"><paper-button class="gl-btn-info" title="{{localize('bt_recovery')}}" raised>{{localize('bt_recovery')}}</paper-button></td>
+            </tr>
+          </tbody>
+        </template>
+      </table>
+    </gl-form-panel>
+  </template>
+  <script>
+    Polymer({
+      is: "member-fileDelete",
+      behaviors: [dataBehavior, nylonLocalizeBehavior, nylonBehavior],
+      created:function(){
+          this.nylonLocalizeImport('/i18n-page-admin-exporter.json');
+      },
+      _selectData:function(e){
+      // console.log(e.currentTarget.data);
+        var idFile = e.currentTarget.data.file_id
+        window.location = '/api/external/upload/file/'+idFile;
+      },
+      recovery:function(e){
+        // console.log(e.currentTarget.data);
+        this.fire('toast',{status:'dialog',
+        text:'คุณต้องการจะกู้คืนไฟล์ใช่หรือไม่ ?',
+        confirmed : this._confirm.bind(this),
+        datas: {
+          file_id : e.currentTarget.data.file_id
+          }
+        });
+      },
+      _confirm:function(result, detail){
+        if(result == true){
+          // console.log(detail.datas);
+          this.fire('toast',{status:'load',text:'กำลังบันทึกข้อมูล...'})
+          axios.put('/external/upload/update/'+detail.datas.file_id)
+          .then( (response)=>{
+            // console.log(response);
+            this.fire('refresh-exporter');
+            this.fire('getFiles');
+            this.fire('toast',{status:'success',text:'บันทึกสำเร็จ',callback:function(){
+              // console.log('success');
+            }});
+          })
+          .catch(function (error) {
+              console.log(error);
+          });
+        }
+      }
+    });
+  </script>
+</dom-module>

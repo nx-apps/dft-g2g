@@ -1,0 +1,650 @@
+<link rel="import" href="../components/dataBehavior.html">
+<link rel="import" href="../../nylon-behavior.html">
+<link rel="import" href="../components/panel-right/panel-right.html">
+<link rel="import" href="components/detail-company.html">
+<link rel="import" href="components/fileup-company.html">
+<link rel="import" href="components/company-page.html">
+
+<dom-module id="page-admin-confirm">
+  <style is="custom-style" include="iron-flex iron-flex-factors iron-flex-alignment gl-size gl-color gl-table gl-toast">
+    * {
+      font-family: 'CSChatThaiUI', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    .marginCheckbox {
+      margin: 10px 0px 0px 30px;
+    }
+    .searchBorder {
+      border: 1px solid var(--gl-gray-light-color);
+      margin: 15px;
+      border-radius: 3px;
+    }
+    .text-table {
+      text-align: center;
+      font-size: var(--font-size-h5);
+    }
+    .gl-table-default {
+      border-collapse: collapse;
+      width: 100%;
+      white-space: nowrap;
+    }
+    .tabs {
+      background-color: #f7941e;
+      margin: 0px 15px 0px 15px;
+      color: #F2F2F2;
+      --paper-tabs-selection-bar: {
+        height: 5px;
+        background-color: var(--gl-info-color);
+      }
+    }
+    .tab:focus>div.tab-content {
+      background-color: yellow;
+      opacity: 1;
+      font-weight: 0;
+    }
+    .tab:not(:last-of-type) {
+      border-right: 3px solid var(--gl-gray-light-color);
+      font-size: var(--font-size-h5);
+    }
+    .tabs .tab.iron-selected {
+      font-size: var(--font-size-h5);
+      color: var(--gl-white-color);
+      background-color: var(--gl-info-color);
+    }
+    .table-head>tr>th:nth-child(2) {
+      width: 15%;
+    }
+    .btn{
+      margin:15px 20px 5px 10px;
+    }
+    .btn-bottom{
+      margin:0px 15px 15px 0px;
+    }
+  </style>
+  <template>
+    <div class="horizontal layout center-justified" style="margin-top:10px;">
+      <gl-form-input hidden="{{isHidden}}" style="width:300px;" label="{{localize('tax_no')}} :" value="{{companyId}}" always-float-label allowed-pattern="[0-9]" maxlength="13">
+        <iron-icon icon="search" prefix style="width:20px;height:30px;"></iron-icon>
+        <paper-icon-button suffix on-tap="clearData" icon="clear" title="clear" style="height:30px;">
+      </gl-form-input>
+      <paper-button hidden="{{isHidden}}" class="gl-btn-info btn" raised on-tap="_search">{{localize('bt_search')}}</paper-button>
+    </div>
+    <iron-pages selected="{{pageSelected}}" attr-for-selected="name">
+      <div name="listCompany">
+        <!--<div class="horizontal layout left-justified">
+          <paper-checkbox class="marginCheckbox" checked={{selectDataAll}}>{{localize('ck_select_all')}}</paper-checkbox>
+        </div>-->
+        <div class="searchBorder" style="overflow-x:auto;">
+          <table class="gl-table-default">
+            <thead class="table-head">
+              <tr>
+                <th><div class="text-table">{{localize('No')}}</div></th>
+                <th><div class="text-table">{{localize('no_exporter_fullname')}}</div></th>
+                <th><div class="text-table">{{localize('name_company')}}</div></th>
+                <th><div class="text-table">{{localize('type_license')}}</div></th>
+                <!--<th><div class="text-table">{{localize('type_license')}}</div></th>-->
+                <th><div class="text-table">{{localize('date_register')}}</div></th>
+                <th><div class="text-table">{{localize('status')}}</div></th>
+              </tr>
+            </thead>
+
+            <template is="dom-repeat" items="{{companys}}">
+              <tbody>
+                <tr style="cursor:pointer;">
+                  <td><div class="text-table">[[indexNo(index)]]</div></td>
+                  <!--<td style="text-align:center">
+                    <template is="dom-if" if={{checkStatus(item.approve_status)}}>
+                      <paper-checkbox checked="{{item.check}}" class="checkbox"></paper-checkbox>
+                    </template>
+                  </td>-->
+                  <td style="text-align:center"><gl-form-input value="{{item.exporter_no}}" on-blur="changeNo" data="[[item]]" allowed-pattern="[0-9]"></gl-form-input></td>
+                  <!-- <td on-tap="_selectData" data="[[item]]"><div class="text-table">{{item.exporter_no_name}}</div></td> -->
+                  <td on-tap="_selectData" data="[[item]]"><div>{{item.company_name_th}}</div></td>
+                  <td on-tap="_selectData" data="[[item]]"><div>{{item.type_lic_name}}</div></td>
+                  <td on-tap="_selectData" data="[[item]]"><div class="text-table">{{item.date_created}}</div></td>
+                  <td on-tap="_selectData" data="[[item]]"><div>{{item.approve_status_name}}</div></td>
+                </tr>
+            </template>
+            <template is="dom-if" if={{_checkData(companys)}}>
+              <tr>
+                  <td colspan="6"><div class="text-table" style="margin:20px">{{localize('not_found')}}</div></td>
+              </tr>
+            </template>
+              </tbody>
+          </table>
+        </div>
+        <!--<div class="horizontal layout end-justified">-->
+          <!--<div style="margin-left:20px;">
+            {{localize('bt_print_book')}}
+            <paper-icon-button icon="print" on-tap="_print" title="{{localize('bt_print_book')}}"></paper-icon-button>
+          </div>-->
+          <!--<div>-->
+            <!--<paper-button class="gl-btn-danger" on-tap="_close" raised>{{localize('bt_cancel')}}</paper-button>-->
+            <!--<paper-button class="gl-btn-success" style="margin-right:15px" on-tap="_approveAll" raised>{{localize('bt_approve')}}</paper-button>-->
+          <!--</div>-->
+        <!--</div>-->
+      </div>
+
+      <div name="detailCompany">
+        <!-- <detail-member data={{dataSelect}}></detail-member> -->
+        <paper-tabs selected="{{pages}}" align-bottom no-slide class="tabs">
+          <paper-tab class="tab">{{localize('detail')}}</paper-tab>
+          <paper-tab id="tabFile" class="tab">{{localize('doc_ev')}}</paper-tab>
+        </paper-tabs>
+        <gl-form-panel>
+          <iron-pages selected="{{pages}}">
+            <detail-company data="[[dataSelect]]" type-lic="[[typeLic]]" exporter-data="[[exporter_data]]"></detail-company>
+            <fileup-company data="[[dataSelect]]" doc-type="[[docType]]" exporter-data="[[exporter_data]]"></fileup-company>
+          </iron-pages>
+        </gl-form-panel>
+
+        <div class="horizontal layout justified">
+          <div>
+            <paper-button hidden="[[_hidBtnPass(dataSelect.approve_status)]]" class="gl-btn-warning" style="margin-left:15px;" on-tap="_dialogRemark" raised>{{localize('bt_no_pass')}}</paper-button>
+            <div hidden="[[_hidBtnApp(dataSelect.approve_status)]]" style="margin-left:20px;">
+              <!--{{localize('bt_print_book')}}
+              <paper-icon-button icon="print" on-tap="_print" title="{{localize('bt_print_book')}}"></paper-icon-button>-->
+              <div class="btn-bottom">
+                <iron-icon icon="print"></iron-icon>
+                <paper-dropdown-menu style="width:300px" placeholder="{{localize('select_report')}}" no-label-float name="report">
+                  <paper-tabs class="dropdown-content" attr-for-selected="report" selected="{{report}}">
+                    <paper-tab on-tap="_print" report="report1">{{localize('memorandum')}}</paper-tab>
+                    <paper-tab on-tap="_print" report="report2">{{localize('confirmation')}}</paper-tab>
+                  </paper-tabs>
+                </paper-dropdown-menu>
+              </div>
+            </div>
+          </div>
+          <div>
+            <paper-button on-tap="_backPage" raised>{{localize('bt_back')}}</paper-button>
+            <paper-button hidden="[[_hidBtnPass(dataSelect.approve_status)]]" class="gl-btn-success btn-bottom" on-tap="_save" raised>{{localize('bt_pass')}}</paper-button>
+            
+            <template is="dom-if" if={{isEnabled}}>
+              <paper-button hidden="[[_hidBtnApp(dataSelect.approve_status)]]" class="gl-btn-success btn-bottom" on-tap="approve" raised>{{localize('bt_approve')}}</paper-button>
+            </template>
+            
+            <template is="dom-if" if={{!isEnabled}}>
+              <template is="dom-if" if={{!obExporter(exporter_data.export_status)}}>
+                <paper-button class="gl-btn-warning btn-bottom" on-tap="_extend" raised>{{localize('bt_exporter_extend')}}</paper-button>
+              </template>
+              <template is="dom-if" if={{obExporter(exporter_data.export_status)}}>
+                <paper-button hidden="[[_hidBtnApp(dataSelect.approve_status)]]" class="gl-btn-success btn-bottom" on-tap="approve" raised>{{localize('bt_approve')}}</paper-button>
+              </template>
+            </template>
+            <!--<paper-button id="btn-approve" class="gl-btn-success btn-bottom" on-tap="approve" raised>{{localize('bt_approve')}}</paper-button>-->
+          </div>
+        </div>
+      </div>
+      <div name="register">
+        <company-page doc-type="[[docType]]" data="[[data]]" type-lic="[[typeLic]]"></company-page>
+      </div>
+    </iron-pages>
+    <paper-dialog id="dialog" style="width:60%;">
+      <gl-grid-row width="{{getWidth}}">
+        <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,12]]">
+          <gl-form-textarea label="{{localize('note')}} : " always-float-label value="{{company_remark}}"></gl-form-textarea>
+        </gl-grid-col>
+      </gl-grid-row>
+      <div>
+        <paper-button class=" button-size" raised on-tap="_dialogcancle">{{localize('bt_back')}}</paper-button>
+        <paper-button class="gl-btn-primary button-size" raised on-tap="_reject">{{localize('bt_save')}}</paper-button>
+      </div>
+    </paper-dialog>
+    [[obData(dataSelect)]]
+  </template>
+  <script>
+    Polymer({
+      is: "page-admin-confirm",
+      properties: {
+        pages:{
+          type: String,
+          value: 0
+        },
+        pageSelected: {
+          type: String,
+          value: 'listCompany'
+        },
+        data: {
+          type: Array,
+          value: []
+        },
+        selectDataAll: {
+          type: Boolean,
+          value: false,
+          observer: '_changeselectDataAll'
+        },
+        isHidden:{
+          type: Boolean,
+          value: false
+        }
+      },
+      behaviors: [dataBehavior, nylonLocalizeBehavior, nylonBehavior],
+      listeners: {
+        'back_page' : '_backPage',
+        'clearData' : 'clearData',
+        'refresh-company' : 'getCompany'
+      },
+      created: function () {
+        this.nylonLocalizeImport('/i18n-page-admin-exporter.json');
+      },
+      nylonPageActive: function () {
+        this.getCompany();
+        this.getDocType();
+      },
+      getCompany: function () {
+        this.read('./external/confirm_exporter/list', (data) => {
+          data.map((item) => {
+            for (var key in item) {
+              if (item[key] === '') {
+                item[key] = '-';
+              }
+            }
+          })
+          this.companys = data;
+          for (var i = 0; i < this.companys.length; i++) {
+            this.companys[i]['check'] = false;
+          }
+        })
+      },
+      getDocType: function () {
+        this.read('./external/document_type', (data) => {
+          this.docType = data;
+        })
+        this.read('./external/type_license', (data) => {
+          this.typeLic = data;
+        })
+      },
+      _selectData: function (e) {
+        this.isHidden = true;
+        this.pageSelected = "detailCompany";
+        this.dataSelect = e.currentTarget.data;
+      },
+      _backPage: function (data) {
+        this.pageSelected = 'listCompany';
+        this.pages = 0;
+        this.isHidden = false;
+      },
+      _save: function () {
+        this.fire('toast', {
+          status: 'dialog',
+          text: 'เอกสารครบถ้วนแล้วใช่หรือไม่ ?',
+          confirmed: this._confirmProcess.bind(this),
+          datas: {
+            id: this.dataSelect.id,
+            company_id: this.dataSelect.company_id,
+            exporter_no: this.dataSelect.exporter_no,
+            approve_status: 'process'
+          }
+        });
+      },
+      _confirmProcess: function (result, detail) {
+        if (result == true) {
+          // console.log(detail.datas);
+          this.fire('toast', { status: 'load', text: 'กำลังบันทึกข้อมูล...' })
+          this.update('./external/confirm_exporter/update', detail.datas, () => {
+            this.fire('toast', {
+              status: 'success', text: 'บันทึกสำเร็จ', callback: () => {
+                this.pageSelected = 'listCompany';
+                this.getCompany();
+                // this.fire('refresh-company');
+                // this.fire('refresh-exporter');
+                // console.log('success');
+              }
+            });
+          });
+        }
+      },
+      approve: function () {
+        this.fire('toast', {
+          status: 'dialog',
+          text: 'คุณต้องการจะอนุมัติใช่หรือไม่ ?',
+          confirmed: this._confirmApprove.bind(this),
+          datas: this.dataSelect
+        });
+      },
+      _confirmApprove: function (result, detail) {
+        if (result == true) {
+          if(this.dataSelect.change_status === true){
+            let {id, exporter_id, type_lic_id} = this.exporter_data;
+            let newData = {id, exporter_id, type_lic_id};
+            this.fire('toast', { status: 'load', text: 'กำลังบันทึกข้อมูล...' })
+            this.update('./external/confirm_exporter/changetype', newData, () => {
+              this.fire('toast', {
+                status: 'success', text: 'บันทึกสำเร็จ', callback: () => {
+                  this.pageSelected = 'listCompany';
+                  this.getCompany();
+                }
+              });
+            })
+          }else{
+            let { exporter_no, company_id, id, type_lic_id} = detail.datas;
+            let newData = { exporter_no, company_id, type_lic_id};
+            newData.confirm_id = this.dataSelect.id;
+            newData.exporter_status = 'no';
+            newData.expire_status = true;
+            this.fire('toast', { status: 'load', text: 'กำลังบันทึกข้อมูล...' })
+            this.insert('./external/confirm_exporter/insert', newData, () => {
+              this.fire('toast', {
+                status: 'success', text: 'บันทึกสำเร็จ', callback: () => {
+                  this.pageSelected = 'listCompany';
+                  this.getCompany();
+                }
+              });
+            });
+          }
+        }
+      },
+      _changeselectDataAll: function (val) {
+        // console.log(val);
+        if (typeof this.companys != 'undefined') {
+          this.companys.map((item, index) => {
+            // if (item.approve_status == "process") {
+            this.set('companys.' + index + '.check', val);
+            // }
+          });
+        }
+      },
+      _close: function () {
+        this.fire('close-toggle');
+      },
+      _approveAll: function () {
+        const check = (item) => {
+          return item.check == true;
+        }
+        this.companys.filter(check).map((datas) => {
+          // console.log(datas);
+          let { exporter_no, company_id, id, exporter_status, type_lic_id} = datas;
+          let newData = { exporter_no, company_id, exporter_status, type_lic_id};
+          newData.confirm_id = datas.id
+          // console.log(newData);
+          this.data.push(newData);
+        });
+        this.fire('toast', {
+          status: 'dialog',
+          text: 'คุณต้องการจะอนุมัติใช่หรือไม่ ?',
+          confirmed: this._confirm.bind(this)
+        });
+      },
+      _confirm: function (result, detail) {
+        this.data.map((datas) => {
+          datas = {
+            confirm_id: datas.id,
+            company_id: datas.company_id,
+            exporter_no: datas.exporter_no
+          }
+          if (result == true) {
+            // console.log(datas);
+            this.fire('toast', { status: 'load', text: 'กำลังบันทึกข้อมูล...' })
+            this.insert('./external/confirm_exporter/insert', datas, () => {
+              this.fire('toast', {
+                status: 'success', text: 'บันทึกสำเร็จ', callback: () => {
+                  this.fire('refresh-company');
+                  this.fire('refresh-exporter');
+                  this.fire('refresh-listcompany');
+                  this.selectDataAll = false;
+                  // console.log('success');
+                }
+              });
+            });
+          }
+        });
+      },
+      _dialogRemark: function () {
+        this.$.dialog.toggle();
+        // console.log(this.dataSelect);
+      },
+      _dialogcancle: function () {
+        this.$.dialog.toggle();
+        this.company_remark = "";
+      },
+      _reject: function () {
+        this.fire('toast', {
+          status: 'dialog',
+          text: 'คุณต้องการจะให้ผู้ส่งออกส่งเอกสารเพิ่มเติมใช่หรือไม่ ?',
+          confirmed: this._confirmReject.bind(this),
+          data: {
+            id: this.dataSelect.id,
+            company_id: this.dataSelect.company_id,
+            approve_status: 'reject',
+            company_remark: this.company_remark
+          }
+        });
+      },
+      _confirmReject: function (result, detail) {
+        if (result == true) {
+          // console.log(detail.data);
+          this.fire('toast', { status: 'load', text: 'กำลังบันทึกข้อมูล...' })
+          this.update('./external/confirm_exporter/update', detail.data, () => {
+            this.fire('toast', {
+              status: 'success', text: 'บันทึกสำเร็จ', callback: () => {
+                this.$.dialog.toggle()
+                this.company_remark = "";
+                this.fire('refresh-company');
+                this.fire('refresh-exporter');
+                this._backPage();
+                // console.log('success');
+              }
+            });
+          });
+        }
+      },
+      _extend:function(){
+        this.fire('toast', {
+          status: 'dialog',
+          text: 'คุณต้องการจะต่ออายุผู้ส่งออกใช่หรือไม่ ?',
+          confirmed: this._confirmExtend.bind(this),
+          datas: {
+            id: this.exporter_data.exporter_id,
+            confirm_id: this.dataSelect.id
+          }
+        });
+      },
+      _confirmExtend: function (result, detail) {
+        if (result == true) {
+          // console.log(detail.datas);
+          this.fire('toast',{status:'load',text:'กำลังบันทึกข้อมูล...'})
+          this.update('./external/exporter/update/date', detail.datas, () => {
+            if(this.dataSelect.change_status === true){
+              let newData = {};
+              newData.id = detail.datas.confirm_id;
+              newData.approve_status = 'process';
+              this.update('./external/confirm_exporter/update', newData, () => {
+                this.fire('toast',{status:'success',text:'บันทึกสำเร็จ',callback: () => {
+                  this.getCompany();
+                  this.pageSelected = 'listCompany';
+                }});
+              });
+            }else{
+              this.fire('toast',{status:'success',text:'บันทึกสำเร็จ',callback:() => {
+                this.pageSelected = 'listCompany';
+                this.getCompany();
+                // this.fire('refresh-exporter');
+                // this.fire('refresh-edit',detail.datas.id);
+              }});
+            }
+          });
+        }
+      },
+      changeNo: function (e) {
+        var company = e.currentTarget.data;
+        var datas = {
+          id: company.id,
+          exporter_no: parseInt(company.exporter_no),
+          company_id: company.company_id
+        }
+        // console.log(datas);
+        this.read('./external/check/duplicate?table=confirm_exporter&field=exporter_no&value=' + datas.exporter_no, (response) => {
+          if (response == 0) {
+            this.fire('toast', { status: 'load', text: 'กำลังบันทึกข้อมูล...' })
+            this.update('./external/confirm_exporter/update', datas, () => {
+              this.fire('toast', {
+                status: 'success', text: 'บันทึกสำเร็จ', callback: () => {
+                  this.fire('refresh-company');
+                  // console.log('success');
+                }
+              });
+            });
+          }
+          else {
+            this.read('./external/check/myowner?table=confirm_exporter&id=' + datas.id + '&field=exporter_no&value=' + datas.exporter_no, (response) => {
+              if (response == 1) {
+                this.fire('toast', { status: 'load', text: 'กำลังบันทึกข้อมูล...' })
+                this.update('./external/confirm_exporter/update', datas, () => {
+                  this.fire('toast', {
+                    status: 'success', text: 'บันทึกสำเร็จ', callback: () => {
+                      this.fire('refresh-company');
+                      // console.log('success');
+                    }
+                  });
+                });
+              }
+              else {
+                this.fire('toast', {
+                  status: 'connectError', text: 'เลข ข. นี้มีอยู่แล้ว',
+                  callback: function () {
+                  }
+                })
+              }
+            });
+          }
+        });
+      },
+      _print: function (e) {
+        // console.log(e.target.getAttribute('report'));
+        if(e.target.getAttribute('report') == 'report1'){
+          if(typeof this.exporter_data !== 'undefined'){
+            if(this.exporter_data.export_status === false){
+              // console.log('หมดอายุ');
+              window.open('./api/external/report_exporter/approve_renew_1/'+this.dataSelect.id);
+            }else{
+              // console.log('ไม่หมดอายุ');
+              window.open('./api/external/report_exporter/approve_changtype/'+this.dataSelect.id);
+            }
+          }else{
+              window.open('./api/external/report_exporter/approve_general_1/'+this.dataSelect.id);
+          }
+        }else{
+          if(typeof this.exporter_data !== 'undefined'){
+            window.open('./api/external/report_exporter/approve_renew_2/'+this.dataSelect.id);
+          }else{
+            window.open('./api/external/report_exporter/approve_general_2/'+this.dataSelect.id);
+          }
+        }
+        
+      },
+      checkStatus: function (val) {
+        if (val != 'process') {
+          return false
+        }
+        else {
+          return true
+        }
+      },
+      _search: function () {
+        if(this.companyId != ''){
+          this.read('./external/company/' + this.companyId, (data) => {
+            if(data != [] && data != ''){
+              this.read('./external/confirm_exporter/list/' + data[0].id, (data) => {
+                if (data != []) {
+                  for (var key in data) {
+                    // console.log(data[key]);
+                    if (data[key] == '') {
+                      data[key] = "-";
+                    }
+                  }
+                  this.pageSelected = "register";
+                  this.data = data;
+                  // console.log('มี',data);
+                }
+                else {
+                    this.read('./external/company/' + this.companyId, (data) => {
+                      data[0].approve_status = 'register';
+                      data[0].approve_status_name = 'ยังไม่ลงทะเบียนผู้ส่งออก';
+                      for (var key in data[0]) {
+                        // console.log(data[key]);
+                        if (data[0][key] == '') {
+                          data[0][key] = "-";
+                        }
+                      }
+                      this.pageSelected = "register";
+                      this.data = data[0];
+                      // console.log('ไม่มี',data);
+                    })
+                  }
+              })
+            }
+            else{
+              this.fire('toast', { status: 'connectError', text: 'ไม่มีเลขประจำตัวผู้ส่งออกในระบบ' })
+            }
+          })
+        }
+        else{
+          this.fire('toast', { status: 'connectError', text: 'กรุณากรอกเลขประจำตัวผู้ส่งออก' })
+        }
+      },
+      clearData: function(){
+        this.idCompany = {};
+        this.companyId = '';
+        this._backPage();
+      },
+      getFile: function () {
+        if (typeof this.dataSelect != 'undefined' && this.dataSelect != '') {
+          var companyId = this.dataSelect.company_id;
+          if (companyId != '' && companyId != undefined) {
+            axios.get('/external/upload/list/' + companyId)
+              .then((response) => {
+                // console.log(response);
+                this.listFiles = response.data;
+              })
+              .catch(function (error) {
+                console.log(error);
+              });
+          }
+        }
+      },
+      obData: function(val){
+        this.read('./external/confirm_exporter/get/'+val.id, (data) =>{
+            this.exporter_data = data[0];
+            if(typeof this.exporter_data === 'undefined'){
+              this.isEnabled = true;
+            }else{
+              this.isEnabled = false;
+            }
+        })
+      },
+      indexNo:function(val){
+        return val+1
+      },
+      obExporter:function(val){
+        if(typeof val === 'undefined' && val == undefined){
+          return true
+        }else if(val === true){
+          return true
+        }else{
+          return false
+        }
+      },
+      _hidBtnApp:function(val){
+        if(val == 'process'){
+          return false
+        }else{
+          return true
+        }
+      },
+      _hidBtnPass:function(val){
+        if(val == 'request'){
+          return false
+        }else{
+          return true
+        }
+      },
+      _checkData:function(val){
+        if(val.length > 0){
+          return false
+        }else{
+          return true
+        }
+      }
+    });
+  </script>
+</dom-module>

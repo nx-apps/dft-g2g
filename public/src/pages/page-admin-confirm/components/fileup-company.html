@@ -1,0 +1,57 @@
+<dom-module id="fileup-company">
+  <style include="iron-flex iron-flex-factors iron-flex-alignment gl-size gl-color">
+    .title{
+      font-size: 17px;
+      font-family: 'rsubold', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      /*text-decoration:underline;*/
+      margin: 10px 0px 10px 5px;
+    }
+    upload-file{
+      --divider-color: white;
+      --primary-color: #339933;
+      --vaadin-upload-drag-ripple: {
+        border: 2px solid #ddd;
+      }
+    }
+    .title-head{
+      text-align: center;
+      font-size: var(--font-size-h4);
+      font-family: 'rsubold', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      /*text-decoration:underline;*/
+      margin: 30px 0px 20px 0px;
+    }
+  </style>
+  <template>
+    <div class="title-head">{{localize('doc_attach')}}</div>
+    <template is="dom-repeat" items="[[docType]]">
+      <div class="title">[[item.doc_name_th]]</div>
+      <upload-file
+        target="/api/external/upload/exporter/file/[[companyId]]"
+        accept="application/pdf"
+        ref-path="exporter.document.[[item.doc_code]]"
+        doc-type-id="[[item.doc_type_id]]"
+        company-id="[[companyId]]"
+        >
+      </upload-file>
+    </template>
+    <div style="margin-bottom:20px;"></div>
+  </template>
+  <script>
+    Polymer({
+      is: "fileup-company",
+      behaviors: [dataBehavior,nylonBehavior, nylonLocalizeBehavior],
+      observers: [
+        '_dataInput(data)'
+      ],
+      created: function () {
+        this.nylonLocalizeImport('/i18n-page-admin-exporter.json');
+      },
+      _dataInput:function(data) {
+        this.companyId = data.company_id;
+        // console.log(this.companyId);
+      }
+    });
+  </script>
+</dom-module>

@@ -1,0 +1,198 @@
+<link rel="import" href="./../../components/validateFormBehaviors.html">
+
+<dom-module id="detail-company">
+  <style is="custom-style" include="iron-flex iron-flex-factors iron-flex-alignment gl-size gl-color">
+    * {
+      font-family: 'CSChatThaiUI', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    .title-head {
+      text-align: center;
+       font-size: var(--font-size-h3);
+        color: white;
+    }
+    .title {
+      text-align: center;
+      font-size: var(--font-size-h4);
+      font-family: 'rsubold', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      margin: 20px 0px 20px 0px;
+    }
+    paper-icon-button {
+      margin-top: 20px;
+    }
+    .padding {
+      padding: 20px;
+    }
+    .text {
+      margin-top: 25px;
+      font-size: var(--font-size-h5);
+    }
+    .boxNortify{
+      border: 2px solid red;
+      background-color: red;
+      padding: 5px;
+    }
+    .boxChange_status{
+      border: 2px solid #6699FF;
+      background-color: #6699FF;
+      padding: 5px;
+    }
+  </style>
+  <template>
+    <template is="dom-if" if={{!obExporter(exporterData.export_status)}}>
+      <div id="titleBg" class="boxNortify">
+        <div id="titleExporter" class="title-head"><iron-icon icon="icons:info"></iron-icon>  {{localize('request_change_expire')}}</div>
+      </div>
+    </template>
+    <template is="dom-if" if={{obExporter(exporterData.export_status)}}>
+      <template is="dom-if" if={{data.change_status}}>
+        <div id="titleBg" class="boxChange_status">
+          <div id="titleExporter" class="title-head"><iron-icon icon="icons:info"></iron-icon>  {{localize('request_change_status')}}</div>
+        </div>
+      </template>
+    </template>
+    <gl-grid-row width="{{getWidth}}">
+      <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,9]]"></gl-grid-col>
+      <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
+        <div class="text" style="text-align: right;">{{localize('status')}} : {{data.approve_status_name}}</div>
+      </gl-grid-col>
+    </gl-grid-row>
+
+    <div class="title">{{localize('detail_data')}}</div>
+    <gl-form-panel set-border="0">
+
+      [[checkStatus(data.approve_status)]]
+
+      <gl-grid-row>
+        <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+          <gl-form-input hidden id="input-no" label="{{localize('no_exporter_fullname')}} :" value="{{data.exporter_no_name}}" disabled></gl-form-input>
+        </gl-grid-col>
+      </gl-grid-row>
+
+
+      <gl-grid-row>
+        <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+          <gl-form-input label="{{localize('tax_no')}} :" value="{{data.company_taxno}}" disabled></gl-form-input>
+        </gl-grid-col>
+        <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+          <gl-form-textarea label="{{localize('name_company')}} :" value="{{data.company_name_th}}" disabled></gl-form-textarea>
+        </gl-grid-col>
+        <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+          <gl-form-textarea label="{{localize('name_company')}} ({{localize('eng')}}) :" value="{{data.company_name_en}}" disabled></gl-form-textarea>
+        </gl-grid-col>
+      </gl-grid-row>
+
+      <gl-grid-row>
+        <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,10]]">
+          <gl-form-textarea label="{{localize('address')}} :" value="{{data.company_address_th}}" disabled></gl-form-textarea>
+        </gl-grid-col>
+        <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,10]]">
+          <gl-form-textarea label="{{localize('address')}} ({{localize('eng')}}) :" value="{{data.company_address_en}}" disabled></gl-form-textarea>
+        </gl-grid-col>
+      </gl-grid-row>
+
+      <gl-grid-row>
+        <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+          <gl-form-textarea label="{{localize('tel')}} :" value="{{data.company_phone}}" disabled></gl-form-textarea>
+        </gl-grid-col>
+        <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+          <gl-form-input label="{{localize('fax')}} :" value="{{data.company_fax}}" disabled></gl-form-input>
+        </gl-grid-col>
+        <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+          <gl-form-dropdown-menu style="width:60%;" class="checkValidate" label="{{localize('type_license')}}" placeholder="{{localize('select_type')}}" disabled="[[obItem(data.creater)]]" required>
+            <paper-menu class="dropdown-content" attr-for-selected="value" selected="{{data.type_lic_id}}" name="type_lic_id">
+              <template is="dom-repeat" items={{typeLic}}>
+                <paper-item value="[[item.type_lic_id]]">{{item.type_lic_name}}</paper-item>
+              </template>
+            </paper-menu>
+          </gl-form-dropdown-menu>
+        </gl-grid-col>
+        <!--<gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+          <gl-form-dropdown-menu style="width:60%;" class="checkValidate" label="สถานะสมาชิกสมาคมผู้ส่งออก" placeholder="กรุณาเลือกทั้งหมด" disabled="[[obItem(data.creater)]]" required>
+            <paper-menu class="dropdown-content" attr-for-selected="value" selected="{{data.exporter_status}}" name="exporter_status">
+              <paper-item value="yes">{{localize('member')}}</paper-item>
+              <paper-item value="no">{{localize('no_member')}}</paper-item>
+            </paper-menu>
+          </gl-form-dropdown-menu>
+        </gl-grid-col>-->
+      </gl-grid-row>
+      <div class="horizontal layout">
+        <div class="text">{{localize('list_board')}}</div>
+      </div>
+      <gl-grid-row>
+        <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+          <template is="dom-repeat" items="{{data.company_agent}}">
+            <gl-form-input label="{{localize('name_committee')}}" auto-validate error-message="{{localize('insert_board')}}" required value="{{item.agent_name}}"
+              no-label-float disabled></gl-form-input>
+          </template>
+        </gl-grid-col>
+      </gl-grid-row>
+
+      <gl-grid-row>
+        <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,9]]"></gl-grid-col>
+        <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
+          <gl-form-input hidden id="input-remark" always-float-label label="{{localize('note')}} : " value="{{data.company_remark}}" disabled></gl-form-input>
+        </gl-grid-col>
+      </gl-grid-row>
+    </gl-form-panel>
+
+  </template>
+  <script>
+    Polymer({
+      is: "detail-company",
+      behaviors: [nylonBehavior, nylonLocalizeBehavior, ValidateFormBehavior],
+      properties: {
+        data: {
+          type: Object,
+          notify: true
+        }
+      },
+      created: function () {
+        this.nylonLocalizeImport('/i18n-page-admin-exporter.json');
+      },
+      backPage: function () {
+        this.fire('backPage');
+      },
+      checkStatus: function (val) {
+        if (typeof val != 'undefined' && val != undefined) {
+          if (val == 'request') {
+            this.$$('#input-no').setAttribute("hidden", "hidden");
+            this.$$('#input-remark').setAttribute("hidden", "hidden");
+          }
+          else if (val == 'reject') {
+            this.$$('#input-no').setAttribute("hidden", "hidden");
+            this.$$('#input-remark').removeAttribute("hidden");
+          }
+          else if (val == 'approve') {
+            this.$$('#input-no').removeAttribute("hidden");
+            this.$$('#input-remark').setAttribute("hidden", "hidden");
+          }
+        }
+      },
+      obItem:function(val){
+        if(typeof val != 'undefined' && val != undefined){
+          if(val == 'admin'){
+            return true;
+          }
+          else{
+            return false;
+          }
+        }
+      },
+      validate:function(){
+        var check = this.validateForm('.checkValidate')
+        return check
+      },
+      obExporter:function(val){
+        if(typeof val === 'undefined' && val == undefined){
+          return true
+        }else if(val === true){
+          return true
+        }else{
+          return false
+        }
+      }
+    });
+  </script>
+</dom-module>

@@ -9,19 +9,19 @@
     <template>
     <style>
         *{
-            font-family: 'rsuregular', sans-serif;
+            font-family: 'CSChatThaiUI', sans-serif !important;
             -webkit-font-smoothing: antialiased;
         }
         app-toolbar{
             color: white;
-            background-color: #FF5000;
+            background-color: orange;
             font-size: 22px;
-            user-drag: none;
+            /*user-drag: none;
             user-select: none;
             -moz-user-select: none;
             -webkit-user-drag: none;
             -webkit-user-select: none;
-            -ms-user-select: none;
+            -ms-user-select: none;*/
         }
         iron-image,iron-icon{
             padding-right: 10px;
@@ -39,8 +39,7 @@
     </style>
         <div class="menu">
 				<app-toolbar>
-                     <iron-image src="./../../images/manifest/icon-32.png">
-                     </iron-image>
+                     <iron-image src="./../../images/01/32.png"></iron-image>
                      <!--<iron-icon icon="home" item-icon></iron-icon>-->
                         Menu
                      </app-toolbar>
@@ -67,17 +66,21 @@
                     type:Array,
                     value:[
                         {
-                            name: 'จัดการสัญญา',
-                            path: '/dashboard'
+                            name: 'รายชื่อผู้ส่งออกข้าวไปต่างประเทศ',
+                            path: '/admin-exporter'
+                        },
+                        {
+                            name: 'จัดการข้อมูลบริษัท',
+                            path: '/company-edit'
                         },
                         // {
-                        //     name: 'ซื้อขายข้าว',
-                        //     path: '/g2g'
+                        //     name: 'ต่ออายุคน. ทะเบียนผู้ส่งออกข้าวไปต่างประเทศ',
+                        //     path: '/dit-exporter'
                         // },
-                        {
-                            name: 'รายงาน',
-                            path: '/report'
-                        },
+                        // {
+                        //     name: 'รายงาน',
+                        //     path: '/report'
+                        // }
                     ]
                 },
                 sendElement:{
@@ -87,33 +90,27 @@
             },
 
             selectPage:function(e){
-              // console.log(1111);
                 if((('/'+this.path) != e.currentTarget.getAttribute('path')) && (e.currentTarget.getAttribute('path')!='')){
                     this.set('listMenu.'+e.currentTarget.index+'.loading',true);
                     if(!this.sendElement){
-                      // console.log('send-element-layout-main-drawer');
                         this.fire('send-element-layout-main-drawer',this);
                         this.sendElement = true;
                     }
-                    // console.log('path');
                     this.fire('nylon-change-page',{
                         path:e.currentTarget.getAttribute('path')
                     });
                 }else{
-                  // console.log('start');
-                    this.fire('toggle-drawer');
+                    this.fire('open-drawer');
                 }
 
             },
             _loaded:function(){
-              // console.log('fin');
                 this.async(()=>{
                     this.listMenu.map((item,i)=>{
                         this.set('listMenu.'+i+'.loading',false);
                     });
-
-                    this.fire('toggle-drawer');
-                },1000)
+                    this.fire('close-drawer');
+                },200)
 
             }
         });

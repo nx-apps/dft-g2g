@@ -1,0 +1,15 @@
+{
+    "name": "exporter.type_license",
+    "patternProperties": {
+        ".*$": {
+            "type": "string"
+        }
+    },
+    "properties": {
+        "id": {
+            "type": "string",
+            "maxLength": 2,
+            "minLength": 2
+        }
+    }
+}

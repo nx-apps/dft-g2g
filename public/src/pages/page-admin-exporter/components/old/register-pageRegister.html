@@ -1,0 +1,22 @@
+<link rel="import" href="register/confirm-exporter.html">
+
+<dom-module id="register-pageRegister">
+  <template>
+
+    <gl-form-panel set-border="0px">
+        <confirm-exporter companys="[[companys]]" doc-type="[[docType]]"  list-company="[[listCompany]]"></confirm-exporter>
+    </gl-form-panel>
+  </template>
+  <script>
+    Polymer({
+      is: "register-pageRegister",
+      behaviors: [dataBehavior],
+      backPage:function(){
+        this.$$('confirm-exporter')._backPage();
+      },
+      clearData:function(){
+        this.$$('confirm-exporter').clearData();
+      }
+    });
+  </script>
+</dom-module>

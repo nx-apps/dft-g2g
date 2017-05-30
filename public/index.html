@@ -4,13 +4,13 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
 
-  <title>G2G</title>
+  <title>ระบบการขึ้นทะเบียนผู้ส่งออกข้าว</title>
 
-  <link rel="shortcut icon" sizes="32x32" href="/images/manifest/icon-32.png">
+  <link rel="shortcut icon" sizes="32x32" href="/images/01/32.png">
   <link rel="manifest" href="/manifest.json">
   <script src="/bower_components/axios/dist/axios.min.js"></script>
-  
-  <script>axios.defaults.baseURL = `https://${window.location.hostname}:${location.port}/api`</script>
+  <!--<script>axios.defaults.baseURL = 'https://'+window.location.hostname+':8080/api'</script>-->
+  <script>axios.defaults.baseURL = `https://${window.location.hostname}:${location.port}/api`</script> 
   <link rel="import" href="/src/nylon-app.html" async>
 
   <style>
@@ -19,22 +19,62 @@
       margin: 0;
     }
 
-  </style>
-  <script>
-    window._config={
-      // reportServer:"https://g2g.rice.dft.go.th/reporter",
-      reportServer:"https://localhost:8081",
-      // externalServer:"https://exporter.rice.dft.go.th",
-      externalServer:"https://localhost:8080",
-      externalServerCommon:'https://localhost:3000'
-    };
+    #toolbar {
+				background-color: #f7941e;
+				color: white;
+				font-family: 'CSChatThaiUI', sans-serif !important;
+        -webkit-font-smoothing: antialiased;
+				--app-toolbar-font-size: 20px;
+				box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
+        height:64px;
+			}
 
-  </script>
+
+      .loader {
+        border: 5px solid #f3f3f3;
+        border-radius: 50%;
+        border-top: 5px solid #3498db;
+        width: 30px;
+        height: 30px;
+        -webkit-animation: spin 0.5s linear infinite;
+        animation: spin 0.5s linear infinite;
+
+        margin: auto;
+      }
+
+      @-webkit-keyframes spin {
+        0% { -webkit-transform: rotate(0deg); }
+        100% { -webkit-transform: rotate(360deg); }
+      }
+
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+
+      .middle{
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        top:0;
+        left: 0;
+        z-index: 1;
+        display: -webkit-flex;
+        display: flex;
+      }
+
+  </style>
 
 </head>
 <body>
 
-  <nylon-app unresolved></nylon-app>
+  <nylon-app unresolved>
+    <div id="toolbar"></div>
+    <div class="middle">
+      <div class="loader"></div>
+    </div>
+
+  </nylon-app>
 
   <script>
     window.performance && performance.mark && performance.mark('index.html');

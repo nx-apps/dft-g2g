@@ -1,0 +1,36 @@
+{
+    "name": "exporter.trader",
+    "properties": {
+        "id": {
+            "type": "string"
+        },
+        "seller_id": {
+            "type": "string"
+        },
+        "trader_date_approve": {
+            "type": "string",
+            "format": "date-time"
+        },
+        "trader_no": {
+            "type": "string"
+        },
+        "trader_name": {
+            "type": "string"
+        },
+        "trader_distric": {
+            "type": "string"
+        },
+        "trader_office": {
+            "type": "string"
+        },
+        "province_id": {
+            "type": "string"
+        },
+        "type_lic_id": {
+            "type": "string"
+        }
+    },
+    "required": [
+        "trader_date_approve"
+    ]
+}

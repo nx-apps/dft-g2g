@@ -1,0 +1,25 @@
+{
+    "name": "exporter.exporter",
+    "properties": {
+        "id": {
+            "type": "string"
+        },
+        "exporter_no": {
+            "type": "number"
+        },
+        "exporter_date_approve": {
+            "type": "string",
+            "format": "date-time"
+        },
+        "exporter_remark": {
+            "type": "string"
+        },
+        "trader_id": {
+            "type": "string"
+        }
+    },
+    "required": [
+        "exporter_date_approve",
+        "trader_id"
+    ]
+}

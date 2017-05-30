@@ -1,0 +1,282 @@
+<link rel="import" href="./../../components/validateFormBehaviors.html">
+<dom-module id="company-manage">
+  <style is="custom-style" include="iron-flex iron-flex-factors iron-flex-alignment gl-size gl-color">
+    .title {
+      text-align: center;
+      font-size: var(--font-size-h4);
+      font-family: 'rsubold', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      margin: 20px 0px 20px 0px;
+    }
+
+    paper-icon-button {
+      margin-top: 20px;
+    }
+
+    .padding {
+      padding: 20px;
+    }
+
+    .text {
+      margin-top: 25px;
+      font-size: var(--font-size-h5);
+    }
+  </style>
+  <template>
+    <div class="horizontal end-justified layout">
+      <div hidden="{{isEnabled}}">
+        <paper-icon-button icon="create" on-tap="editChange" title="{{localize('edit_data')}}"></paper-icon-button>
+        <paper-icon-button style="margin-right: 10px;" icon="delete" on-tap="_delete" title="{{localize('bt_delete')}}"></paper-icon-button>
+      </div>
+    </div>
+
+    <gl-form-panel set-border="1px" set-padding="10px 10px 10px 10px">
+      <div class="title">{{localize('detail_data')}}</div>
+
+      <gl-grid-row width="{{getWidth}}">
+        <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+          <gl-form-input class="checkValidate" required error-message="{{localize('request_form')}}" placeholder="{{localize('insert_form')}}"
+            label="{{localize('tax_no')}} :" value="{{data.company_taxno}}" disabled="{{_checkStatus(statusAction)}}" allowed-pattern="[0-9]"
+            maxlength="13"></gl-form-input>
+        </gl-grid-col>
+        <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+          <gl-form-textarea class="checkValidate" required error-message="{{localize('request_form')}}" placeholder="{{localize('insert_form')}}"
+            label="{{localize('name_company')}} :" value="{{data.company_name_th}}" disabled="{{enabled}}"></gl-form-textarea>
+        </gl-grid-col>
+        <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+          <gl-form-textarea class="checkValidate" required error-message="{{localize('request_form')}}" placeholder="{{localize('insert_form')}}"
+            label="{{localize('name_company')}} ({{localize('eng')}}) :" value="{{data.company_name_en}}" disabled="{{enabled}}"></gl-form-textarea>
+        </gl-grid-col>
+      </gl-grid-row>
+
+      <gl-grid-row>
+        <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,10]]">
+          <gl-form-textarea class="checkValidate" required error-message="{{localize('request_form')}}" placeholder="{{localize('insert_form')}}"
+            label="{{localize('address')}} :" value="{{data.company_address_th}}" disabled="{{enabled}}"></gl-form-textarea>
+        </gl-grid-col>
+        <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,10]]">
+          <gl-form-textarea class="checkValidate" required error-message="{{localize('request_form')}}" placeholder="{{localize('insert_form')}}"
+            label="{{localize('address')}} ({{localize('eng')}}) :" value="{{data.company_address_en}}" disabled="{{enabled}}"></gl-form-textarea>
+        </gl-grid-col>
+      </gl-grid-row>
+
+      <gl-grid-row>
+        <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+          <gl-form-textarea class="checkValidate" required error-message="{{localize('request_form')}}" placeholder="{{localize('insert_form')}}"
+            label="{{localize('country')}} :" value="{{data.company_phone}}" disabled="{{enabled}}"></gl-form-textarea>
+        </gl-grid-col>
+        <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+          <gl-form-input class="checkValidate" required error-message="{{localize('request_form')}}" placeholder="{{localize('insert_form')}}"
+            label="{{localize('country')}} ({{localize('eng')}}) :" value="{{data.company_fax}}" disabled="{{enabled}}"></gl-form-input>
+        </gl-grid-col>
+      </gl-grid-row>
+
+      <gl-grid-row>
+        <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+          <gl-form-textarea class="checkValidate" required error-message="{{localize('request_form')}}" placeholder="{{localize('insert_form')}}"
+            label="{{localize('tel')}} :" value="{{data.company_country_th}}" disabled="{{enabled}}"></gl-form-textarea>
+        </gl-grid-col>
+        <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+          <gl-form-input class="checkValidate" required error-message="{{localize('request_form')}}" placeholder="{{localize('insert_form')}}"
+            label="{{localize('fax')}} :" value="{{data.company_country_en}}" disabled="{{enabled}}"></gl-form-input>
+        </gl-grid-col>
+      </gl-grid-row>
+
+      <div class="horizontal layout">
+        <div class="text">{{localize('list_board')}}</div>
+        <div hidden="[[enabled]]">
+          <paper-icon-button icon="icons:add-circle" on-tap="_addAgent" title="{{localize('add_board')}}"></paper-icon-button>
+        </div>
+      </div>
+      <!--<gl-grid-row>-->
+      <!--<gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">-->
+      <template is="dom-repeat" items="{{data.company_agent}}">
+        <div class="vertical layout">
+          <div class="horizontal layout">
+            <gl-form-input style="width:400px;" label="{{localize('name_committee')}}" auto-validate error-message="{{localize('insert_board')}}"
+              required value="{{item.agent_name}}" no-label-float disabled="{{enabled}}">
+            </gl-form-input>
+            <div hidden="[[enabled]]">
+              <paper-icon-button id="[[index]]" style="margin:0px;" icon="icons:remove-circle" on-tap="_deleteAgent" title="{{localize('del_board')}}"></paper-icon-button>
+            </div>
+          </div>
+        </div>
+      </template>
+      <!--</gl-grid-col>-->
+      <!--</gl-grid-row>-->
+
+    </gl-form-panel>
+
+    <div class="horizontal end-justified layout">
+      <div hidden="[[enabled]]">
+        <paper-button on-tap="_cancel" raised title="{{localize('bt_back')}}">{{localize('bt_back')}}</paper-button>
+        <paper-button class="gl-btn-success" on-tap="_save" raised title="{{localize('bt_save')}}">{{localize('bt_save')}}</paper-button>
+      </div>
+    </div>
+
+  </template>
+  <script>
+    Polymer({
+      is: "company-manage",
+      behaviors: [nylonBehavior, dataBehavior, nylonLocalizeBehavior, ValidateFormBehavior],
+      properties: {
+        data: {
+          type: Object,
+          notify: true
+        },
+        enabled: {
+          type: Boolean,
+          value: false
+        },
+        isEnabled: {
+          type: Boolean,
+          value: true
+        }
+      },
+      created: function () {
+        this.nylonLocalizeImport('/i18n-page-admin-exporter.json');
+      },
+      editChange: function () {
+        this.isEnabled = true;
+        this.enabled = false;
+      },
+      _addAgent: function () {
+        this.push('data.company_agent', {
+          agent_name: ''
+        });
+      },
+      _cancel: function () {
+        if (this.statusAction == 'edit') {
+          this.clearData(this.data.company_taxno);
+          this.fire('get-company', this.data.company_taxno);
+        } else {
+          this.fire('back-page');
+        }
+      },
+      _save: function () {
+        if (this.statusAction == 'edit') {
+          for (var key in this.data) {
+            if (this.data[key] === '-') {
+              this.data[key] = "";
+            }
+          }
+          delete this.data['date_exported']
+          delete this.data['company_name']
+          this.fire('toast', {
+            status: 'dialog',
+            text: 'คุณต้องการแก้ไขข้อมูลใช่หรือไม่ ?',
+            confirmed: this._confirmSave.bind(this),
+            datas: this.data
+          });
+        } else {
+          this.fire('toast', {
+            status: 'dialog',
+            text: 'คุณต้องการเพิ่มข้อมูลใช่หรือไม่ ?',
+            confirmed: this._confirmSave.bind(this),
+            datas: this.data
+          });
+        }
+      },
+      _confirmSave: function (result, detail) {
+        if (result == true) {
+          var check = this.validate();
+          if (check === true) {
+            if (this.statusAction == 'edit') {
+              this.read('./external/check/duplicate?table=company&field=company_name_th&value=' + detail.datas.company_name_th, (data) => {
+                if (data == 0) {
+                  this.update('./external/company/update', detail.datas, () => {
+                    this.fire('toast', {
+                      status: 'success', text: 'บันทึกสำเร็จ', callback: () => {
+                        this.clearData(detail.datas.company_taxno);
+                        this.fire('refresh-company');
+                      }
+                    });
+                  });
+                } else {
+                  this.read('./external/check/myowner?table=company&id=' + detail.datas.id + '&field=company_name_th&value=' + detail.datas.company_name_th, (data) => {
+                    if (data == 1) {
+                      this.update('./external/company/update', detail.datas, () => {
+                        this.fire('toast', {
+                          status: 'success', text: 'บันทึกสำเร็จ', callback: () => {
+                            this.clearData(detail.datas.company_taxno);
+                            this.fire('refresh-company');
+                          }
+                        });
+                      });
+                    } else {
+                      this.fire('toast', { status: 'connectError', text: 'ชื่อบริษัทนี้มีอยู่แล้ว', callback: () => { } })
+                    }
+                  })
+                }
+              })
+            } else {
+              // console.log(detail.datas);
+              this.read('./external/check/duplicate?table=company&field=company_taxno&value=' + detail.datas.company_taxno, (data) => {
+                if (data < 1) {
+                  this.read('./external/check/duplicate?table=company&field=company_name_th&value=' + detail.datas.company_name_th, (data_name) => {
+                    if (data_name < 1) {
+                      this.insert('./external/company/insert', detail.datas, () => {
+                        this.fire('toast', {
+                          status: 'success', text: 'บันทึกสำเร็จ', callback: () => {
+                            this.data = { company_agent: [] };
+                            this.fire('refresh-company');
+                          }
+                        });
+                      });
+                    } else {
+                      this.fire('toast', { status: 'connectError', text: 'ชื่อบริษัทนี้มีอยู่แล้ว', callback: () => { } })
+                    }
+                  })
+                } else {
+                  this.fire('toast', { status: 'connectError', text: 'เลขประจำตัวผู้เสียภาษีนี้มีอยู่แล้ว', callback: () => { } })
+                }
+
+              })
+
+            }
+          }
+        }
+      },
+      clearData: function (val) {
+        this.isEnabled = false;
+        this.enabled = true;
+        this.fire('get-company', val);
+      },
+      _deleteAgent: function (e) {
+        // console.log(e.currentTarget.id);
+        var index = e.currentTarget.id;
+        this.splice('data.company_agent', index, 1);
+      },
+      _checkStatus: function (val) {
+        if (val == 'add') {
+          return false
+        } else {
+          return true
+        }
+      },
+      validate: function () {
+        var check = this.validateForm('.checkValidate')
+        return check
+      },
+      _delete: function () {
+        this.fire('toast', {
+          status: 'dialog',
+          text: 'ต้องการลบข้อมูลใช่หรือไม่ ?',
+          confirmed: (result) => {
+            if (result == true) {
+              this.fire('toast', { status: 'load' });
+            this.delete('./external/company/delete/id/', this.data.id, () => {
+              this.fire('toast', {
+                status: 'success', text: 'ลบข้อมูลสำเร็จ', callback: () => {
+                  this.fire('refresh-company');
+                  this.fire('back-page');
+                }
+              });
+            });
+          }
+        }
+        })
+      }
+    });
+  </script>
+</dom-module>

@@ -1,0 +1,52 @@
+<dom-module id="register-fileup">
+  <style include="iron-flex iron-flex-factors iron-flex-alignment gl-size gl-color">
+    *{
+      font-family: 'CSChatThaiUI', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    .title{
+      font-size: var(--font-size-h5);
+      margin: 10px 0px 10px 5px;
+    }
+    upload-file{
+      --primary-color: #339933;
+    }
+    .title-head{
+      text-align: center;
+      font-size: var(--font-size-h4);
+      margin: 30px 0px 20px 0px;
+    }
+  </style>
+  <template>
+    <div class="title-head">{{localize('doc_attach')}}</div>
+    <template is="dom-repeat" items="[[docType]]">
+      <div class="title">[[item.doc_name_th]]</div>
+      <upload-file
+        target="/api/external/upload/exporter/file/[[companyId]]"
+        accept="application/pdf"
+        ref-path="exporter.document.[[item.doc_code]]"
+        doc-type-id="[[item.doc_type_id]]"
+        company-id="[[companyId]]"
+        >
+      </upload-file>
+    </template>
+    <div style="margin-bottom:20px;"></div>
+  </template>
+  <script>
+    Polymer({
+      is: "register-fileup",
+      behaviors: [dataBehavior, nylonLocalizeBehavior, nylonBehavior],
+      created:function(){
+          this.nylonLocalizeImport('/i18n-page-admin-exporter.json');
+      },
+      observers: [
+        '_dataInput(data)'
+      ],
+      _dataInput:function(data) {
+        this.companyId = data.company_id;
+        // console.log(this.companyId);
+        // console.log(this.docType);
+      }
+    });
+  </script>
+</dom-module>
