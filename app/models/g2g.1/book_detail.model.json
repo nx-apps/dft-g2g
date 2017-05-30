@@ -1,0 +1,43 @@
+{
+    "name": "g2g.book_detail",
+    "items": {
+        "properties": {
+            "id": {
+                "type": "string"
+            },
+            "num_of_container": {
+                "type": "integer"
+            },
+            "package_id": {
+                "type": "string"
+            },
+            "package": {
+                "type": "object"
+            },
+            "exporter_id": {
+                "type": "string"
+            },
+            "hamonize_quantity": {
+                "type": "number"
+            },
+            "price_per_ton": {
+                "type": "number"
+            },
+            "hamonize_id": {
+                "type": "string"
+            },
+            "hamonize": {
+                "type": "object"
+            },
+            "book_id": {
+                "type": "string"
+            },
+            "cl_id": {
+                "type": "string"
+            },
+            "contract_id": {
+                "type": "string"
+            }
+        }
+    }
+}
