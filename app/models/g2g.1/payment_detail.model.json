@@ -7,6 +7,9 @@
         "exporter_id": {
             "type": "string"
         },
+        "company":{
+            "type":"object"
+        },
         "fee_id": {
             "type": "string"
         },

@@ -17,6 +17,9 @@
             "exporter_id": {
                 "type": "string"
             },
+            "company": {
+                "type": "object"
+            },
             "hamonize_quantity": {
                 "type": "number"
             },
