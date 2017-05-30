@@ -24,5 +24,5 @@ module.exports = function (app) {
     });
     app.get('/sql', index.sql);
     app.post('/date',index.date);
-
+    app.get('/company',index.company);
 }

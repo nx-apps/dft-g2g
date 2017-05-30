@@ -21,7 +21,7 @@
       <table class="gl-table-default">
         <thead class="table-head">
           <tr>
-            <th><div class="text-table">{{localize('file_name')}}</div></th>
+            <th><div class="text-table">{{localize.file_name}}</div></th>
             <th></th>
           </tr>
         </thead>
@@ -30,7 +30,7 @@
           <tbody>
             <tr style="cursor:pointer;" data="[[item]]">
               <td on-tap="_selectData" data="[[item]]"><div class="text-table">{{item.name}}</div></td>
-              <td on-tap="recovery" data="[[item]]"><paper-button class="gl-btn-info" title="{{localize('bt_recovery')}}" raised>{{localize('bt_recovery')}}</paper-button></td>
+              <td on-tap="recovery" data="[[item]]"><paper-button class="gl-btn-info" title="{{localize.bt_recovery}}" raised>{{localize.bt_recovery}}</paper-button></td>
             </tr>
           </tbody>
         </template>
@@ -40,9 +40,14 @@
   <script>
     Polymer({
       is: "member-fileDelete",
-      behaviors: [dataBehavior, nylonLocalizeBehavior, nylonBehavior],
-      created:function(){
-          this.nylonLocalizeImport('/i18n-page-admin-exporter.json');
+      behaviors: [ReduxBehavior],
+      properties:{
+        localize:{
+          statePath : 'i18n.exporter'
+        },
+        data:{
+          statePath : 'exporter.files'
+        }
       },
       _selectData:function(e){
       // console.log(e.currentTarget.data);
@@ -51,31 +56,16 @@
       },
       recovery:function(e){
         // console.log(e.currentTarget.data);
-        this.fire('toast',{status:'dialog',
+        var id = e.currentTarget.data.file_id;
+        var companyId = e.currentTarget.data.company_id;
+        this.fire('toast',{status:'openDialog',
         text:'คุณต้องการจะกู้คืนไฟล์ใช่หรือไม่ ?',
-        confirmed : this._confirm.bind(this),
-        datas: {
-          file_id : e.currentTarget.data.file_id
+        confirmed: (result) =>{
+          if(result == true){
+            this.dispatchAction('UPLOAD_RECOVERY', id, companyId)
           }
-        });
-      },
-      _confirm:function(result, detail){
-        if(result == true){
-          // console.log(detail.datas);
-          this.fire('toast',{status:'load',text:'กำลังบันทึกข้อมูล...'})
-          axios.put('/external/upload/update/'+detail.datas.file_id)
-          .then( (response)=>{
-            // console.log(response);
-            this.fire('refresh-exporter');
-            this.fire('getFiles');
-            this.fire('toast',{status:'success',text:'บันทึกสำเร็จ',callback:function(){
-              // console.log('success');
-            }});
-          })
-          .catch(function (error) {
-              console.log(error);
-          });
         }
+        });
       }
     });
   </script>

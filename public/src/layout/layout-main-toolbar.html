@@ -1,67 +1,110 @@
-<link rel="import" href="./../../bower_components/app-layout/app-toolbar/app-toolbar.html">
-<link rel="import" href="./../../bower_components/paper-icon-button/paper-icon-button.html">
-<!--<link rel="import" href="./../../bower_components/gl-font/gl-rsu-font.html">-->
-<link rel="import" href="./../../bower_components/iron-image/iron-image.html">
-
+<link rel="import" href="../../bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../bower_components/iron-image/iron-image.html">
+<link rel="import" href="./shared-styles.html">
 
 <dom-module id="layout-main-toolbar">
 	<template>
-        <style is="custom-style">
+		<style is="custom-style" include="shared-styles">
 			app-toolbar {
 				background-color: #f7941e;
 				color: white;
-				font-family: 'CSChatThaiUI', sans-serif !important;
-        -webkit-font-smoothing: antialiased;
+				font-family: CSChatThaiUI, sans-serif;
+				-webkit-font-smoothing: antialiased;
 				--app-toolbar-font-size: 20px;
 				box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
 			}
-			.background{
+			
+			.background {
 				padding: 10px;
 				background-color: white;
 			}
-			iron-image{
+			
+			iron-image {
 				margin-right: 20px;
 				margin-left: 20px;
 			}
-			.sectionContent{
+			
+			.sectionContent {
 				margin-left: 9%;
 				margin-top: 20px;
 				font-size: 16px;
 				padding-bottom: 5px;
 			}
-			paper-button{
+			
+			paper-button {
 				font-size: 16px;
+			}
+			
+			.icon {
+				display: inline-block;
+				width: 1em;
+				height: 1em;
+				stroke-width: 0;
+				stroke: currentColor;
+				fill: currentColor;
 			}
 		</style>
 		<app-toolbar>
-				<paper-icon-button icon="menu" on-tap="toggleDrawer"></paper-icon-button>
-				<iron-image src="./../../images/01/32.png"></iron-image>
-				<div main-title>ระบบการขึ้นทะเบียนผู้ส่งออกข้าว</div>
-				<paper-button on-tap="changeLanguage">{{localize('Meg')}}</paper-button>
-				<!--<div class="sectionContent" bottom-item>
-					<iron-icon icon="chevron-right"></iron-icon>
-					รายการจัดสรรปีโควตา
-				</div>-->
+			<paper-icon-button icon="menu" on-tap="toggleDrawer"></paper-icon-button>
+			<iron-image src="../../images/01/32.png"></iron-image>
+			<div main-title>ระบบลงทะเบียนผู้ส่งออก</div>
+			<!--[[user.name]]-->
+			<div style="cursor: pointer" hidden="{{hidden}}">
+				<paper-icon-button icon="exit-to-app"></paper-icon-button>Logout
+			</div>
+			<!--<div style="cursor: pointer" on-tap="logout" hidden="{{!hidden}}">
+				<paper-icon-button icon="power-settings-new"></paper-icon-button>
+				Log-in
+			</div>-->
 		</app-toolbar>
-
 	</template>
 	<script>
-  	Polymer({
-    is: 'layout-main-toolbar',
-		behaviors:[nylonLocalizeBehavior],
-		attached:function(){
-			 this.nylonLocalizeImport('/i18n-page1.json');
-		},
-          toggleDrawer:function(){
-              this.fire('toggle-drawer');
-          },
-		changeLanguage:function(){
-            if(this.language=='th'){
-              this.nylonLocalizeChange('en');
-            }else{
-              this.nylonLocalizeChange('th');
-            }
-          },
-    });
-  </script>
+		Polymer({
+			is: 'layout-main-toolbar',
+			behaviors: [ReduxBehavior],
+			properties: {
+				user: {
+					statePath: 'auth.user',
+					observer: 'check'
+				}
+			},
+			check: function () {
+				if (this.user.id) {
+					this.hidden = false;
+				}
+				else {
+					// this.fire('nylon-change-page',{path:'/login'})
+					this.hidden = true;
+				}
+			},
+			attached: function () {
+				//this.nylonLocalizeImport('/i18n-page1.json');
+			},
+			toggleDrawer: function () {
+				this.fire('toggle-drawer');
+			},
+			changeLanguage: function () {
+				if (this.language == 'th') {
+					this.nylonLocalizeChange('en');
+				} else {
+					this.nylonLocalizeChange('th');
+				}
+			},
+			logout: function () {
+				this.hidden = true;
+				//	localStorage.removeItem('token');
+				//	  _deleteCookie("token");
+				this.AUTH_CLEAR_USER(this.formLogin);
+				if (this.user.role == "none") {
+					this.fire('nylon-change-page', { path: '/login' })
+				}
+				//	}else{
+				//	window.location = "/login"
+				//}
+				//this.fire('nylon-change-page',{path:'/login'})
+				//  this.AUTH_LOGOUT();
+			}
+		});
+	</script>
 </dom-module>

@@ -1,2 +1,13 @@
-/loggers
 /node_modules
+/public/bower_components
+/public/build
+/public/node_modules
+/public/bundle.js
+/public/bundle.js.map
+/public/css/main.css
+/temp
+/loggers/*
+!/loggers/file.log
+npm-debug*
+.DS_Store
+yarn.lock

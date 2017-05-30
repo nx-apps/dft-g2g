@@ -1,0 +1,158 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="./flexbox-grid.html">
+<link rel="import" href="./page-style.html">
+<link rel="import" href="../../bower_components/gl-styles/gl-color.html">
+
+<dom-module id="shared-styles">
+    <template>
+        <style include="flexbox-grid page-style gl-color">
+            @font-face {
+                font-family: CSChatThaiUI;
+                src: url('../../fonts/CSChatThaiUI.eot');
+                src: url('../../fonts/CSChatThaiUI.eot?#iefix') format('eot'), url('../../fonts/CSChatThaiUI.woff') format('woff'), url('../../fonts/CSChatThaiUI.ttf') format('truetype'), url('../../fonts/CSChatThaiUI.svg') format('svg');
+            }
+            paper-button{
+                 font-size: 18px;
+             }
+             :host,
+            paper-button,paper-item,vaadin-combo-box{
+                font-family: CSChatThaiUI;
+                --paper-input-container-label:{
+                    font-family: CSChatThaiUI;
+                    color:#313131;
+                }
+                --paper-input-container-label-floating:{
+                    font-size: 22px;
+                }
+                --paper-input-container-input:{
+                    font-family: CSChatThaiUI;
+                }
+                --panel-right-font:{
+                    font-family: CSChatThaiUI;
+                }
+                --shadow-elevation-2dp:{
+                    font-family: CSChatThaiUI;
+                    border: 1px solid #ddd;
+                }
+            }
+            .Table {
+                display: table;
+                width: 100%;
+                border: solid;
+                border-width: 1px 1px 0px 1px;
+                border-color: #D5D8DC;
+            }
+
+            .Title {
+                display: table-caption;
+                text-align: center;
+                font-weight: bold;
+                font-size: larger;
+            }
+            
+            .Heading {
+                display: table-row;
+                font-weight: bold;
+                text-align: center;
+                background-color: #D5D8DC;
+                border-color:#D5D8DC;
+            }
+            
+            .Row {
+                display: table-row;
+                text-align: center;
+            }
+            .Row:hover{
+                background-color: #ECF0F1;
+            }
+            .Cell {
+                display: table-cell;
+                border-bottom: solid;
+                border-width: 1px;
+                padding-left: 5px;
+                padding-right: 5px;
+                border-color: #D5D8DC;
+            }
+
+            /*bg*/
+            
+            .gl-bg-primary,
+            .gl-bg-success,
+            .gl-bg-info,
+            .gl-bg-warning,
+            .gl-bg-danger {
+                color: var(--gl-white-color);
+                /*padding: var(--gl-padding);*/
+            }
+            /* coror and btn*/
+            
+            .gl-bg-primary,
+            .gl-btn-primary {
+                background-color: var(--gl-primary-color);
+            }
+            
+            .gl-bg-success,
+            .gl-btn-success {
+                background-color: var(--gl-success-color);
+            }
+            
+            .gl-bg-info,
+            .gl-btn-info {
+                background-color: var(--gl-info-color);
+            }
+            
+            .gl-bg-warning,
+            .gl-btn-warning {
+                background-color: var(--gl-warning-color);
+            }
+            
+            .gl-bg-danger,
+            .gl-btn-danger {
+                background-color: var(--gl-danger-color);
+            }
+            /*end bg */
+            /*btn*/
+            
+            .gl-btn-default,
+            .gl-btn-primary,
+            .gl-btn-success,
+            .gl-btn-info,
+            .gl-btn-warning,
+            .gl-btn-danger {
+                color: var(--gl-white-color);
+                min-height: var(--gl-btn-min-hight);
+                min-width: var(--gl-btn-min-width);
+                margin: var(--gl-btn-margin);
+            }
+            
+            .gl-btn-default {
+                background-color: var(--gl-white-color);
+                color: black;
+            }
+            /*btn disabled*/
+            
+            .gl-btn-default[disabled],
+            .gl-btn-primary[disabled],
+            .gl-btn-success[disabled],
+            .gl-btn-info[disabled],
+            .gl-btn-warning[disabled],
+            .gl-btn-danger[disabled] {
+                background-color: #eaeaea;
+                color: #a8a8a8;
+            }
+            
+            .gl-btn-disabled {
+                background-color: var(--gl-disabled-color);
+                color: var(--gl-white-color);
+                min-height: var(--gl-btn-min-hight);
+                min-width: var(--gl-btn-min-width);
+                margin: var(--gl-btn-margin);
+                --paper-button-disabled: {
+                    cursor: not-allowed;
+                }
+            }
+
+            
+        </style>
+    </template>
+</dom-module>

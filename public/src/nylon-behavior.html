@@ -1,26 +1,50 @@
 <script>
-    nylonBehavior = {
-        observers:['_checkPageActive(path,currentPath)'],
-        _checkPageActive:function(route,currentRoute){
-            if(route==currentRoute){
+    
+    window.nylonBehavior = {
+        properties:{
+            nylonShow:{
+                value:true,
+                reflectToAttribute: true
+            },
+            visible:{
+                type:Boolean,
+                observer:'_checkVisible'
+            }
+        },
+        _checkVisible:function(ob){
+            if(ob){
                 if(typeof this.nylonPageActive != "undefined"){
                     this.nylonPageActive();
                 }
+            }else{
+                if(typeof this.nylonPageUnActive != "undefined"){
+                    this.nylonPageUnActive();
+                }
+                //this.nylonVisible(false);
             }
+
+        },
+        nylonVisible:function(b){
+            if(typeof b == "undefined") b = true;
+            console.log(b);
+            this.nylonShow = b;
         }
+
     };
-    nylonLocalize = {
-        attached:function(){
-            nylonLocalize.subscribe((x)=>{
-                this.language = x;
-            });
-        },
-        nylonLocalizeImport:function(path){
-            this.loadResources(this.resolveUrl('/src/localize'+path));
-        },
-        nylonLocalizeChange:function(lang){
-            nylonLocalize.onNext(lang);
-        }
-    }
-    nylonLocalizeBehavior = [ Polymer.AppLocalizeBehavior, nylonLocalize ]
+
+    // Polymer.nylonLocalize = {
+    //     attached:function(){
+    //         nylonLocalize.subscribe((x)=>{ 
+    //             this.language = x;
+    //         });
+    //     },
+    //     nylonLocalizeImport:function(path){
+    //         this.loadResources(this.resolveUrl('/src/localize'+path));
+    //     },
+    //     nylonLocalizeChange:function(lang){
+    //         nylonLocalize.onNext(lang);
+    //     }
+    // }
+    //nylonLocalizeBehavior = [ Polymer.AppLocalizeBehavior, Polymer.nylonLocalize ]
+
 </script>

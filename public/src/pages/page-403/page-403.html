@@ -1,0 +1,53 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../nylon-behavior.html">
+
+<dom-module id="page-403">
+    <template>
+        <style>
+            div{
+                text-align: left;
+                font-family: 'rsuregular', sans-serif;
+                -webkit-font-smoothing: antialiased;
+                padding-top : 10px;
+            }
+            .header{
+                font-size: 180px;
+                color: orange;
+            }
+            .content{
+                font-size: 80px;
+                margin-top: -60px;
+                color: grey;
+            }
+            .container{
+                padding: 20px;
+            }
+            paper-button{
+                font-family: 'rsuregular', sans-serif;
+                -webkit-font-smoothing: antialiased;
+                font-size: 22px;
+                background-color: #f7941e;
+                color: white;
+                border-radius: 10px;
+            }
+        </style>
+        <div class="container">
+            <div class="header"> 403</div>
+            <div class="content"></div>
+            <div>
+                <paper-button></paper-button>
+            </div>
+            
+        </div>
+        
+    </template>
+    <script>
+        Polymer({
+            is: 'page-403',
+            behaviors:[window.nylonBehavior],
+            created:function(){
+                //this.nylonLocalizeImport('/404.json');
+            }
+        });
+    </script>
+</dom-module>

@@ -1,5 +1,5 @@
 <dom-module id="member-manage">
-  <style is="custom-style" include="iron-flex iron-flex-factors iron-flex-alignment gl-size gl-color">
+  <style is="custom-style" include="">
     * {
       font-family: 'CSChatThaiUI', sans-serif;
       -webkit-font-smoothing: antialiased;
@@ -22,50 +22,50 @@
   <template>
     <div id="formData">
       <gl-form-panel-body set-border="0px">
-        <div class="title">{{localize('detail_exporter')}}</div>
+        <div class="title">{{localize.detail_exporter}}</div>
 
         <gl-grid-row width="{{getWidth}}">
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-            <gl-form-input label="{{localize('no_exporter_fullname')}} :" value="{{data.exporter_no_name}}" disabled=""></gl-form-input>
+            <gl-form-input label="{{localize.no_exporter_fullname}} :" value="{{data.exporter_no_name}}" disabled></gl-form-input>
           </gl-grid-col>
         </gl-grid-row>
 
         <gl-grid-row>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-            <gl-form-input label="{{localize('tax_no')}} :" value="{{data.company_taxno}}" disabled></gl-form-input>
+            <gl-form-input label="{{localize.tax_no}} :" value="{{data.company_taxno}}" disabled></gl-form-input>
           </gl-grid-col>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-            <gl-form-textarea label="{{localize('name_company')}} :" value="{{data.company_name_th}}" disabled></gl-form-textarea>
+            <gl-form-textarea label="{{localize.name_company}} :" value="{{data.company_name_th}}" disabled></gl-form-textarea>
           </gl-grid-col>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-            <gl-form-textarea label="{{localize('name_company')}} ({{localize('eng')}}) :" value="{{data.company_name_en}}" disabled></gl-form-textarea>
+            <gl-form-textarea label="{{localize.name_company}} ({{localize.eng}}) :" value="{{data.company_name_en}}" disabled></gl-form-textarea>
           </gl-grid-col>
         </gl-grid-row>
 
         <gl-grid-row>
           <gl-grid-col width="[[getWidth]]" grid="[[500,12],[700,8]]">
-            <gl-form-textarea label="{{localize('address')}} :" value="{{data.company_address_th}}" disabled></gl-form-textarea>
+            <gl-form-textarea label="{{localize.address}} :" value="{{data.company_address_th}}" disabled></gl-form-textarea>
           </gl-grid-col>
           <gl-grid-col width="[[getWidth]]" grid="[[500,12],[700,8]]">
-            <gl-form-textarea label="{{localize('address')}} ({{localize('eng')}}) :" value="{{data.company_address_en}}" disabled></gl-form-textarea>
+            <gl-form-textarea label="{{localize.address}} ({{localize.eng}}) :" value="{{data.company_address_en}}" disabled></gl-form-textarea>
           </gl-grid-col>
         </gl-grid-row>
 
         <gl-grid-row>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-            <gl-form-textarea label="{{localize('tel')}} :" value="{{data.company_phone}}" disabled></gl-form-textarea>
+            <gl-form-textarea label="{{localize.tel}} :" value="{{data.company_phone}}" disabled></gl-form-textarea>
           </gl-grid-col>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-            <gl-form-textarea label="{{localize('fax')}} :" value="{{data.company_fax}}" disabled></gl-form-textarea>
+            <gl-form-textarea label="{{localize.fax}} :" value="{{data.company_fax}}" disabled></gl-form-textarea>
           </gl-grid-col>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-            <vaadin-date-picker label="{{localize('date_approve')}} :" value="{{data.exporter_date_approve}}" disabled></vaadin-date-picker>
+            <vaadin-date-picker label="{{localize.date_approve}} :" value="{{data.exporter_date_approve}}" disabled></vaadin-date-picker>
           </gl-grid-col>
         </gl-grid-row>
 
         <gl-grid-row>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-            <gl-form-dropdown-menu style="width:100%;" class="checkValidate" label="{{localize('type_license')}}" placeholder="{{localize('select_type')}}"
+            <gl-form-dropdown-menu style="width:100%;" class="checkValidate" label="{{localize.type_license}}" placeholder="{{localize.select_type}}"
               disabled="[[isEnabled]]" required>
               <paper-menu class="dropdown-content" attr-for-selected="value" selected="{{data.type_lic_id}}" name="type_lic_id">
                 <template is="dom-repeat" items={{typeLic}}>
@@ -75,7 +75,7 @@
             </gl-form-dropdown-menu>
           </gl-grid-col>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-            <gl-form-dropdown-menu style="width:100%;" class="checkValidate" label="{{localize('status_export')}}" placeholder="{{localize('select_plz')}}" disabled="[[isEnabled]]" required>
+            <gl-form-dropdown-menu style="width:100%;" class="checkValidate" label="{{localize.status_export}}" placeholder="{{localize.select_plz}}" disabled="[[isEnabled]]" required>
               <paper-menu class="dropdown-content" attr-for-selected="value" selected="{{data.exporter_status}}" name="exporter_status">
                 <paper-item value="yes">เป็นสมาชิก</paper-item>
                 <paper-item value="no">ไม่เป็นสมาชิก</paper-item>
@@ -87,7 +87,7 @@
         <gl-grid-row>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
             <template is="dom-repeat" items="{{data.company_agent}}">
-              <gl-form-input label="{{localize('name_committee')}} :" value="{{item.agent_name}}" disabled></gl-form-input>
+              <gl-form-input label="{{localize.name_committee}} :" value="{{item.agent_name}}" disabled></gl-form-input>
             </template>
           </gl-grid-col>
         </gl-grid-row>
@@ -98,15 +98,17 @@
   <script>
     Polymer({
       is: "member-manage",
+      behaviors: [ReduxBehavior],
       properties: {
-        data: {
-          type: Object,
-          value: {}
+        data:{
+          statePath : 'exporter.data'
+        },
+        typeLic:{
+          statePath : 'exporter.typeLic'
+        },
+        localize:{
+          statePath : 'i18n.exporter'
         }
-      },
-      behaviors: [nylonLocalizeBehavior, nylonBehavior],
-      created: function () {
-        this.nylonLocalizeImport('/i18n-page-admin-exporter.json');
       }
     });
   </script>

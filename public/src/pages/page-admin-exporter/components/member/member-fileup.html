@@ -1,3 +1,4 @@
+<link rel="import" href="./../../../components/upload-file.html">
 <dom-module id="member-fileup">
   <style include="iron-flex iron-flex-factors iron-flex-alignment gl-size gl-color">
     * {
@@ -20,7 +21,7 @@
     }
   </style>
   <template>
-    <div class="title-head">{{localize('doc_attach')}}</div>
+    <div class="title-head">{{localize.doc_attach}}</div>
     <template is="dom-repeat" items="[[docType]]">
       <div class="title">[[item.doc_name_th]]</div>
       <upload-file
@@ -34,7 +35,7 @@
     </template>
 
     <div class="horizontal end-justified layout" style="margin-top:20px;">
-      <paper-button class="gl-bg-danger" on-tap="pageFileDel" raised>{{localize('bt_del_file')}}</paper-button>
+      <paper-button class="gl-bg-danger" on-tap="pageFileDel" raised>{{localize.bt_del_file}}</paper-button>
     </div>
 
     <div style="margin-bottom:20px;"></div>
@@ -42,9 +43,14 @@
   <script>
     Polymer({
       is: "member-fileup",
-      behaviors: [dataBehavior, nylonLocalizeBehavior, nylonBehavior],
-      created:function(){
-          this.nylonLocalizeImport('/i18n-page-admin-exporter.json');
+      behaviors: [ReduxBehavior],
+      properties:{
+        localize:{
+          statePath : 'i18n.exporter'
+        },
+        docType:{
+          statePath : 'exporter.docType'
+        }
       },
       observers: [
         '_dataInput(data)'
@@ -61,7 +67,7 @@
       },
       pageFileDel:function() {
         this.fire('pageFileDelete');
-        this.fire('getFiles');
+        // this.fire('getFiles');
       }
     });
   </script>

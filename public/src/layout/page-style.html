@@ -1,0 +1,179 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<dom-module id="page-style">
+    <template>
+        <style>
+            .header {
+                font-size: 32px;
+                padding-top: 20px;
+                padding-bottom: 10px;
+            }
+            
+            .subHeader {
+                font-size: 20px;
+            }
+            
+            .title {
+                font-size: 22px;
+                font-weight: bold;
+            }
+            
+            .section {
+                margin-top: 10px;
+                margin-bottom: 10px;
+            }
+            
+            .material {
+                background-color: #EFEFEF;
+                box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
+            }
+            
+            main {
+                /*min-width: 320px;*/
+                /*max-width: 1000px;*/
+                padding: 5px;
+                margin: 0 auto;
+            }
+            
+            section {
+                display: none;
+                /*padding: 20px 0 0;*/
+                border-top: 1px solid #ddd;
+            }
+            
+            input {
+                display: none;
+            }
+            
+            label {
+                display: inline-block;
+                margin: 0 0 -1px;
+                padding: 15px 25px;
+                font-weight: 600;
+                text-align: center;
+                color: #bbb;
+                border: 1px solid transparent;
+                background: #D5D8DC;
+            }
+            
+            label:before {
+                font-family: fontawesome;
+                font-weight: normal;
+                margin-right: 10px;
+            }
+            /*label[for*='1']:before { content: '\f1cb'; }
+            label[for*='2']:before { content: '\f17d'; }*/
+            
+            label:hover {
+                color: #888;
+                cursor: pointer;
+            }
+            
+            input:checked+label {
+                color: #555;
+                border: 1px solid #ddd;
+                border-top: 3px solid orange;
+                border-bottom: 1px solid #fff;
+                background: #fff;
+            }
+            
+            vaadin-grid#material {
+                /*font-family: Roboto, sans-serif;*/
+                --divider-color: rgba(0, 0, 0, var(--dark-divider-opacity));
+                --vaadin-grid-cell: {
+                    padding: 0;
+                }
+                ;
+                --vaadin-grid-header-cell: {
+                    height: 64px;
+                    /*color: rgba(0, 0, 0, var(--dark-secondary-opacity));*/
+                    font-size: 16px;
+                    /*text-align: center;*/
+                    font-weight: bold;
+                    /*background-color: #D5D8DC;*/
+                }
+                ;
+                --vaadin-grid-body-cell: {
+                    height: 60px;
+                    /*color: rgba(0, 0, 0, var(--dark-primary-opacity));*/
+                    font-size: 16px;
+                    /*width: 80%;*/
+                }
+                ;
+                /*--vaadin-grid-cell:{
+                    text-align:center;
+                    align-items:center;
+                }*/
+                /*--vaadin-grid-body-row-hover-cell: {
+                    background-color: var(--paper-grey-200);
+                }
+                ;
+                --vaadin-grid-body-row-selected-cell: {
+                    background-color: var(--paper-grey-100);
+                }
+                ;*/
+                --vaadin-grid-focused-cell: {
+                    box-shadow: none;
+                    font-weight: bold;
+                }
+                ;
+            }
+            
+            vaadin-grid#material .cell {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                padding-right: 56px;
+            }
+            
+            vaadin-grid#material .cell.last {
+                padding-right: 24px;
+            }
+            
+            vaadin-grid#material .cell.numeric {
+                text-align: right;
+            }
+            
+            vaadin-grid#material paper-checkbox {
+                --primary-color: var(--paper-indigo-500);
+                margin: 0 24px;
+            }
+            
+            vaadin-grid#material vaadin-grid-sorter {
+                --vaadin-grid-sorter-arrow: {
+                    display: none !important;
+                }
+                ;
+            }
+            
+            vaadin-grid#material vaadin-grid-sorter .cell {
+                flex: 1;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            
+            vaadin-grid#material vaadin-grid-sorter iron-icon {
+                transform: scale(0.8);
+            }
+            
+            vaadin-grid#material vaadin-grid-sorter:not([direction]) iron-icon {
+                color: rgba(0, 0, 0, var(--dark-disabled-opacity));
+            }
+            
+            vaadin-grid#material vaadin-grid-sorter[direction] {
+                color: rgba(0, 0, 0, var(--dark-primary-opacity));
+            }
+            
+            vaadin-grid#material vaadin-grid-sorter[direction=desc] iron-icon {
+                transform: scale(0.8) rotate(180deg);
+            }
+            .center{
+                text-align: center;
+            }
+        </style>
+    </template>
+    <script>
+        Polymer({
+            is: 'page-style'
+        });
+    </script>
+</dom-module>

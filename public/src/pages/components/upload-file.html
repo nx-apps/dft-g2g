@@ -57,6 +57,7 @@
     <script>
         Polymer({
             is: 'upload-file',
+            behaviors: [ReduxBehavior, uploadAction],
             properties:{
                 target:{
                     type:String
@@ -89,18 +90,18 @@
               if(fileChange.path=='file.complete'){
                 if(fileChange.base.xhr){
                   var res = JSON.parse(fileChange.base.xhr.response);
-                  axios.get('/external/document_file/id/'+res.generated_keys[0])
+                  this.dispatchAction('UPLOAD_FILE_CHANGE',res.generated_keys[0])
                   .then((response)=>{
                     this.fileIdUpload = response.data.file_id;
                     // console.log(response.data.file_id);
                   })
-                  // return res.generated_keys[0];
+                  return res.generated_keys[0];
                 }
               }
             },
             getList:function(){
               if (this.refPath != {} && this.companyId != '' && this.companyId != undefined) {
-                axios.get('/external/upload/list/'+this.refPath+'/'+this.companyId)
+                  this.dispatchAction('UPLOAD_GET_LIST',this.refPath,this.companyId)
                 .then( (response)=>{
                     this.listFiles = response.data;
                 })
@@ -134,31 +135,18 @@
                   idFile = this.fileIdUpload
                 }else{
                   idFile = e.target.fileId
-                  console.log("ID File = "+idFile);
+                //   console.log("ID File = "+idFile);
                 }
-                this.fire('toast',{status:'dialog',
+                this.fire('toast',{status:'openDialog',
                 text:'คุณต้องการจะลบไฟล์ใช่หรือไม่ ?',
-                confirmed : this._confirmToast.bind(this),
-                datas : idFile
+                confirmed: (result) => {
+                    if (result == true) {
+                        this.dispatchAction('UPLOAD_DELETE', idFile, this.companyId)
+                    }else {
+                        this.getList();
+                    }
+                }
                 });
-            },
-            _confirmToast:function(result,detail){
-              if(result == true){
-                this.fire('toast',{status:'load',text:'กำลังบันทึกข้อมูล...'})
-                axios.delete('/external/upload/file/'+detail.datas)
-                .then( (response)=>{
-                    //console.log(response);
-                    this.fire('toast',{status:'success',text:'บันทึกสำเร็จ',callback:function(){
-                      console.log('success');
-                    }});
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
-              }
-              else {
-                this.getList();
-              }
             }
         });
     </script>
