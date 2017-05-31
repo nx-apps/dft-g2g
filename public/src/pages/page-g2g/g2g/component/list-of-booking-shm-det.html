@@ -54,7 +54,7 @@
 
           <template is="dom-if" if={{clClose}}>
             <div class="title-ber" hidden="[[_isSeleted(cl_id)]]">
-              ปิดบัญชี
+              ปิดบัญชี {{setTextCl}}
             </div>
           </template>
 
@@ -136,6 +136,10 @@
         clClose: {
           type: Boolean,
           value: false
+        },
+        setTextCl:{
+          type: String,
+          value:''
         }
       },
       observers: [
@@ -156,6 +160,8 @@
             // console.log(cl_id);
             // console.log(this.dataForSelect.bookApp);
             let sets = this.dataForSelect.bookApp.find((item) => item.cl_id === cl_id)
+            // console.log(sets);
+            this.set('setTextCl',`สัญญาที่ ${sets.cl_no} ปริมาณข้าว ${this.formatNumberNoZero(sets.cl_quantity_total)} ตัน`)
             let sum = sets.cl_quantity_total - sets.book_quantity
             // console.log(sum);
             // console.log(this.clClose);

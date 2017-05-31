@@ -59,7 +59,8 @@
             <td>[[item.keyword]]</td>
             <td>[[item.statusName]]</td>
             <td>[[item.weightAll]]</td>
-            <td>[[formatNumber(item.value)]]</td>
+             <!--<td>[[formatNumber(item.value)]]</td>-->
+            <td style="text-align: center;">-</td>
             <!--<td>[[item.Active]]</td>-->
           </tr>
         </template>
@@ -71,7 +72,9 @@
         <gl-form-input disabled label="{{localize('label_total_ton')}} :" placeholder="0" value="{{data.total_ton}}" name="total_ton"></gl-form-input>
       </gl-grid-col>
       <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-       <gl-form-input disabled label="{{localize('label_amount_total')}} :" placeholder="0" value="{{data.total_price}}" name="total_price"></gl-form-input>
+       <!--<gl-form-input disabled label="{{localize('label_amount_total')}} :" placeholder="0" value="{{data.total_price}}" name="total_price"></gl-form-input>-->
+            <gl-form-input disabled label="{{localize('label_amount_total')}} :" placeholder="-" value="{{data.total_price}}" name="total_price"></gl-form-input>
+
      </gl-grid-col>
     </gl-grid-row>
   </template>

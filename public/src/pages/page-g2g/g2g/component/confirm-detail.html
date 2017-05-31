@@ -318,7 +318,8 @@
         g2gModelBehavior,
         g2gCongtroller,
         nylonBehavior,
-        nylonLocalizeBehavior
+        nylonLocalizeBehavior,
+        FormatNumberBehavior
       ],
       properties: {
         dataForSelect: {
@@ -409,18 +410,18 @@
             let price = (type_rice_quantity* 1000) * data[0].fp3
             let ton = data[0].fp3
             // console.log(price,ton);
-            this.set('costprice',price)
-            this.set('costpriceton',ton)
+            this.set('costprice',this.formatNumber(price))
+            this.set('costpriceton',this.formatNumber(ton))
             // console.log('costprice',this.costprice,'costpriceton',this.costpriceton);
             this.set('data.cl_type_rice.' + index + '.costprice', price)
             this.set('data.cl_type_rice.' + index + '.costpriceton', ton)
             let plus = this.data.cl_type_rice
 
             let costpriceton = Object.keys(plus).reduce((previous, current) => previous + plus[current].costpriceton, 0)
-            this.set('data.cl_total_costpriceton', this.costpriceton)
+            this.set('data.cl_total_costpriceton', this.formatNumber(this.costpriceton))
 
             let costpricex = Object.keys(plus).reduce((previous, current) => previous + plus[current].costprice, 0)
-            this.set('data.cl_total_costprice', this.costprice)
+            this.set('data.cl_total_costprice', this.formatNumber(this.costprice))
           })
         } catch (e) {
           // console.log(e);
