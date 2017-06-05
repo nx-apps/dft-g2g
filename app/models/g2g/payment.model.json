@@ -5,7 +5,7 @@
             "type": "string"
         },
         "pay_no": {
-            "type": "number"
+            "type": "string"
         },
         "pay_amount": {
             "type": "number"

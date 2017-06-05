@@ -159,12 +159,12 @@
               </gl-grid-col>
               <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
                 [[changeString2Num(item.*,'costpriceton')]] 
-                <gl-form-input disabled format-number="on" value="[[item.costpriceton]]" label="{{localize('label_cost_price_ton')}}"></gl-form-input>
+                <gl-form-input disabled="[[isInputDisabled]]" format-number="on" value="[[item.costpriceton]]" label="{{localize('label_cost_price_ton')}}"></gl-form-input>
                <!--{{item.costpriceton}}-->
               </gl-grid-col>
               <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
-                [[changeString2Num(item.*,'costprice')]] 
-                <gl-form-input disabled format-number="on" value="[[item.costprice]]" label="{{localize('label_cost_price')}}" ></gl-form-input>
+                <!--[[changeString2Num(item.*,'costprice')]] 
+                <gl-form-input disabled="[[isInputDisabled]]" format-number="on" value="[[item.costprice]]" label="{{localize('label_cost_price')}}" ></gl-form-input>-->
               <!--{{item.costprice}}-->
               </gl-grid-col>
               <!-- <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
@@ -281,7 +281,7 @@
           <!--1-->
         </gl-grid-col>
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
-          <gl-form-input class="numberBack" disabled  format-number="on" label="{{localize('label_total_cost_price')}}"value="[[data.cl_total_costprice]]"></gl-form-input>
+          <!--<gl-form-input class="numberBack" disabled  format-number="on" label="{{localize('label_total_cost_price')}}"value="[[data.cl_total_costprice]]"></gl-form-input>-->
         </gl-grid-col>
       </gl-grid-row>
       <gl-grid-row>
