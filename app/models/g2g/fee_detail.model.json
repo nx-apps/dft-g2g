@@ -1,0 +1,67 @@
+{
+    "name": "g2g.fee_detail",
+    "properties": {
+        "id": {
+            "type": "string"
+        },
+        "fee_id": {
+            "type": "string"
+        },
+        "cl_id": {
+            "type": "string"
+        },
+        "contract_id": {
+            "type": "string"
+        },
+        "fee_foreign": {
+            "type": "number"
+        },
+        "fee_internal": {
+            "type": "number"
+        },
+        "fee_other": {
+            "type": "number"
+        },
+        "fee_date_receipt": {
+            "type": "string",
+            "format": "date-time"
+        },
+        "rate_bank": {
+            "type": "number"
+        },
+        "rate_tt": {
+            "type": "number"
+        },
+        "invoice": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "invoice_id": {
+                        "type": "string"
+                    },
+                    "book_id": {
+                        "type": "string"
+                    },
+                    "invoice_detail": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "invoice_fee": {
+                                    "type": "number"
+                                },
+                                "book_det_id": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "fee_det_status": {
+            "type": "boolean"
+        }
+    }
+}
