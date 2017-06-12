@@ -17,13 +17,19 @@
             "exporter_id": {
                 "type": "string"
             },
+            "company_taxno": {
+                "type": "string"
+            },
             "company": {
                 "type": "object"
             },
-            "hamonize_quantity": {
+            "book_det_weight": {
                 "type": "number"
             },
             "price_per_ton": {
+                "type": "number"
+            },
+            "value_usd": {
                 "type": "number"
             },
             "hamonize_id": {
@@ -33,6 +39,9 @@
                 "type": "object"
             },
             "book_id": {
+                "type": "string"
+            },
+            "book_no": {
                 "type": "string"
             },
             "cl_id": {

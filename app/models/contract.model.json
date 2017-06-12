@@ -20,7 +20,7 @@
         "contract_desc": {
             "type": "string"
         },
-        "contract_quantity": {
+        "contract_weight": {
             "type": "number"
         },
         "contract_hamonize": {

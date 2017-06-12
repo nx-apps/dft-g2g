@@ -14,6 +14,9 @@
             "type": "string",
             "format": "date-time"
         },
+        "cl_weight": {
+            "type": "number"
+        },
         "cl_hamonize": {
             "type": "array",
             "items": {
@@ -25,7 +28,7 @@
                     "hamonize": {
                         "type": "object"
                     },
-                    "hamonize_quantity": {
+                    "hamonize_weight": {
                         "type": "number"
                     },
                     "project_th": {
