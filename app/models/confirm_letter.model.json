@@ -65,8 +65,8 @@
                     "inct_id": {
                         "type": "string"
                     },
-                    "incoterms": {
-                        "type": "object"
+                    "inct_name": {
+                        "type": "string"
                     }
                 }
             }
