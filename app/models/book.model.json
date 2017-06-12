@@ -30,8 +30,8 @@
                     "surveyor_id": {
                         "type": "string"
                     },
-                    "surveyor": {
-                        "type": "object"
+                    "surveyor_name": {
+                        "type": "string"
                     }
                 }
             }
@@ -39,11 +39,20 @@
         "load_port_id": {
             "type": "string"
         },
+        "load_port": {
+            "type": "object"
+        },
         "deli_port_id": {
             "type": "string"
         },
+        "deli_port": {
+            "type": "object"
+        },
         "dest_port_id": {
             "type": "string"
+        },
+        "dest_port": {
+            "type": "object"
         },
         "eta_date": {
             "type": "string",
@@ -77,8 +86,8 @@
                     "ship_id": {
                         "type": "string"
                     },
-                    "ship": {
-                        "type": "object"
+                    "ship_name": {
+                        "type": "string"
                     },
                     "ship_voy_no": {
                         "type": "string"
