@@ -45,6 +45,9 @@
         },
         "country": {
             "type": "object"
+        },
+        "payterm": {
+            "type": "string"
         }
     }
 }
