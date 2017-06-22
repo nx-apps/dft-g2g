@@ -14,14 +14,8 @@
             "package": {
                 "type": "object"
             },
-            "exporter_id": {
-                "type": "string"
-            },
-            "company_taxno": {
-                "type": "string"
-            },
-            "company": {
-                "type": "object"
+            "package_amount": {
+                "type": "number"
             },
             "book_det_weight": {
                 "type": "number"
@@ -31,6 +25,27 @@
             },
             "value_usd": {
                 "type": "number"
+            },
+            "gross_weight": {
+                "type": "number"
+            },
+            "net_weight": {
+                "type": "number"
+            },
+            "tare_weight": {
+                "type": "number"
+            },
+            "exporter_id": {
+                "type": "string"
+            },
+            "exporter_no": {
+                "type": "number"
+            },
+            "company_taxno": {
+                "type": "string"
+            },
+            "company": {
+                "type": "object"
             },
             "hamonize_id": {
                 "type": "string"

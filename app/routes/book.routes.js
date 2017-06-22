@@ -1,11 +1,15 @@
 module.exports = function (app) {
-    var controller = require('../../controllers/g2g/book.controller');
-    app.get('/contract/id/:contract_id', controller.getByContractId);
-    app.get('/shipment/id/:shm_id', controller.getByShmId);
-    app.get('/confirm/id/:cl_id', controller.getByClId);
-    app.get('/id/:book_id', controller.getById);
-
+    var controller = require('../controllers/book.controller');
+    //book
+    app.get('/confirm', controller.getByClId);
+    app.get('/', controller.getById);
     app.post('/insert', controller.insert);
     app.put('/update', controller.update);
-    app.delete('/delete/id/:id', controller.delete);
+    app.delete('/delete/:id', controller.delete);
+    //book_detail
+    app.get('/detail/list', controller.listDetail);
+    app.get('/detail', controller.getDetailById);
+    app.post('/detail/insert', controller.insertDetail);
+    app.put('/detail/update', controller.updateDetail);
+    app.delete('/detail/delete/:id', controller.deleteDetail);
 }

@@ -71,8 +71,14 @@ exports.insert = function (req, res) {
     var r = req.r;
     var result = { result: false, message: null, id: null };
     if (valid) {
-        var obj = Object.assign(req.body, { date_created: new Date().toISOString(), date_updated: new Date().toISOString(), creater: 'admin', updater: 'admin' });
-        r.db('g2g2').table("contract")
+        var obj = Object.assign(req.body, {
+            date_created: r.now().inTimezone('+07'),
+            date_updated: r.now().inTimezone('+07'),
+            creater: 'admin',
+            updater: 'admin',
+            contract_date: r.ISO8601(req.body.contract_date).inTimezone('+07')
+        });
+        r.table("contract")
             .insert(obj)
             .run()
             .then(function (response) {
@@ -92,58 +98,67 @@ exports.insert = function (req, res) {
         res.json(result);
     }
 }
-// exports.update = function (req, res) {
-//     var r = req.r;
-//     var result = { result: false, message: null, id: null };
-//     if (req.body.id != '' && req.body.id != null && typeof req.body.id != 'undefined') {
-//         result.id = req.body.id;
-//         var obj = Object.assign(req.body, { date_updated: new Date().toISOString(), updater: 'admin' });
-//         r.db('g2g2').table("contract")
-//             .get(req.body.id)
-//             .update(obj)
-//             .run()
-//             .then(function (response) {
-//                 result.message = response;
-//                 if (response.errors == 0) {
-//                     result.result = true;
-//                 }
-//                 res.json(result);
-//             })
-//             .error(function (err) {
-//                 result.message = err;
-//                 res.json(result);
-//             })
-//     } else {
-//         result.message = 'require field id';
-//         res.json(result);
-//     }
-// }
-// exports.delete = function (req, res) {
-//     var r = req.r;
-//     var result = { result: false, message: null, id: null };
-//     if (req.params.id != '' || req.params.id != null) {
-//         result.id = req.params.id;
-//         var q = r.db('g2g2').table("contract").get(req.params.id).do(function (result) {
-//             return r.branch(
-//                 result('contract_status').eq(false)
-//                 , r.db('g2g2').table("contract").get(req.params.id).delete()
-//                 , r.expr("Can't delete because this status = true.")
-//             )
-//         })
-//         q.run()
-//             .then(function (response) {
-//                 result.message = response;
-//                 if (response.errors == 0) {
-//                     result.result = true;
-//                 }
-//                 res.json(result);
-//             })
-//             .error(function (err) {
-//                 result.message = err;
-//                 res.json(result);
-//             })
-//     } else {
-//         result.message = 'require field id';
-//         res.json(result);
-//     }
-// }
+exports.update = function (req, res) {
+    var valid = req.ajv.validate('g2g.contract', req.body);
+    var r = req.r;
+    var result = { result: false, message: null, id: null };
+    if (req.body.id != '' && req.body.id != null && typeof req.body.id !== 'undefined') {
+        result.id = req.body.id;
+        if (valid) {
+            var obj = Object.assign(req.body, {
+                date_updated: r.now().inTimezone('+07'),
+                updater: 'admin'
+            });
+            r.table("contract")
+                .get(req.body.id)
+                .update(obj)
+                .run()
+                .then(function (response) {
+                    result.message = response;
+                    if (response.errors == 0) {
+                        result.result = true;
+                    }
+                    res.json(result);
+                })
+                .error(function (err) {
+                    result.message = err;
+                    res.json(result);
+                })
+        } else {
+            result.message = req.ajv.errorsText()
+            res.json(result);
+        }
+    } else {
+        result.message = 'require field id';
+        res.json(result);
+    }
+}
+exports.delete = function (req, res) {
+    var r = req.r;
+    var result = { result: false, message: null, id: null };
+    if (req.params.id != '' && req.params.id != null) {
+        result.id = req.params.id;
+        var q = r.table("contract").get(req.params.id).do(function (result) {
+            return r.branch(
+                result('contract_status').eq(false)
+                , r.table("contract").get(req.params.id).delete()
+                , r.expr("Can't delete because this status = true.")
+            )
+        })
+        q.run()
+            .then(function (response) {
+                result.message = response;
+                if (response.errors == 0) {
+                    result.result = true;
+                }
+                res.json(result);
+            })
+            .error(function (err) {
+                result.message = err;
+                res.json(result);
+            })
+    } else {
+        result.message = 'require field id';
+        res.json(result);
+    }
+}

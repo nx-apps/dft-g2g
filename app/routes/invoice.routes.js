@@ -1,10 +1,10 @@
 module.exports = function (app) {
-    var controller = require('../../controllers/g2g/invoice.controller');
-    app.get('/contract/id/:contract_id', controller.getByContractId);
-    app.get('/shipment/id/:shm_id', controller.getByShmId);
-    app.get('/id/:invoice_id', controller.getById);
+    var controller = require('../controllers/invoice.controller');
+    app.get('/contract', controller.getByContractId);
+    app.get('/book', controller.getByBookId);
+    // app.get('/id/:invoice_id', controller.getById);
 
-    app.post('/insert', controller.insert);
     app.put('/update', controller.update);
-    app.delete('/delete/id/:id', controller.delete);
+    app.delete('/reject/:id', controller.reject);
+    // app.delete('/delete/id/:id', controller.delete);
 }

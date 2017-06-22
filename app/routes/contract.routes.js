@@ -3,7 +3,7 @@ module.exports = function (app) {
     app.get('/list', controller.list);  //updated 2017-06-12
     app.get('/buyer', controller.buyerId);
     app.get('/', controller.getById);
-    // app.post('/insert', controller.insert);
-    // app.put('/update', controller.update);
-    // app.delete('/delete/id/:id', controller.delete);
+    app.post('/insert', controller.insert);
+    app.put('/update', controller.update);
+    app.delete('/delete/:id', controller.delete);
 }

@@ -96,7 +96,7 @@
             }
         },
         "ship_lot_no": {
-            "type": "string"
+            "type": "number"
         },
         "shipline_id": {
             "type": "string"
@@ -107,7 +107,23 @@
         "weight_per_container": {
             "type": "number"
         },
+        "book_status": {
+            "type": "boolean"
+        },
         "book_remark": {
+            "type": "string"
+        },
+        "invoice_date": {
+            "type": "string",
+            "format": "date-time"
+        },
+        "invoice_no": {
+            "type": "string"
+        },
+        "invoice_status": {
+            "type": "boolean"
+        },
+        "made_out_to": {
             "type": "string"
         }
     }
