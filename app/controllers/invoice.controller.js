@@ -2,7 +2,7 @@ exports.getByContractId = function (req, res) {
     var r = req.r;
     r.table('book')
         .getAll([req.query.id, true, false], { index: 'contractBookInvoiceStatus' })
-        .pluck('id', 'ship_lot_no', 'bl_no', { 'deli_port': ['country_name_en', 'port_name'] }, { 'dest_port': ['country_name_en', 'port_name'] })
+        .pluck('id', 'ship_lot', 'bl_no', { 'deli_port': ['country_name_en', 'port_name'] }, { 'dest_port': ['country_name_en', 'port_name'] })
         .run()
         .then(function (result) {
             res.json(result)
@@ -19,14 +19,14 @@ exports.getByBookId = function (req, res) {
                 buyer: r.table('contract').get(m('contract_id')).getField('buyer'),
                 ship: m('ship')
                     .map(function (map) {
-                        return map('ship_name').add(' V.', map('ship_voy_no'))
+                        return map('ship_name').add(' V.', map('ship_voy'))
                     })
                     .reduce(function (l, r) {
                         return l.add(r)
                     }),
                 detail: r.table('book_detail').getAll(req.query.id, { index: 'book_id' })
                     .coerceTo('array')
-                    .pluck('package_amount', 'package', 'price_per_ton', 'gross_weight', 'tare_weight', 'net_weight', 'value_usd')
+                    .pluck('package_amount', 'package', 'price_d', 'gross_weight', 'tare_weight', 'net_weight', 'value_d')
             }
         })
         .run()
@@ -43,6 +43,7 @@ exports.update = function (req, res) {
             invoice_date: r.ISO8601(req.body.invoice_date + '+07:00'),
             made_out_to: req.body.made_out_to,
             invoice_status: true,
+            fee_status: false,
             date_updated: r.now().inTimezone('+07'),
             updater: 'admin'
         };

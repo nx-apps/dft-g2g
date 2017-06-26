@@ -3,8 +3,8 @@ exports.getByClId = function (req, res) {
     var r = req.r;
     r.table('book')
         .getAll(req.query.cl_id, { index: 'cl_id' })
-        .pluck('id', 'ship_lot_no', { 'dest_port': ['country_name_en', 'port_name'] }, { 'deli_port': ['country_name_en', 'port_name'] })
-        .orderBy(r.desc('ship_lot_no'))
+        .pluck('id', 'ship_lot', { 'dest_port': ['country_name_en', 'port_name'] }, { 'deli_port': ['country_name_en', 'port_name'] })
+        .orderBy(r.desc('ship_lot'))
         .run()
         .then(function (result) {
             res.json(result)
@@ -119,7 +119,7 @@ function insertShip(datas, req, res, cb) {
                         .then(function (data) {
                             ship.push({
                                 ship_id: data.generated_keys[0],
-                                ship_voy_no: i.ship_voy_no,
+                                ship_voy: i.ship_voy,
                                 ship_name: i.ship_name
                             });
                             next();

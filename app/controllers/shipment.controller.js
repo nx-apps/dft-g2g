@@ -48,7 +48,7 @@ exports.getById = function (req, res) {
                             eta_date: me('eta_date').split('T')(0),
                             etd_date: me('etd_date').split('T')(0),
                             packing_date: me('packing_date').split('T')(0),
-                            cut_of_date: me('cut_of_date').split('T')(0),
+                            cut_date: me('cut_date').split('T')(0),
                             product_date: me('product_date').split('T')(0),
                             ship: me('ship').map(function (arr_ship) {
                                 return arr_ship.merge(function (row_ship) {

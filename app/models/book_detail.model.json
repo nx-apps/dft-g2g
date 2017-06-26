@@ -20,10 +20,10 @@
             "book_det_weight": {
                 "type": "number"
             },
-            "price_per_ton": {
+            "price_d": {
                 "type": "number"
             },
-            "value_usd": {
+            "value_d": {
                 "type": "number"
             },
             "gross_weight": {

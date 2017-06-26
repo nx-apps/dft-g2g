@@ -58,13 +58,13 @@ exports.getByContractId = function (req, res) {
                 product_date: m('product_date').split('T')(0),
                 cl_date: m('cl_date').split('T')(0),
                 contract_date: m('contract_date').split('T')(0),
-                cut_of_date: m('cut_of_date').split('T')(0),
+                cut_date: m('cut_date').split('T')(0),
                 date_created: m('date_created').split('T')(0),
                 date_updated: m('date_updated').split('T')(0)
             }
         })
         .without('id', 'tags')
-        .orderBy('cl_no', r.row('ship_lot_no').coerceTo('number'))
+        .orderBy('cl_no', r.row('ship_lot').coerceTo('number'))
         .run()
         .then(function (result) {
             res.json(result)
@@ -128,7 +128,7 @@ exports.getByShmId = function (req, res) {
                 packing_date: m('packing_date').split('T')(0),
                 product_date: m('product_date').split('T')(0),
                 cl_date: m('cl_date').split('T')(0),
-                cut_of_date: m('cut_of_date').split('T')(0),
+                cut_date: m('cut_date').split('T')(0),
                 date_created: m('date_created').split('T')(0),
                 date_updated: m('date_updated').split('T')(0)
             }
@@ -197,13 +197,13 @@ exports.getByClId = function (req, res) {
                 packing_date: m('packing_date').split('T')(0),
                 product_date: m('product_date').split('T')(0),
                 cl_date: m('cl_date').split('T')(0),
-                cut_of_date: m('cut_of_date').split('T')(0),
+                cut_date: m('cut_date').split('T')(0),
                 date_created: m('date_created').split('T')(0),
                 date_updated: m('date_updated').split('T')(0)
             }
         })
         .without('id', 'tags')
-        .orderBy(r.desc('ship_lot_no'))
+        .orderBy(r.desc('ship_lot'))
         .run()
         .then(function (result) {
             res.json(result)
@@ -227,13 +227,13 @@ exports.getById = function (req, res) {
         })
         .merge(function (me) {
             return {
-                aaa: me('ship_lot_no'),
+                aaa: me('ship_lot'),
                 book_id: me('id'),
                 bl_detail: r.db('g2g2').table('shipment_detail')
                     .getAll(req.params.book_id, { index: 'book_id' })
                     .group(function (g) {
                         return g.pluck(
-                            "type_rice_id", "package_id", "price_per_ton"
+                            "type_rice_id", "package_id", "price_d"
                         )
                     })
                     .sum("shm_det_quantity")
@@ -242,7 +242,7 @@ exports.getById = function (req, res) {
                         return {
                             type_rice_id: me2('group')('type_rice_id'),
                             package_id: me2('group')('package_id'),
-                            price_per_ton: me2('group')('price_per_ton'),
+                            price_d: me2('group')('price_d'),
                             quantity_tons: me2('reduction')
                         }
                     })
@@ -263,7 +263,7 @@ exports.getById = function (req, res) {
                     })
                     .merge(function (me2) {
                         return {
-                            amount_usd: me2('price_per_ton').mul(me2('weight_net'))
+                            amount_usd: me2('price_d').mul(me2('weight_net'))
                         }
                     })
                     .eqJoin("type_rice_id", r.db('common').table("type_rice")).without({ right: ["id", "date_created", "date_updated", "creater", "updater"] }).zip()
@@ -341,12 +341,12 @@ exports.getById = function (req, res) {
             return r.db('common').table("carrier").get(m('carrier_id')).pluck('carrier_name')
         })
         .without('id', 'tags')
-        // .orderBy('ship_lot_no')
+        // .orderBy('ship_lot')
         .run()
         .then(function (result) {
 
             // result.map((m) => {
-            //     console.log(m.ship_lot_no);
+            //     console.log(m.ship_lot);
             // });
             res.json(result)
         })
@@ -390,7 +390,7 @@ exports.insert = function (req, res) {
                         .then(function (data) {
                             ship.push({
                                 ship_id: data.generated_keys[0],
-                                ship_voy_no: i.ship_voy_no
+                                ship_voy: i.ship_voy
 
                             });
                             next();
@@ -499,7 +499,7 @@ exports.update = function (req, res) {
                             .then(function (data) {
                                 ship.push({
                                     ship_id: data.generated_keys[0],
-                                    ship_voy_no: i.ship_voy_no
+                                    ship_voy: i.ship_voy
 
                                 });
                                 next();

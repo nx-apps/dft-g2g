@@ -159,7 +159,7 @@ exports.getById = function (req, res) {
                             .getAll(row('book_id'), { index: 'book_id' })
                             .group(function (g) {
                                 return g.pluck(
-                                    "type_rice_id", "package_id", "price_per_ton"
+                                    "type_rice_id", "package_id", "price_d"
                                 )
                             })
                             .sum("shm_det_quantity")
@@ -168,7 +168,7 @@ exports.getById = function (req, res) {
                                 return {
                                     type_rice_id: me2('group')('type_rice_id'),
                                     package_id: me2('group')('package_id'),
-                                    price_per_ton: me2('group')('price_per_ton'),
+                                    price_d: me2('group')('price_d'),
                                     quantity_tons: me2('reduction')
                                 }
                             })
@@ -189,7 +189,7 @@ exports.getById = function (req, res) {
                             })
                             .merge(function (me2) {
                                 return {
-                                    amount_usd: me2('price_per_ton').mul(me2('weight_net'))
+                                    amount_usd: me2('price_d').mul(me2('weight_net'))
                                 }
                             })
                             .eqJoin("type_rice_id", r.db('common').table("type_rice")).without({ right: ["id", "date_created", "date_updated", "creater", "updater"] }).zip()

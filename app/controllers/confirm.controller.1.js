@@ -124,7 +124,7 @@ exports.getByExporterId = function (req, res) {
                         return f('tags').contains(cl('id'))
                     })
                     .sum('shm_det_quantity'),
-                ship_lot_no_lastest: r.table('shipment_detail')
+                ship_lot_lastest: r.table('shipment_detail')
                     .getAll(req.query.exporter_id, { index: 'exporter_id' })
                     .filter(function (ship_filter) {
                         return ship_filter('tags').contains(cl('id'))
@@ -135,9 +135,9 @@ exports.getByExporterId = function (req, res) {
 
                 // r.db('g2g2').table('book')
                 //     .getAll(cl('id'), { index: 'cl_id' })
-                //     .orderBy(r.desc('ship_lot_no'))
+                //     .orderBy(r.desc('ship_lot'))
                 //     .limit(1)
-                //     .getField('ship_lot_no')
+                //     .getField('ship_lot')
                 //     .reduce(function (l, r) {
                 //         return l.add(r)
                 //     }).default("-")

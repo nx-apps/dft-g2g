@@ -17,10 +17,10 @@ exports.getByContractId = function (req, res) {
                                 return {
                                     invoice_detail: inv_det_merge('invoice_detail').merge(function (shm_det_merge) {
                                         return r.db('g2g2').table('shipment_detail').get(shm_det_merge('shm_det_id'))
-                                            .pluck('package_id', 'type_rice_id', 'price_per_ton', 'shm_det_quantity', 'shm_id')
+                                            .pluck('package_id', 'type_rice_id', 'price_d', 'shm_det_quantity', 'shm_id')
                                             .merge(function (usd_merge) {
                                                 return {
-                                                    usd_value: usd_merge('price_per_ton').mul(usd_merge('shm_det_quantity'))
+                                                    usd_value: usd_merge('price_d').mul(usd_merge('shm_det_quantity'))
                                                 }
                                             })
                                     })
@@ -135,10 +135,10 @@ exports.getById = function (req, res) {
                                 return {
                                     invoice_detail: inv_det_merge('invoice_detail').merge(function (shm_det_merge) {
                                         return r.db('g2g2').table('shipment_detail').get(shm_det_merge('shm_det_id'))
-                                            .pluck('package_id', 'type_rice_id', 'price_per_ton', 'shm_det_quantity', 'cl_id')
+                                            .pluck('package_id', 'type_rice_id', 'price_d', 'shm_det_quantity', 'cl_id')
                                             .merge(function (usd_merge) {
                                                 return {
-                                                    usd_value: usd_merge('price_per_ton').mul(usd_merge('shm_det_quantity'))
+                                                    usd_value: usd_merge('price_d').mul(usd_merge('shm_det_quantity'))
                                                 }
                                             })
                                     }),
@@ -205,7 +205,7 @@ exports.getByInvoiceId = function (req, res) {
                 invoice_detail: r.db('g2g2').table('shipment_detail')
                     .getAll(m('book_id'), { index: 'book_id' })
                     .coerceTo('array')
-                    .pluck("id", "cl_id", "package_id", "exporter_id", "shm_det_quantity", "type_rice_id", "price_per_ton")
+                    .pluck("id", "cl_id", "package_id", "exporter_id", "shm_det_quantity", "type_rice_id", "price_d")
                     // .eqJoin("shm_id", r.db('g2g2').table("shipment")).without({ right: ["id", "date_created", "date_updated", "creater", "updater"] }).zip()
                     .eqJoin("package_id", r.db('common').table("package")).without({ right: ["id", "date_created", "date_updated", "creater", "updater"] }).zip()
                     .eqJoin("exporter_id", r.db('external').table("exporter")).without({ right: ["id", "date_created", "date_updated", "creater", "updater"] }).zip()
@@ -230,7 +230,7 @@ exports.getByInvoiceId = function (req, res) {
                     })
                     .merge(function (m1) {
                         return {
-                            amount_usd: m1('price_per_ton').mul(m1('weight_net'))
+                            amount_usd: m1('price_d').mul(m1('weight_net'))
                         }
                     })
                     .without('id', 'cl_type_rice', 'shm_det_quantity')
@@ -312,15 +312,15 @@ exports.approve = function (req, res) {
                         return {
                             invoice_detail: invoice_merge('invoice_detail').merge(function (shm_det_merge) {
                                 return r.db('g2g2').table('shipment_detail').get(shm_det_merge('shm_det_id'))
-                                    .pluck('price_per_ton', 'shm_det_quantity', 'exporter_id')
+                                    .pluck('price_d', 'shm_det_quantity', 'exporter_id')
                                     .merge(function (price_merge) {
                                         return {
-                                            value_usd: price_merge('price_per_ton').mul(price_merge('shm_det_quantity'))
+                                            value_d: price_merge('price_d').mul(price_merge('shm_det_quantity'))
                                         }
                                     })
                                     .merge(function (price_merge) {
                                         return {
-                                            value_bath: price_merge('value_usd').mul(fee_det_merge('rate_bank'))
+                                            value_bath: price_merge('value_d').mul(fee_det_merge('rate_bank'))
                                         }
                                     })
                             })
@@ -415,10 +415,10 @@ exports.getPayByContractId = function (req, res) {
                                     return {
                                         invoice_detail: inv_det_merge('invoice_detail').merge(function (shm_det_merge) {
                                             return r.db('g2g2').table('shipment_detail').get(shm_det_merge('shm_det_id'))
-                                                .pluck('package_id', 'type_rice_id', 'price_per_ton', 'shm_det_quantity', 'cl_id')
+                                                .pluck('package_id', 'type_rice_id', 'price_d', 'shm_det_quantity', 'cl_id')
                                                 .merge(function (usd_merge) {
                                                     return {
-                                                        usd_value: usd_merge('price_per_ton').mul(usd_merge('shm_det_quantity'))
+                                                        usd_value: usd_merge('price_d').mul(usd_merge('shm_det_quantity'))
                                                     }
                                                 })
                                         })
