@@ -14,19 +14,20 @@ export function contractReducer(state = initialState, action) {
 export function contractAction(store) {
     return [commonAction(),
     {
+        // GET
         GET_BUYER_LIST: function (ref, com) {
             axios.get('./contract/list')
                 .then(function (response) {
-                    console.log(response.data);
+                    // console.log(response.data);
                     store.dispatch({ type: 'GET_BUYER_LIST', payload: response.data })
                 })
                 .catch(function (error) {
                     console.log(error);
                 });
-            console.log(window._config);
+            // console.log(window._config);
             // https://localhost:3001/api/contract/list
-            // return axios.get('/external/upload/list/' + ref + '/' + com)
         },
+        // END GET
     }
     ]
 }
