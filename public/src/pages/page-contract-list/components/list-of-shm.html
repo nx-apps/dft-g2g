@@ -1,5 +1,7 @@
 <link rel="import" href="shm-det-exporter.html">
 <link rel="import" href="list-of-shm-det.html">
+<link rel="import" href="./../../../../bower_components/iron-pages/iron-pages.html">
+
 <dom-module id="list-of-shm">
   <style include="iron-flex iron-flex-factors iron-flex-alignment gl-styles">
     table.gl-table-default {
@@ -30,10 +32,11 @@
     Polymer({
       is: "list-of-shm",
       behaviors: [
-        g2gCongtroller,
-        g2gModelBehavior,
-        nylonBehavior,
-        nylonLocalizeBehavior
+        ReduxBehavior,
+        nylonBehavior
+        // g2gCongtroller,
+        // g2gModelBehavior,
+        // nylonLocalizeBehavior
       ],
       properties: {
         pageSelected: {
@@ -50,30 +53,30 @@
           value: false
         }
       },
-      created: function () {
-        this.nylonLocalizeImport('/i18n-page1.json');
-      },
-      listeners: {
-        '_change-component-shm': '_changeComponentShm',
-        '_get-fire-in-book-shm-detail': '_getFireInBookShmDetail',
-        '_post-approve-book': '_postApproveBook'
-      },
-      _changeComponentShm: function (data) {
-        this.set('pageSelected', data.detail.detail)
-      },
-      _getFireInBookShmDetail: function (e) {
-        this.dataEdit = e.detail.detail;
-        this.set('dataEdit', e.detail.detail)
-        this.set('pageSelected', 'shm-detail')
-      },
-      _postApproveBook: function (e) {
-        // console.log(e.detail);
-        // this.fire('toast', { status: 'load' });
-        this.update('./g2g/book/update/', e.detail, () => {
-          // this.fire('toast', { status: 'load' });
-          // console.log(11);
-        });
-      }
+      // created: function () {
+      //   this.nylonLocalizeImport('/i18n-page1.json');
+      // },
+      // listeners: {
+      //   '_change-component-shm': '_changeComponentShm',
+      //   '_get-fire-in-book-shm-detail': '_getFireInBookShmDetail',
+      //   '_post-approve-book': '_postApproveBook'
+      // },
+      // _changeComponentShm: function (data) {
+      //   this.set('pageSelected', data.detail.detail)
+      // },
+      // _getFireInBookShmDetail: function (e) {
+      //   this.dataEdit = e.detail.detail;
+      //   this.set('dataEdit', e.detail.detail)
+      //   this.set('pageSelected', 'shm-detail')
+      // },
+      // _postApproveBook: function (e) {
+      //   // console.log(e.detail);
+      //   // this.fire('toast', { status: 'load' });
+      //   this.update('./g2g/book/update/', e.detail, () => {
+      //     // this.fire('toast', { status: 'load' });
+      //     // console.log(11);
+      //   });
+      // }
 
     });
   </script>
