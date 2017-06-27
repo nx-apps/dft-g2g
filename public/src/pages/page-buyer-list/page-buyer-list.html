@@ -75,6 +75,37 @@
             },
             nylonPageActive: function () {
             },
+            // _getCountry() {
+            //     this.read('./g2g/contract/list', (data) => {
+            //         this.set('countryList', data)
+            //     });
+            // },
+            // getContractList(e) {
+            //     // console.log(e.detail.buyer_id);
+            //     document.cookie = "buyerId=" + e.detail.buyer_id
+            //     this.fire('nylon-change-page', { path: '/g2g' })
+            // },
+            // _getDataForContract: function () {
+            //     //use data for contract
+            //     this.read(window._config.externalServerCommon+'/api/buyer', (data) => {
+            //         this.dataForSelected.dataForContract.buyer = data;
+            //         this.notifyPath('dataForSelected.dataForContract.buyer');
+            //     });
+            //     this.read(window._config.externalServerCommon+'/api/hamonize?group=g2g', (data) => {
+            //         data.map((set_name) => {
+            //             set_name.type_rice_name_th = '('+ set_name.type_rice_id+ ') ' +set_name.type_rice_name_th
+            //             set_name.type_rice_name_en = '('+ set_name.type_rice_id+ ') ' +set_name.type_rice_name_en
+            //         })
+            //         this.dataForSelected.dataForContract.typeRice = data;
+            //         this.notifyPath('dataForSelected.dataForContract.typeRice');
+            //         // console.log(this.dataForSelected);
+            //     });
+            //     this.read(window._config.externalServerCommon+'/api/incoterms', (data) => {
+            //         this.dataForSelected.dataForContract.incoterms = data;
+            //         this.notifyPath('dataForSelected.dataForContract.incoterms');
+            //     });
+            //     //end use data for contract
+            // },
             addCountry() {
                 this.titlePanelRight = 'เพิ่มสัญญาการซื้อขาย'
                 this.fire('toast', { status: 'load' });
