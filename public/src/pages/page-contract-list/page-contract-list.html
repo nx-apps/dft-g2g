@@ -1,17 +1,88 @@
+<link rel="import" href="./../../../bower_components/polymer/polymer.html">
+<link rel="import" href="./../../layout/page-style.html">
+<link rel="import" href="./../../../bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="./../../../bower_components/paper-tooltip/paper-tooltip.html">
+<link rel="import" href="./../../../bower_components/nylon-panel/nylon-panel-right.html">
 
 <dom-module id="page-contract-list">
-    <template>
-        <style>
-            :host {
-                display: block;
+    <style media="screen" include="iron-flex iron-flex-factors iron-flex-alignment gl-styles page-style">
+         :host {
+            --paper-fab-background: var(--paper-light-blue-500);
+            --paper-fab-keyboard-focus-background: var(--paper-light-blue-900);
+        }
+        * {
+            font-family: 'CSChatThaiUI', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        paper-fab {
+            position: fixed;
+            right: 25px;
+            bottom: 25px;
+            color: #fff;
+            /*--paper-fab-background: var(--paper-light-blue-500);*/
+        }
+        .addContract {
+            margin: 16px;
+            margin-bottom: 80px;
+            padding: 7.5px;
+            /*border: 1px solid var(--gl-gray-light-color);*/
+        }
+        nylon-panel-right {
+            --app-toolbar-style: {
+                background-color: #FF5000;
             }
-        </style>
-        page-contract-list
+        }
+        .breadcrumbs {
+            margin: 38px 38px 0px 38px;
+            border-bottom: 1px solid #ccc!important;
+            padding: 10px;
+        }
+    </style>
+    <template>
+        <div class="layout vertical">
+            <div class="xx horizontal center-justified layout wrap" style="width: 1300px">
+                <template is="dom-repeat" items="[[contractList]]">
+                    <chart-pie-g2g on-okload="okload" chart-name="[[item.contract_name]]" data="[[item]]"></chart-pie-g2g>
+                </template>
+            </div>
+        </div>
+        <nylon-panel-right title="{{titlePanelRight}}" id="drawerRight" set-width="95%">
+            <div class="rightdata" align="left">
+                <div class="breadcrumbs">
+                    <plutonium-breadcrumbs crumbs="{{crumbs}}" selected-crumb="{{crumb}}"></plutonium-breadcrumbs>
+                </div>
+                <iron-pages selected="{{g2gPageSeleted}}" attr-for-selected="name">
+                    <div class="addContract" name="addContract">
+                        <contract-detail data-for-select="[[dataForSelected.dataForContract]]" is-view-seleted="[[!isViewSeleted]]" is-edit="[[!isEdit]]"
+                        is-input-disabled="[[!isInputDisabled]]"></contract-detail>
+                    </div>
+                    <div class="addContract" name="contractDetail">
+                        <contract-detail data-for-select="[[dataForSelected.dataForContract]]" data="[[dataSelected]]" is-view-seleted="[[isViewSeleted]]"
+                        is-edit="[[isEdit]]" is-input-disabled="[[isInputDisabled]]"></contract-detail>
+                    </div>
+                    <div class="addContract" name="listOfConfirm">
+                        <list-of-confirm page-selected="{{pageSelected}}" data-for-select="[[dataForSelected.dataForConfirm]]" data="[[dataSelected]]"
+                        is-input-disabled="[[!isInputDisabled]]">
+                        </list-of-confirm>
+                    </div>
+                    <div class="addContract" name="listOfShipment">
+                        <list-of-booking page-selected="{{pageSelected}}" data-for-select="[[dataForSelected.dataForBooking]]" data="[[dataSelected]]"></list-of-booking>
+                    </div>
+                    <div class="addContract" name="listOfFee">
+                        <list-of-fee-g2g page-selected="{{pageSelected}}" data-for-select="[[dataForSelected.dataForFee]]" data="[[feeList]]"></list-of-fee-g2g>
+                    </div>
+                </iron-pages>
+            </div>
+        </nylon-panel-right>
+        <div class="btnFab">
+            <paper-fab icon="add" title="{{localize('label_add_contract')}}" id="addContract" on-tap="addContract"></paper-fab>
+            <paper-tooltip for="addContract" offset="0">{{localize('label_add_contract')}}</paper-tooltip>
+        </div>
     </template>
     <script>
         Polymer({
             is: 'page-contract-list',
-            behaviors: [ReduxBehavior, nylonBehavior, i18nAction,contractAction],
+            behaviors: [ReduxBehavior, nylonBehavior, i18nAction, contractAction],
             properties: {
                 layerContent: {
                     type: String,
