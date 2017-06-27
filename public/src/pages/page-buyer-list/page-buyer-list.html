@@ -74,9 +74,35 @@
                 },
             },
             nylonPageActive: function () {
-                // this.dispatchAction('EXPORTER_GET_DATA');
-                // this.dispatchAction('EXPORTER_GET_TYPE_LIC');
             },
+            addCountry() {
+                this.titlePanelRight = 'เพิ่มสัญญาการซื้อขาย'
+                this.fire('toast', { status: 'load' });
+                if (this.checkRenderPage.contractDetail != true) {
+                    this.async(() => {
+                        this.importHref(
+                            this.resolveUrl('./components/contract-detail-dash.html'),
+                            () => {
+                                this.async(() => {
+                                    this.fire('toast', { status: 'load' });
+                                    // console.log(this.dataForSelected.dataForContract);
+                                    this._flipDrawer();
+                                    this.checkRenderPage.contractDetail = true;
+                                }, 500)
+                            }, null, true
+                        );
+                    }, 1000);
+                } else {
+                    this.fire('toast', { status: 'load' });
+                    this._flipDrawer();
+                }
+            },
+            _flipDrawer: function () {
+                Polymer.dom(this.root).querySelector('#drawerRight').open();
+            },
+            _flipDrawerClose: function () {
+                Polymer.dom(this.root).querySelector('#drawerRight').close();
+            }
         });
     </script>
 </dom-module>
