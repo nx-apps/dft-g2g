@@ -7,37 +7,49 @@
 <link rel="import" href="./../../../../bower_components/gl-form/gl-form-textarea.html">
 <link rel="import" href="./../../../../bower_components/gl-form/gl-form-panel-footer.html">
 <link rel="import" href="./../../../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="./../../../../bower_components/paper-checkbox/paper-checkbox.html">
+<link rel="import" href="./../../components/format-number-behavior.html">
+<link rel="import" href="./../../components/g2g-logic-behavior.html">
+
+
 
 <dom-module id="contract-detail">
   <style include="iron-flex iron-flex-factors iron-flex-alignment gl-styles page-style">
     * {
       font-family: 'CSChatThaiUI', sans-serif;
       -webkit-font-smoothing: antialiased;
-    }    
+    }
+
     gl-form-dropdown-menu {
       width: 100%;
-    }  
+    }
+
     paper-icon-button.crud {
       margin: 5px 5px 5px 5px;
-    }   
+    }
+
     paper-icon-button.crud:hover {
       background-color: var(--paper-grey-200);
       border-radius: 5px;
       box-shadow: inset 0 0 3px 3px rgba(0, 0, 0, .2);
-    }    
+    }
+
     .riceName {
       margin-top: 25px;
       font-size: var(--font-size-h5);
-    }    
+    }
+
     paper-button.btnInTable {
       --paper-button: {
         margin-top: 0px;
         height: 32px;
       }
-    }    
+    }
+
     .titleName {
       margin-bottom: 10px;
-    }    
+    }
+
     .table-head>tr>th:nth-child(1),
     .table-head>tr>th:nth-child(3),
     .table-body>tr>td:nth-child(1),
@@ -46,84 +58,109 @@
     .table-foot>tr>td:nth-child(3) {
       width: 20%;
       text-align: center;
-    }    
+    }
+
     .table-head>tr>th:nth-child(2),
     .table-body>tr>th:nth-child(2),
     .table-foot>tr>th:nth-child(2) {
       width: 60%;
-    }    
+    }
+
     .gl-table-default {
       margin-bottom: 20px;
-    }    
+    }
+
     .upGlComboBox {
       margin-top: -20px;
-    }    
+    }
+
     vaadin-date-picker {
       font-family: 'CSChatThaiUI', sans-serif !important;
       -webkit-font-smoothing: antialiased !important;
       color: red !important;
-    }    
+    }
+
     paper-button[disabled] {
       background: #eaeaea;
       color: #a8a8a8;
-    }    
+    }
+
     gl-form-input.number {
       --paper-input-container-input: {
         text-align: left;
       }
-    }    
+    }
+
     gl-form-input.number[disabled] {
       --paper-input-container-input: {
         text-align: left !important;
       }
-    }    
+    }
+
     iron-icon {
       height: 16px;
       width: 16px;
       margin-right: 8px;
     }
+
+    div.main {
+      /*background-color: red;*/
+      height: 300px;
+      overflow-y: scroll;
+      /*min-width: 300px;*/
+      border: solid darkblue 1px;
+    }
+
+    div.item {
+      margin: 2px 5px;
+    }
+
+    div.sub-item {
+      margin: 5px 20px;
+    }
   </style>
   <template>
     <gl-form-panel set-padding="10px 20px 10px 20px" set-border="1px">
       <template is="dom-if" if="[[_isViewing(isViewSeleted)]]">
-        <icon-button-management is-input-disabled="[[!isInputDisabled]]"></icon-button-management>
+        <icon-button-management is-input-disabled="[[!commonState.btnDisabled]]"></icon-button-management>
       </template>
       <gl-grid-row width="{{getWidth}}">
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,9]]">
-          <gl-form-input required class="required" disabled="[[_checkArrayTrue(isInputDisabled,data.contract_status)]]" error-message="{{localize.label_error_contract}}"
+          <gl-form-input required class="required" disabled="[[_checkArrayTrue(commonState.btnDisabled,data.contract_status)]]" error-message="{{localize.label_error_contract}}"
             label="{{localize.label_contract}}" value="{{data.contract_name}}" placeholder="{{localize.label_contract}}"></gl-form-input>
         </gl-grid-col>
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
-          <vaadin-date-picker always-float-label class="required" required disabled="[[_checkArrayTrue(isInputDisabled,data.contract_status)]]"
-            label="{{localize.label_date}}" error-message="{{localize.label_error_date}}" value="{{data.contract_date}}"></vaadin-date-picker>
+          <gl-form-input type="date" always-float-label class="required" required disabled="[[_checkArrayTrue(commonState.btnDisabled,data.contract_status)]]"
+            label="{{localize.label_date}}" error-message="{{localize.label_error_date}}" value="{{data.contract_date}}">
+            </vaadin-date-picker>
         </gl-grid-col>
       </gl-grid-row>
 
       <gl-grid-row width="{{getWidth}}">
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,9]]">
-          <gl-combo-box class="required" required disabled="[[_checkArrayTrue(isInputDisabled,data.contract_status)]]" label="{{localize.label_payment_type}}"
+          <gl-combo-box class="required" required disabled="[[_checkArrayTrue(commonState.btnDisabled,data.contract_status)]]" label="{{localize.label_payment_type}}"
             error-message="{{localize.label_error_payment_type}}" placeholder="{{localize.label_payment_type}}" items="[[payterms]]"
             item-label-path="payterms_Name" item-value-path="payterms_Id" value="{{data.payterm}}">
-             <template>
+            <template>
               [[item.payterms_Name]]
             </template>
           </gl-combo-box>
         </gl-grid-col>
-        <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">[[changeString2Num(data.*,'contract_quantity')]]
-          <gl-form-input class="required number" required allowed-pattern="[0-9||,||.]" format-number="on" disabled="[[_checkArrayTrue(isInputDisabled,data.contract_status)]]"
-            error-message="{{localize.label_error_quantity}}" required label="{{localize.label_quantity}}" value="{{data.contract_quantity}}"
-            placeholder="{{localize.label_quantity}}" id="contract_quantity"></gl-form-input>
+        <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">[[changeString2Num(data.*,'contract_weight')]]
+          <gl-form-input class="required number" required allowed-pattern="[0-9||,||.]" format-number="on" disabled="[[_checkArrayTrue(commonState.btnDisabled,data.contract_status)]]"
+            error-message="{{localize.label_error_quantity}}" required label="{{localize.label_quantity}}" value="{{data.contract_weight}}"
+            placeholder="{{localize.label_quantity}}" id="contract_weight"></gl-form-input>
         </gl-grid-col>
       </gl-grid-row>
 
       <gl-grid-row>
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,9]]">
-          [[_getBuyerAddressFromData(data)]]
-          <gl-combo-box class="required" always-float-label required id="buyer_id" 
-            label="{{localize.label_buyer}}" disabled error-message="{{localize.label_error_buyer}}" value="{{data.buyer_id}}"
-            on-value-changed="_getBuyerAddress">
+          <!--[[_getBuyerAddressFromData(data)]]-->
+          <gl-combo-box class="required" always-float-label required id="buyer_id" label="{{localize.label_buyer}}" disabled="[[_checkArrayTrue(commonState.btnDisabled,data.contract_status)]]"
+            items="{{buyerList}}" item-label-path="buyer_name" item-value-path="buyer_id" error-message="{{localize.label_error_buyer}}"
+            value="{{data.buyer_id}}" on-selected-item-changed="_getBuyerAddress">
             <template>
-              [[item.label]]
+              [[item.buyer_name]]
             </template>
           </gl-combo-box>
         </gl-grid-col>
@@ -131,15 +168,14 @@
 
       <gl-grid-row>
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,9]]">
-          <gl-form-input disabled 
-            label="FAX" value="{{data.buyer_fax}}" placeholder="FAX"></gl-form-input>
+          <gl-form-input disabled label="FAX" value="{{dataShow.buyer_fax}}" placeholder="FAX"></gl-form-input>
         </gl-grid-col>
       </gl-grid-row>
       <gl-grid-row>
 
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,6]]">
           <gl-form-textarea rows="2" disabled label="{{localize.label_buyer_address}}" placeholder="{{localize.label_buyer_address}}"
-            value="{{data.buyerAddress}}"></gl-form-textarea>
+            value="{{dataShow.buyerAddress}}"></gl-form-textarea>
         </gl-grid-col>
       </gl-grid-row>
 
@@ -147,25 +183,25 @@
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,12]]">
 
           <div class="titleName">{{localize.label_list_rice}}</div>
-          <table class="gl-table-default">
+          <!--<table class="gl-table-default">
             <thead class="table-head">
               <tr>
                 <th>{{localize.label_order}}</th>
                 <th>{{localize.label_rice_type}}</th>
                 <th>
-                  <template is="dom-if" if="[[!_isViewing(isInputDisabled)]]">
+                  <template is="dom-if" if="[[!_isViewing(commonState.btnDisabled)]]">
                     {{localize.label_action}}
                   </template>
                 </th>
               </tr>
             </thead>
-            <template is="dom-if" if="[[!_isViewing(isInputDisabled)]]">
+            <template is="dom-if" if="[[!_isViewing(commonState.btnDisabled)]]">
               <tfoot class="table-foot">
                 <tr>
                   <td></td>
                   <td></td>
                   <td>
-                    <paper-button hidden="[[isInputDisabled]]" raised id="[[index]]" on-tap="addTypeRice" class="btnInTable gl-btn-primary">
+                    <paper-button hidden="[[commonState.btnDisabled]]" raised id="[[index]]" on-tap="addTypeRice" class="btnInTable gl-btn-primary">
                       <iron-icon icon="add"></iron-icon>{{localize.btn_add}}</paper-button>
                   </td>
                 </tr>
@@ -179,18 +215,18 @@
                   </td>
                   <td>
                     <div class="upGlComboBox">
-                      <gl-combo-box id="rice-[[index]]" class="required" required disabled="[[isInputDisabled]]" error-message="{{localize.label_error_rice_type}}"
+                      <gl-combo-box id="rice-[[index]]" class="required" required disabled="[[commonState.btnDisabled]]" error-message="{{localize.label_error_rice_type}}"
                         placeholder="{{localize.label_rice_type}}" name="type_rice_name" item-label-path="type_rice_name_th"
                         item-value-path="type_rice_id" value="{{item.type_rice_id}}" on-value-changed="_typeRiceContract">
                         <template>
-                          [[item.type_rice_name_th]] 
+                          [[item.type_rice_name_th]]
                         </template>
                       </gl-combo-box>
                     </div>
                   </td>
                   <td>
                     <template is="dom-if" if="[[!_isViewing(data.isInputDisabled)]]">
-                      <paper-button hidden="[[isInputDisabled]]" raised id="[[index]]" on-tap="deleteTypeRice" class="btnInTable gl-btn-danger"
+                      <paper-button hidden="[[commonState.btnDisabled]]" raised id="[[index]]" on-tap="deleteTypeRice" class="btnInTable gl-btn-danger"
                         title="ลบชนิดข้าว">
                         <iron-icon icon="remove"></iron-icon>{{localize.btn_delete}}</paper-button>
                     </template>
@@ -198,28 +234,43 @@
                 </tr>
               </template>
             </tbody>
-          </table>
+          </table>-->
+          <div class="main">
+            <template is="dom-repeat" items={{hamonizeList}} index-as="indexroot">
+              <div class="item">
+                <paper-checkbox checked="{{item.check}}" id="{{indexroot}}" on-tap="getCheckChild" disabled="[[commonState.btnDisabled]]">
+                  {{item.check}}|| [[item.name_th]] || [[item.value]]</paper-checkbox>
+                <template is="dom-repeat" items={{item.sub}} as="subChild">
+                  <div class="sub-item">
+                    <paper-checkbox id="{{indexroot}}" checked="{{subChild.check}}" on-tap="getSelect" disabled="[[commonState.btnDisabled]]">
+                      {{subChild.check}}|| [[subChild.hamonize_th]] || [[subChild.hamonize_year]] || [[item.value]]</paper-checkbox>
+                  </div>
+                </template>
+              </div>
+              <br>
+            </template>
+          </div>
         </gl-grid-col>
       </gl-grid-row>
 
       <gl-grid-row>
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,6]]">
-          <gl-form-textarea disabled="[[_checkArrayTrue(isInputDisabled,data.contract_status)]]" rows="2" label="{{localize.label_more_detail}}"
+          <gl-form-textarea disabled="[[_checkArrayTrue(commonState.btnDisabled,data.contract_status)]]" rows="2" label="{{localize.label_more_detail}}"
             placeholder="{{localize.label_more_detail}}" value="{{data.contract_desc}}" name="contract_desc"></gl-form-textarea>
         </gl-grid-col>
       </gl-grid-row>
       <gl-form-panel-footer label="" set-padding="10px">
         <div class="horizontal end-justified layout">
 
-          <template is="dom-if" if="[[!_isViewing(isEdit)]]">
-            <paper-button class="gl-btn-primary" on-tap="insertContract" raised hidden="[[_isViewing(data.contract_status)]]">{{localize.btn_add}}</paper-button>
+          <template is="dom-if" if="[[commonState.isInsert]]">
+            <paper-button class="gl-btn-primary" on-tap="insertContract" raised>{{localize.btn_add}}</paper-button>
           </template>
-          <template is="dom-if" if="[[_isViewing(isViewSeleted)]]">
-            <paper-button class="gl-btn-default" on-tap="calcelContract" raised hidden="[[_isViewing(isInputDisabled)]]">{{localize.btn_cancel}}</paper-button>
-            <paper-button class="gl-btn-success" on-tap="saveContract" raised hidden="[[_isViewing(isInputDisabled)]]">{{localize.btn_save}}</paper-button>
+          <template is="dom-if" if="[[!commonState.isInsert]]">
+            <paper-button class="gl-btn-default" on-tap="calcelContract" raised hidden="[[commonState.btnDisabled]]">{{localize.btn_cancel}}</paper-button>
+            <paper-button class="gl-btn-success" on-tap="saveContract" raised hidden="[[commonState.btnDisabled]]">{{localize.btn_save}}</paper-button>
           </template>
-          <template is="dom-if" if="[[_isViewing(isInputDisabled)]]">
-            <paper-button class="gl-btn-info" raised on-tap="confirmDrawer" hidden="[[_isViewing(data.contract_status)]]">{{localize.btn_confirm}}</paper-button>
+          <template is="dom-if" if="[[commonState.btnDisabled]]">
+            <paper-button class="gl-btn-info" raised on-tap="confirmDrawer" hidden="[[data.contract_status]]">{{localize.btn_confirm}}</paper-button>
           </template>
         </div>
       </gl-form-panel-footer>
@@ -229,40 +280,104 @@
     Polymer({
       is: "contract-detail",
       behaviors: [
-        ReduxBehavior,
-        nylonBehavior
-        // g2gModelBehavior,
-        // g2gCongtroller,
-        // nylonLocalizeBehavior
+        ReduxBehavior, FormatNumberBehavior, nylonBehavior, g2gLogicBehavior
       ],
       properties: {
-        localize:{
-          statePatch: 'i18n.g2g'
-        }
+        localize: {
+          statePath: 'i18n.g2g'
+        },
+        commonState: {
+          statePath: 'commonState.setState'
+        },
+        data: {
+          statePath: 'contract.contractDetail',
+          observer: 'checkContract'
+        },
+        dataShow: {
+          type: Object,
+          value: {}
+        },
+        buyerList: {
+          statePath: 'commonG2g.buyerList',
+          // observer:'get'
+        },
+        hamonizeList: {
+          statePath: 'commonG2g.hamonizeList',
+          // observer: 'get'
+        },
         // dataForSelect: {
         //   type: Object,
         // },
         // data: {
         //   type: Object,
-        //   value: { contract_quantity: 0, contract_type_rice: [{}] }
+        //   value: { contract_weight: 0, contract_type_rice: [{}] }
         // },
         // dataForUse: {
         //   type: Object,
         // },
-        // payterms: {
-        //   type: Object,
-        //   value: [
-        //     { payterms_Name: 'L/C', payterms_Id: 'L/C' },
-        //     { payterms_Name: 'T/T', payterms_Id: 'T/T' },
-        //     { payterms_Name: 'D/P', payterms_Id: 'D/P' },
-        //     { payterms_Name: 'D/A', payterms_Id: 'D/A' }
-        //   ]
-        // }
+        payterms: {
+          type: Object,
+          value: [
+            { payterms_Name: 'L/C', payterms_Id: 'L/C' },
+            { payterms_Name: 'T/T', payterms_Id: 'T/T' },
+            { payterms_Name: 'D/P', payterms_Id: 'D/P' },
+            { payterms_Name: 'D/A', payterms_Id: 'D/A' }
+          ]
+        }
       },
-      // observers: [
-      //   '_changeDataContract(data.contract_date)',
-      //   '_getBuyer(dataForSelect.buyer)',
-      // ],
+      get(data) {
+        // console.log(data);
+      },
+      observers: [
+        '_checkHamonize(data,hamonizeList)'
+        // '_changeDataContract(data.contract_date)',
+        // '_getBuyer(dataForSelect.buyer)',
+      ],
+      checkContract: function (data) {
+        if (data.id === undefined) {
+          this.set('dataShow.buyer_fax', '')
+          this.set('dataShow.buyerAddress', '')
+          // console.log(211111);
+          this._checkHamonize(this.data, this.hamonizeList, false)
+        }
+        // console.log(data.id);
+      },
+      _checkHamonize: function (data, hamonizeList, status = true) {
+        try {
+          let contract_hamonize = data.contract_hamonize
+          // let hamonize = hamonizeList
+          if (data.id === undefined)
+            status = false
+          console.log(status);
+          for (var index = 0; index < contract_hamonize.length; index++) {
+            for (var index2 = 0; index2 < hamonizeList.length; index2++) {
+              for (var index3 = 0; index3 < hamonizeList[index2].sub.length; index3++) {
+                if (contract_hamonize[index].hamonize_id === hamonizeList[index2].sub[index3].sub_id) {
+                  console.log(status);
+                  this.set('hamonizeList.' + index2 + '.sub.' + index3 + '.check', status)
+                  // console.log(contract_hamonize[index].hamonize_id === hamonizeList[index2].sub[index3].sub_id);
+                  break
+                }
+              }
+            }
+          }
+        } catch (e) {
+        }
+      },
+      getCheckChild(e) {
+        let item = e.model.__data__.item
+        let indexRoot = e.currentTarget.id
+        let checkHost = e.currentTarget.checked
+        this.hamonizeList[indexRoot].sub.map((item, index) => {
+          this.set('hamonizeList.' + indexRoot + '.sub.' + index + '.check', checkHost)
+        })
+      },
+      getSelect(e) {
+        let indexRoot = e.currentTarget.id
+        let checkHost = e.currentTarget.checked
+        let checkFalse = this.hamonizeList[indexRoot].sub.find((item) => item.check !== true)
+        this.set('hamonizeList.' + indexRoot + '.check', checkFalse === undefined)
+      },
       // listeners: {
       //   'edit-input': 'editInput',
       //   'delete-input': 'deleteContract'
@@ -281,7 +396,7 @@
       // _getUrl: function () {
 
       //     console.log(this._getCookie("buyerId"));
-          
+
       //   },
 
       // _getBuyer: function (buyers) {
@@ -299,22 +414,31 @@
       //   }
 
       // },
-      // _getBuyerAddress: function (e) {
-      //   if (e.detail.value) {
-      //     this._getAddCondation(e.detail.value);
-      //   }
-      //   if (e.detail.value === '') {
-      //     try {
-      //       this._getAddCondation(e.detail.value);
-      //       this.data.buyer_fax = '';
-      //       this.data.buyerAddress = '';
-      //       this.notifyPath('data.buyer_fax');
-      //       this.notifyPath('data.buyerAddress');
-      //     } catch (e) {
-      //       // console.log(e);
-      //     } 
-      //   }
-      // },
+      _getBuyerAddress: function (e) {
+        if (e.detail.value) {
+          // console.log(e.detail.value);
+          this.set('dataShow.obj', e.detail.value)
+          this.set('dataShow.buyer_fax', e.detail.value.buyer_fax)
+          this.set('dataShow.buyerAddress', e.detail.value.buyer_address)
+
+          // this._getAddCondation(e.detail.value);
+        }
+        // console.log(e.detail.value);
+        // if (e.detail.value) {
+        //   this._getAddCondation(e.detail.value);
+        // }
+        // if (e.detail.value === '') {
+        //   try {
+        //     this._getAddCondation(e.detail.value);
+        //     this.data.buyer_fax = '';
+        //     this.data.buyerAddress = '';
+        //     this.notifyPath('data.buyer_fax');
+        //     this.notifyPath('data.buyerAddress');
+        //   } catch (e) {
+        //     // console.log(e);
+        //   } 
+        // }
+      },
       // _getAddCondation: function (buyerId) {
       //   try {
       //     let buyer_id = this.dataForSelect.buyer.filter((buyer) => buyer.buyer_id == buyerId);
@@ -328,9 +452,8 @@
       //   } 
       // },
       // _getBuyerAddressFromData: function (data) {
-      //   this.data.buyer_fax = data.buyer_fax;
+      //   console.log(dataShow);
       //   this.data.buyerAddress = data.buyer_address;
-      //   this.notifyPath('data.buyer_fax');
       //   this.notifyPath('data.buyerAddress');
       // },
       // _changeDataContract: function (contract_date) {
@@ -345,38 +468,69 @@
       // deleteTypeRice: function (e) {
       //   this.splice('data.contract_type_rice', e.currentTarget.id, 1);
       // },
-      // insertContract: function () {
-      //   this.set('data.tags', [])
-      //   this.push('data.tags', this.data.country_id);
-      //   this._clearnData(this.data, (data) => {
-      //     this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
-      //     data.contract_status = false;
-      //     this.insert('./g2g/contract/insert', data, () => {
-      //       this.fire('toast', {
-      //         status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
-      //         callback: () => {
-      //           this.fire('refresh-contract', { detail: 'refresh-contract' });
-      //           this.fire('close-drawer', { detail: 'refresh-contract' });
-      //         }
-      //       });
-      //     });
-      //     let el = Polymer.dom(this.root).querySelectorAll('.required');
-      //     el.map((el) => { el.reset(); el.value = '' });
-      //   });
-      // },
+      _getHamonize(hamonizeList) {
+        let hamonizeArr = []
+        hamonizeList = hamonizeList || this.hamonizeList
+        for (var index2 = 0; index2 < hamonizeList.length; index2++) {
+          for (var index3 = 0; index3 < hamonizeList[index2].sub.length; index3++) {
+            if (hamonizeList[index2].sub[index3].check === true) {
+              let data = {
+                digits: hamonizeList[index2].sub[index3].digits,
+                hamonize_code: hamonizeList[index2].sub[index3].hamonize_code,
+                hamonize_en: hamonizeList[index2].sub[index3].hamonize_en,
+                hamonize_en2: hamonizeList[index2].sub[index3].hamonize_en2,
+                hamonize_th: hamonizeList[index2].sub[index3].hamonize_th,
+                hamonize_th2: hamonizeList[index2].sub[index3].hamonize_th2,
+                hamonize_year: hamonizeList[index2].sub[index3].hamonize_year
+              }
+              hamonizeArr.push({
+                hamonize_id: hamonizeList[index2].sub[index3].sub_id,
+                hamonize: data
+              })
+            }
+          }
+        }
+        return hamonizeArr
+      },
+      insertContract: function () {
+        this.data.contract_hamonize = this._getHamonize()
+        this.data.buyer = this.dataShow.obj
+        console.log(this.data);
+        // console.log(this.dataShow.obj);
+        // console.log(this._getHamonize());
+        // this.set('data.tags', [])
+        // this.push('data.tags', this.data.country_id);
+        // this._clearnData(this.data, (data) => {
+        //   this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
+        //   data.contract_status = false;
+        //   this.insert('./g2g/contract/insert', data, () => {
+        //     this.fire('toast', {
+        //       status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
+        //       callback: () => {
+        //         this.fire('refresh-contract', { detail: 'refresh-contract' });
+        //         this.fire('close-drawer', { detail: 'refresh-contract' });
+        //       }
+        //     });
+        //   });
+        //   let el = Polymer.dom(this.root).querySelectorAll('.required');
+        //   el.map((el) => { el.reset(); el.value = '' });
+        // });
+      },
 
-      // saveContract: function () {
-      //   this._clearnData(this.data, (data) => {
-      //     data.id = this.data.contract_id;
-      //     this.fire('toast', {  //คำสั่งสำหรับเปิด toast dialog
-      //       status: 'dialog',
-      //       text: 'ต้องการแก้ข้อมูลใช่หรือไม่ ?',
-      //       confirmed: this._saveData.bind(this), //function ที่ใช้รับค่า ปุ่ม
-      //       el: this, // compontents
-      //       data: data // ข้อมูลที่ส่งไป เช่น id ที่จะใช้ลบข้อมูล ใน db
-      //     });
-      //   });
-      // },
+      saveContract: function () {
+        console.log(this.data);
+        console.log(this.dataShow.obj);
+        // this._clearnData(this.data, (data) => {
+        //   data.id = this.data.contract_id;
+        //   this.fire('toast', {  //คำสั่งสำหรับเปิด toast dialog
+        //     status: 'dialog',
+        //     text: 'ต้องการแก้ข้อมูลใช่หรือไม่ ?',
+        //     confirmed: this._saveData.bind(this), //function ที่ใช้รับค่า ปุ่ม
+        //     el: this, // compontents
+        //     data: data // ข้อมูลที่ส่งไป เช่น id ที่จะใช้ลบข้อมูล ใน db
+        //   });
+        // });
+      },
       // _saveData: function (result, detail) {
       //   if (result == true) {
       //     this.update('./g2g/contract/update', detail.data, () => {
@@ -394,7 +548,7 @@
       // confirmDrawer: function () {
       //   this._clearnData(this.data, (data) => {
       //     data.id = this.data.contract_id;
-      //     data.contract_quantity = this.data.contract_quantity;
+      //     data.contract_weight = this.data.contract_weight;
       //     data.contract_status = this.approve(data.contract_status);
       //     this.fire('toast', {  //คำสั่งสำหรับเปิด toast dialog
       //       status: 'dialog',
@@ -476,8 +630,8 @@
       //   let stat = el.map((el) => el.validate());
       //   if (stat.every(elem => elem == true)) {
       //     let { buyer_id, contract_date, contract_desc, contract_name, contract_status, payterm } = data;
-      //     let { contract_quantity } = data;
-      //     let newData = { buyer_id, contract_date, contract_desc, contract_name, contract_quantity, contract_status, payterm };
+      //     let { contract_weight } = data;
+      //     let newData = { buyer_id, contract_date, contract_desc, contract_name, contract_weight, contract_status, payterm };
       //     newData.contract_type_rice = [];
       //     newData.contract_date = new Date(newData.contract_date);
       //     data.contract_type_rice.map((riceCode) => {

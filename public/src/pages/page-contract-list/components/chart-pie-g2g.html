@@ -1,9 +1,7 @@
 <link rel="import" href="../../../../bower_components/chart-elements/chart-pie.html">
 <link rel="import" href="../../components/format-number-behavior.html">
 <link rel="import" href="../../../../bower_components/paper-card/paper-card.html">
-
 <link rel="import" href="../../components/format-number-behavior.html">
-
 <link rel="import" href="../../../layout/shared-styles.html">
 
 <!--<link rel="import" href="../controller/chart-controller-behavior.html">-->
@@ -151,25 +149,11 @@
           value:['#96b1d2','#ff9973'] //FC3D32
         }
       },
-      // created:function(){
-      //     this.nylonLocalizeImport('/i18n-page1.json');
-      // },
       attached: function() {
-        // setInterval(()=>{
-        //   if (this.seleteChartPie == 0) {
-        //     this.chartPieNext();
-        //   }else {
-        //     this.chartPiePrevious();
-        //   }
-        // }, 3000);
         this.chartPiePrevious();
-        // this.chartPieNext();
-        // this.set('labelName.0',localize('text_enter_your_detail'))
       },
       _computeChartPie:function (confirm,balance,name,colorPie,colorBg){
-          this.fire('okload');
-          // console.log('dddd');
-        // console.log(confirm,balance,name);
+          // this.fire('okload');
             return {
                     labels: [
                       // "ทั้งหมด (ตัน)",
@@ -235,16 +219,16 @@
         // console.log(this.dataChartPie);
       },
       contractDetail:function () {
-        this.fire('get-contract-detail',{detail:'contract-detail',data:this.data});
+        this.fire('get-contract-detail',this.data);
       },
       listConfirm:function () {
-        this.fire('get-list-confirm',{detail:'list-confirm',data:this.data});
+        this.fire('get-list-confirm',this.data);
       },
       listShipment:function () {
-        this.fire('get-list-shipment',{detail:'list-shipment',data:this.data});
+        this.fire('get-list-booking',this.data);
       },
       listFee:function () {
-        this.fire('get-list-Fee',{detail:'list-Fee',data:this.data});
+        this.fire('get-list-Fee',this.data);
       },
       listPayment:function () {
         document.cookie = "contract_id="+this.data.contract_id;

@@ -2,7 +2,8 @@ import axios from '../axios'
 import { commonAction } from '../config'
 const initialState = {
     buyerList: [],
-    contractList: []
+    contractList: [],
+    contractDetail:{}
 }
 export function contractReducer(state = initialState, action) {
     switch (action.type) {
@@ -10,6 +11,8 @@ export function contractReducer(state = initialState, action) {
             return Object.assign({}, state, { buyerList: action.payload });
         case 'GET_CONTRACT_OF_BUYER':
             return Object.assign({}, state, { contractList: action.payload });
+        case 'GET_CONTRACT':
+            return Object.assign({}, state, { contractDetail: action.payload });
         default:
             return state
     }
@@ -42,6 +45,22 @@ export function contractAction(store) {
                 });
             // console.log(window._config.externalServerCommon);
             // https://localhost:3001/api/contract/list
+        },
+        GET_CONTRACT: function (contractId,) {
+            axios.get('./contract?id='+contractId)
+                .then(function (response) {
+                    // console.log(response);
+                    store.dispatch({ type: 'GET_CONTRACT', payload: response.data })
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+            // console.log(window._config.externalServerCommon);
+            // https://localhost:3001/api/contract/list
+        },
+        CLEAR_CONTRACT: function (contractId,) {
+            let data = { contract_status:false, contract_weight: 0, contract_hamonize: [] }
+           store.dispatch({ type: 'GET_CONTRACT', payload: data })
         },
         // END GET
     }

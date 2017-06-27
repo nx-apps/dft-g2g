@@ -3,10 +3,12 @@
 <link rel="import" href="./../../../bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="./../../../bower_components/paper-tooltip/paper-tooltip.html">
 <link rel="import" href="./../../../bower_components/nylon-panel/nylon-panel-right.html">
-<!--<link rel="import" href="components/contract-detail.html">
-<link rel="import" href="components/list-of-confirm.html">
+<!--<link rel="import" href="components/contract-detail.html">-->
+<!--<link rel="import" href="components/list-of-confirm.html">
 <link rel="import" href="components/list-of-booking.html">
 <link rel="import" href="components/list-of-fee-g2g.html">-->
+
+<link rel="import" href="./../../../bower_components/iron-pages/iron-pages.html">
 
 <link rel="import" href="./components/chart-pie-g2g.html">
 
@@ -19,21 +21,23 @@
             --paper-fab-background: var(--paper-light-blue-500);
             --paper-fab-keyboard-focus-background: var(--paper-light-blue-900);
         }
+
         * {
             font-family: 'CSChatThaiUI', sans-serif;
             -webkit-font-smoothing: antialiased;
         }
+
         .addContract {
             margin: 16px;
             margin-bottom: 80px;
             padding: 7.5px;
         }
+
         nylon-panel-right {
             --app-toolbar-style: {
                 background-color: #FF5000;
             }
         }
-        
     </style>
     <template>
         <div class="layout vertical">
@@ -43,21 +47,19 @@
                 </template>
             </div>
         </div>
-        <!--<nylon-panel-right title="{{titlePanelRight}}" id="drawerRight" set-width="95%">
+        <nylon-panel-right title="{{titlePanelRight}}" id="drawerRight" set-width="95%">
             <div align="left">
                 <div class="breadcrumbs">
                     <plutonium-breadcrumbs crumbs="{{crumbs}}" selected-crumb="{{crumb}}"></plutonium-breadcrumbs>
                 </div>
                 <iron-pages selected="{{g2gPageSeleted}}" attr-for-selected="name">
                     <div class="addContract" name="addContract">
-                        <contract-detail data-for-select="[[dataForSelected.dataForContract]]" is-view-seleted="[[!isViewSeleted]]" is-edit="[[!isEdit]]"
-                            is-input-disabled="[[!isInputDisabled]]"></contract-detail>
+                        <contract-detail></contract-detail>
                     </div>
                     <div class="addContract" name="contractDetail">
-                        <contract-detail data-for-select="[[dataForSelected.dataForContract]]" data="[[dataSelected]]" is-view-seleted="[[isViewSeleted]]"
-                            is-edit="[[isEdit]]" is-input-disabled="[[isInputDisabled]]"></contract-detail>
+                        <contract-detail></contract-detail>
                     </div>
-                    <div class="addContract" name="listOfConfirm">
+                    <!--<div class="addContract" name="listOfConfirm">
                         <list-of-confirm page-selected="{{pageSelected}}" data-for-select="[[dataForSelected.dataForConfirm]]" data="[[dataSelected]]"
                             is-input-disabled="[[!isInputDisabled]]">
                         </list-of-confirm>
@@ -67,10 +69,10 @@
                     </div>
                     <div class="addContract" name="listOfFee">
                         <list-of-fee-g2g page-selected="{{pageSelected}}" data-for-select="[[dataForSelected.dataForFee]]" data="[[feeList]]"></list-of-fee-g2g>
-                    </div>
+                    </div>-->
                 </iron-pages>
             </div>
-        </nylon-panel-right>-->
+        </nylon-panel-right>
         <div class="btnFab">
             <paper-fab icon="add" title="{{localize.label_add_contract}}" id="addContract" on-tap="addContract"></paper-fab>
             <paper-tooltip for="addContract" offset="0">{{localize.label_add_contract}}</paper-tooltip>
@@ -79,19 +81,20 @@
     <script>
         Polymer({
             is: 'page-contract-list',
-            behaviors: [ReduxBehavior, nylonBehavior, i18nAction,CookieBehavior, contractAction],
+            behaviors: [ReduxBehavior, nylonBehavior, i18nAction, CookieBehavior,
+                contractAction, commonStateAction, commonG2gAction],
             properties: {
                 layerContent: {
                     type: String,
                     value: "detailRegExporter"
                 },
-                contractList:{
+                contractList: {
                     statePath: 'contract.contractList'
                 },
                 localize: {
                     statePath: 'i18n.g2g'
                 },
-                 crumbs: {
+                crumbs: {
                     type: Array,
                     value: []
                 },
@@ -105,20 +108,20 @@
                 //     type: Object,
                 //     value: { dataForContract: {}, dataForConfirm: {}, dataForBooking: {}, dataForFee: {} }
                 // },
-                // g2gPageSeleted: {
-                //     type: String,
-                //     value: 'addContract'
-                // },
-                // checkRenderPage: {
-                //     type: Object,
-                //     value:
-                //     {
-                //         contractDetail: false,
-                //         listOfConfirm: false,
-                //         listOfShipment: false,
-                //         listOfFee: false
-                //     }
-                // },
+                g2gPageSeleted: {
+                    type: String,
+                    value: 'addContract'
+                },
+                checkRenderPage: {
+                    type: Object,
+                    value:
+                    {
+                        contractDetail: false,
+                        listOfConfirm: false,
+                        listOfShipment: false,
+                        listOfFee: false
+                    }
+                },
                 // titlePanelRight: {
                 //     type: String,
                 //     value: 'การซื้อขายข้าวระหว่างประเทศ'
@@ -128,13 +131,35 @@
                 //     value: { listOfConfirm: 'listOfConfirm', listOfShipment: 'listOfShipment' }
                 // }
             },
+            listeners: {
+                // 'refresh-contract': '_getContractList',
+                'get-contract-detail': '_getContractDetail',
+                'get-list-confirm': '_getListConfirm',
+                'get-list-booking': '_getListShipment',
+                'get-list-Fee': '_getlistFee',
+                // 'flipDrawer': '_flipDrawer',
+                // 'close-drawer': '_flipDrawerClose',
+                // 'name-panel-right': '_namePanelRight',
+                // '_set-breadcrumbs': 'setEventBreadcrumbs'
+            },
             nylonPageActive: function () {
-                console.log(111);
-                console.log(this.getCookieBhv("buyerId"));
-                this.dispatchAction('GET_CONTRACT_OF_BUYER',this.getCookieBhv("buyerId"));
+                // console.log(111);
+                // console.log(this.getCookieBhv("buyerId"));
+                this.dispatchAction('GET_CONTRACT_OF_BUYER', this.getCookieBhv("buyerId"));
                 // console.log(this.getCookieBhv("buyerId"));
                 // this.dispatchAction('EXPORTER_GET_TYPE_LIC');
+                this.dispatchAction('GET_COMMON_BUYER_LIST');
+                this.dispatchAction('GET_COMMON_HAMONIZE_LIST');
+                this.dispatchAction('GET_COMMON_CARRIER_LIST');
+                this.dispatchAction('GET_COMMON_INCOTERMS_LIST');
+                this.dispatchAction('GET_COMMON_NOTIFY_LIST');
+                this.dispatchAction('GET_COMMON_PACKAGE_LIST');
+                this.dispatchAction('GET_COMMON_PORT_LIST');
+                this.dispatchAction('GET_COMMON_SHIP_LIST');
+                this.dispatchAction('GET_COMMON_SHIPLINE_LIST');
+                this.dispatchAction('GET_COMMON_SURVEYOR_LIST');
             },
+
             // ready: function () {
             //     Polymer.RenderStatus.afterNextRender(this, () => {
             //     this._getContractList();
@@ -248,80 +273,107 @@
             //     this.set('crumbs', data)
             // },
             // //addContract
-            // addContract: function () {
-            //     let datass = [
-            //     {
-            //         label: 'เพิ่มสัญญา',
-            //         href: ''
-            //     },
-            //     ]
-            //     this.setBreadcrumbs(datass)
-            //     this.g2gPageSeleted = 'addContract';
-            //     this.titlePanelRight = 'เพิ่มข้อมูลผู้สั่งซื้อ'
-            //     this.fire('toast', { status: 'load' });
-            //     if (this.checkRenderPage.contractDetail != true) {
-            //     this.async(() => {
-            //         this.importHref(
-            //         this.resolveUrl('./g2g/component/contract-detail.html'),
-            //         () => {
-            //             this.async(() => {
-            //             this.fire('toast', { status: 'load' });
-            //             // console.log(this.dataForSelected.dataForContract);
-            //             this._flipDrawer();
-            //             this.checkRenderPage.contractDetail = true;
-            //             }, 500)
-            //         }, null, true
-            //         );
-            //     }, 1000);
-            //     } else {
-            //     this.fire('toast', { status: 'load' });
-            //     this._flipDrawer();
-            //     }
-            // },
-            // _getContractDetail: function (e) {
-            //     this.g2gPageSeleted = 'contractDetail';
-            //     // console.log(typeof e.detail.data === 'undefined');
-            //     if (typeof e.detail.data !== 'undefined') {
-            //     this.titlePanelRight = 'ข้อมูลผู้สั่งซื้อ : ' + e.detail.data.contract_name
-            //     let datass = [
-            //         {
-            //         label: e.detail.data.contract_name,
-            //         href: ''
-            //         },
-            //         {
-            //         label: 'รายละเอียดสัญญา',
-            //         href: ''
-            //         },
-            //     ]
-            //     this.setBreadcrumbs(datass)
-            //     }
-            //     if (typeof e.detail.contractId === "undefined") {
-            //     this.fire('toast', { status: 'load' });
-            //     if (this.checkRenderPage.contractDetail != true) {
-            //         this.async(() => {
-            //         this.importHref(
-            //             this.resolveUrl('./g2g/component/contract-detail.html'),
-            //             () => {
-            //             this.async(() => {
-            //                 this.fire('toast', { status: 'load' });
-            //                 // console.log(this.dataForSelected.dataForContract);
-            //                 this._flipDrawer();
-            //                 this.checkRenderPage.contractDetail = true;
-            //             }, 500)
-            //             }, null, true
-            //         );
-            //         }, 1000);
-            //     } else {
-            //         this.fire('toast', { status: 'load' });
-            //         this._flipDrawer();
-            //     }
-            //     this.dataSelected = e.detail.data;
-            //     } else {
-            //     let contractId = e.detail.contractId;
-            //     let dataContract = this.contractList.filter((contractList) => contractList.contract_id == contractId);
-            //     this.dataSelected = dataContract[0];
-            //     }
-            // },
+            addContract: function () {
+                // let datass = [
+                //     {
+                //         label: 'เพิ่มสัญญา',
+                //         href: ''
+                //     },
+                // ]
+                // this.setBreadcrumbs(datass)
+                // this.g2gPageSeleted = 'addContract';
+                // this.titlePanelRight = 'เพิ่มข้อมูลผู้สั่งซื้อ'
+                this.dispatchAction('CLEAR_CONTRACT')
+                this.fire('toast', { status: 'load' });
+                this.dispatchAction('SET_STATE', {
+                    isInsert: true,
+                    btnDisabled: false,
+                    hiddend: true
+                })
+                if (this.checkRenderPage.contractDetail != true) {
+                    this.async(() => {
+                        this.importHref(
+                            this.resolveUrl('./components/contract-detail.html'),
+                            () => {
+                                this.async(() => {
+                                    this.fire('toast', {
+                                        status: 'success', text: 'โหลดสำเร็จ', callback: () => {
+                                            // console.log(this.dataForSelected.dataForContract);
+                                            this._flipDrawer();
+                                            this.checkRenderPage.contractDetail = true;
+                                        }
+                                    });
+
+                                }, 500)
+                            }, null, true
+                        );
+                    }, 1000);
+                } else {
+                    this.fire('toast', {
+                        status: 'success', text: 'โหลดสำเร็จ', callback: () => {
+                            this._flipDrawer();
+                        }
+                    });
+                }
+            },
+            _getContractDetail: function (e) {
+                // console.log(e.detail.contract_id);
+                this.dispatchAction('GET_CONTRACT', e.detail.contract_id)
+                this.g2gPageSeleted = 'contractDetail'
+                // // console.log(typeof e.detail.data === 'undefined');
+                // if (typeof e.detail.data !== 'undefined') {
+                // this.titlePanelRight = 'ข้อมูลผู้สั่งซื้อ : ' + e.detail.data.contract_name
+                // let datass = [
+                //     {
+                //     label: e.detail.data.contract_name,
+                //     href: ''
+                //     },
+                //     {
+                //     label: 'รายละเอียดสัญญา',
+                //     href: ''
+                //     },
+                // ]
+                // this.setBreadcrumbs(datass)
+                // }
+                // if (typeof e.detail.contractId === "undefined") {
+                this.fire('toast', { status: 'load' });
+                this.dispatchAction('SET_STATE', {
+                    isInsert: false,
+                    btnDisabled: true,
+                    hiddend: true
+                })
+                if (this.checkRenderPage.contractDetail != true) {
+                    this.async(() => {
+                        this.importHref(
+                            this.resolveUrl('./components/contract-detail.html'),
+                            () => {
+                                this.async(() => {
+                                    this.fire('toast', {
+                                        status: 'success', text: 'โหลดสำเร็จ', callback: () => {
+                                            // console.log(this.dataForSelected.dataForContract);
+                                            this._flipDrawer();
+                                            this.checkRenderPage.contractDetail = true;
+                                        }
+                                    });
+
+                                }, 500)
+                            }, null, true
+                        );
+                    }, 1000);
+                } else {
+                    this.fire('toast', {
+                        status: 'success', text: 'โหลดสำเร็จ', callback: () => {
+                            this._flipDrawer();
+                        }
+                    });
+                }
+                // this.dataSelected = e.detail.data;
+                // } else {
+                // let contractId = e.detail.contractId;
+                // let dataContract = this.contractList.filter((contractList) => contractList.contract_id == contractId);
+                // this.dataSelected = dataContract[0];
+                // }
+            },
             // _getListConfirm: function (e) {
             //     this.set('pageSelected', 'listOfConfirm')
             //     // listOfConfirm
@@ -507,12 +559,12 @@
             //     this.checkLoad = true;
             // },
             // // end_addContract
-            // _flipDrawer: function () {
-            //     Polymer.dom(this.root).querySelector('#drawerRight').open();
-            // },
-            // _flipDrawerClose: function () {
-            //     Polymer.dom(this.root).querySelector('#drawerRight').close();
-            // },
+            _flipDrawer: function () {
+                Polymer.dom(this.root).querySelector('#drawerRight').open();
+            },
+            _flipDrawerClose: function () {
+                Polymer.dom(this.root).querySelector('#drawerRight').close();
+            },
             // _namePanelRight: function (name) {
             //     this.titlePanelRight = name;
             // }
