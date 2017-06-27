@@ -1,5 +1,8 @@
 <link rel="import" href="fee-exports-g2g.html">
 <link rel="import" href="list-of-fee-detail-g2g.html">
+<link rel="import" href="./../../../../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="./../../../../bower_components/gl-form/gl-form-panel.html">
+
 <dom-module id="list-of-fee-g2g">
   <style include="iron-flex iron-flex-factors iron-flex-alignment gl-styles">
      :host {
@@ -33,30 +36,24 @@
     }
   </style>
   <template>
-
     <iron-pages selected="{{pageSelected}}" attr-for-selected="name">
       <div name="listOfFee">
         <gl-form-panel set-padding="10px 20px 10px 20px" set-border="1px">
-          <!--<div class="title">{{localize('text_page_total')}}{{localize('text_fee')}} [[nameContract]]</div>-->
           <div class="flex searchInput ">
             <div class="horizontal end-justified layout">
-              <!-- <div class="labelSearch">ครั้งที่คิดธรรมเนียม</div>{{_searchInArray(searchInput)}}
-             <paper-input label=" " no-label-float value="{{searchInput}}"></paper-input>
-             <paper-icon-button icon="search"></paper-icon-button> -->
             </div>
           </div>
           <table class="gl-table-default">
             <thead class="table-head">
               <tr>
-                <th>{{localize('text_fee_no')}}</th>
-                <th>{{localize('label_bath_value')}}</th>
-                <th>{{localize('label_invoice_fee')}}</th>
-                <th>{{localize('label_expenses_one_present')}}</th>
-                <th>{{localize('label_total_bath_expenses')}}</th>
+                <th>{{localize.text_fee_no}}</th>
+                <th>{{localize.label_bath_value}}</th>
+                <th>{{localize.label_invoice_fee}}</th>
+                <th>{{localize.label_expenses_one_present}}</th>
+                <th>{{localize.label_total_bath_expenses}}</th>
               </tr>
             </thead>
             <tbody class="table-body">
-              <!--<template is="dom-if" if="[[!_isHave(newData)]]">-->
               <template is="dom-repeat" items="[[newData]]">
                 <tr data="[[item]]" on-tap="getFeeDetailList">
                   <td>[[item.fee_no]]</td>
@@ -66,10 +63,9 @@
                   <td style="text-align: right  !important">[[formatNumber(item.bath_balance)]]</td>
                 </tr>
               </template>
-              <!--</template>-->
               <template is="dom-if" if="[[_isHave(newData)]]">
                 <tr>
-                  <td colspan="5" style="text-align:center"> {{localize('text_no_data')}}</td>
+                  <td colspan="5" style="text-align:center"> {{localize.text_no_data}}</td>
                 </tr>
               </template>
             </tbody>
@@ -87,25 +83,27 @@
   <script>
     Polymer({
       is: "list-of-fee-g2g",
-      observers: [
-        'initDataFee(data)'
-      ],
+      // observers: [
+      //   'initDataFee(data)'
+      // ],
       behaviors: [
-        g2gCongtroller,
-        g2gModelBehavior,
+        ReduxBehavior,
         nylonBehavior,
-        nylonLocalizeBehavior,
         FormatNumberBehavior
+        // g2gCongtroller,
+        // g2gModelBehavior,
+        // nylonLocalizeBehavior,
       ],
-      listeners: {
-        'page-change': '_pageChange',
-        'get-Fee-Detail': '_getFeeDetail',
-        'get-new-fee-list': '_getFeeListEvent',
-        'get-new-fee-list-detail': '_getFeeDetail',
-      },
-
-
+      // listeners: {
+      //   'page-change': '_pageChange',
+      //   'get-Fee-Detail': '_getFeeDetail',
+      //   'get-new-fee-list': '_getFeeListEvent',
+      //   'get-new-fee-list-detail': '_getFeeDetail',
+      // },
       properties: {
+        localize:{
+          statePath : 'i18n.g2g'
+        },
         newData: {
           type: Object
         },
@@ -119,85 +117,85 @@
           value: { dataSelected: '', fee: '' }
         }
       },
-      created: function () {
-        this.nylonLocalizeImport('/i18n-page1.json');
-      },
-      initDataFee: function (data) {
-        // console.log(data);
-        this.newData = this.g2gClone(data);
-      },
-      _getFeeListEvent: function (e) {
-        this._getDbFeeDetailList(e.detail.fee_id, (data) => {
-          this.dataSelected.feeDetail = data;
-          this.notifyPath('dataSelected.feeDetail');
-        })
-      },
-      _searchInArray: function (searchInput) {
-        // console.log(searchInput == '');
-        if (searchInput != '') {
-          let arr = [];
-          this.data.map((el) => {
-            if (el.fee_name.search(searchInput) > -1) {
-              //  console.log('search==> ',el);
-              arr.push(el);
-            }
-          });
-          this.newData = arr;
-        } else {
-          this.initDataFee(this.data);
-        }
-      },
-      // ฟังชั่นเปลี่ยนหน้า
-      _pageChange: function (e) {
-        this.pageSelected = e.detail.page;
-      },
-      getFeeDetailList: function (e) {
-        this.fire('toast', { status: 'load' });
-        this._getDbFeeDetailList(e.currentTarget.data.fee_id, (data) => {
-          this.fire('toast', { status: 'load' });
-          this.dataSelected.feeDetail = data;
-          this.notifyPath('dataSelected.feeDetail');
-          this.pageSelected = 'feeDetailList';
-        })
-        let breadcrumbs = datass = [
-          {
-            label: this.dataForSelect.contract_name,
-            href: ''
-          },
-          {
-            label: 'รายการค่าธรรมเนียมครั้งที่ '+e.currentTarget.data.fee_no,
-            href: ''
-          },
-        ]
-        this.set('dataForSelect.fee_no', e.currentTarget.data.fee_no)
-        // th
-        // console.log(breadcrumbs);
-        this.fire('_set-breadcrumbs', breadcrumbs)
-        // console.log(this.dataForSelect);
-        // console.log(e.currentTarget.data);
-      },
-      _getFeeDetail: function (e) {
-        // console.log(e.detail.data);
-        this.fire('toast', { status: 'load' });
-        this._getDbFeeDetail(e.detail.data, (data) => {
-          this.fire('toast', { status: 'load' });
-          this.dataSelected.fee = data;
-          // console.log(this.dataSelected);
-          this.notifyPath('dataSelected.fee');
-          this.pageSelected = 'feeDetail';
-        })
-      },
-      //callback
-      _getDbFeeDetailList: function (fee_id, callback) {
-        this.read('./g2g/fee/id/' + fee_id, (data) => {
-          callback(data);
-        });
-      },
-      _getDbFeeDetail: function (fee_det_id, callback) {
-        this.read('./g2g/fee_detail/id/' + fee_det_id, (data) => {
-          callback(data);
-        });
-      }
+      // created: function () {
+      //   this.nylonLocalizeImport('/i18n-page1.json');
+      // },
+      // initDataFee: function (data) {
+      //   // console.log(data);
+      //   this.newData = this.g2gClone(data);
+      // },
+      // _getFeeListEvent: function (e) {
+      //   this._getDbFeeDetailList(e.detail.fee_id, (data) => {
+      //     this.dataSelected.feeDetail = data;
+      //     this.notifyPath('dataSelected.feeDetail');
+      //   })
+      // },
+      // _searchInArray: function (searchInput) {
+      //   // console.log(searchInput == '');
+      //   if (searchInput != '') {
+      //     let arr = [];
+      //     this.data.map((el) => {
+      //       if (el.fee_name.search(searchInput) > -1) {
+      //         //  console.log('search==> ',el);
+      //         arr.push(el);
+      //       }
+      //     });
+      //     this.newData = arr;
+      //   } else {
+      //     this.initDataFee(this.data);
+      //   }
+      // },
+      // // ฟังชั่นเปลี่ยนหน้า
+      // _pageChange: function (e) {
+      //   this.pageSelected = e.detail.page;
+      // },
+      // getFeeDetailList: function (e) {
+      //   this.fire('toast', { status: 'load' });
+      //   this._getDbFeeDetailList(e.currentTarget.data.fee_id, (data) => {
+      //     this.fire('toast', { status: 'load' });
+      //     this.dataSelected.feeDetail = data;
+      //     this.notifyPath('dataSelected.feeDetail');
+      //     this.pageSelected = 'feeDetailList';
+      //   })
+      //   let breadcrumbs = datass = [
+      //     {
+      //       label: this.dataForSelect.contract_name,
+      //       href: ''
+      //     },
+      //     {
+      //       label: 'รายการค่าธรรมเนียมครั้งที่ '+e.currentTarget.data.fee_no,
+      //       href: ''
+      //     },
+      //   ]
+      //   this.set('dataForSelect.fee_no', e.currentTarget.data.fee_no)
+      //   // th
+      //   // console.log(breadcrumbs);
+      //   this.fire('_set-breadcrumbs', breadcrumbs)
+      //   // console.log(this.dataForSelect);
+      //   // console.log(e.currentTarget.data);
+      // },
+      // _getFeeDetail: function (e) {
+      //   // console.log(e.detail.data);
+      //   this.fire('toast', { status: 'load' });
+      //   this._getDbFeeDetail(e.detail.data, (data) => {
+      //     this.fire('toast', { status: 'load' });
+      //     this.dataSelected.fee = data;
+      //     // console.log(this.dataSelected);
+      //     this.notifyPath('dataSelected.fee');
+      //     this.pageSelected = 'feeDetail';
+      //   })
+      // },
+      // //callback
+      // _getDbFeeDetailList: function (fee_id, callback) {
+      //   this.read('./g2g/fee/id/' + fee_id, (data) => {
+      //     callback(data);
+      //   });
+      // },
+      // _getDbFeeDetail: function (fee_det_id, callback) {
+      //   this.read('./g2g/fee_detail/id/' + fee_det_id, (data) => {
+      //     callback(data);
+      //   });
+      // }
     });
   </script>
 </dom-module>
