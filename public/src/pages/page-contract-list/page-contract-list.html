@@ -11,7 +11,7 @@
     <script>
         Polymer({
             is: 'page-contract-list',
-            behaviors: [ReduxBehavior, nylonBehavior, i18nAction,],
+            behaviors: [ReduxBehavior, nylonBehavior, i18nAction,contractAction],
             properties: {
                 layerContent: {
                     type: String,
@@ -19,7 +19,8 @@
                 },
             },
             nylonPageActive: function () {
-                // this.dispatchAction('EXPORTER_GET_DATA');
+                console.log(111);
+                this.dispatchAction('GET_BUYER_LIST');
                 // this.dispatchAction('EXPORTER_GET_TYPE_LIC');
             },
         });
