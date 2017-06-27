@@ -1,4 +1,11 @@
 <link rel="import" href="../../../../../bower_components/gl-styles/gl-size.html">
+<link rel="import" href="./../../../../bower_components/gl-form/gl-combo-box.html">
+<link rel="import" href="./../../../../bower_components/gl-form/gl-form-panel-head.html">
+<link rel="import" href="./../../../../bower_components/gl-form/gl-form-panel-footer.html">
+<link rel="import" href="./../../../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="./../../../../bower_components/gl-grid/gl-grid-row.html">
+<link rel="import" href="./../../../../bower_components/gl-grid/gl-grid-col.html">
+
 <dom-module id="list-of-booking-shm-det">
   <style include="iron-flex iron-flex-factors iron-flex-alignment gl-styles gl-size page-style">
      :host {
@@ -35,10 +42,6 @@
     }
   </style>
   <template>
-    <!--<paper-button class="gl-btn-default" raised on-tap="backWard2BookingInConfirm">
-      {{localize('btn_back_ward')}}</paper-button>-->
-    <!--{{dataForSelect.conFirmApprove}}-->
-    <!--{{cl_id}}///-->
     <gl-combo-box placeholder="สัญญาย่อย" items="{{dataForSelect.conFirmApprove}}" item-label-path="cl_no" label="สัญญาย่อย"
       item-value-path="cl_id" value="{{cl_id}}" on-value-changed="getShowByBook">
       <template>
@@ -49,44 +52,28 @@
       <gl-form-panel-head set-padding="10px" set-border="1px">
 
         <div class="addconfirm horizontal end-justified layout">
-
-          <!---->
-
           <template is="dom-if" if={{clClose}}>
             <div class="title-ber" hidden="[[_isSeleted(cl_id)]]">
               ปิดบัญชี {{setTextCl}}
             </div>
           </template>
 
-
-          <paper-button raised class="gl-btn-primary" disabled="[[_isSeleted(cl_id)]]" on-tap="createBooking" hidden="{{clClose}}">{{localize('btn_add_booking')}}</paper-button>
+          <paper-button raised class="gl-btn-primary" disabled="[[_isSeleted(cl_id)]]" on-tap="createBooking" hidden="{{clClose}}">{{localize.btn_add_booking}}</paper-button>
         </div>
-
-
-
+        
       </gl-form-panel-head>
       <br>
       <gl-grid-row width="{{getWidth}}">
-        <!-- <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
-                  {{localize('text_list_booking')}}
-              </gl-grid-col> -->
-        <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,5]]">
-          <!--<div class="textinPut">-->
-          <!--{{localize('label_confirmation_letter')}}{{localize('text_order_no')}}-->
-          <!--{{localize('label_ref_no')}} : [[dataForSelect.cl_no]]-->
-          <!--</div>-->
-
-          <!-- <gl-form-input disabled label="{{localize('label_confirmation_letter')}}{{localize('text_order_no')}}" value="[[dataForSelect.cl_no]]"></gl-form-input> -->
-        </gl-grid-col>
+        <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,5]]"></gl-grid-col>
       </gl-grid-row>
 
       <table class="gl-table-default">
         <thead class="table-head">
           <tr>
-            <th>{{localize('label_lot_no')}}</th>
-            <th>{{localize('label_port_of_destination')}}</th>
-            <th>{{localize('label_place_of_delivery')}}</th>
-            <th>{{localize('label_action')}}</th>
+            <th>{{localize.label_lot_no}}</th>
+            <th>{{localize.label_port_of_destination}}</th>
+            <th>{{localize.label_place_of_delivery}}</th>
+            <th>{{localize.label_action}}</th>
           </tr>
         </thead>
         <tbody class="table-body">
@@ -97,14 +84,14 @@
               <td on-tap="getShmDetail" data="[[item]]"> [[item.deli_port_name]] </td>
               <td>
                 <paper-button class="gl-btn-info gl-small" raised on-tap="btnEditBooking" data="[[item]]">
-                  {{localize('btn_detail')}}</paper-button>
+                  {{localize.btn_detail}}</paper-button>
               </td>
             </tr>
           </template>
 
           <template is="dom-if" if="[[_isHave(data)]]">
             <tr>
-              <td colspan="4"> {{localize('text_no_data')}}</td>
+              <td colspan="4"> {{localize.text_no_data}}</td>
             </tr>
           </template>
         </tbody>
@@ -119,12 +106,16 @@
     Polymer({
       is: "list-of-booking-shm-det",
       behaviors: [
-        g2gCongtroller,
-        FormatNumberBehavior,
-        nylonBehavior,
-        nylonLocalizeBehavior
+        ReduxBehavior,
+        nylonBehavior
+        // g2gCongtroller,
+        // FormatNumberBehavior,
+        // nylonLocalizeBehavior
       ],
       properties: {
+        localize:{
+          statePath : 'i18n.g2g'
+        },
         data: {
           type: Object,
           value: [],
@@ -142,153 +133,153 @@
           value:''
         }
       },
-      observers: [
-        // '_checkConfirm(dataForSelect.conFirmApprove)',
-        // '_changeGetBook(dataForSelect.bookBl.*)',
-        '_setDefalseData(dataForSelect.conFirmApprove,dataForSelect.bookBl)',
-        'checkCl_close(cl_id)'
-      ],
-      _setDefalseData(conFirmApprove, bookBl) {
-        this.set('cl_id', '')
-        this.set('data', '')
-        // console.log(this.cl_id);
-      },
-      checkCl_close(cl_id) {
-        this.async(() => {
-          try {
+      // observers: [
+      //   // '_checkConfirm(dataForSelect.conFirmApprove)',
+      //   // '_changeGetBook(dataForSelect.bookBl.*)',
+      //   '_setDefalseData(dataForSelect.conFirmApprove,dataForSelect.bookBl)',
+      //   'checkCl_close(cl_id)'
+      // ],
+      // _setDefalseData(conFirmApprove, bookBl) {
+      //   this.set('cl_id', '')
+      //   this.set('data', '')
+      //   // console.log(this.cl_id);
+      // },
+      // checkCl_close(cl_id) {
+      //   this.async(() => {
+      //     try {
 
-            // console.log(cl_id);
-            // console.log(this.dataForSelect.bookApp);
-            let sets = this.dataForSelect.bookApp.find((item) => item.cl_id === cl_id)
-            // console.log(sets);
-            this.set('setTextCl',`สัญญาที่ ${sets.cl_no} ปริมาณข้าว ${this.formatNumberNoZero(sets.cl_quantity_total)} ตัน`)
-            let sum = sets.cl_quantity_total - sets.book_quantity
-            // console.log(sum);
-            // console.log(this.clClose);
-            if (sum <= 0) {
-              this.set('clClose', true)
-            } else {
-              this.set('clClose', false)
-              // console.log(this.clClose);
-            }
+      //       // console.log(cl_id);
+      //       // console.log(this.dataForSelect.bookApp);
+      //       let sets = this.dataForSelect.bookApp.find((item) => item.cl_id === cl_id)
+      //       // console.log(sets);
+      //       this.set('setTextCl',`สัญญาที่ ${sets.cl_no} ปริมาณข้าว ${this.formatNumberNoZero(sets.cl_quantity_total)} ตัน`)
+      //       let sum = sets.cl_quantity_total - sets.book_quantity
+      //       // console.log(sum);
+      //       // console.log(this.clClose);
+      //       if (sum <= 0) {
+      //         this.set('clClose', true)
+      //       } else {
+      //         this.set('clClose', false)
+      //         // console.log(this.clClose);
+      //       }
 
-            // console.log(sets);
-          } catch (e) {
+      //       // console.log(sets);
+      //     } catch (e) {
 
-          }
-        }, 50);
-      },
-      _isSeleted(data) {
-        return data === ''
-      },
-      setLabel(data) {
-        try {
-          // console.log(111111);
-          // console.log(data);
-          let con = data.map((data) => data.cl_no = 'สัญญาที่ ' + data.cl_no + ' ปริมาณข้าว ' + this.formatNumberNoZero(data.cl_quantity_total) + ' ตัน'
-          )
-          // console.log(con);
-        } catch (e) {
+      //     }
+      //   }, 50);
+      // },
+      // _isSeleted(data) {
+      //   return data === ''
+      // },
+      // setLabel(data) {
+      //   try {
+      //     // console.log(111111);
+      //     // console.log(data);
+      //     let con = data.map((data) => data.cl_no = 'สัญญาที่ ' + data.cl_no + ' ปริมาณข้าว ' + this.formatNumberNoZero(data.cl_quantity_total) + ' ตัน'
+      //     )
+      //     // console.log(con);
+      //   } catch (e) {
 
-        }
+      //   }
 
-      },
-      _checkConfirm(conFirmApprove) {
-        // console.log(conFirmApprove);
-        // if()
-        // if (conFirmApprove !== undefined && conFirmApprove !== '' && conFirmApprove.length > 0) {
-        //   this.set('cl_id', conFirmApprove[conFirmApprove.length - 1].cl_id)
-        // }
-      },
-      _changeGetBook(data) {
-        // console.log(data);
-        // console.log(this.dataForSelect.bookBl !== undefined 
-        //             && this.dataForSelect.bookBl !== '' 
-        //             && this.dataForSelect.bookBl.length > 0);
-        // if (this.dataForSelect.bookBl !== undefined 
-        //     && this.dataForSelect.bookBl !== '' 
-        //     && this.dataForSelect.bookBl.length > 0) {
-        //   let datax = {}
-        //   datax.detail.value = this.cl_id
-        //   console.log(this.cl_id);
-        //   console.log(1111111);
-        //   console.log(datax);
-        //   this.getShowByBook(datax)
-        // } else {
-        //   console.log(1111212);
-        //   console.log(this.dataForSelect.bookBl);
-        // }
-        // console.log('dfff');
-      },
-      created: function () {
-        this.nylonLocalizeImport('/i18n-page1.json');
-      },
-      createBooking: function () {
-        // console.log(this.data);
-        // console.log(this.dataForSelect.bookApp);
-        this.fire('_change-component-book', { detail: 'list-of-booking-add' })
-      },
-      getShmDetail: function (e) {
-        // this.fire('_change-component-book',{detail:'list-of-booking-shm-det'});
-        // console.log(e.currentTarget.data);
-        this.fire('_get-shm-detail', { detail: e.currentTarget.data });
-        let breadcrumbs = datass = [
-          {
-            label: this.dataForSelect.contract_name,
-            href: ''
-          },
-          {
-            label: 'สัญญาย่อยที่ ' + this.book.cl_no,
-            href: ''
-          },
-          {
-            label: 'เรือลำที่ ' + e.currentTarget.data.ship_lot_no,
-            href: ''
-          },
-        ]
-        this.fire('_set-breadcrumbs', breadcrumbs)
-      },
-      backWard2BookingInConfirm: function () {
-        this.fire('_change-component-bl', { detail: 'list-of-booking-in-confirm' })
-      },
-      btnEditBooking: function (e) {
-        this.fire('_edit-booking-detail', { detail: e.currentTarget.data });
-      },
-      getShowByBook: function (e) {
-        try {
-          if ((e.detail.value !== undefined && e.detail.value !== '') &&
-            (this.dataForSelect.bookBl !== undefined && this.dataForSelect.bookBl !== '')) {
-            // console.log(e.detail.value);
-            // console.log(this.dataForSelect.bookBl);
-            let bookBl = this.g2gClone(this.dataForSelect)
-            // console.log(bookBl);
-            this.set('book', bookBl.bookBl.filter((item) => item.cl_id == e.detail.value)[0])
-            // console.log(this.book);
-            // console.log(book);
-            this.fire('_get-booking-detail', { detail: this.book })
-            // console.log(this.dataForSelect.contract_name);
-            let breadcrumbs = datass = [
-              {
-                label: this.dataForSelect.contract_name,
-                href: ''
-              },
-              {
-                label: 'สัญญาย่อยที่ ' + this.book.cl_no,
-                href: ''
-              },
-            ]
-            this.set('dataForSelect.breadcrumbs', breadcrumbs)
-            this.fire('_set-breadcrumbs', breadcrumbs)
-          } else {
-            this.set('data', '')
-          }
-        } catch (e) {
-          // console.log(e);
-        } finally {
+      // },
+      // _checkConfirm(conFirmApprove) {
+      //   // console.log(conFirmApprove);
+      //   // if()
+      //   // if (conFirmApprove !== undefined && conFirmApprove !== '' && conFirmApprove.length > 0) {
+      //   //   this.set('cl_id', conFirmApprove[conFirmApprove.length - 1].cl_id)
+      //   // }
+      // },
+      // _changeGetBook(data) {
+      //   // console.log(data);
+      //   // console.log(this.dataForSelect.bookBl !== undefined 
+      //   //             && this.dataForSelect.bookBl !== '' 
+      //   //             && this.dataForSelect.bookBl.length > 0);
+      //   // if (this.dataForSelect.bookBl !== undefined 
+      //   //     && this.dataForSelect.bookBl !== '' 
+      //   //     && this.dataForSelect.bookBl.length > 0) {
+      //   //   let datax = {}
+      //   //   datax.detail.value = this.cl_id
+      //   //   console.log(this.cl_id);
+      //   //   console.log(1111111);
+      //   //   console.log(datax);
+      //   //   this.getShowByBook(datax)
+      //   // } else {
+      //   //   console.log(1111212);
+      //   //   console.log(this.dataForSelect.bookBl);
+      //   // }
+      //   // console.log('dfff');
+      // },
+      // created: function () {
+      //   this.nylonLocalizeImport('/i18n-page1.json');
+      // },
+      // createBooking: function () {
+      //   // console.log(this.data);
+      //   // console.log(this.dataForSelect.bookApp);
+      //   this.fire('_change-component-book', { detail: 'list-of-booking-add' })
+      // },
+      // getShmDetail: function (e) {
+      //   // this.fire('_change-component-book',{detail:'list-of-booking-shm-det'});
+      //   // console.log(e.currentTarget.data);
+      //   this.fire('_get-shm-detail', { detail: e.currentTarget.data });
+      //   let breadcrumbs = datass = [
+      //     {
+      //       label: this.dataForSelect.contract_name,
+      //       href: ''
+      //     },
+      //     {
+      //       label: 'สัญญาย่อยที่ ' + this.book.cl_no,
+      //       href: ''
+      //     },
+      //     {
+      //       label: 'เรือลำที่ ' + e.currentTarget.data.ship_lot_no,
+      //       href: ''
+      //     },
+      //   ]
+      //   this.fire('_set-breadcrumbs', breadcrumbs)
+      // },
+      // backWard2BookingInConfirm: function () {
+      //   this.fire('_change-component-bl', { detail: 'list-of-booking-in-confirm' })
+      // },
+      // btnEditBooking: function (e) {
+      //   this.fire('_edit-booking-detail', { detail: e.currentTarget.data });
+      // },
+      // getShowByBook: function (e) {
+      //   try {
+      //     if ((e.detail.value !== undefined && e.detail.value !== '') &&
+      //       (this.dataForSelect.bookBl !== undefined && this.dataForSelect.bookBl !== '')) {
+      //       // console.log(e.detail.value);
+      //       // console.log(this.dataForSelect.bookBl);
+      //       let bookBl = this.g2gClone(this.dataForSelect)
+      //       // console.log(bookBl);
+      //       this.set('book', bookBl.bookBl.filter((item) => item.cl_id == e.detail.value)[0])
+      //       // console.log(this.book);
+      //       // console.log(book);
+      //       this.fire('_get-booking-detail', { detail: this.book })
+      //       // console.log(this.dataForSelect.contract_name);
+      //       let breadcrumbs = datass = [
+      //         {
+      //           label: this.dataForSelect.contract_name,
+      //           href: ''
+      //         },
+      //         {
+      //           label: 'สัญญาย่อยที่ ' + this.book.cl_no,
+      //           href: ''
+      //         },
+      //       ]
+      //       this.set('dataForSelect.breadcrumbs', breadcrumbs)
+      //       this.fire('_set-breadcrumbs', breadcrumbs)
+      //     } else {
+      //       this.set('data', '')
+      //     }
+      //   } catch (e) {
+      //     // console.log(e);
+      //   } finally {
 
-        }
+      //   }
 
-      }
+      // }
     });
   </script>
 </dom-module>
