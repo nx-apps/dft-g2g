@@ -82,9 +82,9 @@
 
               <div class="flex-8 layout horizontal textSum">
                 <div class="flex">
-                  <div class="flex">{{localize('label_total')}}</div>
+                  <div class="flex">{{localize.label_total}}</div>
                   <div class="flex">[[_labelNames(seleteChartPie)]]</div>
-                  <div class="flex">{{localize('label_balance')}}</div>
+                  <div class="flex">{{localize.label_balance}}</div>
                 </div>
                 <div class="flex">
                   <div class="flex">[[formatNumberNoZero(data.contract_weight_book_balance)]]</div>
@@ -106,13 +106,13 @@
         <iron-icon icon="radio-button-unchecked" item-icon class="iconNextRadio" id="chartShipment" on-tap="chartPieNext"></iron-icon>
       </div>
       <div class="card-actions horizontal end-justified layout">
-        <paper-button raised on-tap="contractDetail">{{localize('btn_contract_detail')}}</paper-button>
-        <paper-button raised on-tap="listConfirm">{{localize('btn_confirm_detail')}}</paper-button>
-        <paper-button raised on-tap="listShipment">{{localize('text_list_booking')}}</paper-button>
-        <paper-button id="number" raised on-tap="listFee">{{localize('btn_fee_detail')}}</paper-button>
+        <paper-button raised on-tap="contractDetail">{{localize.btn_contract_detail}}</paper-button>
+        <paper-button raised on-tap="listConfirm">{{localize.btn_confirm_detail}}</paper-button>
+        <paper-button raised on-tap="listShipment">{{localize.text_list_booking}}</paper-button>
+        <paper-button id="number" raised on-tap="listFee">{{localize.btn_fee_detail}}</paper-button>
         <!--<paper-badge for="number" label="4">
           </paper-badge>-->
-        <paper-button raised on-tap="listPayment">{{localize('btn_payment')}}</paper-button>
+        <paper-button raised on-tap="listPayment">{{localize.btn_payment}}</paper-button>
       </div>
     </paper-card>
 
@@ -121,7 +121,7 @@
     Polymer({
       is: "chart-pie-g2g",
       behaviors: [
-        FormatNumberBehavior, nylonBehavior, i18nAction
+        ReduxBehavior,FormatNumberBehavior, nylonBehavior
       ],
       properties: {
         localize: {
@@ -199,16 +199,16 @@
       },
       _calConfirm:function (seleteChartPie,data) {
         if (seleteChartPie == 0) {
-          return this.formatNumberNoZero(data.contract_quantity_confirm);
+          return this.formatNumberNoZero(data.contract_weight_confirm);
         }else {
-          return this.formatNumberNoZero(data.contract_quantity_book);
+          return this.formatNumberNoZero(data.contract_weight_book);
         }
       },
       _calTotal:function (seleteChartPie,data) {
         if (seleteChartPie == 0) {
-          return this.formatNumberNoZero(data.contract_quantity_confirm_balance);
+          return this.formatNumberNoZero(data.contract_weight_confirm_balance);
         }else {
-          return this.formatNumberNoZero(data.contract_quantity_book_balance);
+          return this.formatNumberNoZero(data.contract_weight_book_balance);
         }
       },
       //end_observe
@@ -220,7 +220,7 @@
         this.$.chartContract.icon = 'radio-button-checked';
         this.$.chartShipment.icon = 'radio-button-unchecked';
         // this.dataChartPie = this._computeChartPie(this.data.contract_quantity_book,this.data.contract_quantity_book_balance,this.nameChart[1],this.colorPie[1]);
-        this.dataChartPie = this._computeChartPie(this.data.contract_quantity_confirm,this.data.contract_quantity_confirm_balance,this.nameChart[0],this.colorPie[0],this.colorBg[0]);
+        this.dataChartPie = this._computeChartPie(this.data.contract_weight_confirm,this.data.contract_weight_confirm_balance,this.nameChart[0],this.colorPie[0],this.colorBg[0]);
 
         // console.log(this.dataChartPie);
       },
@@ -229,7 +229,7 @@
         this.$$('#titleChart').innerHTML = 'ปริมาณข้าวที่ส่งมอบ';
         this.$.chartContract.icon = 'radio-button-unchecked';
         this.$.chartShipment.icon = 'radio-button-checked';
-        this.dataChartPie = this._computeChartPie(this.data.contract_quantity_book,this.data.contract_quantity_book_balance,this.nameChart[1],this.colorPie[1],this.colorBg[1]);
+        this.dataChartPie = this._computeChartPie(this.data.contract_weight_book,this.data.contract_weight_book_balance,this.nameChart[1],this.colorPie[1],this.colorBg[1]);
 
         // this.dataChartPie = this._computeChartPie(this.data.contract_quantity_confirm,this.data.contract_quantity_confirm_balance,this.nameChart[0],this.colorPie[0]);
         // console.log(this.dataChartPie);
