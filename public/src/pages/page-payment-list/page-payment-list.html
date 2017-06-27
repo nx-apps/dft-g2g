@@ -1,17 +1,99 @@
 <link rel="import" href="./../components/cookie-behavior.html">
 <dom-module id="page-payment-list">
-    <template>
-        <style>
-            :host {
-                display: block;
+    <style media="screen" include="iron-flex iron-flex-factors iron-flex-alignment gl-styles">
+         :host {
+            --paper-fab-background: var(--paper-light-blue-500);
+            --paper-fab-keyboard-focus-background: var(--paper-light-blue-900);
+        }
+        * {
+            font-family: 'CSChatThaiUI', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        paper-fab {
+            position: fixed;
+            right: 16px;
+            bottom: 16px;
+            color: var(--gl-white-color);
+        }
+        paper-material {
+            /*margin: 10px;*/
+            background-color: var(--gl-white-color);
+        }
+        nylon-panel-right {
+            --app-toolbar-style: {
+                background-color: #FF5000;
             }
-        </style>
+        }
+        main {
+            /*min-width: 320px;*/
+            /*max-width: 1000px;*/
+            padding: 5px;
+            margin: 0 auto;
+        }
+        section {
+            display: none;
+            /*padding: 20px 0 0;*/
+            border-top: 1px solid #ddd;
+        }
+        input {
+            display: none;
+        }
+        label {
+            display: inline-block;
+            margin: 0 0 -1px;
+            padding: 15px 25px;
+            font-weight: 600;
+            text-align: center;
+            color: #bbb;
+            border: 1px solid transparent;
+            background: #D5D8DC;
+        }
+        label:before {
+            font-family: fontawesome;
+            font-weight: normal;
+            margin-right: 10px;
+        }
+        label:hover {
+            color: #888;
+            cursor: pointer;
+        }
+        input:checked+label {
+            color: #555;
+            border: 1px solid #ddd;
+            border-top: 3px solid orange;
+            border-bottom: 1px solid #fff;
+            background: #fff;
+        }
+        #tab1:checked~#content1,
+        #tab2:checked~#content2,
+        #tab3:checked~#content3,
+        #tab4:checked~#content4,
+        #tab5:checked~#content5,
+        #tab6:checked~#content6 {
+            display: block;
+        }
+        list-of-bl-pm,
+        list-of-invoice,
+        list-of-fee,
+        list-of-cheque,
+        list-of-payments,
+        list-of-history {
+            margin-top: 15px;
+            width: 98%;
+        }
+        .breadcrumbs {
+            margin: 38px 38px 0px 38px;
+            border-bottom: 1px solid #ccc!important;
+            padding: 10px;
+        }
+    </style>
+    <template>
         page-payment-list
     </template>
     <script>
         Polymer({
             is: 'page-payment-list',
-            behaviors: [ReduxBehavior, nylonBehavior, i18nAction,CookieBehavior],
+            behaviors: [ReduxBehavior, nylonBehavior, i18nAction, CookieBehavior],
             properties: {
                 layerContent: {
                     type: String,

@@ -1,0 +1,199 @@
+<link rel="import" href="../../../../../bower_components/paper-checkbox/paper-checkbox.html">
+<dom-module id="list-of-invoice">
+  <style include="iron-flex iron-flex-factors iron-flex-alignment gl-styles page-style">
+     :host {
+      display: block;
+    }
+    
+    * {
+      font-family: 'CSChatThaiUI', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    
+    .labelSearch {
+      font-size: var(--font-size-h4);
+      margin: 10px 10px 10px 10px;
+    }
+    
+    .table-body>tr>td {
+      cursor: pointer;
+    }
+    
+    .title {
+      margin: 16px;
+      text-align: left;
+      font-size: var(--font-size-h4);
+    }
+    
+    .worrne {
+      padding: 15px;
+    }
+    
+    table.gl-table-default {
+      width: 98%;
+      border: 1px solid #ddd;
+      margin-bottom: 15px;
+    }
+    
+    .sendMoney>td:hover {
+      color: red;
+      cursor: default;
+      background-color: #ffffff;
+    }
+  </style>
+  <template>
+    <div class="flex searchInput horizontal center-justified layout">
+      <div class="flex title">{{localize('text_of_contract')}} : [[dataForSelect.nameContract]]</div>
+       <!--<div class="horizontal end-justified layout">-->
+      <div class="flex horizontal end-justified layout">
+        <!--<div class="labelSearch">{{localize('label_lot_no')}}</div>{{_searchInArray(searchInput)}}
+        <paper-input label=" " no-label-float value="{{searchInput}}"></paper-input>
+        <paper-icon-button icon="search"></paper-icon-button>
+        </paper-input>-->
+      </div>
+    </div>
+
+    <div class="horizontal center-justified layout">
+      <table class="gl-table-default">
+        <thead class="table-head">
+          <tr>
+            <th>{{localize('text_check_box')}}</th>
+            <th>{{localize('text_invoice_no')}}</th>
+            <th>{{localize('label_place_of_delivery')}} </th>
+            <th>{{localize('label_port_of_discharge')}}</th>
+            <th style="width:10%">{{localize('label_report_invoice')}}</th>
+          </tr>
+
+        </thead>
+        <tbody class="table-body">
+          <!-- <template is="dom-if" if="[[!_isHave(data)]]"> -->
+          <template is="dom-repeat" items="{{data}}" as="payment" index-as="paymentIndex">
+            <template is="dom-repeat" items="{{payment.invoice_detail}}">
+              <tr>
+                <!-- disabled="[[_checkDisabled(shipid,payment.shm_id,item.invoice_id)]]" -->
+                <td>
+                  <paper-checkbox id="[[paymentIndex]]" class="checkBoxInvoice" data="{{item}}" shm-id="{{payment.shm_id}}" on-tap="checkBoxInvoice"
+                    checked="{{item.status}}"></paper-checkbox>
+                </td>
+                <td data="[[item]]" on-tap="getInvoiceDetail">[[item.invoice_no]]</td>
+                <td data="[[item]]" on-tap="getInvoiceDetail">[[item.deli_port_name]] ([[item.deli_country_name]])</td>
+                <td data="[[item]]" on-tap="getInvoiceDetail">[[item.dest_port_name]] ([[item.dest_country_name]])</td>
+                <td>
+                  <paper-icon-button id="printShipment" data="[[item]]" class="crud" icon="print" raised on-tap="getInvoiceid" hidden="[[!data.shm_status]]"></paper-icon-button>
+                  <paper-tooltip for="printShipment" offset="0">{{localize('label_send_report')}}</paper-tooltip>
+                </td>
+              </tr>
+            </template>
+            <tr class="sendMoney">
+              <!-- <td colspan="6"></td> -->
+              <!-- <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td> -->
+              <td colspan="5">
+                <div class="horizontal end-justified layout btnMoney">
+                  <paper-button class="gl-btn-success" raised on-tap="payMoney">{{localize('btn_money_receiver')}}</paper-button>
+                </div>
+              </td>
+            </tr>
+          </template>
+
+          <!-- </template> -->
+          <template is="dom-if" if="[[_isHave(data)]]">
+            <tr>
+              <td colspan="5" style="text-align:center"> {{localize('text_no_data')}}</td>
+            </tr>
+          </template>
+        </tbody>
+      </table>
+    </div>
+    <div class="worrne">
+      {{localize('text_check_true')}}
+    </div>
+  </template>
+  <script>
+    Polymer({
+      is: "list-of-invoice",
+      behaviors: [
+        g2gCongtroller,
+        nylonBehavior,
+        nylonLocalizeBehavior
+      ],
+      properties: {
+        data: {
+          type: Object,
+        },
+        shipid: {
+          type: String,
+          value: ''
+        }
+      },
+      created: function () {
+        this.nylonLocalizeImport('/i18n-page1.json');
+      },
+      _isHave: function (data) {
+        if ((typeof data == 'object') && (data !== null)) {
+          if (data.length < 1) {
+            return true;
+          } else {
+            return false
+          }
+        } else {
+          return true
+        }
+      },
+      // observers:[
+      //   '_cleanCheckBox(data.*)'
+      // ],
+      // _cleanCheckBox:function (data) {
+      //   // console.log(data);
+      //   let checkDisabled = Polymer.dom(this.root).querySelectorAll('paper-checkbox[aria-disabled="true"]');
+      //   checkDisabled.map((el)=>{
+      //       el.disabled=false;
+      //   });
+      //   let check = Polymer.dom(this.root).querySelectorAll('paper-checkbox[aria-checked="true"]');
+      //   check.map((el)=>{
+      //       el.checked=false;
+      //   });
+      // },
+      checkBoxInvoice: function (e) {
+        let dataPay = this.data[e.currentTarget.id].invoice_detail.filter((item) => item.status == true);
+        // console.log(dataPay);
+        // console.log(e.currentTarget.id);
+        this._checkBoxDisabledInvoice(e.currentTarget.shmId);
+        this._checkBoxEabledInvoice(dataPay);
+      },
+      _checkBoxDisabledInvoice: function (shmId) {
+        let notCheck = Polymer.dom(this.root).querySelectorAll('paper-checkbox.checkBoxInvoice')
+        notCheck.map((el) => {
+          if (shmId != el.shmId) {
+            el.disabled = true;
+            el.parentNode.parentNode.style.backgroundColor = '#F1F1F1';
+            // el.parentNode.parentNode.style.cursor= 'default';
+          }
+        })
+      },
+      _checkBoxEabledInvoice: function (dataPay) {
+        if (dataPay.length < 1) {
+          let checkDisabled = Polymer.dom(this.root).querySelectorAll('paper-checkbox.checkBoxInvoice[aria-disabled="true"]');
+          checkDisabled.map((el) => {
+            el.disabled = false;
+            el.parentNode.parentNode.style.backgroundColor = '#FFFFFF';
+
+          })
+        }
+      },
+      getInvoiceDetail: function (e) {
+        this.fire('get-invoice-detail', { detail: e.currentTarget.data });
+      },
+      getInvoiceid: function (e) {
+        // console.log(e.currentTarget.data.invoice_id);
+        window.open(window._config.reportServer+'/api/payment/report1?invoice_id=' + e.currentTarget.data.invoice_id, '1');
+      },
+      payMoney: function () {
+        let check = Polymer.dom(this.root).querySelectorAll('paper-checkbox[aria-checked="true"]');
+        this.fire('get-select-draftPayment', { detail: check, });
+      }
+    });
+  </script>
+</dom-module>

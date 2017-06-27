@@ -1,0 +1,71 @@
+  <dom-module id="fee-management-list">
+  <style include="iron-flex iron-flex-factors iron-flex-alignment gl-styles">
+    :host {
+      display: block;
+    }
+    table{
+      margin: 20px 0px;
+    }
+    tbody.table-body{
+      cursor: pointer;
+    }
+    thead.table-head > tr > th:nth-child(1),
+    tbody.table-body > tr > td:nth-child(1),
+    thead.table-head > tr > th:nth-child(2) {
+      text-align: center;
+    }
+    thead.table-head > tr > th:nth-child(1) {
+      width: 10%;
+    }
+    thead.table-head > tr > th:nth-child(2) {
+      width: 90%;
+    }
+  </style>
+  <template>
+    <div class="horizontal end-justified layout">
+         <paper-button raised on-tap="addFeeRound" class="gl-btn-primary" >{{localize('btn_add_fee_no')}}</paper-button>
+    </div>
+    <table class="gl-table-default">
+      <thead class="table-head">
+        <tr>
+          <th>{{localize('label_payout')}}</th>
+          <th>{{localize('label_status')}}</th>
+        </tr>
+      </thead>
+      <tbody class="table-body">
+        <template is="dom-repeat" items="[[data.feeListinShm]]">
+          <tr data="[[item]]" on-tap="getFeeMana">
+            <td>[[item.fee_no]]</td>
+            <td>[[item.fee_status_name]]</td>
+          </tr>
+        </template>
+        <template is="dom-if" if="[[_isHave(data.feeListinShm)]]">
+          <tr>
+            <td colspan="5" style="text-align:center">  {{localize('label_no_data')}}</td>
+          </tr>
+        </template>
+      </tbody>
+    </table>
+    {{localize('label_fee_note_avarate')}}
+  </template>
+  <script>
+    Polymer({
+      is: "fee-management-list",
+      behaviors: [
+          g2gCongtroller,
+          nylonBehavior,
+          nylonLocalizeBehavior
+      ],
+      created:function(){
+          this.nylonLocalizeImport('/i18n-page1.json');
+      },
+      getFeeMana:function (e) {
+        // console.log(e.currentTarget.data);
+        this.fire('_get-fee-mana',{data:e.currentTarget.data});
+      },
+      addFeeRound:function () {
+        this.fire('_get-insert-fee',{data:'insertFee'});
+      }
+    });
+  </script>
+  </dom-module>

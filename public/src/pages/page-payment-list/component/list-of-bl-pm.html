@@ -1,0 +1,122 @@
+<dom-module id="list-of-bl-pm">
+  <style include="iron-flex iron-flex-factors iron-flex-alignment gl-styles">
+     :host {
+      display: block;
+    }
+    
+    * {
+      font-family: 'CSChatThaiUI', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    
+    .labelSearch {
+      font-size: var(--font-size-h4);
+      margin: 10px 10px 10px 10px;
+    }
+    
+    .table-body>tr>td {
+      cursor: pointer;
+    }
+    
+    .title {
+      margin: 16px;
+      text-align: left;
+      font-size: var(--font-size-h4);
+    }
+    
+    table.gl-table-default {
+      width: 98%;
+      border: 1px solid #ddd;
+      margin-bottom: 15px;
+    }
+  </style>
+  <template>
+    <div class="flex searchInput horizontal center-justified layout">
+      <div class="flex title">{{localize('text_of_contract')}} : [[dataForSelect.nameContract]]</div <div class="horizontal end-justified layout">
+      <div class="flex horizontal end-justified layout">
+        <div class="labelSearch">{{localize('label_lot_no')}}</div>{{_searchInArray(searchInput)}}
+        <paper-input label=" " no-label-float value="{{searchInput}}"></paper-input>
+        <paper-icon-button icon="search"></paper-icon-button>
+        </paper-input>
+      </div>
+    </div>
+    <div class="horizontal center-justified layout">
+      <table class="gl-table-default">
+        <thead class="table-head">
+          <tr>
+            <th>{{localize('label_lot_no')}}</th>
+            <th>{{localize('label_bill_of_lading')}}</th>
+            <th>{{localize('label_place_of_delivery')}} </th>
+            <th>{{localize('label_port_of_discharge')}}</th>
+
+          </tr>
+        </thead>
+        <tbody class="table-body">
+          <!-- <template is="dom-repeat" items="[[data]]" as="contract"> -->
+          <!-- <template is="dom-if" if="[[!_isHave(newData)]]"> -->
+          <template is="dom-repeat" items="[[newData]]">
+            <tr data="[[item]]" on-tap="getBlDetail" level="primary">
+              <td>[[item.ship_lot_no]]</td>
+              <td>[[item.bl_no]]</td>
+              <td>[[item.deli_port_name]] ([[item.deli_country_name]])</td>
+              <td>[[item.dest_port_name]] ([[item.dest_country_name]])</td>
+            </tr>
+            <!-- </template> -->
+          </template>
+          <!-- //[[_isHave(newData)]]// -->
+          <template is="dom-if" if="[[_isHave(newData)]]">
+            <tr>
+              <td colspan="6" style="text-align:center"> {{localize('text_no_data')}}</td>
+            </tr>
+          </template>
+        </tbody>
+      </table>
+    </div>
+  </template>
+  <script>
+    Polymer({
+      is: "list-of-bl-pm",
+      observers: [
+        'initDatabl(data)'
+      ],
+      behaviors: [
+        g2gCongtroller,
+        nylonBehavior,
+        nylonLocalizeBehavior
+      ],
+      properties: {
+        newData: {
+          type: Object,
+        }
+      },
+      created: function () {
+        this.nylonLocalizeImport('/i18n-page1.json');
+      },
+      initDatabl: function (data) {
+        // console.log(data);
+        this.newData = this.g2gClone(data);
+        // console.log('clone new==>',this.newData);
+        // console.log('org==>',this.data);
+      },
+      _searchInArray: function (searchInput) {
+        // console.log(searchInput == '');
+        if (searchInput != '') {
+          let arr = [];
+          this.data.map((el) => {
+            if (el.ship_lot_no.search(searchInput) > -1) {
+              //  console.log('search==> ',el);
+              arr.push(el);
+            }
+          });
+          this.newData = arr;
+        } else {
+          this.initDatabl(this.data);
+        }
+      },
+      getBlDetail: function (e) {
+        // console.log(e.currentTarget.data);
+        this.fire('get-bl-detail', { detail: e.currentTarget.data });
+      }
+    });
+  </script>
+</dom-module>
