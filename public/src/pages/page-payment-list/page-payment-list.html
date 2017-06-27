@@ -1,4 +1,4 @@
-
+<link rel="import" href="./../components/cookie-behavior.html">
 <dom-module id="page-payment-list">
     <template>
         <style>
@@ -11,7 +11,7 @@
     <script>
         Polymer({
             is: 'page-payment-list',
-            behaviors: [ReduxBehavior, nylonBehavior, i18nAction,],
+            behaviors: [ReduxBehavior, nylonBehavior, i18nAction,CookieBehavior],
             properties: {
                 layerContent: {
                     type: String,
@@ -19,6 +19,9 @@
                 },
             },
             nylonPageActive: function () {
+                console.log(this.getCookieBhv("contract_id"));
+                console.log(this.getCookieBhv("contractName"));
+                console.log(this.getCookieBhv("buyerId"));
                 // this.dispatchAction('EXPORTER_GET_DATA');
                 // this.dispatchAction('EXPORTER_GET_TYPE_LIC');
             },

@@ -1,17 +1,20 @@
 <link rel="import" href="./../../../bower_components/polymer/polymer.html">
-<link rel="import" href="./../../layout/page-style.html">
+<!--<link rel="import" href="./../../layout/page-style.html">-->
 <link rel="import" href="./../../../bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="./../../../bower_components/paper-tooltip/paper-tooltip.html">
 <link rel="import" href="./../../../bower_components/nylon-panel/nylon-panel-right.html">
-<link rel="import" href="components/contract-detail.html">
+<!--<link rel="import" href="components/contract-detail.html">
 <link rel="import" href="components/list-of-confirm.html">
 <link rel="import" href="components/list-of-booking.html">
-<link rel="import" href="components/list-of-fee-g2g.html">
+<link rel="import" href="components/list-of-fee-g2g.html">-->
+
+<link rel="import" href="./components/chart-pie-g2g.html">
 
 <link rel="import" href="./../components/cookie-behavior.html">
 
+<link rel="import" href="./../../layout/shared-styles.html">
 <dom-module id="page-contract-list">
-    <style media="screen" include="iron-flex iron-flex-factors iron-flex-alignment gl-styles page-style">
+    <style media="screen" include="iron-flex iron-flex-factors iron-flex-alignment shared-styles.html">
          :host {
             --paper-fab-background: var(--paper-light-blue-500);
             --paper-fab-keyboard-focus-background: var(--paper-light-blue-900);
@@ -19,12 +22,6 @@
         * {
             font-family: 'CSChatThaiUI', sans-serif;
             -webkit-font-smoothing: antialiased;
-        }
-        paper-fab {
-            position: fixed;
-            right: 25px;
-            bottom: 25px;
-            color: #fff;
         }
         .addContract {
             margin: 16px;
@@ -36,11 +33,7 @@
                 background-color: #FF5000;
             }
         }
-        .breadcrumbs {
-            margin: 38px 38px 0px 38px;
-            border-bottom: 1px solid #ccc!important;
-            padding: 10px;
-        }
+        
     </style>
     <template>
         <div class="layout vertical">
@@ -50,7 +43,7 @@
                 </template>
             </div>
         </div>
-        <nylon-panel-right title="{{titlePanelRight}}" id="drawerRight" set-width="95%">
+        <!--<nylon-panel-right title="{{titlePanelRight}}" id="drawerRight" set-width="95%">
             <div align="left">
                 <div class="breadcrumbs">
                     <plutonium-breadcrumbs crumbs="{{crumbs}}" selected-crumb="{{crumb}}"></plutonium-breadcrumbs>
@@ -77,7 +70,7 @@
                     </div>
                 </iron-pages>
             </div>
-        </nylon-panel-right>
+        </nylon-panel-right>-->
         <div class="btnFab">
             <paper-fab icon="add" title="{{localize.label_add_contract}}" id="addContract" on-tap="addContract"></paper-fab>
             <paper-tooltip for="addContract" offset="0">{{localize.label_add_contract}}</paper-tooltip>
@@ -97,48 +90,47 @@
                 },
                 localize: {
                     statePath: 'i18n.g2g'
-                }, crumbs: {
+                },
+                 crumbs: {
                     type: Array,
                     value: []
                 },
-                contractList: {
-                    type: Object
-                },
-                feeList: {
-                    type: Object
-                },
-                dataSelected: {
-                    type: Object,
-                },
-                dataForSelected: {
-                    type: Object,
-                    value: { dataForContract: {}, dataForConfirm: {}, dataForBooking: {}, dataForFee: {} }
-                },
-                g2gPageSeleted: {
-                    type: String,
-                    value: 'addContract'
-                },
-                checkRenderPage: {
-                    type: Object,
-                    value:
-                    {
-                        contractDetail: false,
-                        listOfConfirm: false,
-                        listOfShipment: false,
-                        listOfFee: false
-                    }
-                },
-                titlePanelRight: {
-                    type: String,
-                    value: 'การซื้อขายข้าวระหว่างประเทศ'
-                },
-                pageInConponents: {
-                    type: Object,
-                    value: { listOfConfirm: 'listOfConfirm', listOfShipment: 'listOfShipment' }
-                }
+                // feeList: {
+                //     type: Object
+                // },
+                // dataSelected: {
+                //     type: Object,
+                // },
+                // dataForSelected: {
+                //     type: Object,
+                //     value: { dataForContract: {}, dataForConfirm: {}, dataForBooking: {}, dataForFee: {} }
+                // },
+                // g2gPageSeleted: {
+                //     type: String,
+                //     value: 'addContract'
+                // },
+                // checkRenderPage: {
+                //     type: Object,
+                //     value:
+                //     {
+                //         contractDetail: false,
+                //         listOfConfirm: false,
+                //         listOfShipment: false,
+                //         listOfFee: false
+                //     }
+                // },
+                // titlePanelRight: {
+                //     type: String,
+                //     value: 'การซื้อขายข้าวระหว่างประเทศ'
+                // },
+                // pageInConponents: {
+                //     type: Object,
+                //     value: { listOfConfirm: 'listOfConfirm', listOfShipment: 'listOfShipment' }
+                // }
             },
             nylonPageActive: function () {
                 console.log(111);
+                console.log(this.getCookieBhv("buyerId"));
                 this.dispatchAction('GET_CONTRACT_OF_BUYER',this.getCookieBhv("buyerId"));
                 // console.log(this.getCookieBhv("buyerId"));
                 // this.dispatchAction('EXPORTER_GET_TYPE_LIC');

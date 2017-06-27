@@ -6,10 +6,12 @@
 <link rel="import" href="./../../../bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="./../../../bower_components/paper-tooltip/paper-tooltip.html">
 
+<link rel="import" href="./../../layout/shared-styles.html">
+
 
 <dom-module id="page-buyer-list">
     <template>
-        <style include="page-style">
+        <style include="page-style shared-styles">
              :host {
                 --paper-fab-background: var(--paper-light-blue-500);
                 --paper-fab-keyboard-focus-background: var(--paper-light-blue-900);
@@ -19,16 +21,6 @@
                 font-family: 'CSChatThaiUI', sans-serif;
                 -webkit-font-smoothing: antialiased;
             }
-
-            paper-fab {
-                position: fixed;
-                right: 25px;
-                bottom: 25px;
-                color: #fff;
-                --paper-fab-background: var(--paper-light-blue-500);
-                --paper-fab-keyboard-focus-background: var(--paper-light-blue-900);
-            }
-
             nylon-panel-right {
                 --app-toolbar-style: {
                     background-color: #FF5000;
@@ -60,6 +52,9 @@
                 titlePanelRight: {
                     type: String,
                     value: 'การซื้อขายข้าวระหว่างประเทศ'
+                },
+                localize: {
+                    statePath: 'i18n.g2g'
                 },
                 checkRenderPage: {
                     type: Object,

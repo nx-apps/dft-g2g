@@ -34,7 +34,7 @@ export function contractAction(store) {
         GET_CONTRACT_OF_BUYER: function (buyerId,) {
             axios.get('./contract/buyer?id='+buyerId)
                 .then(function (response) {
-                    // console.log(response.data);
+                    // console.log(response);
                     store.dispatch({ type: 'GET_CONTRACT_OF_BUYER', payload: response.data })
                 })
                 .catch(function (error) {
