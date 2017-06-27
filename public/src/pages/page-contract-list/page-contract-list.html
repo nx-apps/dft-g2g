@@ -3,6 +3,10 @@
 <link rel="import" href="./../../../bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="./../../../bower_components/paper-tooltip/paper-tooltip.html">
 <link rel="import" href="./../../../bower_components/nylon-panel/nylon-panel-right.html">
+<link rel="import" href="components/contract-detail.html">
+<link rel="import" href="components/list-of-confirm.html">
+<link rel="import" href="components/list-of-booking.html">
+<link rel="import" href="components/list-of-fee-g2g.html">
 
 <link rel="import" href="./../components/cookie-behavior.html">
 
@@ -21,13 +25,11 @@
             right: 25px;
             bottom: 25px;
             color: #fff;
-            /*--paper-fab-background: var(--paper-light-blue-500);*/
         }
         .addContract {
             margin: 16px;
             margin-bottom: 80px;
             padding: 7.5px;
-            /*border: 1px solid var(--gl-gray-light-color);*/
         }
         nylon-panel-right {
             --app-toolbar-style: {
@@ -42,29 +44,29 @@
     </style>
     <template>
         <div class="layout vertical">
-            <div class="xx horizontal center-justified layout wrap" style="width: 1300px">
+            <div class="horizontal center-justified layout" style="width: 1300px">
                 <template is="dom-repeat" items="[[contractList]]">
                     <chart-pie-g2g chart-name="[[item.contract_name]]" data="[[item]]"></chart-pie-g2g>
                 </template>
             </div>
         </div>
         <nylon-panel-right title="{{titlePanelRight}}" id="drawerRight" set-width="95%">
-            <div class="rightdata" align="left">
+            <div align="left">
                 <div class="breadcrumbs">
                     <plutonium-breadcrumbs crumbs="{{crumbs}}" selected-crumb="{{crumb}}"></plutonium-breadcrumbs>
                 </div>
                 <iron-pages selected="{{g2gPageSeleted}}" attr-for-selected="name">
                     <div class="addContract" name="addContract">
                         <contract-detail data-for-select="[[dataForSelected.dataForContract]]" is-view-seleted="[[!isViewSeleted]]" is-edit="[[!isEdit]]"
-                        is-input-disabled="[[!isInputDisabled]]"></contract-detail>
+                            is-input-disabled="[[!isInputDisabled]]"></contract-detail>
                     </div>
                     <div class="addContract" name="contractDetail">
                         <contract-detail data-for-select="[[dataForSelected.dataForContract]]" data="[[dataSelected]]" is-view-seleted="[[isViewSeleted]]"
-                        is-edit="[[isEdit]]" is-input-disabled="[[isInputDisabled]]"></contract-detail>
+                            is-edit="[[isEdit]]" is-input-disabled="[[isInputDisabled]]"></contract-detail>
                     </div>
                     <div class="addContract" name="listOfConfirm">
                         <list-of-confirm page-selected="{{pageSelected}}" data-for-select="[[dataForSelected.dataForConfirm]]" data="[[dataSelected]]"
-                        is-input-disabled="[[!isInputDisabled]]">
+                            is-input-disabled="[[!isInputDisabled]]">
                         </list-of-confirm>
                     </div>
                     <div class="addContract" name="listOfShipment">
@@ -77,8 +79,8 @@
             </div>
         </nylon-panel-right>
         <div class="btnFab">
-            <paper-fab icon="add" title="{{localize('label_add_contract')}}" id="addContract" on-tap="addContract"></paper-fab>
-            <paper-tooltip for="addContract" offset="0">{{localize('label_add_contract')}}</paper-tooltip>
+            <paper-fab icon="add" title="{{localize.label_add_contract}}" id="addContract" on-tap="addContract"></paper-fab>
+            <paper-tooltip for="addContract" offset="0">{{localize.label_add_contract}}</paper-tooltip>
         </div>
     </template>
     <script>
@@ -92,6 +94,47 @@
                 },
                 contractList:{
                     statePath: 'contract.contractList'
+                },
+                localize: {
+                    statePath: 'i18n.g2g'
+                }, crumbs: {
+                    type: Array,
+                    value: []
+                },
+                contractList: {
+                    type: Object
+                },
+                feeList: {
+                    type: Object
+                },
+                dataSelected: {
+                    type: Object,
+                },
+                dataForSelected: {
+                    type: Object,
+                    value: { dataForContract: {}, dataForConfirm: {}, dataForBooking: {}, dataForFee: {} }
+                },
+                g2gPageSeleted: {
+                    type: String,
+                    value: 'addContract'
+                },
+                checkRenderPage: {
+                    type: Object,
+                    value:
+                    {
+                        contractDetail: false,
+                        listOfConfirm: false,
+                        listOfShipment: false,
+                        listOfFee: false
+                    }
+                },
+                titlePanelRight: {
+                    type: String,
+                    value: 'การซื้อขายข้าวระหว่างประเทศ'
+                },
+                pageInConponents: {
+                    type: Object,
+                    value: { listOfConfirm: 'listOfConfirm', listOfShipment: 'listOfShipment' }
                 }
             },
             nylonPageActive: function () {
@@ -100,6 +143,387 @@
                 // console.log(this.getCookieBhv("buyerId"));
                 // this.dispatchAction('EXPORTER_GET_TYPE_LIC');
             },
+            // ready: function () {
+            //     Polymer.RenderStatus.afterNextRender(this, () => {
+            //     this._getContractList();
+            //     this._getDataForContract();
+            //     this._getDataForConfirm();
+            //     this._getDataForShipment();
+            //     });
+            // },
+            // _getCookie: function (name) {
+            //     var value = "; " + document.cookie;
+            //     var parts = value.split("; " + name + "=");
+            //     if (parts.length == 2) return parts.pop().split(";").shift();
+            // },
+            // _getUrl: function () {
+            //     this._getCookie("buyerId")
+            // },
+            // // _getContractList
+            // _getContractList: function () {
+            //     this.read('./g2g/contract/buyer/id/' + this._getCookie("buyerId"), (data) => {
+            //     this.set('contractList', data)
+            //     });
+            // },
+            // _getDataForContract: function () {
+            //     //use data for contract
+            //     this.read(window._config.externalServerCommon + '/api/buyer', (data) => {
+            //     this.dataForSelected.dataForContract.buyer = data;
+            //     this.notifyPath('dataForSelected.dataForContract.buyer');
+            //     });
+            //     this.read(window._config.externalServerCommon + '/api/hamonize?group=g2g', (data) => {
+
+            //     data.map((set_name) => {
+            //         set_name.type_rice_name_th = '(' + set_name.type_rice_id + ') ' + set_name.type_rice_name_th
+            //         set_name.type_rice_name_en = '(' + set_name.type_rice_id + ') ' + set_name.type_rice_name_en
+            //     })
+            //     // console.log(data);
+            //     this.dataForSelected.dataForContract.typeRice = data;
+            //     this.notifyPath('dataForSelected.dataForContract.typeRice');
+            //     // console.log(this.dataForSelected.dataForContract);
+            //     });
+            //     this.read(window._config.externalServerCommon + '/api/incoterms', (data) => {
+            //     this.dataForSelected.dataForContract.incoterms = data;
+            //     this.notifyPath('dataForSelected.dataForContract.incoterms');
+            //     });
+            //     //end use data for contract
+            // },
+            // _getDataForShipment: function () {
+            //     // call data
+            //     this.read(window._config.externalServer + '/api/external/exporter', (data) => {
+            //     data.map((set_name) => {
+            //         set_name.company_name_th = '' + set_name.exporter_no_name + ' [' + set_name.company_taxno + '] ' + set_name.company_name_th
+            //     })
+            //     // console.log(data);
+            //     this.dataForSelected.dataForBooking.seller = data;
+            //     this.notifyPath('dataForSelected.dataForBooking.seller');
+            //     // console.log(this.common.seller);
+            //     });
+            //     this.read(window._config.externalServerCommon + '/api/carrier', (data) => {
+
+            //     // console.log(data);
+            //     this.dataForSelected.dataForBooking.carrier = data;
+            //     this.notifyPath('dataForSelected.dataForBooking.carrier');
+            //     });
+            //     //shipline_id
+            //     this.read(window._config.externalServerCommon + '/api/shipline/', (data) => {
+            //     data.map((item, index) => {
+            //         item.text = item.shipline_name
+            //     })
+
+            //     this.dataForSelected.dataForBooking.shipline = data;
+            //     this.notifyPath('dataForSelected.dataForBooking.shipline');
+            //     });
+            //     //ship in shipline
+            //     this.read(window._config.externalServerCommon + '/api/shipline/ship', (data) => {
+            //     data.map((item, index) => {
+            //         item.ship.map((sp) => {
+            //         sp.text = sp.ship_name
+            //         })
+            //     })
+            //     // console.log(data);
+            //     this.dataForSelected.dataForBooking.shipInShipline = data;
+            //     this.notifyPath('dataForSelected.dataForBooking.shipInShipline');
+            //     });
+            //     //get surveyor_id
+            //     this.read(window._config.externalServerCommon + '/api/surveyor', (data) => {
+            //     this.dataForSelected.dataForBooking.surveyor = data;
+            //     this.notifyPath('dataForSelected.dataForBooking.surveyor');
+            //     });
+            //     // list port
+            //     this.read(window._config.externalServerCommon + '/api/port/', (data) => {
+            //     this.dataForSelected.dataForBooking.countryPort = data;
+            //     this.notifyPath('dataForSelected.dataForBooking.countryport');
+            //     });
+            //     // console.log(this.dataForSelected.dataForBooking);
+            // },
+            // // end_getContractList
+            // _getDataForConfirm: function () {
+            //     //ชนิดข้าวเอามาจากสัญญา
+            //     this.read(window._config.externalServerCommon + '/api/package', (data) => {
+            //     this.dataForSelected.dataForConfirm.package = data;
+            //     this.notifyPath('dataForSelected.dataForConfirm.package');
+            //     });
+            //     this.read(window._config.externalServerCommon + '/api/incoterms', (data) => {
+            //     this.dataForSelected.dataForConfirm.incoterms = data;
+            //     this.notifyPath('dataForSelected.dataForConfirm.incoterms');
+            //     });
+            // },
+            // setEventBreadcrumbs: function (data) {
+            //     this.setBreadcrumbs(data.detail)
+            // },
+            // setBreadcrumbs: function (data) {
+            //     this.set('crumbs', data)
+            // },
+            // //addContract
+            // addContract: function () {
+            //     let datass = [
+            //     {
+            //         label: 'เพิ่มสัญญา',
+            //         href: ''
+            //     },
+            //     ]
+            //     this.setBreadcrumbs(datass)
+            //     this.g2gPageSeleted = 'addContract';
+            //     this.titlePanelRight = 'เพิ่มข้อมูลผู้สั่งซื้อ'
+            //     this.fire('toast', { status: 'load' });
+            //     if (this.checkRenderPage.contractDetail != true) {
+            //     this.async(() => {
+            //         this.importHref(
+            //         this.resolveUrl('./g2g/component/contract-detail.html'),
+            //         () => {
+            //             this.async(() => {
+            //             this.fire('toast', { status: 'load' });
+            //             // console.log(this.dataForSelected.dataForContract);
+            //             this._flipDrawer();
+            //             this.checkRenderPage.contractDetail = true;
+            //             }, 500)
+            //         }, null, true
+            //         );
+            //     }, 1000);
+            //     } else {
+            //     this.fire('toast', { status: 'load' });
+            //     this._flipDrawer();
+            //     }
+            // },
+            // _getContractDetail: function (e) {
+            //     this.g2gPageSeleted = 'contractDetail';
+            //     // console.log(typeof e.detail.data === 'undefined');
+            //     if (typeof e.detail.data !== 'undefined') {
+            //     this.titlePanelRight = 'ข้อมูลผู้สั่งซื้อ : ' + e.detail.data.contract_name
+            //     let datass = [
+            //         {
+            //         label: e.detail.data.contract_name,
+            //         href: ''
+            //         },
+            //         {
+            //         label: 'รายละเอียดสัญญา',
+            //         href: ''
+            //         },
+            //     ]
+            //     this.setBreadcrumbs(datass)
+            //     }
+            //     if (typeof e.detail.contractId === "undefined") {
+            //     this.fire('toast', { status: 'load' });
+            //     if (this.checkRenderPage.contractDetail != true) {
+            //         this.async(() => {
+            //         this.importHref(
+            //             this.resolveUrl('./g2g/component/contract-detail.html'),
+            //             () => {
+            //             this.async(() => {
+            //                 this.fire('toast', { status: 'load' });
+            //                 // console.log(this.dataForSelected.dataForContract);
+            //                 this._flipDrawer();
+            //                 this.checkRenderPage.contractDetail = true;
+            //             }, 500)
+            //             }, null, true
+            //         );
+            //         }, 1000);
+            //     } else {
+            //         this.fire('toast', { status: 'load' });
+            //         this._flipDrawer();
+            //     }
+            //     this.dataSelected = e.detail.data;
+            //     } else {
+            //     let contractId = e.detail.contractId;
+            //     let dataContract = this.contractList.filter((contractList) => contractList.contract_id == contractId);
+            //     this.dataSelected = dataContract[0];
+            //     }
+            // },
+            // _getListConfirm: function (e) {
+            //     this.set('pageSelected', 'listOfConfirm')
+            //     // listOfConfirm
+            //     this.g2gPageSeleted = 'listOfConfirm';
+            //     if (typeof e.detail.contractId == "undefined") {
+            //     // console.log(e.detail.data)
+            //     this.titlePanelRight = 'รายละเอียดสัญญา : ' + e.detail.data.contract_name
+            //     let datass = [
+            //         {
+            //         label: e.detail.data.contract_name,
+            //         href: ''
+            //         },
+            //         {
+            //         label: 'รายการสัญญาย่อย',
+            //         href: ''
+            //         },
+            //     ]
+            //     this.setBreadcrumbs(datass)
+            //     this.fire('toast', { status: 'load' });
+            //     if (this.checkRenderPage.listOfConfirm != true) {
+            //         this.async(() => {
+            //         this.importHref(
+            //             this.resolveUrl('./g2g/component/list-of-confirm.html'),
+            //             () => {
+            //             this.async(() => {
+            //                 this.fire('toast', { status: 'load' });
+            //                 // console.log(this.dataForSelected.dataForContract);
+            //                 this._flipDrawer();
+            //                 this.checkRenderPage.listOfConfirm = true;
+            //             }, 500)
+            //             }, null, true
+            //         );
+            //         }, 1000);
+            //     } else {
+            //         this.fire('toast', { status: 'load' });
+            //         this._flipDrawer();
+            //     }
+            //     let exporter = []
+            //     e.detail.data.exporter.map((exporters) => {
+            //         exporter.push({
+            //             exporter_id: exporters.exporter_id,
+            //             label: '' + exporters.exporter_no + ' [' + exporters.company_taxno + '] ' + exporters.company_name_th,
+            //             company_id: exporters.company_id
+            //         })
+            //     })
+            //     this.dataSelected = e.detail.data;
+            //     this.set('dataForSelected.dataForConfirm.contract_id', e.detail.data.contract_id);
+            //     this.set('dataForSelected.dataForConfirm.exporters', exporter);
+            //     this.set('dataForSelected.dataForConfirm.contract_status', e.detail.data.contract_status);
+            //     this.set('dataForSelected.dataForConfirm.buyer_id', e.detail.data.buyer_id);
+            //     this.set('dataForSelected.dataForConfirm.country_id', e.detail.data.country_id);
+            //     } else {
+            //     this._getContractList();
+            //     this.read('./g2g/contract/buyer/id/' + this._getCookie("buyerId"), (data) => {
+            //         // console.log(e.detail)
+            //         let contractId = e.detail.contractId;
+            //         // console.log(contractId)
+            //         let dataContract = data.filter((contractList) => contractList.contract_id == contractId);
+            //         let exporter = []
+            //         dataContract[0].exporter.map((exporters) => {
+            //             exporter.push({
+            //                 exporter_id: exporters.exporter_id,
+            //                 label: '' + exporters.exporter_no + ' [' + exporters.company_taxno + '] ' + exporters.company_name_th,
+            //                 company_id: exporters.company_id
+            //             })
+            //         })
+
+            //         this.dataSelected = dataContract[0];
+            //         this.set('dataForSelected.dataForConfirm.exporters', exporter);
+            //     });
+            //     }
+            // },
+            // _getListShipment: function (e) {
+            //     // 
+            //     // console.log(e.detail.detail);
+            //     this.g2gPageSeleted = 'listOfShipment';
+
+            //     // console.log(e.detail.contractId);
+            //     if (typeof e.detail.contractId == "undefined") {
+            //     this.set('pageSelected', 'list-of-booking')
+            //     this.titlePanelRight = 'รายการส่งมอบสินค้า : ' + e.detail.data.contract_name
+            //     this.set('dataForSelected.dataForBooking.contract_name', e.detail.data.contract_name)
+            //     // console.log(this.dataForSelected.dataForBooking)
+            //     // console.log(e.detail.data.book);
+            //     let datass = [
+            //         {
+            //             label: e.detail.data.contract_name,
+            //             href: ''
+            //         },
+            //         {
+            //             label: 'รายการลำเรือ',
+            //             href: ''
+            //         },
+            //     ]
+            //     this.setBreadcrumbs(datass)
+            //     this.dataSelected = e.detail.data;
+            //     // console.log(this.dataSelected);
+            //     this.set('dataForSelected.dataForBooking.book', e.detail.data.book);
+            //     // console.log(this.dataForSelected.dataForBooking.book);
+            //     this.set('dataForSelected.dataForBooking.contract_id', e.detail.data.contract_id);
+            //     this.set('dataForSelected.dataForBooking.buyer_id', e.detail.data.buyer_id);
+            //     // console.log(this.dataForSelected.dataForBooking);
+            //     this.set('dataForSelected.dataForBooking.country_id', e.detail.data.country_id);
+            //     this.set('dataForSelected.dataForBooking.buyer_masks', e.detail.data.buyer_masks);
+            //     this.fire('toast', { status: 'load' });
+            //     if (this.checkRenderPage.listOfShipment != true) {
+            //         this.async(() => {
+            //         this.importHref(
+            //             this.resolveUrl('./g2g/component/list-of-booking.html'),
+            //             () => {
+            //             this.async(() => {
+            //                 this.fire('toast', { status: 'load' });
+            //                 // console.log(this.dataForSelected.dataForContract);
+            //                 this._flipDrawer();
+            //                 this.checkRenderPage.listOfShipment = true;
+            //             }, 500)
+            //             }, null, true
+            //         );
+            //         }, 1000);
+            //     } else {
+            //         this.async(() => {
+            //         this.fire('toast', { status: 'load' });
+            //         this._flipDrawer();
+            //         }, 1000);
+            //     }
+            //     } else {
+            //     let contractId = e.detail.contractId;
+            //     // console.log(contractId);
+            //     this.read('./g2g/contract/buyer/id/' + this._getCookie("buyerId"), (data) => {
+            //         let dataContract = data.filter((contractList) => contractList.contract_id == contractId);
+            //         this.dataSelected = dataContract[0];
+            //     });
+            //     }
+            // },
+            // _getlistFee: function (e) {
+            //     try {
+            //     this.read('./g2g/fee/contract/id/' + e.detail.data.contract_id, (data) => {
+            //         //ปัญหาตรงนี้
+            //         this.set('pageSelected', 'listOfFee')
+            //         this.feeList = data;
+            //         this.titlePanelRight = 'ค่าธรรมเนียม : ' + e.detail.data.contract_name
+            //         this.dataForSelected.dataForFee.feeListinShm = data;
+            //         this.notifyPath('dataForSelected.dataForFee.feeListinShm');
+            //         let datass = [
+            //             {
+            //                 label: e.detail.data.contract_name,
+            //                 href: ''
+            //             },
+            //             {
+            //                 label: 'รายการค่าธรรมเนียม',
+            //                 href: ''
+            //             },
+            //         ]
+            //         this.set('dataForSelected.dataForFee.contract_name', e.detail.data.contract_name);
+            //         this.setBreadcrumbs(datass)
+            //         this.g2gPageSeleted = 'listOfFee';
+            //         if (this.checkRenderPage.listOfFee != true) {
+
+            //         this.fire('toast', { status: 'load' });
+            //         this.async(() => {
+            //             this.importHref(
+            //             this.resolveUrl('./g2g/component/list-of-fee-g2g.html'),
+            //             () => {
+            //                 this.async(() => {
+            //                 this.fire('toast', { status: 'load' });
+            //                 // console.log(this.dataForSelected.dataForContract);
+            //                 this._flipDrawer();
+            //                 this.checkRenderPage.listOfFee = true;
+            //                 }, 500)
+            //             }, null, true
+            //             );
+            //         }, 1000);
+            //         } else {
+            //         this._flipDrawer();
+            //         }
+
+            //     });
+            //     } catch (e) {
+            //     // console.log(e);
+            //     }
+            // },
+            // okload: function () {
+            //     this.checkLoad = true;
+            // },
+            // // end_addContract
+            // _flipDrawer: function () {
+            //     Polymer.dom(this.root).querySelector('#drawerRight').open();
+            // },
+            // _flipDrawerClose: function () {
+            //     Polymer.dom(this.root).querySelector('#drawerRight').close();
+            // },
+            // _namePanelRight: function (name) {
+            //     this.titlePanelRight = name;
+            // }
         });
     </script>
 </dom-module>
