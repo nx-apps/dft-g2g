@@ -3,7 +3,7 @@ import { commonAction } from '../config'
 const initialState = {
     list: []
 }
-export function bookDetailReducer(state = initialState, action) {
+export function shipmentReducer(state = initialState, action) {
     switch (action.type) {
         // case 'EXPORTER_GET_DATA':
         //     return Object.assign({}, state, { list: action.payload });
@@ -11,7 +11,7 @@ export function bookDetailReducer(state = initialState, action) {
             return state
     }
 }
-export function bookDetailAction(store) {
+export function shipmentAction(store) {
     return [commonAction(),
     {
         UPLOAD_GET_LIST: function (ref, com) {

@@ -8,27 +8,26 @@
   <title>ระบบจัดการข้อมูลพื้นฐาน</title>
   <meta http-equiv="X-UA-Compatible" content="chrome=1">
   <link rel="shortcut icon" sizes="32x32" href="/images/02/32.png">
-  <link rel="manifest" href="/manifest.json">  
+  <link rel="manifest" href="/manifest.json">
 
   <script src="/bundle.js"></script>
   <link rel="import" href="/src/nylon-app.html" async>
 
   <style>
-    
     @font-face {
-        font-family: CSChatThaiUI;
-        src: url('fonts/CSChatThaiUI.eot');
-        src: url('fonts/CSChatThaiUI.eot?#iefix') format('eot'),
-            url('fonts/CSChatThaiUI.woff') format('woff'),
-            url('fonts/CSChatThaiUI.ttf') format('truetype'),
-            url('fonts/CSChatThaiUI.svg') format('svg');
+      font-family: CSChatThaiUI;
+      src: url('fonts/CSChatThaiUI.eot');
+      src: url('fonts/CSChatThaiUI.eot?#iefix') format('eot'),
+      url('fonts/CSChatThaiUI.woff') format('woff'),
+      url('fonts/CSChatThaiUI.ttf') format('truetype'),
+      url('fonts/CSChatThaiUI.svg') format('svg');
     }
 
     body {
       margin: 0;
       background: #efefef;
     }
-    
+
     #toolbar {
       background-color: #f7941e;
       color: white;
@@ -37,7 +36,7 @@
       box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
       height: 64px;
     }
-    
+
     .loader {
       border: 5px solid #f3f3f3;
       border-radius: 50%;
@@ -48,7 +47,7 @@
       animation: spin 0.5s linear infinite;
       margin: auto;
     }
-    
+
     @-webkit-keyframes spin {
       0% {
         -webkit-transform: rotate(0deg);
@@ -57,7 +56,7 @@
         -webkit-transform: rotate(360deg);
       }
     }
-    
+
     @keyframes spin {
       0% {
         transform: rotate(0deg);
@@ -66,7 +65,7 @@
         transform: rotate(360deg);
       }
     }
-    
+
     .middle {
       position: fixed;
       width: 100%;
@@ -77,14 +76,14 @@
       display: -webkit-flex;
       display: flex;
     }
-    
-    #toolbar > .icon {
+
+    #toolbar>.icon {
       margin-left: 76px;
       padding-top: 8px;
       float: left;
     }
-    
-    #toolbar > .title {
+
+    #toolbar>.title {
       line-height: 65px;
       margin-left: 20px;
       font-size: 20px;
@@ -108,16 +107,24 @@
       <div class="loader"></div>
     </div>
   </nylon-app>
-
+  <script>
+    window._config = {
+      // reportServer:"https://g2g.rice.dft.go.th/reporter",
+      reportServer: "https://localhost:8081",
+      // externalServer:"https://exporter.rice.dft.go.th",
+      externalServer: "https://localhost:3000",
+      externalServerCommon: 'https://localhost:3002'
+    };
+  </script>
   <script>
     window.performance && performance.mark && performance.mark('index.html');
 
-    Polymer = {lazyRegister: true, dom: 'shadow'};
+    Polymer = { lazyRegister: true, dom: 'shadow' };
 
-    (function() {
+    (function () {
       if ('registerElement' in document
-          && 'import' in document.createElement('link')
-          && 'content' in document.createElement('template')) {
+        && 'import' in document.createElement('link')
+        && 'content' in document.createElement('template')) {
         // platform is good!
       } else {
         // polyfill the platform!
