@@ -1,41 +1,43 @@
+<link rel="import" href="./../../../../bower_components/gl-form/gl-form-panel.html">
+<link rel="import" href="./../../../../bower_components/gl-grid/gl-grid-row.html">
+<link rel="import" href="./../../../../bower_components/gl-grid/gl-grid-col.html">
+<link rel="import" href="./../../../../bower_components/gl-form/gl-form-input.html">
+<link rel="import" href="./../../../../bower_components/vaadin-date-picker/vaadin-date-picker.html">
+<link rel="import" href="./../../../../bower_components/gl-form/gl-combo-box.html">
+<link rel="import" href="./../../../../bower_components/gl-form/gl-form-textarea.html">
+<link rel="import" href="./../../../../bower_components/gl-form/gl-form-panel-footer.html">
+<link rel="import" href="./../../../../bower_components/paper-button/paper-button.html">
+
 <dom-module id="contract-detail">
   <style include="iron-flex iron-flex-factors iron-flex-alignment gl-styles page-style">
     * {
       font-family: 'CSChatThaiUI', sans-serif;
       -webkit-font-smoothing: antialiased;
-    }
-    
+    }    
     gl-form-dropdown-menu {
       width: 100%;
-    }
-    
+    }  
     paper-icon-button.crud {
       margin: 5px 5px 5px 5px;
-    }
-    
+    }   
     paper-icon-button.crud:hover {
       background-color: var(--paper-grey-200);
       border-radius: 5px;
       box-shadow: inset 0 0 3px 3px rgba(0, 0, 0, .2);
-    }
-    
+    }    
     .riceName {
-      /*color: red;*/
       margin-top: 25px;
       font-size: var(--font-size-h5);
-    }
-    
+    }    
     paper-button.btnInTable {
       --paper-button: {
         margin-top: 0px;
         height: 32px;
       }
-    }
-    
+    }    
     .titleName {
       margin-bottom: 10px;
-    }
-    
+    }    
     .table-head>tr>th:nth-child(1),
     .table-head>tr>th:nth-child(3),
     .table-body>tr>td:nth-child(1),
@@ -44,45 +46,37 @@
     .table-foot>tr>td:nth-child(3) {
       width: 20%;
       text-align: center;
-    }
-    
+    }    
     .table-head>tr>th:nth-child(2),
     .table-body>tr>th:nth-child(2),
     .table-foot>tr>th:nth-child(2) {
       width: 60%;
-    }
-    
+    }    
     .gl-table-default {
       margin-bottom: 20px;
-    }
-    
+    }    
     .upGlComboBox {
       margin-top: -20px;
-    }
-    
+    }    
     vaadin-date-picker {
       font-family: 'CSChatThaiUI', sans-serif !important;
       -webkit-font-smoothing: antialiased !important;
       color: red !important;
-    }
-    
+    }    
     paper-button[disabled] {
       background: #eaeaea;
       color: #a8a8a8;
-    }
-    
+    }    
     gl-form-input.number {
       --paper-input-container-input: {
         text-align: left;
       }
-    }
-    
+    }    
     gl-form-input.number[disabled] {
       --paper-input-container-input: {
         text-align: left !important;
       }
-    }
-    
+    }    
     iron-icon {
       height: 16px;
       width: 16px;
@@ -92,34 +86,23 @@
   <template>
     <gl-form-panel set-padding="10px 20px 10px 20px" set-border="1px">
       <template is="dom-if" if="[[_isViewing(isViewSeleted)]]">
-        <!--<gl-form-panel-head label="" set-padding="10px" set-border="1px">-->
-        <!-- <div class="horizontal end-justified layout"> -->
-        <!-- <paper-icon-button id="editConfirm" class="crud" icon="create" raised on-tap="editInput" ></paper-icon-button>
-        <paper-tooltip for="editConfirm" offset="0">Edit Contract</paper-tooltip>
-        <template is="dom-if" if="[[!_isViewing(data.contract_status)]]">
-          <paper-icon-button id="deleteConfirm" class="crud" icon="delete" raised on-tap="deleteContract"></paper-icon-button>
-          <paper-tooltip for="deleteConfirm" offset="0">Delete Contract</paper-tooltip>
-        </template> -->
         <icon-button-management is-input-disabled="[[!isInputDisabled]]"></icon-button-management>
-        <!-- </div> -->
-        <!--</gl-form-panel-head>-->
       </template>
-      <!--<gl-form-panel-body label="" set-padding="10px" set-border="1px">-->
       <gl-grid-row width="{{getWidth}}">
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,9]]">
-          <gl-form-input required class="required" disabled="[[_checkArrayTrue(isInputDisabled,data.contract_status)]]" error-message="{{localize('label_error_contract')}}"
-            label="{{localize('label_contract')}}" value="{{data.contract_name}}" placeholder="{{localize('label_contract')}}"></gl-form-input>
+          <gl-form-input required class="required" disabled="[[_checkArrayTrue(isInputDisabled,data.contract_status)]]" error-message="{{localize.label_error_contract}}"
+            label="{{localize.label_contract}}" value="{{data.contract_name}}" placeholder="{{localize.label_contract}}"></gl-form-input>
         </gl-grid-col>
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
           <vaadin-date-picker always-float-label class="required" required disabled="[[_checkArrayTrue(isInputDisabled,data.contract_status)]]"
-            label="{{localize('label_date')}}" error-message="{{localize('label_error_date')}}" value="{{data.contract_date}}"></vaadin-date-picker>
+            label="{{localize.label_date}}" error-message="{{localize.label_error_date}}" value="{{data.contract_date}}"></vaadin-date-picker>
         </gl-grid-col>
       </gl-grid-row>
 
       <gl-grid-row width="{{getWidth}}">
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,9]]">
-          <gl-combo-box class="required" required disabled="[[_checkArrayTrue(isInputDisabled,data.contract_status)]]" label="{{localize('label_payment_type')}}"
-            error-message="{{localize('label_error_payment_type')}}" placeholder="{{localize('label_payment_type')}}" items="[[payterms]]"
+          <gl-combo-box class="required" required disabled="[[_checkArrayTrue(isInputDisabled,data.contract_status)]]" label="{{localize.label_payment_type}}"
+            error-message="{{localize.label_error_payment_type}}" placeholder="{{localize.label_payment_type}}" items="[[payterms]]"
             item-label-path="payterms_Name" item-value-path="payterms_Id" value="{{data.payterm}}">
              <template>
               [[item.payterms_Name]]
@@ -128,24 +111,16 @@
         </gl-grid-col>
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">[[changeString2Num(data.*,'contract_quantity')]]
           <gl-form-input class="required number" required allowed-pattern="[0-9||,||.]" format-number="on" disabled="[[_checkArrayTrue(isInputDisabled,data.contract_status)]]"
-            error-message="{{localize('label_error_quantity')}}" required label="{{localize('label_quantity')}}" value="{{data.contract_quantity}}"
-            placeholder="{{localize('label_quantity')}}" id="contract_quantity"></gl-form-input>
+            error-message="{{localize.label_error_quantity}}" required label="{{localize.label_quantity}}" value="{{data.contract_quantity}}"
+            placeholder="{{localize.label_quantity}}" id="contract_quantity"></gl-form-input>
         </gl-grid-col>
       </gl-grid-row>
-
-      <!-- <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">[[changeString2Num(data.*,'tolerance_rate')]]
-           <gl-form-input class="required number"maxlength="3" allowed-pattern="[0-9||,||.]" required disabled="[[_checkArrayTrue(isInputDisabled,data.contract_status)]]" error-message="กรุณาใส่จำนวน" required label="ค่าคลาดเคลื่อนที่ยอมรับได้" value="{{data.tolerance_rate}}" placeholder="{{localize('text_your_detail')}}" id="tolerance_rate">
-              <div suffix>%</div>
-           </gl-form-input>
-       </gl-grid-col> -->
-
-       
 
       <gl-grid-row>
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,9]]">
           [[_getBuyerAddressFromData(data)]]
           <gl-combo-box class="required" always-float-label required id="buyer_id" 
-            label="{{localize('label_buyer')}}" disabled error-message="{{localize('label_error_buyer')}}" value="{{data.buyer_id}}"
+            label="{{localize.label_buyer}}" disabled error-message="{{localize.label_error_buyer}}" value="{{data.buyer_id}}"
             on-value-changed="_getBuyerAddress">
             <template>
               [[item.label]]
@@ -163,7 +138,7 @@
       <gl-grid-row>
 
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,6]]">
-          <gl-form-textarea rows="2" disabled label="{{localize('label_buyer_address')}}" placeholder="{{localize('label_buyer_address')}}"
+          <gl-form-textarea rows="2" disabled label="{{localize.label_buyer_address}}" placeholder="{{localize.label_buyer_address}}"
             value="{{data.buyerAddress}}"></gl-form-textarea>
         </gl-grid-col>
       </gl-grid-row>
@@ -171,15 +146,15 @@
       <gl-grid-row>
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,12]]">
 
-          <div class="titleName">{{localize('label_list_rice')}}</div>
+          <div class="titleName">{{localize.label_list_rice}}</div>
           <table class="gl-table-default">
             <thead class="table-head">
               <tr>
-                <th>{{localize('label_order')}}</th>
-                <th>{{localize('label_rice_type')}}</th>
+                <th>{{localize.label_order}}</th>
+                <th>{{localize.label_rice_type}}</th>
                 <th>
                   <template is="dom-if" if="[[!_isViewing(isInputDisabled)]]">
-                    {{localize('label_action')}}
+                    {{localize.label_action}}
                   </template>
                 </th>
               </tr>
@@ -190,10 +165,8 @@
                   <td></td>
                   <td></td>
                   <td>
-                    <!-- <template is="dom-if" if="[[!_isViewing(isInputDisabled)]]"> -->
                     <paper-button hidden="[[isInputDisabled]]" raised id="[[index]]" on-tap="addTypeRice" class="btnInTable gl-btn-primary">
-                      <iron-icon icon="add"></iron-icon>{{localize('btn_add')}}</paper-button>
-                    <!-- </template> -->
+                      <iron-icon icon="add"></iron-icon>{{localize.btn_add}}</paper-button>
                   </td>
                 </tr>
               </tfoot>
@@ -206,8 +179,8 @@
                   </td>
                   <td>
                     <div class="upGlComboBox">
-                      <gl-combo-box id="rice-[[index]]" class="required" required disabled="[[isInputDisabled]]" error-message="{{localize('label_error_rice_type')}}"
-                        placeholder="{{localize('label_rice_type')}}" name="type_rice_name" item-label-path="type_rice_name_th"
+                      <gl-combo-box id="rice-[[index]]" class="required" required disabled="[[isInputDisabled]]" error-message="{{localize.label_error_rice_type}}"
+                        placeholder="{{localize.label_rice_type}}" name="type_rice_name" item-label-path="type_rice_name_th"
                         item-value-path="type_rice_id" value="{{item.type_rice_id}}" on-value-changed="_typeRiceContract">
                         <template>
                           [[item.type_rice_name_th]] 
@@ -219,7 +192,7 @@
                     <template is="dom-if" if="[[!_isViewing(data.isInputDisabled)]]">
                       <paper-button hidden="[[isInputDisabled]]" raised id="[[index]]" on-tap="deleteTypeRice" class="btnInTable gl-btn-danger"
                         title="ลบชนิดข้าว">
-                        <iron-icon icon="remove"></iron-icon>{{localize('btn_delete')}}</paper-button>
+                        <iron-icon icon="remove"></iron-icon>{{localize.btn_delete}}</paper-button>
                     </template>
                   </td>
                 </tr>
@@ -231,302 +204,303 @@
 
       <gl-grid-row>
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,6]]">
-          <gl-form-textarea disabled="[[_checkArrayTrue(isInputDisabled,data.contract_status)]]" rows="2" label="{{localize('label_more_detail')}}"
-            placeholder="{{localize('label_more_detail')}}" value="{{data.contract_desc}}" name="contract_desc"></gl-form-textarea>
+          <gl-form-textarea disabled="[[_checkArrayTrue(isInputDisabled,data.contract_status)]]" rows="2" label="{{localize.label_more_detail}}"
+            placeholder="{{localize.label_more_detail}}" value="{{data.contract_desc}}" name="contract_desc"></gl-form-textarea>
         </gl-grid-col>
       </gl-grid-row>
-      <!--</gl-form-panel-body>-->
       <gl-form-panel-footer label="" set-padding="10px">
         <div class="horizontal end-justified layout">
 
           <template is="dom-if" if="[[!_isViewing(isEdit)]]">
-            <paper-button class="gl-btn-primary" on-tap="insertContract" raised hidden="[[_isViewing(data.contract_status)]]">{{localize('btn_add')}}</paper-button>
+            <paper-button class="gl-btn-primary" on-tap="insertContract" raised hidden="[[_isViewing(data.contract_status)]]">{{localize.btn_add}}</paper-button>
           </template>
           <template is="dom-if" if="[[_isViewing(isViewSeleted)]]">
-            <paper-button class="gl-btn-default" on-tap="calcelContract" raised hidden="[[_isViewing(isInputDisabled)]]">{{localize('btn_cancel')}}</paper-button>
-            <paper-button class="gl-btn-success" on-tap="saveContract" raised hidden="[[_isViewing(isInputDisabled)]]">{{localize('btn_save')}}</paper-button>
+            <paper-button class="gl-btn-default" on-tap="calcelContract" raised hidden="[[_isViewing(isInputDisabled)]]">{{localize.btn_cancel}}</paper-button>
+            <paper-button class="gl-btn-success" on-tap="saveContract" raised hidden="[[_isViewing(isInputDisabled)]]">{{localize.btn_save}}</paper-button>
           </template>
           <template is="dom-if" if="[[_isViewing(isInputDisabled)]]">
-            <paper-button class="gl-btn-info" raised on-tap="confirmDrawer" hidden="[[_isViewing(data.contract_status)]]">{{localize('btn_confirm')}}</paper-button>
+            <paper-button class="gl-btn-info" raised on-tap="confirmDrawer" hidden="[[_isViewing(data.contract_status)]]">{{localize.btn_confirm}}</paper-button>
           </template>
         </div>
       </gl-form-panel-footer>
     </gl-form-panel>
   </template>
   <script>
-    // Polymer = {lazyRegister: true, dom: 'shade'};
     Polymer({
       is: "contract-detail",
       behaviors: [
-        g2gModelBehavior,
-        g2gCongtroller,
-        nylonBehavior,
-        nylonLocalizeBehavior
+        ReduxBehavior,
+        nylonBehavior
+        // g2gModelBehavior,
+        // g2gCongtroller,
+        // nylonLocalizeBehavior
       ],
       properties: {
-        dataForSelect: {
-          type: Object,
-        },
-        data: {
-          type: Object,
-          value: { contract_quantity: 0, contract_type_rice: [{}] }
-        },
-        dataForUse: {
-          type: Object,
-        },
-        payterms: {
-          type: Object,
-          value: [
-            { payterms_Name: 'L/C', payterms_Id: 'L/C' },
-            { payterms_Name: 'T/T', payterms_Id: 'T/T' },
-            { payterms_Name: 'D/P', payterms_Id: 'D/P' },
-            { payterms_Name: 'D/A', payterms_Id: 'D/A' }
-          ]
+        localize:{
+          statePatch: 'i18n.g2g'
         }
+        // dataForSelect: {
+        //   type: Object,
+        // },
+        // data: {
+        //   type: Object,
+        //   value: { contract_quantity: 0, contract_type_rice: [{}] }
+        // },
+        // dataForUse: {
+        //   type: Object,
+        // },
+        // payterms: {
+        //   type: Object,
+        //   value: [
+        //     { payterms_Name: 'L/C', payterms_Id: 'L/C' },
+        //     { payterms_Name: 'T/T', payterms_Id: 'T/T' },
+        //     { payterms_Name: 'D/P', payterms_Id: 'D/P' },
+        //     { payterms_Name: 'D/A', payterms_Id: 'D/A' }
+        //   ]
+        // }
+      },
+      // observers: [
+      //   '_changeDataContract(data.contract_date)',
+      //   '_getBuyer(dataForSelect.buyer)',
+      // ],
+      // listeners: {
+      //   'edit-input': 'editInput',
+      //   'delete-input': 'deleteContract'
+      // },
+      // created: function () {
+      //   this.nylonLocalizeImport('/i18n-page1.json');
+      // },
+      // attached: function () {
+      //   this._typeRiceContract();
+      // },
+      // _getCookie: function (name) {
+      //   var value = "; " + document.cookie;
+      //   var parts = value.split("; " + name + "=");
+      //   if (parts.length == 2) return parts.pop().split(";").shift();
+      // },
+      // _getUrl: function () {
 
-      },
-      observers: [
-        '_changeDataContract(data.contract_date)',
-        '_getBuyer(dataForSelect.buyer)',
-      ],
-      listeners: {
-        'edit-input': 'editInput',
-        'delete-input': 'deleteContract'
-      },
-      created: function () {
-        this.nylonLocalizeImport('/i18n-page1.json');
-      },
-      attached: function () {
-        this._typeRiceContract();
-      },
-      _getCookie: function (name) {
-        var value = "; " + document.cookie;
-        var parts = value.split("; " + name + "=");
-        if (parts.length == 2) return parts.pop().split(";").shift();
-      },
-      _getUrl: function () {
-
-          console.log(this._getCookie("buyerId"));
+      //     console.log(this._getCookie("buyerId"));
           
-        },
+      //   },
 
-      _getBuyer: function (buyers) {
-        try {
-          // console.log(this._getCookie("buyerId"));
-          this.set('data.buyer_id',this._getCookie("buyerId"))
-          let elements = this.$$('#buyer_id');
-          let buyer = new Array();
-          buyers.map((el, index) => {
-            buyer.push({ label: el.buyer_name + ' [' + el.country_name_en + '] ', value: el.buyer_id });
-          });
-          elements.items = buyer;
-        } catch (e) {
-          // console.log(e);
-        }
+      // _getBuyer: function (buyers) {
+      //   try {
+      //     // console.log(this._getCookie("buyerId"));
+      //     this.set('data.buyer_id',this._getCookie("buyerId"))
+      //     let elements = this.$$('#buyer_id');
+      //     let buyer = new Array();
+      //     buyers.map((el, index) => {
+      //       buyer.push({ label: el.buyer_name + ' [' + el.country_name_en + '] ', value: el.buyer_id });
+      //     });
+      //     elements.items = buyer;
+      //   } catch (e) {
+      //     // console.log(e);
+      //   }
 
-      },
-      _getBuyerAddress: function (e) {
-        if (e.detail.value) {
-          this._getAddCondation(e.detail.value);
-        }
-        if (e.detail.value === '') {
-          try {
-            this._getAddCondation(e.detail.value);
-            this.data.buyer_fax = '';
-            this.data.buyerAddress = '';
-            this.notifyPath('data.buyer_fax');
-            this.notifyPath('data.buyerAddress');
-          } catch (e) {
-            // console.log(e);
-          } 
-        }
-      },
-      _getAddCondation: function (buyerId) {
-        try {
-          let buyer_id = this.dataForSelect.buyer.filter((buyer) => buyer.buyer_id == buyerId);
-          this.data.buyerAddress = buyer_id[0].buyer_address;
-          this.data.buyer_fax = buyer_id[0].buyer_fax;
-          this.data.country_id = buyer_id[0].country_id;
-          this.notifyPath('data.buyerAddress');
-          this.notifyPath('data.buyer_fax');
-        } catch (e) {
-          // console.log(e);
-        } 
-      },
-      _getBuyerAddressFromData: function (data) {
-        this.data.buyer_fax = data.buyer_fax;
-        this.data.buyerAddress = data.buyer_address;
-        this.notifyPath('data.buyer_fax');
-        this.notifyPath('data.buyerAddress');
-      },
-      _changeDataContract: function (contract_date) {
-        this.getDateg2g(contract_date, (date) => {
-          this.set('data.contract_date', date);
-          this.notifyPath('data.contract_date');
-        });
-      },
-      addTypeRice: function () {
-        this.push('data.contract_type_rice', {});
-      },
-      deleteTypeRice: function (e) {
-        this.splice('data.contract_type_rice', e.currentTarget.id, 1);
-      },
-      insertContract: function () {
-        this.set('data.tags', [])
-        this.push('data.tags', this.data.country_id);
-        this._clearnData(this.data, (data) => {
-          this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
-          data.contract_status = false;
-          this.insert('./g2g/contract/insert', data, () => {
-            this.fire('toast', {
-              status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
-              callback: () => {
-                this.fire('refresh-contract', { detail: 'refresh-contract' });
-                this.fire('close-drawer', { detail: 'refresh-contract' });
-              }
-            });
-          });
-          let el = Polymer.dom(this.root).querySelectorAll('.required');
-          el.map((el) => { el.reset(); el.value = '' });
-        });
-      },
+      // },
+      // _getBuyerAddress: function (e) {
+      //   if (e.detail.value) {
+      //     this._getAddCondation(e.detail.value);
+      //   }
+      //   if (e.detail.value === '') {
+      //     try {
+      //       this._getAddCondation(e.detail.value);
+      //       this.data.buyer_fax = '';
+      //       this.data.buyerAddress = '';
+      //       this.notifyPath('data.buyer_fax');
+      //       this.notifyPath('data.buyerAddress');
+      //     } catch (e) {
+      //       // console.log(e);
+      //     } 
+      //   }
+      // },
+      // _getAddCondation: function (buyerId) {
+      //   try {
+      //     let buyer_id = this.dataForSelect.buyer.filter((buyer) => buyer.buyer_id == buyerId);
+      //     this.data.buyerAddress = buyer_id[0].buyer_address;
+      //     this.data.buyer_fax = buyer_id[0].buyer_fax;
+      //     this.data.country_id = buyer_id[0].country_id;
+      //     this.notifyPath('data.buyerAddress');
+      //     this.notifyPath('data.buyer_fax');
+      //   } catch (e) {
+      //     // console.log(e);
+      //   } 
+      // },
+      // _getBuyerAddressFromData: function (data) {
+      //   this.data.buyer_fax = data.buyer_fax;
+      //   this.data.buyerAddress = data.buyer_address;
+      //   this.notifyPath('data.buyer_fax');
+      //   this.notifyPath('data.buyerAddress');
+      // },
+      // _changeDataContract: function (contract_date) {
+      //   this.getDateg2g(contract_date, (date) => {
+      //     this.set('data.contract_date', date);
+      //     this.notifyPath('data.contract_date');
+      //   });
+      // },
+      // addTypeRice: function () {
+      //   this.push('data.contract_type_rice', {});
+      // },
+      // deleteTypeRice: function (e) {
+      //   this.splice('data.contract_type_rice', e.currentTarget.id, 1);
+      // },
+      // insertContract: function () {
+      //   this.set('data.tags', [])
+      //   this.push('data.tags', this.data.country_id);
+      //   this._clearnData(this.data, (data) => {
+      //     this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
+      //     data.contract_status = false;
+      //     this.insert('./g2g/contract/insert', data, () => {
+      //       this.fire('toast', {
+      //         status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
+      //         callback: () => {
+      //           this.fire('refresh-contract', { detail: 'refresh-contract' });
+      //           this.fire('close-drawer', { detail: 'refresh-contract' });
+      //         }
+      //       });
+      //     });
+      //     let el = Polymer.dom(this.root).querySelectorAll('.required');
+      //     el.map((el) => { el.reset(); el.value = '' });
+      //   });
+      // },
 
-      saveContract: function () {
-        this._clearnData(this.data, (data) => {
-          data.id = this.data.contract_id;
-          this.fire('toast', {  //คำสั่งสำหรับเปิด toast dialog
-            status: 'dialog',
-            text: 'ต้องการแก้ข้อมูลใช่หรือไม่ ?',
-            confirmed: this._saveData.bind(this), //function ที่ใช้รับค่า ปุ่ม
-            el: this, // compontents
-            data: data // ข้อมูลที่ส่งไป เช่น id ที่จะใช้ลบข้อมูล ใน db
-          });
-        });
-      },
-      _saveData: function (result, detail) {
-        if (result == true) {
-          this.update('./g2g/contract/update', detail.data, () => {
-            this.fire('refresh-contract', { detail: 'refresh-contract' });
-            this.fire('toast', {
-              status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
-              callback: () => {
-                this.editInput();
-                this.fire('get-contract-detail', { contractId: detail.data.id });
-              }
-            });
-          });
-        }
-      },
-      confirmDrawer: function () {
-        this._clearnData(this.data, (data) => {
-          data.id = this.data.contract_id;
-          data.contract_quantity = this.data.contract_quantity;
-          data.contract_status = this.approve(data.contract_status);
-          this.fire('toast', {  //คำสั่งสำหรับเปิด toast dialog
-            status: 'dialog',
-            text: 'ต้องการบันทึกข้อมูลใช่หรือไม่ ?',
-            confirmed: this._confirmContract.bind(this), //function ที่ใช้รับค่า ปุ่ม
-            el: this, // compontents
-            data: data // ข้อมูลที่ส่งไป เช่น id ที่จะใช้ลบข้อมูล ใน db
-          })
-        });
-      },
-      _confirmContract: function (result, detail) {
-        if (result == true) {
-          this.update('./g2g/contract/update', detail.data, () => {
-            this.fire('refresh-contract', { detail: 'refresh-contract' });
-            this.fire('toast', {
-              status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
-              callback: () => {
-                this.fire('get-contract-detail', { contractId: detail.data.id });
-              }
-            });
-          });
-        }
-      },
-      deleteContract: function () {
-        this.fire('toast', {  //คำสั่งสำหรับเปิด toast dialog
-          status: 'dialog',
-          text: 'ต้องการลบข้อมูลใช่หรือไม่ ?',
-          confirmed: this._deleteData.bind(this), //function ที่ใช้รับค่า ปุ่ม
-          el: this, // compontents
-          data: this.data.contract_id // ข้อมูลที่ส่งไป เช่น id ที่จะใช้ลบข้อมูล ใน db
-        })
-      },
-      _deleteData: function (result, detail) {
-        if (result == true) {
-          this.delete('./g2g/contract/delete/id/', detail.data, () => {
-            this.fire('refresh-contract', { detail: 'refresh-contract' });
-            this.fire('close-drawer', { detail: 'flip-drawer' });
-            this.fire('toast', {
-              status: 'success', text: 'ลบสำเร็จ',  // คำสั่งสำหรับเปิด toast success
-              callback: function () {
-              }
-            });
-          });
-        }
-      },
-      _typeRiceContract: function () {
-        try {
-          if (this._checkUndefined(this.dataForSelect.typeRice)) {
-            this.async(() => {
-              let comboboxs, arrForItem, itemif;
-              for (var i = 0; i < this.data.contract_type_rice.length; i++) {
-                // console.log('this.dataForSelect.typeRice1>>', this.dataForSelect.typeRice);
-                arrForItem = JSON.parse(JSON.stringify(this.dataForSelect.typeRice));
-                //  console.log('arrForItem',arrForItem);
-                this.data.contract_type_rice.map((item, index) => {
-                  //  console.log(item);
-                  if (i != index) {
-                    //ตัดอาเรย์ตอนที่ไม่เท่ากับค่าของตัวเอง
-                    if (arrForItem.filter((blDetail) => blDetail.type_rice_id == item.type_rice_id)[0] != undefined) {
-                      itemif = arrForItem.indexOf(arrForItem.filter((blDetail) => blDetail.type_rice_id == item.type_rice_id)[0]);
-                      //  console.log(itemif);
-                      arrForItem.splice(itemif, 1);
-                    }
-                  }
-                });
-                comboboxs = Polymer.dom(this.root).querySelector('#rice-' + i);
-                comboboxs.items = arrForItem;
-              }
-            }, 1);
-          }
+      // saveContract: function () {
+      //   this._clearnData(this.data, (data) => {
+      //     data.id = this.data.contract_id;
+      //     this.fire('toast', {  //คำสั่งสำหรับเปิด toast dialog
+      //       status: 'dialog',
+      //       text: 'ต้องการแก้ข้อมูลใช่หรือไม่ ?',
+      //       confirmed: this._saveData.bind(this), //function ที่ใช้รับค่า ปุ่ม
+      //       el: this, // compontents
+      //       data: data // ข้อมูลที่ส่งไป เช่น id ที่จะใช้ลบข้อมูล ใน db
+      //     });
+      //   });
+      // },
+      // _saveData: function (result, detail) {
+      //   if (result == true) {
+      //     this.update('./g2g/contract/update', detail.data, () => {
+      //       this.fire('refresh-contract', { detail: 'refresh-contract' });
+      //       this.fire('toast', {
+      //         status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
+      //         callback: () => {
+      //           this.editInput();
+      //           this.fire('get-contract-detail', { contractId: detail.data.id });
+      //         }
+      //       });
+      //     });
+      //   }
+      // },
+      // confirmDrawer: function () {
+      //   this._clearnData(this.data, (data) => {
+      //     data.id = this.data.contract_id;
+      //     data.contract_quantity = this.data.contract_quantity;
+      //     data.contract_status = this.approve(data.contract_status);
+      //     this.fire('toast', {  //คำสั่งสำหรับเปิด toast dialog
+      //       status: 'dialog',
+      //       text: 'ต้องการบันทึกข้อมูลใช่หรือไม่ ?',
+      //       confirmed: this._confirmContract.bind(this), //function ที่ใช้รับค่า ปุ่ม
+      //       el: this, // compontents
+      //       data: data // ข้อมูลที่ส่งไป เช่น id ที่จะใช้ลบข้อมูล ใน db
+      //     })
+      //   });
+      // },
+      // _confirmContract: function (result, detail) {
+      //   if (result == true) {
+      //     this.update('./g2g/contract/update', detail.data, () => {
+      //       this.fire('refresh-contract', { detail: 'refresh-contract' });
+      //       this.fire('toast', {
+      //         status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
+      //         callback: () => {
+      //           this.fire('get-contract-detail', { contractId: detail.data.id });
+      //         }
+      //       });
+      //     });
+      //   }
+      // },
+      // deleteContract: function () {
+      //   this.fire('toast', {  //คำสั่งสำหรับเปิด toast dialog
+      //     status: 'dialog',
+      //     text: 'ต้องการลบข้อมูลใช่หรือไม่ ?',
+      //     confirmed: this._deleteData.bind(this), //function ที่ใช้รับค่า ปุ่ม
+      //     el: this, // compontents
+      //     data: this.data.contract_id // ข้อมูลที่ส่งไป เช่น id ที่จะใช้ลบข้อมูล ใน db
+      //   })
+      // },
+      // _deleteData: function (result, detail) {
+      //   if (result == true) {
+      //     this.delete('./g2g/contract/delete/id/', detail.data, () => {
+      //       this.fire('refresh-contract', { detail: 'refresh-contract' });
+      //       this.fire('close-drawer', { detail: 'flip-drawer' });
+      //       this.fire('toast', {
+      //         status: 'success', text: 'ลบสำเร็จ',  // คำสั่งสำหรับเปิด toast success
+      //         callback: function () {
+      //         }
+      //       });
+      //     });
+      //   }
+      // },
+      // _typeRiceContract: function () {
+      //   try {
+      //     if (this._checkUndefined(this.dataForSelect.typeRice)) {
+      //       this.async(() => {
+      //         let comboboxs, arrForItem, itemif;
+      //         for (var i = 0; i < this.data.contract_type_rice.length; i++) {
+      //           // console.log('this.dataForSelect.typeRice1>>', this.dataForSelect.typeRice);
+      //           arrForItem = JSON.parse(JSON.stringify(this.dataForSelect.typeRice));
+      //           //  console.log('arrForItem',arrForItem);
+      //           this.data.contract_type_rice.map((item, index) => {
+      //             //  console.log(item);
+      //             if (i != index) {
+      //               //ตัดอาเรย์ตอนที่ไม่เท่ากับค่าของตัวเอง
+      //               if (arrForItem.filter((blDetail) => blDetail.type_rice_id == item.type_rice_id)[0] != undefined) {
+      //                 itemif = arrForItem.indexOf(arrForItem.filter((blDetail) => blDetail.type_rice_id == item.type_rice_id)[0]);
+      //                 //  console.log(itemif);
+      //                 arrForItem.splice(itemif, 1);
+      //               }
+      //             }
+      //           });
+      //           comboboxs = Polymer.dom(this.root).querySelector('#rice-' + i);
+      //           comboboxs.items = arrForItem;
+      //         }
+      //       }, 1);
+      //     }
 
-        } catch (e) {
-          // console.log(e);
-        }
+      //   } catch (e) {
+      //     // console.log(e);
+      //   }
 
-      },
-      _clearnData: function (data, callback) {
-        let el = Polymer.dom(this.root).querySelectorAll('.required');
-        let stat = el.map((el) => el.validate());
-        if (stat.every(elem => elem == true)) {
-          let { buyer_id, contract_date, contract_desc, contract_name, contract_status, payterm } = data;
-          let { contract_quantity } = data;
-          let newData = { buyer_id, contract_date, contract_desc, contract_name, contract_quantity, contract_status, payterm };
-          newData.contract_type_rice = [];
-          newData.contract_date = new Date(newData.contract_date);
-          data.contract_type_rice.map((riceCode) => {
-            newData.contract_type_rice.push({ type_rice_id: riceCode.type_rice_id });
-          });
-          if (typeof data.tags !== 'undefined') {
-            newData.tags = new Array();
-            data.tags.map((tag) => {
-              newData.tags.push(tag);
-            });
-          }
-          // newData.tags.push(data.country_id);
-          // console.log(newData);
-          el.map((el) => { el.reset(); });
-          callback(newData);
-        } else {
-          this.fire('toast', {
-            status: 'connectError', text: 'กรุณากรอกข้อมูลให้ครบทุกช่อง', //คำสั่งสำหรับเปิด toast error
-            callback: function () {
-            }
-          })
-        }
-      },
+      // },
+      // _clearnData: function (data, callback) {
+      //   let el = Polymer.dom(this.root).querySelectorAll('.required');
+      //   let stat = el.map((el) => el.validate());
+      //   if (stat.every(elem => elem == true)) {
+      //     let { buyer_id, contract_date, contract_desc, contract_name, contract_status, payterm } = data;
+      //     let { contract_quantity } = data;
+      //     let newData = { buyer_id, contract_date, contract_desc, contract_name, contract_quantity, contract_status, payterm };
+      //     newData.contract_type_rice = [];
+      //     newData.contract_date = new Date(newData.contract_date);
+      //     data.contract_type_rice.map((riceCode) => {
+      //       newData.contract_type_rice.push({ type_rice_id: riceCode.type_rice_id });
+      //     });
+      //     if (typeof data.tags !== 'undefined') {
+      //       newData.tags = new Array();
+      //       data.tags.map((tag) => {
+      //         newData.tags.push(tag);
+      //       });
+      //     }
+      //     // newData.tags.push(data.country_id);
+      //     // console.log(newData);
+      //     el.map((el) => { el.reset(); });
+      //     callback(newData);
+      //   } else {
+      //     this.fire('toast', {
+      //       status: 'connectError', text: 'กรุณากรอกข้อมูลให้ครบทุกช่อง', //คำสั่งสำหรับเปิด toast error
+      //       callback: function () {
+      //       }
+      //     })
+      //   }
+      // },
 
     });
   </script>
