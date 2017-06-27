@@ -6,6 +6,7 @@
 <link rel="import" href="./../../../bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="./../../../bower_components/paper-tooltip/paper-tooltip.html">
 
+
 <dom-module id="page-buyer-list">
     <template>
         <style include="page-style">
@@ -13,19 +14,21 @@
                 --paper-fab-background: var(--paper-light-blue-500);
                 --paper-fab-keyboard-focus-background: var(--paper-light-blue-900);
             }
-            
+
             * {
                 font-family: 'CSChatThaiUI', sans-serif;
                 -webkit-font-smoothing: antialiased;
             }
-            
+
             paper-fab {
                 position: fixed;
                 right: 25px;
                 bottom: 25px;
                 color: #fff;
+                --paper-fab-background: var(--paper-light-blue-500);
+                --paper-fab-keyboard-focus-background: var(--paper-light-blue-900);
             }
-            
+
             nylon-panel-right {
                 --app-toolbar-style: {
                     background-color: #FF5000;
@@ -33,7 +36,7 @@
             }
         </style>
         <div class="xcontainer ">
-            <template is="dom-repeat" items={{countryList}} index-as=index>
+            <template is="dom-repeat" items={{buyerList}} index-as=index>
                 <buyer-list data="[[item]]"></buyer-list>
             </template>
         </div>
@@ -52,12 +55,8 @@
     <script>
         Polymer({
             is: 'page-buyer-list',
-            behaviors: [ReduxBehavior, nylonBehavior, i18nAction],
+            behaviors: [ReduxBehavior, nylonBehavior, i18nAction, contractAction, commonG2gAction],
             properties: {
-                countryList: {
-                    type: Object,
-                    value: ''
-                },
                 titlePanelRight: {
                     type: String,
                     value: 'การซื้อขายข้าวระหว่างประเทศ'
@@ -69,12 +68,25 @@
                         contractDetail: false,
                     }
                 },
-                dataForSelected: {
-                    type: Object,
-                    value: { dataForContract: {} }
+                buyerList: {
+                    statePath: 'contract.buyerList'
                 },
             },
             nylonPageActive: function () {
+                
+                this.dispatchAction('GET_BUYER_LIST');
+
+                this.dispatchAction('GET_COMMON_BANK_LIST');
+                this.dispatchAction('GET_COMMON_HAMONIZE_LIST');
+                this.dispatchAction('GET_COMMON_CARRIER_LIST');
+                this.dispatchAction('GET_COMMON_INCOTERMS_LIST');
+                this.dispatchAction('GET_COMMON_NOTIFY_LIST');
+                this.dispatchAction('GET_COMMON_PACKAGE_LIST');
+                this.dispatchAction('GET_COMMON_PORT_LIST');
+                this.dispatchAction('GET_COMMON_SHIP_LIST');
+                this.dispatchAction('GET_COMMON_SHIPLINE_LIST');
+                this.dispatchAction('GET_COMMON_SURVEYOR_LIST');
+                // console.log(111);
             },
             // _getCountry() {
             //     this.read('./g2g/contract/list', (data) => {
@@ -116,17 +128,25 @@
                             this.resolveUrl('./components/contract-detail-dash.html'),
                             () => {
                                 this.async(() => {
-                                    this.fire('toast', { status: 'load' });
+                                    this.fire('toast', {
+                                        status: 'success', text: 'โหลดสำเร็จ', callback: () => {
+                                            this._flipDrawer();
+                                            this.checkRenderPage.contractDetail = true;
+                                        }
+                                    });
                                     // console.log(this.dataForSelected.dataForContract);
-                                    this._flipDrawer();
-                                    this.checkRenderPage.contractDetail = true;
+
                                 }, 500)
                             }, null, true
                         );
                     }, 1000);
                 } else {
-                    this.fire('toast', { status: 'load' });
-                    this._flipDrawer();
+                    this.fire('toast', {
+                        status: 'success', text: 'โหลดสำเร็จ', callback: () => {
+                            this._flipDrawer();
+                        }
+                    });
+
                 }
             },
             _flipDrawer: function () {

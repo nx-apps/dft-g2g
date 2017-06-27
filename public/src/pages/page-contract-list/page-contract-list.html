@@ -4,6 +4,8 @@
 <link rel="import" href="./../../../bower_components/paper-tooltip/paper-tooltip.html">
 <link rel="import" href="./../../../bower_components/nylon-panel/nylon-panel-right.html">
 
+<link rel="import" href="./../components/cookie-behavior.html">
+
 <dom-module id="page-contract-list">
     <style media="screen" include="iron-flex iron-flex-factors iron-flex-alignment gl-styles page-style">
          :host {
@@ -42,7 +44,7 @@
         <div class="layout vertical">
             <div class="xx horizontal center-justified layout wrap" style="width: 1300px">
                 <template is="dom-repeat" items="[[contractList]]">
-                    <chart-pie-g2g on-okload="okload" chart-name="[[item.contract_name]]" data="[[item]]"></chart-pie-g2g>
+                    <chart-pie-g2g chart-name="[[item.contract_name]]" data="[[item]]"></chart-pie-g2g>
                 </template>
             </div>
         </div>
@@ -82,16 +84,20 @@
     <script>
         Polymer({
             is: 'page-contract-list',
-            behaviors: [ReduxBehavior, nylonBehavior, i18nAction, contractAction],
+            behaviors: [ReduxBehavior, nylonBehavior, i18nAction,CookieBehavior, contractAction],
             properties: {
                 layerContent: {
                     type: String,
                     value: "detailRegExporter"
                 },
+                contractList:{
+                    statePath: 'contract.contractList'
+                }
             },
             nylonPageActive: function () {
                 console.log(111);
-                this.dispatchAction('GET_BUYER_LIST');
+                this.dispatchAction('GET_CONTRACT_OF_BUYER',this.getCookieBhv("buyerId"));
+                // console.log(this.getCookieBhv("buyerId"));
                 // this.dispatchAction('EXPORTER_GET_TYPE_LIC');
             },
         });

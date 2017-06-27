@@ -3,9 +3,15 @@
 <link rel="import" href="./../../../../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="./../../../../bower_components/paper-button/paper-button.html">
 
+<link rel="import" href="./../../../../bower_components/chart-elements/chart-bar.html">
+
+<link rel="import" href="../../../layout/shared-styles.html">
+
+
+
 <dom-module id="buyer-list">
     <template>
-        <style include="iron-flex iron-flex-factors iron-flex-alignment gl-styles page-style">
+        <style include="iron-flex iron-flex-factors iron-flex-alignment shared-styles">
              :host {
                 display: block;
             }
@@ -33,11 +39,11 @@
         </style>
         <div class="horizontal layout center-justified  wrap">
             <!--<template is="dom-repeat" items={{data}} as=item index-as=index>-->
-            <paper-material elevation="1" class="paper-meterial tree margin-meterial">
+            <paper-material elevation="1" class="white tree margin-meterial">
 
 
                 <div class="head-meterial">
-                    [[data.buyer_name]] ([[data.country_name_th]])
+                    [[data.buyer_name]] ([[data.country_name_en]])
                 </div>
                 <div class="content-meterial">
                     <div class="horizontal center-justified layout title-head">
@@ -72,6 +78,7 @@
     <script>
         Polymer({
             is: 'buyer-list',
+            behaviors: [ReduxBehavior, nylonBehavior, i18nAction],
             properties: {
                 page: {
                     type: Number,
@@ -80,54 +87,56 @@
                 title: {
                     type: String,
                     value: 'ปริมาณการส่งมอบ (ตัน)'
+                },
+                
+            },
+            getContractList(e) {
+                let data = e.currentTarget.data
+                document.cookie = "buyerId=" + data.buyer_id
+                this.fire('nylon-change-page',{path:'/contract-list'})
+            },
+            getChartQuantity(quantity) {
+                // console.log(quantity);
+                return {
+                    labels: quantity.map((ed) => ed.contract_year),
+                    
+                    datasets: [
+                        {
+                            label: "ปริมาณการส่งมอบ (ตัน)",
+                            backgroundColor: "#003BAE",
+                            borderColor: "#96b1d2",
+                            borderWidth: 1,
+                            data: quantity.map((ed) => ed.shipment)
+                        }
+                    ]
                 }
             },
-            // getContractList(e) {
-            //     // console.log(e.currentTarget.data);
-            //     this.fire('_getContractList', e.currentTarget.data)
-            // },
-            // getChartQuantity(quantity) {
-            //     // console.log(quantity);
-            //     return {
-            //         labels: quantity.map((ed) => ed.contract_year),
-                    
-            //         datasets: [
-            //             {
-            //                 label: "ปริมาณการส่งมอบ (ตัน)",
-            //                 backgroundColor: "#003BAE",
-            //                 borderColor: "#96b1d2",
-            //                 borderWidth: 1,
-            //                 data: quantity.map((ed) => ed.shipment)
-            //             }
-            //         ]
-            //     }
-            // },
-            // getChartValue(value) {
-            //     return {
-            //         labels: value.map((ed) => ed.contract_year),
-            //         datasets: [
-            //             {
-            //                 label: "มูลค่าการส่งออก (บาท)",
-            //                 backgroundColor: "#ff4500",
-            //                 borderColor: "#ff9973",
-            //                 borderWidth: 1,
-            //                 data: value.map((ed) => ed.payment)
-            //             }
-            //         ]
-            //     }
-            // },
-            // chartPiePrevious(e) {
-            //     this.set('page', 0)
-            //     this.set('title', 'ปริมาณการส่งมอบ (ตัน)')
-            //     this.$$('#chartQuantity').icon = 'radio-button-checked'
-            //     this.$$('#chartValue').icon = 'radio-button-unchecked'
-            // },
-            // chartPieNext(e) {
-            //     this.set('page', 1)
-            //     this.set('title', 'มูลค่าการส่งออก (บาท)')
-            //     this.$$('#chartQuantity').icon = 'radio-button-unchecked'
-            //     this.$$('#chartValue').icon = 'radio-button-checked'
-            // }
+            getChartValue(value) {
+                return {
+                    labels: value.map((ed) => ed.contract_year),
+                    datasets: [
+                        {
+                            label: "มูลค่าการส่งออก (บาท)",
+                            backgroundColor: "#ff4500",
+                            borderColor: "#ff9973",
+                            borderWidth: 1,
+                            data: value.map((ed) => ed.payment)
+                        }
+                    ]
+                }
+            },
+            chartPiePrevious(e) {
+                this.set('page', 0)
+                this.set('title', 'ปริมาณการส่งมอบ (ตัน)')
+                this.$$('#chartQuantity').icon = 'radio-button-checked'
+                this.$$('#chartValue').icon = 'radio-button-unchecked'
+            },
+            chartPieNext(e) {
+                this.set('page', 1)
+                this.set('title', 'มูลค่าการส่งออก (บาท)')
+                this.$$('#chartQuantity').icon = 'radio-button-unchecked'
+                this.$$('#chartValue').icon = 'radio-button-checked'
+            }
         });
     </script>
 </dom-module>
