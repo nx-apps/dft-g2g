@@ -1,0 +1,68 @@
+<link rel="import" href="components/box-menu.html">
+<link rel="import" href="components/box-menu-search.html">
+<link rel="import" href="components/month-behavior.html">
+<link rel="import" href="../../nylon-behavior.html">
+<dom-module id="page-report">
+  <style include="iron-flex iron-flex-factors iron-flex-alignment gl-styles">
+    :host {
+      display: block;
+    }
+    .btn-search {
+      margin-top: 15px;
+    }
+  </style>
+  <template>
+    <div class="layout horizontal center-justified wrap">
+      <box-menu-search>
+        <div class="title-head" style="font-size:40px">
+           {{localize('label_pnd_53')}}
+        </div>
+        <div class="layout horizontal center-justified">
+          <div class="menu">
+            {{localize('label_month')}}
+          </div>
+          <div class="layout horizontal center-justified">
+            <gl-combo-box always-float-label   error-message="กรุณาเลือกเดือนที่ต้องการดูรายงาน"
+             items="[[getMonth()]]" item-label-path="name"   item-value-path="id"  value="{{data.month}}"  >
+             <template>
+                [[item.name]]
+              </template>
+            </gl-combo-box>
+          </div>
+          <div class="btn-search">
+            <paper-button raised class="gl-btn-primary" on-tap="getReportPay">เลือก</paper-button>
+          </div>
+
+        </div>
+      </box-menu-search>
+    </div>
+  </template>
+  <script>
+    Polymer({
+      is: "page-report",
+      behaviors: [
+          MonthBehavior,
+          nylonBehavior,
+          nylonLocalizeBehavior
+      ],
+      properties: {
+        data:{
+          type: Object,
+          value:{}
+        },
+      },
+      created:function(){
+          this.nylonLocalizeImport('/i18n-page1.json');
+      },
+      getReportPay:function () {
+        // console.log(this.data);
+        var toYear = new Date().toISOString().split('-')[0];
+        var toMonth = new Date().toISOString().split('-')[1];
+        typeof this.data.month == 'undefined' ? this.data.month = toMonth : this.data.month ;
+        this.data.month < 10 ? this.data.month=this.data.month : this.data.month;
+        window.open(window._config.reportServer+'/api/payment/report7?date_start='+toYear+'-'+this.data.month+'-01&date_end='+toYear+'-'+this.data.month+'-31','_blank');
+        window.open(window._config.reportServer+'/api/payment/report8?date_start='+toYear+'-'+this.data.month+'-01&date_end='+toYear+'-'+this.data.month+'-31','_blank');
+      }
+    });
+  </script>
+</dom-module>

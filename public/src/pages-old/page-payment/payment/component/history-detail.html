@@ -1,0 +1,97 @@
+<link rel="import" href="payment-detail-by-rice.html">
+<dom-module id="history-detail">
+  <style include="iron-flex iron-flex-factors iron-flex-alignment gl-styles page-style">
+     :host {
+      display: block;
+    }
+
+    .textheader-center {
+      margin: 25px;
+      text-align: center;
+      font-size: var(--font-size-large);
+    }
+
+    table.gl-table-default {
+      width: 98%;
+      border: 1px solid #ddd;
+      /*margin-bottom: 15px;*/
+    }
+
+    table.gl-table-default>thead.table-head>tr>th,
+    table.gl-table-default>tbody.table-body>tr>td,
+    table.gl-table-default>thead.table-head>tr>th {
+      text-align: center;
+    }
+
+    table.gl-table-default>tbody.table-body>tr>td:nth-child(2) {
+      text-align: left;
+    }
+
+    table.gl-table-default>tbody.table-body>tr>td:nth-child(1){
+      width: 5%;
+    }
+
+    table.gl-table-default>tbody.table-body>tr>td:nth-child(2),
+    table.gl-table-default>tbody.table-body>tr>td:nth-child(3) {
+      width: 20%;
+    }
+
+    table.gl-table-default>tbody.table-body>tr>td:nth-child(4){
+      text-align: right;
+      width: 15%;
+    }
+  </style>
+  <template>
+    <!--[[dataForSelect.contract_id]]-->
+    <gl-form-panel set-padding="10px 0px 10px 20px" set-border="1px">
+      <!--<gl-form-panel-body label="" set-padding="10px" set-border="1px">-->
+        <table class="gl-table-default">
+          <thead class="table-head">
+            <tr>
+              <th>{{localize('label_order')}}</th>
+              <th>{{localize('label_componey')}}</th>
+              <th>{{localize('text_invoice_no')}}</th>
+              <th>{{localize('label_total_value_bath')}}</th>
+            </tr>
+            </tr>
+          </thead>
+          <tbody class="table-body">
+            <template is="dom-repeat" items="[[data.payment_detail]]">
+              <tr id="tr-[[item.exporter_id]]">
+                <td>[[_ObcountIndex(index)]]</td>
+                <td>[[item.exporter_name]]</td>
+                <td>[[item.invoice_exporter_no]]</td>
+                <td>[[formatNumber(item.pay_amount)]]</td>
+              </tr>
+            </template>
+          </tbody>
+        </table>
+      <!--</gl-form-panel-body>-->
+
+    </gl-form-panel>
+
+
+
+  </template>
+  <script>
+    Polymer({
+      is: "history-detail",
+      properties: {
+        data: {
+          type: Object,
+          value: {}
+        },
+      },
+      behaviors: [
+        g2gModelBehavior,
+        g2gCongtroller,
+        FormatNumberBehavior,
+        nylonBehavior,
+        nylonLocalizeBehavior
+      ],
+      created: function () {
+        this.nylonLocalizeImport('/i18n-page1.json');
+      }
+    });
+  </script>
+</dom-module>

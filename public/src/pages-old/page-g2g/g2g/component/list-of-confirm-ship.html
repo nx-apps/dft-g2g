@@ -1,0 +1,136 @@
+
+<dom-module id="list-of-confirm-ship">
+  <style include="gl-styles iron-flex iron-flex-factors iron-flex-alignment">
+    table.gl-table-default {
+      width: 100%;
+      border: 1px solid #ddd;
+      margin: 20px 0px 10px 0px;
+    }
+    
+    table.gl-table-default>tbody.table-body>tr>td {
+      cursor: pointer;
+    }
+    
+    .combo-box {
+      width: 100%;
+    }
+    
+    .title {
+      font-size: var(--font-size-h3);
+      text-align: center;
+    }
+  </style>
+  <template>
+
+    <gl-form-panel>
+
+
+      <div class="title">
+        [[title]]
+      </div>
+      <div class="horizontal layout wrap">
+        <!--<div class="flex-2">
+        </div>-->
+        <div id="combox" class="flex">
+          <gl-combo-box placeholder="ผู้ส่งออกทั้งหมด" items="{{dataForSelect.exporter}}" item-label-path="label"
+            label="ผู้ส่งออก" item-value-path="company_id" on-value-changed="getShowByExport">
+            <template>
+               [[item.label]] <b>[[item.value]]</b>
+            </template>
+          </gl-combo-box>
+        </div>
+      </div>
+
+      <!--</gl-form-panel-head>-->
+      <table class="gl-table-default">
+        <thead class="table-head">
+          <tr>
+            <th>{{localize('label_ref_no')}}</th>
+            <th>{{localize('label_quantity_ship')}}</th>
+            <th>{{localize('label_quantity_confirm')}}</th>
+            <th>{{localize('label_quantity_confirm_delivery')}}</th>
+            <th>#</th>
+          </tr>
+        </thead>
+        <tbody class="table-body">
+          <template is="dom-repeat" items="[[data.book]]">
+            <tr>
+              <td on-tap="bookingDetail" data="[[item]]">[[item.cl_no]]</td>
+              <td on-tap="bookingDetail" data="[[item]]">[[item.ship_lot_no_lastest]]</td>
+              <td on-tap="bookingDetail" data="[[item]]">[[formatNumberNoZero(item.cl_quantity_total)]]</td>
+              <td on-tap="bookingDetail" data="[[item]]">[[formatNumberNoZero(item.book_quantity)]] [[checkMInus(item.cl_quantity_tolerance)]]</td>
+              <td>
+                <paper-icon-button id="printShipment" class="crud" icon="print" raised on-tap="printVesel" data="[[item]]"></paper-icon-button>
+                <paper-tooltip for="printShipment" offset="0">Print Invoice</paper-tooltip>
+              </td>
+            </tr>
+          </template>
+          <template is="dom-if" if="[[_isHave(data.book)]]">
+            <tr>
+              <td colspan="5" style=" text-align: center;"> {{localize('text_no_data')}}</td>
+            </tr>
+          </template>
+        </tbody>
+      </table>
+    </gl-form-panel>
+
+  </template>
+  <script>
+    Polymer({
+      is: "list-of-confirm-ship",
+      behaviors: [
+        nylonBehavior,
+        nylonLocalizeBehavior,
+        g2gCongtroller,
+        FormatNumberBehavior
+      ],
+      properties: {
+        title: {
+          type: String,
+          value: 'แสดงปริมาณการส่งมอบ'
+        }
+      },
+      created: function () {
+        this.nylonLocalizeImport('/i18n-page1.json');
+      },
+      printVesel(e) {
+        window.open(window._config.reportServer+'/api/shipment/report4/' + e.currentTarget.data.cl_id, '1');
+        // console.log(e.currentTarget.data);
+      },
+      bookingDetail: function (e) {
+        // console.log(e.currentTarget.data);
+        //สั่งเปลีย่นหน่า
+        // this.fire('_change-component-bl',{detail:'list-of-booking-shm-det'})
+        //ส่งดาต้า
+        // console.log(e.currentTarget.data);
+        this.fire('_get-booking-detail', { detail: e.currentTarget.data })
+      },
+      checkMInus(cl_quantity_tolerance) {
+        var str = this.formatNumberNoZero(cl_quantity_tolerance);
+        // console.log(this.formatNumberNoZero(0));
+        if (cl_quantity_tolerance > 0) str = "+" + str;
+        return typeof cl_quantity_tolerance === "undefined" ? '' : "(" + str + ")";
+      },
+      getShowByExport(e) {
+        // console.log(e);
+        try {
+          this.set('title', 'แสดงปริมาณการส่งมอบ')
+          if (e.currentTarget.value != '') {
+            let exporter = this.g2gClone(this.dataForSelect.exporter)
+            // console.log(exporter);
+            let data = exporter.filter((exporterid) => exporterid.company_id == e.currentTarget.value)[0]
+            // console.log(data);
+            // this.set('title', 'แสดงปริมาณการส่งมอบ' )
+            this.fire('_get-fire-group-exporter', data.exporter_id)
+          } else {
+            this.fire('_get-fire-group-exporter', '')
+          }
+        } catch (e) {
+          // console.log(e);
+        }
+
+      }
+
+    });
+  </script>
+</dom-module>

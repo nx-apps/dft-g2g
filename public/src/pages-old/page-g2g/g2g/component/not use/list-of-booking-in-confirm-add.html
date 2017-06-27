@@ -1,0 +1,41 @@
+<dom-module id="list-of-booking-in-confirm-add">
+  <style include="iron-flex iron-flex-factors iron-flex-alignment gl-styles">
+    table.gl-table-default {
+      width: 100%;
+      border: 1px solid #ddd;
+      margin: 20px 0px 10px 0px;
+    }
+  </style>
+  <template>
+
+    <gl-form-panel>
+      <gl-grid-row width="{{getWidth}}">
+        <gl-grid-col width="[[getWidth]]" grid="[[500,4],[700,4]]"></gl-grid-col>
+        <gl-grid-col width="[[getWidth]]" grid="[[500,4],[700,4]]">
+          <gl-combo-box always-float-label label="เลือก" placeholder="กรุณาเลือก"></gl-combo-box>
+        </gl-grid-col>
+      </gl-grid-row>
+      <div class="horizontal center-justified layout">
+        <paper-button class="gl-btn-success" raised on-tap="createBookingConfirm">Create</paper-button>
+      </div>
+    </gl-form-panel>
+
+  </template>
+  <script>
+    Polymer({
+      is: "list-of-booking-in-confirm-add",
+      behaviors: [
+          nylonBehavior,
+          nylonLocalizeBehavior
+      ],
+      created:function(){
+          this.nylonLocalizeImport('/i18n-page1.json');
+      },
+      createBookingConfirm:function () {
+        // console.log(11);
+          this.fire('_change-component-bl',{detail:'list-of-booking-in-confirm'})
+      }
+
+    });
+  </script>
+</dom-module>
