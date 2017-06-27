@@ -1,3 +1,8 @@
+<link rel="import" href="./../../../../bower_components/gl-form/gl-form-panel.html">
+<link rel="import" href="./../../../../bower_components/gl-form/gl-combo-box.html">
+<link rel="import" href="./../../../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="./../../../../bower_components/paper-icon-button/paper-icon-button.html">
+
 
 <dom-module id="list-of-confirm-ship">
   <style include="gl-styles iron-flex iron-flex-factors iron-flex-alignment">
@@ -23,14 +28,10 @@
   <template>
 
     <gl-form-panel>
-
-
       <div class="title">
         [[title]]
       </div>
       <div class="horizontal layout wrap">
-        <!--<div class="flex-2">
-        </div>-->
         <div id="combox" class="flex">
           <gl-combo-box placeholder="ผู้ส่งออกทั้งหมด" items="{{dataForSelect.exporter}}" item-label-path="label"
             label="ผู้ส่งออก" item-value-path="company_id" on-value-changed="getShowByExport">
@@ -40,8 +41,7 @@
           </gl-combo-box>
         </div>
       </div>
-
-      <!--</gl-form-panel-head>-->
+      
       <table class="gl-table-default">
         <thead class="table-head">
           <tr>
@@ -79,58 +79,61 @@
     Polymer({
       is: "list-of-confirm-ship",
       behaviors: [
+        ReduxBehavior,
         nylonBehavior,
-        nylonLocalizeBehavior,
-        g2gCongtroller,
+        // nylonLocalizeBehavior,
+        // g2gCongtroller,
         FormatNumberBehavior
       ],
       properties: {
+        localize:{
+          statePath : 'i18n.g2g'
+        },
         title: {
           type: String,
           value: 'แสดงปริมาณการส่งมอบ'
         }
       },
-      created: function () {
-        this.nylonLocalizeImport('/i18n-page1.json');
-      },
-      printVesel(e) {
-        window.open(window._config.reportServer+'/api/shipment/report4/' + e.currentTarget.data.cl_id, '1');
-        // console.log(e.currentTarget.data);
-      },
-      bookingDetail: function (e) {
-        // console.log(e.currentTarget.data);
-        //สั่งเปลีย่นหน่า
-        // this.fire('_change-component-bl',{detail:'list-of-booking-shm-det'})
-        //ส่งดาต้า
-        // console.log(e.currentTarget.data);
-        this.fire('_get-booking-detail', { detail: e.currentTarget.data })
-      },
-      checkMInus(cl_quantity_tolerance) {
-        var str = this.formatNumberNoZero(cl_quantity_tolerance);
-        // console.log(this.formatNumberNoZero(0));
-        if (cl_quantity_tolerance > 0) str = "+" + str;
-        return typeof cl_quantity_tolerance === "undefined" ? '' : "(" + str + ")";
-      },
-      getShowByExport(e) {
-        // console.log(e);
-        try {
-          this.set('title', 'แสดงปริมาณการส่งมอบ')
-          if (e.currentTarget.value != '') {
-            let exporter = this.g2gClone(this.dataForSelect.exporter)
-            // console.log(exporter);
-            let data = exporter.filter((exporterid) => exporterid.company_id == e.currentTarget.value)[0]
-            // console.log(data);
-            // this.set('title', 'แสดงปริมาณการส่งมอบ' )
-            this.fire('_get-fire-group-exporter', data.exporter_id)
-          } else {
-            this.fire('_get-fire-group-exporter', '')
-          }
-        } catch (e) {
-          // console.log(e);
-        }
+      // created: function () {
+      //   this.nylonLocalizeImport('/i18n-page1.json');
+      // },
+      // printVesel(e) {
+      //   window.open(window._config.reportServer+'/api/shipment/report4/' + e.currentTarget.data.cl_id, '1');
+      //   // console.log(e.currentTarget.data);
+      // },
+      // bookingDetail: function (e) {
+      //   // console.log(e.currentTarget.data);
+      //   //สั่งเปลีย่นหน่า
+      //   // this.fire('_change-component-bl',{detail:'list-of-booking-shm-det'})
+      //   //ส่งดาต้า
+      //   // console.log(e.currentTarget.data);
+      //   this.fire('_get-booking-detail', { detail: e.currentTarget.data })
+      // },
+      // checkMInus(cl_quantity_tolerance) {
+      //   var str = this.formatNumberNoZero(cl_quantity_tolerance);
+      //   // console.log(this.formatNumberNoZero(0));
+      //   if (cl_quantity_tolerance > 0) str = "+" + str;
+      //   return typeof cl_quantity_tolerance === "undefined" ? '' : "(" + str + ")";
+      // },
+      // getShowByExport(e) {
+      //   // console.log(e);
+      //   try {
+      //     this.set('title', 'แสดงปริมาณการส่งมอบ')
+      //     if (e.currentTarget.value != '') {
+      //       let exporter = this.g2gClone(this.dataForSelect.exporter)
+      //       // console.log(exporter);
+      //       let data = exporter.filter((exporterid) => exporterid.company_id == e.currentTarget.value)[0]
+      //       // console.log(data);
+      //       // this.set('title', 'แสดงปริมาณการส่งมอบ' )
+      //       this.fire('_get-fire-group-exporter', data.exporter_id)
+      //     } else {
+      //       this.fire('_get-fire-group-exporter', '')
+      //     }
+      //   } catch (e) {
+      //     // console.log(e);
+      //   }
 
-      }
-
+      // }
     });
   </script>
 </dom-module>
