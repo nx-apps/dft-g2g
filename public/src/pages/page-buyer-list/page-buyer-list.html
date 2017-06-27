@@ -1,26 +1,76 @@
-
 <link rel="import" href="./../../layout/page-style.html">
+<link rel="import" href="components/buyer-list.html">
+<link rel="import" href="components/contract-detail-dash.html">
+<link rel="import" href="./../../../bower_components/nylon-panel/nylon-panel-right.html">
+<link rel="import" href="./../../../bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="./../../../bower_components/paper-tooltip/paper-tooltip.html">
 
 <dom-module id="page-buyer-list">
     <template>
         <style include="page-style">
              :host {
-                display: block;
+                --paper-fab-background: var(--paper-light-blue-500);
+                --paper-fab-keyboard-focus-background: var(--paper-light-blue-900);
+            }
+            
+            * {
+                font-family: 'CSChatThaiUI', sans-serif;
+                -webkit-font-smoothing: antialiased;
+            }
+            
+            paper-fab {
+                position: fixed;
+                right: 25px;
+                bottom: 25px;
+                color: #fff;
+            }
+            
+            nylon-panel-right {
+                --app-toolbar-style: {
+                    background-color: #FF5000;
+                }
             }
         </style>
-        <div class="material">
-            page-buyer-list ddd
+        <div class="xcontainer ">
+            <template is="dom-repeat" items={{countryList}} index-as=index>
+                <buyer-list data="[[item]]"></buyer-list>
+            </template>
+        </div>
+        <nylon-panel-right title="{{titlePanelRight}}" id="drawerRight" set-width="95%">
+            <div class="rightdata" align="left">
+                <contract-detail-dash data-for-select="[[dataForSelected.dataForContract]]" is-view-seleted="[[!isViewSeleted]]" is-edit="[[!isEdit]]"
+                    is-input-disabled="[[!isInputDisabled]]"></contract-detail-dash>
+            </div>
+        </nylon-panel-right>
+        <div class="btnFab">
+            <paper-fab icon="add" title="เพิ่มประเทศ" id="addCountry" on-tap="addCountry"></paper-fab>
+            <paper-tooltip for="addCountry" offset="0">เพิ่มประเทศ</paper-tooltip>
         </div>
 
     </template>
     <script>
         Polymer({
             is: 'page-buyer-list',
-            behaviors: [ReduxBehavior, nylonBehavior, i18nAction,],
+            behaviors: [ReduxBehavior, nylonBehavior, i18nAction],
             properties: {
-                layerContent: {
+                countryList: {
+                    type: Object,
+                    value: ''
+                },
+                titlePanelRight: {
                     type: String,
-                    value: "detailRegExporter"
+                    value: 'การซื้อขายข้าวระหว่างประเทศ'
+                },
+                checkRenderPage: {
+                    type: Object,
+                    value:
+                    {
+                        contractDetail: false,
+                    }
+                },
+                dataForSelected: {
+                    type: Object,
+                    value: { dataForContract: {} }
                 },
             },
             nylonPageActive: function () {

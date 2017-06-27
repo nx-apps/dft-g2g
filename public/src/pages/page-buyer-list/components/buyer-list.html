@@ -1,0 +1,133 @@
+<link rel="import" href="../../../../bower_components/chart-elements/chart-bar.html">
+<link rel="import" href="./../../../../bower_components/paper-material/paper-material.html">
+<link rel="import" href="./../../../../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="./../../../../bower_components/paper-button/paper-button.html">
+
+<dom-module id="buyer-list">
+    <template>
+        <style include="iron-flex iron-flex-factors iron-flex-alignment gl-styles page-style">
+             :host {
+                display: block;
+            }
+            
+            .tree {
+                width: 495px;
+                margin: 15px;
+            }
+            
+            iron-icon.iconNextRadio {
+                --iron-icon-height: 16px;
+                --iron-icon-width: 16px;
+                --iron-icon-stroke-color: var(--gl-gray-lighter-color);
+                --iron-icon-fill-color: var(--gl-gray-color);
+                margin: 16px 0px 16px 0px;
+            }
+            
+            iron-icon {
+                cursor: pointer;
+            }
+            
+            .title-head {
+                font-size: var(--font-size-h4);
+            }
+        </style>
+        <div class="horizontal layout center-justified  wrap">
+            <!--<template is="dom-repeat" items={{data}} as=item index-as=index>-->
+            <paper-material elevation="1" class="paper-meterial tree margin-meterial">
+
+
+                <div class="head-meterial">
+                    [[data.buyer_name]] ([[data.country_name_th]])
+                </div>
+                <div class="content-meterial">
+                    <div class="horizontal center-justified layout title-head">
+                        [[title]]
+                    </div>
+
+                    <div class="horizontal layout center">
+                        <iron-icon class="chartPiePrevious" icon="chevron-left" item-icon on-tap="chartPiePrevious"></iron-icon>
+
+                        <iron-pages selected="{{page}}">
+                            <chart-bar class="chartBar" data="[[getChartQuantity(data.contract)]]" style="width: 430px; height: auto;"></chart-bar>
+                            <chart-bar class="chartBar" data="[[getChartValue(data.contract)]]" style="width: 430px; height: auto;"></chart-bar>
+                        </iron-pages>
+
+                        <iron-icon class="chartPieNext" icon="chevron-right" item-icon on-tap="chartPieNext"></iron-icon>
+                    </div>
+                </div>
+                <div class="layout horizontal center-justified">
+                    <iron-icon icon="radio-button-checked" item-icon class="iconNextRadio" id="chartQuantity" on-tap="chartPiePrevious"></iron-icon>
+                    <iron-icon icon="radio-button-unchecked" item-icon class="iconNextRadio" id="chartValue" on-tap="chartPieNext"></iron-icon>
+                </div>
+                <div class="foot-meterial ">
+                    <div class="horizontal end-justified layout ">
+                        <paper-button raised class="" data="[[data]]" on-tap="getContractList" class="gl-bg-primary">ดูข้อมูล</paper-button>
+                    </div>
+                </div>
+
+            </paper-material>
+            <!--</template>-->
+        </div>
+    </template>
+    <script>
+        Polymer({
+            is: 'buyer-list',
+            properties: {
+                page: {
+                    type: Number,
+                    value: 0
+                },
+                title: {
+                    type: String,
+                    value: 'ปริมาณการส่งมอบ (ตัน)'
+                }
+            },
+            // getContractList(e) {
+            //     // console.log(e.currentTarget.data);
+            //     this.fire('_getContractList', e.currentTarget.data)
+            // },
+            // getChartQuantity(quantity) {
+            //     // console.log(quantity);
+            //     return {
+            //         labels: quantity.map((ed) => ed.contract_year),
+                    
+            //         datasets: [
+            //             {
+            //                 label: "ปริมาณการส่งมอบ (ตัน)",
+            //                 backgroundColor: "#003BAE",
+            //                 borderColor: "#96b1d2",
+            //                 borderWidth: 1,
+            //                 data: quantity.map((ed) => ed.shipment)
+            //             }
+            //         ]
+            //     }
+            // },
+            // getChartValue(value) {
+            //     return {
+            //         labels: value.map((ed) => ed.contract_year),
+            //         datasets: [
+            //             {
+            //                 label: "มูลค่าการส่งออก (บาท)",
+            //                 backgroundColor: "#ff4500",
+            //                 borderColor: "#ff9973",
+            //                 borderWidth: 1,
+            //                 data: value.map((ed) => ed.payment)
+            //             }
+            //         ]
+            //     }
+            // },
+            // chartPiePrevious(e) {
+            //     this.set('page', 0)
+            //     this.set('title', 'ปริมาณการส่งมอบ (ตัน)')
+            //     this.$$('#chartQuantity').icon = 'radio-button-checked'
+            //     this.$$('#chartValue').icon = 'radio-button-unchecked'
+            // },
+            // chartPieNext(e) {
+            //     this.set('page', 1)
+            //     this.set('title', 'มูลค่าการส่งออก (บาท)')
+            //     this.$$('#chartQuantity').icon = 'radio-button-unchecked'
+            //     this.$$('#chartValue').icon = 'radio-button-checked'
+            // }
+        });
+    </script>
+</dom-module>
