@@ -13,7 +13,7 @@ exports.getById = function (req, res) {
                                     shipment_detail: r.db('g2g2').table('shipment_detail')
                                         .getAll(m('book_id'), { index: 'book_id' })
                                         .coerceTo('array')
-                                        .pluck("id", "book_id", "package_id", "exporter_id", "shm_det_quantity", "type_rice_id", "price_per_ton")
+                                        .pluck("id", "book_id", "package_id", "exporter_id", "shm_det_quantity", "type_rice_id", "price_d")
                                         .eqJoin("book_id", r.db('g2g2').table("book")).pluck('left', { right: ['cl_id'] }).zip()
                                         .eqJoin("cl_id", r.db('g2g2').table("confirm_letter")).without({ right: ['id', 'date_created', 'date_updated', 'creater', 'updater', "cl_date", "cl_quality"] }).zip()
                                         .eqJoin("package_id", r.db('common').table("package")).without({ right: ["id", "date_created", "date_updated", "creater", "updater"] }).zip()
@@ -22,14 +22,14 @@ exports.getById = function (req, res) {
                                         .merge(function (m1) {
                                             return {
                                                 shm_det_id: m1('id'),
-                                                // price_per_ton: m1('cl_type_rice')
+                                                // price_d: m1('cl_type_rice')
                                                 //     .filter(function (tb) {
                                                 //         return tb('type_rice_id').eq(m1('type_rice_id'))
                                                 //     }).getField("package")(0)
                                                 //     .filter(function (f) {
                                                 //         return f('package_id').eq(m1('package_id'))
                                                 //     })(0)
-                                                //     .pluck('price_per_ton')
+                                                //     .pluck('price_d')
                                                 //     .values()(0),
                                                 quantity_tons: m1('shm_det_quantity'),
                                                 quantity_bags: m1('shm_det_quantity').mul(1000).div(m1('package_kg_per_bag'))
@@ -45,7 +45,7 @@ exports.getById = function (req, res) {
                                         })
                                         .merge(function (m1) {
                                             return {
-                                                amount_usd: m1('price_per_ton').mul(m1('weight_net'))
+                                                amount_usd: m1('price_d').mul(m1('weight_net'))
                                             }
                                         })
                                         .without('id', 'cl_type_rice', 'shm_det_quantity')

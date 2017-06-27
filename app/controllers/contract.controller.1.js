@@ -245,11 +245,11 @@ exports.buyerId = function (req, res) {
                                 }),
                             cl_quantity_total: cl('cl_type_rice').sum('type_rice_quantity'),
                             cl_status: cl('cl_status'),
-                            ship_lot_no_lastest: r.db('g2g2').table('book')
+                            ship_lot_lastest: r.db('g2g2').table('book')
                                 .getAll(cl('id'), { index: 'cl_id' })
-                                .orderBy(r.desc('ship_lot_no'))
+                                .orderBy(r.desc('ship_lot'))
                                 .limit(1)
-                                .getField('ship_lot_no')
+                                .getField('ship_lot')
                                 .reduce(function (l, r) {
                                     return l.add(r)
                                 }).default(0),
@@ -299,7 +299,7 @@ exports.buyerId = function (req, res) {
                 //             book_status_name: r.branch(book('book_status').eq(true), 'อนุมัติ', 'ยังไม่อนุมัติ')
                 //         }
                 //     })
-                //     .orderBy('ship_lot_no')
+                //     .orderBy('ship_lot')
                 //     .without('id', "tags")
                 //     .coerceTo('array')
                 //     .eqJoin("cl_id", r.db('g2g2').table("confirm_letter")).without({ right: ["id", "date_created", "date_updated", "cl_type_rice", "cl_quality", "tags"] }).zip()

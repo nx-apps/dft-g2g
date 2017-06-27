@@ -14,9 +14,9 @@ exports.getByContractId = function (req, res) {
                 invoice_id: det_map('group'),
                 payment_detail: det_map('reduction')
                     .eqJoin('shm_det_id', r.db('g2g2').table('shipment_detail'))
-                    .pluck("left", { right: ['book_id', 'type_rice_id', 'package_id', 'price_per_ton', 'shm_det_quantity'] }).zip()
+                    .pluck("left", { right: ['book_id', 'type_rice_id', 'package_id', 'price_d', 'shm_det_quantity'] }).zip()
                     .eqJoin('book_id', r.db('g2g2').table('book'))
-                    .pluck("left", { right: ['ship', 'ship_lot_no', 'cl_id'] }).zip()
+                    .pluck("left", { right: ['ship', 'ship_lot', 'cl_id'] }).zip()
                     .eqJoin('cl_id', r.db('g2g2').table('confirm_letter'))
                     .pluck("left", { right: ['contract_id'] }).zip()
                     .eqJoin('type_rice_id', r.db('common').table('type_rice'))
@@ -27,13 +27,13 @@ exports.getByContractId = function (req, res) {
                     .pluck("left", { right: ['rate_tt', 'rate_bank', 'fee_date_receipt', 'fee_id'] }).zip()
                     .merge(fee_det_merge => {
                         return {
-                            amount_usd: fee_det_merge('shm_det_quantity').mul(fee_det_merge('price_per_ton')),
-                            amount_bath: fee_det_merge('shm_det_quantity').mul(fee_det_merge('price_per_ton')).mul(fee_det_merge('rate_bank')),
+                            amount_usd: fee_det_merge('shm_det_quantity').mul(fee_det_merge('price_d')),
+                            amount_bath: fee_det_merge('shm_det_quantity').mul(fee_det_merge('price_d')).mul(fee_det_merge('rate_bank')),
                             amount_bath_fee: fee_det_merge('pay_amount').mul(100).div(99),
                             fee_date_receipt: fee_det_merge('fee_date_receipt').split('T')(0),
                             ship: fee_det_merge('ship').map(ship_map => {
                                 return r.db('common').table('ship').get(ship_map('ship_id')).getField('ship_name')
-                                    .add(' V.', ship_map('ship_voy_no'))
+                                    .add(' V.', ship_map('ship_voy'))
 
                             }).reduce((left, right) => {
                                 return left.add(' / ', right)

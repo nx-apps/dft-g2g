@@ -51,7 +51,7 @@
                                 "package": {
                                     "type": "object"
                                 },
-                                "price_per_ton": {
+                                "price_d": {
                                     "type": "number"
                                 }
                             }
