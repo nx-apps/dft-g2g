@@ -33,7 +33,7 @@ export const g2g = {
         text_marks_no:"Marks & Nos.",
         text_quantity:"จำนวน",
         text_descriptions:"คำอธิบาย",
-        text_amount":"จำนวนเงิน",
+        text_amount:"จำนวนเงิน",
         text_bags:"BAGS",
         text_order_no:"ครั้งที่ ",
         text_check_box:"เลือก ",
