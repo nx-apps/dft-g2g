@@ -102,7 +102,7 @@
         <gl-grid-row>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,12]]">
             <template is="dom-repeat" items="{{data.detail}}">
-              <gl-form-textarea disabled value="[[item.package_amount]] BAGS OF [[_obSetUpper(item.hamonize.hamonize_en)]] BROKENS, [[item.project_en]] CURRENT NEW CROP, DOUBLE POLISHED AND SORTEXED QUALITY." placeholder="{{localize.text_your_detail}}"
+              <gl-form-textarea disabled value="[[formatNumberNoZero(item.package_amount)]] BAGS OF [[_obSetUpper(item.hamonize.hamonize_en)]] BROKENS, [[item.project_en]] CURRENT NEW CROP, DOUBLE POLISHED AND SORTEXED QUALITY." placeholder="{{localize.text_your_detail}}"
                 label="{{localize.label_invoice_of}} :" error-message="{{localize.text_enter_your_detail}}" auto-validate
                 required></gl-form-textarea>
             </template>
@@ -110,22 +110,20 @@
         </gl-grid-row>
 
         <gl-grid-row>
-
-          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,8]]">
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,5]]">
             <gl-form-input disabled value="{{data.ship}}" label="{{localize.label_shippped_per_invoice}} : [[_ObcountIndex(index)]]"></gl-form-input>
           </gl-grid-col>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
             <gl-form-input disabled value="[[_obSetUpper(data.load_port.port_name)]],[[_obSetUpper(data.load_port.country_name_en)]]" label="{{localize.label_port_of_loading_invoice}} :"></gl-form-input>
           </gl-grid-col>
-          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+        </gl-grid-row>
+
+        <gl-grid-row>
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,5]]">
             <gl-form-textarea disabled value="[[_obSetUpper(data.deli_port.port_name)]],[[_obSetUpper(data.deli_port.country_fullname_en)]]" label="{{localize.label_port_of_discharge_invoice}}:"></gl-form-label-textarea>
           </gl-grid-col>
-
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
             <gl-form-textarea disabled value="[[_obSetUpper(data.dest_port.port_name)]],[[_obSetUpper(data.dest_port.country_fullname_en)]]" label="{{localize.label_place_of_delivery_invoice}} :"></gl-form-textarea>
-          </gl-grid-col>
-          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-            <gl-form-input disabled value="[[data.bl_no]]" label="{{localize.label_bill_of_lading}}:"></gl-form-input>
           </gl-grid-col>
         </gl-grid-row>
 
@@ -143,6 +141,17 @@
           </gl-grid-col>
         </gl-grid-row>
         <br>
+
+        <gl-grid-row>
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,12]]">
+            <div class="horizontal layout">
+              <div style="padding: 10px 0px 0px 10px;">{{localize.label_bill_of_lading}} : </div>
+              <div style="padding-left: 10px;"><gl-form-input no-label-float disabled value="[[data.bl_no]]"></gl-form-input></div>
+              <div style="padding: 10px 0px 0px 150px;">{{localize.label_dated}} : </div>
+              <div style="padding-left: 10px;"><gl-form-input type="date" no-label-float disabled value="[[data.invoice_date]]"></gl-form-input></div>
+            </div>
+          </gl-grid-col>
+        </gl-grid-row>
 
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,12]]">
           <table class="gl-table-default">
@@ -258,12 +267,9 @@
           statePath : 'i18n.g2g'
         },
         data:{
-          statePath : 'book.data'
+          statePath : 'book.data',
+          observer : '_setDate'
         },
-        // nameRice: {
-        //   type: String,
-        //   value: ''
-        // },
         printReport: {
           type: Object,
           value: { typeFile: 'pdf' }
@@ -280,6 +286,10 @@
             ]
           }
         }
+      },
+      _setDate:function(data){
+        var dateNow = new Date().toISOString().split('T')[0];
+        this.set('data.invoice_date', dateNow);
       },
       // observers: [
       //   '_obCheckDataForWrite(data)',
