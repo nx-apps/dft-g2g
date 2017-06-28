@@ -1,20 +1,161 @@
 {
     "name": "g2g.fee",
     "properties": {
-        "id": {
-            "type": "string"
-        },
-        "fee_no": {
-            "type": "number"
-        },
-        "fee_status": {
-            "type": "boolean"
+        "book": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "book_id": {
+                        "type": "string"
+                    },
+                    "cheque_status": {
+                        "type": "boolean"
+                    },
+                    "cl_id": {
+                        "type": "string"
+                    },
+                    "cl_no": {
+                        "type": "number"
+                    },
+                    "contract_id": {
+                        "type": "string"
+                    },
+                    "detail": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "company": {
+                                    "type": "object"
+                                },
+                                "detail_id": {
+                                    "type": "string"
+                                },
+                                "net_weight": {
+                                    "type": "number"
+                                },
+                                "price_d": {
+                                    "type": "number"
+                                },
+                                "value_b": {
+                                    "type": "number"
+                                },
+                                "value_bal_b": {
+                                    "type": "number"
+                                },
+                                "value_d": {
+                                    "type": "number"
+                                },
+                                "value_fee_b": {
+                                    "type": "number"
+                                },
+                                "value_final_b": {
+                                    "type": "number"
+                                },
+                                "value_tax_b": {
+                                    "type": "number"
+                                }
+                            }
+                        }
+                    },
+                    "fee_ex_d": {
+                        "type": "number"
+                    },
+                    "fee_in_b": {
+                        "type": "number"
+                    },
+                    "invoice_date": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "invoice_no": {
+                        "type": "string"
+                    },
+                    "net_weight": {
+                        "type": "number"
+                    },
+                    "value_b": {
+                        "type": "number"
+                    },
+                    "value_bal_b": {
+                        "type": "number"
+                    },
+                    "value_d": {
+                        "type": "number"
+                    },
+                    "value_fee_b": {
+                        "type": "number"
+                    },
+                    "value_final_b": {
+                        "type": "number"
+                    },
+                    "value_tax_b": {
+                        "type": "number"
+                    }
+                }
+            }
         },
         "cl_id": {
             "type": "string"
         },
+        "cl_no": {
+            "type": "number"
+        },
         "contract_id": {
             "type": "string"
+        },
+        "fee_date": {
+            "type": "string",
+            "format": "date-time"
+        },
+        "fee_ex_d": {
+            "type": "number"
+        },
+        "fee_in_b": {
+            "type": "number"
+        },
+        "fee_no": {
+            "type": "number"
+        },
+        "fee_round": {
+            "type": "number"
+        },
+        "fin_status": {
+            "type": "boolean"
+        },
+        "id": {
+            "type": "string"
+        },
+        "net_weight": {
+            "type": "number"
+        },
+        "rate_bank_b": {
+            "type": "number"
+        },
+        "rate_tt_b": {
+            "type": "number"
+        },
+        "rice_status": {
+            "type": "boolean"
+        },
+        "value_b": {
+            "type": "number"
+        },
+        "value_bal_b": {
+            "type": "number"
+        },
+        "value_d": {
+            "type": "number"
+        },
+        "value_fee_b": {
+            "type": "number"
+        },
+        "value_final_b": {
+            "type": "number"
+        },
+        "value_tax_b": {
+            "type": "number"
         }
     }
 }

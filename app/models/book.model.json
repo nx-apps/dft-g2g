@@ -125,6 +125,9 @@
         },
         "made_out_to": {
             "type": "string"
+        },
+        "fee_status": {
+            "type": "boolean"
         }
     }
 }
