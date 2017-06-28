@@ -8,6 +8,7 @@
 <link rel="import" href="./../../../../bower_components/gl-form/gl-form-panel-footer.html">
 <link rel="import" href="./../../../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="./../../../../bower_components/paper-checkbox/paper-checkbox.html">
+<link rel="import" href="./../../components/validateFormBehaviors.html">
 <link rel="import" href="./../../components/format-number-behavior.html">
 <link rel="import" href="./../../components/g2g-logic-behavior.html">
 
@@ -280,7 +281,7 @@
     Polymer({
       is: "contract-detail",
       behaviors: [
-        ReduxBehavior, FormatNumberBehavior, nylonBehavior, g2gLogicBehavior
+        ReduxBehavior, FormatNumberBehavior, nylonBehavior, g2gLogicBehavior, ValidateFormBehavior
       ],
       properties: {
         localize: {
@@ -347,13 +348,12 @@
           let contract_hamonize = data.contract_hamonize
           // let hamonize = hamonizeList
           if (data.id === undefined)
-            status = false
-          console.log(status);
+              status = false
           for (var index = 0; index < contract_hamonize.length; index++) {
             for (var index2 = 0; index2 < hamonizeList.length; index2++) {
               for (var index3 = 0; index3 < hamonizeList[index2].sub.length; index3++) {
                 if (contract_hamonize[index].hamonize_id === hamonizeList[index2].sub[index3].sub_id) {
-                  console.log(status);
+                  // console.log(status);
                   this.set('hamonizeList.' + index2 + '.sub.' + index3 + '.check', status)
                   // console.log(contract_hamonize[index].hamonize_id === hamonizeList[index2].sub[index3].sub_id);
                   break
@@ -417,7 +417,28 @@
       _getBuyerAddress: function (e) {
         if (e.detail.value) {
           // console.log(e.detail.value);
-          this.set('dataShow.obj', e.detail.value)
+          let data = e.detail.value
+          let buyer = {
+            buyer: {
+              buyer_address: data.buyer_address,
+              buyer_email: data.buyer_email,
+              buyer_fax: data.buyer_fax,
+              buyer_masks: data.buyer_masks,
+              buyer_name: data.buyer_name,
+              buyer_tel: data.buyer_tel,
+              country_id: data.country_id
+            },
+            country: {
+              continent_id: data.continent_id,
+              country_code2: data.country_code2,
+              country_code3: data.country_code3,
+              country_fullname_en: data.country_fullname_en,
+              country_fullname_th: data.country_fullname_th,
+              country_name_en: data.country_name_en,
+              country_name_th: data.country_name_th
+            },
+          }
+          this.set('dataShow.obj', buyer)
           this.set('dataShow.buyer_fax', e.detail.value.buyer_fax)
           this.set('dataShow.buyerAddress', e.detail.value.buyer_address)
 
@@ -492,14 +513,45 @@
         }
         return hamonizeArr
       },
+      _resiveDataContract: function () {
+        return new Promise((res, rej) => {
+          let dataResive = this.data
+          dataResive.contract_hamonize = this._getHamonize()
+          dataResive.buyer = this.dataShow.obj.buyer
+          dataResive.country = this.dataShow.obj.country
+          dataResive.country_id = this.dataShow.obj.buyer.country_id
+          dataResive.contract_date = new Date(dataResive.contract_date);
+          res(dataResive)
+        })
+      },
       insertContract: function () {
-        this.data.contract_hamonize = this._getHamonize()
-        this.data.buyer = this.dataShow.obj
-        console.log(this.data);
-        // console.log(this.dataShow.obj);
-        // console.log(this._getHamonize());
-        // this.set('data.tags', [])
-        // this.push('data.tags', this.data.country_id);
+        // console.log(this.validateForm('.required'));
+        if (this.validateForm('.required')) {
+          this._resiveDataContract().then((res) => {
+            this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
+            this.dispatchAction('POST_CONTRACT', res)
+              .then((response)=> {
+                this.dispatchAction('GET_CONTRACT_OF_BUYER', res.buyer_id);
+                this.fire('toast', {
+                  status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
+                  callback: () => {
+                    this.queryFrom('.required').map((el) => { el.reset(); });
+                    this.fire('close-drawer')
+                  }
+                });
+              })
+              .catch((error)=> {
+                console.log(error);
+              });
+
+          })
+        } else {
+          this.fire('toast', {
+            status: 'connectError', text: 'กรุณากรอกข้อมูลให้ครบทุกช่อง', //คำสั่งสำหรับเปิด toast error
+            callback: function () {
+            }
+          })
+        }
         // this._clearnData(this.data, (data) => {
         //   this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
         //   data.contract_status = false;

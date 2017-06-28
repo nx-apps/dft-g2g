@@ -148,15 +148,9 @@
       if (parts.length == 2) return parts.pop().split(";").shift();
     },
     _getUrl: function () {
-      // this.set('dataForSelect.nameContract', this._getCookie("contractName"));
-      // this.set('dataForSelect.contract_id', this._getCookie("contract_id"));
       return this._getCookie("contract_id");
     },
     getDateg2g: function (date, callback) {
-      // ex
-      // this.getDateg2g(dateUn,(date)=>{
-      //   //   console.log('date',date);
-      // });
       // console.log('gggg=',date);
       if (date == undefined || date == 'undefined') {
         let date = new Date;
@@ -215,17 +209,6 @@
       }
     },
     changeString2Num: function (ob, param) {
-      //console.log(typeof ob.value);
-      // if(typeof ob.value == "string"){
-      //   console.log(numeral().unformat(ob.value));
-      //   var pathChange = ob.path.split(".");
-      //   if(pathChange.length == 2){
-      //       if(pathChange[1]==param){
-      //         ob.base[param]=parseFloat(ob.value);
-      //         // console.log(typeof ob.value);
-      //       }
-      //   }
-      // }
       if (typeof ob.value == "string") {
         var pathChange = ob.path.split(".");
         // undefined
@@ -237,20 +220,20 @@
         }
       }
     },
-    change2MsSql: function(data) {
+    change2MsSql: function (data) {
       //ฟั่งชั่นแปลงค่า date จาก 2017-01-01 เป็น 2017/01/01 เพื่อให่เวลาเป็น gmt+7(แบบเก่า+0)
-      let newdata 
+      let newdata
       // Object.getOwnPropertyNames(data).map((date) => {
-        // console.log(date.indexOf("date"));
-        // if (date.indexOf("date") > -1) {
-          newdata = data.replace("-", "/").replace("-", "/");
+      // console.log(date.indexOf("date"));
+      // if (date.indexOf("date") > -1) {
+      newdata = data.replace("-", "/").replace("-", "/");
       //   } else {
       //     newdata[date] = data[date];
       //   }
       // })
       return newdata
     },
-    genUrl: function(url) {
+    genUrl: function (url) {
       let data = new String()
       let url_length = Object.getOwnPropertyNames(url).length
       let count = new Number()
@@ -264,7 +247,24 @@
       }
       // console.log(data);
       return data
-    }
+    },
+    changeTime: function (data, timeZone) {
+      let time
+      data.map((item, index) => {
+        for (var prop in item) {
+          if (prop.indexOf('date') >= 0 && prop !== 'updater') {
+            time = new Date(item[prop])
+            // console.log(data[index][prop]);
+            data[index][prop] = new Date(time.setHours(time.getHours() + timeZone)).toISOString()
+            // console.log(new Date(data[index][prop]).toISOString());
+          }
+          // console.log(typeof item[prop] === 'object');
+          if (typeof item[prop] === 'object')
+            this.changeTime(item[prop], timeZone)
+        }
+      })
+      return data
+    },
   }
 
 </script>
