@@ -14,10 +14,22 @@ exports.getByContractId = function (req, res) {
 }
 exports.getByBookId = function (req, res) {
     req.r.table('book').get(req.query.id)
-        .pluck('id', 'ship', 'load_port', 'dest_port', 'deli_port', 'bl_no', 'contract_id')
+        .pluck('id', 'cl_id', 'ship', 'load_port', 'dest_port', 'deli_port', 'bl_no', 'contract_id')
         .merge(function (m) {
+            var detail = r.table('book_detail').getAll(req.query.id, { index: 'book_id' })
+                .coerceTo('array')
+                .pluck('package_amount', 'package', 'price_d', 'gross_weight', 'tare_weight', 'net_weight', 'value_d',
+                'hamonize', 'hamonize_id', 'project_en');
             return {
                 buyer: r.table('contract').get(m('contract_id')).getField('buyer'),
+                invoice_of: detail.group('hamonize_id').ungroup()
+                    .map(function (m2) {
+                        return {
+                            package_amount: m2('reduction').sum('package_amount'),
+                            hamonize_en: m2('reduction')(0)('hamonize')('hamonize_en'),
+                            project_en: m2('reduction')(0)('project_en')
+                        }
+                    }),
                 ship: m('ship')
                     .map(function (map) {
                         return map('ship_name').add(' V.', map('ship_voy'))
@@ -25,9 +37,13 @@ exports.getByBookId = function (req, res) {
                     .reduce(function (l, r) {
                         return l.add(r)
                     }),
-                detail: r.table('book_detail').getAll(req.query.id, { index: 'book_id' })
-                    .coerceTo('array')
-                    .pluck('package_amount', 'package', 'price_d', 'gross_weight', 'tare_weight', 'net_weight', 'value_d')
+                detail: detail,
+                incoterms: r.table('confirm_letter').get(m('cl_id')).getField('incoterms'),
+                package_amount: detail.sum('package_amount'),
+                gross_weight: detail.sum('gross_weight'),
+                tare_weight: detail.sum('tare_weight'),
+                net_weight: detail.sum('net_weight'),
+                value_d: detail.sum('value_d')
             }
         })
         .run()
