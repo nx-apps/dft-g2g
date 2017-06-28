@@ -64,9 +64,10 @@ export function contractAction(store) {
             axios.get('./contract?id=' + contractId)
                 .then(function (response) {
                     // console.log(response);
+                    cutDataInObject(response.data, [ 'contract_date'])
                     store.dispatch({ 
                         type: 'GET_CONTRACT',
-                        payload: cutDataInObject(response.data, ['date_created', 'date_updated', 'contract_date'])
+                        payload: response.data
                     })
                 })
                 .catch(function (error) {
@@ -76,10 +77,24 @@ export function contractAction(store) {
             // https://localhost:3001/api/contract/list
         },
         // END GET
+        // POST
         POST_CONTRACT: function (data) {
             return axios.post('./contract/insert', data)
             // https://localhost:3001/api/contract/list
         },
+        // END POST
+        // PUT
+        PUT_CONTRACT: function (data) {
+            return axios.put('./contract/update', data)
+            // https://localhost:3001/api/contract/list
+        },
+        // END PUT
+        // DELETE
+        DELETE_CONTRACT: function (contractId) {
+            return axios.delete('./contract/delete/'+contractId)
+            // https://localhost:3001/api/contract/list
+        },
+        // END DELETE
         // CLEAR
         CLEAR_CONTRACT: function (contractId, ) {
             let data = { contract_status: false, contract_weight: 0, contract_hamonize: [] }

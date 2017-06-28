@@ -107,7 +107,8 @@ exports.update = function (req, res) {
         if (valid) {
             var obj = Object.assign(req.body, {
                 date_updated: r.now().inTimezone('+07'),
-                updater: 'admin'
+                updater: 'admin',
+                contract_date: r.ISO8601(req.body.contract_date).inTimezone('+07')
             });
             r.table("contract")
                 .get(req.body.id)

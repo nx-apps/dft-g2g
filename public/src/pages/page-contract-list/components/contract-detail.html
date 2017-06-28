@@ -122,9 +122,14 @@
   </style>
   <template>
     <gl-form-panel set-padding="10px 20px 10px 20px" set-border="1px">
-      <template is="dom-if" if="[[_isViewing(isViewSeleted)]]">
-        <icon-button-management is-input-disabled="[[!commonState.btnDisabled]]"></icon-button-management>
-      </template>
+      <!--<template is="dom-if" if="[[_isViewing(isViewSeleted)]]">-->
+      <div class="horizontal end-justified layout">
+        <paper-icon-button id="edit" class="crud" icon="create" raised on-tap="editContract" disabled="[[!commonState.btnDisabled]]"></paper-icon-button>
+        <paper-tooltip for="edit" offset="0">แก้ไข</paper-tooltip>
+        <paper-icon-button id="delete" class="crud" icon="delete" raised on-tap="deleteContract" disabled="[[!commonState.btnDisabled]]"></paper-icon-button>
+        <paper-tooltip for="delete" offset="0">ลบ</paper-tooltip>
+      </div>
+      <!--</template>-->
       <gl-grid-row width="{{getWidth}}">
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,9]]">
           <gl-form-input required class="required" disabled="[[_checkArrayTrue(commonState.btnDisabled,data.contract_status)]]" error-message="{{localize.label_error_contract}}"
@@ -240,11 +245,17 @@
             <template is="dom-repeat" items={{hamonizeList}} index-as="indexroot">
               <div class="item">
                 <paper-checkbox checked="{{item.check}}" id="{{indexroot}}" on-tap="getCheckChild" disabled="[[commonState.btnDisabled]]">
-                  {{item.check}}|| [[item.name_th]] || [[item.value]]</paper-checkbox>
+                  <!--{{item.check}}||-->
+                   [[item.name_th]] || 
+                   [[item.value]]
+                   </paper-checkbox>
                 <template is="dom-repeat" items={{item.sub}} as="subChild">
                   <div class="sub-item">
                     <paper-checkbox id="{{indexroot}}" checked="{{subChild.check}}" on-tap="getSelect" disabled="[[commonState.btnDisabled]]">
-                      {{subChild.check}}|| [[subChild.hamonize_th]] || [[subChild.hamonize_year]] || [[item.value]]</paper-checkbox>
+                      <!--{{subChild.check}}|| -->
+                      [[subChild.hamonize_th]] 
+                      || [[subChild.hamonize_year]] 
+                      <!--|| [[item.value]]</paper-checkbox>-->
                   </div>
                 </template>
               </div>
@@ -331,8 +342,6 @@
       },
       observers: [
         '_checkHamonize(data,hamonizeList)'
-        // '_changeDataContract(data.contract_date)',
-        // '_getBuyer(dataForSelect.buyer)',
       ],
       checkContract: function (data) {
         if (data.id === undefined) {
@@ -348,7 +357,7 @@
           let contract_hamonize = data.contract_hamonize
           // let hamonize = hamonizeList
           if (data.id === undefined)
-              status = false
+            status = false
           for (var index = 0; index < contract_hamonize.length; index++) {
             for (var index2 = 0; index2 < hamonizeList.length; index2++) {
               for (var index3 = 0; index3 < hamonizeList[index2].sub.length; index3++) {
@@ -378,42 +387,13 @@
         let checkFalse = this.hamonizeList[indexRoot].sub.find((item) => item.check !== true)
         this.set('hamonizeList.' + indexRoot + '.check', checkFalse === undefined)
       },
-      // listeners: {
-      //   'edit-input': 'editInput',
-      //   'delete-input': 'deleteContract'
-      // },
-      // created: function () {
-      //   this.nylonLocalizeImport('/i18n-page1.json');
-      // },
-      // attached: function () {
-      //   this._typeRiceContract();
-      // },
-      // _getCookie: function (name) {
-      //   var value = "; " + document.cookie;
-      //   var parts = value.split("; " + name + "=");
-      //   if (parts.length == 2) return parts.pop().split(";").shift();
-      // },
-      // _getUrl: function () {
-
-      //     console.log(this._getCookie("buyerId"));
-
-      //   },
-
-      // _getBuyer: function (buyers) {
-      //   try {
-      //     // console.log(this._getCookie("buyerId"));
-      //     this.set('data.buyer_id',this._getCookie("buyerId"))
-      //     let elements = this.$$('#buyer_id');
-      //     let buyer = new Array();
-      //     buyers.map((el, index) => {
-      //       buyer.push({ label: el.buyer_name + ' [' + el.country_name_en + '] ', value: el.buyer_id });
-      //     });
-      //     elements.items = buyer;
-      //   } catch (e) {
-      //     // console.log(e);
-      //   }
-
-      // },
+      editContract() {
+        this.dispatchAction('SET_STATE', {
+          isInsert: false,
+          btnDisabled: false,
+          hiddend: true
+        })
+      },
       _getBuyerAddress: function (e) {
         if (e.detail.value) {
           // console.log(e.detail.value);
@@ -441,54 +421,8 @@
           this.set('dataShow.obj', buyer)
           this.set('dataShow.buyer_fax', e.detail.value.buyer_fax)
           this.set('dataShow.buyerAddress', e.detail.value.buyer_address)
-
-          // this._getAddCondation(e.detail.value);
         }
-        // console.log(e.detail.value);
-        // if (e.detail.value) {
-        //   this._getAddCondation(e.detail.value);
-        // }
-        // if (e.detail.value === '') {
-        //   try {
-        //     this._getAddCondation(e.detail.value);
-        //     this.data.buyer_fax = '';
-        //     this.data.buyerAddress = '';
-        //     this.notifyPath('data.buyer_fax');
-        //     this.notifyPath('data.buyerAddress');
-        //   } catch (e) {
-        //     // console.log(e);
-        //   } 
-        // }
       },
-      // _getAddCondation: function (buyerId) {
-      //   try {
-      //     let buyer_id = this.dataForSelect.buyer.filter((buyer) => buyer.buyer_id == buyerId);
-      //     this.data.buyerAddress = buyer_id[0].buyer_address;
-      //     this.data.buyer_fax = buyer_id[0].buyer_fax;
-      //     this.data.country_id = buyer_id[0].country_id;
-      //     this.notifyPath('data.buyerAddress');
-      //     this.notifyPath('data.buyer_fax');
-      //   } catch (e) {
-      //     // console.log(e);
-      //   } 
-      // },
-      // _getBuyerAddressFromData: function (data) {
-      //   console.log(dataShow);
-      //   this.data.buyerAddress = data.buyer_address;
-      //   this.notifyPath('data.buyerAddress');
-      // },
-      // _changeDataContract: function (contract_date) {
-      //   this.getDateg2g(contract_date, (date) => {
-      //     this.set('data.contract_date', date);
-      //     this.notifyPath('data.contract_date');
-      //   });
-      // },
-      // addTypeRice: function () {
-      //   this.push('data.contract_type_rice', {});
-      // },
-      // deleteTypeRice: function (e) {
-      //   this.splice('data.contract_type_rice', e.currentTarget.id, 1);
-      // },
       _getHamonize(hamonizeList) {
         let hamonizeArr = []
         hamonizeList = hamonizeList || this.hamonizeList
@@ -520,17 +454,36 @@
           dataResive.buyer = this.dataShow.obj.buyer
           dataResive.country = this.dataShow.obj.country
           dataResive.country_id = this.dataShow.obj.buyer.country_id
-          dataResive.contract_date = new Date(dataResive.contract_date);
+          dataResive.contract_date = new Date(dataResive.contract_date)
+          delete dataResive.date_updated 
+          delete dataResive.date_created
           res(dataResive)
+        })
+      },
+      _resiveForm: function () {
+        return new Promise((res, rej) => {
+          if (this.validateForm('.required')) {
+            this._resiveDataContract().then((data) => {
+              res(data)
+            })
+          } else {
+            this.fire('toast', {
+              status: 'connectError', text: 'กรุณากรอกข้อมูลให้ครบทุกช่อง', //คำสั่งสำหรับเปิด toast error
+              callback: function () {
+                rej('error')
+              }
+            })
+          }
         })
       },
       insertContract: function () {
         // console.log(this.validateForm('.required'));
-        if (this.validateForm('.required')) {
-          this._resiveDataContract().then((res) => {
+        this._resiveForm()
+          .then((res) => {
             this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
+            res.contract_status =  false
             this.dispatchAction('POST_CONTRACT', res)
-              .then((response)=> {
+              .then((response) => {
                 this.dispatchAction('GET_CONTRACT_OF_BUYER', res.buyer_id);
                 this.fire('toast', {
                   status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
@@ -540,173 +493,131 @@
                   }
                 });
               })
-              .catch((error)=> {
-                console.log(error);
-              });
+          })
+          .catch((error) => {
+            console.log(error);
+          });
 
-          })
-        } else {
-          this.fire('toast', {
-            status: 'connectError', text: 'กรุณากรอกข้อมูลให้ครบทุกช่อง', //คำสั่งสำหรับเปิด toast error
-            callback: function () {
-            }
-          })
-        }
-        // this._clearnData(this.data, (data) => {
-        //   this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
-        //   data.contract_status = false;
-        //   this.insert('./g2g/contract/insert', data, () => {
-        //     this.fire('toast', {
-        //       status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
-        //       callback: () => {
-        //         this.fire('refresh-contract', { detail: 'refresh-contract' });
-        //         this.fire('close-drawer', { detail: 'refresh-contract' });
-        //       }
-        //     });
-        //   });
-        //   let el = Polymer.dom(this.root).querySelectorAll('.required');
-        //   el.map((el) => { el.reset(); el.value = '' });
-        // });
       },
 
       saveContract: function () {
-        console.log(this.data);
-        console.log(this.dataShow.obj);
-        // this._clearnData(this.data, (data) => {
-        //   data.id = this.data.contract_id;
-        //   this.fire('toast', {  //คำสั่งสำหรับเปิด toast dialog
-        //     status: 'dialog',
-        //     text: 'ต้องการแก้ข้อมูลใช่หรือไม่ ?',
-        //     confirmed: this._saveData.bind(this), //function ที่ใช้รับค่า ปุ่ม
-        //     el: this, // compontents
-        //     data: data // ข้อมูลที่ส่งไป เช่น id ที่จะใช้ลบข้อมูล ใน db
-        //   });
-        // });
+        this.fire('toast', {
+          status: 'openDialog',
+          text: 'ต้องการแก้ข้อมูลใช่หรือไม่ ?',
+          confirmed: (result) => {
+            if (result == true) {
+              this._resiveForm()
+                .then((res) => {
+                  // console.log(data);
+                  this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
+                  this.dispatchAction('PUT_CONTRACT', res)
+                    .then((response) => {
+                      this.dispatchAction('GET_CONTRACT_OF_BUYER', res.buyer_id);
+                      this.dispatchAction('GET_CONTRACT', res.id)
+                      this.queryFrom('.required').map((el) => { el.reset(); });
+                      this.dispatchAction('SET_STATE', {
+                        isInsert: false,
+                        btnDisabled: true,
+                        hiddend: true
+                      })
+                      this.fire('toast', {
+                        status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
+                        callback: () => {
+                        }
+                      });
+                    })
+                })
+                .catch((error) => {
+                  console.log(error);
+                });
+            }
+          }
+        })
       },
-      // _saveData: function (result, detail) {
-      //   if (result == true) {
-      //     this.update('./g2g/contract/update', detail.data, () => {
-      //       this.fire('refresh-contract', { detail: 'refresh-contract' });
-      //       this.fire('toast', {
-      //         status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
-      //         callback: () => {
-      //           this.editInput();
-      //           this.fire('get-contract-detail', { contractId: detail.data.id });
-      //         }
-      //       });
-      //     });
-      //   }
-      // },
-      // confirmDrawer: function () {
-      //   this._clearnData(this.data, (data) => {
-      //     data.id = this.data.contract_id;
-      //     data.contract_weight = this.data.contract_weight;
-      //     data.contract_status = this.approve(data.contract_status);
-      //     this.fire('toast', {  //คำสั่งสำหรับเปิด toast dialog
-      //       status: 'dialog',
-      //       text: 'ต้องการบันทึกข้อมูลใช่หรือไม่ ?',
-      //       confirmed: this._confirmContract.bind(this), //function ที่ใช้รับค่า ปุ่ม
-      //       el: this, // compontents
-      //       data: data // ข้อมูลที่ส่งไป เช่น id ที่จะใช้ลบข้อมูล ใน db
-      //     })
-      //   });
-      // },
-      // _confirmContract: function (result, detail) {
-      //   if (result == true) {
-      //     this.update('./g2g/contract/update', detail.data, () => {
-      //       this.fire('refresh-contract', { detail: 'refresh-contract' });
-      //       this.fire('toast', {
-      //         status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
-      //         callback: () => {
-      //           this.fire('get-contract-detail', { contractId: detail.data.id });
-      //         }
-      //       });
-      //     });
-      //   }
-      // },
-      // deleteContract: function () {
-      //   this.fire('toast', {  //คำสั่งสำหรับเปิด toast dialog
-      //     status: 'dialog',
-      //     text: 'ต้องการลบข้อมูลใช่หรือไม่ ?',
-      //     confirmed: this._deleteData.bind(this), //function ที่ใช้รับค่า ปุ่ม
-      //     el: this, // compontents
-      //     data: this.data.contract_id // ข้อมูลที่ส่งไป เช่น id ที่จะใช้ลบข้อมูล ใน db
-      //   })
-      // },
-      // _deleteData: function (result, detail) {
-      //   if (result == true) {
-      //     this.delete('./g2g/contract/delete/id/', detail.data, () => {
-      //       this.fire('refresh-contract', { detail: 'refresh-contract' });
-      //       this.fire('close-drawer', { detail: 'flip-drawer' });
-      //       this.fire('toast', {
-      //         status: 'success', text: 'ลบสำเร็จ',  // คำสั่งสำหรับเปิด toast success
-      //         callback: function () {
-      //         }
-      //       });
-      //     });
-      //   }
-      // },
-      // _typeRiceContract: function () {
-      //   try {
-      //     if (this._checkUndefined(this.dataForSelect.typeRice)) {
-      //       this.async(() => {
-      //         let comboboxs, arrForItem, itemif;
-      //         for (var i = 0; i < this.data.contract_type_rice.length; i++) {
-      //           // console.log('this.dataForSelect.typeRice1>>', this.dataForSelect.typeRice);
-      //           arrForItem = JSON.parse(JSON.stringify(this.dataForSelect.typeRice));
-      //           //  console.log('arrForItem',arrForItem);
-      //           this.data.contract_type_rice.map((item, index) => {
-      //             //  console.log(item);
-      //             if (i != index) {
-      //               //ตัดอาเรย์ตอนที่ไม่เท่ากับค่าของตัวเอง
-      //               if (arrForItem.filter((blDetail) => blDetail.type_rice_id == item.type_rice_id)[0] != undefined) {
-      //                 itemif = arrForItem.indexOf(arrForItem.filter((blDetail) => blDetail.type_rice_id == item.type_rice_id)[0]);
-      //                 //  console.log(itemif);
-      //                 arrForItem.splice(itemif, 1);
-      //               }
-      //             }
-      //           });
-      //           comboboxs = Polymer.dom(this.root).querySelector('#rice-' + i);
-      //           comboboxs.items = arrForItem;
-      //         }
-      //       }, 1);
-      //     }
-
-      //   } catch (e) {
-      //     // console.log(e);
-      //   }
-
-      // },
-      // _clearnData: function (data, callback) {
-      //   let el = Polymer.dom(this.root).querySelectorAll('.required');
-      //   let stat = el.map((el) => el.validate());
-      //   if (stat.every(elem => elem == true)) {
-      //     let { buyer_id, contract_date, contract_desc, contract_name, contract_status, payterm } = data;
-      //     let { contract_weight } = data;
-      //     let newData = { buyer_id, contract_date, contract_desc, contract_name, contract_weight, contract_status, payterm };
-      //     newData.contract_type_rice = [];
-      //     newData.contract_date = new Date(newData.contract_date);
-      //     data.contract_type_rice.map((riceCode) => {
-      //       newData.contract_type_rice.push({ type_rice_id: riceCode.type_rice_id });
-      //     });
-      //     if (typeof data.tags !== 'undefined') {
-      //       newData.tags = new Array();
-      //       data.tags.map((tag) => {
-      //         newData.tags.push(tag);
-      //       });
-      //     }
-      //     // newData.tags.push(data.country_id);
-      //     // console.log(newData);
-      //     el.map((el) => { el.reset(); });
-      //     callback(newData);
-      //   } else {
-      //     this.fire('toast', {
-      //       status: 'connectError', text: 'กรุณากรอกข้อมูลให้ครบทุกช่อง', //คำสั่งสำหรับเปิด toast error
-      //       callback: function () {
-      //       }
-      //     })
-      //   }
-      // },
+      deleteContract: function () {
+        this.fire('toast', {
+          status: 'openDialog',
+          text: 'ต้องการลบข้อมูลใช่หรือไม่ ?',
+          confirmed: (result) => {
+            if (result == true) {
+              this._resiveForm()
+                .then((res) => {
+                  // console.log(res);
+                  this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
+                  this.dispatchAction('DELETE_CONTRACT', res.id)
+                    .then((response) => {
+                      this.dispatchAction('GET_CONTRACT_OF_BUYER', res.buyer_id);
+                      this.fire('toast', {
+                        status: 'success', text: 'ลบสำเร็จ',  // คำสั่งสำหรับเปิด toast success
+                        callback: () => {
+                        }
+                      })
+                      this.fire('close-drawer')
+                    })
+                })
+                .catch((error) => {
+                  console.log(error);
+                });
+            }
+          }
+        })
+      },
+      calcelContract: function () {
+        this.fire('toast', {
+          status: 'openDialog',
+          text: 'ต้องการยกเลิกแก้ข้อมูลใช่หรือไม่ ?',
+          confirmed: (result) => {
+            if (result == true) {
+              this._resiveForm()
+                .then((res) => {
+                  this.dispatchAction('GET_CONTRACT', res.id)
+                  this.dispatchAction('SET_STATE', {
+                    isInsert: false,
+                    btnDisabled: true,
+                    hiddend: true
+                  })
+                  this.queryFrom('.required').map((el) => { el.reset(); });
+                })
+            }
+          }
+        })
+      },
+      confirmDrawer: function () {
+        this.fire('toast', {
+          status: 'openDialog',
+          text: 'ต้องการยืนยันสัญญาใช่หรือไม่ ?',
+          confirmed: (result) => {
+            if (result == true) {
+              this._resiveForm()
+                .then((res) => {
+                  res.contract_status = true
+                  // console.log(data);
+                  this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
+                  this.dispatchAction('PUT_CONTRACT', res)
+                    .then((response) => {
+                      this.dispatchAction('GET_CONTRACT_OF_BUYER', res.buyer_id);
+                      this.dispatchAction('GET_CONTRACT', res.id)
+                      this.queryFrom('.required').map((el) => { el.reset(); });
+                      this.dispatchAction('SET_STATE', {
+                        isInsert: false,
+                        btnDisabled: true,
+                        hiddend: true
+                      })
+                      this.fire('toast', {
+                        status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
+                        callback: () => {
+                        }
+                      });
+                    })
+                })
+                .catch((error) => {
+                  console.log(error);
+                });
+            }
+          }
+        })
+      }
+      
 
     });
   </script>
