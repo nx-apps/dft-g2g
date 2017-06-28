@@ -3,6 +3,8 @@
 <link rel="import" href="./../../../../bower_components/vaadin-date-picker/vaadin-date-picker.html">
 <link rel="import" href="./../../../../bower_components/gl-form/gl-form-panel.html">
 <link rel="import" href="./../../../../bower_components/gl-form/gl-combo-box.html">
+<link rel="import" href="./../../components/g2g-logic-behavior.html">
+<link rel="import" href="./../../components/format-number-behavior.html">
 
 <dom-module id="confirm-detail">
   <style is="custom-style" include="iron-flex iron-flex-alignment gl-styles page-style">
@@ -10,47 +12,59 @@
       font-family: 'CSChatThaiUI', sans-serif;
       -webkit-font-smoothing: antialiased;
     }
+
     .top {
       margin-top: 15px;
       font-size: var(--font-size-h5);
     }
+
     table.gl-table-default {
       width: 98%;
       border: 1px solid #ddd;
       margin-bottom: 15px;
     }
+
     paper-button {
       margin-top: 10px;
     }
+
     gl-form-textarea {
       word-break: break-all;
     }
+
     paper-icon-button {
       margin-top: 10px;
     }
+
     paper-icon-button.crud {
       margin: 5px 5px 5px 5px;
     }
+
     paper-icon-button.crud:hover {
       background-color: var(--paper-grey-200);
       border-radius: 5px;
       box-shadow: inset 0 0 3px 3px rgba(0, 0, 0, .2);
     }
+
     paper-button.btnInTable {
       --paper-button: {
         margin-top: 0px;
         height: 30px;
       }
     }
+
     gl-combo-box.InTable {
       margin-top: -20px;
     }
+
     .numberBack {
       text-align: right;
     }
+
     .btnCenter {
       text-align: center;
     }
+
     iron-icon {
       height: 16px;
       width: 16px;
@@ -58,64 +72,70 @@
     }
   </style>
   <template>
-    <template is="dom-if" if="[[_isViewing(isInputDisabled)]]">
-      <paper-button raised on-tap="backPage" class="gl-btn-default">{{localize.btn_back_ward}}</paper-button>
-    </template>
-    <template is="dom-if" if="[[!_isViewing(isInputDisabled)]]">
+    <!--<template is="dom-if" if="[[commonState.btnDisabled]]">-->
+    <paper-button raised on-tap="backPage" class="gl-btn-default">{{localize.btn_back_ward}}</paper-button>
+    <!--</template>-->
+    <template is="dom-if" if="[[!commonState.btnDisabled]]">
       <paper-button raised on-tap="backPageInsert" class="gl-btn-default" hidden="[[isViewSeleted]]">{{localize.btn_back_ward}}</paper-button>
     </template>
     <gl-form-panel set-padding="10px 20px 10px 20px" set-border="1px">
-      <template is="dom-if" if="[[!data.cl_status]]">
-        <template is="dom-if" if="[[isViewSeleted]]">
-          <icon-button-management is-input-disabled="[[!isInputDisabled]]"></icon-button-management>
-        </template>
+      <!--<template is="dom-if" if="[[!data.cl_status]]">-->
+      <template is="dom-if" if="[[!commonState.isInsert]]">
+        <div class="horizontal end-justified layout">
+          <paper-icon-button id="edit" class="crud" icon="create" raised on-tap="editContract" disabled="[[!commonState.btnDisabled]]"></paper-icon-button>
+          <paper-tooltip for="edit" offset="0">แก้ไข</paper-tooltip>
+          <paper-icon-button id="delete" class="crud" icon="delete" raised on-tap="deleteContract" disabled="[[!commonState.btnDisabled]]"></paper-icon-button>
+          <paper-tooltip for="delete" offset="0">ลบ</paper-tooltip>
+        </div>
       </template>
+      <!--</template>-->
       <gl-grid-row width="{{getWidth}}">
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,2]]">
           [[changeString2Num(data.*,'cl_no')]]
-          <gl-form-input class="required" required autofocus allowed-pattern="[0-9||,||.]" format-number="on" disabled="[[isInputDisabled]]"
-            error-message="{{localize.label_error_order}}" required label="{{localize.label_ref_no}}" always-float-label
-            value="{{data.cl_no}}"></gl-form-input>
+          <gl-form-input class="required" required autofocus allowed-pattern="[0-9||,||.]" format-number="on" disabled="[[commonState.btnDisabled]]"
+            error-message="{{localize.label_error_order}}" required label="{{localize.label_ref_no}}" always-float-label value="{{data.cl_no}}"></gl-form-input>
         </gl-grid-col>
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
-          <vaadin-date-picker class="required" required disabled="[[isInputDisabled]]" label="{{localize.label_date}}" value="{{data.cl_date}}"></vaadin-date-picker>
+          <!--<vaadin-date-picker class="required" required disabled="[[commonState.btnDisabled]]" label="{{localize.label_date}}" value="{{data.cl_date}}"></vaadin-date-picker>-->
+          <gl-form-input type="date" class="required" required disabled="[[commonState.btnDisabled]]" label="{{localize.label_date}}"
+            value="{{data.cl_date}}"></gl-form-input>
+
         </gl-grid-col>
       </gl-grid-row>
 
       <div class="top ">{{localize.label_detail}}</div>
 
-      <template is="dom-repeat" items="[[data.cl_type_rice]]">
+      <template is="dom-repeat" items="[[data.cl_hamonize]]">
         <div class="bg">
           <gl-form-panel set-padding="10px 20px 10px 20px" set-border="1px">
             <div class="horizontal end-justified layout">
-              <paper-button id="[[index]]" raised class="btnInTable gl-btn-danger" on-tap="deleteRiceType" style="margin-top:16px" hidden="[[_isViewing(isInputDisabled)]]">
+              <paper-button id="[[index]]" raised class="btnInTable gl-btn-danger" on-tap="deleteRiceType" style="margin-top:16px" hidden="[[commonState.btnDisabled]]">
                 <iron-icon icon="remove"></iron-icon>{{localize.btn_delete_rice_type}}</paper-button>
             </div>
             <gl-grid-row>
               <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,6]]">
 
-                <gl-combo-box id="riceType-[[index]]" class="required" required disabled="[[isInputDisabled]]" error-message="{{localize.label_error_rice_type}}"
-                  placeholder="{{localize.label_rice_type}}" name="type_rice_name" label="{{localize.label_rice_type}}"
-                  item-label-path="type_rice_name_th" item-value-path="type_rice_id" value="{{item.type_rice_id}}" on-value-changed="_typeRiceConfirm">
+                <gl-combo-box id="riceType-[[index]]" class="required" required disabled="[[commonState.btnDisabled]]" error-message="{{localize.label_error_rice_type}}"
+                  placeholder="{{localize.label_rice_type}}" name="hamonize.hamonize_th" label="{{localize.label_rice_type}}"
+                  item-label-path="label" item-value-path="hamonize_id" value="{{item.hamonize_id}}" on-value-changed="_typeRiceConfirm">
                   <template>
-                    [[item.type_rice_name_th]]
+                    [[item.label]]
                   </template>
                 </gl-combo-box>
 
               </gl-grid-col>
               <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
 
-                [[changeString2Num(item.*,'type_rice_quantity')]] [[_obCalcWeight(item.*,'type_rice_quantity')]]
-                <gl-form-input class="required" id="[[index]]" required allowed-pattern="[0-9||,||.]" format-number="on" disabled="[[isInputDisabled]]"
+                [[changeString2Num(item.*,'hamonize_weight')]] [[_obCalcWeight(item.*,'hamonize_weight')]]
+                <gl-form-input class="required" id="[[index]]" required allowed-pattern="[0-9||,||.]" format-number="on" disabled="[[commonState.btnDisabled]]"
                   label="{{localize.label_quantity}}" placeholder="{{localize.label_quantity}}" error-message="{{localize.label_error_quantity}}"
-                  value="{{item.type_rice_quantity}}" name="type_rice_quantity" on-value-changed="getCostPrice"></gl-form-input>
+                  value="{{item.hamonize_weight}}" name="hamonize_weight" on-value-changed="getCostPrice"></gl-form-input>
 
               </gl-grid-col>
               <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">[[changeString2Num(item.*,'tolerance_rate')]]
                 <gl-form-input class="required number" required maxlength="3" allowed-pattern="[0-9||,||.]" error-message="{{localize.label_error_tolerance_rate}}"
-                  disabled="[[isInputDisabled]]" label="{{localize.label_tolerance_rate}}" value="{{item.tolerance_rate}}"
-                  placeholder="{{localize.label_tolerance_rate}}" error-message="{{localize.label_error_tolerance_rate}}"
-                  id="tolerance_rate">
+                  disabled="[[commonState.btnDisabled]]" label="{{localize.label_tolerance_rate}}" value="{{item.tolerance_rate}}"
+                  placeholder="{{localize.label_tolerance_rate}}" error-message="{{localize.label_error_tolerance_rate}}" id="tolerance_rate">
                   <div suffix>%</div>
                 </gl-form-input>
               </gl-grid-col>
@@ -124,21 +144,24 @@
 
             <gl-grid-row>
               <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
-                <gl-form-input class="required" required disabled="[[isInputDisabled]]" label="{{localize.label_project_th}}" placeholder="{{localize.label_project_th}}"
+                <gl-form-input class="required" required disabled="[[commonState.btnDisabled]]" label="{{localize.label_project_th}}" placeholder="{{localize.label_project_th}}"
                   value="{{item.project_th}}" error-message="{{localize.label_error_project_en}}"></gl-form-input>
               </gl-grid-col>
               <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
-                <gl-form-input class="required" required disabled="[[isInputDisabled]]" label="{{localize.label_project_en}}" placeholder="{{localize.label_project_en}}"
+                <gl-form-input class="required" required disabled="[[commonState.btnDisabled]]" label="{{localize.label_project_en}}" placeholder="{{localize.label_project_en}}"
                   value="{{item.project_en}}" error-message="{{localize.label_error_project_en}}"></gl-form-input>
               </gl-grid-col>
               <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
-                [[changeString2Num(item.*,'costpriceton')]] 
-                <gl-form-input disabled="[[isInputDisabled]]" format-number="on" value="[[item.costpriceton]]" label="{{localize.label_cost_price_ton}}"></gl-form-input>
+                [[changeString2Num(item.*,'cost_price')]]
+                <gl-form-input disabled="[[commonState.btnDisabled]]" format-number="on" value="[[item.cost_price]]" label="{{localize.label_cost_price_ton}}"></gl-form-input>
               </gl-grid-col>
               <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
+                [[changeString2Num(item.*,'cost_value')]]
+                <gl-form-input disabled="[[commonState.btnDisabled]]" format-number="on" value="[[item.cost_value]]" label="ราคาบาท (ยัง)"></gl-form-input>
+
               </gl-grid-col>
             </gl-grid-row>
-            
+
             <br>
             <table class="gl-table-default" id="[[index]]">
               <thead class="table-head">
@@ -147,7 +170,7 @@
                   <th style="text-align: center; width: 20%">{{localize.text_price}}<br> {{localize.text_usd_ton}}</th>
                   <th style="text-align: center; width: 20%">{{localize.text_weight_sacks}} <br>{{localize.text_gram}}</th>
                   <th style="text-align: center; width: 30%">
-                    <template is="dom-if" if="[[!_isViewing(isInputDisabled)]]">
+                    <template is="dom-if" if="[[!commonState.btnDisabled]]">
                       {{localize.label_action}}
                     </template>
                   </th>
@@ -157,28 +180,28 @@
                 <template is="dom-repeat" as="packageitem" items="[[item.package]]" index-as=indexpackeage>
                   <tr>
                     <td>
-                      
-                      <gl-combo-box id="package-[[index]]-[[indexpackeage]]" class="required InTable" required disabled="[[isInputDisabled]]" error-message="{{localize.label_error_package}}"
-                        placeholder="{{localize.label_package}}" item-label-path="package_name_th" item-value-path="package_id"
-                        value="{{packageitem.package_id}}" on-value-changed="_typePackageConfirm">
+
+                      <gl-combo-box id="package-[[index]]-[[indexpackeage]]" class="required InTable" required disabled="[[commonState.btnDisabled]]"
+                        error-message="{{localize.label_error_package}}" placeholder="{{localize.label_package}}" item-label-path="package_name_th"
+                        item-value-path="package_id" value="{{packageitem.package_id}}" on-value-changed="_typePackageConfirm">
                         <template>
                           [[item.package_name_th]]
                         </template>
                       </gl-combo-box>
 
                     </td>
-                    <td> [[changeString2Num(packageitem.*,'price_per_ton')]]
-                      <gl-form-input class="required numberBack" required allowed-pattern="[0-9||,||.]" format-number="on" disabled="[[isInputDisabled]]"
-                        placeholder="{{localize.text_price}}" error-message="{{localize.text_error_price}}" value="{{packageitem.price_per_ton}}"
+                    <td> [[changeString2Num(packageitem.*,'price_d')]]
+                      <gl-form-input class="required numberBack" required allowed-pattern="[0-9||,||.]" format-number="on" disabled="[[commonState.btnDisabled]]"
+                        placeholder="{{localize.text_price}}" error-message="{{localize.text_error_price}}" value="{{packageitem.price_d}}"
                         no-label-float></gl-form-input>
                     </td>
                     <td>
-                      <gl-form-input class="numberBack" disabled value="[[_obChangePrice(packageitem.package_id,dataForSelect.package)]]" name="package_weight_bag"
+                      <gl-form-input class="numberBack" disabled value="[[_obChangePrice(packageitem.package_id,packageList)]]" name="package_weight_bag"
                         no-label-float></gl-form-input>
                     </td>
                     <td style="text-align:center;">
                       <paper-button id-packeage="[[indexpackeage]]" id-table="[[index]]" raised class="btnInTable gl-btn-danger" on-tap="delePackage"
-                        hidden="[[_isViewing(isInputDisabled)]]" disabled="[[_isHaveForDelete(item.package,item.package.*)]]">
+                        hidden="[[commonState.btnDisabled]]" disabled="[[_isHaveForDelete(item.package,item.package.*)]]">
                         <iron-icon icon="remove"></iron-icon>{{localize.btn_delete}}</paper-button>
                     </td>
                   </tr>
@@ -186,8 +209,8 @@
               </tbody>
             </table>
             <div class="horizontal end-justified layout">
-              <paper-button raised id="[[index]]" class="btnInTable gl-btn-primary" on-tap="addPackage" hidden="[[_isViewing(isInputDisabled)]]"
-                disabled="[[!_isHaveForUse(item.package,dataForSelect.package,item.package.*)]]">
+              <paper-button raised id="[[index]]" class="btnInTable gl-btn-primary" on-tap="addPackage" hidden="[[commonState.btnDisabled]]"
+                disabled="[[!_isHaveForUse(item.package,packageList,item.package.*)]]">
                 <iron-icon icon="add"></iron-icon>{{localize.btn_add_package}}</paper-button>
             </div>
           </gl-form-panel>
@@ -195,15 +218,15 @@
       </template>
       <div class="horizontal end-justified layout">
 
-        <template is="dom-if" if="[[!_isViewing(isInputDisabled)]]">
-          <paper-button raised on-tap="addNewTypeRice" class="gl-btn-primary" hidden="[[btnCheckDisabled]]" disabled="[[!_isHaveForUse(data.cl_type_rice,dataForSelect.contract_type_rice,data.cl_type_rice.*)]]">
+        <template is="dom-if" if="[[!commonState.btnDisabled]]">
+          <paper-button raised on-tap="addNewTypeRice" class="gl-btn-primary" hidden="[[btnCheckDisabled]]" disabled="[[!_isHaveForUse(data.cl_hamonize,hamonizeContract,data.cl_hamonize.*)]]">
             <iron-icon icon="add"></iron-icon>{{localize.btn_add_rice_type}}</paper-button>
         </template>
       </div>
       <gl-grid-row>
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,5]]">
           <template is="dom-repeat" items="[[data.incoterms]]">
-            <gl-combo-box id="incoterms-[[index]]" class="required" required disabled="[[isInputDisabled]]" label="{{localize.label_incoterms}} [[_ObcountIndex(index)]]"
+            <gl-combo-box id="incoterms-[[index]]" class="required" required disabled="[[commonState.btnDisabled]]" label="{{localize.label_incoterms}} [[_ObcountIndex(index)]]"
               error-message="{{localize.label_error_incoterms}} [[_ObcountIndex(index)]]" placeholder="{{localize.label_incoterms}} [[_ObcountIndex(index)]]"
               item-label-path="inct_name" item-value-path="inct_id" value="{{item.inct_id}}" on-blur="_incotermsConfirm">
               <template>
@@ -214,10 +237,10 @@
         </gl-grid-col>
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
           <gl-form-input class="numberBack" disabled allowed-pattern="[0-9||,||.]" format-number="on" always-float-label label="{{localize.label_total_ton}}"
-            value="{{dataForSelect.cl_total_quantity}}"></gl-form-input>
+            value="{{dataShow.cl_total_quantity}}"></gl-form-input>
         </gl-grid-col>
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
-          <gl-form-input class="numberBack" disabled  format-number="on" label="{{localize.label_total_cost_price_ton}}" value="[[data.cl_total_costpriceton]]"></gl-form-input>
+          <gl-form-input class="numberBack" disabled format-number="on" label="{{localize.label_total_cost_price_ton}}" value="[[dataShow.cl_total_costpriceton]]"></gl-form-input>
         </gl-grid-col>
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,5]]"></gl-grid-col>
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]"></gl-grid-col>
@@ -225,23 +248,23 @@
       </gl-grid-row>
       <gl-grid-row>
         <div class="horizontal start-justified layout">
-          <paper-button raised class="gl-btn-primary" on-tap="addincoterms" hidden="[[_isViewing(isInputDisabled)]]" disabled="[[!_isHaveForUse(data.incoterms,dataForSelect.incoterms,data.incoterms.*)]]">
+          <paper-button raised class="gl-btn-primary" on-tap="addincoterms" hidden="[[commonState.btnDisabled]]" disabled="[[!_isHaveForUse(data.incoterms,incotermsList,data.incoterms.*)]]">
             <iron-icon icon="add"></iron-icon>{{localize.btn_add}}</paper-button>
-          <paper-button raised class="gl-btn-danger" on-tap="deleteIncoterms" hidden="[[_isViewing(isInputDisabled)]]" disabled="[[_isHaveForDelete(data.incoterms,data.incoterms.*)]]">
+          <paper-button raised class="gl-btn-danger" on-tap="deleteIncoterms" hidden="[[commonState.btnDisabled]]" disabled="[[_isHaveForDelete(data.incoterms,data.incoterms.*)]]">
             <iron-icon icon="remove"></iron-icon>{{localize.btn_delete}}</paper-button>
         </div>
       </gl-grid-row>
 
       <div class="horizontal end-justified layout">
-        <template is="dom-if" if="[[!_isViewing(isInputDisabled)]]">
-          <paper-button class="gl-btn-primary" on-tap="insertConfirm" raised hidden="[[isViewSeleted]]">{{localize.btn_add}}</paper-button>
+        <template is="dom-if" if="[[commonState.isInsert]]">
+          <paper-button class="gl-btn-primary" on-tap="insertConfirm" raised>{{localize.btn_add}}</paper-button>
         </template>
-        <template is="dom-if" if="[[_isViewing(isInputDisabled)]]">
+        <template is="dom-if" if="[[commonState.btnDisabled]]">
           <paper-button class="gl-btn-info" raised on-tap="confirmConfirm" hidden="[[data.cl_status]]">{{localize.btn_confirm}}</paper-button>
         </template>
-        <template is="dom-if" if="[[_isViewing(isViewSeleted)]]">
-          <paper-button class="gl-btn-default" on-tap="calcelContract" raised hidden="[[isInputDisabled]]">{{localize.btn_cancel}}</paper-button>
-          <paper-button class="gl-btn-success" on-tap="saveConfirm" raised hidden="[[isInputDisabled]]">{{localize.btn_save}}</paper-button>
+        <template is="dom-if" if="[[!commonState.isInsert]]">
+          <paper-button class="gl-btn-default" on-tap="calcelContract" raised hidden="[[commonState.btnDisabled]]">{{localize.btn_cancel}}</paper-button>
+          <paper-button class="gl-btn-success" on-tap="saveConfirm" raised hidden="[[commonState.btnDisabled]]">{{localize.btn_save}}</paper-button>
         </template>
       </div>
     </gl-form-panel>
@@ -252,30 +275,63 @@
       behaviors: [
         ReduxBehavior,
         nylonBehavior,
-        FormatNumberBehavior
-        // g2gModelBehavior,
+        FormatNumberBehavior,
+        g2gLogicBehavior,
         // g2gCongtroller,
         // nylonLocalizeBehavior,
       ],
       properties: {
-        localize:{
+        localize: {
           statePath: 'i18n.g2g'
-        }
-        // dataForSelect: {
-        //   type: Object,
-        // },
+        },
+        commonState: {
+          statePath: 'commonState.setState'
+        },
+        data: {
+          statePath: 'confirmLetter.contractDetail',
+        },
+        hamonizeContract: {
+          statePath: 'confirmLetter.hamonizeContract',
+          // observer: 'get'
+        },
+        hamonizeFp: {
+          statePath: 'confirmLetter.hamonizeFp',
+          // observer: 'get'
+        },
+        contractId: {
+          statePath: 'commonState.contractId',
+          observer: 'get'
+        },
+        packageList: {
+          statePath: 'commonG2g.packageList',
+          // observer: 'get'
+        },
+        incotermsList: {
+          statePath: 'commonG2g.incotermsList',
+          // observer: 'get'
+        },
+
+        dataShow: {
+          type: Object,
+          value: {}
+        },
+
         // data: {
         //   type: Object,
-        //   value: { cl_total_costPrice: 0, type_rice_quantity: 0, cl_type_rice: [{ package: [{ package_id: '', price_per_ton: 0, }] }], incoterms: [{ inct_id: 'd' }] }
+        //   value: { cl_total_costPrice: 0, hamonize_weight: 0, cl_hamonize: [{ package: [{ package_id: '', price_d: 0, }] }], incoterms: [{ inct_id: 'd' }] }
         // },
       },
-      // observers: [
-      //   '_changeDataConfirm(data.cl_date)',
-      //   '_typeRiceConfirm(data.*)',
-      //   '_typePackageConfirm(data.*)',
-      //   '_incotermsConfirm(data.*)',
-      //   '_isHaveForUse(data.cl_type_rice,dataForSelect.contract_type_rice,data.cl_type_rice.*)'
-      // ],
+      // get(data){
+      //   console.log(this.contractId)
+      //   console.log(this.commonState)
+      // },
+      observers: [
+        // '_changeDataConfirm(data.cl_date)',
+        '_typeRiceConfirm(data.*)',
+        '_typePackageConfirm(data.*)',
+        '_incotermsConfirm(data.*)',
+        '_isHaveForUse(data.cl_hamonize,hamonizeContract,data.cl_hamonize.*)'
+      ],
       // listeners: {
       //   'edit-input': 'editInput',
       //   'delete-input': 'deleteConfirm'
@@ -297,166 +353,236 @@
       //   this.editInput();
       //   this.calcelContract();
       // },
-      // deleteRiceType: function (e) {
-      //   this.splice('data.cl_type_rice', e.currentTarget.id, 1);
-      // },
-      // delePackage: function (e) {
-      //   // let table = Polymer.dom(Polymer.dom(Polymer.dom(Polymer.dom(Polymer.dom(e.currentTarget).parentNode).parentNode).parentNode).parentNode);
-      //   // console.log(table);
-      //   // console.log(e.currentTarget.idPackeage,'e',e.currentTarget.idTable);
-      //   this.splice('data.cl_type_rice.' + [e.currentTarget.idTable] + '.package', e.currentTarget.idPackeage, 1);
-      // },
-      // addincoterms: function () {
-      //   this.push('data.incoterms', { inct_id: '' });
-      //   this.notifyPath('data.incoterms');
-      // },
-      // deleteIncoterms: function () {
-      //   if (this.data.incoterms.length > 1) {
-      //     this.pop('data.incoterms');
-      //   }
-      // },
-      // _obCalcWeight: function (data, type_rice_quantity) {
-      //   let total = 0;
-      //   // console.log(data,type_rice_quantity);
-      //   let datas = this.data.cl_type_rice;
-      //   for (index in datas) {
-      //     total += parseFloat(datas[index].type_rice_quantity);
+      deleteRiceType: function (e) {
+        this.splice('data.cl_hamonize', e.currentTarget.id, 1);
+      },
+      delePackage: function (e) {
+        // let table = Polymer.dom(Polymer.dom(Polymer.dom(Polymer.dom(Polymer.dom(e.currentTarget).parentNode).parentNode).parentNode).parentNode);
+        // console.log(table);
+        // console.log(e.currentTarget.idPackeage,'e',e.currentTarget.idTable);
+        this.splice('data.cl_hamonize.' + [e.currentTarget.idTable] + '.package', e.currentTarget.idPackeage, 1);
+      },
+      addincoterms: function () {
+        this.push('data.incoterms', { inct_id: '' });
+        this.notifyPath('data.incoterms');
+      },
+      deleteIncoterms: function () {
+        if (this.data.incoterms.length > 1) {
+          this.pop('data.incoterms');
+        }
+      },
+      _obCalcWeight: function (data, hamonize_weight) {
+        let total = 0;
+        let datas = this.data.cl_hamonize;
+        for (index in datas) {
+          total += parseFloat(datas[index].hamonize_weight);
 
-      //   }
+        }
+        // this.cl_total_quantity=this._isNan(total);
+        this.dataShow.cl_total_quantity = this._isNan(total);
+        this.set('data.cl_weight', total)
+        this.notifyPath('dataShow.cl_total_quantity');
 
-      //   // this.cl_total_quantity=this._isNan(total);
-      //   this.dataForSelect.cl_total_quantity = this._isNan(total);
-      //   this.notifyPath('dataForSelect.cl_total_quantity');
+        // this.cl_total_quantity = numeral(total).format('0,0');
 
-      //   // this.cl_total_quantity = numeral(total).format('0,0');
+      },
+      //เปลี่ยนเป็น observer ด้วย
+      getCostPrice: function (e) {
+        try {
+          if (this.data.cl_date !== undefined && this.data.cl_date !== ''
+            && e.model.item.hamonize_id !== '') {
+            let index = e.currentTarget.id
+            let date = new Date(this.data.cl_date)
+            let lastMonth = new Date(date.setMonth(date.getMonth() - 3)).toISOString().split('T')[0]
+            // console.log(lastMonth)
+            let url = {
+              startDate: lastMonth,
+              endDate: date.toISOString().split('T')[0],
+              hmcode: e.model.item.hamonize_id
+            }
+            // this.dispatchAction('GET_CONFIRM_FP',this.genUrl(url))
+            // console.log(url)
+          }
 
-      // },
-      // getCostPrice: function (e) {
-      //   try {
-      //     // const setData = (date)=> 
-      //     let index = e.currentTarget.id
-      //     let oldDate = new Date(this.data.cl_date)
-      //     let type_rice_quantity = JSON.parse(JSON.stringify(e.model.item.type_rice_quantity))
-      //     // console.log();
-      //     oldDate.setMonth(oldDate.getMonth() - 3)
-      //     let dataSend = {
-      //       startDate: oldDate.toISOString().split('T')[0],
-      //       endDate: this.data.cl_date,
-      //       hmcode: e.model.item.type_rice_id
-      //     }
-      //     this.read('./g2g/confirm/fp?' + this.genUrl(dataSend), (data) => {
-      //       // JSON.parse(JSON.stringify(this.dataForSelect.contract_type_rice));
-      //       let price = (type_rice_quantity* 1000) * data[0].fp3
-      //       let ton = data[0].fp3
-      //       // console.log(price,ton);
-      //       this.set('costprice',this.formatNumber(price))
-      //       this.set('costpriceton',this.formatNumber(ton))
-      //       // console.log('costprice',this.costprice,'costpriceton',this.costpriceton);
-      //       this.set('data.cl_type_rice.' + index + '.costprice', price)
-      //       this.set('data.cl_type_rice.' + index + '.costpriceton', ton)
-      //       let plus = this.data.cl_type_rice
+          //     // const setData = (date)=> 
+          //     let index = e.currentTarget.id
+          //     let oldDate = new Date(this.data.cl_date)
+          //     let hamonize_weight = JSON.parse(JSON.stringify(e.model.item.hamonize_weight))
+          //     // console.log();
+          //     oldDate.setMonth(oldDate.getMonth() - 3)
+          //     let dataSend = {
+          //       startDate: oldDate.toISOString().split('T')[0],
+          //       endDate: this.data.cl_date,
+          //       hmcode: e.model.item.hamonize_id
+          //     }
+          //     this.read('./g2g/confirm/fp?' + this.genUrl(dataSend), (data) => {
+          //       // JSON.parse(JSON.stringify(this.hamonizeContract));
+          //       let price = (hamonize_weight* 1000) * data[0].fp3
+          //       let ton = data[0].fp3
+          //       // console.log(price,ton);
+          //       this.set('costprice',this.formatNumber(price))
+          //       this.set('cost_price',this.formatNumber(ton))
+          //       // console.log('costprice',this.costprice,'cost_price',this.cost_price);
+          //       this.set('data.cl_hamonize.' + index + '.costprice', price)
+          //       this.set('data.cl_hamonize.' + index + '.cost_price', ton)
+          //       let plus = this.data.cl_hamonize
 
-      //       let costpriceton = Object.keys(plus).reduce((previous, current) => previous + plus[current].costpriceton, 0)
-      //       this.set('data.cl_total_costpriceton', this.formatNumber(this.costpriceton))
+          //       let cost_price = Object.keys(plus).reduce((previous, current) => previous + plus[current].cost_price, 0)
+          //       this.set('data.cl_total_costpriceton', this.formatNumber(this.cost_price))
 
-      //       let costpricex = Object.keys(plus).reduce((previous, current) => previous + plus[current].costprice, 0)
-      //       this.set('data.cl_total_costprice', this.formatNumber(this.costprice))
-      //     })
-      //   } catch (e) {
-      //     // console.log(e);
-      //   } 
+          //       let costpricex = Object.keys(plus).reduce((previous, current) => previous + plus[current].costprice, 0)
+          //       this.set('data.cl_total_costprice', this.formatNumber(this.costprice))
+          //     })
+        } catch (e) {
+          // console.log(e);
+        }
 
-      // },
-      // addNewTypeRice: function () {
-      //   this.push('data.cl_type_rice', {
-      //     type_rice_id: '',
-      //     type_rice_quantity: 0,
-      //     package:
-      //     [
-      //       {
-      //         package_id: '',
-      //         price_per_ton: 0,
-      //       }
-      //     ]
-      //   });
-      // },
-      // addPackage: function (e) {
-      //   let id = e.currentTarget.id;
-      //   let data = {
-      //     package_id: '',
-      //     price_per_ton: 0,
-      //     package_weight_bag: 0,
-      //   };
-      //   this.push('data.cl_type_rice.' + [id] + '.package', data);
-      // },
-      // _obChangePrice: function (data, list) {
-      //   let result = "";
-      //   if (list.package_id != '') {
-      //     list.map((packages, index) => {
-      //       if (packages.package_id == data) {
-      //         result = packages.package_weight_bag;
-      //       }
-      //     });
-      //     return result;
-      //   }
-      // },
-      // backPage: function () {
-      //   let breadcrumbs = datass = [
-      //     {
-      //       label: this.dataForSelect.contract_name,
-      //       href: ''
-      //     },
-      //     {
-      //       label: 'รายการสัญญาย่อย',
-      //       href: ''
-      //     },
-      //   ]
-      //   // console.log(breadcrumbs);
-      //   this.fire('_set-breadcrumbs', breadcrumbs)
-      //   if (this.isInputDisabled == false) {
-      //     this.editInput();
-      //   }
-      //   this.fire('back-page-confirm', { detail: '_back-page-confirm' });
-      // },
+      },
+      addNewTypeRice: function () {
+        this.push('data.cl_hamonize', {
+          hamonize_id: '',
+          hamonize_weight: 0,
+          package:
+          [
+            {
+              package_id: '',
+              price_d: 0,
+            }
+          ]
+        });
+      },
+      addPackage: function (e) {
+        let id = e.currentTarget.id;
+        let data = {
+          package_id: '',
+          price_d: 0,
+          package_weight_bag: 0,
+        };
+        this.push('data.cl_hamonize.' + [id] + '.package', data);
+      },
+      _obChangePrice: function (data, list) {
+        let result = "";
+        if (list.package_id != '') {
+          list.map((packages, index) => {
+            if (packages.package_id === data) {
+              result = packages.package_weight_bag;
+            }
+          });
+          return result;
+        }
+      },
+      backPage: function () {
+        //   let breadcrumbs = datass = [
+        //     {
+        //       label: this.dataForSelect.contract_name,
+        //       href: ''
+        //     },
+        //     {
+        //       label: 'รายการสัญญาย่อย',
+        //       href: ''
+        //     },
+        //   ]
+        //   // console.log(breadcrumbs);
+        //   this.fire('_set-breadcrumbs', breadcrumbs)
+        //   if (this.commonState.btnDisabled == false) {
+        //     this.editInput();
+        //   }
+        this.fire('back-page-confirm', { detail: '_back-page-confirm' });
+      },
       // backPageInsert: function () {
 
       //   this.fire('back-page-confirm', { detail: '_back-page-confirm' });
       // },
-      // insertConfirm: function () {
-      //   this.data.cl_status = false;
-      //   // console.log(this.dataForSelect);
-      //   this.set('data.tags', [this.dataForSelect.buyer_id, this.dataForSelect.country_id]);
-      //   // console.log(this.data);
-      //   // this.data.cl_close = false
-      //   this._clearnDataConfirm(this.data, (data) => {
-      //     if (this.dataForSelect.cl_total_quantity <= this.dataForSelect.contract_quantity_confirm_balance) {
-      //       data.contract_id = this.dataForSelect.contract_id;
-      //       this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
-      //       // console.log(data);
-      //       this.insert('./g2g/confirm/insert', data, () => {
-      //         this.fire('get-list-confirm', { contractId: data.contract_id });
-      //         this.fire('toast', {
-      //           status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
-      //           callback: () => {
+      _getIncoterms: function () {
+        let incoterm = []
+        this.incotermsList
+        for (var index2 = 0; index2 < this.data.incoterms.length; index2++) {
+          let d = this.incotermsList.find((item) => item.inct_id === this.data.incoterms[index2].inct_id)
+          incoterm.push({
+            inct_id: d.inct_id,
+            inct_name: d.inct_name
+          })
+        }
+        return incoterm
+      },
+      _getHamonize: function (hamonizes) {
+        let hamonize = []
+        for (var index2 = 0; index2 < hamonizes.length; index2++) {
+          let d = this.hamonizeContract.find((item) => item.hamonize_id === hamonizes[index2].hamonize_id)
+          if (d.digits !== undefined) {
+            hamonize.push({
+              digits: d.hamonize.digits,
+              hamonize_code: d.hamonize.hamonize_code,
+              hamonize_en: d.hamonize.hamonize_en,
+              hamonize_en2: d.hamonize.hamonize_en2,
+              hamonize_th: d.hamonize.hamonize_th,
+              hamonize_th2: d.hamonize.hamonize_th2,
+              hamonize_year: d.hamonize.hamonize_year
+            })
+            hamonizes[index2].hamonize = hamonize
+          }
+            
+        }
+        console.log(hamonize)
+        console.log(hamonizes)
+        return hamonizes
+      },
+      _resiveDataConfirm: function () {
+        return new Promise((res, rej) => {
+          let dataResive = {}
+          dataResive.cl_date = new Date(this.data.cl_date),
+            dataResive.cl_hamonize = this._getHamonize(this.data.cl_hamonize),
+            dataResive.cl_no = this.data.cl_no,
+            dataResive.cl_status = this.data.cl_status,
+            dataResive.cl_weight = this.data.cl_weight,
+            dataResive.contract_id = this.contractId,
+            dataResive.incoterms = this._getIncoterms()
+          delete dataResive.date_updated
+          delete dataResive.date_created
+          res(dataResive)
+        })
+      },
+      insertConfirm: function () {
+        this._resiveDataConfirm()
+          .then((res) => {
+            console.log(res)
+          })
 
-      //             this.fire('back-page-confirm', { detail: '_back-page-confirm' });
-      //           }
-      //         });
-      //       });
-      //       let el = Polymer.dom(this.root).querySelectorAll('.required');
-      //       el.map((el) => { el.reset(); el.value = '' });
-      //       this._changeDataConfirm('undefined');
-      //     } else {
-      //       this.fire('toast', {
-      //         status: 'connectError', text: 'คุณใส่ปริมาณข้าวที่คงเหลือเกินจำนวน ' + this.dataForSelect.contract_quantity_confirm_balance + ' ตัน', //คำสั่งสำหรับเปิด toast error
-      //         callback: function () {
-      //         }
-      //       })
-      //     }
-      //     // this.editInput();
-      //   });
+        // this._getIncoterms()
+        //   this.data.cl_status = false;
+        //   // console.log(this.dataForSelect);
+        //   this.set('data.tags', [this.dataForSelect.buyer_id, this.dataForSelect.country_id]);
+        //   // console.log(this.data);
+        //   // this.data.cl_close = false
+        //   this._clearnDataConfirm(this.data, (data) => {
+        //     if (this.dataForSelect.cl_total_quantity <= this.dataForSelect.contract_quantity_confirm_balance) {
+        //       data.contract_id = this.dataForSelect.contract_id;
+        //       this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
+        //       // console.log(data);
+        //       this.insert('./g2g/confirm/insert', data, () => {
+        //         this.fire('get-list-confirm', { contractId: data.contract_id });
+        //         this.fire('toast', {
+        //           status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
+        //           callback: () => {
 
-      // },
+        //             this.fire('back-page-confirm', { detail: '_back-page-confirm' });
+        //           }
+        //         });
+        //       });
+        //       let el = Polymer.dom(this.root).querySelectorAll('.required');
+        //       el.map((el) => { el.reset(); el.value = '' });
+        //       this._changeDataConfirm('undefined');
+        //     } else {
+        //       this.fire('toast', {
+        //         status: 'connectError', text: 'คุณใส่ปริมาณข้าวที่คงเหลือเกินจำนวน ' + this.dataForSelect.contract_quantity_confirm_balance + ' ตัน', //คำสั่งสำหรับเปิด toast error
+        //         callback: function () {
+        //         }
+        //       })
+        //     }
+        //     // this.editInput();
+        //   });
+
+      },
       // saveConfirm: function () {
       //   // console.log(this.cl_total_quantity,'=',this.dataForSelect.contract_quantity_confirm_balance);
       //   this._clearnDataConfirm(this.data, (data) => {
@@ -566,97 +692,97 @@
       //     });
       //   }
       // },
-      // _typeRiceConfirm: function () {
-      //   // console.log('this.data.cl_type_rice',this.data.cl_type_rice);
-      //   this.async(() => {
-      //     let comboboxs, arrForItem, itemif;
-      //     try {
-      //       for (var i = 0; i < this.data.cl_type_rice.length; i++) {
-      //         arrForItem = JSON.parse(JSON.stringify(this.dataForSelect.contract_type_rice));
-      //         //  console.log('arrForItem',arrForItem);
-      //         this.data.cl_type_rice.map((item, index) => {
-      //           //  console.log(item);
-      //           if (i != index) {
-      //             //ตัดอาเรย์ตอนที่ไม่เท่ากับค่าของตัวเอง
-      //             if (arrForItem.filter((blDetail) => blDetail.type_rice_id == item.type_rice_id)[0] != undefined) {
-      //               itemif = arrForItem.indexOf(arrForItem.filter((blDetail) => blDetail.type_rice_id == item.type_rice_id)[0]);
-      //               //  console.log(itemif);
-      //               arrForItem.splice(itemif, 1);
-      //             }
-      //           }
-      //         });
-      //         comboboxs = Polymer.dom(this.root).querySelector('#riceType-' + i);
-      //         comboboxs.items = arrForItem;
-      //       }
-      //     } catch (e) {
-      //       //  console.log(e);
-      //     }
-      //   }, 1);
-      // },
-      // _typePackageConfirm: function () {
-      //   this.async(() => {
-      //     let comboboxs, arrForItem, itemif;
-      //     try {
-      //       for (var i = 0; i < this.data.cl_type_rice.length; i++) {
-      //         for (var j = 0; j < this.data.cl_type_rice[i].package.length; j++) {
-      //           arrForItem = JSON.parse(JSON.stringify(this.dataForSelect.package));
-      //           //  console.log('this.data.cl_type_rice',arrForItem);
-      //           //  console.log('arrForItem',arrForItem);
-      //           this.data.cl_type_rice[i].package.map((item, index) => {
-      //             // console.log(item);
-      //             if (j != index) {
-      //               //ตัดอาเรย์ตอนที่ไม่เท่ากับค่าของตัวเอง
-      //               if (arrForItem.filter((blDetail) => blDetail.package_id == item.package_id)[0] != undefined) {
-      //                 itemif = arrForItem.indexOf(arrForItem.filter((blDetail) => blDetail.package_id == item.package_id)[0]);
-      //                 arrForItem.splice(itemif, 1);
-      //               }
-      //             }
-      //           });
-      //           // console.log(arrForItem);
-      //           // package-[[index]]-[[indexpackeage]]
-      //           comboboxs = Polymer.dom(this.root).querySelector('#package-' + i + '-' + j);
-      //           // console.log(comboboxs);
-      //           comboboxs.items = arrForItem;
-      //         }
-      //       }
-      //     } catch (e) {
-      //       //  console.log(e);
-      //     }
-      //   }, 1);
-      // },
-      // _incotermsConfirm: function () {
-      //   this.async(() => {
-      //     let comboboxs, arrForItem, itemif;
-      //     try {
-      //       for (var i = 0; i < this.data.incoterms.length; i++) {
-      //         arrForItem = JSON.parse(JSON.stringify(this.dataForSelect.incoterms));
-      //         //  console.log('arrForItem',arrForItem);
-      //         this.data.incoterms.map((item, index) => {
-      //           //  console.log(item);
-      //           if (i != index) {
-      //             //ตัดอาเรย์ตอนที่ไม่เท่ากับค่าของตัวเอง
-      //             if (arrForItem.filter((incoterm) => incoterm.inct_id == item.inct_id)[0] != undefined) {
-      //               itemif = arrForItem.indexOf(arrForItem.filter((incoterm) => incoterm.inct_id == item.inct_id)[0]);
-      //               //  console.log(itemif);
-      //               arrForItem.splice(itemif, 1);
-      //             }
-      //           }
-      //         });
-      //         comboboxs = Polymer.dom(this.root).querySelector('#incoterms-' + i);
-      //         comboboxs.items = arrForItem;
-      //       }
-      //     } catch (e) {
-      //       //  console.log(e);
-      //     }
-      //   }, 1);
-      // },
+      _typeRiceConfirm: function () {
+        // console.log('this.data.cl_hamonize',this.data.cl_hamonize);
+        this.async(() => {
+          let comboboxs, arrForItem, itemif;
+          try {
+            for (var i = 0; i < this.data.cl_hamonize.length; i++) {
+              arrForItem = JSON.parse(JSON.stringify(this.hamonizeContract));
+              console.log('arrForItem', arrForItem);
+              this.data.cl_hamonize.map((item, index) => {
+                //  console.log(item);
+                if (i != index) {
+                  //ตัดอาเรย์ตอนที่ไม่เท่ากับค่าของตัวเอง
+                  if (arrForItem.filter((blDetail) => blDetail.hamonize_id == item.hamonize_id)[0] != undefined) {
+                    itemif = arrForItem.indexOf(arrForItem.filter((blDetail) => blDetail.hamonize_id == item.hamonize_id)[0]);
+                    //  console.log(itemif);
+                    arrForItem.splice(itemif, 1);
+                  }
+                }
+              });
+              comboboxs = Polymer.dom(this.root).querySelector('#riceType-' + i);
+              comboboxs.items = arrForItem;
+            }
+          } catch (e) {
+            //  console.log(e);
+          }
+        }, 1);
+      },
+      _typePackageConfirm: function () {
+        this.async(() => {
+          let comboboxs, arrForItem, itemif;
+          try {
+            for (var i = 0; i < this.data.cl_hamonize.length; i++) {
+              for (var j = 0; j < this.data.cl_hamonize[i].package.length; j++) {
+                arrForItem = JSON.parse(JSON.stringify(this.packageList));
+                //  console.log('this.data.cl_hamonize',arrForItem);
+                //  console.log('arrForItem',arrForItem);
+                this.data.cl_hamonize[i].package.map((item, index) => {
+                  // console.log(item);
+                  if (j != index) {
+                    //ตัดอาเรย์ตอนที่ไม่เท่ากับค่าของตัวเอง
+                    if (arrForItem.filter((blDetail) => blDetail.package_id == item.package_id)[0] != undefined) {
+                      itemif = arrForItem.indexOf(arrForItem.filter((blDetail) => blDetail.package_id == item.package_id)[0]);
+                      arrForItem.splice(itemif, 1);
+                    }
+                  }
+                });
+                // console.log(arrForItem);
+                // package-[[index]]-[[indexpackeage]]
+                comboboxs = Polymer.dom(this.root).querySelector('#package-' + i + '-' + j);
+                // console.log(comboboxs);
+                comboboxs.items = arrForItem;
+              }
+            }
+          } catch (e) {
+            //  console.log(e);
+          }
+        }, 1);
+      },
+      _incotermsConfirm: function () {
+        this.async(() => {
+          let comboboxs, arrForItem, itemif;
+          try {
+            for (var i = 0; i < this.data.incoterms.length; i++) {
+              arrForItem = JSON.parse(JSON.stringify(this.incotermsList));
+              //  console.log('arrForItem',arrForItem);
+              this.data.incoterms.map((item, index) => {
+                //  console.log(item);
+                if (i != index) {
+                  //ตัดอาเรย์ตอนที่ไม่เท่ากับค่าของตัวเอง
+                  if (arrForItem.filter((incoterm) => incoterm.inct_id == item.inct_id)[0] != undefined) {
+                    itemif = arrForItem.indexOf(arrForItem.filter((incoterm) => incoterm.inct_id == item.inct_id)[0]);
+                    //  console.log(itemif);
+                    arrForItem.splice(itemif, 1);
+                  }
+                }
+              });
+              comboboxs = Polymer.dom(this.root).querySelector('#incoterms-' + i);
+              comboboxs.items = arrForItem;
+            }
+          } catch (e) {
+            //  console.log(e);
+          }
+        }, 1);
+      },
       // _clearnDataConfirm: function (data, callback) {
       //   let el = Polymer.dom(this.root).querySelectorAll('.required');
       //   let stat = el.map((el) => el.validate());
       //   if (stat.every(elem => elem == true)) {
       //     let { cl_date, cl_no, cl_quality, cl_status } = data;
       //     let newData = { cl_date, cl_no, cl_quality, cl_status };
-      //     newData.cl_type_rice = [];
+      //     newData.cl_hamonize = [];
       //     newData.incoterms = [];
       //     newData.cl_date = new Date(newData.cl_date);
       //     data.incoterms.map((item) => {
@@ -664,25 +790,25 @@
       //       newData.incoterms.push({ inct_id: item.inct_id })
       //     })
 
-      //     data.cl_type_rice.map((cl_type_rice, index) => {
-      //       newData.cl_type_rice.push({
-      //         type_rice_id: cl_type_rice.type_rice_id,
-      //         type_rice_quantity: cl_type_rice.type_rice_quantity,
-      //         tolerance_rate: cl_type_rice.tolerance_rate,
-      //         project_th: cl_type_rice.project_th,
-      //         project_en: cl_type_rice.project_en,
-      //         costpriceton: cl_type_rice.costpriceton,
-      //         costprice: cl_type_rice.costprice,
-      //         // season_th:cl_type_rice.season_th,
-      //         // season_en:cl_type_rice.season_en,
-      //         //description_th:cl_type_rice.description_th,
-      //         //description_en:cl_type_rice.description_en,
+      //     data.cl_hamonize.map((cl_hamonize, index) => {
+      //       newData.cl_hamonize.push({
+      //         hamonize_id: cl_hamonize.hamonize_id,
+      //         hamonize_weight: cl_hamonize.hamonize_weight,
+      //         tolerance_rate: cl_hamonize.tolerance_rate,
+      //         project_th: cl_hamonize.project_th,
+      //         project_en: cl_hamonize.project_en,
+      //         cost_price: cl_hamonize.cost_price,
+      //         costprice: cl_hamonize.costprice,
+      //         // season_th:cl_hamonize.season_th,
+      //         // season_en:cl_hamonize.season_en,
+      //         //description_th:cl_hamonize.description_th,
+      //         //description_en:cl_hamonize.description_en,
       //         package: []
       //       });
-      //       cl_type_rice.package.map((packages) => {
-      //         newData.cl_type_rice[index].package.push({
+      //       cl_hamonize.package.map((packages) => {
+      //         newData.cl_hamonize[index].package.push({
       //           package_id: packages.package_id,
-      //           price_per_ton: packages.price_per_ton
+      //           price_d: packages.price_d
       //         }
       //         );
       //       });

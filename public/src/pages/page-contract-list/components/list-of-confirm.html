@@ -1,26 +1,30 @@
 <link rel="import" href="confirm-detail.html">
-<link rel="import" href="../../../../../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../../components/month-behavior.html">
+<link rel="import" href="./../../../../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="./../../../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="./../../../../bower_components/gl-form/gl-combo-box.html">
 <link rel="import" href="./../../../../bower_components/paper-icon-button/paper-icon-button.html">
-
 <dom-module id="list-of-confirm">
   <style include="iron-flex iron-flex-factors iron-flex-alignment gl-styles page-style">
     * {
       font-family: 'CSChatThaiUI', sans-serif;
       -webkit-font-smoothing: antialiased;
     }
+
     table.gl-table-default {
       width: 100%;
       border: 1px solid #ddd;
       margin: 20px 0px 10px 0px;
-    }    
+    }
+
     table.gl-table-default>tbody.table-body>tr>td {
       cursor: pointer;
-    }    
+    }
+
     .combo-box {
       width: 100%;
-    }    
+    }
+
     .title {
       font-size: var(--font-size-h3);
       text-align: center;
@@ -30,7 +34,9 @@
     <iron-pages selected="{{pageSelected}}" attr-for-selected="name">
       <div name="listOfConfirm">
         <div class="addconfirm horizontal end-justified layout">
-          <paper-button raised class="gl-btn-primary" disabled="[[!dataForSelect.contract_status]]" on-tap="createConfirm">{{localize.btn_add}}</paper-button>
+          <!--<paper-button raised class="gl-btn-primary" disabled="[[!dataForSelect.contract_status]]" on-tap="createConfirm">{{localize.btn_add}}</paper-button>-->
+          <paper-button raised class="gl-btn-primary" on-tap="createConfirm">{{localize.btn_add}}</paper-button>
+
         </div>
         <br>
         <div class="title">
@@ -38,15 +44,15 @@
         </div>
         <div class="horizontal layout wrap">
           <div id="combox" class="flex">
-            <gl-combo-box placeholder="ผู้ส่งออกทั้งหมด" items="{{dataForSelect.exporters}}" item-label-path="label" label="ผู้ส่งออก" item-value-path="exporter_id"
-              on-value-changed="getShowByExport"  value="{{data.exporter_idss}}">
+            <gl-combo-box placeholder="ผู้ส่งออกทั้งหมด" items="{{dataForSelect.exporters}}" item-label-path="label" label="ผู้ส่งออก"
+              item-value-path="exporter_id" on-value-changed="getShowByExport" value="{{data.exporter_idss}}">
               <template>
                 [[item.label]]
               </template>
             </gl-combo-box>
           </div>
         </div>
-        
+
         <table class="gl-table-default">
           <thead class="table-head">
             <tr>
@@ -58,12 +64,12 @@
             </tr>
           </thead>
           <tbody class="table-body">
-            <template is="dom-repeat" items="[[data.book]]">
+            <template is="dom-repeat" items="[[confirmLetterList]]">
               <tr>
                 <td on-tap="getConfirmDetail" data="[[item]]">[[item.cl_no]]</td>
-                <td on-tap="getConfirmDetail" data="[[item]]">[[item.ship_lot_no_lastest]]</td>
-                <td on-tap="getConfirmDetail" data="[[item]]">[[formatNumberNoZero(item.cl_quantity_total)]]</td>
-                <td on-tap="getConfirmDetail" data="[[item]]">[[formatNumberNoZero(item.book_quantity)]] [[checkMInus(item.cl_quantity_tolerance)]]</td>
+                <td on-tap="getConfirmDetail" data="[[item]]">[[item.count_ship]]</td>
+                <td on-tap="getConfirmDetail" data="[[item]]">[[formatNumberNoZero(item.cl_weight)]]</td>
+                <td on-tap="getConfirmDetail" data="[[item]]">[[formatNumberNoZero(item.book_weight)]] [[checkMInus(item.cl_weight_balance)]]</td>
                 <td>
                   <paper-icon-button id="printShipment" class="crud" icon="print" raised on-tap="printVesel" data="[[item]]"></paper-icon-button>
                   <paper-tooltip for="printShipment" offset="0">Print Invoice</paper-tooltip>
@@ -82,8 +88,7 @@
         <confirm-detail data-for-select="[[dataForSelect]]" is-view-seleted="[[!isEdit]]" is-input-disabled="[[isInputDisabled]]"></confirm-detail>
       </div>
       <div name="confirmDetail">
-        <confirm-detail data-for-select="[[dataForSelect]]" is-view-seleted="[[isEdit]]" is-input-disabled="[[!isInputDisabled]]"
-          data="[[dataSelected]]"></confirm-detail>
+        <confirm-detail></confirm-detail>
       </div>
     </iron-pages>
   </template>
@@ -99,10 +104,10 @@
         // g2gModelBehavior,
         // nylonLocalizeBehavior,
       ],
-      // listeners: {
-      //   'back-page-confirm': '_backPageConfirm',
-      //   'get-confirm-detail': '_getConfirmDetail'
-      // },
+      listeners: {
+        'back-page-confirm': '_backPageConfirm',
+        // 'get-confirm-detail': '_getConfirmDetail'
+      },
       // observers: [
       //   '_insertRiceType(data)',
       //   '_changeConfirm(data.exporter)'
@@ -116,28 +121,35 @@
       //       })
       // },
       properties: {
-        localize:{
-          statePath : 'i18n.g2g'
+        localize: {
+          statePath: 'i18n.g2g'
         },
-        title: {
-          type: String,
-          value: 'แสดงปริมาณการส่งมอบ'
+        commonState: {
+          statePath: 'commonState.setState'
         },
+        // title: {
+        //   type: String,
+        //   value: 'แสดงปริมาณการส่งมอบ'
+        // },
         pageSelected: {
           type: String,
           value: 'listOfConfirm',
           notify: true
         },
-        dataForSelect: {
-          type: Object,
-          value: { contract_type_rice: [] }
+        confirmLetterList: {
+          statePath: 'confirmLetter.confirmLetterlist',
+          // observer:'get'
         },
-        dataSelected: {
-          type: Object
-        },
-        clId: {
-          type: String,
-        }
+        // dataForSelect: {
+        //   type: Object,
+        //   value: { contract_type_rice: [] }
+        // },
+        // dataSelected: {
+        //   type: Object
+        // },
+        // clId: {
+        //   type: String,
+        // }
       },
       // created: function () {
       //   this.nylonLocalizeImport('/i18n-page1.json');
@@ -159,62 +171,94 @@
       //     // console.log(e);
       //   }
       // },
-      // createConfirm: function () {
-      //   this.pageSelected = 'addConfirm';
-      // },
-      // getConfirmDetail: function (e) {
-      //   this.fire('toast', { status: 'load' });
-      //   this.dataForSelect.contract_quantity_confirm_balance = this.data.contract_quantity_confirm_balance;
-      //   let confirm_letter = this.g2gClone(this.data.confirm_letter)
-      //   let data = confirm_letter.filter((cl) => cl.cl_id == e.currentTarget.data.cl_id)[0]
-      //   // console.log(data);
-      //   let breadcrumbs = datass = [
-      //     {
-      //       label: this.data.contract_name,
-      //       href: ''
-      //     },
-      //     {
-      //       label: 'รายการสัญญาย่อย',
-      //       href: ''
-      //     },
-      //     {
-      //       label: 'สัญญาย่อยที่' + data.cl_no,
-      //       href: ''
-      //     },
-      //   ]
-      //   this.set('dataForSelect.contract_name', this.data.contract_name)
-      //   // th
-      //   // console.log(breadcrumbs);
-      //   this.fire('_set-breadcrumbs', breadcrumbs)
-      //   this.notifyPath('dataForSelect.contract_quantity_confirm_balance');
-      //   this.dataSelected = data;
-      //   // console.log(e.currentTarget.data.cl_id);
-      //   this.pageSelected = 'confirmDetail';
-      //   this.fire('toast', { status: 'load' });
-      // },
+      createConfirm: function () {
+        // console.log(this.data)
+        this.fire('toast', { status: 'load' });
+        this.dispatchAction('SET_STATE', {
+          isInsert: true,
+          btnDisabled: false,
+          hiddend: true
+        })
+        this.dispatchAction('CLEAR_CONFIRM')
+        this.async(() => {
+          this.fire('toast', {
+            status: 'success', text: 'โหลดสำเร็จ', callback: () => {
+              this.pageSelected = 'addConfirm';
+            }
+          })
+        }, 500)
+
+      },
+      getConfirmDetail: function (e) {
+        this.fire('toast', { status: 'load' });
+        let cl = e.currentTarget.data
+        // console.log(e.currentTarget.data)
+        this.dispatchAction('SET_STATE', {
+          isInsert: false,
+          btnDisabled: true,
+          hiddend: true
+        })
+        this.dispatchAction('GET_CONFIRM_DETAIL', cl.id)
+        this.async(() => {
+          this.fire('toast', {
+            status: 'success', text: 'โหลดสำเร็จ', callback: () => {
+              this.pageSelected = 'confirmDetail';
+            }
+          })
+        }, 500)
+
+        //   this.fire('toast', { status: 'load' });
+        //   this.dataForSelect.contract_quantity_confirm_balance = this.data.contract_quantity_confirm_balance;
+        //   let confirm_letter = this.g2gClone(this.data.confirm_letter)
+        //   let data = confirm_letter.filter((cl) => cl.cl_id == e.currentTarget.data.cl_id)[0]
+        //   // console.log(data);
+        //   let breadcrumbs = datass = [
+        //     {
+        //       label: this.data.contract_name,
+        //       href: ''
+        //     },
+        //     {
+        //       label: 'รายการสัญญาย่อย',
+        //       href: ''
+        //     },
+        //     {
+        //       label: 'สัญญาย่อยที่' + data.cl_no,
+        //       href: ''
+        //     },
+        //   ]
+        //   this.set('dataForSelect.contract_name', this.data.contract_name)
+        //   // th
+        //   // console.log(breadcrumbs);
+        //   this.fire('_set-breadcrumbs', breadcrumbs)
+        //   this.notifyPath('dataForSelect.contract_quantity_confirm_balance');
+        //   this.dataSelected = data;
+        //   // console.log(e.currentTarget.data.cl_id);
+        //   this.pageSelected = 'confirmDetail';
+        //   this.fire('toast', { status: 'load' });
+      },
       // _getConfirmDetail: function (data) {
       //   // แทนค่าใส่ properties เพื่อรอ _insertRiceType ไปทำงานอีกรอบ
       //   this.clId = data.detail.clId;
       // },
-      // _backPageConfirm: function (data) {
-      //   this.pageSelected = 'listOfConfirm';
-      // },
+      _backPageConfirm: function (data) {
+        this.pageSelected = 'listOfConfirm';
+      },
 
-      // printVesel: function (e) {
-      //   window.open(window._config.reportServer+'/api/shipment/report4/' + e.currentTarget.data.cl_id, '1');
-      //   // console.log(e.currentTarget.data);
-      // },
-      // checkMInus(cl_quantity_tolerance) {
-      //   var str = this.formatNumberNoZero(cl_quantity_tolerance);
-      //   // console.log(this.formatNumberNoZero(0));
-      //   if (cl_quantity_tolerance > 0) str = "+" + str;
-      //   return typeof cl_quantity_tolerance === "undefined" ? '' : "(" + str + ")";
-      // },
-      // getShowByExport(e) {
-      //   // console.log(e);
+      printVesel: function (e) {
+        window.open(window._config.reportServer + '/api/shipment/report4/' + e.currentTarget.data.cl_id, '1');
+        // console.log(e.currentTarget.data);
+      },
+      checkMInus(cl_quantity_tolerance) {
+        var str = this.formatNumberNoZero(cl_quantity_tolerance);
+        //   // console.log(this.formatNumberNoZero(0));
+        if (cl_quantity_tolerance > 0) str = "+" + str;
+        return typeof cl_quantity_tolerance === "undefined" ? '' : "(" + str + ")";
+      },
+      getShowByExport(e) {
+        console.log(e);
       //   try {
       //     this.set('title', 'แสดงปริมาณการส่งมอบ')
-          
+
       //     if (e.currentTarget.value !== undefined && e.currentTarget.value !== '') {
       //       // console.log(e.currentTarget.value)
       //       // this.set('data', this.oldData)
@@ -233,8 +277,8 @@
       //     }
       //   } catch (e) {
       //     // console.log(e);
-      //   }
-      // }
+        // }
+      }
 
     });
   </script>

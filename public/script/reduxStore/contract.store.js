@@ -1,15 +1,12 @@
 import axios from '../axios'
 import { commonAction } from '../config'
 const cutDataInObject = (data, namePop) => {
-    // console.log(data);
     for (var key in data) {
         for (var index = 0; index < namePop.length; index++) {
             if (namePop[index] === key) {
                 let time = new Date(data[key])
-                // console.log(data[key]);
                 data[key] = new Date(time.setHours(time.getHours() + 7)).toISOString()
                 data[key] = data[key].split("T")[0]
-                // console.log(data[key]);
             }
         }
     }
@@ -44,10 +41,7 @@ export function contractAction(store) {
                 .catch(function (error) {
                     console.log(error);
                 });
-            // console.log(window._config.externalServerCommon);
-            // https://localhost:3001/api/contract/list
         },
-        // https://localhost:3001/api/contract/buyer?id=44e7a3ae-a7cf-44e3-a9fe-ff8c7a3421cf
         GET_CONTRACT_OF_BUYER: function (buyerId, ) {
             axios.get('./contract/buyer?id=' + buyerId)
                 .then(function (response) {
@@ -57,8 +51,6 @@ export function contractAction(store) {
                 .catch(function (error) {
                     console.log(error);
                 });
-            // console.log(window._config.externalServerCommon);
-            // https://localhost:3001/api/contract/list
         },
         GET_CONTRACT: function (contractId, ) {
             axios.get('./contract?id=' + contractId)
@@ -73,26 +65,21 @@ export function contractAction(store) {
                 .catch(function (error) {
                     console.log(error);
                 });
-            // console.log(window._config.externalServerCommon);
-            // https://localhost:3001/api/contract/list
         },
         // END GET
         // POST
         POST_CONTRACT: function (data) {
             return axios.post('./contract/insert', data)
-            // https://localhost:3001/api/contract/list
         },
         // END POST
         // PUT
         PUT_CONTRACT: function (data) {
             return axios.put('./contract/update', data)
-            // https://localhost:3001/api/contract/list
         },
         // END PUT
         // DELETE
         DELETE_CONTRACT: function (contractId) {
             return axios.delete('./contract/delete/'+contractId)
-            // https://localhost:3001/api/contract/list
         },
         // END DELETE
         // CLEAR

@@ -423,7 +423,7 @@
           this.set('dataShow.buyerAddress', e.detail.value.buyer_address)
         }
       },
-      _getHamonize(hamonizeList) {
+      _getHamonize: function (hamonizeList) {
         let hamonizeArr = []
         hamonizeList = hamonizeList || this.hamonizeList
         for (var index2 = 0; index2 < hamonizeList.length; index2++) {
