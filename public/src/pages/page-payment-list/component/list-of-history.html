@@ -1,3 +1,10 @@
+<link rel="import" href="./../../../../bower_components/gl-form/gl-combo-box.html">
+<link rel="import" href="./../../../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="./../../../../bower_components/paper-tooltip/paper-tooltip.html">
+<link rel="import" href="./../../../../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="./../../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="./../../../../bower_components/paper-icon-button/paper-icon-button.html">
+
 <dom-module id="list-of-history">
   <style include="iron-flex iron-flex-factors iron-flex-alignment gl-styles page-style">
      :host {
@@ -49,24 +56,19 @@
     }
   </style>
   <template>
-    <!--[[dataForSelect.contract_id]]-->
     <div class="flex searchInput horizontal center-justified layout">
       <div class="flex title">
-        {{localize('text_of_contract')}} : [[dataForSelect.nameContract]]
-
-
-        <!--<paper-icon-button id="printReport" icon="icons:print" on-tap="_printReport"></paper-icon-button>
-        <paper-tooltip for="printReport" offset="0">ออกรายงาน</paper-tooltip>-->
+        {{localize.text_of_contract}} : [[dataForSelect.nameContract]]
       </div>
       <div class="flex">
         <div class="flex horizontal end-justified layout">
-          <gl-combo-box always-float-label label="{{localize('label_report')}}" placeholder="{{localize('label_report')}}" value="{{printReport.typeReport}}"
+          <gl-combo-box always-float-label label="{{localize.label_report}}" placeholder="{{localize.label_report}}" value="{{printReport.typeReport}}"
             item-label-path="report_name" item-value-path="report_name_id" items="{{report.report_name}}">
             <template>
               [[item.report_name]]
             </template>
           </gl-combo-box>
-          <gl-combo-box always-float-label label="{{localize('label_report_type')}}" placeholder="{{localize('label_report_type')}}"
+          <gl-combo-box always-float-label label="{{localize.label_report_type}}" placeholder="{{localize.label_report_type}}"
             value="{{printReport.typeFile}}" item-label-path="report_type" item-value-path="report_type_id" items="{{report.report_type}}">
             <template>
               [[item.report_type]]
@@ -76,9 +78,7 @@
           <paper-tooltip for="printReport" offset="0">ออกรายงาน</paper-tooltip>
         </div>
       </div>
-
-
-
+      
       <paper-dialog id="printReport" modal>
         <div class="container">
           <div class="gl-default fontCSC">เลือกรายงาน</div>
@@ -88,20 +88,16 @@
           <gl-combo-box class="required" required label="เดือน" error-message="กรุณาเลือกเดือน" placeholder="เลือกเดือน" items="[[months]]"
             item-label-path="name_th" item-value-path="month" value="{{dataSelect.month}}">
           </gl-combo-box>
-
         </div>
         <div class="buttons">
           <paper-button dialog-confirm autofocus>close</paper-button>
           <paper-button class="gl-btn-success" on-tap="_print" autofocus>print</paper-button>
         </div>
       </paper-dialog>
-
-
-      <!--<div class="horizontal end-justified layout">-->
-
     </div>
+
     <div class="flex horizontal end-justified layout">
-      <div class="labelSearch">{{localize('text_invoice_no')}}</div>{{_searchInArray(searchInput)}}
+      <div class="labelSearch">{{localize.text_invoice_no}}</div>{{_searchInArray(searchInput)}}
       <paper-input label=" " no-label-float value="{{searchInput}}"></paper-input>
       <paper-icon-button icon="search"></paper-icon-button>
       </paper-input>
@@ -110,26 +106,22 @@
       <table class="gl-table-default">
         <thead class="table-head">
           <tr>
-            <th>{{localize('text_invoice_no')}}</th>
-            <th>{{localize('label_invoice_create_date')}}</th>
+            <th>{{localize.text_invoice_no}}</th>
+            <th>{{localize.label_invoice_create_date}}</th>
           </tr>
         </thead>
         <tbody class="table-body">
-          <!-- <template is="dom-repeat" items="[[data]]" as="contract"> -->
-          <!-- <template is="dom-if" if="[[!_isHave(newData)]]"> -->
           <template is="dom-repeat" items="[[newData]]">
             <tr data="[[item]]" on-tap="getChequeDetail" level="primary">
               <td>[[item.invoice_no]]</td>
               <td>[[changeDateCC(item.invoice_date)]]</td>
             </tr>
           </template>
-          <!-- </template> -->
           <template is="dom-if" if="[[_isHave(newData)]]">
             <tr>
-              <td colspan="2" style="text-align:center"> {{localize('text_no_data')}}</td>
+              <td colspan="2" style="text-align:center"> {{localize.text_no_data}}</td>
             </tr>
           </template>
-          <!-- </template> -->
         </tbody>
       </table>
     </div>
@@ -137,15 +129,16 @@
   <script>
     Polymer({
       is: "list-of-history",
-      observers: [
-        'initDatabl(data)'
-      ],
       behaviors: [
-        g2gCongtroller,
-        nylonBehavior,
-        nylonLocalizeBehavior
+        ReduxBehavior,
+        nylonBehavior
+        // g2gCongtroller,
+        // nylonLocalizeBehavior
       ],
       properties: {
+        localize:{
+          statePath : 'i18n.g2g'
+        },
         dataSelect: {
           type: Object,
           value: {}
@@ -193,95 +186,98 @@
           }
         }
       },
-      created: function () {
-        this.nylonLocalizeImport('/i18n-page1.json');
-      },
-      ready: function () {
-        this.createYear();
-      },
-      initDatabl: function (data) {
-        // console.log(data);
-        this.newData = this.g2gClone(data);
-        // console.log('clone new==>',this.newData);
-        // console.log('org==>',this.data);
-      },
-      _searchInArray: function (searchInput) {
-        // console.log(searchInput == '');
-        if (searchInput != '') {
-          let arr = [];
-          this.data.map((el) => {
-            if (String(el.invoice_no).search(searchInput) > -1) {
-              arr.push(el);
-            }
-          });
-          this.newData = arr;
-        } else {
-          this.initDatabl(this.data);
-        }
-      },
-      getChequeDetail: function (e) {
-        // console.log(e.currentTarget.data);
-        this.fire('get-history-detail', { detail: e.currentTarget.data });
-      },
-      _printReport: function () {
-        this.$.printReport.toggle();
-        this.dataSelect = {
-          year: new Date().getFullYear(),
-          month: new Date().getMonth() + 1
-        }
-      },
-      createYear: function () {
-        var currentYear = new Date().getFullYear(), years = [];
-        var startYear = 1980;
-        while (startYear <= currentYear) {
-          years.push({ year: startYear++ });
-        }
-        this.years = years.reverse();
-      },
-      _print: function () {
-        let el = Polymer.dom(this.root).querySelectorAll('.required');
-        let stat = el.map((el) => el.validate());
-        if (stat.every(elem => elem == true)) {
-          var str = '';
-          for (var key in this.dataSelect) {
-            if (this.dataSelect[key] != '' && this.dataSelect[key] != null) {
-              if (str == '') { str += '?' } else { str += '&' }
-              str += key + '=' + this.dataSelect[key];
-              // console.log(str);
-            }
-          }
-          var data = str + "&contract_id=" + this.dataForSelect.contract_id;
-          // console.log(data);
-          switch (this.printReport.typeReport) {
-            case '0':
-              window.open(window._config.reportServer+'/api/payment/report11' + data+'&export=' + this.printReport.typeFile, '_blank');
-              break;
-            case '1':
-              window.open(window._config.reportServer+'/api/payment/report7' + str+'&export=' + this.printReport.typeFile, '_blank');
-              break;
-            case '2':
-              window.open(window._config.reportServer+'/api/payment/report8' + str+'&export=' + this.printReport.typeFile, '_blank');
-              break;
+      // observers: [
+      //   'initDatabl(data)'
+      // ],
+      // created: function () {
+      //   this.nylonLocalizeImport('/i18n-page1.json');
+      // },
+      // ready: function () {
+      //   this.createYear();
+      // },
+      // initDatabl: function (data) {
+      //   // console.log(data);
+      //   this.newData = this.g2gClone(data);
+      //   // console.log('clone new==>',this.newData);
+      //   // console.log('org==>',this.data);
+      // },
+      // _searchInArray: function (searchInput) {
+      //   // console.log(searchInput == '');
+      //   if (searchInput != '') {
+      //     let arr = [];
+      //     this.data.map((el) => {
+      //       if (String(el.invoice_no).search(searchInput) > -1) {
+      //         arr.push(el);
+      //       }
+      //     });
+      //     this.newData = arr;
+      //   } else {
+      //     this.initDatabl(this.data);
+      //   }
+      // },
+      // getChequeDetail: function (e) {
+      //   // console.log(e.currentTarget.data);
+      //   this.fire('get-history-detail', { detail: e.currentTarget.data });
+      // },
+      // _printReport: function () {
+      //   this.$.printReport.toggle();
+      //   this.dataSelect = {
+      //     year: new Date().getFullYear(),
+      //     month: new Date().getMonth() + 1
+      //   }
+      // },
+      // createYear: function () {
+      //   var currentYear = new Date().getFullYear(), years = [];
+      //   var startYear = 1980;
+      //   while (startYear <= currentYear) {
+      //     years.push({ year: startYear++ });
+      //   }
+      //   this.years = years.reverse();
+      // },
+      // _print: function () {
+      //   let el = Polymer.dom(this.root).querySelectorAll('.required');
+      //   let stat = el.map((el) => el.validate());
+      //   if (stat.every(elem => elem == true)) {
+      //     var str = '';
+      //     for (var key in this.dataSelect) {
+      //       if (this.dataSelect[key] != '' && this.dataSelect[key] != null) {
+      //         if (str == '') { str += '?' } else { str += '&' }
+      //         str += key + '=' + this.dataSelect[key];
+      //         // console.log(str);
+      //       }
+      //     }
+      //     var data = str + "&contract_id=" + this.dataForSelect.contract_id;
+      //     // console.log(data);
+      //     switch (this.printReport.typeReport) {
+      //       case '0':
+      //         window.open(window._config.reportServer+'/api/payment/report11' + data+'&export=' + this.printReport.typeFile, '_blank');
+      //         break;
+      //       case '1':
+      //         window.open(window._config.reportServer+'/api/payment/report7' + str+'&export=' + this.printReport.typeFile, '_blank');
+      //         break;
+      //       case '2':
+      //         window.open(window._config.reportServer+'/api/payment/report8' + str+'&export=' + this.printReport.typeFile, '_blank');
+      //         break;
 
-          }
-          // window.open(window._config.reportServer+'/api/payment/report11' + data, '_blank');
-        }
-      },
-      printShipment: function () {
-        let book_id = this.dataForSelect.book_id
-        if (this.printReport.typeReport == '0') {
-          window.open(window._config.reportServer+'/api/shipment/report1/' + book_id + '?export=' + this.printReport.typeFile, '1');
-        } else if (this.printReport.typeReport == '1') {
-          this.$.printShipmentReport.toggle();
-        } else if (this.printReport.typeReport == '2') {
-          window.open(window._config.reportServer+'/api/shipment/report3?book_id=' + book_id + '&export=' + this.printReport.typeFile, '1');
-        } else if (this.printReport.typeReport == '3') {
-          window.open(window._config.reportServer+'/api/shipment/report3_1/' + book_id + '?export=' + this.printReport.typeFile, '1');
-        } else if (this.printReport.typeReport == '4') {
-          window.open(window._config.reportServer+'/api/shipment/report3_2/' + book_id + '?export=' + this.printReport.typeFile, '1');
-        }
+      //     }
+      //     // window.open(window._config.reportServer+'/api/payment/report11' + data, '_blank');
+      //   }
+      // },
+      // printShipment: function () {
+      //   let book_id = this.dataForSelect.book_id
+      //   if (this.printReport.typeReport == '0') {
+      //     window.open(window._config.reportServer+'/api/shipment/report1/' + book_id + '?export=' + this.printReport.typeFile, '1');
+      //   } else if (this.printReport.typeReport == '1') {
+      //     this.$.printShipmentReport.toggle();
+      //   } else if (this.printReport.typeReport == '2') {
+      //     window.open(window._config.reportServer+'/api/shipment/report3?book_id=' + book_id + '&export=' + this.printReport.typeFile, '1');
+      //   } else if (this.printReport.typeReport == '3') {
+      //     window.open(window._config.reportServer+'/api/shipment/report3_1/' + book_id + '?export=' + this.printReport.typeFile, '1');
+      //   } else if (this.printReport.typeReport == '4') {
+      //     window.open(window._config.reportServer+'/api/shipment/report3_2/' + book_id + '?export=' + this.printReport.typeFile, '1');
+      //   }
 
-      },
+      // },
     });
   </script>
 </dom-module>
