@@ -42,7 +42,7 @@ exports.getByContractId = function (req, res) {
 }
 exports.getHmByContract = function (req, res) {
     req.r.table('contract')
-        .get(req.query.id)
+        .get(req.query.contract_id)
         .getField('contract_hamonize')
         .run()
         .then(function (data) {
