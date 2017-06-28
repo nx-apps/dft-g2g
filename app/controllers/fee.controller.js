@@ -1,18 +1,4 @@
 var async = require('async');
-exports.getByContractId = function (req, res) {
-    var r = req.r;
-    r.table('book')
-        .getAll([req.query.id, false], { index: 'contractFeeStatus' })
-        .pluck('confirm_lot', 'invoice_no', 'id', 'ship_lot')
-        .orderBy('invoice_no')
-        .run()
-        .then(function (result) {
-            res.json(result)
-        })
-        .error(function (err) {
-            res.json(err)
-        })
-}
 exports.calc = function (req, res) {
     req.r.table('book').getAll(r.args(r.expr(req.query.id.split('_'))), { index: 'id' })
         .merge({ book_id: r.row('id') })
@@ -125,6 +111,14 @@ exports.insert = function (req, res) {
         // console.log(results);
         res.json(results.fee);
     });
+}
+exports.getByContractId = function (req, res) {
+    req.r.table('fee').getAll([req.query.id, false], { index: 'contractFinStatus' })
+        .pluck('id', 'fee_no', 'fee_round', 'net_weight', 'value_d', 'fee_ex_d', 'fee_in_b', 'rate_bank_b', 'fee_date')
+        .run()
+        .then(function (data) {
+            res.json(data)
+        })
 }
 exports.getById = function (req, res) {
     req.r.table('fee').get(req.query.id)

@@ -1,76 +1,64 @@
+<link rel="import" href="./../../../../bower_components/gl-form/gl-form-panel-body.html">
+<link rel="import" href="./../../../../bower_components/gl-form/gl-form-input.html">
+
 <dom-module id="fee-exports-sum">
   <style is="custom-style" include="iron-flex iron-flex-alignment">
     .flexchild-1 {
       @apply(--layout-flex);
-    }
-    
+    }    
     .flexchild-2 {
       @apply(--layout-flex-2);
-    }
-    
+    }    
     .flexchild-5 {
       @apply(--layout-flex-5);
-    }
-    
+    }    
     .flex-center-justified {
       @apply(--layout-horizontal);
       @apply(--layout-center-justified);
-    }
-    
+    }    
     .header {
       text-align: center;
-    }
-    
+    }    
     .text {
       margin-top: 10px;
       margin-right: 10px;
-    }
-    
+    }    
     .setText {
       font-weight: bold;
       font-size: 18px;
       color: #737373;
-    }
-    
+    }    
     .inputHeader {
       width: 40%;
-    }
-    
+    }    
     .container {
       padding: 10px;
-    }
-    
+    }    
     table.default {
       border-collapse: collapse;
       width: 100%
-    }
-    
+    }    
     table.default,
     th,
     td {
       border-bottom: 1px solid #ddd;
-    }
-    
+    }    
     th,
     td {
       padding: 15px;
-    }
-    
+    }    
     th {
       text-align: center;
       background-color: #F1F1F1;
       white-space: nowrap;
-    }
-    
+    }    
     td {
       text-align: left;
       white-space: nowrap;
-    }
-    
+    }    
     tr:hover {
       background-color: #F1F1F1;
-    }
-    
+    }    
     gl-form-input.number {
       --paper-input-container-input: {
         text-align: right;
@@ -80,22 +68,22 @@
   <template>
 
     <gl-form-panel-body set-padding="5px" set-border="0px">
-      {{localize('label_conclude')}}
+      {{localize.label_conclude}}
       <div style="overflow-x:auto;">
         <table class="default">
           <tr>
-            <th>{{localize('text_invoice_list')}}</th>
-            <th>{{localize('label_total_value_ton')}}<br>(1)</th>
-            <th>{{localize('label_total_value_ton_per_usd')}}<br>(2)</th>
-            <th>{{localize('label_total_value_usd')}}<br>(3)=(1)*2</th>
-            <th>{{localize('label_total_value_bath')}}<br>(4)=(3)*34.96</th>
-            <th>{{localize('label_expenses_fee')}}<br>(5)</th>
-            <th>{{localize('label_expenses_one_present')}}<br> (6)=((4)-(5))*1%</th>
-            <th>{{localize('label_total_bath')}}<br> (7)=((4)-(5)-(6))</th>
+            <th>{{localize.text_invoice_list}}</th>
+            <th>{{localize.label_total_value_ton}}<br>(1)</th>
+            <th>{{localize.label_total_value_ton_per_usd}}<br>(2)</th>
+            <th>{{localize.label_total_value_usd}}<br>(3)=(1)*2</th>
+            <th>{{localize.label_total_value_bath}}<br>(4)=(3)*34.96</th>
+            <th>{{localize.label_expenses_fee}}<br>(5)</th>
+            <th>{{localize.label_expenses_one_present}}<br> (6)=((4)-(5))*1%</th>
+            <th>{{localize.label_total_bath}}<br> (7)=((4)-(5)-(6))</th>
           </tr>
           <template is="dom-repeat" items="[[totalInvoice]]" as="invoice">
             <tr>
-              <td>{{localize('label_sum')}} ({{localize('text_invoice_no')}}: [[invoice.invoice_no]])</td>
+              <td>{{localize.label_sum}} ({{localize.text_invoice_no}}: [[invoice.invoice_no]])</td>
               <td>
                 <gl-form-input class="number" format-number="on" style="width:140px;" value="[[invoice.totalTonInvoices]]" disabled></gl-form-input>
               </td>
@@ -121,7 +109,7 @@
             </tr>
           </template>
           <tr>
-            <td>{{localize('label_total_sum')}}</td>
+            <td>{{localize.label_total_sum}}</td>
             <td>
               <gl-form-input class="number" style="width:140px;" format-number="on" value="[[data.totalTonInvoices]]" disabled></gl-form-input>
             </td>
@@ -151,7 +139,15 @@
   <script>
     Polymer({
       is: "fee-exports-sum",
+      behaviors: [
+        ReduxBehavior,
+        nylonBehavior
+        // nylonLocalizeBehavior
+      ],
       properties: {
+        localize:{
+          statePath : 'i18n.g2g'
+        },
         data: {
           type: Object,
           value: {
@@ -165,90 +161,86 @@
           }
         }
       },
-      observers: [
-        'check(totalInvoice.*)'
-      ],
-      behaviors: [
-        nylonBehavior,
-        nylonLocalizeBehavior
-      ],
-      created: function () {
-        this.nylonLocalizeImport('/i18n-page1.json');
-      },
-      ch(data) {
-        // console.log(typeof data == 'number');
-        // console.log(this.totalInvoice);
-        // if (typeof data == 'number') {
-        //   return data
-        // }
+      // observers: [
+      //   'check(totalInvoice.*)'
+      // ],
+      // created: function () {
+      //   this.nylonLocalizeImport('/i18n-page1.json');
+      // },
+      // ch(data) {
+      //   // console.log(typeof data == 'number');
+      //   // console.log(this.totalInvoice);
+      //   // if (typeof data == 'number') {
+      //   //   return data
+      //   // }
 
-      },
-      check: function (totalInvoice) {
-        this.async(() => {
-          try {
-            // return items.filter((item) => item.fee_status == false);
+      // },
+      // check: function (totalInvoice) {
+      //   this.async(() => {
+      //     try {
+      //       // return items.filter((item) => item.fee_status == false);
 
-            // console.log('totalInvoice =>',this.totalInvoice);
-            var result = 0;
-            this.totalInvoice.map((el) => {
-              result += el.totalTonInvoices;
-            });
-            this.set('data.totalTonInvoices', result)
-            // this.data.totalTonInvoices = result
-            // this.notifyPath('data.totalTonInvoices');
+      //       // console.log('totalInvoice =>',this.totalInvoice);
+      //       var result = 0;
+      //       this.totalInvoice.map((el) => {
+      //         result += el.totalTonInvoices;
+      //       });
+      //       this.set('data.totalTonInvoices', result)
+      //       // this.data.totalTonInvoices = result
+      //       // this.notifyPath('data.totalTonInvoices');
 
-            result = 0;
-            this.totalInvoice.map((el) => {
-              result += el.totalPricePerTonUsdInvoices;
-            });
-            this.set('data.totalPricePerTonUsdInvoices', result)
-            // this.data.totalPricePerTonUsdInvoices = result
-            // this.notifyPath('data.totalPricePerTonUsdInvoices');
+      //       result = 0;
+      //       this.totalInvoice.map((el) => {
+      //         result += el.totalPricePerTonUsdInvoices;
+      //       });
+      //       this.set('data.totalPricePerTonUsdInvoices', result)
+      //       // this.data.totalPricePerTonUsdInvoices = result
+      //       // this.notifyPath('data.totalPricePerTonUsdInvoices');
 
-            result = 0;
-            this.totalInvoice.map((el) => {
-              result += el.totalAmountUsdInvoices;
-            });
-            this.set('data.totalAmountUsdInvoices', result)
-            // this.data.totalAmountUsdInvoices = result
-            // this.notifyPath('data.totalAmountUsdInvoices');
+      //       result = 0;
+      //       this.totalInvoice.map((el) => {
+      //         result += el.totalAmountUsdInvoices;
+      //       });
+      //       this.set('data.totalAmountUsdInvoices', result)
+      //       // this.data.totalAmountUsdInvoices = result
+      //       // this.notifyPath('data.totalAmountUsdInvoices');
 
-            result = 0;
-            this.totalInvoice.map((el) => {
-              result += el.totalBathInvoices;
-            });
-            this.set('data.totalBathInvoices', result)
-            // this.data.totalBathInvoices = result
-            // this.notifyPath('data.totalBathInvoices');
+      //       result = 0;
+      //       this.totalInvoice.map((el) => {
+      //         result += el.totalBathInvoices;
+      //       });
+      //       this.set('data.totalBathInvoices', result)
+      //       // this.data.totalBathInvoices = result
+      //       // this.notifyPath('data.totalBathInvoices');
 
-            result = 0;
-            this.totalInvoice.map((el) => {
-              result += el.totalFeeInvoices;
-            });
-            this.set('data.totalFeeInvoices', result)
-            // this.data.totalFeeInvoices = result
-            // this.notifyPath('data.totalFeeInvoices');
+      //       result = 0;
+      //       this.totalInvoice.map((el) => {
+      //         result += el.totalFeeInvoices;
+      //       });
+      //       this.set('data.totalFeeInvoices', result)
+      //       // this.data.totalFeeInvoices = result
+      //       // this.notifyPath('data.totalFeeInvoices');
 
-            result = 0;
-            this.totalInvoice.map((el) => {
-              result += el.totalIncomeTaxInvoices;
-            });
-            this.set('data.totalIncomeTaxInvoices', result)
-            // this.data.totalIncomeTaxInvoices = result
-            // this.notifyPath('data.totalIncomeTaxInvoices');
+      //       result = 0;
+      //       this.totalInvoice.map((el) => {
+      //         result += el.totalIncomeTaxInvoices;
+      //       });
+      //       this.set('data.totalIncomeTaxInvoices', result)
+      //       // this.data.totalIncomeTaxInvoices = result
+      //       // this.notifyPath('data.totalIncomeTaxInvoices');
 
-            result = 0;
-            this.totalInvoice.map((el) => {
-              result += el.totalMoneyBathInvoices;
-            });
-            this.set('data.totalMoneyBathInvoices', result)
-            // this.data.totalMoneyBathInvoices = result
-            // this.notifyPath('data.totalMoneyBathInvoices');
-          } catch (e) {
-            // console.log(e)
-          }
-        }, 500)
-      },
+      //       result = 0;
+      //       this.totalInvoice.map((el) => {
+      //         result += el.totalMoneyBathInvoices;
+      //       });
+      //       this.set('data.totalMoneyBathInvoices', result)
+      //       // this.data.totalMoneyBathInvoices = result
+      //       // this.notifyPath('data.totalMoneyBathInvoices');
+      //     } catch (e) {
+      //       // console.log(e)
+      //     }
+      //   }, 500)
+      // },
     });
   </script>
 </dom-module>

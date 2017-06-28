@@ -1,8 +1,9 @@
 exports.getByContractId = function (req, res) {
     var r = req.r;
     r.table('book')
-        .getAll([req.query.id, true, false], { index: 'contractBookInvoiceStatus' })
-        .pluck('id', 'ship_lot', 'bl_no', { 'deli_port': ['country_name_en', 'port_name'] }, { 'dest_port': ['country_name_en', 'port_name'] })
+        .getAll([req.query.id, false], { index: 'contractFeeStatus' })
+        .pluck('confirm_lot', 'invoice_no', 'id', 'ship_lot')
+        .orderBy('invoice_no')
         .run()
         .then(function (result) {
             res.json(result)

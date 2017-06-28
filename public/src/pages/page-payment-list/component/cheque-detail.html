@@ -1,4 +1,10 @@
 <link rel="import" href="cheque-detail-invoice.html">
+<link rel="import" href="./../../../../bower_components/gl-form/gl-form-input.html">
+<link rel="import" href="./../../../../bower_components/vaadin-date-picker/vaadin-date-picker.html">
+<link rel="import" href="./../../../../bower_components/gl-form/gl-form-panel.html">
+<link rel="import" href="./../../../../bower_components/gl-grid/gl-grid-row.html">
+<link rel="import" href="./../../../../bower_components/gl-grid/gl-grid-col.html">
+
 <dom-module id="cheque-detail">
   <style include="iron-flex iron-flex-factors iron-flex-alignment gl-styles">
     :host {
@@ -15,10 +21,10 @@
             <div class="gl-panel-default-content">
               <gl-grid-row width="{{getWidth}}">
                 <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,2]]">
-                  <gl-form-input class="required" required  disabled="[[isInputDisabled]]" label="{{localize('label_order')}} :" placeholder="{{localize('text_your_detail')}}" error-message="{{localize('text_enter_your_detail')}}" value="{{item.invoice_no}}"></gl-form-input>
+                  <gl-form-input class="required" required  disabled="[[isInputDisabled]]" label="{{localize.label_order}} :" placeholder="{{localize.text_your_detail}}" error-message="{{localize.text_enter_your_detail}}" value="{{item.invoice_no}}"></gl-form-input>
                 </gl-grid-col>
                 <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,2]]">
-                  <vaadin-date-picker class="required" required   disabled="[[isInputDisabled]]" label="{{localize('label_date')}}" value="{{item.invoice_date}}"></vaadin-date-picker>
+                  <vaadin-date-picker class="required" required   disabled="[[isInputDisabled]]" label="{{localize.label_date}}" value="{{item.invoice_date}}"></vaadin-date-picker>
                 </gl-grid-col>
               </gl-grid-row>
             </div>
@@ -31,15 +37,12 @@
   <script>
     Polymer({
       is: "cheque-detail",
-      behaviors: [
-          g2gModelBehavior,
-          g2gCongtroller,
-          nylonBehavior,
-          nylonLocalizeBehavior
-      ],
-      created:function(){
-          this.nylonLocalizeImport('/i18n-page1.json');
-      },
+      behaviors: [ReduxBehavior],
+      properties:{
+        localize:{
+          statePath : 'i18n.g2g'
+        }
+      }
     });
   </script>
 </dom-module>
