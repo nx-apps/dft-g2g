@@ -69,7 +69,6 @@ exports.getById = function (req, res) {
 exports.insert = function (req, res) {
     var valid = req.ajv.validate('g2g.contract', req.body);
     var r = req.r;
-    var result = { result: false, message: null, id: null };
     if (valid) {
         var obj = Object.assign(req.body, {
             date_created: r.now().inTimezone('+07'),
@@ -82,28 +81,19 @@ exports.insert = function (req, res) {
             .insert(obj)
             .run()
             .then(function (response) {
-                result.message = response;
-                if (response.errors == 0) {
-                    result.result = true;
-                    result.id = response.generated_keys;
-                }
-                res.json(result);
+                res.json(response);
             })
             .error(function (err) {
-                result.message = err;
-                res.json(result);
+                res.json(err);
             })
     } else {
-        result.message = req.ajv.errorsText()
-        res.json(result);
+        res.json(req.ajv.errorsText());
     }
 }
 exports.update = function (req, res) {
     var valid = req.ajv.validate('g2g.contract', req.body);
     var r = req.r;
-    var result = { result: false, message: null, id: null };
     if (req.body.id != '' && req.body.id != null && typeof req.body.id !== 'undefined') {
-        result.id = req.body.id;
         if (valid) {
             var obj = Object.assign(req.body, {
                 date_updated: r.now().inTimezone('+07'),
@@ -115,30 +105,21 @@ exports.update = function (req, res) {
                 .update(obj)
                 .run()
                 .then(function (response) {
-                    result.message = response;
-                    if (response.errors == 0) {
-                        result.result = true;
-                    }
-                    res.json(result);
+                    res.json(response);
                 })
                 .error(function (err) {
-                    result.message = err;
-                    res.json(result);
+                    res.json(err);
                 })
         } else {
-            result.message = req.ajv.errorsText()
-            res.json(result);
+            res.json(req.ajv.errorsText());
         }
     } else {
-        result.message = 'require field id';
-        res.json(result);
+        res.json('require field id' );
     }
 }
 exports.delete = function (req, res) {
     var r = req.r;
-    var result = { result: false, message: null, id: null };
     if (req.params.id != '' && req.params.id != null) {
-        result.id = req.params.id;
         var q = r.table("contract").get(req.params.id).do(function (result) {
             return r.branch(
                 result('contract_status').eq(false)
@@ -148,18 +129,12 @@ exports.delete = function (req, res) {
         })
         q.run()
             .then(function (response) {
-                result.message = response;
-                if (response.errors == 0) {
-                    result.result = true;
-                }
-                res.json(result);
+                res.json(response);
             })
             .error(function (err) {
-                result.message = err;
-                res.json(result);
+                res.json(err);
             })
     } else {
-        result.message = 'require field id';
-        res.json(result);
+        res.json('require field id' );
     }
 }

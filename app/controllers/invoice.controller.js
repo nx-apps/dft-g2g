@@ -37,7 +37,6 @@ exports.getByBookId = function (req, res) {
 }
 exports.update = function (req, res) {
     var valid = req.ajv.validate('g2g.book', req.body);
-    var result = { result: false, message: null, id: null };
     if (valid) {
         var obj = {
             invoice_no: req.body.invoice_no,
@@ -53,23 +52,16 @@ exports.update = function (req, res) {
             .update(obj)
             .run()
             .then(function (response) {
-                result.message = response;
-                if (response.errors == 0) {
-                    result.result = true;
-                }
-                res.json(result);
+                res.json(response);
             })
             .error(function (err) {
-                result.message = err;
-                res.json(result);
+                res.json(err);
             })
     } else {
-        result.message = req.ajv.errorsText()
-        res.json(result);
+        res.json(req.ajv.errorsText());
     }
 }
 exports.reject = function (req, res) {
-    var result = { result: false, message: null, id: null };
     var obj = {
         invoice_no: r.literal(),
         invoice_date: r.literal(),
@@ -83,14 +75,9 @@ exports.reject = function (req, res) {
         .update(obj)
         .run()
         .then(function (response) {
-            result.message = response;
-            if (response.errors == 0) {
-                result.result = true;
-            }
-            res.json(result);
+            res.json(response);
         })
         .error(function (err) {
-            result.message = err;
-            res.json(result);
+            res.json(err);
         })
 }

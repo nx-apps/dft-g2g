@@ -27,7 +27,6 @@ exports.getById = function (req, res) {
 }
 exports.insert = function (req, res) {
     var r = req.r;
-    var result = { result: false, message: null, id: null };
     insertShip(req.body, function (ship) {
         req.body.ship = ship;
         var valid = req.ajv.validate('g2g.book', req.body);
@@ -43,32 +42,24 @@ exports.insert = function (req, res) {
                 .insert(obj)
                 .run()
                 .then(function (response) {
-                    result.message = response;
-                    if (response.errors == 0) {
-                        result.result = true;
-                        result.id = response.generated_keys;
-                    }
-                    res.json(result);
+                    res.json(response);
                 })
                 .error(function (err) {
-                    result.message = err;
-                    res.json(result);
+                    res.json(err);
                 })
         } else {
-            result.message = req.ajv.errorsText()
-            res.json(result);
+            res.json(req.ajv.errorsText());
         }
     });
 }
 exports.update = function (req, res) {
     var r = req.r;
-    var result = { result: false, message: null, id: null };
     if (req.body.book_status == "approve" || typeof req.body.bl_no === 'undefined') {
-        updateBook(req, res, result);
+        updateBook(req, res);
     } else {
         insertShip(req.body, req, res, function (ship, req, res) {
             req.body.ship = ship;
-            updateBook(req, res, result);
+            updateBook(req, res);
         });
     }
 }
@@ -138,9 +129,8 @@ function insertShip(datas, req, res, cb) {
         cb(ship, req, res);
     });
 }
-function updateBook(req, res, result) {
+function updateBook(req, res) {
     if (req.body.id != '' && req.body.id != null && typeof req.body.id !== 'undefined') {
-        result.id = req.body.id;
         var valid = req.ajv.validate('g2g.book', req.body);
         if (valid) {
             var obj = Object.assign(req.body, {
@@ -152,23 +142,16 @@ function updateBook(req, res, result) {
                 .update(obj)
                 .run()
                 .then(function (response) {
-                    result.message = response;
-                    if (response.errors == 0) {
-                        result.result = true;
-                    }
-                    res.json(result);
+                    res.json(response);
                 })
                 .error(function (err) {
-                    result.message = err;
-                    res.json(result);
+                    res.json(err);
                 })
         } else {
-            result.message = req.ajv.errorsText()
-            res.json(result);
+            res.json(req.ajv.errorsText());
         }
     } else {
-        result.message = 'require field id';
-        res.json(result);
+        res.json('require field id');
     }
 }
 exports.listDetail = function (req, res) {
