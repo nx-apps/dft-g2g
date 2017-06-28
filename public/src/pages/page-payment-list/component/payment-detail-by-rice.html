@@ -1,3 +1,9 @@
+<link rel="import" href="./../../components/format-number-behavior.html">
+<link rel="import" href="./../../../../bower_components/paper-checkbox/paper-checkbox.html">
+<link rel="import" href="./../../../../bower_components/gl-grid/gl-grid-row.html">
+<link rel="import" href="./../../../../bower_components/gl-grid/gl-grid-col.html">
+<link rel="import" href="./../../../../bower_components/gl-form/src/gl-form-input.html">
+
 <dom-module id="payment-detail-by-rice">
   <style include="gl-styles">
     :host {
@@ -37,16 +43,15 @@
     }
   </style>
   <template>
-
     <br>
     <table class="gl-table-default">
       <thead class="table-head">
         <tr>
           <th></th>
-          <th>{{localize('label_booking_code')}}</th>
-          <th>{{localize('label_booking_name')}}</th>
-          <th>{{localize('label_total_tons')}}</th>
-          <th>{{localize('text_amount')}}</th>
+          <th>{{localize.label_booking_code}}</th>
+          <th>{{localize.label_booking_name}}</th>
+          <th>{{localize.label_total_tons}}</th>
+          <th>{{localize.text_amount}}</th>
         </tr>
         </tr>
       </thead>
@@ -59,9 +64,7 @@
             <td>[[item.keyword]]</td>
             <td>[[item.statusName]]</td>
             <td>[[item.weightAll]]</td>
-             <!--<td>[[formatNumber(item.value)]]</td>-->
             <td style="text-align: center;">-</td>
-            <!--<td>[[item.Active]]</td>-->
           </tr>
         </template>
       </tbody>
@@ -69,46 +72,48 @@
     <gl-grid-row width="{{getWidth}}">
       <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,2]]"></gl-grid-col>
       <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-        <gl-form-input disabled label="{{localize('label_total_ton')}} :" placeholder="0" value="{{data.total_ton}}" name="total_ton"></gl-form-input>
+        <gl-form-input disabled label="{{localize.label_total_ton}} :" placeholder="0" value="{{data.total_ton}}" name="total_ton"></gl-form-input>
       </gl-grid-col>
       <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-       <!--<gl-form-input disabled label="{{localize('label_amount_total')}} :" placeholder="0" value="{{data.total_price}}" name="total_price"></gl-form-input>-->
-            <gl-form-input disabled label="{{localize('label_amount_total')}} :" placeholder="-" value="{{data.total_price}}" name="total_price"></gl-form-input>
-
-     </gl-grid-col>
+        <gl-form-input disabled label="{{localize.label_amount_total}} :" placeholder="-" value="{{data.total_price}}" name="total_price"></gl-form-input>
+      </gl-grid-col>
     </gl-grid-row>
   </template>
   <script>
     Polymer({
       is: "payment-detail-by-rice",
       behaviors: [
+        ReduxBehavior,
         FormatNumberBehavior,
-        nylonBehavior,
-        nylonLocalizeBehavior
+        nylonBehavior
+        // nylonLocalizeBehavior
       ],
       properties: {
+        localize:{
+          statePath : 'i18n.g2g'
+        },
         data: {
           type: Object,
           value: {}
         }
       },
-      created:function(){
-          this.nylonLocalizeImport('/i18n-page1.json');
-      },
-      calR2R: function () {
-        // console.log(this.dataFake);
-        this.set('data.total_ton', 0);
-        this.set('data.total_price',0);
-        // console.log(this.dataFake.filter((item) => item.status == false || typeof item.status == 'undefined' && item.status == undefined));
-        // console.log(this.dataFake[0].status == false);
-        // console.log(typeof this.dataFake[0].status == 'undefined');
-        // console.log(this.dataFake[0].status == undefined);
+      // created:function(){
+      //     this.nylonLocalizeImport('/i18n-page1.json');
+      // },
+      // calR2R: function () {
+      //   // console.log(this.dataFake);
+      //   this.set('data.total_ton', 0);
+      //   this.set('data.total_price',0);
+      //   // console.log(this.dataFake.filter((item) => item.status == false || typeof item.status == 'undefined' && item.status == undefined));
+      //   // console.log(this.dataFake[0].status == false);
+      //   // console.log(typeof this.dataFake[0].status == 'undefined');
+      //   // console.log(this.dataFake[0].status == undefined);
 
-        let dataR2r = this.dataFake.filter((item) => item.status == true);
-        this.set('data.total_ton', Object.keys(dataR2r).reduce((previous, current) => previous + dataR2r[current].weightAll, 0).toFixed(2));
-        this.set('data.total_price',Object.keys(dataR2r).reduce((previous, current) => previous + dataR2r[current].value , 0))
-        // total_price
-      },
+      //   let dataR2r = this.dataFake.filter((item) => item.status == true);
+      //   this.set('data.total_ton', Object.keys(dataR2r).reduce((previous, current) => previous + dataR2r[current].weightAll, 0).toFixed(2));
+      //   this.set('data.total_price',Object.keys(dataR2r).reduce((previous, current) => previous + dataR2r[current].value , 0))
+      //   // total_price
+      // },
     });
   </script>
 </dom-module>
