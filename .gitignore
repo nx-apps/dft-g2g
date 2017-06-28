@@ -6,6 +6,7 @@
 /public/bundle.js.map
 /public/css/main.css
 /temp
+/.vscode
 /loggers/*
 !/loggers/file.log
 npm-debug*

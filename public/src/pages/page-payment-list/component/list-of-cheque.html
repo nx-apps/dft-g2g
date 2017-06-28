@@ -1,3 +1,8 @@
+<link rel="import" href="./../../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="./../../../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="./../../../../bower_components/paper-tooltip/paper-tooltip.html">
+<link rel="import" href="./../../components/format-number-behavior.html">
+
 <dom-module id="list-of-cheque">
   <style include="iron-flex iron-flex-factors iron-flex-alignment gl-styles">
      :host {
@@ -44,10 +49,9 @@
   </style>
   <template>
     <div class="flex searchInput horizontal center-justified layout">
-      <div class="flex title">{{localize('text_of_contract')}} : [[dataForSelect.nameContract]]</div>
-      <!--<div class="horizontal end-justified layout">-->
+      <div class="flex title">{{localize.text_of_contract}} : [[dataForSelect.nameContract]]</div>
       <div class="flex horizontal end-justified layout">
-        <div class="labelSearch">{{localize('text_fee_no')}}.</div>{{_searchInArray(searchInput)}}
+        <div class="labelSearch">{{localize.text_fee_no}}.</div>{{_searchInArray(searchInput)}}
         <paper-input label=" " no-label-float value="{{searchInput}}"></paper-input>
         <paper-icon-button icon="search"></paper-icon-button>
         </paper-input>
@@ -58,37 +62,31 @@
       <table class="gl-table-default">
         <thead class="table-head">
           <tr>
-            <!-- <th>งวดการส่งมอบ</th> -->
-            <th>{{localize('text_fee_no')}}</th>
-            <th>{{localize('label_total_money')}}</th>
-            <th>{{localize('label_total_payed')}}</th>
-            <th>{{localize('label_balance_money')}}</th>
+            <th>{{localize.text_fee_no}}</th>
+            <th>{{localize.label_total_money}}</th>
+            <th>{{localize.label_total_payed}}</th>
+            <th>{{localize.label_balance_money}}</th>
             <th style="width:10%">Print</th>
           </tr>
         </thead>
         <tbody class="table-body">
-          <!-- <template is="dom-repeat" items="[[data]]" as="contract"> -->
-          <!--<template is="dom-if" if="[[!_isHave(newData)]]">-->
           <template is="dom-repeat" items="[[newData]]">
             <tr  level="primary">
-              <!-- <td>[[item.shm_name]]</td> -->
               <td data="[[item]]" on-tap="getChequeDetail">[[item.fee_no]]</td>
               <td data="[[item]]" on-tap="getChequeDetail">[[formatNumber(item.baht_net_value)]]</td>
               <td data="[[item]]" on-tap="getChequeDetail">[[formatNumber(item.baht_pay_value)]]</td>
               <td data="[[item]]" on-tap="getChequeDetail">[[formatNumber(item.baht_balance_value)]]</td>
               <td>
                 <paper-icon-button id="printCheque" data="[[item]]" class="crud" icon="print" raised on-tap="getCheque" hidden="[[!data.shm_status]]"></paper-icon-button>
-                  <paper-tooltip for="printCheque" offset="0">{{localize('label_send_report')}}</paper-tooltip>
+                  <paper-tooltip for="printCheque" offset="0">{{localize.label_send_report}}</paper-tooltip>
                 </td> 
             </tr>
           </template>
-          <!--</template>-->
           <template is="dom-if" if="[[_isHave(newData)]]">
             <tr>
-              <td colspan="4" style="text-align:center"> {{localize('text_no_data')}}</td>
+              <td colspan="4" style="text-align:center"> {{localize.text_no_data}}</td>
             </tr>
           </template>
-          <!-- </template> -->
         </tbody>
       </table>
     </div>
@@ -96,51 +94,55 @@
   <script>
     Polymer({
       is: "list-of-cheque",
-      observers: [
-        'initDatabl(data)'
-      ],
       behaviors: [
-        g2gCongtroller,
+        ReduxBehavior,
         nylonBehavior,
-        nylonLocalizeBehavior,
         FormatNumberBehavior
+        // g2gCongtroller,
+        // nylonLocalizeBehavior,
       ],
       properties: {
+        localize:{
+          statePath : 'i18n.g2g'
+        },
         newData: {
           type: Object
         }
       },
-      created: function () {
-        this.nylonLocalizeImport('/i18n-page1.json');
-      },
-      initDatabl: function (data) {
-        // console.log(data);
-        this.newData = this.g2gClone(data);
-        // console.log('clone new==>',this.newData);
-        // console.log('org==>',this.data);
-      },
-      _searchInArray: function (searchInput) {
-        // console.log(searchInput == '');
-        if (searchInput != '') {
-          let arr = [];
-          this.data.map((el) => {
-            if (String(el.fee_no).search(searchInput) > -1) {
-              arr.push(el);
-            }
-          });
-          this.newData = arr;
-        } else {
-          this.initDatabl(this.data);
-        }
-      },
-      getChequeDetail: function (e) {
-        // console.log(e.currentTarget.data);
-        this.fire('get-cheque-detail', { detail: e.currentTarget.data });
-      },
-      getCheque: function (e) {
-        // console.log(e.currentTarget.data);
-        window.open(window._config.reportServer+'/api/payment/report10/' + e.currentTarget.data.fee_id, '1');
-      },
+      observers: [
+        'initDatabl(data)'
+      ],
+      // created: function () {
+      //   this.nylonLocalizeImport('/i18n-page1.json');
+      // },
+      // initDatabl: function (data) {
+      //   // console.log(data);
+      //   this.newData = this.g2gClone(data);
+      //   // console.log('clone new==>',this.newData);
+      //   // console.log('org==>',this.data);
+      // },
+      // _searchInArray: function (searchInput) {
+      //   // console.log(searchInput == '');
+      //   if (searchInput != '') {
+      //     let arr = [];
+      //     this.data.map((el) => {
+      //       if (String(el.fee_no).search(searchInput) > -1) {
+      //         arr.push(el);
+      //       }
+      //     });
+      //     this.newData = arr;
+      //   } else {
+      //     this.initDatabl(this.data);
+      //   }
+      // },
+      // getChequeDetail: function (e) {
+      //   // console.log(e.currentTarget.data);
+      //   this.fire('get-cheque-detail', { detail: e.currentTarget.data });
+      // },
+      // getCheque: function (e) {
+      //   // console.log(e.currentTarget.data);
+      //   window.open(window._config.reportServer+'/api/payment/report10/' + e.currentTarget.data.fee_id, '1');
+      // },
     });
   </script>
 </dom-module>

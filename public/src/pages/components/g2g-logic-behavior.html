@@ -148,15 +148,9 @@
       if (parts.length == 2) return parts.pop().split(";").shift();
     },
     _getUrl: function () {
-      // this.set('dataForSelect.nameContract', this._getCookie("contractName"));
-      // this.set('dataForSelect.contract_id', this._getCookie("contract_id"));
       return this._getCookie("contract_id");
     },
     getDateg2g: function (date, callback) {
-      // ex
-      // this.getDateg2g(dateUn,(date)=>{
-      //   //   console.log('date',date);
-      // });
       // console.log('gggg=',date);
       if (date == undefined || date == 'undefined') {
         let date = new Date;
@@ -215,17 +209,6 @@
       }
     },
     changeString2Num: function (ob, param) {
-      //console.log(typeof ob.value);
-      // if(typeof ob.value == "string"){
-      //   console.log(numeral().unformat(ob.value));
-      //   var pathChange = ob.path.split(".");
-      //   if(pathChange.length == 2){
-      //       if(pathChange[1]==param){
-      //         ob.base[param]=parseFloat(ob.value);
-      //         // console.log(typeof ob.value);
-      //       }
-      //   }
-      // }
       if (typeof ob.value == "string") {
         var pathChange = ob.path.split(".");
         // undefined
@@ -264,7 +247,7 @@
       }
       // console.log(data);
       return data
-    }
+    },
   }
 
 </script>

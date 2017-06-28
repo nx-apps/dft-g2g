@@ -7,11 +7,10 @@
 <!--<link rel="import" href="components/list-of-confirm.html">
 <link rel="import" href="components/list-of-booking.html">
 <link rel="import" href="components/list-of-fee-g2g.html">-->
-
 <link rel="import" href="./../../../bower_components/iron-pages/iron-pages.html">
 
 <link rel="import" href="./components/chart-pie-g2g.html">
-
+<link rel="import" href="./components/contract-detail.html">
 <link rel="import" href="./../components/cookie-behavior.html">
 
 <link rel="import" href="./../../layout/shared-styles.html">
@@ -41,7 +40,7 @@
     </style>
     <template>
         <div class="layout vertical">
-            <div class="horizontal center-justified layout" style="width: 1300px">
+            <div class="xx horizontal center-justified layout wrap" style="width: 1300px">
                 <template is="dom-repeat" items="[[contractList]]">
                     <chart-pie-g2g chart-name="[[item.contract_name]]" data="[[item]]"></chart-pie-g2g>
                 </template>
@@ -137,8 +136,8 @@
                 'get-list-confirm': '_getListConfirm',
                 'get-list-booking': '_getListShipment',
                 'get-list-Fee': '_getlistFee',
-                // 'flipDrawer': '_flipDrawer',
-                // 'close-drawer': '_flipDrawerClose',
+                'flipDrawer': '_flipDrawer',
+                'close-drawer': '_flipDrawerClose',
                 // 'name-panel-right': '_namePanelRight',
                 // '_set-breadcrumbs': 'setEventBreadcrumbs'
             },
@@ -290,31 +289,14 @@
                     btnDisabled: false,
                     hiddend: true
                 })
-                if (this.checkRenderPage.contractDetail != true) {
-                    this.async(() => {
-                        this.importHref(
-                            this.resolveUrl('./components/contract-detail.html'),
-                            () => {
-                                this.async(() => {
-                                    this.fire('toast', {
-                                        status: 'success', text: 'โหลดสำเร็จ', callback: () => {
-                                            // console.log(this.dataForSelected.dataForContract);
-                                            this._flipDrawer();
-                                            this.checkRenderPage.contractDetail = true;
-                                        }
-                                    });
-
-                                }, 500)
-                            }, null, true
-                        );
-                    }, 1000);
-                } else {
+                this.async(() => {
                     this.fire('toast', {
                         status: 'success', text: 'โหลดสำเร็จ', callback: () => {
                             this._flipDrawer();
                         }
-                    });
-                }
+                    })
+
+                }, 500)
             },
             _getContractDetail: function (e) {
                 // console.log(e.detail.contract_id);
@@ -342,37 +324,14 @@
                     btnDisabled: true,
                     hiddend: true
                 })
-                if (this.checkRenderPage.contractDetail != true) {
-                    this.async(() => {
-                        this.importHref(
-                            this.resolveUrl('./components/contract-detail.html'),
-                            () => {
-                                this.async(() => {
-                                    this.fire('toast', {
-                                        status: 'success', text: 'โหลดสำเร็จ', callback: () => {
-                                            // console.log(this.dataForSelected.dataForContract);
-                                            this._flipDrawer();
-                                            this.checkRenderPage.contractDetail = true;
-                                        }
-                                    });
-
-                                }, 500)
-                            }, null, true
-                        );
-                    }, 1000);
-                } else {
+                this.async(() => {
                     this.fire('toast', {
                         status: 'success', text: 'โหลดสำเร็จ', callback: () => {
                             this._flipDrawer();
                         }
-                    });
-                }
-                // this.dataSelected = e.detail.data;
-                // } else {
-                // let contractId = e.detail.contractId;
-                // let dataContract = this.contractList.filter((contractList) => contractList.contract_id == contractId);
-                // this.dataSelected = dataContract[0];
-                // }
+                    })
+
+                }, 500)
             },
             // _getListConfirm: function (e) {
             //     this.set('pageSelected', 'listOfConfirm')

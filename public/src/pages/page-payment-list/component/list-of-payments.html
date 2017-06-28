@@ -1,3 +1,6 @@
+<link rel="import" href="./../../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="./../../../../bower_components/paper-icon-button/paper-icon-button.html">
+
 <dom-module id="list-of-payments">
   <style include="iron-flex iron-flex-factors iron-flex-alignment gl-styles">
      :host {
@@ -45,11 +48,9 @@
   </style>
   <template>
     <div class="flex searchInput horizontal center-justified layout">
-      <div class="flex title">{{localize('text_of_contract')}} : [[dataForSelect.nameContract]]</div> 
-      
-      <!--<div class="horizontal end-justified layout">-->
+      <div class="flex title">{{localize.text_of_contract}} : [[dataForSelect.nameContract]]</div>
       <div class="flex horizontal end-justified layout">
-        <div class="labelSearch">{{localize('text_invoice_no')}}</div>{{_searchInArray(searchInput)}}
+        <div class="labelSearch">{{localize.text_invoice_no}}</div>{{_searchInArray(searchInput)}}
         <paper-input label=" " no-label-float value="{{searchInput}}"></paper-input>
         <paper-icon-button icon="search"></paper-icon-button>
         </paper-input>
@@ -60,26 +61,22 @@
       <table class="gl-table-default">
         <thead class="table-head">
           <tr>
-            <th>{{localize('text_invoice_no')}}</th>
-            <th>{{localize('label_invoice_create_date')}}</th>
+            <th>{{localize.text_invoice_no}}</th>
+            <th>{{localize.label_invoice_create_date}}</th>
           </tr>
         </thead>
         <tbody class="table-body">
-          <!-- <template is="dom-repeat" items="[[data]]" as="contract"> -->
-          <!-- <template is="dom-if" if="[[!_isHave(newData)]]"> -->
           <template is="dom-repeat" items="[[newData]]">
             <tr data="[[item]]" on-tap="getChequeDetail" level="primary">
               <td>[[item.invoice_no]]</td>
               <td>[[changeDateCC(item.invoice_date)]]</td>
             </tr>
           </template>
-          <!-- </template> -->
           <template is="dom-if" if="[[_isHave(newData)]]">
             <tr>
-              <td colspan="2" style="text-align:center"> {{localize('text_no_data')}}</td>
+              <td colspan="2" style="text-align:center"> {{localize.text_no_data}}</td>
             </tr>
           </template>
-          <!-- </template> -->
         </tbody>
       </table>
     </div>
@@ -87,46 +84,50 @@
   <script>
     Polymer({
       is: "list-of-payments",
-      observers: [
-        'initDatabl(data)'
-      ],
       behaviors: [
-        g2gCongtroller,
-        nylonBehavior,
-        nylonLocalizeBehavior
+        ReduxBehavior,
+        nylonBehavior
+        // g2gCongtroller,
+        // nylonLocalizeBehavior
       ],
       properties: {
+        localize:{
+          statePath : 'i18n.g2g'
+        },
         newData: {
           type: Object
         }
       },
-      created: function () {
-        this.nylonLocalizeImport('/i18n-page1.json');
-      },
-      initDatabl: function (data) {
-        // console.log(data);
-        this.newData = this.g2gClone(data);
-        // console.log('clone new==>',this.newData);
-        // console.log('org==>',this.data);
-      },
-      _searchInArray: function (searchInput) {
-        // console.log(searchInput == '');
-        if (searchInput != '') {
-          let arr = [];
-          this.data.map((el) => {
-            if (String(el.invoice_no).search(searchInput) > -1) {
-              arr.push(el);
-            }
-          });
-          this.newData = arr;
-        } else {
-          this.initDatabl(this.data);
-        }
-      },
-      getChequeDetail: function (e) {
-        // console.log(e.currentTarget.data.invoice_no);
-        this.fire('get-payment-detail', { detail: e.currentTarget.data });
-      }
+      // observers: [
+      //   'initDatabl(data)'
+      // ],
+      // created: function () {
+      //   this.nylonLocalizeImport('/i18n-page1.json');
+      // },
+      // initDatabl: function (data) {
+      //   // console.log(data);
+      //   this.newData = this.g2gClone(data);
+      //   // console.log('clone new==>',this.newData);
+      //   // console.log('org==>',this.data);
+      // },
+      // _searchInArray: function (searchInput) {
+      //   // console.log(searchInput == '');
+      //   if (searchInput != '') {
+      //     let arr = [];
+      //     this.data.map((el) => {
+      //       if (String(el.invoice_no).search(searchInput) > -1) {
+      //         arr.push(el);
+      //       }
+      //     });
+      //     this.newData = arr;
+      //   } else {
+      //     this.initDatabl(this.data);
+      //   }
+      // },
+      // getChequeDetail: function (e) {
+      //   // console.log(e.currentTarget.data.invoice_no);
+      //   this.fire('get-payment-detail', { detail: e.currentTarget.data });
+      // }
     });
   </script>
 </dom-module>
