@@ -1,9 +1,10 @@
 module.exports = function (app) {
     var controller = require('../controllers/fee.controller');
-    app.get('/contract', controller.getByContractId);
     app.get('/calc', controller.calc);
     app.post('/insert', controller.insert);
+    app.get('/contract', controller.getByContractId);
     app.get('', controller.getById);
+    app.put('/update',controller.update);
     // app.get('/shm/id/:shm_id', controller.getByShmID);
 
     // app.get('/invoice/id/:invoice_id', controller.getByInvoiceId);

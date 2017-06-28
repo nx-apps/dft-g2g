@@ -62,7 +62,7 @@ exports.insert = function (req, res) {
                 rate_bank_b: rate_bank,
                 rate_tt_b: rate_tt,
                 fee_no: r.branch(fee.eq([]), 1, fee_round.eq([]), fee.getField('fee_no').max().add(1), fee_round.getField('fee_no')(0)),
-                fee_round: r.branch(fee_round.eq([]), 1, fee_round.getField('fee_round').max().add(1)),
+                fee_round: r.branch(fee_round.eq([]), 0, fee_round.getField('fee_round').max().add(1)),
                 date_created: r.now().inTimezone('+07'),
                 date_updated: r.now().inTimezone('+07'),
                 fin_status: false,
@@ -114,7 +114,16 @@ exports.insert = function (req, res) {
 }
 exports.getByContractId = function (req, res) {
     req.r.table('fee').getAll([req.query.id, false], { index: 'contractFinStatus' })
-        .pluck('id', 'fee_no', 'fee_round', 'net_weight', 'value_d', 'fee_ex_d', 'fee_in_b', 'rate_bank_b', 'fee_date')
+        .merge(function (m) {
+            return {
+                invoice_count: m('book').count(),
+                invoice_no: m('book').getField('invoice_no').reduce(function (lf, rt) { return lf.add(',', rt) })
+            }
+        })
+        .pluck('id', 'cl_no', 'fee_no', 'fee_round', 'fee_date', 'net_weight',
+        'value_d', 'rate_bank_b', 'value_b', 'value_fee_b', 'value_tax_b', 'value_final_b',
+        'fin_status', 'rice_status', 'invoice_count', 'invoice_no')
+        .orderBy('cl_no', 'fee_no', 'fee_round')
         .run()
         .then(function (data) {
             res.json(data)
@@ -126,4 +135,7 @@ exports.getById = function (req, res) {
         .then(function (data) {
             res.json(data)
         })
+}
+exports.update = function(req,res){
+
 }
