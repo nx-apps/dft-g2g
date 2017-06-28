@@ -1,3 +1,7 @@
+<link rel="import" href="./../../components/format-number-behavior.html">
+<link rel="import" href="./../../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="./../../../../bower_components/paper-icon-button/paper-icon-button.html">
+
 <dom-module id="list-of-fee">
   <style include="iron-flex iron-flex-factors iron-flex-alignment gl-styles">
      :host {
@@ -44,10 +48,10 @@
   </style>
   <template>
     <div class="flex searchInput horizontal center-justified layout">
-      <div class="flex title">{{localize('text_of_contract')}} : [[dataForSelect.nameContract]]
+      <div class="flex title">{{localize.text_of_contract}} : [[dataForSelect.nameContract]]
       </div>
       <div class="flex horizontal end-justified layout">
-        <div class="labelSearch">{{localize('text_fee_no')}}</div>{{_searchInArray(searchInput)}}
+        <div class="labelSearch">{{localize.text_fee_no}}</div>{{_searchInArray(searchInput)}}
         <paper-input label=" " no-label-float value="{{searchInput}}"></paper-input>
         <paper-icon-button icon="search"></paper-icon-button>
       </div>
@@ -56,11 +60,11 @@
       <table class="gl-table-default">
         <thead class="table-head">
           <tr>
-            <th>{{localize('text_fee_no')}}</th>
-            <th>{{localize('label_bath_value')}}</th>
-            <th>{{localize('label_invoice_fee')}}</th>
-            <th>{{localize('label_expenses_one_present')}}</th>
-            <th>{{localize('label_total_bath_expenses')}}</th>
+            <th>{{localize.text_fee_no}}</th>
+            <th>{{localize.label_bath_value}}</th>
+            <th>{{localize.label_invoice_fee}}</th>
+            <th>{{localize.label_expenses_one_present}}</th>
+            <th>{{localize.label_total_bath_expenses}}</th>
           </tr>
         </thead>
         <tbody class="table-body">
@@ -75,7 +79,7 @@
           </template>
           <template is="dom-if" if="[[_isHave(newData)]]">
             <tr>
-              <td colspan="5" style="text-align:center"> {{localize('text_no_data')}}</td>
+              <td colspan="5" style="text-align:center"> {{localize.text_no_data}}</td>
             </tr>
           </template>
         </tbody>
@@ -85,45 +89,49 @@
   <script>
     Polymer({
       is: "list-of-fee",
-      observers: [
-        'initDataFee(data)'
-      ],
       behaviors: [
-        g2gCongtroller,
+        ReduxBehavior,
         nylonBehavior,
-        nylonLocalizeBehavior,
         FormatNumberBehavior
+        // g2gCongtroller,
+        // nylonLocalizeBehavior,
       ],
       properties: {
+        localize:{
+          statePath : 'i18n.g2g'
+        },
         newData: {
           type: Object
         }
       },
-      created: function () {
-        this.nylonLocalizeImport('/i18n-page1.json');
-      },
-      initDataFee: function (data) {
-        // console.log(data);
-        this.newData = this.g2gClone(data);
-      },
-      _searchInArray: function (searchInput) {
-        // console.log(searchInput == '');
-        if (searchInput != '') {
-          let arr = [];
-          this.data.map((el) => {
-            if (String(el.fee_no).search(searchInput) > -1) {
-              //  console.log('search==> ',el);
-              arr.push(el);
-            }
-          });
-          this.newData = arr;
-        } else {
-          this.initDataFee(this.data);
-        }
-      },
-      getFeeDetail: function (e) {
-        this.fire('get-fee-detail', { detail: e.currentTarget.data });
-      }
+      // observers: [
+      //   'initDataFee(data)'
+      // ],
+      // created: function () {
+      //   this.nylonLocalizeImport('/i18n-page1.json');
+      // },
+      // initDataFee: function (data) {
+      //   // console.log(data);
+      //   this.newData = this.g2gClone(data);
+      // },
+      // _searchInArray: function (searchInput) {
+      //   // console.log(searchInput == '');
+      //   if (searchInput != '') {
+      //     let arr = [];
+      //     this.data.map((el) => {
+      //       if (String(el.fee_no).search(searchInput) > -1) {
+      //         //  console.log('search==> ',el);
+      //         arr.push(el);
+      //       }
+      //     });
+      //     this.newData = arr;
+      //   } else {
+      //     this.initDataFee(this.data);
+      //   }
+      // },
+      // getFeeDetail: function (e) {
+      //   this.fire('get-fee-detail', { detail: e.currentTarget.data });
+      // }
     });
   </script>
 </dom-module>
