@@ -2,57 +2,6 @@
     "name": "g2g.book_detail",
     "items": {
         "properties": {
-            "id": {
-                "type": "string"
-            },
-            "num_of_container": {
-                "type": "integer"
-            },
-            "package_id": {
-                "type": "string"
-            },
-            "package": {
-                "type": "object"
-            },
-            "package_amount": {
-                "type": "number"
-            },
-            "book_det_weight": {
-                "type": "number"
-            },
-            "price_d": {
-                "type": "number"
-            },
-            "value_d": {
-                "type": "number"
-            },
-            "gross_weight": {
-                "type": "number"
-            },
-            "net_weight": {
-                "type": "number"
-            },
-            "tare_weight": {
-                "type": "number"
-            },
-            "exporter_id": {
-                "type": "string"
-            },
-            "exporter_no": {
-                "type": "number"
-            },
-            "company_taxno": {
-                "type": "string"
-            },
-            "company": {
-                "type": "object"
-            },
-            "hamonize_id": {
-                "type": "string"
-            },
-            "hamonize": {
-                "type": "object"
-            },
             "book_id": {
                 "type": "string"
             },
@@ -62,9 +11,87 @@
             "cl_id": {
                 "type": "string"
             },
+            "company": {
+                "type": "object"
+            },
+            "company_taxno": {
+                "type": "string"
+            },
             "contract_id": {
                 "type": "string"
+            },
+            "creater": {
+                "type": "string"
+            },
+            "date_created": {
+                "type": "string",
+                "format": "date-time"
+            },
+            "date_updated": {
+                "type": "string",
+                "format": "date-time"
+            },
+            "exporter_id": {
+                "type": "string"
+            },
+            "exporter_no": {
+                "type": "number"
+            },
+            "gross_weight": {
+                "type": "number"
+            },
+            "hamonize": {
+                "type": "object"
+            },
+            "hamonize_id": {
+                "type": "string"
+            },
+            "id": {
+                "type": "string"
+            },
+            "net_weight": {
+                "type": "number"
+            },
+            "num_of_container": {
+                "type": "integer"
+            },
+            "package": {
+                "type": "object"
+            },
+            "package_amount": {
+                "type": "number"
+            },
+            "package_id": {
+                "type": "string"
+            },
+            "price_d": {
+                "type": "number"
+            },
+            "tare_weight": {
+                "type": "number"
+            },
+            "updater": {
+                "type": "string"
+            },
+            "value_b": {
+                "type": "number"
+            },
+            "value_bal_b": {
+                "type": "number"
+            },
+            "value_d": {
+                "type": "number"
+            },
+            "value_fee_b": {
+                "type": "number"
+            },
+            "value_final_b": {
+                "type": "number"
+            },
+            "value_tax_b": {
+                "type": "number"
             }
+            
         }
     }
 }
