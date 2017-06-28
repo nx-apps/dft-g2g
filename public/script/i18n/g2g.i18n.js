@@ -38,6 +38,7 @@ export const g2g = {
         text_order_no:"ครั้งที่ ",
         text_check_box:"เลือก ",
         text_pay_amounts: "จำนวนเงินที่ต้องจ่าย",
+        history_pay:"ประวัติการจ่ายเงิน",
 
         "":"Chart",
         label_make_tract:"ทำสัญญา",
