@@ -247,7 +247,7 @@
                 <paper-checkbox checked="{{item.check}}" id="{{indexroot}}" on-tap="getCheckChild" disabled="[[commonState.btnDisabled]]">
                   <!--{{item.check}}||-->
                    [[item.name_th]] || 
-                   <!--[[item.value]]-->
+                   [[item.value]]
                    </paper-checkbox>
                 <template is="dom-repeat" items={{item.sub}} as="subChild">
                   <div class="sub-item">
@@ -455,8 +455,8 @@
           dataResive.country = this.dataShow.obj.country
           dataResive.country_id = this.dataShow.obj.buyer.country_id
           dataResive.contract_date = new Date(dataResive.contract_date)
-          dataResive.date_created = new Date(dataResive.date_created)
-          dataResive.date_updated = new Date(dataResive.date_updated)
+          delete dataResive.date_updated 
+          delete dataResive.date_created
           res(dataResive)
         })
       },
@@ -481,6 +481,7 @@
         this._resiveForm()
           .then((res) => {
             this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
+            res.contract_status =  false
             this.dispatchAction('POST_CONTRACT', res)
               .then((response) => {
                 this.dispatchAction('GET_CONTRACT_OF_BUYER', res.buyer_id);
@@ -541,7 +542,7 @@
             if (result == true) {
               this._resiveForm()
                 .then((res) => {
-                  // console.log(res.id);
+                  // console.log(res);
                   this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
                   this.dispatchAction('DELETE_CONTRACT', res.id)
                     .then((response) => {
