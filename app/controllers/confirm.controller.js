@@ -40,7 +40,15 @@ exports.getByContractId = function (req, res) {
             res.json(err)
         })
 }
-
+exports.getHmByContract = function (req, res) {
+    req.r.table('contract')
+        .get(req.query.id)
+        .getField('contract_hamonize')
+        .run()
+        .then(function (data) {
+            res.json(data);
+        })
+}
 exports.getById = function (req, res) {
     var r = req.r;
     r.table("confirm_letter")

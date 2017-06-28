@@ -1,6 +1,7 @@
 module.exports = function (app) {
     var controller = require('../controllers/confirm.controller');
     app.get('/contract', controller.getByContractId);
+    app.get('/hamonize',controller.getHmByContract);
     app.get('/', controller.getById);
     app.get('/exporter', controller.getExporter)
     app.get('/fp',controller.getFP);
