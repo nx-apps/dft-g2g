@@ -20,17 +20,6 @@
             "contract_id": {
                 "type": "string"
             },
-            "creater": {
-                "type": "string"
-            },
-            "date_created": {
-                "type": "string",
-                "format": "date-time"
-            },
-            "date_updated": {
-                "type": "string",
-                "format": "date-time"
-            },
             "exporter_id": {
                 "type": "string"
             },
@@ -53,7 +42,7 @@
                 "type": "number"
             },
             "num_of_container": {
-                "type": "integer"
+                "type": "number"
             },
             "package": {
                 "type": "object"
@@ -69,9 +58,6 @@
             },
             "tare_weight": {
                 "type": "number"
-            },
-            "updater": {
-                "type": "string"
             },
             "value_b": {
                 "type": "number"
