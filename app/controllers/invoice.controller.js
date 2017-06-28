@@ -40,7 +40,7 @@ exports.update = function (req, res) {
     if (valid) {
         var obj = {
             invoice_no: req.body.invoice_no,
-            invoice_date: r.ISO8601(req.body.invoice_date + '+07:00'),
+            invoice_date: r.ISO8601(req.body.invoice_date).inTimezone('+07'),
             made_out_to: req.body.made_out_to,
             invoice_status: true,
             fee_status: false,

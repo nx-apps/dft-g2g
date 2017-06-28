@@ -25,8 +25,8 @@ exports.insert = function (req, res) {
     var detail = req.body.detail;
     var rate_bank = parseFloat(req.body.rate_bank_b);
     var rate_tt = parseFloat(req.body.rate_tt_b);
-    var fee_date = r.ISO8601(req.body.fee_date + '+07:00');
-    var fees = r.expr(book)
+    var fee_date = r.ISO8601(req.body.fee_date).inTimezone('+07');
+    var obj = r.expr(book)
         .eqJoin('book_id', r.table('book')).pluck('left', { right: ['cl_id', 'cl_no', 'contract_id', 'invoice_date', 'invoice_no'] }).zip()
         .group(function (g) {
             return g.pluck('cl_id', 'cl_no', 'contract_id')
@@ -71,46 +71,7 @@ exports.insert = function (req, res) {
                 updater: 'admin'
             })
         });
-    var book = fees.getField('book')
-        .reduce(function (left, right) {
-            return left.add(right)
-        });
-    var detail = book.getField('detail')
-        .reduce(function (left, right) {
-            return left.add(right)
-        });
-
-    var insertFee = r.table('fee').insert(fees);
-    var updateBook = book.forEach(function (fe) {
-        return r.table('book').get(fe('book_id')).update(
-            fe.pluck('fee_ex_d', 'fee_in_b', 'value_b', 'value_bal_b', 'value_d', 'value_fee_b', 'value_final_b', 'value_tax_b')
-                .merge({ fee_status: true })
-        )
-    });
-    var updateDetail = detail.forEach(function (fe) {
-        return r.table('book_detail').get(fe('detail_id')).update(fe.without('company', 'detail_id'))
-    });
-    async.parallel({
-        fee: function (callback) {
-            insertFee.run().then(function (res1) {
-                callback(null, res1)
-            })
-        },
-        book: function (callback) {
-            updateBook.run().then(function (res2) {
-                callback(null, res2)
-            })
-        },
-        detail: function (callback) {
-            updateDetail.run().then(function (res3) {
-                callback(null, res3)
-            })
-        }
-    }, function (err, results) {
-        // results is now equals to: {one: 1, two: 2}
-        // console.log(results);
-        res.json(results.fee);
-    });
+    updateFee("insert", obj, res);
 }
 exports.getByContractId = function (req, res) {
     req.r.table('fee').getAll([req.query.id, false], { index: 'contractFinStatus' })
@@ -136,6 +97,75 @@ exports.getById = function (req, res) {
             res.json(data)
         })
 }
-exports.update = function(req,res){
+exports.update = function (req, res) {
+    var valid = req.ajv.validate('g2g.fee', req.body);
+    if (req.body.id != '' && req.body.id != null && typeof req.body.id !== 'undefined') {
+        if (valid) {
+            var obj = Object.assign(req.body, {
+                fee_date: r.ISO8601(req.body.fee_date).inTimezone('+07'),
+                date_updated: r.now().inTimezone('+07'),
+                updater: 'admin'
+            });
+            updateFee("update", r.expr([obj]), res);
 
+        } else {
+            res.json(req.ajv.errorsText());
+        }
+    } else {
+        res.json('require field id');
+    }
+}
+
+function updateFee(act, obj, res) {
+    var book = obj.getField('book')
+        .reduce(function (left, right) {
+            return left.add(right)
+        });
+    var detail = book.getField('detail')
+        .reduce(function (left, right) {
+            return left.add(right)
+        });
+    var fee;
+    if (act == "insert") {
+        fee = r.table("fee").insert(obj);
+    } else {
+        fee = r.expr(obj)
+            .merge(function (m) {
+                return {
+                    book: m('book').merge(function (m2) {
+                        return {
+                            invoice_date: r.ISO8601(m2('invoice_date')).inTimezone('+07')
+                        }
+                    })
+                }
+            })
+    }
+    var updateBook = book.forEach(function (fe) {
+        return r.table('book').get(fe('book_id')).update(
+            fe.pluck('fee_ex_d', 'fee_in_b', 'value_b', 'value_bal_b', 'value_d', 'value_fee_b', 'value_final_b', 'value_tax_b')
+                .merge({ fee_status: true })
+        )
+    });
+    var updateDetail = detail.forEach(function (fe) {
+        return r.table('book_detail').get(fe('detail_id')).update(fe.without('company', 'detail_id'))
+    });
+    async.parallel({
+        fee: function (callback) {
+            fee.run().then(function (res1) {
+                callback(null, res1)
+            })
+        },
+        book: function (callback) {
+            updateBook.run().then(function (res2) {
+                callback(null, res2)
+            })
+        },
+        detail: function (callback) {
+            updateDetail.run().then(function (res3) {
+                callback(null, res3)
+            })
+        }
+    }, function (err, results) {
+        res.json(results.fee);
+    });
 }
