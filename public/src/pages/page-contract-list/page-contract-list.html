@@ -41,7 +41,7 @@
     </style>
     <template>
         <div class="layout vertical">
-            <div class="horizontal center-justified layout" style="width: 1300px">
+            <div class="xx horizontal center-justified layout wrap" style="width: 1300px">
                 <template is="dom-repeat" items="[[contractList]]">
                     <chart-pie-g2g chart-name="[[item.contract_name]]" data="[[item]]"></chart-pie-g2g>
                 </template>
@@ -137,8 +137,8 @@
                 'get-list-confirm': '_getListConfirm',
                 'get-list-booking': '_getListShipment',
                 'get-list-Fee': '_getlistFee',
-                // 'flipDrawer': '_flipDrawer',
-                // 'close-drawer': '_flipDrawerClose',
+                'flipDrawer': '_flipDrawer',
+                'close-drawer': '_flipDrawerClose',
                 // 'name-panel-right': '_namePanelRight',
                 // '_set-breadcrumbs': 'setEventBreadcrumbs'
             },
