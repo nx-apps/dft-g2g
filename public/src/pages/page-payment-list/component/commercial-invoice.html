@@ -12,6 +12,7 @@
 <link rel="import" href="./../../../../bower_components/gl-form/gl-form-textarea.html">
 <link rel="import" href="./../../../../bower_components/vaadin-date-picker/vaadin-date-picker.html">
 <link rel="import" href="./../../components/format-number-behavior.html">
+<link rel="import" href="./../../components/validateFormBehaviors.html">
 
 <dom-module id="commercial-invoice">
   <style include="iron-flex iron-flex-factors iron-flex-alignment gl-styles page-style">
@@ -93,44 +94,44 @@
           </gl-grid-col>
           <gl-grid-col width="[[getWidth]]" grid="[[300,0],[500,8]]"></gl-grid-col>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,2]]">
-            <vaadin-date-picker class="required" required disabled="[[isInputDisabled]]" label="{{localize.label_invoice_date}}" value="{{data.invoice_date}}"></vaadin-date-picker>
+            <gl-form-input type="date" class="required" required disabled="[[isInputDisabled]]" label="{{localize.label_invoice_date}}" value="{{data.invoice_date}}"></gl-form-input>
+            <!--<vaadin-date-picker class="required" required disabled="[[isInputDisabled]]" label="{{localize.label_invoice_date}}" value="{{data.invoice_date}}"></vaadin-date-picker>-->
           </gl-grid-col>
         </gl-grid-row>
 
         <gl-grid-row>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,12]]">
-            <gl-form-textarea disabled value="[[data.quantity]] BAGS OF [[nameRice]] CURRENT NEW CROP, [[cl_quality]]" placeholder="{{localize.text_your_detail}}"
-              label="{{localize.label_invoice_of}} :" error-message="{{localize.text_enter_your_detail}}" auto-validate
-              required></gl-form-textarea>
+            <template is="dom-repeat" items="{{data.detail}}">
+              <gl-form-textarea disabled value="[[item.package_amount]] BAGS OF [[_obSetUpper(item.hamonize.hamonize_en)]] BROKENS, [[item.project_en]] CURRENT NEW CROP, DOUBLE POLISHED AND SORTEXED QUALITY." placeholder="{{localize.text_your_detail}}"
+                label="{{localize.label_invoice_of}} :" error-message="{{localize.text_enter_your_detail}}" auto-validate
+                required></gl-form-textarea>
+            </template>
           </gl-grid-col>
         </gl-grid-row>
 
         <gl-grid-row>
 
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,8]]">
-            <gl-form-input disabled value="[[_getVessel(data.ship)]]" label="{{localize.label_shippped_per_invoice}} : [[_ObcountIndex(index)]]"></gl-form-input>
+            <gl-form-input disabled value="{{data.ship}}" label="{{localize.label_shippped_per_invoice}} : [[_ObcountIndex(index)]]"></gl-form-input>
           </gl-grid-col>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-            <gl-form-input disabled value="[[data.load_port_name]],[[data.load_country_name_en]]" label="{{localize.label_port_of_loading_invoice}} :"></gl-form-input>
+            <gl-form-input disabled value="[[_obSetUpper(data.load_port.port_name)]],[[_obSetUpper(data.load_port.country_name_en)]]" label="{{localize.label_port_of_loading_invoice}} :"></gl-form-input>
           </gl-grid-col>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-            <gl-form-textarea disabled value="[[data.deli_port_name]],[[data.deli_country_fullname_en]]" label="{{localize.label_port_of_discharge_invoice}}:"></gl-form-label-textarea>
+            <gl-form-textarea disabled value="[[_obSetUpper(data.deli_port.port_name)]],[[_obSetUpper(data.deli_port.country_fullname_en)]]" label="{{localize.label_port_of_discharge_invoice}}:"></gl-form-label-textarea>
           </gl-grid-col>
 
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-            <gl-form-textarea disabled value="[[data.dest_port_name]],[[data.dest_country_fullname_en]]" label="{{localize.label_place_of_delivery_invoice}} :"></gl-form-textarea>
+            <gl-form-textarea disabled value="[[_obSetUpper(data.dest_port.port_name)]],[[_obSetUpper(data.dest_port.country_fullname_en)]]" label="{{localize.label_place_of_delivery_invoice}} :"></gl-form-textarea>
           </gl-grid-col>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
             <gl-form-input disabled value="[[data.bl_no]]" label="{{localize.label_bill_of_lading}}:"></gl-form-input>
           </gl-grid-col>
-          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-            <vaadin-date-picker disabled label="{{localize.label_invoice_date}}" value="[[data.etd_date]]"></vaadin-date-picker>
-          </gl-grid-col>
         </gl-grid-row>
 
         <gl-grid-row>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,8]]">
-            <gl-form-textarea disabled value="[[data.buyer_address]]" label="{{localize.label_buyer_address_invoice}} :"></gl-form-textarea>
+            <gl-form-textarea disabled value="[[data.buyer.buyer_address]]" label="{{localize.label_buyer_address_invoice}} :"></gl-form-textarea>
           </gl-grid-col>
         </gl-grid-row>
 
@@ -154,135 +155,81 @@
               </tr>
             </thead>
             <tbody class="table-body">
-              <template is="dom-repeat" items="[[data.bl_detail]]">
+              <template is="dom-repeat" items="[[data.detail]]">
                 <tr style="font-size:14px">
-                  <td>[[data.buyer_masks]]</td>
-                  <td>[[formatNumberNoZero(item.quantity_bags)]] {{localize.text_bags}}</td>
+                  <td>[[data.buyer.buyer_masks]]</td>
+                  <td>[[formatNumberNoZero(item.package_amount)]] {{localize.text_bags}}</td>
                   <td>
-                    [[item.type_rice_desc_en]] CURRENT NEW CROP,DOUBLE POLISHED AND SORTEXED QUALITY.<br> PACKING: INSTRONG
-                    EXPORT SEA WORTHY NEWSINGLE PP BAGS OF [[item.package_kg_per_bag]] KILOGRAMS NET WITH MINIMUM TARE WEIGHT
-                    TO BE AT [[item.package_weight_bag]] GRAM/BAG. TWO PERCENT (2%) MARKED SPARE EMPTY BAGS TO BE SUPPLIED
-                    FREE OF CHARGE BY THE SELLER ALONG WITH THE SHIPMENT. <br> PRICE : USD [[item.price_per_ton]] PER METRIC
-                    TON, [[data.inct_id]] [[data.inct_name]] BANGKOK OR [[data.load_port_name]] AT BUYER'S OPTION.<br>
+                    [[_obSetUpper(item.hamonize.hamonize_en)]] BROKENS, [[item.project_en]] CURRENT NEW CROP,DOUBLE POLISHED AND SORTEXED QUALITY.<br> PACKING: INSTRONG
+                    EXPORT SEA WORTHY NEWSINGLE PP BAGS OF [[item.package.package_kg_per_bag]] KILOGRAMS NET WITH MINIMUM TARE WEIGHT
+                    TO BE AT [[item.package.package_weight_bag]] GRAM/BAG. TWO PERCENT (2%) MARKED SPARE EMPTY BAGS TO BE SUPPLIED
+                    FREE OF CHARGE BY THE SELLER ALONG WITH THE SHIPMENT. <br> PRICE : USD [[item.price_d]] PER METRIC
+                    TON, [[_getIncoterms(data.incoterms)]] BANGKOK OR LAEM CHABANG AT BUYER'S OPTION.<br>
                     <gl-grid-row>
-                      <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,1]]">
-                      </gl-grid-col>
-                      <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,3]]">
-                        {{localize.label_gross_weight}}
-                      </gl-grid-col>
-                      <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,1]]">
-                        :
-                      </gl-grid-col>
-                      <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,4]]">
-                        [[formatNumber(item.weight_gross)]]
-                      </gl-grid-col>
-                      <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,3]]">
-                        {{localize.label_metric_ton}}
-                      </gl-grid-col>
+                      <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,1]]"></gl-grid-col>
+                      <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,3]]">{{localize.label_gross_weight}}</gl-grid-col>
+                      <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,1]]">:</gl-grid-col>
+                      <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,4]]">[[formatNumber(item.gross_weight)]]</gl-grid-col>
+                      <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,3]]">{{localize.label_metric_ton}}</gl-grid-col>
                     </gl-grid-row>
                     <gl-grid-row>
-                      <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,1]]">
-                      </gl-grid-col>
-                      <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,3]]">
-                        {{localize.label_tare_weight}}
-                      </gl-grid-col>
-                      <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,1]]">
-                        :
-                      </gl-grid-col>
-                      <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,4]]">
-                        [[formatNumber(item.weight_tare)]]
-                      </gl-grid-col>
-                      <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,3]]">
-                        {{localize.label_metric_ton}}
-                      </gl-grid-col>
+                      <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,1]]"></gl-grid-col>
+                      <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,3]]">{{localize.label_tare_weight}}</gl-grid-col>
+                      <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,1]]">:</gl-grid-col>
+                      <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,4]]">[[formatNumber(item.tare_weight)]]</gl-grid-col>
+                      <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,3]]">{{localize.label_metric_ton}}</gl-grid-col>
                     </gl-grid-row>
 
                     <gl-grid-row>
-                      <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,1]]">
-                      </gl-grid-col>
-                      <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,3]]">
-                        {{localize.label_net_weight}}
-                      </gl-grid-col>
-                      <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,1]]">
-                        :
-                      </gl-grid-col>
-                      <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,4]]">
-                        [[formatNumber(item.weight_net)]]
-                      </gl-grid-col>
-                      <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,3]]">
-                        {{localize.label_metric_ton}}
-                      </gl-grid-col>
+                      <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,1]]"></gl-grid-col>
+                      <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,3]]">{{localize.label_net_weight}}</gl-grid-col>
+                      <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,1]]">:</gl-grid-col>
+                      <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,4]]">[[formatNumber(item.net_weight)]]</gl-grid-col>
+                      <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,3]]">{{localize.label_metric_ton}}</gl-grid-col>
                     </gl-grid-row>
-                    <br> (US.DOLLARS [[_toWords(item.amount_usd)]] ONLY)
+                    <br> (US.DOLLARS [[_toWords(item.value_d)]] ONLY)
                   </td>
-                  <td>USD [[formatNumber(item.amount_usd)]]</td>
+                  <td>USD [[formatNumber(item.value_d)]]</td>
                 </tr>
               </template>
             </tbody>
             <tfoot class="table-foor">
               <tr style="font-size:14px">
                 <td></td>
-                <td>[[formatNumberNoZero(data.quantity_bags)]] BAGS</td>
+                <td>[[formatNumberNoZero(data.package_amount)]] BAGS</td>
                 <td>
                   TOTAL <br>
                   <gl-grid-row>
-                    <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,1]]">
-                    </gl-grid-col>
-                    <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,3]]">
-                      {{localize.label_gross_weight}}
-                    </gl-grid-col>
-                    <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,1]]">
-                      :
-                    </gl-grid-col>
-                    <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,4]]">
-                      [[formatNumber(data.weight_gross)]]
-                    </gl-grid-col>
-                    <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,3]]">
-                      {{localize.label_metric_ton}}
-                    </gl-grid-col>
+                    <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,1]]"></gl-grid-col>
+                    <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,3]]">{{localize.label_gross_weight}}</gl-grid-col>
+                    <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,1]]">:</gl-grid-col>
+                    <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,4]]">[[formatNumber(data.gross_weight)]]</gl-grid-col>
+                    <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,3]]">{{localize.label_metric_ton}}</gl-grid-col>
                   </gl-grid-row>
                   <gl-grid-row>
-                    <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,1]]">
-                    </gl-grid-col>
-                    <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,3]]">
-                      {{localize.label_tare_weight}}
-                    </gl-grid-col>
-                    <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,1]]">
-                      :
-                    </gl-grid-col>
-                    <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,4]]">
-                      [[formatNumber(data.weight_tare)]]
-                    </gl-grid-col>
-                    <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,3]]">
-                      {{localize.label_metric_ton}}
-                    </gl-grid-col>
+                    <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,1]]"></gl-grid-col>
+                    <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,3]]">{{localize.label_tare_weight}}</gl-grid-col>
+                    <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,1]]">:</gl-grid-col>
+                    <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,4]]">[[formatNumber(data.tare_weight)]]</gl-grid-col>
+                    <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,3]]">{{localize.label_metric_ton}}</gl-grid-col>
                   </gl-grid-row>
 
                   <gl-grid-row>
-                    <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,1]]">
-                    </gl-grid-col>
-                    <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,3]]">
-                      {{localize.label_net_weight}}
-                    </gl-grid-col>
-                    <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,1]]">
-                      :
-                    </gl-grid-col>
-                    <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,4]]">
-                      [[formatNumber(data.weight_net)]]
-                    </gl-grid-col>
-                    <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,3]]">
-                      {{localize.label_metric_ton}}
-                    </gl-grid-col>
+                    <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,1]]"></gl-grid-col>
+                    <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,3]]">{{localize.label_net_weight}}</gl-grid-col>
+                    <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,1]]">:</gl-grid-col>
+                    <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,4]]">[[formatNumber(data.net_weight)]]</gl-grid-col>
+                    <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,3]]">{{localize.label_metric_ton}}</gl-grid-col>
                   </gl-grid-row>
 
-                  <br> (US.DOLLARS [[_toWords(data.amount_usd)]] ONLY)
-                  <br> UNDER THE SELLS AND PURCHASE CONTRACT NO.[[data.contract_name]] BETWEEN [[data.buyer_name]] AND DEPARTMENT
-                  OF FOREIGN TRADE, MINISTRY OF COMMERCE OF THAILAND DATED [[checkPrice(data)]]. <br> PAYMENT BY T/T TO :
+                  <br> (US.DOLLARS [[_toWords(data.value_d)]] ONLY)
+                  <br> UNDER THE SELLS AND PURCHASE CONTRACT NO.[[data.contract_name]] BETWEEN [[data.buyer.buyer_name]] AND DEPARTMENT
+                  OF FOREIGN TRADE, MINISTRY OF COMMERCE OF THAILAND DATED [[checkDate(data)]]. <br> PAYMENT BY T/T TO :
                   KRUNG THAI BANK PUBLIC COMPANY LIMITED, BANGKOK, THAILAND <br> SWIFT CODE : KRTHTHBK <br> NAME ACCOUNT:
                   DEPARTMENT OF FOREIGN TRADE <br> BANK ACCOUNT NUMBER 385-0-12421-5<br> ADDRESS : 44/100 NONTHABURI 1 ROAD,
                   NONTHABURI 11000, THAILAND
                 </td>
-                <td>USD [[formatNumber(data.amount_usd)]]</td>
+                <td>USD [[formatNumber(data.value_d)]]</td>
               </tr>
             </tfoot>
           </table>
@@ -305,25 +252,18 @@
   <script>
     Polymer({
       is: "commercial-invoice",
-      behaviors: [
-        ReduxBehavior,
-        FormatNumberBehavior,
-        nylonBehavior
-        // g2gModelBehavior,
-        // g2gCongtroller,
-        // nylonLocalizeBehavior
-      ],
+      behaviors: [ReduxBehavior, FormatNumberBehavior, nylonBehavior, ValidateFormBehavior],
       properties: {
         localize:{
           statePath : 'i18n.g2g'
         },
-        data: {
-          type: Object
+        data:{
+          statePath : 'book.data'
         },
-        nameRice: {
-          type: String,
-          value: ''
-        },
+        // nameRice: {
+        //   type: String,
+        //   value: ''
+        // },
         printReport: {
           type: Object,
           value: { typeFile: 'pdf' }
@@ -349,42 +289,71 @@
       //   'edit-input': 'editInput',
       //   'delete-input': 'deteleInvoice'
       // },
-      // created: function () {
-      //   this.nylonLocalizeImport('/i18n-page1.json');
-      // },
-      // _getVessel: function (data) {
-      //   if (typeof data !== 'undefined' && data !== 'undefined') {
-      //     return data.map((e) => e.ship_name).join(", ");
-      //   }
-      // },
+      _getVessel: function (data) {
+        if (typeof data !== 'undefined' && data !== 'undefined') {
+          return data.map((e) => e.ship_name).join(", ");
+        }
+      },
+      _getIncoterms: function (data){
+        if (typeof data !== 'undefined' && data !== 'undefined') {
+          return data.map((e) => e.inct_name).join(", ");
+        }
+      },
       // _changeDataCommercial: function (dateUn) {
       //   this.getDateg2g(dateUn, (date) => {
       //     this.set('data.invoice_date', date);
       //     this.notifyPath('data.invoice_date');
       //   });
       // },
-      // _obCheckDataForWrite: function (data) {
-      //   // if (data.cl_quality != null) {
-      //   //   this.cl_quality = data.cl_quality.toUpperCase();
-      //   // }
-      //   try {
-      //     let rice = data.bl_detail;
-      //     if (this.nameRice.length == 0) {
-      //       rice.map((el) => {
-      //         this.nameRice += el.type_rice_name_en.toUpperCase() + ', ';
-      //       })
-      //     }
-      //   } catch (e) {
-      //     // console.log(e);
-      //   }
-
-      // },
+      _obSetUpper: function (data) {
+        if(typeof data !== 'undefined'){
+          return data.toUpperCase()
+        }
+        // // if (data.cl_quality != null) {
+        // //   this.cl_quality = data.cl_quality.toUpperCase();
+        // // }
+        // try {
+        //   let rice = data.bl_detail;
+        //   if (this.nameRice.length == 0) {
+        //     rice.map((el) => {
+        //       this.nameRice += el.type_rice_name_en.toUpperCase() + ', ';
+        //     })
+        //   }
+        // } catch (e) {
+        //   // console.log(e);
+        // }
+      },
 
       // printInvoice: function () {
       //   // report.report_type
       //   window.open(window._config.reportServer+'/api/payment/report1?invoice_id=' + this.data.invoice_id + '&export=' + this.printReport.typeFile, '1');
       // },
-      // createInvoice: function () {
+      createInvoice: function () {
+        // console.log(this.data);
+        var data = {
+          id : this.data.id,
+          contract_id : this.data.contract_id,
+          invoice_no : this.data.invoice_no,
+          invoice_date : this.data.invoice_date,
+          made_out_to : this.data.made_out_to
+        }
+        // console.log(data);
+        var check = this.validateForm('.required');
+        if(check === true){
+          this.fire('toast', {
+            status: 'openDialog', 
+            text: 'ต้องการเพิ่มใบแจ้งหนี้ใช่หรือไม่',
+            confirmed: (result) =>{
+              if(result === true){
+                this.dispatchAction('BOOK_INSERT', data);
+              }
+            }
+          });
+        }else{
+          this.fire('toast', {
+            status: 'connectError', text: 'กรุณากรอกข้อมูลให้ครบถ้วน',callback: () => {}
+          });
+        }
       //   let book_id = this.data.book_id;
       //   let contract_id = this._getUrl();
       //   // this._cleanDataBl(this.data,(data)=>{
@@ -415,7 +384,7 @@
       //       });
       //     });
       //   });
-      // },
+      },
       // saveInvoice: function () {
       //   let book_id = this.data.book_id;
       //   let contract_id = this._getUrl();
@@ -477,79 +446,79 @@
       //     });
       //   }
       // },
-      // checkPrice: function (data) {
-      //   // console.log(data);
-      //   // this._toWords(data.base.amount_usd);
-      //   // console.log(this._toWords(data.base.amount_usd));
-      //   if (typeof data.contract_date !== 'undefined' && data.contract_date !== 'undefined') {
-      //     var monthNames = ["January", "February", "March", "April", "May", "June",
-      //       "July", "August", "September", "October", "November", "December"
-      //     ];
-      //     // console.log(Number(this.data.contract_date.substring(5, 7))-1);
-      //     var monthNum = Number(data.contract_date.substring(5, 7)) - 1;
-      //     let contractDate = data.contract_date.substring(8, 10) + " " + monthNames[monthNum] + " " + data.contract_date.substring(0, 4);
-      //     return contractDate.toUpperCase();
-      //   }
-      // },
-      // _toWords: function (amount_usd) {
-      //   if (typeof amount_usd !== 'undefined' && amount_usd !== 'undefined') {
-      //     // num = num.base.amount_usd || 0;
-      //     // Convert numbers to words
-      //     // copyright 25th July 2006, by Stephen Chapman https://javascript.about.com
-      //     // permission to use this Javascript on your web page is granted
-      //     // provided that all of the code (including this copyright notice) is
-      //     // used exactly as shown (you can change the numbering system if you wish)
-      //     // American Numbering System
-      //     var th = ['', 'thousand', 'million', 'billion', 'trillion'];
-      //     // uncomment this line for English Number System
-      //     // var th = ['','thousand','million', 'milliard','billion'];
-      //     var dg = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'];
-      //     var tn = ['ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen'];
-      //     var tw = ['twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'];
-      //     // console.log(amount_usd);
-      //     var s = amount_usd.toString();
-      //     s = s.replace(/[\, ]/g, '');
-      //     if (s != parseFloat(s)) return 'not a number';
-      //     var x = s.indexOf('.');
-      //     if (x == -1) x = s.length;
-      //     if (x > 15) return 'too big';
-      //     var n = s.split('');
-      //     var str = '';
-      //     var sk = 0;
-      //     for (var i = 0; i < x; i++) {
-      //       if ((x - i) % 3 == 2) {
-      //         if (n[i] == '1') {
-      //           str += tn[Number(n[i + 1])] + ' ';
-      //           i++;
-      //           sk = 1;
-      //         } else if (n[i] != 0) {
-      //           str += tw[n[i] - 2] + ' ';
-      //           sk = 1;
-      //         }
-      //       } else if (n[i] != 0) {
-      //         str +=
-      //           dg[n[i]] + ' ';
-      //         if ((x - i) % 3 == 0) str += 'hundred ';
-      //         sk = 1;
-      //       }
-      //       if ((x - i) % 3 == 1) {
-      //         if (sk)
-      //           str += th[(x - i - 1) / 3] + ' ';
-      //         sk = 0;
-      //       }
-      //     }
-      //     if (x != s.length) {
-      //       var y = s.length;
-      //       str +=
-      //         'point ';
-      //       for (var i = x + 1; i < y; i++) str += dg[n[i]] + ' ';
-      //     }
-      //     let priceWords = str.replace(/\s+/g, ' ').toUpperCase();
-      //     return priceWords;
-      //   } else {
-      //     return 0;
-      //   }
-      // },
+      checkDate: function (data) {
+        // console.log(data);
+        // this._toWords(data.base.amount_usd);
+        // console.log(this._toWords(data.base.amount_usd));
+        if (typeof data.contract_date !== 'undefined' && data.contract_date !== 'undefined') {
+          var monthNames = ["January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+          ];
+          // console.log(Number(this.data.contract_date.substring(5, 7))-1);
+          var monthNum = Number(data.contract_date.substring(5, 7)) - 1;
+          let contractDate = data.contract_date.substring(8, 10) + " " + monthNames[monthNum] + " " + data.contract_date.substring(0, 4);
+          return contractDate.toUpperCase();
+        }
+      },
+      _toWords: function (amount_usd) {
+        if (typeof amount_usd !== 'undefined' && amount_usd !== 'undefined') {
+          // num = num.base.amount_usd || 0;
+          // Convert numbers to words
+          // copyright 25th July 2006, by Stephen Chapman https://javascript.about.com
+          // permission to use this Javascript on your web page is granted
+          // provided that all of the code (including this copyright notice) is
+          // used exactly as shown (you can change the numbering system if you wish)
+          // American Numbering System
+          var th = ['', 'thousand', 'million', 'billion', 'trillion'];
+          // uncomment this line for English Number System
+          // var th = ['','thousand','million', 'milliard','billion'];
+          var dg = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'];
+          var tn = ['ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen'];
+          var tw = ['twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'];
+          // console.log(amount_usd);
+          var s = amount_usd.toString();
+          s = s.replace(/[\, ]/g, '');
+          if (s != parseFloat(s)) return 'not a number';
+          var x = s.indexOf('.');
+          if (x == -1) x = s.length;
+          if (x > 15) return 'too big';
+          var n = s.split('');
+          var str = '';
+          var sk = 0;
+          for (var i = 0; i < x; i++) {
+            if ((x - i) % 3 == 2) {
+              if (n[i] == '1') {
+                str += tn[Number(n[i + 1])] + ' ';
+                i++;
+                sk = 1;
+              } else if (n[i] != 0) {
+                str += tw[n[i] - 2] + ' ';
+                sk = 1;
+              }
+            } else if (n[i] != 0) {
+              str +=
+                dg[n[i]] + ' ';
+              if ((x - i) % 3 == 0) str += 'hundred ';
+              sk = 1;
+            }
+            if ((x - i) % 3 == 1) {
+              if (sk)
+                str += th[(x - i - 1) / 3] + ' ';
+              sk = 0;
+            }
+          }
+          if (x != s.length) {
+            var y = s.length;
+            str +=
+              'point ';
+            for (var i = x + 1; i < y; i++) str += dg[n[i]] + ' ';
+          }
+          let priceWords = str.replace(/\s+/g, ' ').toUpperCase();
+          return priceWords;
+        } else {
+          return 0;
+        }
+      },
       // _cleanDataInvoice: function (data, callback) {
       //   let el = Polymer.dom(this.root).querySelectorAll('.required');
       //   let stat = el.map((el) => el.validate());

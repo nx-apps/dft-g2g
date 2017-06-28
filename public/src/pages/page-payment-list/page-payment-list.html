@@ -4,6 +4,7 @@
 <link rel="import" href="./../../../bower_components/nylon-panel/nylon-panel-right.html">
 <link rel="import" href="./../../../bower_components/plutonium-breadcrumbs/plutonium-breadcrumbs.html">
 <link rel="import" href="./../../../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="./../components/g2g-logic-behavior.html">
 <link rel="import" href="./component/list-of-bl-pm.html">
 <link rel="import" href="./component/list-of-invoice.html">
 <link rel="import" href="./component/list-of-fee.html">
@@ -171,7 +172,7 @@
             </section>
         </main>
 
-        <nylon-panel-right title="{{titlePanelRight}}" id="test" set-width="95%">
+        <nylon-panel-right title="{{titlePanelRight}}" id="panelRight" set-width="95%">
             <div class="rightdata" align="left">
                 <div class="breadcrumbs">
                     <plutonium-breadcrumbs crumbs="{{crumbs}}" selected-crumb="{{crumb}}"></plutonium-breadcrumbs>
@@ -207,22 +208,36 @@
     <script>
         Polymer({
             is: 'page-payment-list',
-            behaviors: [ReduxBehavior, nylonBehavior, i18nAction, CookieBehavior],
+            behaviors: [ReduxBehavior, nylonBehavior, CookieBehavior, i18nAction, bookAction],
             properties: {
                 localize:{
                     statePath : 'i18n.g2g'
-                },
-                layerContent: {
-                    type: String,
-                    value: "detailRegExporter"
-                },
+                }
+            },
+            listeners: {
+                // 'get-bl-list': '_getBlListFire',
+                'get-bl-detail': '_getBlDetail',
+                // 'get-invoice-list': '_getInvoiceListFire',
+                // 'get-invoice-detail': '_getBlInvoiceDetail',
+                // 'get-fee-list': '_getFeeListFire',
+                // 'get-select-draftPayment': '_getInvoiceDetail',
+                // 'get-fee-list-in-shm-event': '_getFeeListInShmEvent',
+                // 'get-fee-detail': '_getFeeDetail',
+                // 'get-Cheque-list': '_getChequeListFire',
+                // 'get-cheque-detail': '_getChequeDetail',
+                // 'get-payment-list': '_getPaymentsFire',
+                // 'get-history-payment-list': '_getHistoryListFire',
+                // 'get-payment-detail': '_getPaymentDetail',
+                // 'get-history-detail': '_getHistoryDetail',
+                // 'flipDrawer': '_flipDrawer',
+                // 'close-drawer': '_flipDrawerClose',
+                // '_set-breadcrumbs': 'setEventBreadcrumbs'
             },
             nylonPageActive: function () {
-                console.log("contact id = "+ this.getCookieBhv("contract_id"));
-                console.log("contact name = "+ this.getCookieBhv("contractName"));
-                console.log("buyer id = "+ this.getCookieBhv("buyerId"));
-                // this.dispatchAction('EXPORTER_GET_DATA');
-                // this.dispatchAction('EXPORTER_GET_TYPE_LIC');
+                var contract_id = this.getCookieBhv("contract_id");
+                var contract_name = this.getCookieBhv("contractName");
+                var buyer_id = this.getCookieBhv("buyerId");
+                this.dispatchAction('BOOK_GET_LIST_DATA', contract_id);
             },
             // ready: function () {
             //     let contract_id = this._getUrl();
@@ -338,49 +353,49 @@
             //     // console.log(this.dataForSelect.dataBank);
             //     });
             // },
-            // _getBlDetail: function (e) {
-            //     let book_id = e.detail.detail.book_id;
-            //     // console.log(e.detail.detail);
-            //     this.titlePanelRight = 'รายละเอียดใบ Invoice'
-            //     let datass = [
-            //     {
-            //         label: this.dataForSelect.nameContract,
-            //         href: ''
-            //     },
-            //     {
-            //         label: 'รายละเอียดใบ Invoice',
-            //         href: ''
-            //     },
-            //     ]
-            //     this.setBreadcrumbs(datass)
-            //     this.fire('toast', { status: 'load' });
-            //     this.read('./g2g/book/id/' + book_id, (data) => {
-            //     this.dataSelected = data;
-            //     // console.log(this.dataSelected);
-            //     this.paymentsPageSeleted = 'blPage';
-            //     });
-            //     if (this.checkRenderPage.commercialInvoice != true) {
-            //     this.async(() => {
-            //         this.importHref(
-            //         this.resolveUrl('./payment/component/commercial-invoice.html'),
-            //         () => {
-            //             this.async(() => {
-            //             this.fire('toast', { status: 'load' });
+            _getBlDetail: function (e) {
+                let book_id = e.detail.detail.id;
+                this.titlePanelRight = 'รายละเอียดใบ Invoice'
+                // let datass = [
+                // {
+                //     label: this.dataForSelect.nameContract,
+                //     href: ''
+                // },
+                // {
+                //     label: 'รายละเอียดใบ Invoice',
+                //     href: ''
+                // },
+                // ]
+                // this.setBreadcrumbs(datass)
+                // this.fire('toast', { status: 'load' });
+                this.dispatchAction('BOOK_GET_ID_DATA', book_id);
+                // this.read('./g2g/book/id/' + book_id, (data) => {
+                // this.dataSelected = data;
+                // // console.log(this.dataSelected);
+                this.paymentsPageSeleted = 'blPage';
+                // });
+                // if (this.checkRenderPage.commercialInvoice != true) {
+                // this.async(() => {
+                //     this.importHref(
+                //     this.resolveUrl('./payment/component/commercial-invoice.html'),
+                //     () => {
+                //         this.async(() => {
+                //         this.fire('toast', { status: 'load' });
 
-            //             this._flipDrawer();
-            //             this.checkRenderPage.commercialInvoice = true;
-            //             }, 500)
-            //         }, null, true
-            //         );
-            //     }, 1000);
-            //     } else {
-            //     this.async(() => {
-            //         this.fire('toast', { status: 'load' });
-            //         this._flipDrawer();
-            //     }, 500)
-            //     }
+                //         this._flipDrawer();
+                //         this.checkRenderPage.commercialInvoice = true;
+                //         }, 500)
+                //     }, null, true
+                //     );
+                // }, 1000);
+                // } else {
+                // this.async(() => {
+                //     this.fire('toast', { status: 'load' });
+                    this._flipDrawer();
+                // }, 500)
+                // }
 
-            // },
+            },
             // _getBlInvoiceDetail: function (e) {
             //     this.titlePanelRight = 'รายละเอียดใบกำกับสินค้า'
             //     this.fire('toast', { status: 'load' });
@@ -673,17 +688,16 @@
             //     } else {
             //     this.async(() => {
             //         this.fire('toast', { status: 'load' });
-            //         this._flipDrawer();
+                    // this._flipDrawer();
             //     }, 500)
             //     }
             // },
-            // _flipDrawer: function () {
-            //     Polymer.dom(this.root).querySelector('#test').open();
-            // },
-            // _flipDrawerClose: function () {
-            //     // console.log(111);
-            //     Polymer.dom(this.root).querySelector('#test').close();
-            // }
+            _flipDrawer: function () {
+                Polymer.dom(this.root).querySelector('#panelRight').open();
+            },
+            _flipDrawerClose: function () {
+                Polymer.dom(this.root).querySelector('#panelRight').close();
+            }
         });
     </script>
 </dom-module>
