@@ -36,7 +36,12 @@ exports.insert = function (req, res) {
                 date_updated: r.now().inTimezone('+07'),
                 creater: 'admin',
                 updater: 'admin',
-                invoice_status: false
+                invoice_status: false,
+                cut_date: r.ISO8601(req.body.cut_date).inTimezone('+07'),
+                eta_date: r.ISO8601(req.body.eta_date).inTimezone('+07'),
+                etd_date: r.ISO8601(req.body.etd_date).inTimezone('+07'),
+                packing_date: r.ISO8601(req.body.packing_date).inTimezone('+07'),
+                product_date: r.ISO8601(req.body.product_date).inTimezone('+07')
             });
             r.table("book")
                 .insert(obj)
@@ -135,7 +140,12 @@ function updateBook(req, res) {
         if (valid) {
             var obj = Object.assign(req.body, {
                 date_updated: r.now().inTimezone('+07'),
-                updater: 'admin'
+                updater: 'admin',
+                cut_date: r.ISO8601(req.body.cut_date).inTimezone('+07'),
+                eta_date: r.ISO8601(req.body.eta_date).inTimezone('+07'),
+                etd_date: r.ISO8601(req.body.etd_date).inTimezone('+07'),
+                packing_date: r.ISO8601(req.body.packing_date).inTimezone('+07'),
+                product_date: r.ISO8601(req.body.product_date).inTimezone('+07')
             });
             r.table("book")
                 .get(req.body.id)
