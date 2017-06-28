@@ -130,7 +130,8 @@ exports.update = function (req, res) {
         if (valid) {
             var obj = Object.assign(req.body, {
                 date_updated: r.now().inTimezone('+07'),
-                updater: 'admin'
+                updater: 'admin',
+                cl_date: r.ISO8601(req.body.cl_date).inTimezone('+07')
             });
             r.table("confirm_letter")
                 .get(req.body.id)
@@ -146,7 +147,7 @@ exports.update = function (req, res) {
             res.json(req.ajv.errorsText());
         }
     } else {
-        res.json('require field id' );
+        res.json('require field id');
     }
 }
 exports.delete = function (req, res) {
@@ -167,6 +168,6 @@ exports.delete = function (req, res) {
                 res.json(err);
             })
     } else {
-        res.json('require field id' );
+        res.json('require field id');
     }
 }
