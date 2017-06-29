@@ -1,6 +1,6 @@
 var async = require('async');
 exports.calc = function (req, res) {
-    req.r.table('book').getAll(r.args(r.expr(req.query.id.split('_'))), { index: 'id' })
+    req.r.table('book').getAll(r.args(r.expr(req.query.book_id.split('_'))), { index: 'id' })
         .merge({ book_id: r.row('id') })
         .pluck('book_id', 'invoice_no', 'cl_id', 'contract_id')
         .orderBy('invoice_no')
@@ -115,7 +115,6 @@ exports.update = function (req, res) {
         res.json('require field id');
     }
 }
-
 function updateFee(act, obj, res) {
     var book = obj.getField('book')
         .reduce(function (left, right) {
@@ -129,7 +128,7 @@ function updateFee(act, obj, res) {
     if (act == "insert") {
         fee = r.table("fee").insert(obj);
     } else {
-        fee = r.expr(obj)
+        fee = r.expr(obj(0))
             .merge(function (m) {
                 return {
                     book: m('book').merge(function (m2) {
@@ -139,6 +138,9 @@ function updateFee(act, obj, res) {
                     })
                 }
             })
+            .do(function (d) {
+                return r.table('fee').get(d('id')).update(d)
+            });
     }
     var updateBook = book.forEach(function (fe) {
         return r.table('book').get(fe('book_id')).update(
