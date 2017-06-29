@@ -43,12 +43,12 @@
         </div>
         <br>
         <div class="title">
-          [[title]]{{data.exporter_idss}}/////
+          [[title]]
         </div>
         <div class="horizontal layout wrap">
           <div id="combox" class="flex">
             <gl-combo-box placeholder="ผู้ส่งออกทั้งหมด" items="{{confirmLetterExporterlist}}" item-label-path="label" label="ผู้ส่งออก"
-              item-value-path="exporter_id" on-value-changed="getShowByExport" value="{{data.exporter_idss}}">
+              item-value-path="exporter_id" on-value-changed="getShowByExport">
               <template>
                 [[item.label]]
               </template>
@@ -131,10 +131,10 @@
         commonState: {
           statePath: 'commonState.setState'
         },
-        // title: {
-        //   type: String,
-        //   value: 'แสดงปริมาณการส่งมอบ'
-        // },
+        title: {
+          type: String,
+          value: 'แสดงปริมาณการส่งมอบ'
+        },
         pageSelected: {
           type: String,
           value: 'listOfConfirm',
@@ -152,16 +152,6 @@
           statePath: 'commonState.contractId',
           observer: 'get'
         },
-        // dataForSelect: {
-        //   type: Object,
-        //   value: { contract_type_rice: [] }
-        // },
-        // dataSelected: {
-        //   type: Object
-        // },
-        // clId: {
-        //   type: String,
-        // }
       },
       // created: function () {
       //   this.nylonLocalizeImport('/i18n-page1.json');
@@ -184,8 +174,11 @@
       //   }
       // },
       createConfirm: function () {
-        let cl_length = this.confirmLetterList.length
-        let cl_no = this.confirmLetterList[0].cl_no
+        let cl_no = 0
+        if (this.confirmLetterList.length !== 0) {
+          cl_no = this.confirmLetterList[0].cl_no
+        }
+
 
         this.fire('toast', { status: 'load' });
         this.dispatchAction('SET_STATE', {
@@ -269,17 +262,18 @@
         return typeof cl_quantity_tolerance === "undefined" ? '' : "(" + str + ")";
       },
       getShowByExport(e) {
-        console.log(e);
+        // console.log(e);
         try {
           this.set('title', 'แสดงปริมาณการส่งมอบ')
-
-          if (e.currentTarget.value !== undefined && e.currentTarget.value !== '') {
-            // let = e.currentTarget.value
-            let url = { contract_id: this.contractId, status: 'all' ,exporter_id: e.currentTarget.value}
-            this.dispatchAction('GET_CONFIRM_LIST', this.genUrl(url))
-          } else {
-            let url = { contract_id: this.contractId, status: 'all' }
-            this.dispatchAction('GET_CONFIRM_LIST', this.genUrl(url))
+          if (this.contractId !== undefined) {
+            if (e.currentTarget.value !== undefined && e.currentTarget.value !== '') {
+              // let = e.currentTarget.value
+              let url = { contract_id: this.contractId, status: 'all', exporter_id: e.currentTarget.value }
+              this.dispatchAction('GET_CONFIRM_LIST', this.genUrl(url))
+            } else {
+              let url = { contract_id: this.contractId, status: 'all' }
+              this.dispatchAction('GET_CONFIRM_LIST', this.genUrl(url))
+            }
           }
         } catch (e) {
           // console.log(e);

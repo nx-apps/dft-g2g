@@ -1,37 +1,61 @@
-<link rel="import" href="list-of-booking-in-confirm.html">
-<link rel="import" href="list-of-booking-detail.html">
+<link rel="import" href="./../../../../bower_components/polymer/polymer.html">
+<!--<link rel="import" href="list-of-shm.html">-->
+<!--<link rel="import" href="booking-detail.html">-->
+<link rel="import" href="./../../../../bower_components/iron-pages/iron-pages.html">
+
+<link rel="import" href="list-of-booking-shm-det.html">
 <dom-module id="list-of-booking">
 
   <template>
-    <list-of-booking-detail data-default="[[dataDefault]]" page-selected="{{pageSelected}}" data="{{dataSelected}}" data-for-select="[[dataForSelect]]"></list-of-booking-detail>
+    <iron-pages selected="{{pageSelected}}" attr-for-selected="name">
+      <div name="list-of-booking">
+        <list-of-booking-shm-det></list-of-booking-shm-det>
+      </div>
+      <div name="list-of-booking-add">
+        <!--<booking-detail ></booking-detail>-->
+      </div>
+      <div name="list-of-booking-edit">
+        <!--<booking-detail ></booking-detail>-->
+      </div>
+      <div name="list-of-booking-shm-det">
+        <!--<list-of-shm page-selected="{{subPageSelected}}" data-selected="{{dataSelected}}" data-for-select="{{dataForSelect}}"></list-of-shm>-->
+      </div>
+    </iron-pages>
+    ====ss
 
   </template>
   <script>
     Polymer({
       is: "list-of-booking",
+      behaviors: [
+        ReduxBehavior, nylonBehavior
+      ],
       properties: {
+        localize: {
+          statePath: 'i18n.g2g'
+        },
         pageSelected: {
           type: String,
-          notify: true
-        },
-        dataSelected: {
-          type: Array
-        },
-        dataForSelect: {
-          type: Object,
-          value: { exporter: [], cl_type_rice: [] }
-        },
-        dataDefault: {
-          type: Object,
-          value: { bl_no: '', ship: [{ ship_id: '', ship_voy_no: '' }], surveyor: [{ surveyor_id: '' }] },
+          value: 'list-of-booking'
         }
+      // dataSelected: {
+      //   type: Array
+      // },
+      // dataForSelect: {
+      //   type: Object,
+      //   value: { exporter: [], cl_type_rice: [] }
+      // },
+      // dataDefault: {
+      //   type: Object,
+      //   value: { bl_no: '', ship: [{ ship_id: '', ship_voy_no: '' }], surveyor: [{ surveyor_id: '' }] },
+      // }
       },
-      behaviors: [
-        ReduxBehavior,
+      // behaviors: [
+      // ReduxBehavior,
       //   g2gModelBehavior,
       //   g2gCongtroller,
-        FormatNumberBehavior
-      ],
+      //   FormatNumberBehavior
+      // ],
       // observers: [
       //   'getExport(data)',
       //   'setTotalRice(data)',
@@ -63,7 +87,7 @@
       //   // console.log(22222);
       //   // console.log(this.dataForSelect.cl_close);
       //   this.set('dataForSelect.cl_close',false)
-        
+
       //   // console.log('this.dataForSelect.book>>>',this.dataForSelect.book);
       //   // let bookApp = this.dataForSelect.book.filter((status) => status.cl_status == true)
       //   // // console.log(arr);

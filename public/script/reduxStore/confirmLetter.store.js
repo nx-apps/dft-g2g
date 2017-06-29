@@ -41,7 +41,9 @@ export function confirmLetterAction(store) {
         GET_CONFIRM_LIST: function (link = '') {
             axios.get('./confirm/contract?' + link)
                 .then(function (response) {
-                    // console.log(response.data);
+                    for (var index = 0; index < response.data.length; index++) {
+                        response.data[index].label = 'สัญญาที่ '+response.data[index].cl_no + ' ปริมาณ'+  response.data[index].cl_weight_balance +' ตัน' 
+                    }
                     store.dispatch({ type: 'GET_CONFIRM_LIST', payload: response.data })
                 })
                 .catch(function (error) {
@@ -53,8 +55,7 @@ export function confirmLetterAction(store) {
                 .then(function (response) {
                     // console.log(response.data);
                     for (var index = 0; index < response.data.length; index++) {
-                        response.data[index].label = '['+response.data[index].company.company_taxno+'] '+response.data[index].company.company_name_th
-                        
+                        response.data[index].label = '['+response.data[index].company.company_taxno+'] '+response.data[index].company.company_name_th  
                     }
                     store.dispatch({ type: 'GET_CONFIRM_EXPORTER_LIST', payload: response.data })
                 })

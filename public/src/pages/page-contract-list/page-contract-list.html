@@ -62,10 +62,10 @@ hip
                     <div class="addContract" name="listOfConfirm">
                         <list-of-confirm></list-of-confirm>
                     </div>
-                    <!--<div class="addContract" name="listOfShipment">
-                        <list-of-booking page-selected="{{pageSelected}}" data-for-select="[[dataForSelected.dataForBooking]]" data="[[dataSelected]]"></list-of-booking>
+                    <div class="addContract" name="listOfShipment">
+                        <list-of-booking></list-of-booking>
                     </div>
-                    <div class="addContract" name="listOfFee">
+                    <!--<div class="addContract" name="listOfFee">
                         <list-of-fee-g2g page-selected="{{pageSelected}}" data-for-select="[[dataForSelected.dataForFee]]" data="[[feeList]]"></list-of-fee-g2g>
                     </div>-->
                 </iron-pages>
@@ -333,7 +333,6 @@ hip
             },
             _getListConfirm: function (e) {
                 let url = { contract_id: e.detail.contract_id ,status:'all'}
-                // console.log(url)
                 this.dispatchAction('GET_CONFIRM_LIST', this.genUrl(url))
                 this.dispatchAction('GET_HAMONIZE_OF_CONTRACT',this.genUrl(url))
                 this.dispatchAction('GET_CONFIRM_EXPORTER_LIST',this.genUrl(url))
@@ -421,10 +420,12 @@ hip
                 //     });
                 //     }
             },
-            // _getListShipment: function (e) {
+            _getListShipment: function (e) {
             //     // 
-            //     // console.log(e.detail.detail);
-            //     this.g2gPageSeleted = 'listOfShipment';
+                console.log(e.detail);
+                let url = { contract_id: e.detail.contract_id ,status:true}
+                this.dispatchAction('GET_CONFIRM_LIST', this.genUrl(url))
+                this.g2gPageSeleted = 'listOfShipment';
 
             //     // console.log(e.detail.contractId);
             //     if (typeof e.detail.contractId == "undefined") {
@@ -453,27 +454,34 @@ hip
             //     // console.log(this.dataForSelected.dataForBooking);
             //     this.set('dataForSelected.dataForBooking.country_id', e.detail.data.country_id);
             //     this.set('dataForSelected.dataForBooking.buyer_masks', e.detail.data.buyer_masks);
-            //     this.fire('toast', { status: 'load' });
-            //     if (this.checkRenderPage.listOfShipment != true) {
-            //         this.async(() => {
-            //         this.importHref(
-            //             this.resolveUrl('./g2g/component/list-of-booking.html'),
-            //             () => {
-            //             this.async(() => {
-            //                 this.fire('toast', { status: 'load' });
-            //                 // console.log(this.dataForSelected.dataForContract);
-            //                 this._flipDrawer();
-            //                 this.checkRenderPage.listOfShipment = true;
-            //             }, 500)
-            //             }, null, true
-            //         );
-            //         }, 1000);
-            //     } else {
-            //         this.async(() => {
-            //         this.fire('toast', { status: 'load' });
-            //         this._flipDrawer();
-            //         }, 1000);
-            //     }
+                this.fire('toast', { status: 'load' });
+                if (this.checkRenderPage.listOfShipment != true) {
+                    this.async(() => {
+                    this.importHref(
+                        this.resolveUrl('./components/list-of-booking.html'),
+                        () => {
+                        this.async(() => {
+                            this.fire('toast', {
+                                    status: 'success', text: 'โหลดสำเร็จ', callback: () => {
+                                        this._flipDrawer();
+                            this.checkRenderPage.listOfShipment = true;
+                                    }
+                                })
+                            // console.log(this.dataForSelected.dataForContract);
+                            
+                        }, 500)
+                        }, null, true
+                    );
+                    }, 1000);
+                } else {
+                    this.async(() => {
+                    this.fire('toast', {
+                                    status: 'success', text: 'โหลดสำเร็จ', callback: () => {
+                                        this._flipDrawer();
+                                    }
+                                })
+                    }, 1000);
+                }
             //     } else {
             //     let contractId = e.detail.contractId;
             //     // console.log(contractId);
@@ -482,7 +490,7 @@ hip
             //         this.dataSelected = dataContract[0];
             //     });
             //     }
-            // },
+            },
             // _getlistFee: function (e) {
             //     try {
             //     this.read('./g2g/fee/contract/id/' + e.detail.data.contract_id, (data) => {
