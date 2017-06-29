@@ -1,12 +1,12 @@
 import axios from '../axios'
 import { commonAction } from '../config'
 const initialState = {
-    list: []
+    list_calc: []
 }
 export function feeReducer(state = initialState, action) {
     switch (action.type) {
-        // case 'EXPORTER_GET_DATA':
-        //     return Object.assign({}, state, { list: action.payload });
+        case 'FEE_CALC_DATA':
+            return Object.assign({}, state, { list_calc: action.payload });
         default:
             return state
     }
@@ -14,7 +14,14 @@ export function feeReducer(state = initialState, action) {
 export function feeAction(store) {
     return [commonAction(),
     {
-        UPLOAD_GET_LIST: function (ref, com) {
+        FEE_CALC_DATA: function (data) {
+            axios.get('./fee/calc?book_id='+data)
+            .then((response) => {
+                store.dispatch({type:'FEE_CALC_DATA', payload : response.data});
+            })
+            .catch((err) =>{
+                console.log(err);
+            })
             // return axios.get('/external/upload/list/' + ref + '/' + com)
         },
     }

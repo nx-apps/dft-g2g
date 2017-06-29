@@ -5,6 +5,7 @@
 <link rel="import" href="./../../../../bower_components/gl-form/gl-form-input.html">
 <link rel="import" href="./../../../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="./../../components/format-number-behavior.html">
+<link rel="import" href="./../../components/g2g-logic-behavior.html">
 
 <dom-module id="fee-management-detail">
   <style include="iron-flex iron-flex-factors iron-flex-alignment gl-styles page-style">
@@ -64,14 +65,7 @@
           value: {},
         },
       },
-      behaviors: [
-        ReduxBehavior,
-        nylonBehavior,
-        FormatNumberBehavior
-        // g2gModelBehavior,
-        // g2gCongtroller,
-        // nylonLocalizeBehavior,
-      ],
+      behaviors: [ReduxBehavior, nylonBehavior, FormatNumberBehavior, g2gLogicBehavior],
       // created: function () {
       //   this.nylonLocalizeImport('/i18n-page1.json');
       // },
