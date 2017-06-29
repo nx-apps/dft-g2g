@@ -1,8 +1,24 @@
 var async = require('async');
 exports.calc = function (req, res) {
     req.r.table('book').getAll(r.args(r.expr(req.query.book_id.split('_'))), { index: 'id' })
-        .merge({ book_id: r.row('id') })
-        .pluck('book_id', 'invoice_no', 'cl_id', 'contract_id', 'invoice_date')
+        .merge(function (m) {
+            var ship = m.getField('ship');
+            return {
+                book_id: m('id'),
+                ship: r.branch(ship.count().gt(1),
+                    ship.reduce(function (left, right) {
+                        var shipL = left('ship_name').add(' V.', left('ship_voy'));
+                        var shipR = right('ship_name').add(' V.', right('ship_voy'));
+                        return r.branch(left.hasFields('data'),
+                            { data: left('data').add(', ', shipR) },
+                            { data: shipL.add(', ', shipR) }
+                        )
+                    }),
+                    ship(0)('ship_name').add(' V.', ship(0)('ship_voy'))
+                )
+            }
+        })
+        .pluck('book_id', 'invoice_no', 'cl_id', 'contract_id', 'invoice_date', 'cl_no', 'ship', 'ship_lot')
         .orderBy('invoice_no')
         .merge(function (m) {
             return {
@@ -11,7 +27,7 @@ exports.calc = function (req, res) {
                     .merge(function (m2) {
                         return { detail_id: m2('id') }
                     })
-                    .pluck({ 'company': 'company_name_th' },
+                    .pluck({ 'company': 'company_name_th' }, 'hamonize', 'hamonize_id',
                     'detail_id', 'net_weight', 'price_d', 'value_d')
             }
         })
