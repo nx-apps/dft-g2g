@@ -89,6 +89,7 @@ exports.reject = function (req, res) {
         invoice_no: r.literal(),
         invoice_date: r.literal(),
         made_out_to: r.literal(),
+        fee_status:r.literal(),
         invoice_status: false,
         date_updated: r.now().inTimezone('+07'),
         updater: 'admin'
