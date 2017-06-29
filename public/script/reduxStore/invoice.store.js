@@ -5,8 +5,8 @@ const initialState = {
 }
 export function invoiceReducer(state = initialState, action) {
     switch (action.type) {
-        // case 'EXPORTER_GET_DATA':
-        //     return Object.assign({}, state, { list: action.payload });
+        case 'INVOICE_GET_LIST_DATA':
+            return Object.assign({}, state, { list: action.payload });
         default:
             return state
     }
@@ -14,9 +14,54 @@ export function invoiceReducer(state = initialState, action) {
 export function invoiceAction(store) {
     return [commonAction(),
     {
-        UPLOAD_GET_LIST: function (ref, com) {
-            // return axios.get('/external/upload/list/' + ref + '/' + com)
+        INVOICE_GET_LIST_DATA: function (id) {
+            axios.get('./invoice/contract?id='+id)
+            .then((response) => {
+                response.data.map((val) => {
+                    return val.check = false
+                })
+                store.dispatch({type: 'INVOICE_GET_LIST_DATA', payload: response.data})
+            })
         },
+        INVOICE_SAVE: function (data){
+            this.fire('toast',{status:'load'});
+            axios.put('./invoice/update', data)
+            .then((response) =>{
+                this.fire('toast', {
+                    status: 'success', text: 'บันทึกสำเร็จ',
+                    callback: () => {
+                        this.INVOICE_GET_LIST_DATA(data.contract_id);
+                        this.BOOK_GET_LIST_DATA(data.contract_id);
+                        this.SET_STATE({
+                            isInsert: false,
+                            btnDisabled: true,
+                            hiddend: true
+                        });
+                    }
+                });
+            })
+            .catch((err) => {
+                console.log(err);
+            })
+        },
+        INVOICE_DELETE: function(data){
+            this.fire('toast',{status:'load'});
+            axios.delete('./invoice/reject/'+data.id)
+            .then((response) => {
+                // console.log(response);
+                this.fire('toast', {
+                    status: 'success', text: 'บันทึกสำเร็จ',
+                    callback: () => {
+                        this.INVOICE_GET_LIST_DATA(data.contract_id);
+                        this.BOOK_GET_LIST_DATA(data.contract_id);
+                        this._flipDrawerClose();
+                    }
+                });
+            })
+            .catch((err) => {
+                console.log(err);
+            })
+        }
     }
     ]
 }

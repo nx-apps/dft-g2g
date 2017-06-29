@@ -147,6 +147,7 @@ export const g2g = {
         label_cut_off_time:"Cut off time",
         label_production_date:"Production date",
         label_note:"หมายเหตุ (แก้ใข)",
+        bl_weight:"ปริมาณ (ตัน)",
 
         "":"list_bl",
         label_shm_no:"งวดการส่งมอบ",
