@@ -101,7 +101,21 @@ exports.delete = function (req, res) {
     }
 }
 exports.approve = function (req, res) {
-    req.r.table('book').get(req.body.id).update({ book_status: true })
+    req.r.table('book').get(req.body.id).pluck('id')
+        .merge(function (m) {
+            var detail = r.table('book_detail').getAll(m('id'), { index: 'book_id' });
+            return {
+                net_weight: detail.sum('net_weight'),
+                gross_weight: detail.sum('gross_weight'),
+                tare_weight: detail.sum('tare_weight'),
+                value_d: detail.sum('value_d'),
+                package_amount: detail.sum('package_amount'),
+                book_status: true
+            }
+        })
+        .do(function (d) {
+            return r.table('book').get(d('id')).update(d)
+        })
         .run()
         .then(function (data) {
             res.json(data);
