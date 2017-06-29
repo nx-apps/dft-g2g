@@ -24,7 +24,7 @@ export function commonStateAction(store) {
             // return axios.get('/external/upload/list/' + ref + '/' + com)
         },
         SET_CONTRACT_ID: function (data) {
-            console.log(data);
+            // console.log(data);
             store.dispatch({ type: 'SET_CONTRACT_ID', payload: data })
             // return axios.get('/external/upload/list/' + ref + '/' + com)
         },

@@ -5,7 +5,7 @@
 <link rel="import" href="./../../../../bower_components/gl-form/gl-combo-box.html">
 <link rel="import" href="./../../components/g2g-logic-behavior.html">
 <link rel="import" href="./../../components/format-number-behavior.html">
-
+<link rel="import" href="./../../components/validateFormBehaviors.html">
 <dom-module id="confirm-detail">
   <style is="custom-style" include="iron-flex iron-flex-alignment gl-styles page-style">
     * {
@@ -79,16 +79,16 @@
       <paper-button raised on-tap="backPageInsert" class="gl-btn-default" hidden="[[isViewSeleted]]">{{localize.btn_back_ward}}</paper-button>
     </template>
     <gl-form-panel set-padding="10px 20px 10px 20px" set-border="1px">
-      <!--<template is="dom-if" if="[[!data.cl_status]]">-->
-      <template is="dom-if" if="[[!commonState.isInsert]]">
-        <div class="horizontal end-justified layout">
-          <paper-icon-button id="edit" class="crud" icon="create" raised on-tap="editContract" disabled="[[!commonState.btnDisabled]]"></paper-icon-button>
-          <paper-tooltip for="edit" offset="0">แก้ไข</paper-tooltip>
-          <paper-icon-button id="delete" class="crud" icon="delete" raised on-tap="deleteContract" disabled="[[!commonState.btnDisabled]]"></paper-icon-button>
-          <paper-tooltip for="delete" offset="0">ลบ</paper-tooltip>
-        </div>
+      <template is="dom-if" if="[[!data.cl_status]]">
+        <template is="dom-if" if="[[!commonState.isInsert]]">
+          <div class="horizontal end-justified layout">
+            <paper-icon-button id="edit" class="crud" icon="create" raised on-tap="editConfirm" disabled="[[!commonState.btnDisabled]]"></paper-icon-button>
+            <paper-tooltip for="edit" offset="0">แก้ไข</paper-tooltip>
+            <paper-icon-button id="delete" class="crud" icon="delete" raised on-tap="deleteConfirm" disabled="[[!commonState.btnDisabled]]"></paper-icon-button>
+            <paper-tooltip for="delete" offset="0">ลบ</paper-tooltip>
+          </div>
+        </template>
       </template>
-      <!--</template>-->
       <gl-grid-row width="{{getWidth}}">
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,2]]">
           [[changeString2Num(data.*,'cl_no')]]
@@ -115,9 +115,10 @@
             <gl-grid-row>
               <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,6]]">
 
-                <gl-combo-box id="riceType-[[index]]" class="required" required disabled="[[commonState.btnDisabled]]" error-message="{{localize.label_error_rice_type}}"
-                  placeholder="{{localize.label_rice_type}}" name="hamonize.hamonize_th" label="{{localize.label_rice_type}}"
-                  item-label-path="label" item-value-path="hamonize_id" value="{{item.hamonize_id}}" on-value-changed="_typeRiceConfirm">
+                <gl-combo-box id="riceType-[[index]]" index="[[index]]" class="required" required disabled="[[commonState.btnDisabled]]"
+                  error-message="{{localize.label_error_rice_type}}" placeholder="{{localize.label_rice_type}}" name="hamonize.hamonize_th"
+                  label="{{localize.label_rice_type}}" item-label-path="label" item-value-path="hamonize_id" value="{{item.hamonize_id}}"
+                  on-selected-item-changed="getObjectHamonize" on-value-changed="_typeRiceConfirm">
                   <template>
                     [[item.label]]
                   </template>
@@ -181,9 +182,10 @@
                   <tr>
                     <td>
 
-                      <gl-combo-box id="package-[[index]]-[[indexpackeage]]" class="required InTable" required disabled="[[commonState.btnDisabled]]"
-                        error-message="{{localize.label_error_package}}" placeholder="{{localize.label_package}}" item-label-path="package_name_th"
-                        item-value-path="package_id" value="{{packageitem.package_id}}" on-value-changed="_typePackageConfirm">
+                      <gl-combo-box id="package-[[index]]-[[indexpackeage]]" index="[[index]]" indexpackeage=[[indexpackeage]] class="required InTable"
+                        required disabled="[[commonState.btnDisabled]]" error-message="{{localize.label_error_package}}" placeholder="{{localize.label_package}}"
+                        item-label-path="package_name_th" item-value-path="package_id" value="{{packageitem.package_id}}" on-selected-item-changed="getObjectPackeage"
+                        on-value-changed="_typePackageConfirm">
                         <template>
                           [[item.package_name_th]]
                         </template>
@@ -226,9 +228,10 @@
       <gl-grid-row>
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,5]]">
           <template is="dom-repeat" items="[[data.incoterms]]">
-            <gl-combo-box id="incoterms-[[index]]" class="required" required disabled="[[commonState.btnDisabled]]" label="{{localize.label_incoterms}} [[_ObcountIndex(index)]]"
-              error-message="{{localize.label_error_incoterms}} [[_ObcountIndex(index)]]" placeholder="{{localize.label_incoterms}} [[_ObcountIndex(index)]]"
-              item-label-path="inct_name" item-value-path="inct_id" value="{{item.inct_id}}" on-blur="_incotermsConfirm">
+            <gl-combo-box id="incoterms-[[index]]" index="[[index]]" class="required" required disabled="[[commonState.btnDisabled]]"
+              label="{{localize.label_incoterms}} [[_ObcountIndex(index)]]" error-message="{{localize.label_error_incoterms}} [[_ObcountIndex(index)]]"
+              placeholder="{{localize.label_incoterms}} [[_ObcountIndex(index)]]" item-label-path="inct_name" item-value-path="inct_id"
+              value="{{item.inct_id}}" on-selected-item-changed="getObjectIncoterms" on-blur="_incotermsConfirm">
               <template>
                 [[item.inct_name]]
               </template>
@@ -263,7 +266,7 @@
           <paper-button class="gl-btn-info" raised on-tap="confirmConfirm" hidden="[[data.cl_status]]">{{localize.btn_confirm}}</paper-button>
         </template>
         <template is="dom-if" if="[[!commonState.isInsert]]">
-          <paper-button class="gl-btn-default" on-tap="calcelContract" raised hidden="[[commonState.btnDisabled]]">{{localize.btn_cancel}}</paper-button>
+          <paper-button class="gl-btn-default" on-tap="canncelConfirm" raised hidden="[[commonState.btnDisabled]]">{{localize.btn_cancel}}</paper-button>
           <paper-button class="gl-btn-success" on-tap="saveConfirm" raised hidden="[[commonState.btnDisabled]]">{{localize.btn_save}}</paper-button>
         </template>
       </div>
@@ -277,6 +280,8 @@
         nylonBehavior,
         FormatNumberBehavior,
         g2gLogicBehavior,
+        CookieBehavior,
+        ValidateFormBehavior
         // g2gCongtroller,
         // nylonLocalizeBehavior,
       ],
@@ -313,7 +318,11 @@
 
         dataShow: {
           type: Object,
-          value: {}
+          value: {
+            cl_hamonize: [],
+            cl_hamonize_pk: [{ package: [] }]
+            , incoterms: []
+          }
         },
 
         // data: {
@@ -349,10 +358,23 @@
       //     this.notifyPath('data.cl_date');
       //   });
       // },
-      // canncelConfirm: function () {
-      //   this.editInput();
-      //   this.calcelContract();
-      // },
+      canncelConfirm: function () {
+        this.fire('toast', {
+          status: 'openDialog',
+          text: 'ต้องการยกเลิกแก้ข้อมูลใช่หรือไม่ ?',
+          confirmed: (result) => {
+            if (result == true) {
+                  this.dispatchAction('GET_CONFIRM_DETAIL',this.data.id)
+                  this.dispatchAction('SET_STATE', {
+                    isInsert: false,
+                    btnDisabled: true,
+                    hiddend: true
+                  })
+                  this.queryFrom('.required').map((el) => { el.reset(); });
+            }
+          }
+        })
+      },
       deleteRiceType: function (e) {
         this.splice('data.cl_hamonize', e.currentTarget.id, 1);
       },
@@ -493,59 +515,80 @@
 
       //   this.fire('back-page-confirm', { detail: '_back-page-confirm' });
       // },
-      _getIncoterms: function () {
-        let incoterm = []
-        this.incotermsList
-        for (var index2 = 0; index2 < this.data.incoterms.length; index2++) {
-          let d = this.incotermsList.find((item) => item.inct_id === this.data.incoterms[index2].inct_id)
-          incoterm.push({
-            inct_id: d.inct_id,
-            inct_name: d.inct_name
-          })
-        }
-        return incoterm
+      editConfirm: function () {
+        this.dispatchAction('SET_STATE', {
+          isInsert: false,
+          btnDisabled: false,
+          hiddend: true
+        })
       },
-      _getHamonize: function (hamonizes) {
-        let hamonize = []
-        for (var index2 = 0; index2 < hamonizes.length; index2++) {
-          let d = this.hamonizeContract.find((item) => item.hamonize_id === hamonizes[index2].hamonize_id)
-          if (d.digits !== undefined) {
-            hamonize.push({
-              digits: d.hamonize.digits,
-              hamonize_code: d.hamonize.hamonize_code,
-              hamonize_en: d.hamonize.hamonize_en,
-              hamonize_en2: d.hamonize.hamonize_en2,
-              hamonize_th: d.hamonize.hamonize_th,
-              hamonize_th2: d.hamonize.hamonize_th2,
-              hamonize_year: d.hamonize.hamonize_year
-            })
-            hamonizes[index2].hamonize = hamonize
+      _getHamonize: function () {
+        try {
+          let hamonize = this.data.cl_hamonize
+          for (var index = 0; index < hamonize.length; index++) {
+            hamonize[index].hamonize = this.dataShow.cl_hamonize[index].hamonize
+            for (var index2 = 0; index2 < hamonize[index].package.length; index2++) {
+              hamonize[index].package[index2].package = this.dataShow.cl_hamonize_pk[index].package[index2].package
+            }
           }
-            
+          return hamonize
+        } catch (e) {
+          // console.log(e);
         }
-        console.log(hamonize)
-        console.log(hamonizes)
-        return hamonizes
+
       },
       _resiveDataConfirm: function () {
         return new Promise((res, rej) => {
-          let dataResive = {}
+          let dataResive = this.data
+          // dataResive.id = this.data.id,
           dataResive.cl_date = new Date(this.data.cl_date),
-            dataResive.cl_hamonize = this._getHamonize(this.data.cl_hamonize),
+            dataResive.cl_hamonize = this._getHamonize(),
             dataResive.cl_no = this.data.cl_no,
             dataResive.cl_status = this.data.cl_status,
             dataResive.cl_weight = this.data.cl_weight,
             dataResive.contract_id = this.contractId,
-            dataResive.incoterms = this._getIncoterms()
+            dataResive.incoterms = this.dataShow.incoterms//this._getIncoterms()
           delete dataResive.date_updated
           delete dataResive.date_created
           res(dataResive)
         })
       },
+      _resiveFormConfirm: function () {
+        return new Promise((res, rej) => {
+          if (this.validateForm('.required')) {
+            this._resiveDataConfirm().then((data) => {
+              res(data)
+            })
+          } else {
+            this.fire('toast', {
+              status: 'connectError', text: 'กรุณากรอกข้อมูลให้ครบทุกช่อง', //คำสั่งสำหรับเปิด toast error
+              callback: function () {
+                rej('error')
+              }
+            })
+          }
+        })
+      },
       insertConfirm: function () {
-        this._resiveDataConfirm()
+        this._resiveFormConfirm()
           .then((res) => {
-            console.log(res)
+            this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
+            this.dispatchAction('POST_CONFIRM', res)
+              .then((response) => {
+                let url = { contract_id: this.contractId, status: 'all' }
+                this.dispatchAction('GET_CONFIRM_LIST', this.genUrl(url))
+                this.dispatchAction('GET_CONTRACT_OF_BUYER', this.getCookieBhv("buyerId"));
+                this.fire('toast', {
+                  status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
+                  callback: () => {
+                    this.queryFrom('.required').map((el) => { el.reset(); });
+                    this.backPage()
+                  }
+                });
+              })
+          })
+          .catch((error) => {
+            console.log(error);
           })
 
         // this._getIncoterms()
@@ -583,28 +626,60 @@
         //   });
 
       },
-      // saveConfirm: function () {
-      //   // console.log(this.cl_total_quantity,'=',this.dataForSelect.contract_quantity_confirm_balance);
-      //   this._clearnDataConfirm(this.data, (data) => {
-      //     if (this.dataForSelect.cl_total_quantity <= this.dataForSelect.contract_quantity_confirm_balance) {
-      //       data.contract_id = this.dataForSelect.contract_id;
-      //       data.id = this.data.cl_id;
-      //       this.fire('toast', {  //คำสั่งสำหรับเปิด toast dialog
-      //         status: 'dialog',
-      //         text: 'ต้องการแก้ข้อมูลใช่หรือไม่ ?',
-      //         confirmed: this._saveData.bind(this), //function ที่ใช้รับค่า ปุ่ม
-      //         el: this, // compontents
-      //         data: data // ข้อมูลที่ส่งไป เช่น id ที่จะใช้ลบข้อมูล ใน db
-      //       })
-      //     } else {
-      //       this.fire('toast', {
-      //         status: 'connectError', text: 'คุณใส่ปริมาณข้าวที่คงเหลือเกินจำนวน ' + this.dataForSelect.contract_quantity_confirm_balance + ' ตัน', //คำสั่งสำหรับเปิด toast error
-      //         callback: function () {
-      //         }
-      //       })
-      //     }
-      //   });
-      // },
+      saveConfirm: function () {
+        this.fire('toast', {
+          status: 'openDialog',
+          text: 'ต้องการแก้ข้อมูลใช่หรือไม่ ?',
+          confirmed: (result) => {
+            if (result == true) {
+              this._resiveFormConfirm()
+                .then((res) => {
+                  this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
+                  this.dispatchAction('PUT_CONFIRM', res)
+                    .then((response) => {
+                      let url = { contract_id: this.contractId, status: 'all' }
+                      this.dispatchAction('GET_CONFIRM_LIST', this.genUrl(url))
+                      this.dispatchAction('GET_CONTRACT_OF_BUYER', this.getCookieBhv("buyerId"));
+                      this.queryFrom('.required').map((el) => { el.reset(); });
+                      this.dispatchAction('SET_STATE', {
+                        isInsert: false,
+                        btnDisabled: true,
+                        hiddend: true
+                      })
+                      this.fire('toast', {
+                        status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
+                        callback: () => {
+                        }
+                      });
+                    })
+                })
+                .catch((error) => {
+                  console.log(error);
+                });
+            }
+          }
+        })
+        //   // console.log(this.cl_total_quantity,'=',this.dataForSelect.contract_quantity_confirm_balance);
+        //   this._clearnDataConfirm(this.data, (data) => {
+        //     if (this.dataForSelect.cl_total_quantity <= this.dataForSelect.contract_quantity_confirm_balance) {
+        //       data.contract_id = this.dataForSelect.contract_id;
+        //       data.id = this.data.cl_id;
+        //       this.fire('toast', {  //คำสั่งสำหรับเปิด toast dialog
+        //         status: 'dialog',
+        //         text: 'ต้องการแก้ข้อมูลใช่หรือไม่ ?',
+        //         confirmed: this._saveData.bind(this), //function ที่ใช้รับค่า ปุ่ม
+        //         el: this, // compontents
+        //         data: data // ข้อมูลที่ส่งไป เช่น id ที่จะใช้ลบข้อมูล ใน db
+        //       })
+        //     } else {
+        //       this.fire('toast', {
+        //         status: 'connectError', text: 'คุณใส่ปริมาณข้าวที่คงเหลือเกินจำนวน ' + this.dataForSelect.contract_quantity_confirm_balance + ' ตัน', //คำสั่งสำหรับเปิด toast error
+        //         callback: function () {
+        //         }
+        //       })
+        //     }
+        //   });
+      },
       // _saveData: function (result, detail) {
       //   if (result == true) {
       //     detail.el.update('./g2g/confirm/update', detail.data, () => {
@@ -622,29 +697,63 @@
       //     });
       //   }
       // },
-      // confirmConfirm: function () {
-      //   //  this.editInput()
-      //   this._clearnDataConfirm(this.data, (data) => {
-      //     if (this.dataForSelect.cl_total_quantity <= this.dataForSelect.contract_quantity_confirm_balance) {
-      //       data.contract_id = this.dataForSelect.contract_id;
-      //       data.id = this.data.cl_id;
-      //       data.cl_status = this.approve(data.cl_status);
-      //       this.fire('toast', {  //คำสั่งสำหรับเปิด toast dialog
-      //         status: 'dialog',
-      //         text: 'ต้องการยืนยันข้อมูลใช่หรือไม่ ?',
-      //         confirmed: this._confirmData, //function ที่ใช้รับค่า ปุ่ม
-      //         el: this, // compontents
-      //         data: data // ข้อมูลที่ส่งไป เช่น id ที่จะใช้ลบข้อมูล ใน db
-      //       })
-      //     } else {
-      //       this.fire('toast', {
-      //         status: 'connectError', text: 'คุณใส่ปริมาณข้าวที่คงเหลือเกินจำนวน ' + this.dataForSelect.contract_quantity_confirm_balance + ' ตัน', //คำสั่งสำหรับเปิด toast error
-      //         callback: function () {
-      //         }
-      //       })
-      //     }
-      //   });
-      // },
+      confirmConfirm: function () {
+        this.fire('toast', {
+          status: 'openDialog',
+          text: 'ต้องการยืนยันสัญญาใช่หรือไม่ ?',
+          confirmed: (result) => {
+            if (result == true) {
+              this._resiveFormConfirm()
+                .then((res) => {
+                  res.cl_status = true
+                  console.log(res);
+                  this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
+                  this.dispatchAction('PUT_CONFIRM', res)
+                    .then((response) => {
+                      let url = { contract_id: this.contractId, status: 'all' }
+                      this.dispatchAction('GET_CONFIRM_LIST', this.genUrl(url))
+                      this.dispatchAction('GET_CONTRACT_OF_BUYER', this.getCookieBhv("buyerId"));
+                      this.queryFrom('.required').map((el) => { el.reset(); });
+                      this.dispatchAction('SET_STATE', {
+                        isInsert: false,
+                        btnDisabled: true,
+                        hiddend: true
+                      })
+                      this.fire('toast', {
+                        status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
+                        callback: () => {
+                        }
+                      });
+                    })
+                })
+                .catch((error) => {
+                  console.log(error);
+                });
+            }
+          }
+        })
+        //   //  this.editInput()
+        //   this._clearnDataConfirm(this.data, (data) => {
+        //     if (this.dataForSelect.cl_total_quantity <= this.dataForSelect.contract_quantity_confirm_balance) {
+        //       data.contract_id = this.dataForSelect.contract_id;
+        //       data.id = this.data.cl_id;
+        //       data.cl_status = this.approve(data.cl_status);
+        //       this.fire('toast', {  //คำสั่งสำหรับเปิด toast dialog
+        //         status: 'dialog',
+        //         text: 'ต้องการยืนยันข้อมูลใช่หรือไม่ ?',
+        //         confirmed: this._confirmData, //function ที่ใช้รับค่า ปุ่ม
+        //         el: this, // compontents
+        //         data: data // ข้อมูลที่ส่งไป เช่น id ที่จะใช้ลบข้อมูล ใน db
+        //       })
+        //     } else {
+        //       this.fire('toast', {
+        //         status: 'connectError', text: 'คุณใส่ปริมาณข้าวที่คงเหลือเกินจำนวน ' + this.dataForSelect.contract_quantity_confirm_balance + ' ตัน', //คำสั่งสำหรับเปิด toast error
+        //         callback: function () {
+        //         }
+        //       })
+        //     }
+        //   });
+      },
       // _confirmData: function (result, detail) {
       //   if (result == true) {
       //     detail.el.update('./g2g/confirm/update', detail.data, () => {
@@ -661,15 +770,37 @@
       //     });
       //   }
       // },
-      // deleteConfirm: function () {
-      //   this.fire('toast', {  //คำสั่งสำหรับเปิด toast dialog
-      //     status: 'dialog',
-      //     text: 'ต้องการลบข้อมูลใช่หรือไม่ ?',
-      //     confirmed: this._deleteDataConfirm.bind(this), //function ที่ใช้รับค่า ปุ่ม
-      //     el: this, // compontents
-      //     data: this.data // ข้อมูลที่ส่งไป เช่น id ที่จะใช้ลบข้อมูล ใน db
-      //   })
-      // },
+      deleteConfirm: function () {
+        this.fire('toast', {
+          status: 'openDialog',
+          text: 'ต้องการลบข้อมูลใช่หรือไม่ ?',
+          confirmed: (result) => {
+            if (result == true) {
+              // console.log(res);
+              this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
+              this.dispatchAction('DELETE_CONFIRM', this.data.id)
+                .then((response) => {
+                  this.dispatchAction('GET_CONTRACT_OF_BUYER', this.getCookieBhv("buyerId"));
+                  let url = { contract_id: this.contractId, status: 'all' }
+                  this.dispatchAction('GET_CONFIRM_LIST', this.genUrl(url))
+                  this.fire('toast', {
+                    status: 'success', text: 'ลบสำเร็จ',  // คำสั่งสำหรับเปิด toast success
+                    callback: () => {
+                      this.backPage()
+                    }
+                  })
+                })
+            }
+          }
+        })
+        //   this.fire('toast', {  //คำสั่งสำหรับเปิด toast dialog
+        //     status: 'dialog',
+        //     text: 'ต้องการลบข้อมูลใช่หรือไม่ ?',
+        //     confirmed: this._deleteDataConfirm.bind(this), //function ที่ใช้รับค่า ปุ่ม
+        //     el: this, // compontents
+        //     data: this.data // ข้อมูลที่ส่งไป เช่น id ที่จะใช้ลบข้อมูล ใน db
+        //   })
+      },
       // _deleteDataConfirm: function (result, detail) {
       //   if (result == true) {
       //     // console.log(detail.data.cl_id);
@@ -699,7 +830,7 @@
           try {
             for (var i = 0; i < this.data.cl_hamonize.length; i++) {
               arrForItem = JSON.parse(JSON.stringify(this.hamonizeContract));
-              console.log('arrForItem', arrForItem);
+              // console.log('arrForItem', arrForItem);
               this.data.cl_hamonize.map((item, index) => {
                 //  console.log(item);
                 if (i != index) {
@@ -776,6 +907,47 @@
           }
         }, 1);
       },
+      getObjectIncoterms: function (e) {
+        if (e.detail.value !== null) {
+          let indexIn = e.currentTarget.index
+          let dataIncoterms = {
+            inct_id: e.detail.value.inct_id,
+            inct_name: e.detail.value.inct_name
+          }
+          this.set('dataShow.incoterms.' + indexIn, dataIncoterms)
+        }
+      },
+      getObjectHamonize: function (e) {
+        if (e.detail.value !== null) {
+          let indexIn = e.currentTarget.index
+          let dataHamonize = JSON.parse(JSON.stringify(e.detail.value));
+          delete dataHamonize.label
+          this.set('dataShow.cl_hamonize.' + indexIn, dataHamonize)
+        }
+      },
+      getObjectPackeage: function (e) {
+        if (e.detail.value !== null) {
+          let indexHa = e.currentTarget.index
+          let indexPk = e.currentTarget.indexpackeage
+          let dataPackage = JSON.parse(JSON.stringify(e.detail.value));
+          // console.log(dataPackage);
+          let package = {
+            package: {
+              id: dataPackage.package_id,
+              package_kg_per_bag: dataPackage.package_kg_per_bag,
+              package_name_en: dataPackage.package_name_en,
+              package_name_th: dataPackage.package_name_th,
+              package_weight_bag: dataPackage.package_weight_bag
+            },
+            package_id: dataPackage.package_id,
+          }
+          // delete dataHamonize.label
+          // console.log(pack);
+          this.set('dataShow.cl_hamonize_pk.' + indexHa + '.package.' + indexPk, package)
+        }
+      },
+
+
       // _clearnDataConfirm: function (data, callback) {
       //   let el = Polymer.dom(this.root).querySelectorAll('.required');
       //   let stat = el.map((el) => el.validate());

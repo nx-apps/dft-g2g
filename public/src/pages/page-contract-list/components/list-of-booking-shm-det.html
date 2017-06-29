@@ -1,10 +1,13 @@
-<link rel="import" href="../../../../../bower_components/gl-styles/gl-size.html">
+<link rel="import" href="./../../../../bower_components/polymer/polymer.html">
 <link rel="import" href="./../../../../bower_components/gl-form/gl-combo-box.html">
 <link rel="import" href="./../../../../bower_components/gl-form/gl-form-panel-head.html">
 <link rel="import" href="./../../../../bower_components/gl-form/gl-form-panel-footer.html">
 <link rel="import" href="./../../../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="./../../../../bower_components/gl-grid/gl-grid-row.html">
 <link rel="import" href="./../../../../bower_components/gl-grid/gl-grid-col.html">
+<link rel="import" href="./../../components/validateFormBehaviors.html">
+<link rel="import" href="./../../components/format-number-behavior.html">
+<link rel="import" href="./../../components/g2g-logic-behavior.html">
 
 <dom-module id="list-of-booking-shm-det">
   <style include="iron-flex iron-flex-factors iron-flex-alignment gl-styles gl-size page-style">
@@ -42,10 +45,10 @@
     }
   </style>
   <template>
-    <gl-combo-box placeholder="สัญญาย่อย" items="{{dataForSelect.conFirmApprove}}" item-label-path="cl_no" label="สัญญาย่อย"
-      item-value-path="cl_id" value="{{cl_id}}" on-value-changed="getShowByBook">
+    <gl-combo-box placeholder="สัญญาย่อย" items="{{confirmLetterlist}}" item-label-path="label" label="สัญญาย่อย"
+      item-value-path="id" on-value-changed="getShowByBook">
       <template>
-        [[item.cl_no]]
+        [[item.label]]
       </template>
     </gl-combo-box>
     <gl-form-panel set-padding="10px 20px 10px 20px" set-border="1px">
@@ -60,7 +63,7 @@
 
           <paper-button raised class="gl-btn-primary" disabled="[[_isSeleted(cl_id)]]" on-tap="createBooking" hidden="{{clClose}}">{{localize.btn_add_booking}}</paper-button>
         </div>
-        
+
       </gl-form-panel-head>
       <br>
       <gl-grid-row width="{{getWidth}}">
@@ -107,31 +110,31 @@
       is: "list-of-booking-shm-det",
       behaviors: [
         ReduxBehavior,
-        nylonBehavior
-        // g2gCongtroller,
-        // FormatNumberBehavior,
-        // nylonLocalizeBehavior
+        nylonBehavior , FormatNumberBehavior, g2gLogicBehavior, ValidateFormBehavior
       ],
       properties: {
-        localize:{
-          statePath : 'i18n.g2g'
+        localize: {
+          statePath: 'i18n.g2g'
         },
-        data: {
-          type: Object,
-          value: [],
+        confirmLetterlist: {
+          statePath:'confirmLetter.confirmLetterlist',
+          observer:'get'
         },
-        dataForSelect: {
-          type: Object,
-          notify: true
-        },
-        clClose: {
-          type: Boolean,
-          value: false
-        },
-        setTextCl:{
-          type: String,
-          value:''
-        }
+        // dataForSelect: {
+        //   type: Object,
+        //   notify: true
+        // },
+        // clClose: {
+        //   type: Boolean,
+        //   value: false
+        // },
+        // setTextCl: {
+        //   type: String,
+        //   value: ''
+        // }
+      },
+      get(d){
+        console.log(d);
       },
       // observers: [
       //   // '_checkConfirm(dataForSelect.conFirmApprove)',
@@ -245,41 +248,40 @@
       // btnEditBooking: function (e) {
       //   this.fire('_edit-booking-detail', { detail: e.currentTarget.data });
       // },
-      // getShowByBook: function (e) {
-      //   try {
-      //     if ((e.detail.value !== undefined && e.detail.value !== '') &&
-      //       (this.dataForSelect.bookBl !== undefined && this.dataForSelect.bookBl !== '')) {
-      //       // console.log(e.detail.value);
-      //       // console.log(this.dataForSelect.bookBl);
-      //       let bookBl = this.g2gClone(this.dataForSelect)
-      //       // console.log(bookBl);
-      //       this.set('book', bookBl.bookBl.filter((item) => item.cl_id == e.detail.value)[0])
-      //       // console.log(this.book);
-      //       // console.log(book);
-      //       this.fire('_get-booking-detail', { detail: this.book })
-      //       // console.log(this.dataForSelect.contract_name);
-      //       let breadcrumbs = datass = [
-      //         {
-      //           label: this.dataForSelect.contract_name,
-      //           href: ''
-      //         },
-      //         {
-      //           label: 'สัญญาย่อยที่ ' + this.book.cl_no,
-      //           href: ''
-      //         },
-      //       ]
-      //       this.set('dataForSelect.breadcrumbs', breadcrumbs)
-      //       this.fire('_set-breadcrumbs', breadcrumbs)
-      //     } else {
-      //       this.set('data', '')
-      //     }
-      //   } catch (e) {
-      //     // console.log(e);
-      //   } finally {
+      getShowByBook: function (e) {
+        console.log(e.detail.value);
+        // try {
+        //   if ((e.detail.value !== undefined && e.detail.value !== '') &&
+        //     (this.dataForSelect.bookBl !== undefined && this.dataForSelect.bookBl !== '')) {
+        //     // console.log(e.detail.value);
+        //     // console.log(this.dataForSelect.bookBl);
+        //     let bookBl = this.g2gClone(this.dataForSelect)
+        //     // console.log(bookBl);
+        //     this.set('book', bookBl.bookBl.filter((item) => item.cl_id == e.detail.value)[0])
+        //     // console.log(this.book);
+        //     // console.log(book);
+        //     this.fire('_get-booking-detail', { detail: this.book })
+        //     // console.log(this.dataForSelect.contract_name);
+        //     let breadcrumbs = datass = [
+        //       {
+        //         label: this.dataForSelect.contract_name,
+        //         href: ''
+        //       },
+        //       {
+        //         label: 'สัญญาย่อยที่ ' + this.book.cl_no,
+        //         href: ''
+        //       },
+        //     ]
+        //     this.set('dataForSelect.breadcrumbs', breadcrumbs)
+        //     this.fire('_set-breadcrumbs', breadcrumbs)
+        //   } else {
+        //     this.set('data', '')
+        //   }
+        // } catch (e) {
+        //   // console.log(e);
+        // } 
 
-      //   }
-
-      // }
+      }
     });
   </script>
 </dom-module>

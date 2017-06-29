@@ -4,6 +4,9 @@
 <link rel="import" href="./../../../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="./../../../../bower_components/gl-form/gl-combo-box.html">
 <link rel="import" href="./../../../../bower_components/paper-icon-button/paper-icon-button.html">
+
+<link rel="import" href="../../components/g2g-logic-behavior.html">
+
 <dom-module id="list-of-confirm">
   <style include="iron-flex iron-flex-factors iron-flex-alignment gl-styles page-style">
     * {
@@ -44,8 +47,8 @@
         </div>
         <div class="horizontal layout wrap">
           <div id="combox" class="flex">
-            <gl-combo-box placeholder="ผู้ส่งออกทั้งหมด" items="{{dataForSelect.exporters}}" item-label-path="label" label="ผู้ส่งออก"
-              item-value-path="exporter_id" on-value-changed="getShowByExport" value="{{data.exporter_idss}}">
+            <gl-combo-box placeholder="ผู้ส่งออกทั้งหมด" items="{{confirmLetterExporterlist}}" item-label-path="label" label="ผู้ส่งออก"
+              item-value-path="exporter_id" on-value-changed="getShowByExport">
               <template>
                 [[item.label]]
               </template>
@@ -76,7 +79,7 @@
                 </td>
               </tr>
             </template>
-            <template is="dom-if" if="[[_isHave(data.book)]]">
+            <template is="dom-if" if="[[_isHave(confirmLetterList)]]">
               <tr>
                 <td colspan="5" style=" text-align: center;"> {{localize.text_no_data}}</td>
               </tr>
@@ -85,7 +88,7 @@
         </table>
       </div>
       <div name="addConfirm">
-        <confirm-detail data-for-select="[[dataForSelect]]" is-view-seleted="[[!isEdit]]" is-input-disabled="[[isInputDisabled]]"></confirm-detail>
+        <confirm-detail></confirm-detail>
       </div>
       <div name="confirmDetail">
         <confirm-detail></confirm-detail>
@@ -99,7 +102,8 @@
         ReduxBehavior,
         FormatNumberBehavior,
         nylonBehavior,
-        MonthBehavior
+        MonthBehavior,
+        g2gLogicBehavior
         // g2gCongtroller,
         // g2gModelBehavior,
         // nylonLocalizeBehavior,
@@ -127,10 +131,10 @@
         commonState: {
           statePath: 'commonState.setState'
         },
-        // title: {
-        //   type: String,
-        //   value: 'แสดงปริมาณการส่งมอบ'
-        // },
+        title: {
+          type: String,
+          value: 'แสดงปริมาณการส่งมอบ'
+        },
         pageSelected: {
           type: String,
           value: 'listOfConfirm',
@@ -140,16 +144,14 @@
           statePath: 'confirmLetter.confirmLetterlist',
           // observer:'get'
         },
-        // dataForSelect: {
-        //   type: Object,
-        //   value: { contract_type_rice: [] }
-        // },
-        // dataSelected: {
-        //   type: Object
-        // },
-        // clId: {
-        //   type: String,
-        // }
+        confirmLetterExporterlist: {
+          statePath: 'confirmLetter.confirmLetterExporterlist',
+          // observer:'get'
+        },
+        contractId: {
+          statePath: 'commonState.contractId',
+          observer: 'get'
+        },
       },
       // created: function () {
       //   this.nylonLocalizeImport('/i18n-page1.json');
@@ -172,14 +174,19 @@
       //   }
       // },
       createConfirm: function () {
-        // console.log(this.data)
+        let cl_no = 0
+        if (this.confirmLetterList.length !== 0) {
+          cl_no = this.confirmLetterList[0].cl_no
+        }
+
+
         this.fire('toast', { status: 'load' });
         this.dispatchAction('SET_STATE', {
           isInsert: true,
           btnDisabled: false,
           hiddend: true
         })
-        this.dispatchAction('CLEAR_CONFIRM')
+        this.dispatchAction('CLEAR_CONFIRM', cl_no + 1)
         this.async(() => {
           this.fire('toast', {
             status: 'success', text: 'โหลดสำเร็จ', callback: () => {
@@ -255,29 +262,22 @@
         return typeof cl_quantity_tolerance === "undefined" ? '' : "(" + str + ")";
       },
       getShowByExport(e) {
-        console.log(e);
-      //   try {
-      //     this.set('title', 'แสดงปริมาณการส่งมอบ')
-
-      //     if (e.currentTarget.value !== undefined && e.currentTarget.value !== '') {
-      //       // console.log(e.currentTarget.value)
-      //       // this.set('data', this.oldData)
-      //       this.read('./g2g/confirm/exporter?contract_id=' + this.data.contract_id + '&exporter_id=' + e.currentTarget.value, (data) => {
-      //         // this.data=data;
-      //         // console.log();
-      //         this.set('data.book', data)
-      //       });
-      //     } else {
-      //       // console.log(this.oldData);
-      //       // console.log(this.data)
-      //       // console.log(this.dataForSelect)
-      //       // get-list-confirm
-      //       this.fire('get-list-confirm',{contractId:this.dataForSelect.contract_id})
-      //       // this.set('data.book', this.oldData.book)
-      //     }
-      //   } catch (e) {
-      //     // console.log(e);
-        // }
+        // console.log(e);
+        try {
+          this.set('title', 'แสดงปริมาณการส่งมอบ')
+          if (this.contractId !== undefined) {
+            if (e.currentTarget.value !== undefined && e.currentTarget.value !== '') {
+              // let = e.currentTarget.value
+              let url = { contract_id: this.contractId, status: 'all', exporter_id: e.currentTarget.value }
+              this.dispatchAction('GET_CONFIRM_LIST', this.genUrl(url))
+            } else {
+              let url = { contract_id: this.contractId, status: 'all' }
+              this.dispatchAction('GET_CONFIRM_LIST', this.genUrl(url))
+            }
+          }
+        } catch (e) {
+          // console.log(e);
+        }
       }
 
     });
