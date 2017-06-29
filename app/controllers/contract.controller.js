@@ -97,9 +97,13 @@ exports.update = function (req, res) {
         if (valid) {
             var obj = Object.assign(req.body, {
                 date_updated: r.now().inTimezone('+07'),
-                updater: 'admin',
-                contract_date: r.ISO8601(req.body.contract_date).inTimezone('+07')
+                updater: 'admin'
             });
+            if (typeof req.body.contract_date !== "undefined") {
+                obj = Object.assign(obj, {
+                    contract_date: r.ISO8601(req.body.contract_date).inTimezone('+07')
+                });
+            }
             r.table("contract")
                 .get(req.body.id)
                 .update(obj)
@@ -114,7 +118,7 @@ exports.update = function (req, res) {
             res.json(req.ajv.errorsText());
         }
     } else {
-        res.json('require field id' );
+        res.json('require field id');
     }
 }
 exports.delete = function (req, res) {
@@ -135,6 +139,6 @@ exports.delete = function (req, res) {
                 res.json(err);
             })
     } else {
-        res.json('require field id' );
+        res.json('require field id');
     }
 }
