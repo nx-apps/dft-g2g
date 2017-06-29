@@ -2,8 +2,8 @@ exports.getByContractId = function (req, res) {
     var r = req.r;
     r.table('book')
         .getAll([req.query.id, false], { index: 'contractFeeStatus' })
-        .pluck('confirm_lot', 'invoice_no', 'id', 'ship_lot')
-        .orderBy('invoice_no')
+        .pluck('confirm_lot', 'invoice_no', 'id', 'ship_lot', 'cl_no', 'invoice_date', 'net_weight', 'invoice_status', 'value_d')
+        .orderBy('invoice_date')
         .run()
         .then(function (result) {
             res.json(result)
@@ -14,7 +14,7 @@ exports.getByContractId = function (req, res) {
 }
 exports.getByBookId = function (req, res) {
     req.r.table('book').get(req.query.id)
-        .pluck('id', 'cl_id', 'ship', 'load_port', 'dest_port', 'deli_port', 'bl_no', 'contract_id', 'invoice_no', 'invoice_date', 'made_out_to')
+        .pluck('id', 'cl_id', 'ship', 'load_port', 'dest_port', 'deli_port', 'bl_no', 'contract_id', 'invoice_no', 'invoice_date', 'made_out_to', 'invoice_status')
         .merge(function (m) {
             var detail = r.table('book_detail').getAll(req.query.id, { index: 'book_id' })
                 .coerceTo('array')
@@ -60,6 +60,11 @@ exports.update = function (req, res) {
             invoice_no: req.body.invoice_no,
             invoice_date: r.ISO8601(req.body.invoice_date).inTimezone('+07'),
             made_out_to: req.body.made_out_to,
+            package_amount: parseFloat(req.body.package_amount),
+            gross_weight: parseFloat(req.body.gross_weight),
+            tare_weight: parseFloat(req.body.tare_weight),
+            net_weight: parseFloat(req.body.net_weight),
+            value_d: parseFloat(req.body.value_d),
             invoice_status: true,
             fee_status: false,
             date_updated: r.now().inTimezone('+07'),
