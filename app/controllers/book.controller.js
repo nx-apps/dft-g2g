@@ -59,14 +59,14 @@ exports.insert = function (req, res) {
 }
 exports.update = function (req, res) {
     var r = req.r;
-    if (req.body.book_status == "approve" || typeof req.body.bl_no === 'undefined') {
+    // if (req.body.book_status == "approve" || typeof req.body.bl_no === 'undefined') {
+    //     updateBook(req, res);
+    // } else {
+    insertShip(req.body, req, res, function (ship, req, res) {
+        req.body.ship = ship;
         updateBook(req, res);
-    } else {
-        insertShip(req.body, req, res, function (ship, req, res) {
-            req.body.ship = ship;
-            updateBook(req, res);
-        });
-    }
+    });
+    // }
 }
 exports.delete = function (req, res) {
     var r = req.r;
@@ -99,6 +99,13 @@ exports.delete = function (req, res) {
         result.message = 'require field id';
         res.json(result);
     }
+}
+exports.approve = function (req, res) {
+    req.r.table('book').get(req.body.id).update({ book_status: true })
+        .run()
+        .then(function (data) {
+            res.json(data);
+        })
 }
 function insertShip(datas, req, res, cb) {
     var ship = [];
