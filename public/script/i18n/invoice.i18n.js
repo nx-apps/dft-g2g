@@ -1,6 +1,7 @@
 export const invoice = {
     th:{
         contract_name:'ชื่อสัญญา',
+        lot_no:'งวดที่',
         ship_lot:'ลำดับเรือที่',
         select:'เลือก',
         invoice_no:'เลขที่ใบแจ้งหนี้',

@@ -57,6 +57,16 @@ export function bookAction(store) {
             .catch((err) => {
                 console.log(err);
             })
+        },
+        BOOK_DELETE: function(data){
+            // console.log(data)
+            axios.put('./book/approve',data)
+            .then((response) => {
+                console.log(response);
+            })
+            .catch((err) => {
+                console.log(err);
+            })
         }
     }
     ]

@@ -27,6 +27,7 @@ export const bl = {
         mark:'Marks & Nos.',
         quantity:'Quantity',
         descriptions:'Descriptions',
-        amount_en:'Amount'
+        amount_en:'Amount',
+        tools:'เครื่องมือ'
     }
 }
