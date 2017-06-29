@@ -4,7 +4,9 @@ module.exports = function (app) {
     app.post('/insert', controller.insert);
     app.get('/contract', controller.getByContractId);
     app.get('', controller.getById);
-    app.put('/update',controller.update);
+    app.put('/update', controller.update);
+    app.delete('/delete/:id', controller.delete);
+    app.put('/approve', controller.approve);
     // app.get('/shm/id/:shm_id', controller.getByShmID);
 
     // app.get('/invoice/id/:invoice_id', controller.getByInvoiceId);
