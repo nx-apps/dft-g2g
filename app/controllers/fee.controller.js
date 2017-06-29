@@ -2,7 +2,7 @@ var async = require('async');
 exports.calc = function (req, res) {
     req.r.table('book').getAll(r.args(r.expr(req.query.book_id.split('_'))), { index: 'id' })
         .merge({ book_id: r.row('id') })
-        .pluck('book_id', 'invoice_no', 'cl_id', 'contract_id')
+        .pluck('book_id', 'invoice_no', 'cl_id', 'contract_id', 'invoice_date')
         .orderBy('invoice_no')
         .merge(function (m) {
             return {
@@ -15,6 +15,7 @@ exports.calc = function (req, res) {
                     'detail_id', 'net_weight', 'price_d', 'value_d')
             }
         })
+        .orderBy('invoice_date')
         .run()
         .then(function (data) {
             res.json(data);
