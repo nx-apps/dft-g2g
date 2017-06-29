@@ -332,10 +332,11 @@ hip
                 }, 500)
             },
             _getListConfirm: function (e) {
-                let url = { contract_id: e.detail.contract_id }
+                let url = { contract_id: e.detail.contract_id ,status:'all'}
                 // console.log(url)
                 this.dispatchAction('GET_CONFIRM_LIST', this.genUrl(url))
                 this.dispatchAction('GET_HAMONIZE_OF_CONTRACT',this.genUrl(url))
+                this.dispatchAction('GET_CONFIRM_EXPORTER_LIST',this.genUrl(url))
                 this.g2gPageSeleted = 'listOfConfirm'
                 // console.log(11111)
                 //     this.set('pageSelected', 'listOfConfirm')
