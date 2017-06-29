@@ -14,7 +14,7 @@ exports.getByContractId = function (req, res) {
 }
 exports.getByBookId = function (req, res) {
     req.r.table('book').get(req.query.id)
-        .pluck('id', 'cl_id', 'ship', 'load_port', 'dest_port', 'deli_port', 'bl_no', 'contract_id')
+        .pluck('id', 'cl_id', 'ship', 'load_port', 'dest_port', 'deli_port', 'bl_no', 'contract_id', 'invoice_no', 'invoice_date', 'made_out_to')
         .merge(function (m) {
             var detail = r.table('book_detail').getAll(req.query.id, { index: 'book_id' })
                 .coerceTo('array')
@@ -30,13 +30,15 @@ exports.getByBookId = function (req, res) {
                                 project_en: m2('reduction')(0)('project_en')
                             }
                         }),
-                    ship: m('ship')
-                        .map(function (map) {
-                            return map('ship_name').add(' V.', map('ship_voy'))
-                        })
-                        .reduce(function (l, r) {
-                            return l.add(r)
-                        }),
+                    ship: r.branch(m('ship').count().gt(1),
+                        m('ship').reduce(function (lf, rt) {
+                            return r.branch(lf.hasFields('data'),
+                                { data: lf('data').add(', ', rt('shipname'), ' V.', rt('ship_voy')) },
+                                { data: lf('shipname').add(' V.', lf('ship_voy'), ', ', rt('shipname'), ' V.', rt('ship_voy')) }
+                            )
+                        })('data'),
+                        m('ship')(0)('ship_name').add(' V.', m('ship')(0)('ship_voy'))
+                    ),
                     detail: detail,
                     incoterms: r.table('confirm_letter').get(m('cl_id')).getField('incoterms'),
                     package_amount: detail.sum('package_amount'),
