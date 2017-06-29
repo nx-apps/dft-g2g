@@ -110,7 +110,7 @@ exports.approve = function (req, res) {
                 tare_weight: detail.sum('tare_weight'),
                 value_d: detail.sum('value_d'),
                 package_amount: detail.sum('package_amount'),
-                book_status: true
+                book_status: req.body.book_status
             }
         })
         .do(function (d) {
