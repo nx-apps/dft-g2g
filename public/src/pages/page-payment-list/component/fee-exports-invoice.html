@@ -4,7 +4,7 @@
 <link rel="import" href="./../../components/g2g-logic-behavior.html">
 
 <dom-module id="fee-exports-invoice">
-  <style is="custom-style" include="iron-flex iron-flex-alignment">
+  <style is="custom-style" include="iron-flex iron-flex-alignment gl-styles page-style">
     .flexchild-1 {
       @apply(--layout-flex);
     }    
@@ -180,6 +180,29 @@
     <gl-form-panel>
       <fee-exports-sum total-invoice="{{data}}"></fee-exports-sum>
     </gl-form-panel>
+
+    <div class="horizontal end-justified layout">
+      <template is="dom-if" if="[[common.btnDisabled]]">
+        <template is="dom-if" if="[[data.fee_det_status]]">
+          <paper-button raised on-tap="approvePayment" class="gl-btn-default" hidden="[[data.fee_det_status]]">{{localize.reset_data}}{{localize.confirm}}</paper-button>
+        </template>
+      </template>
+      <template is="dom-if" if="[[!common.btnDisabled]]">
+        <paper-button raised class="gl-btn-default" on-tap="cancelFee" hidden="[[!common.isInsert]]">{{localize.reset_data}}</paper-button>
+        <paper-button raised on-tap="addPayment" class="gl-btn-success" hidden="[[!common.isInsert]]">{{localize.add}}</paper-button>
+      </template>
+      <template is="dom-if" if="[[!common.btnDisabled]]">
+        <paper-button raised class="gl-btn-default" on-tap="calcelContract" hidden="[[common.isInsert]]">{{localize.reset_data}}</paper-button>
+        <paper-button raised class="gl-btn-success" on-tap="savePayment" hidden="[[common.isInsert]]">{{localize.save}}</paper-button>
+      </template>
+
+      <template is="dom-if" if="[[data.fee_det_status]]">
+        <template is="dom-if" if="[[common.btnDisabled]]">
+          <paper-button raised class="gl-btn-danger" on-tap="editFee" hidden="[[common.isInsert]]">{{localize.cancel}}{{localize.confirm}}</paper-button>
+        </template>
+      </template>
+    </div>
+
   </template>
   <script>
     Polymer({
@@ -194,6 +217,9 @@
         totalInvoice: {
           type: Array,
           notify: true
+        },
+        common:{
+          statePath : 'commonState.setState'
         }
       },
       behaviors: [ReduxBehavior, g2gLogicBehavior],
@@ -341,7 +367,7 @@
           this.set('data.'+index+'.totalMoneyBathInvoices', result);
           return result;
         }
-      }
+      },
       // _totalPricePerTonUsdInvoices: function (index, data) {
       //   var result = 0;
       //   if(typeof data.base[index] !== 'undefined'){
@@ -351,6 +377,9 @@
       //     return result;
       //   }
       // },
+      addPayment: function (){
+        console.log(this.data);
+      }
     });
   </script>
 </dom-module>
