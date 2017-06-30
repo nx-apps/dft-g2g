@@ -21,6 +21,9 @@
                     "contract_id": {
                         "type": "string"
                     },
+                    "contract_no": {
+                        "type": "number"
+                    },
                     "detail": {
                         "type": "array",
                         "items": {

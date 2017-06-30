@@ -22,6 +22,9 @@
         "contract_id": {
             "type": "string"
         },
+        "contract_no": {
+            "type": "number"
+        },
         "cut_date": {
             "type": "string",
             "format": "date-time"

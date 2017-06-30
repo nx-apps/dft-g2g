@@ -7,6 +7,9 @@
         "contract_name": {
             "type": "string"
         },
+        "contract_no": {
+            "type": "number"
+        },
         "buyer_id": {
             "type": "string"
         },
