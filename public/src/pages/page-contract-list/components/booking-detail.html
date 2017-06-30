@@ -10,22 +10,27 @@
 <link rel="import" href="./../../../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="./../../../../bower_components/vaadin-date-picker/vaadin-date-picker.html">
 <link rel="import" href="./../../../../bower_components/gl-form/gl-form-panel-footer.html">
-
+<link rel="import" href="./../../components/validateFormBehaviors.html">
+<link rel="import" href="./../../components/format-number-behavior.html">
+<link rel="import" href="./../../components/g2g-logic-behavior.html">
 <dom-module id="booking-detail">
   <style include="iron-flex iron-flex-factors iron-flex-alignment gl-styles page-style">
     * {
       font-family: 'CSChatThaiUI', sans-serif;
       -webkit-font-smoothing: antialiased;
     }
+
     .btnVessel {
       min-height: 32px;
       min-width: 32px;
     }
+
     .btnVessel>iron-icon {
       height: 16px;
       width: 16px;
       margin-right: 8px;
     }
+
     div.title {
       margin-top: 16px;
       text-align: center;
@@ -35,18 +40,18 @@
   <template>
 
     <gl-form-panel>
-      <template is="dom-if" if="[[isInputDisabled]]">
+      <!--<template is="dom-if" if="[[commonState.btnDisabled]]">-->
 
-        <template is="dom-if" if="[[_checkEdit(data.book_status)]]">
-          <div class="horizontal end-justified layout">
-            <paper-icon-button id="editConfirm" class="crud" icon="create" raised on-tap="editInput"></paper-icon-button>
-            <paper-tooltip for="editConfirm" offset="0">Edit Booking</paper-tooltip>
-            <paper-icon-button id="deleteConfirm" class="crud" icon="delete" raised on-tap="deleteBooking"></paper-icon-button>
-            <paper-tooltip for="deleteConfirm" offset="0">Delete Booking</paper-tooltip>
-          </div>
-        </template>
+      <!--<template is="dom-if" if="[[_checkEdit(data.book_status)]]">-->
+      <div class="horizontal end-justified layout">
+        <paper-icon-button id="editConfirm" class="crud" icon="create" raised on-tap="editBook"></paper-icon-button>
+        <paper-tooltip for="editConfirm" offset="0">Edit Booking</paper-tooltip>
+        <paper-icon-button id="deleteConfirm" class="crud" icon="delete" raised on-tap="deleteBooking"></paper-icon-button>
+        <paper-tooltip for="deleteConfirm" offset="0">Delete Booking</paper-tooltip>
+      </div>
+      <!--</template>-->
 
-      </template>
+      <!--</template>-->
       <gl-form-panel-body>
         <div class="title">{{localize.text_list_booking}}</div>
       </gl-form-panel-body>
@@ -57,67 +62,72 @@
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
           </gl-grid-col>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-            [[changeString2Num(data.*,'ship_lot_no')]]
+            [[changeString2Num(data.*,'ship_lot')]]
             <gl-form-input required class="required" label="{{localize.label_lot_no}}" always-float-label placeholder="{{localize.text_your_detail}}"
-              value="{{data.ship_lot_no}}" disabled="[[isInputDisabled]]" type="number" min="0"></gl-form-input>
+              value="{{data.ship_lot}}" disabled="[[commonState.btnDisabled]]" type="number" min="0"></gl-form-input>
           </gl-grid-col>
         </gl-grid-row>
         <gl-grid-row width="{{getWidth}}">
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
             <gl-form-input required class="required" label="{{localize.label_booking_no}}" always-float-label placeholder="{{localize.label_booking_no}}"
-              value="{{data.book_no}}" disabled="[[isInputDisabled]]"></gl-form-input>
+              value="{{data.book_no}}" disabled="[[commonState.btnDisabled]]"></gl-form-input>
           </gl-grid-col>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
             <gl-form-input required class="required" label="{{localize.label_bill_of_lading}}" always-float-label placeholder="{{localize.label_bill_of_lading}}"
-              value="{{data.bl_no}}" disabled="[[isInputDisabled]]"></gl-form-input>
+              value="{{data.bl_no}}" disabled="[[commonState.btnDisabled]]"></gl-form-input>
           </gl-grid-col>
 
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-            <gl-combo-box label="{{localize.label_shipping_agent}}" always-float-label item-label-path="carrier_name" disabled="[[isInputDisabled]]"
-              item-value-path="carrier_id" items="{{dataForSelect.carrier}}" value="{{data.carrier_id}}"></gl-combo-box>
-            <template>
-              [[item.carrier_name]]
-            </template>
+            <!--<gl-combo-box label="ที่อยู่ผู้รับสินค้า (ยัง)" always-float-label item-label-path="notify_name" disabled="[[commonState.btnDisabled]]"
+              item-value-path="notify_id" items="{{notifyList}}" value="{{data.notify_id}}">
+              <template>
+                [[item.notify_name]]
+              </template>
+            </gl-combo-box>-->
           </gl-grid-col>
 
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-            <gl-combo-box required class="required" label="{{localize.label_shipping_line}}" always-float-label item-label-path="shipline_name"
-              disabled="[[isInputDisabled]]" item-value-path="shipline_id" items="{{dataForSelect.shipline}}" value="{{data.shipline_id}}"></gl-combo-box>
+            <gl-combo-box label="{{localize.label_shipping_agent}}" always-float-label item-label-path="shipline_name" disabled="[[commonState.btnDisabled]]"
+              item-value-path="shipline_id" items="{{shiplineList}}" value="{{data.shipline_id}}" on-selected-item-changed="getObjectShipline">
+              <template>
+                [[item.shipline_name]]
+              </template>
+            </gl-combo-box>
           </gl-grid-col>
 
           <template is="dom-repeat" items="[[data.ship]]">
             <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-              [[_getShip(data.shipline_id,dataForSelect)]]
+              [[_getShip(data.shipline_id,shipList)]]
               <div class="autocomplete-wrapper">
-                <gl-form-input id="ship-[[index]]" required class="required" disabled="[[isInputDisabled]]" always-float-label label="{{localize.label_vessel}} [[_ObcountIndex(index)]]"
-                  value="{{item.ship_name}}" on-tap="_getCheckShipline" on-blur="getShipId" index="[[index]]"></gl-form-input>
+                <gl-form-input id="ship-[[index]]" required class="required" disabled="[[commonState.btnDisabled]]" always-float-label label="{{localize.label_vessel}} [[_ObcountIndex(index)]]"
+                  value="{{item.ship_name}}" on-blur="getShipId" index="[[index]]"></gl-form-input>
 
-                <paper-autocomplete-suggestions id="shipline-suggestions-[[index]]" is-open="[[true]]" for="ship-[[index]]"></paper-autocomplete-suggestions>
+                <paper-autocomplete-suggestions id="shipline-suggestions-[[index]]" for="ship-[[index]]"></paper-autocomplete-suggestions>
 
               </div>
             </gl-grid-col>
             <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
               <gl-form-input required class="required" label="{{localize.label_voy_no}}" always-float-label placeholder="{{localize.label_voy_no}}"
-                value="{{item.ship_voy_no}}" disabled="[[isInputDisabled]]"></gl-form-input>
+                value="{{item.ship_voy}}" disabled="[[commonState.btnDisabled]]"></gl-form-input>
             </gl-grid-col>
             <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]"></gl-grid-col>
           </template>
-          
+
           <div class="horizontal end-justified layout">
-            <paper-button raised class="gl-btn-primary btnVessel" on-tap="addShip" hidden="[[isInputDisabled]]">
+            <paper-button raised class="gl-btn-primary btnVessel" on-tap="addShip" hidden="[[commonState.btnDisabled]]">
               <iron-icon icon="add"></iron-icon>{{localize.btn_add_vessel}}</paper-button>
-            <paper-button raised class="gl-btn-danger btnVessel" on-tap="deleteShip" hidden="[[isInputDisabled]]" disabled="[[_isHaveForDelete(data.ship,data.ship.*)]]">
+            <paper-button raised class="gl-btn-danger btnVessel" on-tap="deleteShip" hidden="[[commonState.btnDisabled]]" disabled="[[_isHaveForDelete(data.ship,data.ship.*)]]">
               <iron-icon icon="remove"></iron-icon>{{localize.btn_delete_vessel}}</paper-button>
           </div>
-          
+
         </gl-grid-row>
         <gl-grid-row width="{{getWidth}}">
           <template is="dom-repeat" items="[[data.surveyor]]">
             <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-              [[_getSurveyor(item.surveyor_id,dataForSelect,data.surveyor.*)]]
-              <gl-combo-box required class="required" id="surveyor-[[index]]" label="{{localize.label_surveyor}} [[_ObcountIndex(index)]]"
-                always-float-label disabled="[[isInputDisabled]]" item-label-path="surveyor_name" item-value-path="surveyor_id"
-                items="{{dataForSelect.surveyor}}" value="{{item.surveyor_id}}" on-value-changed="_getResetSurveyor">
+              [[_getSurveyor(item.surveyor_id,surveyorList,data.surveyor.*)]]
+              <gl-combo-box required class="required" id="surveyor-[[index]]" index="[[index]]" label="{{localize.label_surveyor}} [[_ObcountIndex(index)]]"
+                always-float-label disabled="[[commonState.btnDisabled]]" item-label-path="surveyor_name" item-value-path="surveyor_id"
+                items="{{surveyorList}}" value="{{item.surveyor_id}}" on-value-changed="_getResetSurveyor" on-selected-item-changed="getObjectSurveyor">
                 <template>
                   [[item.surveyor_name]]
                 </template>
@@ -128,17 +138,28 @@
           </template>
 
           <div class="horizontal end-justified layout">
-            <paper-button raised class="gl-btn-primary btnVessel" on-tap="addSurveyor" hidden="[[isInputDisabled]]" disabled="[[!_isHaveForUse(data.surveyor,dataForSelect.surveyor,data.surveyor.*)]]">
+            <paper-button raised class="gl-btn-primary btnVessel" on-tap="addSurveyor" hidden="[[commonState.btnDisabled]]" disabled="[[!_isHaveForUse(data.surveyor,dataForSelect.surveyor,data.surveyor.*)]]">
               <iron-icon icon="add"></iron-icon>{{localize.btn_add_surveyor}}</paper-button>
-            <paper-button raised class="gl-btn-danger btnVessel" on-tap="deleteSurveyor" hidden="[[isInputDisabled]]" disabled="[[_isHaveForDelete(data.surveyor,data.surveyor.*)]]">
+            <paper-button raised class="gl-btn-danger btnVessel" on-tap="deleteSurveyor" hidden="[[commonState.btnDisabled]]" disabled="[[_isHaveForDelete(data.surveyor,data.surveyor.*)]]">
               <iron-icon icon="remove"></iron-icon>{{localize.btn_delete_surveyor}}</paper-button>
           </div>
         </gl-grid-row>
+        <!--<gl-grid-row width="{{getWidth}}">-->
 
+        <!--</gl-grid-col>-->
         <gl-grid-row width="{{getWidth}}">
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,12]]">
+            <gl-combo-box label="ที่อยู่ผู้รับสินค้า (ยัง)" always-float-label item-label-path="notify_name" disabled="[[commonState.btnDisabled]]"
+              item-value-path="notify_id" items="{{notifyList}}" on-selected-item-changed="getObjectNotify" value="{{data.notify_id}}">
+              <template>
+                [[item.notify_name]]
+              </template>
+            </gl-combo-box>
+          </gl-grid-col>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
             <gl-combo-box required class="required" label="{{localize.label_port_of_loading}}" always-float-label item-label-path="port_name"
-              disabled="[[isInputDisabled]]" item-value-path="port_id" items="{{dataForSelect.pol}}" value="{{data.load_port_id}}">
+              disabled="[[commonState.btnDisabled]]" on-selected-item-changed="getObjectLoadPort" item-value-path="port_id"
+              items="{{portList.Thailand}}" value="{{data.load_port_id}}">
               <template>
                 [[item.port_name]]
               </template>
@@ -146,16 +167,21 @@
           </gl-grid-col>
 
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-            <vaadin-date-picker required class="required" label="{{localize.label_etd}}" always-float-label value="{{data.etd_date}}"
-              disabled="[[isInputDisabled]]"></vaadin-date-picker>
+            <gl-form-input type="date" required class="required" label="{{localize.label_etd}}" always-float-label value="{{data.etd_date}}"
+              disabled="[[commonState.btnDisabled]]"></gl-form-input>
+            <!--<vaadin-date-picker required class="required" label="{{localize.label_etd}}" always-float-label value="{{data.etd_date}}"
+              disabled="[[commonState.btnDisabled]]"></vaadin-date-picker>-->
           </gl-grid-col>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-            <vaadin-date-picker required class="required" label="{{localize.label_eta}}" always-float-label value="{{data.eta_date}}"
-              disabled="[[isInputDisabled]]"></vaadin-date-picker>
+            <gl-form-input type="date" required class="required" label="{{localize.label_eta}}" always-float-label value="{{data.eta_date}}"
+              disabled="[[commonState.btnDisabled]]"></gl-form-input>
+            <!--<vaadin-date-picker required class="required" label="{{localize.label_eta}}" always-float-label value="{{data.eta_date}}"
+              disabled="[[commonState.btnDisabled]]"></vaadin-date-picker>-->
           </gl-grid-col>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
             <gl-combo-box required class="required" label="{{localize.label_port_of_discharge}}" always-float-label item-label-path="port_name"
-              disabled="[[isInputDisabled]]" item-value-path="port_id" items="{{dataForSelect.pod}}" value="{{data.dest_port_id}}">
+              disabled="[[commonState.btnDisabled]]" item-value-path="port_id" on-selected-item-changed="getObjectDestPort"
+              items="{{setPort(portList,contryNameEn)}}" value="{{data.dest_port_id}}">
               <template>
                 [[item.port_name]]
               </template>
@@ -164,7 +190,8 @@
 
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
             <gl-combo-box required class="required" label="{{localize.label_place_of_delivery}}" always-float-label item-label-path="port_name"
-              disabled="[[isInputDisabled]]" item-value-path="port_id" items="{{dataForSelect.pod}}" value="{{data.deli_port_id}}">
+              disabled="[[commonState.btnDisabled]]" item-value-path="port_id" on-selected-item-changed="getObjectDeliPort"
+              items="{{setPort(portList,contryNameEn)}}" value="{{data.deli_port_id}}">
               <template>
                 [[item.port_name]]
               </template>
@@ -172,86 +199,228 @@
           </gl-grid-col>
 
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-            [[changeString2Num(data.*,'weight_per_container')]]
+            [[changeString2Num(data.*,'weight_container')]]
             <gl-form-input required class="required" allowed-pattern="[0-9||,||.]" format-number="on" label="{{localize.label_cabinet}}"
-              always-float-label placeholder="{{localize.text_your_detail}}" disabled="[[isInputDisabled]]" value="{{data.weight_per_container}}"></gl-form-input>
+              always-float-label placeholder="{{localize.text_your_detail}}" disabled="[[commonState.btnDisabled]]" value="{{data.weight_container}}"></gl-form-input>
           </gl-grid-col>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-            <vaadin-date-picker required class="required" label="{{localize.label_packing_date}}" always-float-label value="{{data.packing_date}}"
-              disabled="[[isInputDisabled]]"></vaadin-date-picker>
+            <gl-form-input type="date" required class="required" label="{{localize.label_packing_date}}" always-float-label value="{{data.packing_date}}"
+              disabled="[[commonState.btnDisabled]]"></gl-form-input>
+            <!--<vaadin-date-picker></vaadin-date-picker>-->
           </gl-grid-col>
 
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-            <vaadin-date-picker required class="required" label="{{localize.label_cut_off_date}}" always-float-label value="{{data.cut_of_date}}"
-              disabled="[[isInputDisabled]]"></vaadin-date-picker>
+            <gl-form-input type="date" required class="required" label="{{localize.label_cut_off_date}}" always-float-label value="{{data.cut_date}}"
+              disabled="[[commonState.btnDisabled]]"></gl-form-input>
+            <!--<vaadin-date-picker required class="required" label="{{localize.label_cut_off_date}}" always-float-label value="{{data.cut_of_date}}"
+              disabled="[[commonState.btnDisabled]]"></vaadin-date-picker>-->
           </gl-grid-col>
 
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
             <gl-form-input label="{{localize.label_cut_off_time}}" always-float-label required class="required" type="time" placeholder="{{localize.label_cut_off_time}}"
-              value="{{data.cut_of_time}}" disabled="[[isInputDisabled]]"></gl-form-input>
+              value="{{data.cut_time}}" disabled="[[commonState.btnDisabled]]"></gl-form-input>
           </gl-grid-col>
 
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-            <vaadin-date-picker label="{{localize.label_production_date}}" always-float-label required class="required" value="{{data.product_date}}"
-              disabled="[[isInputDisabled]]"></vaadin-date-picker>
+            <gl-form-input type="date" label="{{localize.label_production_date}}" always-float-label required class="required" value="{{data.product_date}}"
+              disabled="[[commonState.btnDisabled]]"></gl-form-input>
+            <!--<vaadin-date-picker label="{{localize.label_production_date}}" always-float-label required class="required" value="{{data.product_date}}"
+              disabled="[[commonState.btnDisabled]]"></vaadin-date-picker>-->
           </gl-grid-col>
         </gl-grid-row>
         <gl-grid-row width="{{getWidth}}">
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]"></gl-grid-col>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]"></gl-grid-col>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-            <gl-form-input label="{{localize.label_note}}" always-float-label value="{{data.book_remark}}" disabled="[[isInputDisabled]]"></gl-form-input>
+            <gl-form-input label="{{localize.label_note}}" always-float-label value="{{data.book_remark}}" disabled="[[commonState.btnDisabled]]"></gl-form-input>
           </gl-grid-col>
         </gl-grid-row>
       </gl-form-panel-body>
 
-      <template is="dom-if" if="[[!_isViewing(isViewSeleted)]]">
+      <!--<template is="dom-if" if="[[!commonState.isInsert]]">
         <gl-form-panel-footer>
           <paper-button class="gl-btn-default" raised on-tap="cancelInsertShipment"> {{localize.btn_back_ward}}</paper-button>
-          <paper-button class="gl-btn-primary" raised on-tap="addBl"> {{localize.btn_add}}</paper-button>
+          <paper-button class="gl-btn-primary" raised on-tap="insertBook"> {{localize.btn_add}}</paper-button>
         </gl-form-panel-footer>
       </template>
-      <template is="dom-if" if="[[_isViewing(isViewSeleted)]]">
+      <template is="dom-if" if="[[commonState.isInsert]]">
         <gl-form-panel-footer>
-          <paper-button class="gl-btn-default" raised on-tap="cancelInsertShipment" hidden="[[!isInputDisabled]]">
+          <paper-button class="gl-btn-default" raised on-tap="cancelInsertShipment" hidden="[[!commonState.btnDisabled]]">
             {{localize.btn_back_ward}}</paper-button>
-          <paper-button class="gl-btn" on-tap="calcelBl" raised hidden="[[isInputDisabled]]">{{localize.btn_cancel}}</paper-button>
-          <paper-button class="gl-btn-success" raised on-tap="editBl" hidden="[[isInputDisabled]]"> {{localize.btn_save}}</paper-button>
+          <paper-button class="gl-btn" on-tap="calcelBl" raised hidden="[[commonState.btnDisabled]]">{{localize.btn_cancel}}</paper-button>
+          <paper-button class="gl-btn-success" raised on-tap="editBl" hidden="[[commonState.btnDisabled]]"> {{localize.btn_save}}</paper-button>
         </gl-form-panel-footer>
-      </template>
+      </template>-->
+      <div class="horizontal end-justified layout">
+
+        <template is="dom-if" if="[[commonState.isInsert]]">
+          <paper-button class="gl-btn-default" raised on-tap="cancelInsertShipment"> {{localize.btn_back_ward}}</paper-button>
+          <paper-button class="gl-btn-primary" on-tap="insertBook" raised>{{localize.btn_add}}</paper-button>
+
+        </template>
+        <template is="dom-if" if="[[!commonState.isInsert]]">
+          <paper-button class="gl-btn-default" on-tap="calcelContract" raised hidden="[[commonState.btnDisabled]]">{{localize.btn_cancel}}</paper-button>
+          <paper-button class="gl-btn-success" on-tap="saveContract" raised hidden="[[commonState.btnDisabled]]">{{localize.btn_save}}</paper-button>
+        </template>
+        <template is="dom-if" if="[[commonState.btnDisabled]]">
+          <paper-button class="gl-btn-default" raised on-tap="cancelInsertShipment"> {{localize.btn_back_ward}}</paper-button>
+          <paper-button class="gl-btn-info" raised on-tap="confirmDrawer" hidden="[[data.contract_status]]">{{localize.btn_confirm}}</paper-button>
+        </template>
+      </div>
   </template>
   <script>
     Polymer({
       is: "booking-detail",
       behaviors: [
         ReduxBehavior,
-        nylonBehavior
-        // g2gCongtroller,
-        // g2gShipmentController,
-        // g2gModelBehavior,
-        // nylonLocalizeBehavior
+        nylonBehavior,
+        FormatNumberBehavior, g2gLogicBehavior, ValidateFormBehavior
       ],
       properties: {
         data: {
-          type: Object,
-          value: { bl_no: '', ship: [{ ship_id: '', ship_voy_no: '' }], surveyor: [{ surveyor_id: '' }] },
-          notify: true
+          statePath: 'book.bookDetail'
         },
-        dataForSelect: {
-          type: Object,
-        },
-        blNoOld: {
-          type: String,
-        },
+        // dataForSelect: {
+        //   type: Object,
+        // },
+        // blNoOld: {
+        //   type: String,
+        // },
         localize: {
           statePath: 'i18n.g2g'
+        },
+        commonState: {
+          statePath: 'commonState.setState'
+        },
+        contryNameEn: {
+          statePath: 'commonState.contryNameEn'
+        },
+        shipList: {
+          statePath: 'commonG2g.shipList',
+          // observer:'get'
+        },
+        notifyList: {
+          statePath: 'commonG2g.notifyList',
+          // observer:'get'
+        },
+        shiplineList: {
+          statePath: 'commonG2g.shiplineList',
+          // observer:'get'
+        },
+        surveyorList: {
+          statePath: 'commonG2g.surveyorList',
+          // observer:'get'
+        },
+        portList: {
+          statePath: 'commonG2g.portList',
+          // observer:'get'
+        },
+        dataShow: {
+          type: Object,
+          value: {
+            shipline: {},
+            notify_party: {},
+            surveyor: [],
+            load_port: {},
+            deli_port: {},
+            dest_port: {},
+            notify: {},
+            ship: []
+          }
         }
       },
-      // observers: [
-      //   '_oBChangeBooking(data.book_no)',
-      //   '_oBChangePod(data.dest_port_id)',
-      //   '_getPod(dataForSelect)',
-      // ],
+      editBook: function () {
+        this.dispatchAction('SET_STATE', {
+          isInsert: false,
+          btnDisabled: false,
+          hiddend: true
+        })
+      },
+      observers: [
+        '_oBChangeBooking(data.book_no)',
+        '_oBChangePod(data.dest_port_id)',
+        //   '_getPod(dataForSelect)',
+      ],
+      setPort: function (portList, contryNameEn) {
+        return portList[contryNameEn]
+      },
+      getObjectShipline: function (e) {
+        if (e.detail.value !== null) {
+          let data = {
+            id: e.detail.value.shipline_id,
+            shipline_name: e.detail.value.shipline_name,
+            shipline_name2: e.detail.value.shipline_name2,
+            shipline_tel: e.detail.value.shipline_tel
+          }
+          this.set('dataShow.shipline', data)
+        }
+      },
+      getObjectSurveyor: function (e) {
+
+        if (e.detail.value !== null) {
+          // let data = JSON.parse(JSON.stringify(e.detail.value))
+          let index = e.currentTarget.index
+          let data = {
+            surveyor_id: e.detail.value.surveyor_id,
+            surveyor_name: e.detail.value.surveyor_name
+          }
+          this.set('dataShow.surveyor.' + index, data)
+        }
+      },
+      getObjectLoadPort: function (e) {
+        if (e.detail.value !== null) {
+          let data = {
+            country_fullname_en: e.detail.value.country_fullname_en,
+            country_fullname_th: e.detail.value.country_fullname_th,
+            country_name_en: e.detail.value.country_name_en,
+            country_name_th: e.detail.value.country_name_th,
+            id: e.detail.value.port_id,
+            port_name: e.detail.value.port_name
+          }
+          this.set('dataShow.load_port', data)
+        }
+      },
+      getObjectDeliPort: function (e) {
+        if (e.detail.value !== null) {
+          let data = {
+            country_fullname_en: e.detail.value.country_fullname_en,
+            country_fullname_th: e.detail.value.country_fullname_th,
+            country_name_en: e.detail.value.country_name_en,
+            country_name_th: e.detail.value.country_name_th,
+            id: e.detail.value.port_id,
+            port_name: e.detail.value.port_name
+          }
+          this.set('dataShow.deli_port', data)
+        }
+      },
+      getObjectDestPort: function (e) {
+        if (e.detail.value !== null) {
+          let data = {
+            country_fullname_en: e.detail.value.country_fullname_en,
+            country_fullname_th: e.detail.value.country_fullname_th,
+            country_name_en: e.detail.value.country_name_en,
+            country_name_th: e.detail.value.country_name_th,
+            id: e.detail.value.port_id,
+            port_name: e.detail.value.port_name
+          }
+          this.set('dataShow.dest_port', data)
+        }
+      },
+      getObjectNotify: function (e) {
+        if (e.detail.value !== null) {
+          let data = {
+            buyer_id: e.detail.value.buyer_id,
+            id: e.detail.value.notify_id,
+            notify_address: e.detail.value.notify_address,
+            notify_fax: e.detail.value.notify_fax,
+            notify_name: e.detail.value.notify_name,
+            notify_tel: e.detail.value.notify_tel,
+            port_id: e.detail.value.port_id
+          }
+          this.set('dataShow.notify', data)
+        }
+      },
+
       // getShippingId: function () {
       //   try {
       //     var resilte = this.dataForSelect.shipline.filter((item, index) => this.data.shipline_name.toUpperCase() == item.text.toUpperCase())
@@ -260,7 +429,7 @@
       //       this.set('data.shipline_id', resilte[0].shipline_id)
       //     } else {
       //       // console.log(this.data.shipline_name);
-            
+
       //       this.set('data.shipline_id', '')
       //     }
       //     this.set('data.shipline_name', this.data.shipline_name.toUpperCase())
@@ -268,87 +437,131 @@
       //     // console.log(error);
       //   }
       // },
-      // getShipId: function (e) {
-      //   try {
-      //     let index = e.currentTarget.index
-      //     // this.set('data.ship['+index+'].ship_name',this.data.ship[index].ship_name.toUpperCase())
-      //     this.data.ship[index].ship_name = this.data.ship[index].ship_name.toUpperCase()
-      //     this.notifyPath('data.ship.'+index+'.ship_name');
-      //     if (this.data.shipline_id != '') {
-            
-      //       let source = this.$$('#shipline-suggestions-' + index).source
-      //       let ship_name = this.data.ship[index].ship_name
-      //       var resulte = source.filter((item, index) => ship_name == item.text.toUpperCase())
-      //       // console.log(resulte);
-      //       if (resulte.length > 0) {
-      //         // this.set('data.ship['+index+'].ship_id', resulte[0].ship_id)
-      //         this.data.ship[index].ship_id = resulte[0].ship_id
-      //         // console.log(this.data.ship);
-      //       } else {
-      //         // console.log(this.data.ship);
-      //         // this.set('data.shipline_name',this.data.shipline_name)
-      //         this.set('data.ship.' + index + '..ship_id', '')
-      //       }
-      //     }else {
-      //     }
-      //   } catch (e) {
-      //     // console.log(e);
-      //   }
+      getShipId: function (e) {
+        try {
+          let index = e.currentTarget.index
+          // this.set('data.ship['+index+'].ship_name',this.data.ship[index].ship_name.toUpperCase())
+          this.data.ship[index].ship_name = this.data.ship[index].ship_name.toUpperCase()
+          this.notifyPath('data.ship.' + index + '.ship_name');
+          let sugg = this.$$('#shipline-suggestions-' + index)
+          console.log(sugg);
+          // shipList
+          //     if (this.data.shipline_id != '') {
 
-      // },
+          // let source = this.$$('#shipline-suggestions-' + index).source
+          // console.log(source);
+          // let ship_name = this.data.ship[index].ship_name
+          // var resulte = source.filter((item, index) => ship_name == item.text.toUpperCase())
+          //       // console.log(resulte);
+          //       if (resulte.length > 0) {
+          //         // this.set('data.ship['+index+'].ship_id', resulte[0].ship_id)
+          //         this.data.ship[index].ship_id = resulte[0].ship_id
+          //         // console.log(this.data.ship);
+          //       } else {
+          //         // console.log(this.data.ship);
+          //         // this.set('data.shipline_name',this.data.shipline_name)
+          //         this.set('data.ship.' + index + '..ship_id', '')
+          //       }
+          //     }else {
+          //     }
+        } catch (e) {
+          //     // console.log(e);
+        }
+
+      },
       // _checkEdit: function (edit) {
       //   if (edit == false) {
       //     return true
       //   }
       // },
-      // addBl: function () {
+      _resiveDataBook: function () {
+        return new Promise((res, rej) => {
+          let dataResive = this.data
+          // dataResive.ship_name =  this.data.ship_name
+          dataResive.shipline = this.dataShow.shipline
+          dataResive.notify_party = this.dataShow.notify
+          dataResive.surveyor = this.dataShow.surveyor
+          dataResive.load_port = this.dataShow.load_port
+          dataResive.deli_port = this.dataShow.deli_port
+          dataResive.dest_port = this.dataShow.dest_port
+          dataResive.ship = ''
+          // dataResive.id = this.data.id,
 
-      //   let ship_lot_no = this.data.ship_lot_no
-      //   // console.log(this.dataBookNo);
-      //   let ship_lot = this.dataBookNo.filter((ship_lot) => ship_lot.ship_lot_no == ship_lot_no)
-      //   // console.log(this.dataForSelect.listbooking);
-      //   try {
-      //     // console.log(ship_lot.length)
-      //     if (ship_lot.length > 0 || ship_lot_no < 0) {
+          delete dataResive.date_updated
+          delete dataResive.date_created
+          res(dataResive)
+        })
+      },
+      _resiveFormBook: function () {
+        return new Promise((res, rej) => {
+          // if (this.validateForm('.required')) {
+          this._resiveDataBook().then((data) => {
+            res(data)
+          })
+          // } else {
+          //   this.fire('toast', {
+          //     status: 'connectError', text: 'กรุณากรอกข้อมูลให้ครบทุกช่อง', //คำสั่งสำหรับเปิด toast error
+          //     callback: function () {
+          //       rej('error')
+          //     }
+          //   })
+          // }
+        })
+      },
+      insertBook: function () {
+        // console.log(this.data);
+        // console.log(this.dataShow);
+        this._resiveFormBook()
+          .then((res) => {
+            console.log(this.data);
+            console.log(res);
+          })
+        //   let ship_lot = this.data.ship_lot
+        //   // console.log(this.dataBookNo);
+        //   let ship_lot = this.dataBookNo.filter((ship_lot) => ship_lot.ship_lot == ship_lot)
+        //   // console.log(this.dataForSelect.listbooking);
+        //   try {
+        //     // console.log(ship_lot.length)
+        //     if (ship_lot.length > 0 || ship_lot < 0) {
 
-      //       this.fire('toast', {
-      //         status: 'connectError', text: 'ลำดับเรือซ้ำกัน `', //คำสั่งสำหรับเปิด toast error
-      //         callback: function () {
-      //         }
-      //       })
-      //     } else {
-      //       this.data.book_status = false;
-      //       this.data.cl_id = this.dataForSelect.cl_id;
-      //       // console.log(this.data.cl_id);
-      //       this.set('data.tags', [])
-      //       this.push('data.tags', this.dataForSelect.cl_id, this.dataForSelect.contract_id);
-      //       this._cleanDataBl(this.data, (data) => {
-      //         if (data.carrier_id == '' || data.carrier_id == undefined) {
-      //           data.carrier_id = this._checkCarrierIsBlank();
-      //         }
-      //         // console.log(this.data);
-      //         this.insert('./g2g/book/insert', data, () => {
-      //           this.fire('toast', { status: 'load' });
-      //           this.fire('_get-fire-booking-detail', { detail: data });
-      //           this.fire('toast', {
-      //             status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
-      //             callback: () => {
-      //               this.cancelInsertShipment();
-      //               let el = Polymer.dom(this.root).querySelectorAll('.required');
-      //               el.map((el) => { el.value = ''; });
-      //               //ใส่วันปัจจุบันลงไป
-      //               // this._changeDataBl('undefined');
-      //             }
-      //           });
-      //         });
+        //       this.fire('toast', {
+        //         status: 'connectError', text: 'ลำดับเรือซ้ำกัน `', //คำสั่งสำหรับเปิด toast error
+        //         callback: function () {
+        //         }
+        //       })
+        //     } else {
+        //       this.data.book_status = false;
+        //       this.data.cl_id = this.dataForSelect.cl_id;
+        //       // console.log(this.data.cl_id);
+        //       this.set('data.tags', [])
+        //       this.push('data.tags', this.dataForSelect.cl_id, this.dataForSelect.contract_id);
+        //       this._cleanDataBl(this.data, (data) => {
+        //         if (data.carrier_id == '' || data.carrier_id == undefined) {
+        //           data.carrier_id = this._checkCarrierIsBlank();
+        //         }
+        //         // console.log(this.data);
+        //         this.insert('./g2g/book/insert', data, () => {
+        //           this.fire('toast', { status: 'load' });
+        //           this.fire('_get-fire-booking-detail', { detail: data });
+        //           this.fire('toast', {
+        //             status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
+        //             callback: () => {
+        //               this.cancelInsertShipment();
+        //               let el = Polymer.dom(this.root).querySelectorAll('.required');
+        //               el.map((el) => { el.value = ''; });
+        //               //ใส่วันปัจจุบันลงไป
+        //               // this._changeDataBl('undefined');
+        //             }
+        //           });
+        //         });
 
-      //         this.cancelInsertShipment();
-      //       })
-      //     }
-      //   } catch (e) {
+        //         this.cancelInsertShipment();
+        //       })
+        //     }
+        //   } catch (e) {
 
-      //   }
-      // },
+        //   }
+      },
       // deleteBooking: function () {
       //   let book_id = this.data.book_id;
       //   this._cleanDataBl(this.data, (data) => {
@@ -378,40 +591,40 @@
       //     });
       //   }
       // },
-      // addShip: function () {
-      //   try {
-      //     this.push('data.ship', { ship_id: '', ship_voy_no: '' });
-      //     this.notifyPath('data.ship');
-      //   } catch (e) {
-      //     // console.log(e);
-      //   } finally {
-          
-      //   }
-        
-      // },
-      // addSurveyor: function () {
-      //   this.push('data.surveyor', { surveyor_id: '' });
-      //   this.notifyPath('data.surveyor');
-      // },
-      // deleteSurveyor: function () {
-      //   if (this.data.surveyor.length > 1)
-      //     this.pop('data.surveyor')
-      // },
+      addShip: function () {
+        try {
+          this.push('data.ship', { ship_id: '', ship_voy_no: '' });
+          this.notifyPath('data.ship');
+        } catch (e) {
+          // console.log(e);
+        } finally {
+
+        }
+
+      },
+      addSurveyor: function () {
+        this.push('data.surveyor', { surveyor_id: '' });
+        this.notifyPath('data.surveyor');
+      },
+      deleteSurveyor: function () {
+        if (this.data.surveyor.length > 1)
+          this.pop('data.surveyor')
+      },
       // calcelBl: function () {
       //   this.calcelContract();
       // },
-      // deleteShip: function () {
-      //   if (this.data.ship.length > 1)
-      //     this.pop('data.ship')
-      // },
-      // cancelInsertShipment: function () {
-      //   this.fire('_change-component-book', { detail: 'list-of-booking' });
-      // },
+      deleteShip: function () {
+        if (this.data.ship.length > 1)
+          this.pop('data.ship')
+      },
+      cancelInsertShipment: function () {
+        this.fire('_list-book', 'list-of-booking');
+      },
       // editBl: function () {
       //   // let blNo = this.data.bl_no;
-      //   let ship_lot_no = this.data.ship_lot_no
+      //   let ship_lot = this.data.ship_lot
       //   let book_id = this.data.book_id
-      //   let ship_lot = this.dataBookNo.filter((ship_lot) => ship_lot.ship_lot_no == ship_lot_no)[0]
+      //   let ship_lot = this.dataBookNo.filter((ship_lot) => ship_lot.ship_lot == ship_lot)[0]
 
       //   if (ship_lot.book_id != this.data.book_id) {
 
@@ -443,7 +656,7 @@
       // },
       // _editBlExporter: function (result, detail) {
       //   if (result == true) {
-      //     this.editInput();
+      //     this.editBook();
       //     // console.log(detail.data);
       //     this.update('./g2g/book/update', detail.data, () => {
       //       // console.log(detail.data);
@@ -463,22 +676,18 @@
       //     });
       //   }
       // },
-      // _oBChangeBooking: function (book_no) {
-      //   // console.log(book_no);
-      //   if (typeof book_no !== 'undefined' && book_no !== 'undefined') {
-      //     // console.log('book_no',book_no);
-      //     // console.log(this.data.book_no.length);
-      //     // console.log(this.data.bl_no.length);
-      //     if (this.data.bl_no.length < this.data.book_no.length) {
-      //       this.data.bl_no = book_no;
-      //       this.notifyPath('data.bl_no')
-      //     }
-      //   }
-      // },
-      // _oBChangePod: function (dest_port_id) {
-      //   this.data.deli_port_id = dest_port_id;
-      //   this.notifyPath('data.deli_port_id');
-      // },
+      _oBChangeBooking: function (book_no) {
+        if (typeof book_no !== 'undefined' && book_no !== 'undefined') {
+          if (this.data.bl_no.length < this.data.book_no.length) {
+            this.data.bl_no = book_no;
+            this.notifyPath('data.bl_no')
+          }
+        }
+      },
+      _oBChangePod: function (dest_port_id) {
+        this.data.deli_port_id = dest_port_id;
+        this.notifyPath('data.deli_port_id');
+      },
       // _getPod: function (Pod) {
       //   let pol = Pod.countryPort.filter((countryport) => countryport.country_id == 'THA');
       //   this.dataForSelect.pol = pol;
@@ -507,11 +716,11 @@
       //   if (stat.every(elem => elem == true)) {
       //   let { bl_no, book_no, carrier_id, deli_port_id, dest_port_id, eta_date, etd_date,
       //     load_port_id, packing_date, cut_of_time, cut_of_date, product_date,
-      //     ship_lot_no, weight_per_container, book_status, cl_id } = data;
+      //     ship_lot, weight_container, book_status, cl_id } = data;
       //   let newData = {
       //     bl_no, book_no, carrier_id, deli_port_id, dest_port_id, eta_date, etd_date,
       //     load_port_id, packing_date, cut_of_time, cut_of_date, product_date,
-      //     ship_lot_no, weight_per_container, book_status, cl_id,
+      //     ship_lot, weight_container, book_status, cl_id,
       //   };
       //   // console.log('newData.book_remark',newData.book_remark);
       //   // newData.shipline_id = data.shipline_id
@@ -562,6 +771,85 @@
       //     })
       //   }
       // }
+      // _getResetShip: function (e) {
+      //   this._getShip(this.data.shipline_id, this.dataForSelect);
+      // },
+      // _getCheckShipline: function (shipline) {
+      //   // console.log(121212);
+      //   // console.log(this.data.shipline_id);
+      //   if (this.data.shipline_id != '') {
+      //     this._getResetShip(1)
+      //     let shipline_id = this.data.shipline_id
+      //     // console.log(this.dataForSelect.shipInShipline.filter((shipline)=>shipline.shipline_id == shipline_id )[0].ship);
+      //   }
+
+      // },
+      _getShip: function (shipline_id, dataForSelect) {
+        // console.log(shipline_id, dataForSelect);
+        // console.log(this.data);
+        // let shipline_id = e.detail.value;
+        if (shipline_id) {
+          let ships = this.shipList
+          // this.dataForSelect.ships = ships;
+          // this.notifyPath('dataForSelect.ships');
+          this.async(() => {
+            let comboboxs, arrForItem, itemif;
+            for (var i = 0; i < this.data.ship.length; i++) {
+              arrForItem = JSON.parse(JSON.stringify(ships));
+              //  console.log('arrForItem',arrForItem);
+              this.data.ship.map((item, index) => {
+                //  console.log(item);
+                if (i != index) {
+                  //ตัดอาเรย์ตอนที่ไม่เท่ากับค่าของตัวเอง
+                  if (arrForItem.filter((blDetail) => blDetail.ship_id == item.ship_id)[0] != undefined) {
+                    itemif = arrForItem.indexOf(arrForItem.filter((blDetail) => blDetail.ship_id == item.ship_id)[0]);
+                    //  console.log(itemif);
+                    arrForItem.splice(itemif, 1);
+                  }
+                }
+              });
+              comboboxs = Polymer.dom(this.root).querySelector('#shipline-suggestions-' + i);
+              // console.log(comboboxs);
+              comboboxs.source = arrForItem;
+              // console.log(comboboxs.source);
+
+            }
+          }, 1);
+        }
+      },
+      // cancelInsertShipment: function () {
+      //   //shipment-detail.html
+      //   this.fire('cancel-insert-shipment', { detail: 'cancel Show' })
+      // },
+      // _getResetSurveyor: function (e) {
+      //   this._getSurveyor('this.data.shipline_id', this.surveyorList);
+      // },
+      _getSurveyor: function (surveyor_id, surveyorList) {
+        if (surveyor_id) {
+          this.async(() => {
+            let comboboxs, arrForItem, itemif;
+            for (var i = 0; i < this.data.surveyor.length; i++) {
+              arrForItem = JSON.parse(JSON.stringify(this.surveyorList));
+              //  console.log('arrForItem',arrForItem);
+              this.data.surveyor.map((item, index) => {
+                //  console.log(item);
+                if (i != index) {
+                  //ตัดอาเรย์ตอนที่ไม่เท่ากับค่าของตัวเอง
+                  if (arrForItem.filter((shipment) => shipment.surveyor_id == item.surveyor_id)[0] != undefined) {
+                    itemif = arrForItem.indexOf(arrForItem.filter((shipment) => shipment.surveyor_id == item.surveyor_id)[0]);
+                    //  console.log(itemif);
+                    arrForItem.splice(itemif, 1);
+                  }
+                }
+              });
+              comboboxs = Polymer.dom(this.root).querySelector('#surveyor-' + i);
+              comboboxs.items = arrForItem;
+              //  console.log(comboboxs);
+              //  console.log(comboboxs.items);
+            }
+          }, 1);
+        }
+      }
     });
   </script>
 </dom-module>

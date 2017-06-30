@@ -1,5 +1,7 @@
 import axios from '../axios'
 import { commonAction } from '../config'
+import groupArray from '../../../node_modules/group-array'
+// var groupArray = require('group-array');
 const initialState = {
     bankList: [],
     buyerList: [],
@@ -124,7 +126,8 @@ export function commonG2gAction(store) {
         GET_COMMON_PORT_LIST: function () {
             axios.get(window._config.externalServerCommon + '/api/port')
                 .then(function (response) {
-                    store.dispatch({ type: 'GET_COMMON_PORT_LIST', payload: response.data })
+                    let group = groupArray(response.data, 'country_name_en')
+                    store.dispatch({ type: 'GET_COMMON_PORT_LIST', payload: group})
                 })
                 .catch(function (error) {
                     console.log('error');
@@ -134,6 +137,11 @@ export function commonG2gAction(store) {
         GET_COMMON_SHIP_LIST: function () {
             axios.get(window._config.externalServerCommon + '/api/ship')
                 .then(function (response) {
+                    for (var index = 0; index < response.data.length; index++) {
+                         response.data[index].text =  response.data[index].ship_name
+                         response.data[index].value =response.data[index].ship_name
+                        
+                    }
                     store.dispatch({ type: 'GET_COMMON_SHIP_LIST', payload: response.data })
                 })
                 .catch(function (error) {

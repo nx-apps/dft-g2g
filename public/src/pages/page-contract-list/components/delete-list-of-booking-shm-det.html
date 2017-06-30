@@ -45,8 +45,8 @@
     }
   </style>
   <template>
-    <gl-combo-box placeholder="สัญญาย่อย" items="{{confirmLetterlist}}" item-label-path="label" label="สัญญาย่อย"
-      item-value-path="id" on-value-changed="getShowByBook">
+    <gl-combo-box placeholder="สัญญาย่อย" items="{{confirmLetterlist}}" item-label-path="label" label="สัญญาย่อย" item-value-path="id"
+      on-value-changed="getShowByBook" value="{{cl_id}}">
       <template>
         [[item.label]]
       </template>
@@ -80,19 +80,18 @@
           </tr>
         </thead>
         <tbody class="table-body">
-          <template is="dom-repeat" items="[[data]]">
+          <template is="dom-repeat" items="[[bookList]]">
             <tr>
-              <td on-tap="getShmDetail" data="[[item]]"> [[item.ship_lot_no]] </td>
-              <td on-tap="getShmDetail" data="[[item]]"> [[item.dest_port_name]] </td>
-              <td on-tap="getShmDetail" data="[[item]]"> [[item.deli_port_name]] </td>
+              <td on-tap="getShmDetail" data="[[item]]"> [[item.ship_lot]] </td>
+              <td on-tap="getShmDetail" data="[[item]]"> [[item.dest_port.port_name]] </td>
+              <td on-tap="getShmDetail" data="[[item]]"> [[item.deli_port.port_name]] </td>
               <td>
                 <paper-button class="gl-btn-info gl-small" raised on-tap="btnEditBooking" data="[[item]]">
                   {{localize.btn_detail}}</paper-button>
               </td>
             </tr>
           </template>
-
-          <template is="dom-if" if="[[_isHave(data)]]">
+          <template is="dom-if" if="[[_isHave(bookList)]]">
             <tr>
               <td colspan="4"> {{localize.text_no_data}}</td>
             </tr>
@@ -110,20 +109,19 @@
       is: "list-of-booking-shm-det",
       behaviors: [
         ReduxBehavior,
-        nylonBehavior , FormatNumberBehavior, g2gLogicBehavior, ValidateFormBehavior
+        nylonBehavior, FormatNumberBehavior, g2gLogicBehavior, ValidateFormBehavior
       ],
       properties: {
         localize: {
           statePath: 'i18n.g2g'
         },
         confirmLetterlist: {
-          statePath:'confirmLetter.confirmLetterlist',
-          observer:'get'
+          statePath: 'confirmLetter.confirmLetterlist',
+          observer: 'get'
         },
-        // dataForSelect: {
-        //   type: Object,
-        //   notify: true
-        // },
+        bookList: {
+          statePath: 'book.bookList'
+        },
         // clClose: {
         //   type: Boolean,
         //   value: false
@@ -133,7 +131,7 @@
         //   value: ''
         // }
       },
-      get(d){
+      get(d) {
         console.log(d);
       },
       // observers: [
@@ -172,9 +170,9 @@
       //     }
       //   }, 50);
       // },
-      // _isSeleted(data) {
-      //   return data === ''
-      // },
+      _isSeleted(data) {
+        return data === ''
+      },
       // setLabel(data) {
       //   try {
       //     // console.log(111111);
@@ -249,9 +247,15 @@
       //   this.fire('_edit-booking-detail', { detail: e.currentTarget.data });
       // },
       getShowByBook: function (e) {
-        console.log(e.detail.value);
-        // try {
-        //   if ((e.detail.value !== undefined && e.detail.value !== '') &&
+
+        try {
+          if (e.detail.value !== undefined && e.detail.value !== '') {
+            console.log(e.detail.value);
+            let url = { cl_id: e.detail.value }
+            this.dispatchAction('GET_BOOK_LIST', this.genUrl(url));
+          }else {
+            this.dispatchAction('CLEAR_BOOK_LIST')
+          }
         //     (this.dataForSelect.bookBl !== undefined && this.dataForSelect.bookBl !== '')) {
         //     // console.log(e.detail.value);
         //     // console.log(this.dataForSelect.bookBl);
@@ -277,9 +281,9 @@
         //   } else {
         //     this.set('data', '')
         //   }
-        // } catch (e) {
-        //   // console.log(e);
-        // } 
+        } catch (e) {
+          // console.log(e);
+        }
 
       }
     });

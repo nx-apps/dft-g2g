@@ -1,34 +1,134 @@
 <link rel="import" href="./../../../../bower_components/polymer/polymer.html">
 <!--<link rel="import" href="list-of-shm.html">-->
-<!--<link rel="import" href="booking-detail.html">-->
+<link rel="import" href="booking-detail.html">
 <link rel="import" href="./../../../../bower_components/iron-pages/iron-pages.html">
-
-<link rel="import" href="list-of-booking-shm-det.html">
+<link rel="import" href="./../../../../bower_components/gl-form/gl-combo-box.html">
+<link rel="import" href="./../../../../bower_components/gl-form/gl-form-panel-head.html">
+<link rel="import" href="./../../../../bower_components/gl-form/gl-form-panel-footer.html">
+<link rel="import" href="./../../../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="./../../../../bower_components/gl-grid/gl-grid-row.html">
+<link rel="import" href="./../../../../bower_components/gl-grid/gl-grid-col.html">
+<link rel="import" href="./../../components/validateFormBehaviors.html">
+<link rel="import" href="./../../components/format-number-behavior.html">
+<link rel="import" href="./../../components/g2g-logic-behavior.html">
+<!--<link rel="import" href="list-of-booking-shm-det.html">-->
 <dom-module id="list-of-booking">
 
   <template>
+    <style include="iron-flex iron-flex-factors iron-flex-alignment gl-styles gl-size page-style">
+       :host {
+        display: block;
+      }
+
+      .textinPut {
+        margin-bottom: 30px;
+      }
+
+      table {
+        border: 0.16px solid #F1F1F1;
+        margin-bottom: 16px;
+      }
+
+      table.gl-table-default>thead.table-head>tr>th,
+      table.gl-table-default>tbody.table-body>tr>td {
+        text-align: center;
+      }
+
+      table.gl-table-default>tbody.table-body>tr>td {
+        cursor: pointer;
+      }
+
+      .gl-btn-info {
+        font-family: 'CSChatThaiUI', sans-serif;
+        -webkit-font-smoothing: antialiased;
+        font-size: 14px;
+      }
+
+      .title-ber {
+        font-size: 35px;
+        font-weight: bold;
+      }
+    </style>
     <iron-pages selected="{{pageSelected}}" attr-for-selected="name">
       <div name="list-of-booking">
-        <list-of-booking-shm-det></list-of-booking-shm-det>
+        <!--<list-of-booking-shm-det></list-of-booking-shm-det>-->
+        <gl-combo-box placeholder="สัญญาย่อย" items="{{confirmLetterlist}}" item-label-path="label" label="สัญญาย่อย" item-value-path="id"
+          on-value-changed="getShowByBook" value="{{cl_id}}" on-selected-item-changed="getObjectCl">
+          <template>
+            [[item.label]]
+          </template>
+        </gl-combo-box>
+        <gl-form-panel set-padding="10px 20px 10px 20px" set-border="1px">
+          <gl-form-panel-head set-padding="10px" set-border="1px">
+
+            <div class="addconfirm horizontal end-justified layout">
+              <template is="dom-if" if={{clClose}}>
+                <div class="title-ber" hidden="[[_isSeleted(cl_id)]]">
+                  ปิดบัญชี {{setTextCl}}
+                </div>
+              </template>
+
+              <paper-button raised class="gl-btn-primary" disabled="[[_isSeleted(cl_id)]]" on-tap="createBooking" hidden="{{clClose}}">{{localize.btn_add_booking}}</paper-button>
+            </div>
+
+          </gl-form-panel-head>
+          <br>
+          <gl-grid-row width="{{getWidth}}">
+            <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,5]]"></gl-grid-col>
+          </gl-grid-row>
+
+          <table class="gl-table-default">
+            <thead class="table-head">
+              <tr>
+                <th>{{localize.label_lot_no}}</th>
+                <th>{{localize.label_port_of_destination}}</th>
+                <th>{{localize.label_place_of_delivery}}</th>
+                <th>{{localize.label_action}}</th>
+              </tr>
+            </thead>
+            <tbody class="table-body">
+              <template is="dom-repeat" items="[[bookList]]">
+                <tr>
+                  <td on-tap="getShmDetail" data="[[item]]"> [[item.ship_lot]] </td>
+                  <td on-tap="getShmDetail" data="[[item]]"> [[item.dest_port.port_name]] </td>
+                  <td on-tap="getShmDetail" data="[[item]]"> [[item.deli_port.port_name]] </td>
+                  <td>
+                    <paper-button class="gl-btn-info gl-small" raised on-tap="btnEditBooking" data="[[item]]">
+                      {{localize.btn_detail}}</paper-button>
+                  </td>
+                </tr>
+              </template>
+              <template is="dom-if" if="[[_isHave(bookList)]]">
+                <tr>
+                  <td colspan="4"> {{localize.text_no_data}}</td>
+                </tr>
+              </template>
+            </tbody>
+          </table>
+          <!-- </gl-form-panel-body> -->
+          <gl-form-panel-footer set-padding="10px 20px 0px 20px">
+
+          </gl-form-panel-footer>
+        </gl-form-panel>
       </div>
       <div name="list-of-booking-add">
-        <!--<booking-detail ></booking-detail>-->
+        <booking-detail></booking-detail>
       </div>
       <div name="list-of-booking-edit">
-        <!--<booking-detail ></booking-detail>-->
+        <booking-detail></booking-detail>
       </div>
       <div name="list-of-booking-shm-det">
         <!--<list-of-shm page-selected="{{subPageSelected}}" data-selected="{{dataSelected}}" data-for-select="{{dataForSelect}}"></list-of-shm>-->
       </div>
     </iron-pages>
-    ====ss
 
   </template>
   <script>
     Polymer({
       is: "list-of-booking",
       behaviors: [
-        ReduxBehavior, nylonBehavior
+        ReduxBehavior,
+        nylonBehavior, FormatNumberBehavior, g2gLogicBehavior, ValidateFormBehavior
       ],
       properties: {
         localize: {
@@ -37,39 +137,142 @@
         pageSelected: {
           type: String,
           value: 'list-of-booking'
-        }
-      // dataSelected: {
-      //   type: Array
-      // },
-      // dataForSelect: {
-      //   type: Object,
-      //   value: { exporter: [], cl_type_rice: [] }
-      // },
-      // dataDefault: {
-      //   type: Object,
-      //   value: { bl_no: '', ship: [{ ship_id: '', ship_voy_no: '' }], surveyor: [{ surveyor_id: '' }] },
-      // }
+        },
+        confirmLetterlist: {
+          statePath: 'confirmLetter.confirmLetterlist',
+          observer: 'get'
+        },
+        bookList: {
+          statePath: 'book.bookList'
+        },
+        contractId: {
+          statePath: 'commonState.contractId',
+          // observer: 'get'
+        },
+        dataShow: {
+          type: Object
+        },
+        // dataForSelect: {
+        //   type: Object,
+        //   value: { exporter: [], cl_type_rice: [] }
+        // },
+        // dataDefault: {
+        //   type: Object,
+        //   value: { bl_no: '', ship: [{ ship_id: '', ship_voy_no: '' }], surveyor: [{ surveyor_id: '' }] },
+        // }
       },
-      // behaviors: [
-      // ReduxBehavior,
-      //   g2gModelBehavior,
-      //   g2gCongtroller,
-      //   FormatNumberBehavior
-      // ],
       // observers: [
       //   'getExport(data)',
       //   'setTotalRice(data)',
       //   'setdataSelect(dataForSelect)'
       // ],
-      // listeners: {
-      //   '_change-component-bl': '_changeComponentBl',
-      //   '_get-booking-detail': '_getBookingDetail',
-      //   '_get-fire-booking-detail': '_getFireBookingDetail',
-      //   '_get-fire-group-exporter': '_getFireGroupExporter'
-      // },
-      // setdataSelect(data) {
+      listeners: {
+        '_list-book': '_changeIronPage',
+        // '_get-booking-detail': '_getBookingDetail',
+        // '_get-fire-booking-detail': '_getFireBookingDetail',
+        // '_get-fire-group-exporter': '_getFireGroupExporter'
+      },
+      _isSeleted: function (data) {
+        return data === ''
+      },
+      getObjectCl: function (e) {
+        if (e.detail.value !== null) {
+          this.set('dataShow', e.detail.value)
+          // console.log(e.detail.value);
+        }
 
-      // },
+      },
+      btnEditBooking: function (e) {
+        let url = { id: e.currentTarget.data.id }
+        this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
+        this.dispatchAction('SET_STATE', {
+          isInsert: false,
+          btnDisabled: true,
+          hiddend: true
+        })
+        this.dispatchAction('GET_BOOK_DETAIL', this.genUrl(url))
+        this.async(() => {
+          this.fire('toast', {
+            status: 'success', text: 'โหลดสำเร็จ', callback: () => {
+              this.set('pageSelected', 'list-of-booking-edit')
+            }
+          })
+        }, 500)
+
+      },
+      getShowByBook: function (e) {
+
+        try {
+          if (e.detail.value !== undefined && e.detail.value !== '') {
+            // console.log(e.detail.value);
+            let url = { cl_id: e.detail.value }
+            this.dispatchAction('GET_BOOK_LIST', this.genUrl(url));
+          } else {
+            this.dispatchAction('CLEAR_BOOK_LIST')
+          }
+          //     (this.dataForSelect.bookBl !== undefined && this.dataForSelect.bookBl !== '')) {
+          //     // console.log(e.detail.value);
+          //     // console.log(this.dataForSelect.bookBl);
+          //     let bookBl = this.g2gClone(this.dataForSelect)
+          //     // console.log(bookBl);
+          //     this.set('book', bookBl.bookBl.filter((item) => item.cl_id == e.detail.value)[0])
+          //     // console.log(this.book);
+          //     // console.log(book);
+          //     this.fire('_get-booking-detail', { detail: this.book })
+          //     // console.log(this.dataForSelect.contract_name);
+          //     let breadcrumbs = datass = [
+          //       {
+          //         label: this.dataForSelect.contract_name,
+          //         href: ''
+          //       },
+          //       {
+          //         label: 'สัญญาย่อยที่ ' + this.book.cl_no,
+          //         href: ''
+          //       },
+          //     ]
+          //     this.set('dataForSelect.breadcrumbs', breadcrumbs)
+          //     this.fire('_set-breadcrumbs', breadcrumbs)
+          //   } else {
+          //     this.set('data', '')
+          //   }
+        } catch (e) {
+          // console.log(e);
+        }
+      },
+
+      _changeIronPage: function (data) {
+        this.set('pageSelected', data.detail)
+        console.log(data.detail);
+      },
+      createBooking: function () {
+
+        // console.log(data.detail);
+        this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
+        let ship_lot = 0
+        if (this.bookList.length > 0) {
+          ship_lot = this.bookList[0].ship_lot
+        }
+        let data = {
+          contract_id: this.contractId,
+          cl_id: this.dataShow.id,
+          cl_no: this.dataShow.cl_no,
+          ship_lot: ship_lot+1
+        }
+        // console.log(data);
+        this.dispatchAction('CLEAR_BOOK_DETAIL',data)
+        this.dispatchAction('SET_STATE', {
+          isInsert: true,
+          btnDisabled: false,
+          hiddend: true
+        })
+        this.async(() => {
+          this.fire('toast', {
+            status: 'success', text: 'โหลดสำเร็จ', callback: () => {
+              this.set('pageSelected','list-of-booking-add')
+            }
+          })
+        }, 500)
+      },
       // setPageseleted(e) {
       //   // console.log(1);
       //   this.set('dataForSelect.cl_close',false)

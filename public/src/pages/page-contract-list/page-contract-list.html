@@ -80,7 +80,8 @@ hip
         Polymer({
             is: 'page-contract-list',
             behaviors: [ReduxBehavior, nylonBehavior, i18nAction, CookieBehavior,
-                contractAction, commonStateAction, commonG2gAction, confirmLetterAction, g2gLogicBehavior],
+                contractAction, commonStateAction, commonG2gAction, confirmLetterAction, g2gLogicBehavior,
+                bookAction],
             properties: {
                 layerContent: {
                     type: String,
@@ -143,7 +144,8 @@ hip
             nylonPageActive: function () {
                 // console.log(111);
                 // console.log(this.getCookieBhv("buyerId"));
-                this.dispatchAction('GET_CONTRACT_OF_BUYER', this.getCookieBhv("buyerId"));
+                this.dispatchAction('GET_CONTRACT_OF_BUYER', this.getCookieBhv("buyerId"))
+                this.dispatchAction('SET_COUNTRY_NAME_EN', this.getCookieBhv("country_name_en"));
                 // console.log(this.getCookieBhv("buyerId"));
                 // this.dispatchAction('EXPORTER_GET_TYPE_LIC');
                 this.dispatchAction('GET_COMMON_BUYER_LIST');
@@ -426,7 +428,7 @@ hip
                 let url = { contract_id: e.detail.contract_id ,status:true}
                 this.dispatchAction('GET_CONFIRM_LIST', this.genUrl(url))
                 this.g2gPageSeleted = 'listOfShipment';
-
+                this.dispatchAction('SET_CONTRACT_ID',e.detail.contract_id)
             //     // console.log(e.detail.contractId);
             //     if (typeof e.detail.contractId == "undefined") {
             //     this.set('pageSelected', 'list-of-booking')

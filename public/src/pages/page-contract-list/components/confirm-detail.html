@@ -305,7 +305,7 @@
         },
         contractId: {
           statePath: 'commonState.contractId',
-          observer: 'get'
+          // observer: 'get'
         },
         packageList: {
           statePath: 'commonG2g.packageList',
@@ -706,7 +706,7 @@
               this._resiveFormConfirm()
                 .then((res) => {
                   res.cl_status = true
-                  console.log(res);
+                  // console.log(res);
                   this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
                   this.dispatchAction('PUT_CONFIRM', res)
                     .then((response) => {

@@ -4,6 +4,7 @@ const initialState = {
     list: [],
     setState:{},
     contractId:{},
+    contryNameEn:{}
 }
 export function commonStateReducer(state = initialState, action) {
     switch (action.type) {
@@ -11,6 +12,8 @@ export function commonStateReducer(state = initialState, action) {
             return Object.assign({}, state, { setState: action.payload });
         case 'SET_CONTRACT_ID':
             return Object.assign({}, state, { contractId: action.payload });
+        case 'SET_COUNTRY_NAME_EN':
+            return Object.assign({}, state, { contryNameEn: action.payload });
         default:
             return state
     }
@@ -26,6 +29,11 @@ export function commonStateAction(store) {
         SET_CONTRACT_ID: function (data) {
             // console.log(data);
             store.dispatch({ type: 'SET_CONTRACT_ID', payload: data })
+            // return axios.get('/external/upload/list/' + ref + '/' + com)
+        },
+        SET_COUNTRY_NAME_EN: function (data) {
+            // console.log(data);
+            store.dispatch({ type: 'SET_COUNTRY_NAME_EN', payload: data })
             // return axios.get('/external/upload/list/' + ref + '/' + com)
         },
     }
