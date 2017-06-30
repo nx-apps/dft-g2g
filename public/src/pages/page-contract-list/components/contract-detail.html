@@ -519,7 +519,7 @@
             if (result == true) {
               this._resiveForm()
                 .then((res) => {
-                  // console.log(data);
+                  // console.log(res);
                   this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
                   this.dispatchAction('PUT_CONTRACT', res)
                     .then((response) => {

@@ -15,6 +15,9 @@ const initialState = {
     list: [],
     bookList: [],
     bookDetail: {},
+    bookHamonizeList:[],
+    bookExporterList:[],
+    bookExporterDetail:[],
     data: {}
 }
 export function bookReducer(state = initialState, action) {
@@ -23,6 +26,12 @@ export function bookReducer(state = initialState, action) {
             return Object.assign({}, state, { bookList: action.payload });
         case 'GET_BOOK_DETAIL':
             return Object.assign({}, state, { bookDetail: action.payload });
+        case 'GET_BOOK_EXPORTER_LIST':
+            return Object.assign({}, state, { bookExporterList: action.payload });
+        case 'GET_BOOK_HAMONIZE_LIST':
+            return Object.assign({}, state, { bookHamonizeList: action.payload });
+        case 'GET_BOOK_EXPORTER_DETAIL':
+            return Object.assign({}, state, { bookExporterDetail: action.payload });
         case 'BOOK_GET_LIST_DATA':
             return Object.assign({}, state, { list: action.payload });
         case 'BOOK_GET_ID_DATA':
@@ -34,6 +43,11 @@ export function bookReducer(state = initialState, action) {
 export function bookAction(store) {
     return [commonAction(),
     {
+        //     app.get('/detail/list', controller.listDetail);
+        // app.get('/detail', controller.getDetailById);
+        // app.post('/detail/insert', controller.insertDetail);
+        // app.put('/detail/update', controller.updateDetail);
+        // app.delete('/detail/delete/:id', controller.deleteDetail);
         // GET
         GET_BOOK_LIST: function (cl_id) {
             axios.get('./book/confirm?' + cl_id)
@@ -51,6 +65,44 @@ export function bookAction(store) {
                     // console.log(response.data);
                     cutDataInObject(response.data, ['packing_date', 'product_date', 'etd_date', 'eta_date', 'cut_date'])
                     store.dispatch({ type: 'GET_BOOK_DETAIL', payload: response.data })
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        },
+        GET_BOOK_EXPORTER_LIST: function (booking_id) {
+            axios.get('./book/detail/list?' + booking_id)
+                .then(function (response) {
+                    // console.log(response.data);
+                    store.dispatch({ type: 'GET_BOOK_EXPORTER_LIST', payload: response.data })
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        },
+        GET_BOOK_HAMONIZE_LIST: function (cl_id) {
+            axios.get('./book/hamonize?' + cl_id)
+                .then(function (response) {
+                    console.log(response.data);
+                    // for (var index = 0; index < response.data.length; index++) {
+                        // console.log(response.data[index]);
+                        // response.datap[index].label = response.data[index].hamonize.hamonize_en 
+                        // for (var index2 = 0; index2 < response.datap[index].package.length; index2++) {
+                        //     response.datap[index].package[index2].label = response.datap[index].package[index2].package.package_name_en
+                        // }
+                    // }
+                    // console.log(response.data);
+                    store.dispatch({ type: 'GET_BOOK_HAMONIZE_LIST', payload: response.data })
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        },
+        GET_BOOK_EXPORTER_DETAIL: function (booking_exporter_id) {
+            axios.get('./book/detail?' + booking_exporter_id)
+                .then(function (response) {
+                    // console.log(response.data);
+                    store.dispatch({ type: 'GET_BOOK_EXPORTER_DETAIL', payload: response.data })
                 })
                 .catch(function (error) {
                     console.log(error);

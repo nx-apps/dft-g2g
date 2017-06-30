@@ -174,11 +174,14 @@
       //   }
       // },
       createConfirm: function () {
-        let cl_no = 0
+        let data = {cl_no:0}
         if (this.confirmLetterList.length !== 0) {
-          cl_no = this.confirmLetterList[0].cl_no
+          data.cl_no = this.confirmLetterList[0].cl_no 
+          
         }
-
+        data.cl_no++
+        data.contract_id = this.contractId.contract_id
+        data.contract_no = this.contractId.contract_no
 
         this.fire('toast', { status: 'load' });
         this.dispatchAction('SET_STATE', {
@@ -186,7 +189,7 @@
           btnDisabled: false,
           hiddend: true
         })
-        this.dispatchAction('CLEAR_CONFIRM', cl_no + 1)
+        this.dispatchAction('CLEAR_CONFIRM', data)
         this.async(() => {
           this.fire('toast', {
             status: 'success', text: 'โหลดสำเร็จ', callback: () => {

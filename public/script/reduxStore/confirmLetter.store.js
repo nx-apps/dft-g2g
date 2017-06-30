@@ -13,7 +13,7 @@ const cutDataInObject = (data, namePop) => {
 }
 const initialState = {
     confirmLetterlist: [],
-    confirmLetterExporterlist:[],
+    confirmLetterExporterlist: [],
     hamonizeContract: [],
     contractDetail: {},
     hamonizeFp: {}
@@ -42,7 +42,7 @@ export function confirmLetterAction(store) {
             axios.get('./confirm/contract?' + link)
                 .then(function (response) {
                     for (var index = 0; index < response.data.length; index++) {
-                        response.data[index].label = 'สัญญาที่ '+response.data[index].cl_no + ' ปริมาณ'+  response.data[index].cl_weight_balance +' ตัน' 
+                        response.data[index].label = 'สัญญาที่ ' + response.data[index].cl_no + ' ปริมาณ' + response.data[index].cl_weight_balance + ' ตัน'
                     }
                     store.dispatch({ type: 'GET_CONFIRM_LIST', payload: response.data })
                 })
@@ -55,7 +55,7 @@ export function confirmLetterAction(store) {
                 .then(function (response) {
                     // console.log(response.data);
                     for (var index = 0; index < response.data.length; index++) {
-                        response.data[index].label = '['+response.data[index].company.company_taxno+'] '+response.data[index].company.company_name_th  
+                        response.data[index].label = '[' + response.data[index].company.company_taxno + '] ' + response.data[index].company.company_name_th
                     }
                     store.dispatch({ type: 'GET_CONFIRM_EXPORTER_LIST', payload: response.data })
                 })
@@ -110,12 +110,12 @@ export function confirmLetterAction(store) {
         // END PUT
         // DELETE
         DELETE_CONFIRM: function (confirmId) {
-            return axios.delete('./confirm/delete/'+confirmId)
+            return axios.delete('./confirm/delete/' + confirmId)
         },
         // END DELETE
         // CLEAR
-        CLEAR_CONFIRM: function (cl_no) {
-            let data = {
+        CLEAR_CONFIRM: function (data) {
+            let confirm = {
                 cl_date: new Date().toISOString().split('T')[0],
                 cl_hamonize: [
                     {
@@ -134,8 +134,10 @@ export function confirmLetterAction(store) {
                         tolerance_rate: 0
                     }
                 ],
-                cl_no: cl_no,
+                cl_no: Number(data.cl_no),
                 cl_status: false,
+                contract_id: data.contract_id,
+                contract_no: Number(data.contract_no),
                 cl_weigh: 0,
                 incoterms: [
                     {
@@ -144,8 +146,8 @@ export function confirmLetterAction(store) {
                     }
                 ],
             }
-
-            store.dispatch({ type: 'GET_CONFIRM_DETAIL', payload: data })
+            console.log(confirm);
+            store.dispatch({ type: 'GET_CONFIRM_DETAIL', payload: confirm })
         },
         // CLEAR
     }

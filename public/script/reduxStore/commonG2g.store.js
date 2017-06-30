@@ -14,7 +14,7 @@ const initialState = {
     shipList: [],
     shiplineList: [],
     surveyorList: [],
-
+    exporterList:[]
 }
 export function commonG2gReducer(state = initialState, action) {
     switch (action.type) {
@@ -40,6 +40,8 @@ export function commonG2gReducer(state = initialState, action) {
             return Object.assign({}, state, { shiplineList: action.payload });
         case 'GET_COMMON_SURVEYOR_LIST':
             return Object.assign({}, state, { surveyorList: action.payload });
+        case 'GET_COMMON_EXPORTER_LIST':
+            return Object.assign({}, state, { exporterList: action.payload });
         default:
             return state
     }
@@ -163,6 +165,20 @@ export function commonG2gAction(store) {
             axios.get(window._config.externalServerCommon + '/api/surveyor')
                 .then(function (response) {
                     store.dispatch({ type: 'GET_COMMON_SURVEYOR_LIST', payload: response.data })
+                })
+                .catch(function (error) {
+                    console.log('error');
+                    console.log(error);
+                });
+        },
+        GET_COMMON_EXPORTER_LIST: function () {
+            axios.get(window._config.externalServer + '/api/external/exporter/search?type_lic_id=NORMAL')
+                .then(function (response) {
+                    for (var index = 0; index < response.data.length; index++) {
+                        response.data[index].label = '['+response.data[index].company_taxno+'] '+response.data[index].company.company_name_th
+                    }
+                    // console.log(response.data);
+                    store.dispatch({ type: 'GET_COMMON_EXPORTER_LIST', payload: response.data })
                 })
                 .catch(function (error) {
                     console.log('error');

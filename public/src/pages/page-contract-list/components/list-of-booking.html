@@ -1,5 +1,5 @@
 <link rel="import" href="./../../../../bower_components/polymer/polymer.html">
-<!--<link rel="import" href="list-of-shm.html">-->
+<link rel="import" href="list-of-shm.html">
 <link rel="import" href="booking-detail.html">
 <link rel="import" href="./../../../../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="./../../../../bower_components/gl-form/gl-combo-box.html">
@@ -11,7 +11,10 @@
 <link rel="import" href="./../../components/validateFormBehaviors.html">
 <link rel="import" href="./../../components/format-number-behavior.html">
 <link rel="import" href="./../../components/g2g-logic-behavior.html">
-<!--<link rel="import" href="list-of-booking-shm-det.html">-->
+
+<link rel="import" href="./shm-det-exporter.html">
+
+<!--<link rel="import" href="list-of-booking-exporter.html">-->
 <dom-module id="list-of-booking">
 
   <template>
@@ -51,7 +54,7 @@
     </style>
     <iron-pages selected="{{pageSelected}}" attr-for-selected="name">
       <div name="list-of-booking">
-        <!--<list-of-booking-shm-det></list-of-booking-shm-det>-->
+        <!--<list-of-booking-exporter></list-of-booking-exporter>-->
         <gl-combo-box placeholder="สัญญาย่อย" items="{{confirmLetterlist}}" item-label-path="label" label="สัญญาย่อย" item-value-path="id"
           on-value-changed="getShowByBook" value="{{cl_id}}" on-selected-item-changed="getObjectCl">
           <template>
@@ -89,9 +92,9 @@
             <tbody class="table-body">
               <template is="dom-repeat" items="[[bookList]]">
                 <tr>
-                  <td on-tap="getShmDetail" data="[[item]]"> [[item.ship_lot]] </td>
-                  <td on-tap="getShmDetail" data="[[item]]"> [[item.dest_port.port_name]] </td>
-                  <td on-tap="getShmDetail" data="[[item]]"> [[item.deli_port.port_name]] </td>
+                  <td on-tap="getBookingExporter" data="[[item]]"> [[item.ship_lot]] </td>
+                  <td on-tap="getBookingExporter" data="[[item]]"> [[item.dest_port.port_name]] </td>
+                  <td on-tap="getBookingExporter" data="[[item]]"> [[item.deli_port.port_name]] </td>
                   <td>
                     <paper-button class="gl-btn-info gl-small" raised on-tap="btnEditBooking" data="[[item]]">
                       {{localize.btn_detail}}</paper-button>
@@ -117,8 +120,12 @@
       <div name="list-of-booking-edit">
         <booking-detail></booking-detail>
       </div>
-      <div name="list-of-booking-shm-det">
-        <!--<list-of-shm page-selected="{{subPageSelected}}" data-selected="{{dataSelected}}" data-for-select="{{dataForSelect}}"></list-of-shm>-->
+      <div name="list-of-booking-exporter">
+        <list-of-shm></list-of-shm>
+      </div>
+      <div name="list-of-booking-exporter-detail">
+        <shm-det-exporter></shm-det-exporter>
+        <!--<list-of-shm></list-of-shm>-->
       </div>
     </iron-pages>
 
@@ -168,7 +175,7 @@
       // ],
       listeners: {
         '_list-book': '_changeIronPage',
-        // '_get-booking-detail': '_getBookingDetail',
+        // '_get-booking-detail': '_getBookingExporter',
         // '_get-fire-booking-detail': '_getFireBookingDetail',
         // '_get-fire-group-exporter': '_getFireGroupExporter'
       },
@@ -207,6 +214,8 @@
             // console.log(e.detail.value);
             let url = { cl_id: e.detail.value }
             this.dispatchAction('GET_BOOK_LIST', this.genUrl(url));
+            this.dispatchAction('GET_BOOK_HAMONIZE_LIST', this.genUrl(url));
+        // GET_BOOK_HAMONIZE_LIST
           } else {
             this.dispatchAction('CLEAR_BOOK_LIST')
           }
@@ -274,6 +283,27 @@
           })
         }, 500)
       },
+      getBookingExporter: function(e){
+        // console.log(e.currentTarget.data);
+        this.dispatchAction('GET_COMMON_EXPORTER_LIST')
+        
+        // console.log(1111);
+        let url = { book_id: e.currentTarget.data.id }
+        this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
+        this.dispatchAction('SET_STATE', {
+          isInsert: false,
+          btnDisabled: true,
+          hiddend: true
+        })
+        this.dispatchAction('GET_BOOK_EXPORTER_LIST', this.genUrl(url))
+        this.async(() => {
+          this.fire('toast', {
+            status: 'success', text: 'โหลดสำเร็จ', callback: () => {
+              this.set('pageSelected', 'list-of-booking-exporter')
+            }
+          })
+        }, 500)
+      },
       // setPageseleted(e) {
       //   // console.log(1);
       //   this.set('dataForSelect.cl_close',false)
@@ -319,7 +349,7 @@
       //   //   // console.log(e);
       //   // }
       // },
-      // _getBookingDetail: function (e) {
+      // _getBookingExporter: function (e) {
       //   // console.log(e.detail);
       //   try {
       //     // console.log(e.detail.detail);
