@@ -68,22 +68,23 @@
   <template>
 
     <gl-form-panel-body set-padding="5px" set-border="0px">
-      {{localize.label_conclude}}
+      {{localize.conclude}}
       <div style="overflow-x:auto;">
         <table class="default">
           <tr>
-            <th>{{localize.text_invoice_list}}</th>
-            <th>{{localize.label_total_value_ton}}<br>(1)</th>
-            <th>{{localize.label_total_value_ton_per_usd}}<br>(2)</th>
-            <th>{{localize.label_total_value_usd}}<br>(3)=(1)*2</th>
-            <th>{{localize.label_total_value_bath}}<br>(4)=(3)*34.96</th>
-            <th>{{localize.label_expenses_fee}}<br>(5)</th>
-            <th>{{localize.label_expenses_one_present}}<br> (6)=((4)-(5))*1%</th>
-            <th>{{localize.label_total_bath}}<br> (7)=((4)-(5)-(6))</th>
+            <th>{{localize.exporter}}</th>
+            <th>{{localize.amount}} ({{localize.ton}})<br>(1)</th>
+            <th>{{localize.value_ton}} ({{localize.usd}})<br>(2)</th>
+            <th>{{localize.amount}}{{localize.money}} ({{localize.usd}})<br>(3)= (1)*2</th>
+            <th>{{localize.amount}}{{localize.money}} ({{localize.baht}})<br>(4)= (3)*[[rateBank]]</th>
+            <th>{{localize.expenses_fee}} ({{localize.baht}})<br>(5)</th>
+            <th>{{localize.balance}}{{localize.from}}{{localize.expenses_fee}}<br>(6)= (4)-(5)</th>
+            <th>{{localize.expenses_one_present}} ({{localize.baht}})<br> (7)= (6)*1%</th>
+            <th>{{localize.balance}} ({{localize.baht}})<br> (8)= (6)-(7)</th>
           </tr>
           <template is="dom-repeat" items="[[totalInvoice]]" as="invoice">
             <tr>
-              <td>{{localize.label_sum}} ({{localize.text_invoice_no}}: [[invoice.invoice_no]])</td>
+              <td>{{localize.sum}} ({{localize.invoice_no}}: [[invoice.invoice_no]])</td>
               <td>
                 <gl-form-input class="number" format-number="on" style="width:140px;" value="[[invoice.totalTonInvoices]]" disabled></gl-form-input>
               </td>
@@ -97,19 +98,22 @@
               <td>
                 <gl-form-input class="number" format-number="on" style="width:140px;" value="[[invoice.totalBathInvoices]]" disabled></gl-form-input>
               </td>
-              <td>[[ch(invoice.totalFeeInvoices)]]
-                <gl-form-input class="number" format-number="on" style="width:140px;" value="[[invoice.totalFeeInvoices]]" disabled></gl-form-input>
+              <td>
+                <gl-form-input style="text-align:right;" format-number="on" style="width:140px;" value="[[invoice.totalFeeInvoices]]" disabled></gl-form-input>
               </td>
               <td>
-                <gl-form-input class="number" format-number="on" style="width:140px;" value="[[invoice.totalIncomeTaxInvoices]]" disabled></gl-form-input>
+                <gl-form-input style="text-align:right;" format-number="on" style="width:140px;" value="[[invoice.totalBalance]]" disabled></gl-form-input>
               </td>
               <td>
-                <gl-form-input class="number" format-number="on" style="width:140px;" value="[[invoice.totalMoneyBathInvoices]]" disabled></gl-form-input>
+                <gl-form-input style="text-align:right;" format-number="on" style="width:140px;" value="[[invoice.totalIncomeTaxInvoices]]" disabled></gl-form-input>
+              </td>
+              <td>
+                <gl-form-input style="text-align:right;" format-number="on" style="width:140px;" value="[[invoice.totalMoneyBathInvoices]]" disabled></gl-form-input>
               </td>
             </tr>
           </template>
           <tr>
-            <td>{{localize.label_total_sum}}</td>
+            <td>{{localize.total}}</td>
             <td>
               <gl-form-input class="number" style="width:140px;" format-number="on" value="[[data.totalTonInvoices]]" disabled></gl-form-input>
             </td>
@@ -123,13 +127,16 @@
               <gl-form-input class="number" style="width:140px;" format-number="on" value="[[data.totalBathInvoices]]" disabled></gl-form-input>
             </td>
             <td>
-              <gl-form-input class="number" style="width:140px;" format-number="on" value="[[data.totalFeeInvoices]]" disabled></gl-form-input>
+              <gl-form-input style="text-align:right;" style="width:140px;" format-number="on" value="[[data.totalFeeInvoices]]" disabled></gl-form-input>
             </td>
             <td>
-              <gl-form-input class="number" style="width:140px;" format-number="on" value="[[data.totalIncomeTaxInvoices]]" disabled></gl-form-input>
+              <gl-form-input style="text-align:right;" style="width:140px;" format-number="on" value="[[data.totalBalance]]" disabled></gl-form-input>
             </td>
             <td>
-              <gl-form-input class="number" style="width:140px;" format-number="on" value="[[data.totalMoneyBathInvoices]]" disabled></gl-form-input>
+              <gl-form-input style="text-align:right;" style="width:140px;" format-number="on" value="[[data.totalIncomeTaxInvoices]]" disabled></gl-form-input>
+            </td>
+            <td>
+              <gl-form-input style="text-align:right;" style="width:140px;" format-number="on" value="[[data.totalMoneyBathInvoices]]" disabled></gl-form-input>
             </td>
           </tr>
         </table>
@@ -139,20 +146,16 @@
   <script>
     Polymer({
       is: "fee-exports-sum",
-      behaviors: [
-        ReduxBehavior,
-        nylonBehavior
-        // nylonLocalizeBehavior
-      ],
+      behaviors: [ReduxBehavior],
       properties: {
         localize:{
-          statePath : 'i18n.g2g'
+          statePath : 'i18n.fee'
         },
         data: {
           type: Object,
           value: {
             totalTonInvoices: 0,
-            totalPricePerTonUsdInvoices: 0,
+            // totalPricePerTonUsdInvoices: 0,
             totalAmountUsdInvoices: 0,
             totalBathInvoices: 0,
             totalFeeInvoices: 0,
@@ -161,86 +164,82 @@
           }
         }
       },
-      // observers: [
-      //   'check(totalInvoice.*)'
-      // ],
-      // created: function () {
-      //   this.nylonLocalizeImport('/i18n-page1.json');
-      // },
-      // ch(data) {
-      //   // console.log(typeof data == 'number');
-      //   // console.log(this.totalInvoice);
-      //   // if (typeof data == 'number') {
-      //   //   return data
-      //   // }
+      observers: [
+        'check(totalInvoice.*)'
+      ],
+      check: function (totalInvoice) {
+        // console.log(totalInvoice);
+        // this.async(() => {
+        //   try {
+        //     // return items.filter((item) => item.fee_status == false);
 
-      // },
-      // check: function (totalInvoice) {
-      //   this.async(() => {
-      //     try {
-      //       // return items.filter((item) => item.fee_status == false);
+        //     // console.log('totalInvoice =>',this.totalInvoice);
+            var result = 0;
+            this.totalInvoice.map((el) => {
+              result += el.totalTonInvoices;
+            });
+            this.set('data.totalTonInvoices', result)
+        //     // this.data.totalTonInvoices = result
+        //     // this.notifyPath('data.totalTonInvoices');
 
-      //       // console.log('totalInvoice =>',this.totalInvoice);
-      //       var result = 0;
-      //       this.totalInvoice.map((el) => {
-      //         result += el.totalTonInvoices;
-      //       });
-      //       this.set('data.totalTonInvoices', result)
-      //       // this.data.totalTonInvoices = result
-      //       // this.notifyPath('data.totalTonInvoices');
+            // result = 0;
+            // this.totalInvoice.map((el) => {
+            //   result += el.totalPricePerTonUsdInvoices;
+            // });
+            // this.set('data.totalPricePerTonUsdInvoices', result)
+        //     // this.data.totalPricePerTonUsdInvoices = result
+        //     // this.notifyPath('data.totalPricePerTonUsdInvoices');
 
-      //       result = 0;
-      //       this.totalInvoice.map((el) => {
-      //         result += el.totalPricePerTonUsdInvoices;
-      //       });
-      //       this.set('data.totalPricePerTonUsdInvoices', result)
-      //       // this.data.totalPricePerTonUsdInvoices = result
-      //       // this.notifyPath('data.totalPricePerTonUsdInvoices');
+            result = 0;
+            this.totalInvoice.map((el) => {
+              result += el.totalAmountUsdInvoices;
+            });
+            this.set('data.totalAmountUsdInvoices', result)
+        //     // this.data.totalAmountUsdInvoices = result
+        //     // this.notifyPath('data.totalAmountUsdInvoices');
 
-      //       result = 0;
-      //       this.totalInvoice.map((el) => {
-      //         result += el.totalAmountUsdInvoices;
-      //       });
-      //       this.set('data.totalAmountUsdInvoices', result)
-      //       // this.data.totalAmountUsdInvoices = result
-      //       // this.notifyPath('data.totalAmountUsdInvoices');
+            result = 0;
+            this.totalInvoice.map((el) => {
+              result += el.totalBathInvoices;
+            });
+            this.set('data.totalBathInvoices', result)
+        //     // this.data.totalBathInvoices = result
+        //     // this.notifyPath('data.totalBathInvoices');
 
-      //       result = 0;
-      //       this.totalInvoice.map((el) => {
-      //         result += el.totalBathInvoices;
-      //       });
-      //       this.set('data.totalBathInvoices', result)
-      //       // this.data.totalBathInvoices = result
-      //       // this.notifyPath('data.totalBathInvoices');
+            result = 0;
+            this.totalInvoice.map((el) => {
+              result += el.totalFeeInvoices;
+            });
+            this.set('data.totalFeeInvoices', result)
+        //     // this.data.totalFeeInvoices = result
+        //     // this.notifyPath('data.totalFeeInvoices');
 
-      //       result = 0;
-      //       this.totalInvoice.map((el) => {
-      //         result += el.totalFeeInvoices;
-      //       });
-      //       this.set('data.totalFeeInvoices', result)
-      //       // this.data.totalFeeInvoices = result
-      //       // this.notifyPath('data.totalFeeInvoices');
+            result = 0;
+            this.totalInvoice.map((el) => {
+              result += el.totalBalance;
+            });
+            this.set('data.totalBalance', result)
 
-      //       result = 0;
-      //       this.totalInvoice.map((el) => {
-      //         result += el.totalIncomeTaxInvoices;
-      //       });
-      //       this.set('data.totalIncomeTaxInvoices', result)
-      //       // this.data.totalIncomeTaxInvoices = result
-      //       // this.notifyPath('data.totalIncomeTaxInvoices');
+            result = 0;
+            this.totalInvoice.map((el) => {
+              result += el.totalIncomeTaxInvoices;
+            });
+            this.set('data.totalIncomeTaxInvoices', result)
+        //     // this.data.totalIncomeTaxInvoices = result
+        //     // this.notifyPath('data.totalIncomeTaxInvoices');
 
-      //       result = 0;
-      //       this.totalInvoice.map((el) => {
-      //         result += el.totalMoneyBathInvoices;
-      //       });
-      //       this.set('data.totalMoneyBathInvoices', result)
-      //       // this.data.totalMoneyBathInvoices = result
-      //       // this.notifyPath('data.totalMoneyBathInvoices');
-      //     } catch (e) {
-      //       // console.log(e)
-      //     }
-      //   }, 500)
-      // },
+            result = 0;
+            this.totalInvoice.map((el) => {
+              result += el.totalMoneyBathInvoices;
+            });
+            this.set('data.totalMoneyBathInvoices', result)
+        //     // this.data.totalMoneyBathInvoices = result
+        //     // this.notifyPath('data.totalMoneyBathInvoices');
+        //   } catch (e) {
+        //     // console.log(e)
+        //   }
+        // }, 500)
+      }
     });
   </script>
 </dom-module>

@@ -52,7 +52,7 @@
   </style>
   <template>
     <div class="flex searchInput horizontal center-justified layout">
-      <div class="flex title">{{localize.contract_name}} : [[dataForSelect.nameContract]]</div>
+      <div class="flex title">{{localize.contract_name}} : [[getCookieBhv("contractName")]]</div>
       <div class="flex horizontal end-justified layout">
         <div class="labelSearch">{{localize.ship_lot}}</div>{{_searchInArray(searchInput)}}
         <paper-input label=" " no-label-float value="{{searchInput}}"></paper-input>
@@ -100,7 +100,7 @@
   <script>
     Polymer({
       is: "list-of-bl-pm",
-      behaviors: [ReduxBehavior, g2gLogicBehavior, FormatNumberBehavior],
+      behaviors: [ReduxBehavior, g2gLogicBehavior, FormatNumberBehavior, CookieBehavior],
       properties: {
         localize:{
           statePath : 'i18n.bl'

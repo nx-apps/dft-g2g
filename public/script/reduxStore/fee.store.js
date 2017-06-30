@@ -22,7 +22,6 @@ export function feeAction(store) {
             .catch((err) =>{
                 console.log(err);
             })
-            // return axios.get('/external/upload/list/' + ref + '/' + com)
         },
     }
     ]

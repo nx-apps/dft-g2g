@@ -4,7 +4,7 @@
 <link rel="import" href="./../../components/g2g-logic-behavior.html">
 
 <dom-module id="fee-exports-invoice">
-  <style is="custom-style" include="iron-flex iron-flex-alignment">
+  <style is="custom-style" include="iron-flex iron-flex-alignment gl-styles page-style">
     .flexchild-1 {
       @apply(--layout-flex);
     }    
@@ -70,93 +70,104 @@
   <template>
     <gl-form-panel>
       <gl-form-panel-body set-padding="5px" set-border="0px">
-        <template is="dom-repeat" items="[[data]]">
-          <div class="horizontal justified layout">
-            <div>{{localize.text_invoice_no}} : [[item.invoice_no]]</div>
-            <div>{{localize.label_vessel}} :
-              <template is="dom-repeat" items="[[data.ship]]">
-                [[item.ship_name]] ,
-              </template>
+        <template is="dom-repeat" items="{{data}}" index-as="indexData">
+          <div class="vertical layout">
+            <div class="horizontal justified layout">
+              <div>{{localize.invoice_no}} : [[item.invoice_no]]</div>
+              <div>{{localize.cal_no}} : [[item.cl_no]]</div>
+              <div>{{localize.fee_out}} : [[item.fee_ex_d]]</div> {{_calcfeeEx(feeEx, indexData)}}
+              <div>{{localize.fee_in}} : [[item.fee_in_b]]</div> {{_calcfeeIn(feeIn, indexData)}}
+              
+              <div style="width:20px"></div>
+              <div>[[_ObcountIndex(indexData)]]/[[invoicePage]]</div>
             </div>
-            <div>{{localize.label_lot_no}} : [[data.ship_lot_no]]</div>
-            <div style="width:20px"></div>
-            <div>[[index]]/[[invoicePage]]</div>
+            <div class="horizontal layout">
+              <div>{{localize.ship_lot}} : [[item.ship_lot]]</div>
+              <div style="margin-left:100px;">{{localize.vessel_name}} :
+                [[_obArrayShip(item.ship)]]
+              </div>
+            </div>
           </div>
           <div style="overflow-x:auto;">
             <table class="default">
               <tr>
-                <th>{{localize.text_exporter_name}}</th>
-                <th>{{localize.label_total_value_ton}}<br>(1)</th>
-                <th>{{localize.label_total_value_ton_per_usd}}<br>(2)</th>
-                <th>{{localize.label_total_value_usd}}<br>(3)=(1)*2</th>
-                <th>{{localize.label_total_value_bath}}<br>(4)=(3)*[[rateBank]]</th>
-                <th>{{localize.label_expenses_fee}}<br>(5)</th>
-                <th>{{localize.label_expenses_one_present}}<br> (6)=((4)-(5))*1%</th>
-                <th>{{localize.label_total_bath}}<br> (7)=((4)-(5)-(6))</th>
+                <th>{{localize.exporter}}</th>
+                <th>{{localize.amount}} ({{localize.ton}})<br>(1)</th>
+                <th>{{localize.value_ton}} ({{localize.usd}})<br>(2)</th>
+                <th>{{localize.amount}}{{localize.money}} ({{localize.usd}})<br>(3)= (1)*2</th>
+                <th>{{localize.amount}}{{localize.money}} ({{localize.baht}})<br>(4)= (3)*[[rateBank]]</th>
+                <th>{{localize.expenses_fee}} ({{localize.baht}})<br>(5)</th>
+                <th>{{localize.balance}}{{localize.from}}{{localize.expenses_fee}}<br>(6)= (4)-(5)</th>
+                <th>{{localize.expenses_one_present}} ({{localize.baht}})<br> (7)= (6)*1%</th>
+                <th>{{localize.balance}} ({{localize.baht}})<br> (8)= (6)-(7)</th>
               </tr>
-              <template is="dom-repeat" items="[[item.detail]]" as="item2">
+              <template is="dom-repeat" items="{{item.detail}}" as="item2">
                 <tr>
                   <td><div style="margin-top: 15px;">[[item2.company.company_name_th]]</div></td>
-                  [[_totalQuantityTons(item2.net_weight,index)]]
                   <td>
                     <gl-form-input class="number" format-number="on" style="width:140px;" value="[[item2.net_weight]]" disabled></gl-form-input>
                   </td>
-                  [[_totalPricePerTon(item2.price_d,index)]]
                   <td>
                     <gl-form-input format-number="on" style="width:140px;text-align:center;" value="[[item2.price_d]]" disabled></gl-form-input>
                   </td>
-                  [[_totalAmountUsd(item2.value_d,index)]]
                   <td>
                     <gl-form-input class="number" format-number="on" style="width:140px;" value="[[item2.value_d]]" disabled></gl-form-input>
                   </td>
-                  <td>
-                    <gl-form-input class="number" format-number="on" style="width:140px;" value="[[_totalBath(item2.value_d, rateBank, index)]]"
+                  <td>[[_calcValueB(item2.value_d, rateBank, indexData, index)]]
+                    <gl-form-input class="number" format-number="on" style="width:140px;" value="{{item2.value_b}}"
                       disabled></gl-form-input>
                   </td>
                   <td>
                     [[changeString2Num(item2.*,'invoice_fee')]]
-                    [[_totalfee(item2.invoice_fee,index)]]
-                    <gl-form-input disabled class="number" format-number="on" value="{{item2.invoice_fee}}"></gl-form-input>
+                    [[_calcValueFeeB(item.fee_ex_d, rateBank, item.fee_in_b, indexData, index)]]
+                    <gl-form-input disabled style="text-align:right;" format-number="on" value="{{item2.value_fee_b}}"></gl-form-input>
                   </td>
-                  <td>
-                    <gl-form-input class="number" format-number="on" style="width:140px;" value="[[_incomeTax(item2.net_weight,item2.price_d,rateBank,item2.invoice_fee,index)]]"
+                  <td>[[_calcValueBalB(item2.value_b, item2.value_fee_b, indexData, index)]]
+                    <gl-form-input disabled style="text-align:right;" format-number="on" value="{{item2.value_bal_b}}"></gl-form-input>
+                  </td>
+                  <td>[[_calcValueTax(item2.value_bal_b, indexData, index)]]
+                    <gl-form-input style="text-align:right;" format-number="on" style="width:140px;" value="{{item2.value_tax_b}}"
                       disabled></gl-form-input>
                   </td>
-                  <td>
-                    <gl-form-input class="number" format-number="on" style="width:140px;" value="[[_totalMoneyInvoice(item2.net_weight,item2.price_d,rateBank,item2.invoice_fee,index)]]"
+                  <td>[[_calcValueFinalB(item2.value_bal_b, item2.value_tax_b, indexData, index)]]
+                    <gl-form-input style="text-align:right;" format-number="on" style="width:140px;" value="{{item2.value_final_b}}"
                       disabled></gl-form-input>
                   </td>
                 </tr>
               </template>
 
               <tr>
-                <td>{{localize.label_sum}}</td>
+                <td>{{localize.total}}</td>
                 <td>
-                  <gl-form-input class="number" format-number="on" style="width:140px;" value="[[_totalTonInvoices(index,data.*)]]"
+                  <gl-form-input class="number" format-number="on" style="width:140px;" value="[[_totalTonInvoices(indexData,data.*)]]"
                     disabled></gl-form-input>
                 </td>
                 <td>
-                  <gl-form-input format-number="on" style="width:140px;text-align:center;" value="[[_totalPricePerTonUsdInvoices(index,data.*)]]"
+                  <!--<gl-form-input format-number="on" style="width:140px;text-align:center;" value="[[_totalPricePerTonUsdInvoices(indexData,data.*)]]"
+                    disabled></gl-form-input>-->
+                </td>
+                <td>
+                  <gl-form-input class="number" format-number="on" style="width:140px;" value="[[_totalAmountUsdInvoices(indexData,data.*)]]"
                     disabled></gl-form-input>
                 </td>
                 <td>
-                  <gl-form-input class="number" format-number="on" style="width:140px;" value="[[_totalAmountUsdInvoices(index,data.*)]]"
+                  <gl-form-input class="number" format-number="on" style="width:140px;" value="[[_totalBathInvoices(indexData,data.*)]]"
                     disabled></gl-form-input>
                 </td>
                 <td>
-                  <gl-form-input class="number" format-number="on" style="width:140px;" value="[[_totalBathInvoices(index,data.*)]]"
+                  <gl-form-input style="text-align:right;" format-number="on" style="width:140px;" value="[[_totalFeeInvoices(indexData,data.*)]]"
                     disabled></gl-form-input>
                 </td>
                 <td>
-                  <gl-form-input class="number" format-number="on" style="width:140px;" value="[[_totalFeeInvoices(index,data.*)]]"
+                  <gl-form-input style="text-align:right;" format-number="on" style="width:140px;" value="[[_totalBalance(indexData,data.*)]]"
                     disabled></gl-form-input>
                 </td>
                 <td>
-                  <gl-form-input class="number" format-number="on" style="width:140px;" value="[[_totalIncomeTaxInvoices(index,data.*)]]"
+                  <gl-form-input style="text-align:right;" format-number="on" style="width:140px;" value="[[_totalIncomeTaxInvoices(indexData,data.*)]]"
                     disabled></gl-form-input>
                 </td>
                 <td>
-                  <gl-form-input class="number" format-number="on" style="width:140px;" value="[[_totalMoneyBathInvoices(index,data.*)]]"
+                  <gl-form-input style="text-align:right;" format-number="on" style="width:140px;" value="[[_totalMoneyBathInvoices(indexData,data.*)]]"
                     disabled></gl-form-input>
                 </td>
               </tr>
@@ -165,27 +176,54 @@
         </template>
       </gl-form-panel-body>
     </gl-form-panel>
+
+    <gl-form-panel>
+      <fee-exports-sum total-invoice="{{data}}"></fee-exports-sum>
+    </gl-form-panel>
+
+    <div class="horizontal end-justified layout">
+      <template is="dom-if" if="[[common.btnDisabled]]">
+        <template is="dom-if" if="[[data.fee_det_status]]">
+          <paper-button raised on-tap="approvePayment" class="gl-btn-default" hidden="[[data.fee_det_status]]">{{localize.reset_data}}{{localize.confirm}}</paper-button>
+        </template>
+      </template>
+      <template is="dom-if" if="[[!common.btnDisabled]]">
+        <paper-button raised class="gl-btn-default" on-tap="cancelFee" hidden="[[!common.isInsert]]">{{localize.reset_data}}</paper-button>
+        <paper-button raised on-tap="addPayment" class="gl-btn-success" hidden="[[!common.isInsert]]">{{localize.add}}</paper-button>
+      </template>
+      <template is="dom-if" if="[[!common.btnDisabled]]">
+        <paper-button raised class="gl-btn-default" on-tap="calcelContract" hidden="[[common.isInsert]]">{{localize.reset_data}}</paper-button>
+        <paper-button raised class="gl-btn-success" on-tap="savePayment" hidden="[[common.isInsert]]">{{localize.save}}</paper-button>
+      </template>
+
+      <template is="dom-if" if="[[data.fee_det_status]]">
+        <template is="dom-if" if="[[common.btnDisabled]]">
+          <paper-button raised class="gl-btn-danger" on-tap="editFee" hidden="[[common.isInsert]]">{{localize.cancel}}{{localize.confirm}}</paper-button>
+        </template>
+      </template>
+    </div>
+
   </template>
   <script>
     Polymer({
       is: "fee-exports-invoice",
       properties: {
         localize:{
-          statePath : 'i18n.g2g'
+          statePath : 'i18n.fee'
         },
         data: {
-          // type: Object,
-          // notify: true
           statePath : 'fee.list_calc'
         },
         totalInvoice: {
           type: Array,
           notify: true
+        },
+        common:{
+          statePath : 'commonState.setState'
         }
       },
       behaviors: [ReduxBehavior, g2gLogicBehavior],
       observers: [
-        '_averageFee(feeTotal,data)',
         // '_oBcheckValue(data.invoice_detail.*)'
         // // '_changeDataPayrf(item.invoice_date)'
       ],
@@ -201,153 +239,147 @@
       //   // this.notifyPath('item.invoice_date');
       //   // });
       // },
+      _calcfeeEx: function(fee, index){
+        if(fee !== ''){
+          var calc_fee_ex = parseInt(fee)/this.data.length;
+          this.set('data.'+index+'.fee_ex_d', calc_fee_ex);
+        }else{
+          this.set('data.'+index+'.fee_ex_d', 0);
+        }
+      },
+      _calcfeeIn: function(fee, index){
+        if(fee !== ''){
+          var calc_fee_in = parseInt(fee)/this.data.length;
+          this.set('data.'+index+'.fee_in_b', calc_fee_in);
+        }else{
+          this.set('data.'+index+'.fee_in_b', 0);
+        }
+      },
       _countPage: function (invoiceIndex) {
         return invoiceIndex + 1;
       },
-      // // numeral().format('0,0.00')
-      _totalQuantityTons: function (quantity_tons, index) {
-        this.set('data.invoice_detail.' + index + '.quantity_tons', parseFloat(quantity_tons));
+      _obArrayShip:function(ships){
+        return ships.join()
       },
-      _totalPricePerTon: function (price_per_ton, index) {
-        this.set('data.invoice_detail.' + index + '.price_per_ton', parseFloat(price_per_ton));
-      },
-      _totalBath: function (usd, rate_bank, index) {
-        // console.log(usd, rate_bank, index);
-        if(rate_bank.length === 0){
-          return 0
+      _calcValueB: function (usd, rate_bank, indexData, index) {
+        if(rate_bank !== ''){
+          var calc_value_b = usd * parseFloat(rate_bank);
+          this.set('data.'+indexData+'.detail.'+index+'.value_b',calc_value_b);
         }else{
-          var total = usd * parseFloat(rate_bank);
-          return total
+          this.set('data.'+indexData+'.detail.'+index+'.value_b',0);
         }
       },
-      _totalAmountUsd: function (amountUsd, index) {
-        this.set('data.invoice_detail.' + index + '.amountUsd', parseFloat(amountUsd));
-      },
-      _averageFee: function (feeTotal, invoice) {
-        try {
-          if (!this.isInputDisabled) {
-            var invoice_fee = invoice.length;
-            for (var i = 0; i < invoice.length; i++) {
-              for(var j = 0; j < invoice[i].detail.length; j++){
-                this.set('data.' + i + '.detail.'+ j +'.invoice_fee', feeTotal / invoice_fee);
-              }
-            }
-          }
-        } catch (e) {
-          // console.log(e);
+      _calcValueFeeB: function (fee_ex_d, rate_bank, fee_in_b, indexData, index) {
+        if(rate_bank !== ''){
+          var countDetail = this.data[indexData].detail.length;
+          var calc_value_fee_b = ((parseFloat(fee_ex_d) * parseFloat(rate_bank)) + parseFloat(fee_in_b)) / countDetail;
+          this.set('data.'+indexData+'.detail.'+index+'.value_fee_b', calc_value_fee_b);
+        }else{
+          this.set('data.'+indexData+'.detail.'+index+'.value_fee_b', 0);
         }
       },
-      _totalfee: function (invoice_fee, index) {
-        this.set('data.invoice_detail.' + index + '.invoice_fee', parseFloat(invoice_fee));
+      _calcValueBalB: function (value_b, value_fee_b, indexData, index) {
+        var calc_value_bal_b = parseFloat(value_b) - parseFloat(value_fee_b);
+        this.set('data.'+indexData+'.detail.'+index+'.value_bal_b', calc_value_bal_b);
       },
-      // // (6)=((4)-(5))*1%
-      _incomeTax: function (quantity_tons, price_per_ton, rate_bank, invoice_fee, index) {
-        var incomeTax = ((((parseFloat(quantity_tons) * parseFloat(price_per_ton)) * parseFloat(rate_bank)) - parseFloat(invoice_fee)) * 1) / 100;
-        // console.log(this.toNumberFormat(incomeTax));
-        // console.log(incomeTax);
-        this.set('data.invoice_detail.' + index + '.incomeTax', incomeTax);
-        return incomeTax;
+      _calcValueTax: function(value_bal_b, indexData, index){
+        var calc_value_tax_b = (parseFloat(value_bal_b) * 1) / 100;
+        this.set('data.'+indexData+'.detail.'+index+'.value_tax_b', calc_value_tax_b);
       },
-      // // (3)*34.96
-      // // (7)=((4)-(5)-(6))<
-      _totalMoneyInvoice: function (quantity_tons, price_per_ton, rate_bank, invoice_fee, index) {
-
-        try {
-          let incomeTax = ((((parseFloat(quantity_tons) * parseFloat(price_per_ton)) * parseFloat(rate_bank)) - parseFloat(invoice_fee)) * 1) / 100
-
-          var moneyInvoice = ((parseFloat(quantity_tons) * parseFloat(price_per_ton)) * parseFloat(rate_bank) - parseFloat(invoice_fee)) - incomeTax
-          this.set('data.invoice_detail.' + index + '.moneyInvoice', moneyInvoice);
-          // console.log("moneyInvoice =>",this.data.invoice_detail[index].moneyInvoice);
-          return moneyInvoice;
-        } catch (e) {
-          // console.log(e);
-        }
+      _calcValueFinalB: function (value_bal_b, value_tax_b, indexData, index) {
+        var calc_value_final_b = parseFloat(value_bal_b) - parseFloat(value_tax_b);
+        this.set('data.'+indexData+'.detail.'+index+'.value_final_b', calc_value_final_b);
       },
       _totalTonInvoices: function (index, data) {
         var result = 0;
         // console.log( index, data.base);
-        data.base[index].detail.map((item) => {
-            result += item.net_weight;
-        })
-        return result;
-      },
-      _totalPricePerTonUsdInvoices: function (index, data) {
-        var result = 0;
-        data.base[index].detail.map((item) => {
-            result += item.price_d;
-        })
-        return result;
-        // test.base.invoice_detail.map((item) => {
-        //   result += item.price_d;
-        // })
-        // this.set('data.totalPricePerTonUsdInvoices', result);
-        // return result;
+        if(typeof data.base[index] !== 'undefined'){
+          data.base[index].detail.map((item) => {
+              result += item.net_weight;
+          })
+          this.set('data.'+index+'.totalTonInvoices', result);
+          return result
+        }
       },
       _totalAmountUsdInvoices: function (index, data) {
         var result = 0;
-        data.base[index].detail.map((item) => {
-            result += item.value_d;
-        })
-        return result;
-        // test.base.invoice_detail.map((item) => {
-        //   result += item.amountUsd;
-        // })
-        // this.set('data.totalAmountUsdInvoices', result);
-        // return result.toString();
+        if(typeof data.base[index] !== 'undefined'){
+          data.base[index].detail.map((item) => {
+              result += item.value_d;
+          })
+          this.set('data.'+index+'.totalAmountUsdInvoices', result);
+          return result;
+        }
       },
       _totalBathInvoices: function (index, data) {
         var result = 0;
-        // test.base.invoice_detail.map((item) => {
-        //   result += item.testza;
-        // });
-
-        if (isNaN(result)) {
-          return '0'
-        } else {
-          this.set('data.totalBathInvoices', result);
+        if(typeof data.base[index] !== 'undefined'){
+          data.base[index].detail.map((item) => {
+              result += item.value_b;
+          })
+          this.set('data.'+index+'.totalBathInvoices', result);
           return result;
         }
       },
       _totalFeeInvoices: function (index, data) {
         var result = 0;
-        // test.base.invoice_detail.map((item) => {
-        //   result += item.invoice_fee;
-        //   // console.log(result);
-        // })
-        if (isNaN(result)) {
-          return '0'
-        } else {
-          this.set('data.totalFeeInvoices', result)
+        if(typeof data.base[index] !== 'undefined'){
+          data.base[index].detail.map((item) => {
+              result += item.value_fee_b;
+          })
+          this.set('data.'+index+'.totalFeeInvoices', result);
+          return result;
+        }
+
+        // if (isNaN(result)) {
+        //   return '0'
+        // } else {
+        //   this.set('data.'+index+'.totalFeeInvoices', result)
+        //   return result;
+        // }
+      },
+      _totalBalance: function (index, data) {
+        var result = 0;
+        if(typeof data.base[index] !== 'undefined'){
+          data.base[index].detail.map((item) => {
+              result += item.value_bal_b;
+          })
+          this.set('data.'+index+'.totalBalance', result);
           return result;
         }
       },
       _totalIncomeTaxInvoices: function (index, data) {
         var result = 0;
-        // test.base.invoice_detail.map((item) => {
-        //   result += item.incomeTax;
-        // });
-        this.set('data.totalIncomeTaxInvoices', result);
-
-        if (isNaN(result)) {
-          return '0'
-        } else {
+        if(typeof data.base[index] !== 'undefined'){
+          data.base[index].detail.map((item) => {
+              result += item.value_tax_b;
+          })
+          this.set('data.'+index+'.totalIncomeTaxInvoices', result);
           return result;
         }
       },
       _totalMoneyBathInvoices: function (index, data) {
         var result = 0;
-        // test.base.invoice_detail.map((item) => {
-        //   // console.log('item.moneyInvoice  =>',item.moneyInvoice);
-        //   result += item.moneyInvoice;
-        // })
-
-        if (isNaN(result)) {
-          return '0'
-        } else {
-          this.set('data.totalMoneyBathInvoices', result);
+        if(typeof data.base[index] !== 'undefined'){
+          data.base[index].detail.map((item) => {
+              result += item.value_final_b;
+          })
+          this.set('data.'+index+'.totalMoneyBathInvoices', result);
           return result;
         }
       },
+      // _totalPricePerTonUsdInvoices: function (index, data) {
+      //   var result = 0;
+      //   if(typeof data.base[index] !== 'undefined'){
+      //     data.base[index].detail.map((item) => {
+      //         result += item.price_d;
+      //     })
+      //     return result;
+      //   }
+      // },
+      addPayment: function (){
+        console.log(this.data);
+      }
     });
   </script>
 </dom-module>
