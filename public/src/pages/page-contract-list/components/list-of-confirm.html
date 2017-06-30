@@ -265,13 +265,13 @@
         // console.log(e);
         try {
           this.set('title', 'แสดงปริมาณการส่งมอบ')
-          if (this.contractId !== undefined) {
+          if (this.contractId.contract_id !== undefined) {
             if (e.currentTarget.value !== undefined && e.currentTarget.value !== '') {
               // let = e.currentTarget.value
-              let url = { contract_id: this.contractId, status: 'all', exporter_id: e.currentTarget.value }
+              let url = { contract_id: this.contractId.contract_id, status: 'all', exporter_id: e.currentTarget.value }
               this.dispatchAction('GET_CONFIRM_LIST', this.genUrl(url))
             } else {
-              let url = { contract_id: this.contractId, status: 'all' }
+              let url = { contract_id: this.contractId.contract_id, status: 'all' }
               this.dispatchAction('GET_CONFIRM_LIST', this.genUrl(url))
             }
           }

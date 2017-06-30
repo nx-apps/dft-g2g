@@ -261,8 +261,8 @@
 
         </template>
         <template is="dom-if" if="[[!commonState.isInsert]]">
-          <paper-button class="gl-btn-default" on-tap="calcelContract" raised hidden="[[commonState.btnDisabled]]">{{localize.btn_cancel}}</paper-button>
-          <paper-button class="gl-btn-success" on-tap="saveContract" raised hidden="[[commonState.btnDisabled]]">{{localize.btn_save}}</paper-button>
+          <paper-button class="gl-btn-default" on-tap="cancelBook" raised hidden="[[commonState.btnDisabled]]">{{localize.btn_cancel}}</paper-button>
+          <paper-button class="gl-btn-success" on-tap="saveBook" raised hidden="[[commonState.btnDisabled]]">{{localize.btn_save}}</paper-button>
         </template>
         <template is="dom-if" if="[[commonState.btnDisabled]]">
           <paper-button class="gl-btn-default" raised on-tap="cancelInsertShipment"> {{localize.btn_back_ward}}</paper-button>
@@ -446,7 +446,7 @@
           this.data.ship[index].ship_name = this.data.ship[index].ship_name.toUpperCase()
           this.notifyPath('data.ship.' + index + '.ship_name');
           let sugg = this.$$('#shipline-suggestions-' + index)
-          console.log(sugg);
+          // console.log(sugg);
           // shipList
           //     if (this.data.shipline_id != '') {
 
@@ -482,7 +482,9 @@
           let dataResive = this.data
           for (var index = 0; index < this.data.ship.length; index++) {
             let name = this.shipList.find((item) => item.ship_name === this.data.ship[index].ship_name)
-            this.data.ship[index].ship_id = name.ship_id
+            if (name !== undefined)
+              this.data.ship[index].ship_id = name.ship_id
+
           }
           dataResive.cut_date = new Date(dataResive.cut_date)
           dataResive.eta_date = new Date(dataResive.eta_date)
@@ -524,7 +526,7 @@
           .then((res) => {
             // console.log(this.data);
             this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
-            console.log(res.cl_id);
+            // console.log(res.cl_id);
             let cl_id = res.cl_id
             this.dispatchAction('POST_BOOK', res)
               .then((response) => {
@@ -536,6 +538,7 @@
                   callback: () => {
                     this.queryFrom('.required').map((el) => { el.reset(); });
                     this.cancelInsertShipment()
+                    this.dispatchAction('GET_COMMON_SHIP_LIST');
                   }
                 });
               })
@@ -592,19 +595,96 @@
 
         //   }
       },
-      // deleteBooking: function () {
-      //   let book_id = this.data.book_id;
-      //   this._cleanDataBl(this.data, (data) => {
-      //     data.id = book_id;
-      //     this.fire('toast', {  //คำสั่งสำหรับเปิด toast dialog
-      //       status: 'dialog',
-      //       text: 'ต้องการลบข้อมูลใช่หรือไม่ ?',
-      //       confirmed: this._deleteBooking.bind(this), //function ที่ใช้รับค่า ปุ่ม
-      //       el: this, // compontents
-      //       data: data // ข้อมูลที่ส่งไป เช่น id ที่จะใช้ลบข้อมูล ใน db
-      //     });
-      //   });
-      // },
+      cancelBook: function () {
+        this.fire('toast', {
+          status: 'openDialog',
+          text: 'ต้องการยกเลิกแก้ข้อมูลใช่หรือไม่ ?',
+          confirmed: (result) => {
+            if (result == true) {
+              let url = { id: this.data.id }
+              this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
+              this.dispatchAction('SET_STATE', {
+                isInsert: false,
+                btnDisabled: true,
+                hiddend: true
+              })
+              this.dispatchAction('GET_BOOK_DETAIL', this.genUrl(url))
+              this.async(() => {
+                this.fire('toast', {
+                  status: 'success', text: 'โหลดสำเร็จ', callback: () => {
+                    this.queryFrom('.required').map((el) => { el.reset(); });
+                    // this.set('pageSelected', 'list-of-booking-edit')
+                  }
+                })
+              }, 500)
+            }
+          }
+        })
+      },
+      saveBook: function () {
+        this.fire('toast', {
+          status: 'openDialog',
+          text: 'ต้องการแก้ข้อมูลใช่หรือไม่ ?',
+          confirmed: (result) => {
+            if (result == true) {
+              this._resiveFormBook()
+                .then((res) => {
+                  // console.log(data);
+                  this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
+                  this.dispatchAction('PUT_BOOK', res)
+                    .then((response) => {
+                      // this.dispatchAction('GET_CONTRACT_OF_BUYER', res.buyer_id);
+                      // this.dispatchAction('GET_CONTRACT', res.id)
+                      this.queryFrom('.required').map((el) => { el.reset(); });
+                      this.dispatchAction('SET_STATE', {
+                        isInsert: false,
+                        btnDisabled: true,
+                        hiddend: true
+                      })
+                      this.fire('toast', {
+                        status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
+                        callback: () => {
+                          let url = { cl_id: this.data.cl_id }
+                          this.dispatchAction('GET_BOOK_LIST', this.genUrl(url));
+                          this.dispatchAction('GET_COMMON_SHIP_LIST');
+                        }
+                      });
+                    })
+                })
+                .catch((error) => {
+                  console.log(error);
+                });
+            }
+          }
+        })
+      },
+      deleteBooking: function () {
+        this.fire('toast', {
+          status: 'openDialog',
+          text: 'ต้องการลบข้อมูลใช่หรือไม่ ?',
+          confirmed: (result) => {
+            if (result == true) {
+              // console.log(res);
+              this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
+              this.dispatchAction('DELETE_BOOK', this.data.id)
+                .then((response) => {
+                  let url = { cl_id: this.data.cl_id }
+                  this.dispatchAction('GET_BOOK_LIST', this.genUrl(url));
+                  this.fire('toast', {
+                    status: 'success', text: 'ลบสำเร็จ',  // คำสั่งสำหรับเปิด toast success
+                    callback: () => {
+                      this.cancelInsertShipment()
+                    }
+                  })
+
+                })
+                .catch((error) => {
+                  console.log(error);
+                });
+            }
+          }
+        })
+      },
       // _deleteBooking: function (result, detail) {
       //   if (result == true) {
       //     this.delete('./g2g/book/delete/id/', detail.data.id, () => {
@@ -640,9 +720,7 @@
         if (this.data.surveyor.length > 1)
           this.pop('data.surveyor')
       },
-      // calcelBl: function () {
-      //   this.calcelContract();
-      // },
+
       deleteShip: function () {
         if (this.data.ship.length > 1)
           this.pop('data.ship')

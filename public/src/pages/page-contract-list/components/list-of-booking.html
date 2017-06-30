@@ -253,7 +253,8 @@
           ship_lot = this.bookList[0].ship_lot
         }
         let data = {
-          contract_id: this.contractId,
+          contract_id: this.contractId.contract_id,
+          contract_no : this.contractId.contract_no,
           cl_id: this.dataShow.id,
           cl_no: this.dataShow.cl_no,
           ship_lot: ship_lot+1

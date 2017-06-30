@@ -362,7 +362,8 @@ hip
                     btnDisabled: false,
                     hiddend: true,
                 })
-                this.dispatchAction('SET_CONTRACT_ID',e.detail.contract_id)
+                let contractData = { contract_id: e.detail.contract_id ,contract_no:e.detail.contract_no }
+                this.dispatchAction('SET_CONTRACT_ID',contractData)
                 // console.log(11111)
                 // console.log(e.detail.contract_id)
                 this.fire('toast', { status: 'load' });
@@ -428,7 +429,8 @@ hip
                 let url = { contract_id: e.detail.contract_id ,status:true}
                 this.dispatchAction('GET_CONFIRM_LIST', this.genUrl(url))
                 this.g2gPageSeleted = 'listOfShipment';
-                this.dispatchAction('SET_CONTRACT_ID',e.detail.contract_id)
+                let contractData = { contract_id: e.detail.contract_id ,contract_no:e.detail.contract_no }
+                this.dispatchAction('SET_CONTRACT_ID',contractData)
             //     // console.log(e.detail.contractId);
             //     if (typeof e.detail.contractId == "undefined") {
             //     this.set('pageSelected', 'list-of-booking')

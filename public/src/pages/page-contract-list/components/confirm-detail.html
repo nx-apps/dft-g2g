@@ -546,7 +546,8 @@
             dataResive.cl_no = this.data.cl_no,
             dataResive.cl_status = this.data.cl_status,
             dataResive.cl_weight = this.data.cl_weight,
-            dataResive.contract_id = this.contractId,
+            dataResive.contract_id = this.contractId.contract_id,
+            dataResive.contract_no = this.contractId.contract_no,
             dataResive.incoterms = this.dataShow.incoterms//this._getIncoterms()
           delete dataResive.date_updated
           delete dataResive.date_created
@@ -575,7 +576,7 @@
             this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
             this.dispatchAction('POST_CONFIRM', res)
               .then((response) => {
-                let url = { contract_id: this.contractId, status: 'all' }
+                let url = { contract_id: this.contractId.contract_id, status: 'all' }
                 this.dispatchAction('GET_CONFIRM_LIST', this.genUrl(url))
                 this.dispatchAction('GET_CONTRACT_OF_BUYER', this.getCookieBhv("buyerId"));
                 this.fire('toast', {
@@ -637,7 +638,7 @@
                   this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
                   this.dispatchAction('PUT_CONFIRM', res)
                     .then((response) => {
-                      let url = { contract_id: this.contractId, status: 'all' }
+                      let url = { contract_id: this.contractId.contract_id, status: 'all' }
                       this.dispatchAction('GET_CONFIRM_LIST', this.genUrl(url))
                       this.dispatchAction('GET_CONTRACT_OF_BUYER', this.getCookieBhv("buyerId"));
                       this.queryFrom('.required').map((el) => { el.reset(); });
@@ -710,7 +711,7 @@
                   this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
                   this.dispatchAction('PUT_CONFIRM', res)
                     .then((response) => {
-                      let url = { contract_id: this.contractId, status: 'all' }
+                      let url = { contract_id: this.contractId.contract_id, status: 'all' }
                       this.dispatchAction('GET_CONFIRM_LIST', this.genUrl(url))
                       this.dispatchAction('GET_CONTRACT_OF_BUYER', this.getCookieBhv("buyerId"));
                       this.queryFrom('.required').map((el) => { el.reset(); });
@@ -781,7 +782,7 @@
               this.dispatchAction('DELETE_CONFIRM', this.data.id)
                 .then((response) => {
                   this.dispatchAction('GET_CONTRACT_OF_BUYER', this.getCookieBhv("buyerId"));
-                  let url = { contract_id: this.contractId, status: 'all' }
+                  let url = { contract_id: this.contractId.contract_id, status: 'all' }
                   this.dispatchAction('GET_CONFIRM_LIST', this.genUrl(url))
                   this.fire('toast', {
                     status: 'success', text: 'ลบสำเร็จ',  // คำสั่งสำหรับเปิด toast success

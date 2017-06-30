@@ -109,8 +109,9 @@ export function bookAction(store) {
                 book_remark: "",
                 book_status: false,
                 cl_id: data.cl_id,
-                cl_no: data.cl_no,
+                cl_no: Number(data.cl_no),
                 contract_id: data.contract_id,
+                contract_no: Number(data.contract_no),
                 cut_date: date,
                 cut_time: "12:00",
                 deli_port: {},
@@ -130,7 +131,6 @@ export function bookAction(store) {
                 product_date: date,
                 ship: [
                     {
-                        ship_id: "",
                         ship_name: "",
                         ship_voy: ""
                     }
