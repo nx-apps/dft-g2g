@@ -83,15 +83,11 @@ export function bookAction(store) {
         GET_BOOK_HAMONIZE_LIST: function (cl_id) {
             axios.get('./book/hamonize?' + cl_id)
                 .then(function (response) {
-                    console.log(response.data);
-                    // for (var index = 0; index < response.data.length; index++) {
-                        // console.log(response.data[index]);
-                        // response.datap[index].label = response.data[index].hamonize.hamonize_en 
-                        // for (var index2 = 0; index2 < response.datap[index].package.length; index2++) {
-                        //     response.datap[index].package[index2].label = response.datap[index].package[index2].package.package_name_en
-                        // }
-                    // }
-                    // console.log(response.data);
+                    for (var index = 0; index < response.data.length; index++) {
+                        // response.data[index].label = ''
+                        response.data[index].label = '['+response.data[index].hamonize.hamonize_code+'] '+response.data[index].hamonize.hamonize_en
+                        // console.log(response.data[index].hamonize.hamonize_en );
+                    }
                     store.dispatch({ type: 'GET_BOOK_HAMONIZE_LIST', payload: response.data })
                 })
                 .catch(function (error) {

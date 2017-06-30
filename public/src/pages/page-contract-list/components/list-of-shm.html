@@ -74,7 +74,7 @@
       </div>
       <gl-form-panel-head label="{{localize.text_list_exporter_name}}" set-padding="10px" set-border="1px">
         <!--<template is="dom-if" if={{_confirmBook(data)}}>-->
-          <paper-button class="gl-btn-primary" raised on-tap="createShmDet">{{localize.btn_add_exporter}}</paper-button>
+          <paper-button class="gl-btn-primary" raised on-tap="addBookExporter">{{localize.btn_add_exporter}}</paper-button>
         <!--</template>-->
       </gl-form-panel-head>
 
@@ -199,13 +199,12 @@
         // window.open(window._config.reportServer+'/api/shipment/report1?shm_id='+this.data.shm_id+'&ori='+this.printReport.ori+'&nn='+this.printReport.nn,'1');
         window.open(window._config.reportServer+'/api/shipment/report2/' + book_id + '?ori=' + this.printReport.ori + '&nn=' + this.printReport.nn + '&export=' + this.printReport.typeFile, '1');
       },
-      bookExporterDetail(e){
+      bookExporterDetail: function(e){
         let url = { id: e.currentTarget.data.id }
         this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
         this.dispatchAction('SET_STATE', {
           isInsert: false,
-          //test
-          btnDisabled: false,
+          btnDisabled: true,
           hiddend: true
         })
         this.dispatchAction('GET_BOOK_EXPORTER_DETAIL', this.genUrl(url))
@@ -217,6 +216,22 @@
           })
         }, 500)
         
+      },
+      addBookExporter: function(e){
+        this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
+        this.dispatchAction('SET_STATE', {
+          isInsert: true,
+          btnDisabled: false,
+          hiddend: true
+        })
+        // this.dispatchAction('GET_BOOK_EXPORTER_DETAIL', this.genUrl(url))
+        this.async(() => {
+          this.fire('toast', {
+            status: 'success', text: 'โหลดสำเร็จ', callback: () => {
+              this.fire('_list-book',  'list-of-booking-exporter-detail' )
+            }
+          })
+        }, 500)
       },
       // properties: {
       //   pageSelected: {
