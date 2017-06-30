@@ -1,4 +1,4 @@
-<link rel="import" href="../controller/g2gShipmentController.html">
+<!--<link rel="import" href="../controller/g2gShipmentController.html">-->
 <link rel="import" href="./../../../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="./../../../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="./../../../../bower_components/gl-form/gl-form-panel.html">
@@ -10,24 +10,24 @@
 <link rel="import" href="./../../../../bower_components/gl-grid/gl-grid-row.html">
 <link rel="import" href="./../../../../bower_components/gl-grid/gl-grid-col.html">
 <link rel="import" href="./../../../../bower_components/gl-form/gl-combo-box.html">
-
+<link rel="import" href="./../../../layout/shared-styles.html">
 <dom-module id="shm-det-exporter">
-  <style include="iron-flex iron-flex-factors iron-flex-alignment gl-styles page-style">
+  <style include="shared-styles">
     * {
       font-family: 'CSChatThaiUI', sans-serif;
       -webkit-font-smoothing: antialiased;
     }
-    
+
     .title {
       text-align: center;
       font-size: var(--font-size-h4);
     }
   </style>
   <template>
-    <template is="dom-if" if="[[!isViewSeleted]]">
+    <template is="dom-if" if="[[!commonState.isInsert]]">
       <paper-button class="gl-btn-default" raised on-tap="cancelEditShipment">{{localize.btn_back_ward}}</paper-button>
     </template>
-    <template is="dom-if" if={{isInputDisabled}}>
+    <template is="dom-if" if={{commonState.btnDisabled}}>
       <paper-button class="gl-btn-default" raised on-tap="cancelEditShipment">
         {{localize.btn_back_ward}}</paper-button>
     </template>
@@ -41,13 +41,13 @@
           <paper-tooltip for="delExporter" offset="0">Delete Exporter</paper-tooltip>
         </template>
       </div>
-      
+
       <gl-form-panel-head label="{{localize.label_exporter_detail}}" set-padding="10px" set-border="1px"></gl-form-panel-head>
 
       <gl-form-panel-body>
-        {{_getSellerPhone(data.company_id,dataForSelect)}}
+        {{_getSellerPhone(data.company_id,dataForSelect)}} [[data.book_id]]////[[data.gross_weight]]
         <gl-grid-row width="{{getWidth}}">
-          <template is="dom-if" if="[[isViewSeleted]]">
+          <template is="dom-if" if="[[commonState.isInsert]]">
             <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,8]]">
               <gl-form-input disabled label="{{localize.text_exporter_name}}" value="{{data.company_name_th}}" always-float-label></gl-form-input>
             </gl-grid-col>
@@ -55,8 +55,8 @@
               <gl-form-textarea rows="2" disabled label="{{localize.label_exporter_address}}" value="{{data.company_address}}" always-float-label></gl-form-textarea>
             </gl-grid-col>
           </template>
-          <template is="dom-if" if="[[!isViewSeleted]]">
-            <template is="dom-if" if="[[isInputDisabled]]">
+          <template is="dom-if" if="[[!commonState.isInsert]]">
+            <template is="dom-if" if="[[commonState.btnDisabled]]">
               <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,8]]">
                 <gl-form-input disabled label="{{localize.text_exporter_name}}" value="{{data.company_name_th}}" always-float-label></gl-form-input>
               </gl-grid-col>
@@ -64,14 +64,14 @@
                 <gl-form-textarea rows="2" disabled label="{{localize.label_exporter_address}}" value="{{data.company_address}}" always-float-label></gl-form-textarea>
               </gl-grid-col>
             </template>
-            <template is="dom-if" if="[[!isInputDisabled]]">
+            <template is="dom-if" if="[[!commonState.btnDisabled]]">
               <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,8]]">
-                <gl-combo-box class="required" required id="company_id" label="{{localize.text_exporter_name}}" always-float-label item-label-path="company_name_th"
-                  disabled="[[isInputDisabled]]" item-value-path="company_id" items="{{dataForSelect.seller}}" value="{{data.company_id}}">
-                   <template>
-                  [[item.company_name_th]]
-                </template>
-                  </gl-combo-box>
+                <gl-combo-box class="required" required id="company_id" label="{{localize.text_exporter_name}}" always-float-label item-label-path="label"
+                  disabled="[[commonState.btnDisabled]]" item-value-path="company_taxno" items="{{exporterList}}" value="{{data.company_taxno}}">
+                  <template>
+                    [[item.company_name_th]]
+                  </template>
+                </gl-combo-box>
               </gl-grid-col>
 
               <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,8]]">
@@ -92,42 +92,49 @@
               hidden></gl-form-input>
           </gl-grid-col>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,12]]">
-            <gl-combo-box id="type_rice_id" label="{{localize.label_rice_type}}" item-label-path="type_rice_name_en" disabled="[[isInputDisabled]]"
-              class="required" required item-value-path="type_rice_id" items="[[dataForSelect.cl_type_rice]]" value="{{data.type_rice_id}}"
+            <!--<gl-combo-box id="type_rice_id" label="{{localize.label_rice_type}}" item-label-path="type_rice_name_en" disabled="[[commonState.btnDisabled]]"
+              class="required" required item-value-path="type_rice_id" items="[[hamonizeContract]]" value="{{data.type_rice_id}}"
               always-float-label>
               <template>
                   [[item.type_rice_name_en]]
                 </template>
-              </gl-combo-box>
+              </gl-combo-box>-->
+            <gl-combo-box class="required" required disabled="[[commonState.btnDisabled]]" error-message="{{localize.label_error_rice_type}}" placeholder="{{localize.label_rice_type}}" 
+            name="hamonize.hamonize_th" items="[[hamonizeContract]]"label="{{localize.label_rice_type}}" item-label-path="label" item-value-path="hamonize_id" value="{{data.hamonize_id}}"
+              on-selected-item-changed="getObjectHamonize" on-value-changed="_typeRiceConfirm">
+              <template>
+                [[item.label]]
+              </template>
+            </gl-combo-box>
           </gl-grid-col>
           [[_checkDataInPackage(data.type_rice_id)]]
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,8]]">
-            <gl-combo-box id="package_id" label="{{localize.label_package}}" item-label-path="package_name_en" disabled="[[isInputDisabled]]"
-              class="required" required item-value-path="package_id" items="[[dataForSelect.package]]" value="{{data.package_id}}"
+            <gl-combo-box id="package_id" label="{{localize.label_package}}" item-label-path="package_name_en" disabled="[[commonState.btnDisabled]]"
+              class="required" required item-value-path="package_id" items="[[packageList]]" value="{{data.package_id}}"
               always-float-label>
               <template>
-                  [[item.package_name_en]]
-                </template>
-              </gl-combo-box>
+                [[item.package_name_en]]
+              </template>
+            </gl-combo-box>
           </gl-grid-col>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
             [[changeString2Num(data.*,'shm_det_quantity')]]
             <gl-form-input class="required" required allowed-pattern="[0-9||,||.]" format-number="on" label="{{localize.label_quantity}}"
-              value="{{data.shm_det_quantity}}" always-float-label disabled="[[isInputDisabled]]">
+              value="{{data.shm_det_quantity}}" always-float-label disabled="[[commonState.btnDisabled]]">
               <div suffix>/{{dataForSelect.type_rice_quantity_limit_max_label}}</div>
             </gl-form-input>
           </gl-grid-col>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
             [[changeString2Num(data.*,'num_of_container')]]
-            <gl-form-input disabled="[[isInputDisabled]]" required allowed-pattern="[0-9||,||.]" format-number="on" class="required"
+            <gl-form-input disabled="[[commonState.btnDisabled]]" required allowed-pattern="[0-9||,||.]" format-number="on" class="required"
               label="{{localize.label_number_of_containers}}" always-float-label value="{{data.num_of_container}}"></gl-form-input>
           </gl-grid-col>
           [[_getPackageForPrice(data.package_id,dataForSelect)]]
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-            <gl-form-input disabled label="{{localize.label_price_usd_mt}}" value="[[price.price_per_ton]]" always-float-label></gl-form-input>
+            <gl-form-input disabled label="{{localize.label_price_usd_mt}}" value="[[data.price_d]]" always-float-label></gl-form-input>
           </gl-grid-col>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-            <gl-form-input disabled label="{{localize.label_weight_sacks_gram_bag}}" value="[[price.package_weight_bag]]" always-float-label></gl-form-input>
+            <gl-form-input disabled label="{{localize.label_weight_sacks_gram_bag}}" value="[[data.package_amount]]" always-float-label></gl-form-input>
           </gl-grid-col>
 
 
@@ -135,37 +142,37 @@
             <gl-form-input disabled label="{{localize.label_marks}}" value="[[dataForSelect.buyer_masks]]" always-float-label></gl-form-input>
           </gl-grid-col>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-            <gl-form-input disabled label="{{localize.label_quantity_bags}}" value="[[price.quantityBag]]" always-float-label></gl-form-input>
+            <gl-form-input disabled label="{{localize.label_quantity_bags}}" value="[[data.package_amount]]" always-float-label></gl-form-input>
           </gl-grid-col>
         </gl-grid-row>
 
         <gl-grid-row>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-            <gl-form-input disabled label="{{localize.label_gross_weight}}" value="[[price.gw]]" always-float-label></gl-form-input>
+            <gl-form-input disabled label="{{localize.label_gross_weight}}" value="[[data.gross_weight]]" always-float-label></gl-form-input>
           </gl-grid-col>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-            <gl-form-input disabled label="{{localize.label_net_weight}}" value="[[price.nw]]" always-float-label></gl-form-input>
+            <gl-form-input disabled label="{{localize.label_net_weight}}" value="[[data.net_weight]]" always-float-label></gl-form-input>
           </gl-grid-col>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-            <gl-form-input disabled label="{{localize.label_tare_weight}}" value="[[price.tw]]" always-float-label></gl-form-input>
+            <gl-form-input disabled label="{{localize.label_tare_weight}}" value="[[data.tare_weight]]" always-float-label></gl-form-input>
           </gl-grid-col>
         </gl-grid-row>
       </gl-form-panel-body>
       <gl-form-panel-footer set-padding="10px 20px 0px 20px">
-        <template is="dom-if" if="[[!isInputDisabled]]">
-          <template is="dom-if" if="[[isViewSeleted]]">
+        <template is="dom-if" if="[[!commonState.btnDisabled]]">
+          <template is="dom-if" if="[[commonState.isInsert]]">
             <paper-button class="gl-btn-default" on-tap="calcelShipmentInsert" raised>{{localize.btn_cancel}}</paper-button>
             <paper-button class="gl-btn-success" raised on-tap="editExporter">
               <iron-icon class="gl-icon-size" icon="save"></iron-icon>{{localize.btn_save}}</paper-button>
           </template>
         </template>
 
-        <template is="dom-if" if="[[!isViewSeleted]]">
+        <template is="dom-if" if="[[!commonState.isInsert]]">
           <paper-button class="gl-btn-success" raised on-tap="addExporter"> {{localize.btn_add}}</paper-button>
         </template>
       </gl-form-panel-footer>
     </gl-form-panel>
-    
+
   </template>
   <script>
     Polymer({
@@ -180,12 +187,26 @@
         // nylonLocalizeBehavior,
       ],
       properties: {
-        localize:{
-          statePath : 'i18n.g2g'
+        localize: {
+          statePath: 'i18n.g2g'
+        },
+        commonState: {
+          statePath: 'commonState.setState'
         },
         data: {
-          type: Object,
-          value: { shm_det_quantity: 0 }
+          statePath: 'book.bookExporterDetail'
+        },
+        hamonizeContract: {
+          statePath: 'confirmLetter.hamonizeContract',
+          // observer: 'get'
+        },
+        packageList: {
+          statePath: 'commonG2g.packageList',
+          // observer: 'get'
+        },
+        exporterList:{
+          statePath: 'commonG2g.exporterList',
+          // observer: 'get'
         },
         price: {
           type: Object,
@@ -256,9 +277,9 @@
       //   }
       // },
       // calcelShipmentInsert: function () {
-       
+
       //   //  Object.assign(this.data,this.oldData)
-        
+
       //  for (var variable in this.data) {
       //    if (this.data.hasOwnProperty(variable)) {
       //     //  console.log(variable);
@@ -364,16 +385,16 @@
       //   if (typeof pack != 'undefined') {
       //     shm_det_quantity = numeral().unformat(shm_det_quantity);
       //     let quantityBag = ((parseFloat(shm_det_quantity) * parseFloat(1000)) / parseFloat(pack.package_kg_per_bag));
-      //     this.price.quantityBag = numeral(this._isNan(quantityBag)).format('0,0');
-      //     this.notifyPath('price.quantityBag');
+      //     this.data.package_amount = numeral(this._isNan(quantityBag)).format('0,0');
+      //     this.notifyPath('data.package_amount');
       //     let sumGW = ((parseFloat(quantityBag) * (parseFloat(pack.package_kg_per_bag) + (parseFloat(pack.package_weight_bag) / parseFloat(1000))) / parseFloat(1000)));
       //     //  this.notifyPath('price.sumGW');
-      //     this.price.gw = numeral(this._isNan(sumGW)).format('0,0.00');
-      //     this.notifyPath('price.gw');
-      //     this.price.nw = numeral(parseFloat(shm_det_quantity)).format('0,0.00');
-      //     this.notifyPath('price.nw');
-      //     this.price.tw = numeral(this._isNan(((parseFloat(quantityBag) * (parseFloat(pack.package_weight_bag) / parseFloat(1000))) / parseFloat(1000)))).format('0,0.00');
-      //     this.notifyPath('price.tw');
+      //     this.data.gross_weight = numeral(this._isNan(sumGW)).format('0,0.00');
+      //     this.notifyPath('data.gross_weight');
+      //     this.data.net_weight = numeral(parseFloat(shm_det_quantity)).format('0,0.00');
+      //     this.notifyPath('data.net_weight');
+      //     this.data.tare_weight = numeral(this._isNan(((parseFloat(quantityBag) * (parseFloat(pack.package_weight_bag) / parseFloat(1000))) / parseFloat(1000)))).format('0,0.00');
+      //     this.notifyPath('data.tare_weight');
       //   }
       // },
       // addExporter: function () {

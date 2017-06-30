@@ -154,11 +154,11 @@
               </gl-grid-col>
               <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
                 [[changeString2Num(item.*,'cost_price')]]
-                <gl-form-input disabled="[[commonState.btnDisabled]]" format-number="on" value="[[item.cost_price]]" label="{{localize.label_cost_price_ton}}"></gl-form-input>
+                <gl-form-input disabled="[[commonState.btnDisabled]]" format-number="on" value="{{item.cost_price}}" label="{{localize.label_cost_price_ton}}"></gl-form-input>
               </gl-grid-col>
               <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
                 [[changeString2Num(item.*,'cost_value')]]
-                <gl-form-input disabled="[[commonState.btnDisabled]]" format-number="on" value="[[item.cost_value]]" label="ราคาบาท (ยัง)"></gl-form-input>
+                <gl-form-input disabled="[[commonState.btnDisabled]]" format-number="on" value="{{item.cost_value}}" label="ราคาบาท (ยัง)"></gl-form-input>
 
               </gl-grid-col>
             </gl-grid-row>
@@ -320,7 +320,7 @@
           type: Object,
           value: {
             cl_hamonize: [],
-            cl_hamonize_pk: [{ package: [] }]
+            cl_hamonize_pk: [{ package: [{ package: {} }] }]
             , incoterms: []
           }
         },
@@ -364,13 +364,13 @@
           text: 'ต้องการยกเลิกแก้ข้อมูลใช่หรือไม่ ?',
           confirmed: (result) => {
             if (result == true) {
-                  this.dispatchAction('GET_CONFIRM_DETAIL',this.data.id)
-                  this.dispatchAction('SET_STATE', {
-                    isInsert: false,
-                    btnDisabled: true,
-                    hiddend: true
-                  })
-                  this.queryFrom('.required').map((el) => { el.reset(); });
+              this.dispatchAction('GET_CONFIRM_DETAIL', this.data.id)
+              this.dispatchAction('SET_STATE', {
+                isInsert: false,
+                btnDisabled: true,
+                hiddend: true
+              })
+              this.queryFrom('.required').map((el) => { el.reset(); });
             }
           }
         })
@@ -525,12 +525,23 @@
       _getHamonize: function () {
         try {
           let hamonize = this.data.cl_hamonize
+          // console.log(hamonize);
           for (var index = 0; index < hamonize.length; index++) {
             hamonize[index].hamonize = this.dataShow.cl_hamonize[index].hamonize
             for (var index2 = 0; index2 < hamonize[index].package.length; index2++) {
-              hamonize[index].package[index2].package = this.dataShow.cl_hamonize_pk[index].package[index2].package
+              let dataPackage = this.packageList.find((item) => item.package_id === hamonize[index].package[index2].package_id)
+              // console.log(dataPackage);
+              let package = {
+                id: dataPackage.package_id,
+                package_kg_per_bag: dataPackage.package_kg_per_bag,
+                package_name_en: dataPackage.package_name_en,
+                package_name_th: dataPackage.package_name_th,
+                package_weight_bag: dataPackage.package_weight_bag
+              }
+              hamonize[index].package[index2].package = package
             }
           }
+          // console.log(hamonize);
           return hamonize
         } catch (e) {
           // console.log(e);
@@ -538,16 +549,14 @@
 
       },
       _resiveDataConfirm: function () {
+        this._getHamonize()
         return new Promise((res, rej) => {
           let dataResive = this.data
-          // dataResive.id = this.data.id,
+          // console.log(this.data);
           dataResive.cl_date = new Date(this.data.cl_date),
-            dataResive.cl_hamonize = this._getHamonize(),
-            dataResive.cl_no = this.data.cl_no,
+            // dataResive.cl_hamonize = this._getHamonize(),
             dataResive.cl_status = this.data.cl_status,
             dataResive.cl_weight = this.data.cl_weight,
-            dataResive.contract_id = this.contractId.contract_id,
-            dataResive.contract_no = this.contractId.contract_no,
             dataResive.incoterms = this.dataShow.incoterms//this._getIncoterms()
           delete dataResive.date_updated
           delete dataResive.date_created
@@ -573,6 +582,7 @@
       insertConfirm: function () {
         this._resiveFormConfirm()
           .then((res) => {
+            // console.log(res);
             this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
             this.dispatchAction('POST_CONFIRM', res)
               .then((response) => {
@@ -635,6 +645,8 @@
             if (result == true) {
               this._resiveFormConfirm()
                 .then((res) => {
+                  // console.log(res);
+                  // console.log(this.dataShow);
                   this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
                   this.dispatchAction('PUT_CONFIRM', res)
                     .then((response) => {
@@ -657,6 +669,8 @@
                 .catch((error) => {
                   console.log(error);
                 });
+              // }
+
             }
           }
         })
@@ -679,25 +693,25 @@
         //         }
         //       })
         //     }
-        //   });
+        // })
+        // },
+        // _saveData: function (result, detail) {
+        //   if (result == true) {
+        //     detail.el.update('./g2g/confirm/update', detail.data, () => {
+        //       detail.el.fire('refresh-contract', { detail: 'refresh-contract' });
+        //       detail.el.fire('toast', {
+        //         status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
+        //         callback: function () {
+        //           //  detail.el.editInput();
+        //           detail.el.editInput();
+        //           detail.el.fire('get-confirm-detail', { clId: detail.data.id });
+        //           // detail.el.data = detail.data;
+        //           detail.el.fire('get-list-confirm', { contractId: detail.data.contract_id });
+        //         }
+        //       });
+        //     });
+        //   }
       },
-      // _saveData: function (result, detail) {
-      //   if (result == true) {
-      //     detail.el.update('./g2g/confirm/update', detail.data, () => {
-      //       detail.el.fire('refresh-contract', { detail: 'refresh-contract' });
-      //       detail.el.fire('toast', {
-      //         status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
-      //         callback: function () {
-      //           //  detail.el.editInput();
-      //           detail.el.editInput();
-      //           detail.el.fire('get-confirm-detail', { clId: detail.data.id });
-      //           // detail.el.data = detail.data;
-      //           detail.el.fire('get-list-confirm', { contractId: detail.data.contract_id });
-      //         }
-      //       });
-      //     });
-      //   }
-      // },
       confirmConfirm: function () {
         this.fire('toast', {
           status: 'openDialog',
@@ -707,7 +721,6 @@
               this._resiveFormConfirm()
                 .then((res) => {
                   res.cl_status = true
-                  // console.log(res);
                   this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
                   this.dispatchAction('PUT_CONFIRM', res)
                     .then((response) => {
@@ -926,27 +939,29 @@
           this.set('dataShow.cl_hamonize.' + indexIn, dataHamonize)
         }
       },
-      getObjectPackeage: function (e) {
-        if (e.detail.value !== null) {
-          let indexHa = e.currentTarget.index
-          let indexPk = e.currentTarget.indexpackeage
-          let dataPackage = JSON.parse(JSON.stringify(e.detail.value));
-          // console.log(dataPackage);
-          let package = {
-            package: {
-              id: dataPackage.package_id,
-              package_kg_per_bag: dataPackage.package_kg_per_bag,
-              package_name_en: dataPackage.package_name_en,
-              package_name_th: dataPackage.package_name_th,
-              package_weight_bag: dataPackage.package_weight_bag
-            },
-            package_id: dataPackage.package_id,
-          }
-          // delete dataHamonize.label
-          // console.log(pack);
-          this.set('dataShow.cl_hamonize_pk.' + indexHa + '.package.' + indexPk, package)
-        }
-      },
+      // getObjectPackeage: function (e) {
+      //   if (e.detail.value !== null) {
+      //     let indexHa = e.currentTarget.index
+      //     let indexPk = e.currentTarget.indexpackeage
+      //     let dataPackage = JSON.parse(JSON.stringify(e.detail.value));
+      //     // console.log(dataPackage);
+      //     let package = {
+      //       package: {
+      //         id: dataPackage.package_id,
+      //         package_kg_per_bag: dataPackage.package_kg_per_bag,
+      //         package_name_en: dataPackage.package_name_en,
+      //         package_name_th: dataPackage.package_name_th,
+      //         package_weight_bag: dataPackage.package_weight_bag
+      //       },
+      //       package_id: dataPackage.package_id,
+      //     }
+      //     // delete dataHamonize.label
+      //     console.log(indexHa,indexPk);
+      //     console.log(package);
+      //     this.set('dataShow.cl_hamonize_pk.' + indexHa + '.package.' + indexPk, package)
+      //     console.log(this.dataShow.cl_hamonize_pk);
+      //   }
+      // },
 
 
       // _clearnDataConfirm: function (data, callback) {
