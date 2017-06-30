@@ -104,9 +104,18 @@
         <iron-icon icon="radio-button-unchecked" item-icon class="iconNextRadio" id="chartShipment" on-tap="chartPieNext"></iron-icon>
       </div>
       <div class="card-actions horizontal end-justified layout">
-        <paper-button raised on-tap="contractDetail">{{localize.btn_contract_detail}}</paper-button>
-        <paper-button raised on-tap="listConfirm">{{localize.btn_confirm_detail}}</paper-button>
-        <paper-button raised on-tap="listShipment">{{localize.text_list_booking}}</paper-button>
+        <paper-button raised on-tap="contractDetail">
+          <!--{{localize.btn_contract_detail}}-->
+          สัญญา (ยัง)
+          </paper-button>
+        <paper-button raised on-tap="listConfirm">
+          งวด (ยัง)
+          <!--{{localize.btn_confirm_detail}}-->
+
+        </paper-button>
+        <paper-button raised on-tap="listShipment">
+          {{localize.text_list_booking}}
+          </paper-button>
         <paper-button id="number" raised on-tap="listFee">{{localize.btn_fee_detail}}</paper-button>
         <!--<paper-badge for="number" label="4">
           </paper-badge>-->

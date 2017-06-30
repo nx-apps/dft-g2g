@@ -484,6 +484,11 @@
             let name = this.shipList.find((item) => item.ship_name === this.data.ship[index].ship_name)
             this.data.ship[index].ship_id = name.ship_id
           }
+          dataResive.cut_date = new Date(dataResive.cut_date)
+          dataResive.eta_date = new Date(dataResive.eta_date)
+          dataResive.etd_date = new Date(dataResive.etd_date)
+          dataResive.packing_date = new Date(dataResive.packing_date)
+          dataResive.product_date = new Date(dataResive.product_date)
           dataResive.shipline = this.dataShow.shipline
           dataResive.notify_party = this.dataShow.notify
           dataResive.surveyor = this.dataShow.surveyor
@@ -520,16 +525,17 @@
             // console.log(this.data);
             this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
             console.log(res.cl_id);
-            this.dispatchAction('POST_CONFIRM', res)
+            let cl_id = res.cl_id
+            this.dispatchAction('POST_BOOK', res)
               .then((response) => {
-                let url = { cl_id: res.cl_id }
+                let url = { cl_id: cl_id }
                 this.dispatchAction('GET_BOOK_LIST', this.genUrl(url));
-                this.dispatchAction('_list-book', 'list-of-booking');
+                // this.dispatchAction('_list-book', 'list-of-booking');
                 this.fire('toast', {
                   status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
                   callback: () => {
                     this.queryFrom('.required').map((el) => { el.reset(); });
-                    // this.backPage()
+                    this.cancelInsertShipment()
                   }
                 });
               })

@@ -4,6 +4,9 @@
 <link rel="import" href="./../../../bower_components/nylon-panel/nylon-panel-right.html">
 <link rel="import" href="./../../../bower_components/plutonium-breadcrumbs/plutonium-breadcrumbs.html">
 <link rel="import" href="./../../../bower_components/iron-pages/iron-pages.html">
+
+<link rel="import" href="./../../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="./../../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="./../components/g2g-logic-behavior.html">
 <link rel="import" href="./component/list-of-bl-pm.html">
 <link rel="import" href="./component/list-of-invoice.html">
@@ -24,35 +27,43 @@
             --paper-fab-background: var(--paper-light-blue-500);
             --paper-fab-keyboard-focus-background: var(--paper-light-blue-900);
         }
+
         * {
             font-family: 'CSChatThaiUI', sans-serif;
             -webkit-font-smoothing: antialiased;
         }
+
         paper-fab {
             position: fixed;
             right: 16px;
             bottom: 16px;
             color: var(--gl-white-color);
         }
+
         paper-material {
             background-color: var(--gl-white-color);
         }
+
         nylon-panel-right {
             --app-toolbar-style: {
                 background-color: #FF5000;
             }
         }
+
         main {
             padding: 5px;
             margin: 0 auto;
         }
+
         section {
             display: none;
             border-top: 1px solid #ddd;
         }
+
         input {
             display: none;
         }
+
         label {
             display: inline-block;
             margin: 0 0 -1px;
@@ -63,15 +74,18 @@
             border: 1px solid transparent;
             background: #D5D8DC;
         }
+
         label:before {
             font-family: fontawesome;
             font-weight: normal;
             margin-right: 10px;
         }
+
         label:hover {
             color: #888;
             cursor: pointer;
         }
+
         input:checked+label {
             color: #555;
             border: 1px solid #ddd;
@@ -79,6 +93,7 @@
             border-bottom: 1px solid #fff;
             background: #fff;
         }
+
         #tab1:checked~#content1,
         #tab2:checked~#content2,
         #tab3:checked~#content3,
@@ -87,6 +102,7 @@
         #tab6:checked~#content6 {
             display: block;
         }
+
         list-of-bl-pm,
         list-of-invoice,
         list-of-fee,
@@ -96,6 +112,7 @@
             margin-top: 15px;
             width: 98%;
         }
+
         .breadcrumbs {
             margin: 38px 38px 0px 38px;
             border-bottom: 1px solid #ccc!important;
@@ -123,51 +140,57 @@
             <input id="tab6" type="radio" name="tabs">
             <label for="tab6">6.{{localize.history_pay}}</label>
 
+            <input id="tab1" type="radio" name="tabs">
+            <label for="tab1" on-click="backPage">
+                    <iron-icon icon="exit-to-app"></iron-icon>
+                 ย้อนกลับ (ยัง)
+            </label>
+
             <section id="content1">
                 <paper-material elevation="1">
-                <div class="list horizontal center-justified layout">
-                    <list-of-bl-pm data="[[dataListPay.blShipment]]" data-for-select="[[dataForSelect]]"></list-of-bl-pm>
-                </div>
+                    <div class="list horizontal center-justified layout">
+                        <list-of-bl-pm data="[[dataListPay.blShipment]]" data-for-select="[[dataForSelect]]"></list-of-bl-pm>
+                    </div>
                 </paper-material>
             </section>
 
             <section id="content2">
                 <paper-material elevation="1">
-                <div class="list horizontal center-justified layout">
-                    <list-of-invoice data="[[dataListPay.invoiceList]]" data-for-select="[[dataForSelect]]"></list-of-invoice>
-                </div>
+                    <div class="list horizontal center-justified layout">
+                        <list-of-invoice data="[[dataListPay.invoiceList]]" data-for-select="[[dataForSelect]]"></list-of-invoice>
+                    </div>
                 </paper-material>
             </section>
 
             <section id="content3">
                 <paper-material elevation="1">
-                <div class="list horizontal center-justified layout">
-                    <list-of-fee data="[[dataListPay.feeList]]" data-for-select="[[dataForSelect]]"></list-of-fee>
-                </div>
+                    <div class="list horizontal center-justified layout">
+                        <list-of-fee data="[[dataListPay.feeList]]" data-for-select="[[dataForSelect]]"></list-of-fee>
+                    </div>
                 </paper-material>
             </section>
 
             <section id="content4">
                 <paper-material elevation="1">
-                <div class="list horizontal center-justified layout">
-                    <list-of-cheque data="[[dataListPay.chequeList]]" data-for-select="[[dataForSelect]]"></list-of-cheque>
-                </div>
+                    <div class="list horizontal center-justified layout">
+                        <list-of-cheque data="[[dataListPay.chequeList]]" data-for-select="[[dataForSelect]]"></list-of-cheque>
+                    </div>
                 </paper-material>
             </section>
 
             <section id="content5">
                 <paper-material elevation="1">
-                <div class="list horizontal center-justified layout">
-                    <list-of-payments data="[[dataListPay.payments]]" data-for-select="[[dataForSelect]]"></list-of-payments>
-                </div>
+                    <div class="list horizontal center-justified layout">
+                        <list-of-payments data="[[dataListPay.payments]]" data-for-select="[[dataForSelect]]"></list-of-payments>
+                    </div>
                 </paper-material>
             </section>
 
             <section id="content6">
                 <paper-material elevation="1">
-                <div class="list horizontal center-justified layout">
-                    <list-of-history data="[[dataListPay.history]]" data-for-select="[[dataForSelect]]"></list-of-history>
-                </div>
+                    <div class="list horizontal center-justified layout">
+                        <list-of-history data="[[dataListPay.history]]" data-for-select="[[dataForSelect]]"></list-of-history>
+                    </div>
                 </paper-material>
             </section>
         </main>
@@ -189,7 +212,7 @@
                     </div>
                     <div name="feePage">
                         <list-of-fee-detail page-selected="{{pageSelected}}" data="[[dataSelected.fee]]" data-for-select="[[dataForSelect]]" is-input-disabled="[[isInputDisabled]]"
-                        is-view-seleted="[[!isViewSeleted]]"></list-of-fee-detail>
+                            is-view-seleted="[[!isViewSeleted]]"></list-of-fee-detail>
                     </div>
                     <div name="chequePage">
                         <cheque-detail data="[[dataSelected.cheque]]"></cheque-detail>
@@ -198,7 +221,7 @@
                         <payment-detail data="[[dataSelected.paymentDetail]]" data-silo="[[dataSelected.silo]]" data-for-select="[[dataForSelect]]"></payment-detail>
                     </div>
                     <div name="historyDetail">
-                        <history-detail data="[[dataSelected.historyDetail]]"  data-for-select="[[dataForSelect]]"></history-detail>
+                        <history-detail data="[[dataSelected.historyDetail]]" data-for-select="[[dataForSelect]]"></history-detail>
                     </div>
                 </iron-pages>
             </div>
@@ -208,11 +231,11 @@
     <script>
         Polymer({
             is: 'page-payment-list',
-            behaviors: [ReduxBehavior, nylonBehavior, CookieBehavior, i18nAction, bookAction, invoiceAction, 
-            commonStateAction, feeAction],
+            behaviors: [ReduxBehavior, nylonBehavior, CookieBehavior, i18nAction, bookAction, invoiceAction,
+                commonStateAction, feeAction],
             properties: {
-                localize:{
-                    statePath : 'i18n.g2g'
+                localize: {
+                    statePath: 'i18n.g2g'
                 }
             },
             listeners: {
@@ -235,7 +258,7 @@
                 // '_set-breadcrumbs': 'setEventBreadcrumbs'
             },
             nylonPageActive: function () {
-                this.fire('toast',{status:'load'});
+                this.fire('toast', { status: 'load' });
                 var contract_id = this.getCookieBhv("contract_id");
                 var contract_name = this.getCookieBhv("contractName");
                 var buyer_id = this.getCookieBhv("buyerId");
@@ -359,7 +382,7 @@
             _getBlDetail: function (e) {
                 let book_id = e.detail.detail.id;
                 this.titlePanelRight = 'รายละเอียดใบ Invoice';
-                this.fire('toast',{status:'load'});
+                this.fire('toast', { status: 'load' });
                 this.dispatchAction('BOOK_GET_ID_DATA', book_id);
                 this.dispatchAction('SET_STATE', {
                     isInsert: true,
@@ -402,7 +425,7 @@
                 // } else {
                 // this.async(() => {
                 //     this.fire('toast', { status: 'load' });
-                    // this._flipDrawer();
+                // this._flipDrawer();
                 // }, 500)
                 // }
 
@@ -410,7 +433,7 @@
             _getBlInvoiceDetail: function (e) {
                 this.titlePanelRight = 'รายละเอียดใบกำกับสินค้า'
                 // console.log(e.detail.detail);
-                this.fire('toast',{status:'load'});
+                this.fire('toast', { status: 'load' });
                 this.dispatchAction('BOOK_GET_ID_DATA', e.detail.detail.id);
                 this.dispatchAction('SET_STATE', {
                     isInsert: false,
@@ -419,43 +442,43 @@
                 });
                 this.paymentsPageSeleted = 'invoicePage';
                 this._flipDrawer();
-            //     this.fire('toast', { status: 'load' });
-            //     // console.log(1)
-            //     let datass = [
-            //     {
-            //         label: this.dataForSelect.nameContract,
-            //         href: ''
-            //     },
-            //     {
-            //         label: 'รายละเอียดใบ Invoice',
-            //         href: ''
-            //     },
-            //     ]
-            //     this.setBreadcrumbs(datass)
-            //     this.read('./g2g/invoice/id/' + e.detail.detail.invoice_id, (data) => {
-            //     this.dataSelected = data;
-            // this.paymentsPageSeleted = 'invoicePage';
-            //     });
-            //     if (this.checkRenderPage.commercialInvoice != true) {
-            //     this.async(() => {
-            //         this.importHref(
-            //         this.resolveUrl('./payment/component/commercial-invoice.html'),
-            //         () => {
-            //             this.async(() => {
-            //             this.fire('toast', { status: 'load' });
+                //     this.fire('toast', { status: 'load' });
+                //     // console.log(1)
+                //     let datass = [
+                //     {
+                //         label: this.dataForSelect.nameContract,
+                //         href: ''
+                //     },
+                //     {
+                //         label: 'รายละเอียดใบ Invoice',
+                //         href: ''
+                //     },
+                //     ]
+                //     this.setBreadcrumbs(datass)
+                //     this.read('./g2g/invoice/id/' + e.detail.detail.invoice_id, (data) => {
+                //     this.dataSelected = data;
+                // this.paymentsPageSeleted = 'invoicePage';
+                //     });
+                //     if (this.checkRenderPage.commercialInvoice != true) {
+                //     this.async(() => {
+                //         this.importHref(
+                //         this.resolveUrl('./payment/component/commercial-invoice.html'),
+                //         () => {
+                //             this.async(() => {
+                //             this.fire('toast', { status: 'load' });
 
-            //             this._flipDrawer();
-            //             this.checkRenderPage.commercialInvoice = true;
-            //             }, 500)
-            //         }, null, true
-            //         );
-            //     }, 1000);
-            //     } else {
-            //     this.async(() => {
-            //         this.fire('toast', { status: 'load' });
-            // this._flipDrawer();
-            //     }, 500)
-            //     }
+                //             this._flipDrawer();
+                //             this.checkRenderPage.commercialInvoice = true;
+                //             }, 500)
+                //         }, null, true
+                //         );
+                //     }, 1000);
+                //     } else {
+                //     this.async(() => {
+                //         this.fire('toast', { status: 'load' });
+                // this._flipDrawer();
+                //     }, 500)
+                //     }
             },
             _getInvoiceDetail: function (e) {
                 var datas = e.detail.detail;
@@ -475,74 +498,74 @@
                 });
                 this.paymentsPageSeleted = 'blInvoicePage';
                 this._flipDrawer();
-            //     // this.dataSelected = e.detail.detail;
-            //     // window.nameContract = this.dataForSelect.nameContract 
-            //     let datass = [
-            //     {
-            //         label: this.dataForSelect.nameContract,
-            //         href: ''
-            //     },
-            //     {
-            //         label: 'รายละเอียดการคำนวนการถัวเฉลี่ย',
-            //         href: ''
-            //     },
-            //     ]
-            //     this.setBreadcrumbs(datass)
-            //     let url = '', cl_id;
-            //     e.detail.detail.map((el, index) => {
-            //     cl_id = el.data.cl_id;
-            //     if (index == 0) {
-            //         url = url + el.data.invoice_id;
-            //     } else {
-            //         url = url + '_' + el.data.invoice_id;
-            //     }
-            //     });
-            //     //เรียกให้อัพเดตรายชื่อ fee ที่อยู่ใน contract
-            //     if (cl_id !== undefined) {
-            //     this._getFeeListInShm(cl_id);
-            //     }
+                //     // this.dataSelected = e.detail.detail;
+                //     // window.nameContract = this.dataForSelect.nameContract 
+                //     let datass = [
+                //     {
+                //         label: this.dataForSelect.nameContract,
+                //         href: ''
+                //     },
+                //     {
+                //         label: 'รายละเอียดการคำนวนการถัวเฉลี่ย',
+                //         href: ''
+                //     },
+                //     ]
+                //     this.setBreadcrumbs(datass)
+                //     let url = '', cl_id;
+                //     e.detail.detail.map((el, index) => {
+                //     cl_id = el.data.cl_id;
+                //     if (index == 0) {
+                //         url = url + el.data.invoice_id;
+                //     } else {
+                //         url = url + '_' + el.data.invoice_id;
+                //     }
+                //     });
+                //     //เรียกให้อัพเดตรายชื่อ fee ที่อยู่ใน contract
+                //     if (cl_id !== undefined) {
+                //     this._getFeeListInShm(cl_id);
+                //     }
 
-            //     //
-            //     // console.log(e.detail.detail);
-            //     this.fire('toast', { status: 'load' });
-            //     this.read('./g2g/fee/invoice/id/' + url, (data) => {
-            //     // console.log(data);
-            //     // console.log(data.invoice[0]);
-            //     // this.set('dataForSelect.shm_id', data.shm_id);
-            //     // console.log(this.dataForSelect);
-            //     this.set('dataForSelect.cl_id', data.cl_id);
-            //     // console.log(this.dataForSelect);
-            //     this.dataSelected.draft = data;
-            //     this.dataSelected.draft.rate_tt = 0;
-            //     this.dataSelected.draft.rate_bank = 0;
-            //     this.dataSelected.draft.fee_internal = 0;
-            //     this.dataSelected.draft.fee_foreign = 0;
-            //     this.dataSelected.draft.fee_other = 0;
-            //     this.dataSelected.draft.shmId = this.dataForSelect.contract_id;
-            //     this.dataSelected.draft.feeList = this.dataForSelect.feeList;
-            //     this.notifyPath('dataSelected.draft');
-            //     this.paymentsPageSeleted = 'blInvoicePage';
-            //     if (this.checkRenderPage.feeExports != true) {
-            //         this.async(() => {
-            //         this.importHref(
-            //             this.resolveUrl('./payment/component/fee-exports.html'),
-            //             () => {
-            //             this.async(() => {
-            //                 this.fire('toast', { status: 'load' });
-            //                 this._flipDrawer();
-            //                 this.checkRenderPage.feeExports = true;
-            //             }, 500)
-            //             }, null, true
-            //         );
-            //         }, 1000);
-            //     } else {
-            //         this.async(() => {
-            //         this.fire('toast', { status: 'load' });
-            //         this._flipDrawer();
-            //         }, 500)
-            //     }
+                //     //
+                //     // console.log(e.detail.detail);
+                //     this.fire('toast', { status: 'load' });
+                //     this.read('./g2g/fee/invoice/id/' + url, (data) => {
+                //     // console.log(data);
+                //     // console.log(data.invoice[0]);
+                //     // this.set('dataForSelect.shm_id', data.shm_id);
+                //     // console.log(this.dataForSelect);
+                //     this.set('dataForSelect.cl_id', data.cl_id);
+                //     // console.log(this.dataForSelect);
+                //     this.dataSelected.draft = data;
+                //     this.dataSelected.draft.rate_tt = 0;
+                //     this.dataSelected.draft.rate_bank = 0;
+                //     this.dataSelected.draft.fee_internal = 0;
+                //     this.dataSelected.draft.fee_foreign = 0;
+                //     this.dataSelected.draft.fee_other = 0;
+                //     this.dataSelected.draft.shmId = this.dataForSelect.contract_id;
+                //     this.dataSelected.draft.feeList = this.dataForSelect.feeList;
+                //     this.notifyPath('dataSelected.draft');
+                //     this.paymentsPageSeleted = 'blInvoicePage';
+                //     if (this.checkRenderPage.feeExports != true) {
+                //         this.async(() => {
+                //         this.importHref(
+                //             this.resolveUrl('./payment/component/fee-exports.html'),
+                //             () => {
+                //             this.async(() => {
+                //                 this.fire('toast', { status: 'load' });
+                //                 this._flipDrawer();
+                //                 this.checkRenderPage.feeExports = true;
+                //             }, 500)
+                //             }, null, true
+                //         );
+                //         }, 1000);
+                //     } else {
+                //         this.async(() => {
+                //         this.fire('toast', { status: 'load' });
+                //         this._flipDrawer();
+                //         }, 500)
+                //     }
 
-            //     });
+                //     });
             },
             // _getFeeDetail: function (e) {
             //     this.set('pageSelected', 'listOfFeedetail')
@@ -725,7 +748,7 @@
             //     } else {
             //     this.async(() => {
             //         this.fire('toast', { status: 'load' });
-                    // this._flipDrawer();
+            // this._flipDrawer();
             //     }, 500)
             //     }
             // },
@@ -734,6 +757,11 @@
             },
             _flipDrawerClose: function () {
                 Polymer.dom(this.root).querySelector('#panelRight').close();
+            },
+            backPage(){
+                // console.log(11111);
+                // console.log(this.$$('#tab7').checked);
+                this.fire('nylon-change-page',{path:'/contract-list'})
             }
         });
     </script>
