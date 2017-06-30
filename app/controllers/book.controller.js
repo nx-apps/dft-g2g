@@ -25,6 +25,13 @@ exports.getById = function (req, res) {
             res.json(err)
         })
 }
+exports.getHamonize = function (req, res) {
+    req.r.table('confirm_letter').get(req.query.cl_id).getField('cl_hamonize')
+        .run()
+        .then(function (data) {
+            res.json(data)
+        })
+}
 exports.insert = function (req, res) {
     var r = req.r;
     insertShip(req.body, req, res, function (ship, req, res) {

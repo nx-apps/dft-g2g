@@ -3,6 +3,7 @@ module.exports = function (app) {
     //book
     app.get('/confirm', controller.getByClId);
     app.get('/', controller.getById);
+    app.get('/hamonize',controller.getHamonize);
     app.post('/insert', controller.insert);
     app.put('/update', controller.update);
     app.delete('/delete/:id', controller.delete);
