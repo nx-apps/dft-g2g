@@ -5,7 +5,7 @@
 <link rel="import" href="./../../components/format-number-behavior.html">
 
 <dom-module id="list-of-invoice">
-  <style include="iron-flex iron-flex-factors iron-flex-alignment gl-styles page-style">
+  <style include="iron-flex iron-flex-factors iron-flex-alignment gl-styles">
      :host {
       display: block;
     }    
@@ -57,7 +57,7 @@
   </style>
   <template>
     <div class="flex searchInput horizontal center-justified layout">
-      <div class="flex title">{{localize.contract_name}} : [[dataForSelect.nameContract]]</div>
+      <div class="flex title">{{localize.contract_name}} : [[getCookieBhv("contractName")]]</div>
     </div>
 
     <div class="horizontal center-justified layout">
@@ -120,7 +120,7 @@
   <script>
     Polymer({
       is: "list-of-invoice",
-      behaviors: [ReduxBehavior, FormatNumberBehavior],
+      behaviors: [ReduxBehavior, FormatNumberBehavior, CookieBehavior],
       properties: {
         localize:{
           statePath : 'i18n.invoice'

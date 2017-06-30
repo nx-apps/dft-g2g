@@ -304,8 +304,15 @@
       //   'delete-input': 'deteleInvoice'
       // },
       _setDate:function(data){
-        var dateNow = new Date().toISOString().split('T')[0];
-        this.set('data.invoice_date', dateNow);
+        if(typeof data !== 'undefined'){
+          if(typeof data.invoice_date !== 'undefined'){
+            var date = data.invoice_date.split('T')[0];
+            this.set('data.invoice_date', date);
+          }else{
+            var dateNow = new Date().toISOString().split('T')[0];
+            this.set('data.invoice_date', dateNow);
+          }
+        }
       },
       _getVessel: function (data) {
         if (typeof data !== 'undefined' && data !== 'undefined') {
