@@ -21,6 +21,7 @@ export const fee ={
         amount:"จำนวน",
         money:"เงิน",
         ton:"ตัน",
+        sum:"รวม",
         ship_lot:"ลำดับเรือที่",
         expenses_one_present:"หักภาษีรายได้ 1 %",
         balance:"คงเหลือ",

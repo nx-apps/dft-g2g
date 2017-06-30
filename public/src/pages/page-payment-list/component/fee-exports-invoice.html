@@ -70,7 +70,7 @@
   <template>
     <gl-form-panel>
       <gl-form-panel-body set-padding="5px" set-border="0px">
-        <template is="dom-repeat" items="[[data]]" index-as="indexData">
+        <template is="dom-repeat" items="{{data}}" index-as="indexData">
           <div class="vertical layout">
             <div class="horizontal justified layout">
               <div>{{localize.invoice_no}} : [[item.invoice_no]]</div>
@@ -101,7 +101,7 @@
                 <th>{{localize.expenses_one_present}} ({{localize.baht}})<br> (7)= (6)*1%</th>
                 <th>{{localize.balance}} ({{localize.baht}})<br> (8)= (6)-(7)</th>
               </tr>
-              <template is="dom-repeat" items="[[item.detail]]" as="item2">
+              <template is="dom-repeat" items="{{item.detail}}" as="item2">
                 <tr>
                   <td><div style="margin-top: 15px;">[[item2.company.company_name_th]]</div></td>
                   <td>
@@ -175,6 +175,10 @@
           </div>
         </template>
       </gl-form-panel-body>
+    </gl-form-panel>
+
+    <gl-form-panel>
+      <fee-exports-sum total-invoice="{{data}}"></fee-exports-sum>
     </gl-form-panel>
   </template>
   <script>
@@ -260,7 +264,6 @@
         var calc_value_final_b = parseFloat(value_bal_b) - parseFloat(value_tax_b);
         this.set('data.'+indexData+'.detail.'+index+'.value_final_b', calc_value_final_b);
       },
-
       _totalTonInvoices: function (index, data) {
         var result = 0;
         // console.log( index, data.base);
@@ -268,6 +271,7 @@
           data.base[index].detail.map((item) => {
               result += item.net_weight;
           })
+          this.set('data.'+index+'.totalTonInvoices', result);
           return result
         }
       },
@@ -277,6 +281,7 @@
           data.base[index].detail.map((item) => {
               result += item.value_d;
           })
+          this.set('data.'+index+'.totalAmountUsdInvoices', result);
           return result;
         }
       },
@@ -286,13 +291,7 @@
           data.base[index].detail.map((item) => {
               result += item.value_b;
           })
-          return result;
-        }
-
-        if (isNaN(result)) {
-          return '0'
-        } else {
-          this.set('data.totalBathInvoices', result);
+          this.set('data.'+index+'.totalBathInvoices', result);
           return result;
         }
       },
@@ -302,15 +301,16 @@
           data.base[index].detail.map((item) => {
               result += item.value_fee_b;
           })
+          this.set('data.'+index+'.totalFeeInvoices', result);
           return result;
         }
 
-        if (isNaN(result)) {
-          return '0'
-        } else {
-          this.set('data.totalFeeInvoices', result)
-          return result;
-        }
+        // if (isNaN(result)) {
+        //   return '0'
+        // } else {
+        //   this.set('data.'+index+'.totalFeeInvoices', result)
+        //   return result;
+        // }
       },
       _totalBalance: function (index, data) {
         var result = 0;
@@ -318,13 +318,7 @@
           data.base[index].detail.map((item) => {
               result += item.value_bal_b;
           })
-          return result;
-        }
-
-        if (isNaN(result)) {
-          return '0'
-        } else {
-          this.set('data.totalBalance', result)
+          this.set('data.'+index+'.totalBalance', result);
           return result;
         }
       },
@@ -334,14 +328,7 @@
           data.base[index].detail.map((item) => {
               result += item.value_tax_b;
           })
-          return result;
-        }
-
-        this.set('data.totalIncomeTaxInvoices', result);
-
-        if (isNaN(result)) {
-          return '0'
-        } else {
+          this.set('data.'+index+'.totalIncomeTaxInvoices', result);
           return result;
         }
       },
@@ -351,13 +338,7 @@
           data.base[index].detail.map((item) => {
               result += item.value_final_b;
           })
-          return result;
-        }
-
-        if (isNaN(result)) {
-          return '0'
-        } else {
-          this.set('data.totalMoneyBathInvoices', result);
+          this.set('data.'+index+'.totalMoneyBathInvoices', result);
           return result;
         }
       }
