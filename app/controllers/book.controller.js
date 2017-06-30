@@ -27,7 +27,7 @@ exports.getById = function (req, res) {
 }
 exports.insert = function (req, res) {
     var r = req.r;
-    insertShip(req.body, function (ship) {
+    insertShip(req.body, req, res, function (ship, req, res) {
         req.body.ship = ship;
         var valid = req.ajv.validate('g2g.book', req.body);
         if (valid) {
