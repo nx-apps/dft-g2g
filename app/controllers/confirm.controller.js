@@ -138,9 +138,13 @@ exports.update = function (req, res) {
         if (valid) {
             var obj = Object.assign(req.body, {
                 date_updated: r.now().inTimezone('+07'),
-                updater: 'admin',
-                cl_date: r.ISO8601(req.body.cl_date).inTimezone('+07')
+                updater: 'admin'
             });
+            if (typeof req.body.cl_date !== "undefined") {
+                obj = Object.assign(obj, {
+                    cl_date: r.ISO8601(req.body.cl_date).inTimezone('+07')
+                });
+            }
             r.table("confirm_letter")
                 .get(req.body.id)
                 .update(obj)

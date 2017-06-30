@@ -7,16 +7,16 @@
 <link rel="import" href="./../components/g2g-logic-behavior.html">
 <link rel="import" href="./component/list-of-bl-pm.html">
 <link rel="import" href="./component/list-of-invoice.html">
-<link rel="import" href="./component/list-of-fee.html">
+<link rel="import" href="./component/fee-exports.html">
+<link rel="import" href="./component/commercial-invoice.html">
+<!--<link rel="import" href="./component/list-of-fee.html">
 <link rel="import" href="./component/list-of-cheque.html">
 <link rel="import" href="./component/list-of-payments.html">
 <link rel="import" href="./component/list-of-history.html">
-<link rel="import" href="./component/commercial-invoice.html">
-<link rel="import" href="./component/fee-exports.html">
 <link rel="import" href="./component/list-of-fee-detail.html">
 <link rel="import" href="./component/cheque-detail.html">
 <link rel="import" href="./component/payment-detail.html">
-<link rel="import" href="./component/history-detail.html">
+<link rel="import" href="./component/history-detail.html">-->
 
 <dom-module id="page-payment-list">
     <style media="screen" include="iron-flex iron-flex-factors iron-flex-alignment gl-styles">
@@ -179,13 +179,13 @@
                 </div>
                 <iron-pages selected="{{paymentsPageSeleted}}" attr-for-selected="name">
                     <div name="blPage">
-                        <commercial-invoice data="[[dataSelected]]" is-input-disabled="[[!isInputDisabled]]" is-view-seleted="[[isViewSeleted]]"></commercial-invoice>
+                        <commercial-invoice></commercial-invoice>
                     </div>
                     <div name="invoicePage">
-                        <commercial-invoice data="[[dataSelected]]" is-input-disabled="[[isInputDisabled]]" is-view-seleted="[[!isViewSeleted]]"></commercial-invoice>
+                        <commercial-invoice></commercial-invoice>
                     </div>
                     <div name="blInvoicePage">
-                        <fee-exports data="[[dataSelected.draft]]" data-for-select="[[dataForSelect]]" is-input-disabled="[[!isInputDisabled]]" is-view-seleted="[[isViewSeleted]]"></fee-exports>
+                        <fee-exports></fee-exports>
                     </div>
                     <div name="feePage">
                         <list-of-fee-detail page-selected="{{pageSelected}}" data="[[dataSelected.fee]]" data-for-select="[[dataForSelect]]" is-input-disabled="[[isInputDisabled]]"
@@ -208,7 +208,8 @@
     <script>
         Polymer({
             is: 'page-payment-list',
-            behaviors: [ReduxBehavior, nylonBehavior, CookieBehavior, i18nAction, bookAction],
+            behaviors: [ReduxBehavior, nylonBehavior, CookieBehavior, i18nAction, bookAction, invoiceAction, 
+            commonStateAction, feeAction],
             properties: {
                 localize:{
                     statePath : 'i18n.g2g'
@@ -218,9 +219,9 @@
                 // 'get-bl-list': '_getBlListFire',
                 'get-bl-detail': '_getBlDetail',
                 // 'get-invoice-list': '_getInvoiceListFire',
-                // 'get-invoice-detail': '_getBlInvoiceDetail',
+                'get-invoice-detail': '_getBlInvoiceDetail',
                 // 'get-fee-list': '_getFeeListFire',
-                // 'get-select-draftPayment': '_getInvoiceDetail',
+                'get-select-draftPayment': '_getInvoiceDetail',
                 // 'get-fee-list-in-shm-event': '_getFeeListInShmEvent',
                 // 'get-fee-detail': '_getFeeDetail',
                 // 'get-Cheque-list': '_getChequeListFire',
@@ -234,10 +235,12 @@
                 // '_set-breadcrumbs': 'setEventBreadcrumbs'
             },
             nylonPageActive: function () {
+                this.fire('toast',{status:'load'});
                 var contract_id = this.getCookieBhv("contract_id");
                 var contract_name = this.getCookieBhv("contractName");
                 var buyer_id = this.getCookieBhv("buyerId");
                 this.dispatchAction('BOOK_GET_LIST_DATA', contract_id);
+                this.dispatchAction('INVOICE_GET_LIST_DATA', contract_id);
             },
             // ready: function () {
             //     let contract_id = this._getUrl();
@@ -355,7 +358,16 @@
             // },
             _getBlDetail: function (e) {
                 let book_id = e.detail.detail.id;
-                this.titlePanelRight = 'รายละเอียดใบ Invoice'
+                this.titlePanelRight = 'รายละเอียดใบ Invoice';
+                this.fire('toast',{status:'load'});
+                this.dispatchAction('BOOK_GET_ID_DATA', book_id);
+                this.dispatchAction('SET_STATE', {
+                    isInsert: true,
+                    btnDisabled: false,
+                    hiddend: true
+                });
+                this.paymentsPageSeleted = 'blPage';
+                this._flipDrawer();
                 // let datass = [
                 // {
                 //     label: this.dataForSelect.nameContract,
@@ -368,11 +380,10 @@
                 // ]
                 // this.setBreadcrumbs(datass)
                 // this.fire('toast', { status: 'load' });
-                this.dispatchAction('BOOK_GET_ID_DATA', book_id);
                 // this.read('./g2g/book/id/' + book_id, (data) => {
                 // this.dataSelected = data;
                 // // console.log(this.dataSelected);
-                this.paymentsPageSeleted = 'blPage';
+                // this.paymentsPageSeleted = 'blPage';
                 // });
                 // if (this.checkRenderPage.commercialInvoice != true) {
                 // this.async(() => {
@@ -391,16 +402,25 @@
                 // } else {
                 // this.async(() => {
                 //     this.fire('toast', { status: 'load' });
-                    this._flipDrawer();
+                    // this._flipDrawer();
                 // }, 500)
                 // }
 
             },
-            // _getBlInvoiceDetail: function (e) {
-            //     this.titlePanelRight = 'รายละเอียดใบกำกับสินค้า'
+            _getBlInvoiceDetail: function (e) {
+                this.titlePanelRight = 'รายละเอียดใบกำกับสินค้า'
+                // console.log(e.detail.detail);
+                this.fire('toast',{status:'load'});
+                this.dispatchAction('BOOK_GET_ID_DATA', e.detail.detail.id);
+                this.dispatchAction('SET_STATE', {
+                    isInsert: false,
+                    btnDisabled: true,
+                    hiddend: true
+                });
+                this.paymentsPageSeleted = 'invoicePage';
+                this._flipDrawer();
             //     this.fire('toast', { status: 'load' });
             //     // console.log(1)
-            //     console.log(e.detail.detail);
             //     let datass = [
             //     {
             //         label: this.dataForSelect.nameContract,
@@ -414,7 +434,7 @@
             //     this.setBreadcrumbs(datass)
             //     this.read('./g2g/invoice/id/' + e.detail.detail.invoice_id, (data) => {
             //     this.dataSelected = data;
-            //     this.paymentsPageSeleted = 'invoicePage';
+            // this.paymentsPageSeleted = 'invoicePage';
             //     });
             //     if (this.checkRenderPage.commercialInvoice != true) {
             //     this.async(() => {
@@ -433,11 +453,28 @@
             //     } else {
             //     this.async(() => {
             //         this.fire('toast', { status: 'load' });
-            //         this._flipDrawer();
+            // this._flipDrawer();
             //     }, 500)
             //     }
-            // },
-            // _getInvoiceDetail: function (e) {
+            },
+            _getInvoiceDetail: function (e) {
+                var datas = e.detail.detail;
+                let url = '';
+                datas.map((item, index) => {
+                    if (index === 0) {
+                        url = url + item.id;
+                    } else {
+                        url = url + '_' + item.id;
+                    }
+                });
+                this.dispatchAction('FEE_CALC_DATA', url);
+                this.dispatchAction('SET_STATE', {
+                    isInsert: true,
+                    btnDisabled: false,
+                    hiddend: true
+                });
+                this.paymentsPageSeleted = 'blInvoicePage';
+                this._flipDrawer();
             //     // this.dataSelected = e.detail.detail;
             //     // window.nameContract = this.dataForSelect.nameContract 
             //     let datass = [
@@ -506,7 +543,7 @@
             //     }
 
             //     });
-            // },
+            },
             // _getFeeDetail: function (e) {
             //     this.set('pageSelected', 'listOfFeedetail')
             //     this.fire('toast', { status: 'load' });

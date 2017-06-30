@@ -56,28 +56,29 @@ export function bookAction(store) {
                     console.log(error);
                 });
         },
-        BOOK_GET_LIST_DATA: function (id) {
-            axios.get('./bl/contract?id=' + id)
-                .then((response) => {
-                    store.dispatch({ type: 'BOOK_GET_LIST_DATA', payload: response.data })
-                })
-        },
-        BOOK_GET_ID_DATA: function (id) {
-            axios.get('./invoice/book?id=' + id)
-                .then((response) => {
-                    store.dispatch({ type: 'BOOK_GET_ID_DATA', payload: response.data })
-                })
-        },
-        BOOK_INSERT: function (data) {
-            console.log(data);
-            axios.put('./invoice/update', data)
-                .then((response) => {
-                    console.log(response);
-                })
-                .catch((err) => {
-                    console.log(err);
-                })
-        },
+        // BOOK_GET_LIST_DATA: function (id) {
+
+        //     axios.get('./bl/contract?id=' + id)
+        //         .then((response) => {
+        //             store.dispatch({ type: 'BOOK_GET_LIST_DATA', payload: response.data })
+        //         })
+        // },
+        // BOOK_GET_ID_DATA: function (id) {
+        //     axios.get('./invoice/book?id=' + id)
+        //         .then((response) => {
+        //             store.dispatch({ type: 'BOOK_GET_ID_DATA', payload: response.data })
+        //         })
+        // },
+        // BOOK_INSERT: function (data) {
+        //     console.log(data);
+        //     axios.put('./invoice/update', data)
+        //         .then((response) => {
+        //             console.log(response);
+        //         })
+        //         .catch((err) => {
+        //             console.log(err);
+        //         })
+        // },
         // END GET
         // POST
         POST_BOOK: function (data) {
@@ -101,7 +102,7 @@ export function bookAction(store) {
         },
         CLEAR_BOOK_DETAIL: function (data) {
             let date = new Date().toISOString().split('T')[0]
-            console.log(date);
+            // console.log(date);
             let BookDetail = {
                 bl_no: "",
                 book_no: "",
@@ -148,6 +149,58 @@ export function bookAction(store) {
                 weight_container: 25
             }
             store.dispatch({ type: 'GET_BOOK_DETAIL', payload: BookDetail })
+        },
+        BOOK_GET_LIST_DATA: function (id) {
+            axios.get('./bl/contract?id=' + id)
+                .then((response) => {
+                    this.fire('toast', {
+                        status: 'success', text: 'โหลดข้อมูลสำเร็จ',
+                        callback: () => {
+                            store.dispatch({ type: 'BOOK_GET_LIST_DATA', payload: response.data })
+                        }
+                    });
+                })
+        },
+        BOOK_GET_ID_DATA: function (id) {
+            axios.get('./invoice/book?id=' + id)
+                .then((response) => {
+                    this.fire('toast', {
+                        status: 'success', text: 'โหลดข้อมูลสำเร็จ',
+                        callback: () => {
+                            store.dispatch({ type: 'BOOK_GET_ID_DATA', payload: response.data })
+                        }
+                    });
+                })
+        },
+        BOOK_INSERT: function (data) {
+            // console.log(data);
+            this.fire('toast', { status: 'load' });
+            axios.put('./invoice/update', data)
+                .then((response) => {
+                    // console.log(response);
+                    this.fire('toast', {
+                        status: 'success', text: 'บันทึกสำเร็จ',
+                        callback: () => {
+                            this.INVOICE_GET_LIST_DATA(data.contract_id);
+                            this.BOOK_GET_LIST_DATA(data.contract_id);
+                            this._flipDrawerClose();
+                        }
+                    });
+                })
+                .catch((err) => {
+                    console.log(err);
+                })
+        },
+        BOOK_DELETE: function (data) {
+            // console.log(data)
+            axios.put('./book/approve', data)
+                .then((response) => {
+                    console.log(response);
+                })
+                .catch((err) => {
+                    console.log(err);
+                })
+
         }
     }
     ]

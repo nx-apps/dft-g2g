@@ -59,14 +59,14 @@ exports.insert = function (req, res) {
 }
 exports.update = function (req, res) {
     var r = req.r;
-    if (req.body.book_status == "approve" || typeof req.body.bl_no === 'undefined') {
+    // if (req.body.book_status == "approve" || typeof req.body.bl_no === 'undefined') {
+    //     updateBook(req, res);
+    // } else {
+    insertShip(req.body, req, res, function (ship, req, res) {
+        req.body.ship = ship;
         updateBook(req, res);
-    } else {
-        insertShip(req.body, req, res, function (ship, req, res) {
-            req.body.ship = ship;
-            updateBook(req, res);
-        });
-    }
+    });
+    // }
 }
 exports.delete = function (req, res) {
     var r = req.r;
@@ -99,6 +99,27 @@ exports.delete = function (req, res) {
         result.message = 'require field id';
         res.json(result);
     }
+}
+exports.approve = function (req, res) {
+    req.r.table('book').get(req.body.id).pluck('id')
+        .merge(function (m) {
+            var detail = r.table('book_detail').getAll(m('id'), { index: 'book_id' });
+            return {
+                net_weight: detail.sum('net_weight'),
+                gross_weight: detail.sum('gross_weight'),
+                tare_weight: detail.sum('tare_weight'),
+                value_d: detail.sum('value_d'),
+                package_amount: detail.sum('package_amount'),
+                book_status: req.body.book_status
+            }
+        })
+        .do(function (d) {
+            return r.table('book').get(d('id')).update(d)
+        })
+        .run()
+        .then(function (data) {
+            res.json(data);
+        })
 }
 function insertShip(datas, req, res, cb) {
     var ship = [];

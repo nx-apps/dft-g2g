@@ -1,8 +1,24 @@
 var async = require('async');
 exports.calc = function (req, res) {
-    req.r.table('book').getAll(r.args(r.expr(req.query.id.split('_'))), { index: 'id' })
-        .merge({ book_id: r.row('id') })
-        .pluck('book_id', 'invoice_no', 'cl_id', 'contract_id')
+    req.r.table('book').getAll(r.args(r.expr(req.query.book_id.split('_'))), { index: 'id' })
+        .merge(function (m) {
+            var ship = m.getField('ship');
+            return {
+                book_id: m('id'),
+                ship: r.branch(ship.count().gt(1),
+                    ship.reduce(function (left, right) {
+                        var shipL = left('ship_name').add(' V.', left('ship_voy'));
+                        var shipR = right('ship_name').add(' V.', right('ship_voy'));
+                        return r.branch(left.hasFields('data'),
+                            { data: left('data').add(', ', shipR) },
+                            { data: shipL.add(', ', shipR) }
+                        )
+                    }),
+                    ship(0)('ship_name').add(' V.', ship(0)('ship_voy'))
+                )
+            }
+        })
+        .pluck('book_id', 'invoice_no', 'cl_id', 'contract_id', 'invoice_date', 'cl_no', 'ship', 'ship_lot')
         .orderBy('invoice_no')
         .merge(function (m) {
             return {
@@ -11,10 +27,11 @@ exports.calc = function (req, res) {
                     .merge(function (m2) {
                         return { detail_id: m2('id') }
                     })
-                    .pluck({ 'company': 'company_name_th' },
+                    .pluck({ 'company': 'company_name_th' }, 'hamonize', 'hamonize_id',
                     'detail_id', 'net_weight', 'price_d', 'value_d')
             }
         })
+        .orderBy('invoice_date')
         .run()
         .then(function (data) {
             res.json(data);
@@ -115,8 +132,15 @@ exports.update = function (req, res) {
         res.json('require field id');
     }
 }
-
+exports.delete = function (req, res) {
+    if (req.params.id != '') {
+        updateFee("delete", r.table('fee').getAll(req.params.id), res);
+    } else {
+        res.json('require field id');
+    }
+}
 function updateFee(act, obj, res) {
+    var status = true;
     var book = obj.getField('book')
         .reduce(function (left, right) {
             return left.add(right)
@@ -128,8 +152,8 @@ function updateFee(act, obj, res) {
     var fee;
     if (act == "insert") {
         fee = r.table("fee").insert(obj);
-    } else {
-        fee = r.expr(obj)
+    } else if (act == "update") {
+        fee = r.expr(obj(0))
             .merge(function (m) {
                 return {
                     book: m('book').merge(function (m2) {
@@ -139,11 +163,32 @@ function updateFee(act, obj, res) {
                     })
                 }
             })
+            .do(function (d) {
+                return r.table('fee').get(d('id')).update(d)
+            });
+    } else if ('delete') {
+        status = false;
+        fee = obj(0).delete();
+        book = clearValue(book);
+        detail = clearValue(detail);
+        function clearValue(val) {
+            return val.merge(function (m) {
+                return {
+                    fee_ex_d: 0,
+                    fee_in_b: 0,
+                    value_b: 0,
+                    value_bal_b: 0,
+                    value_fee_b: 0,
+                    value_final_b: 0,
+                    value_tax_b: 0
+                }
+            });
+        }
     }
     var updateBook = book.forEach(function (fe) {
         return r.table('book').get(fe('book_id')).update(
             fe.pluck('fee_ex_d', 'fee_in_b', 'value_b', 'value_bal_b', 'value_d', 'value_fee_b', 'value_final_b', 'value_tax_b')
-                .merge({ fee_status: true })
+                .merge({ fee_status: status })
         )
     });
     var updateDetail = detail.forEach(function (fe) {
@@ -168,4 +213,24 @@ function updateFee(act, obj, res) {
     }, function (err, results) {
         res.json(results.fee);
     });
+}
+exports.approve = function (req, res) {
+    var updata = {};
+    if (typeof req.body.rice_status !== 'undefined') {
+        updata.rice_status = req.body.rice_status;
+    }
+    if (typeof req.body.fin_status !== 'undefined') {
+        updata.fin_status = req.body.fin_status;
+    }
+    if (req.body.id != '' && req.body.id != null && typeof req.body.id !== 'undefined') {
+        req.r.table('fee')
+            .get(req.body.id)
+            .update(updata)
+            .run()
+            .then(function (data) {
+                res.json(data);
+            })
+    } else {
+        res.json('require field "id"');
+    }
 }

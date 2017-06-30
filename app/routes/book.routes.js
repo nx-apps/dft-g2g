@@ -6,10 +6,12 @@ module.exports = function (app) {
     app.post('/insert', controller.insert);
     app.put('/update', controller.update);
     app.delete('/delete/:id', controller.delete);
+    app.put('/approve', controller.approve);
     //book_detail
     app.get('/detail/list', controller.listDetail);
     app.get('/detail', controller.getDetailById);
     app.post('/detail/insert', controller.insertDetail);
     app.put('/detail/update', controller.updateDetail);
     app.delete('/detail/delete/:id', controller.deleteDetail);
+
 }

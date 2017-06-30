@@ -1,0 +1,33 @@
+export const bl = {
+    th:{
+        lot_no:'งวดที่',
+        ship_lot:'ลำดับเรือที่',
+        bl_name_en:'Bill of Lading Number',
+        bl_name_th:'ใบตราส่งสินค้าทางทะเล',
+        bl_no:"BL No.",
+        weight:'ปริมาณ',
+        ton:'ตัน',
+        amount:'จำนวน',
+        money:'เงิน',
+        usd:'USD',
+        baht:'บาท',
+        contract_name:'ชื่อสัญญา',
+        invoice_name:'Commercial Invoice',
+        invoice_no:'Invoice no',
+        date:'Date',
+        invoice_of:'Invoice of',
+        shipped:'Shipped per',
+        pol:'Port of Loading',
+        pod:'Port of Discharge',
+        podeli:'Place of Delivery',
+        by_order:'By order and Account of',
+        mot:'MADE OUT TO',
+        bl:'Bill of Lading Number',
+        dated:'Dated',
+        mark:'Marks & Nos.',
+        quantity:'Quantity',
+        descriptions:'Descriptions',
+        amount_en:'Amount',
+        tools:'เครื่องมือ'
+    }
+}

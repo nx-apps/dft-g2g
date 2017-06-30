@@ -1,43 +1,60 @@
 <link rel="import" href="./../../../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="./../../../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="./../../components/format-number-behavior.html">
 
 <dom-module id="list-of-bl-pm">
   <style include="iron-flex iron-flex-factors iron-flex-alignment gl-styles">
      :host {
       display: block;
     }
-    
     * {
       font-family: 'CSChatThaiUI', sans-serif;
       -webkit-font-smoothing: antialiased;
     }
-    
     .labelSearch {
       font-size: var(--font-size-h4);
       margin: 10px 10px 10px 10px;
     }
-    
     .table-body>tr>td {
       cursor: pointer;
-    }
-    
+    }    
     .title {
       margin: 16px;
       text-align: left;
       font-size: var(--font-size-h4);
-    }
-    
+    }    
     table.gl-table-default {
       width: 98%;
       border: 1px solid #ddd;
       margin-bottom: 15px;
     }
+    .table-head>tr>th:nth-child(1),
+    .table-head>tr>th:nth-child(2) {
+      width: 10%;
+      text-align: center;
+    }
+    .table-body>tr>td:nth-child(1),
+    .table-head>tr>th:nth-child(2) {
+      width: 10%;
+      text-align: center;
+    }
+    .table-head>tr>th:nth-child(4) {
+      width: 20%;
+      text-align: center;
+    }
+    .table-head>tr>th:nth-child(5) {
+      width: 20%;
+      text-align: center;
+    }
+    .text-right{
+      text-align: right;
+    }
   </style>
   <template>
     <div class="flex searchInput horizontal center-justified layout">
-      <div class="flex title">{{localize.text_of_contract}} : [[dataForSelect.nameContract]]</div>
+      <div class="flex title">{{localize.contract_name}} : [[dataForSelect.nameContract]]</div>
       <div class="flex horizontal end-justified layout">
-        <div class="labelSearch">{{localize.label_lot_no}}</div>{{_searchInArray(searchInput)}}
+        <div class="labelSearch">{{localize.ship_lot}}</div>{{_searchInArray(searchInput)}}
         <paper-input label=" " no-label-float value="{{searchInput}}"></paper-input>
         <paper-icon-button icon="search"></paper-icon-button>
         </paper-input>
@@ -47,22 +64,28 @@
       <table class="gl-table-default">
         <thead class="table-head">
           <tr>
-            <th>{{localize.label_lot_no}}</th>
-            <th>{{localize.label_ref_no}}</th>
-            <th>{{localize.label_bill_of_lading}}</th>
-            <th>{{localize.label_place_of_delivery}} </th>
-            <th>{{localize.label_port_of_discharge}}</th>
-
+            <th>{{localize.lot_no}}</th>
+            <th>{{localize.ship_lot}}</th>
+            <th>{{localize.bl_name_en}}</th>
+            <th>{{localize.weight}} ({{localize.ton}}) </th>
+            <th>{{localize.amount}}{{localize.money}} ({{localize.usd}})</th>
+            <th><div style="text-align:center;">{{localize.tools}}</div></th>
           </tr>
         </thead>
         <tbody class="table-body">
           <template is="dom-repeat" items="[[newData]]">
-            <tr data="[[item]]" on-tap="getBlDetail" level="primary">
-              <td>[[item.ship_lot]]</td>
-              <td>[[item.cl_no]]</td>
-              <td>[[item.bl_no]]</td>
-              <td>[[item.deli_port.port_name]] ([[item.deli_port.country_name_en]])</td>
-              <td>[[item.dest_port.port_name]] ([[item.dest_port.country_name_en]])</td>
+            <tr level="primary">
+              <td data="[[item]]" on-tap="getBlDetail">[[item.cl_no]]</td>
+              <td data="[[item]]" on-tap="getBlDetail"><div class="text-right">[[item.ship_lot]]</div></td>
+              <td data="[[item]]" on-tap="getBlDetail">[[item.bl_no]]</td>
+              <td data="[[item]]" on-tap="getBlDetail"><div class="text-right">[[formatNumber(item.net_weight)]]</div></td>
+              <td data="[[item]]" on-tap="getBlDetail"><div class="text-right">[[formatNumber(item.value_d)]]</div></td>
+              <td>
+                <div style="text-align:center;">
+                  <paper-icon-button data="[[item]]" icon="delete" raised on-tap="deteleBL"></paper-icon-button>
+                  <paper-tooltip for="delete" offset="0">ลบ</paper-tooltip>
+                </div>
+              </td>
             </tr>
           </template>
           <template is="dom-if" if="[[_isHave(newData)]]">
@@ -77,10 +100,10 @@
   <script>
     Polymer({
       is: "list-of-bl-pm",
-      behaviors: [ReduxBehavior, g2gLogicBehavior],
+      behaviors: [ReduxBehavior, g2gLogicBehavior, FormatNumberBehavior],
       properties: {
         localize:{
-          statePath : 'i18n.g2g'
+          statePath : 'i18n.bl'
         },
         bl_list:{
             statePath : 'book.list'
@@ -110,8 +133,23 @@
         }
       },
       getBlDetail: function (e) {
-        // console.log(e.currentTarget.data);
         this.fire('get-bl-detail', { detail: e.currentTarget.data });
+      },
+      deteleBL: function(e){
+        // console.log(e.currentTarget.data);
+        var data = {
+          id: e.currentTarget.data.id,
+          book_status : false
+        };
+        this.fire('toast',{ 
+          status:'openDialog',
+          text:'ต้องการลบ Bill of Lading Number นี้ใช่หรือไม่ ?',
+          confirmed: (result) => {
+            if(result === true){
+              this.dispatchAction('BOOK_DELETE', data);
+            }
+          }
+        })
       }
     });
   </script>

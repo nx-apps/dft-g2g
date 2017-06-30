@@ -13,6 +13,7 @@
 <link rel="import" href="./../../../../bower_components/vaadin-date-picker/vaadin-date-picker.html">
 <link rel="import" href="./../../components/format-number-behavior.html">
 <link rel="import" href="./../../components/validateFormBehaviors.html">
+<link rel="import" href="./../../components/g2g-logic-behavior.html">
 
 <dom-module id="commercial-invoice">
   <style include="iron-flex iron-flex-factors iron-flex-alignment gl-styles page-style">
@@ -62,10 +63,10 @@
   <template>
 
     <gl-form-panel set-padding="10px 20px 10px 20px">
-      <template is="dom-if" if="[[!isViewSeleted]]">
+      <template is="dom-if" if="[[!common.isInsert]]">
         <gl-form-panel-head set-border="1px" set-padding="0px 20px 10px 20px">
           <div class="horizontal end-justified layout report">
-            <template is="dom-if" if="[[_checkUndefined(data.invoice_id)]]">
+            <template is="dom-if" if="[[_checkUndefined(data.invoice_no)]]">
               <gl-combo-box class="required" required always-float-label label="รูปแบบ" placeholder="รูปแบบ" value="{{printReport.typeFile}}"
                 item-label-path="report_type" item-value-path="report_type_id" items="{{report.report_type}}">
                  <template>
@@ -78,7 +79,13 @@
               </div>
             </template>
             <div class="icon_print">
-              <icon-button-management is-input-disabled="[[!isInputDisabled]]"></icon-button-management>
+              <!--<icon-button-management is-input-disabled="[[!common.btnDisabled]]"></icon-button-management>-->
+              <div class="horizontal end-justified layout">
+                <paper-icon-button id="edit" class="crud" icon="create" raised on-tap="editInvoice" disabled="[[!commonState.btnDisabled]]"></paper-icon-button>
+                <paper-tooltip for="edit" offset="0">แก้ไข</paper-tooltip>
+                <paper-icon-button id="delete" class="crud" icon="delete" raised on-tap="deteleInvoice" disabled="[[!commonState.btnDisabled]]"></paper-icon-button>
+                <paper-tooltip for="delete" offset="0">ลบ</paper-tooltip>
+              </div>
             </div>
           </div>
         </gl-form-panel-head>
@@ -89,13 +96,13 @@
         <div class="text">{{localize.label_cm_invoice}}</div>
         <gl-grid-row width="{{getWidth}}">
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,2]]">
-            <gl-form-input class="required" required disabled="[[isInputDisabled]]" label="{{localize.label_invoice_no}} :" placeholder="{{localize.text_your_detail}}"
+            <gl-form-input class="required" required disabled="[[common.btnDisabled]]" label="{{localize.label_invoice_no}} :" placeholder="{{localize.text_your_detail}}"
               error-message="{{localize.text_enter_your_detail}}" value="{{data.invoice_no}}"></gl-form-input>
           </gl-grid-col>
           <gl-grid-col width="[[getWidth]]" grid="[[300,0],[500,8]]"></gl-grid-col>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,2]]">
-            <gl-form-input type="date" class="required" required disabled="[[isInputDisabled]]" label="{{localize.label_invoice_date}}" value="{{data.invoice_date}}"></gl-form-input>
-            <!--<vaadin-date-picker class="required" required disabled="[[isInputDisabled]]" label="{{localize.label_invoice_date}}" value="{{data.invoice_date}}"></vaadin-date-picker>-->
+            <gl-form-input type="date" class="required" required disabled="[[common.btnDisabled]]" label="{{localize.label_invoice_date}}" value="{{data.invoice_date}}"></gl-form-input>
+            <!--<vaadin-date-picker class="required" required disabled="[[common.btnDisabled]]" label="{{localize.label_invoice_date}}" value="{{data.invoice_date}}"></vaadin-date-picker>-->
           </gl-grid-col>
         </gl-grid-row>
 
@@ -136,7 +143,7 @@
 
         <gl-grid-row>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,12]]">
-            <gl-form-textarea class="required" required disabled="[[isInputDisabled]]" rows="2" value="{{data.made_out_to}}" placeholder="{{localize.text_your_detail}}"
+            <gl-form-textarea class="required" required disabled="[[common.btnDisabled]]" rows="2" value="{{data.made_out_to}}" placeholder="{{localize.text_your_detail}}"
               label="{{localize.label_made_out_to}} :"></gl-form-textarea>
           </gl-grid-col>
         </gl-grid-row>
@@ -247,11 +254,10 @@
 
 
         <gl-form-panel-footer set-padding="20px 0px 0px 20px">
-
-          <paper-button class="gl-btn-primary" raised on-tap="createInvoice" hidden="[[!isViewSeleted]]">{{localize.btn_add_invoice}}</paper-button>
-          <template is="dom-if" if="[[!_isViewing(isInputDisabled)]]">
-            <paper-button class="gl-btn" on-tap="calcelContract" raised hidden="[[isViewSeleted]]">{{localize.btn_cancel}}</paper-button>
-            <paper-button class="gl-btn-success" raised on-tap="saveInvoice" hidden="[[isViewSeleted]]">{{localize.btn_save_invoice}}</paper-button>
+          <paper-button class="gl-btn-primary" raised on-tap="createInvoice" hidden="[[!common.isInsert]]">{{localize.btn_add_invoice}}</paper-button>
+          <template is="dom-if" if="[[!common.btnDisabled]]">
+            <paper-button class="gl-btn" on-tap="cancelInvoice" raised hidden="[[common.isInsert]]">{{localize.btn_cancel}}</paper-button>
+            <paper-button class="gl-btn-success" raised on-tap="saveInvoice" hidden="[[common.isInsert]]">{{localize.btn_save_invoice}}</paper-button>
           </template>
         </gl-form-panel-footer>
 
@@ -261,7 +267,7 @@
   <script>
     Polymer({
       is: "commercial-invoice",
-      behaviors: [ReduxBehavior, FormatNumberBehavior, nylonBehavior, ValidateFormBehavior],
+      behaviors: [ReduxBehavior, FormatNumberBehavior, nylonBehavior, ValidateFormBehavior, g2gLogicBehavior],
       properties: {
         localize:{
           statePath : 'i18n.g2g'
@@ -285,20 +291,22 @@
               // {report_type:'EXCEL',report_type_id:'excel'}
             ]
           }
+        },
+        common:{
+          statePath : 'commonState.setState'
         }
       },
-      _setDate:function(data){
-        var dateNow = new Date().toISOString().split('T')[0];
-        this.set('data.invoice_date', dateNow);
-      },
       // observers: [
-      //   '_obCheckDataForWrite(data)',
       //   '_changeDataCommercial(data.invoice_date)'
       // ],
       // listeners: {
       //   'edit-input': 'editInput',
       //   'delete-input': 'deteleInvoice'
       // },
+      _setDate:function(data){
+        var dateNow = new Date().toISOString().split('T')[0];
+        this.set('data.invoice_date', dateNow);
+      },
       _getVessel: function (data) {
         if (typeof data !== 'undefined' && data !== 'undefined') {
           return data.map((e) => e.ship_name).join(", ");
@@ -309,30 +317,17 @@
           return data.map((e) => e.inct_name).join(", ");
         }
       },
+      _obSetUpper: function (data) {
+        if(typeof data !== 'undefined'){
+          return data.toUpperCase()
+        }
+      },
       // _changeDataCommercial: function (dateUn) {
       //   this.getDateg2g(dateUn, (date) => {
       //     this.set('data.invoice_date', date);
       //     this.notifyPath('data.invoice_date');
       //   });
       // },
-      _obSetUpper: function (data) {
-        if(typeof data !== 'undefined'){
-          return data.toUpperCase()
-        }
-        // // if (data.cl_quality != null) {
-        // //   this.cl_quality = data.cl_quality.toUpperCase();
-        // // }
-        // try {
-        //   let rice = data.bl_detail;
-        //   if (this.nameRice.length == 0) {
-        //     rice.map((el) => {
-        //       this.nameRice += el.type_rice_name_en.toUpperCase() + ', ';
-        //     })
-        //   }
-        // } catch (e) {
-        //   // console.log(e);
-        // }
-      },
 
       // printInvoice: function () {
       //   // report.report_type
@@ -344,7 +339,7 @@
           id : this.data.id,
           contract_id : this.data.contract_id,
           invoice_no : this.data.invoice_no,
-          invoice_date : this.data.invoice_date,
+          invoice_date : this.data.invoice_date+'T00:00:00+07:00',
           made_out_to : this.data.made_out_to
         }
         // console.log(data);
@@ -364,98 +359,59 @@
             status: 'connectError', text: 'กรุณากรอกข้อมูลให้ครบถ้วน',callback: () => {}
           });
         }
-      //   let book_id = this.data.book_id;
-      //   let contract_id = this._getUrl();
-      //   // this._cleanDataBl(this.data,(data)=>{
-      //   //   data.book_status=true;
-      //   //   data.id=book_id;
-      //   //   // console.log(data);
-      //   //   this.update('./g2g/book/update',data,() => {
-      //   //     this.fire('get-bl-list',{detail:contract_id});
-      //   //   });
-      //   // });
-      //   this.set('data.tags', []);
-      //   this.push('data.tags', this.data.cl_id, this.data.contract_id);
-      //   // console.log(this.data);
-      //   this.data.invoice_status = false;
-      //   this._cleanDataInvoice(this.data, (data) => {
-      //     // console.log(data);
-      //     this.fire('toast', { status: 'load' });
-      //     this.insert('./g2g/invoice/insert', data, () => {
-
-
-      //       this.fire('toast', {
-      //         status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
-      //         callback: () => {
-      //           this.fire('close-drawer', { detail: 'close-drawer' })
-      //           this.fire('get-bl-list', { detail: contract_id });
-      //           this.fire('get-invoice-list', { detail: contract_id });
-      //         }
-      //       });
-      //     });
-      //   });
+    },
+    editInvoice:function(){
+      this.dispatchAction('SET_STATE', {
+          isInsert: false,
+          btnDisabled: false,
+          hiddend: true
+      });
+    },
+      saveInvoice: function () {
+        var data = {
+          id : this.data.id,
+          contract_id : this.data.contract_id,
+          invoice_no : this.data.invoice_no,
+          invoice_date : this.data.invoice_date+'T00:00:00+07:00',
+          made_out_to : this.data.made_out_to
+        }
+        // console.log(data);
+        var check = this.validateForm('.required');
+        if(check === true){
+          this.fire('toast', {
+            status: 'openDialog', 
+            text: 'ต้องการแก้ไขใบแจ้งหนี้ใช่หรือไม่',
+            confirmed: (result) =>{
+              if(result === true){
+                this.dispatchAction('INVOICE_SAVE', data);
+              }
+            }
+          });
+        }else{
+          this.fire('toast', {
+            status: 'connectError', text: 'กรุณากรอกข้อมูลให้ครบถ้วน',callback: () => {}
+          });
+        }
       },
-      // saveInvoice: function () {
-      //   let book_id = this.data.book_id;
-      //   let contract_id = this._getUrl();
-      //   this.set('data.tags', []);
-      //   this.push('data.tags', this.data.cl_id, this.data.contract_id);
-      //   this._cleanDataInvoice(this.data, (data) => {
-      //     data.id = this.data.invoice_id;
-      //     data.contract_id = this.data.contract_id;
-      //     // console.log(11);
-      //     this.fire('toast', {  //คำสั่งสำหรับเปิด toast dialog
-      //       status: 'dialog',
-      //       text: 'ต้องการแก้ไขข้อมูลใช่หรือไม่ ?',
-      //       confirmed: this._saveInvoice.bind(this), //function ที่ใช้รับค่า ปุ่ม
-      //       el: this, // compontents
-      //       data: data // ข้อมูลที่ส่งไป เช่น id ที่จะใช้ลบข้อมูล ใน db
-      //     })
-      //   });
-      // },
-      // _saveInvoice: function (result, detail) {
-      //   if (result == true) {
-      //     // console.log(this.data);
-      //     // console.log(detail.data);
-      //     this.update('./g2g/invoice/update', detail.data, () => {
-      //       // console.log('=>',detail.data);
-      //       this.fire('get-invoice-list', { detail: detail.data.contract_id });
-      //       this.fire('toast', {
-      //         status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
-      //         callback: () => {
-      //           this.editInput();
-      //           //  detail.el.fire('get-contract-detail',{contractId:detail.data.id});
-      //         }
-      //       });
-      //     });
-      //   }
-      // },
-      // deteleInvoice: function () {
-      //   this.fire('toast', {  //คำสั่งสำหรับเปิด toast dialog
-      //     status: 'dialog',
-      //     text: 'ต้องการลบข้อมูลใช่หรือไม่ ?',
-      //     confirmed: this._deleteInvoice.bind(this), //function ที่ใช้รับค่า ปุ่ม
-      //     el: this, // compontents
-      //     data: this.data // ข้อมูลที่ส่งไป เช่น id ที่จะใช้ลบข้อมูล ใน db
-      //   });
-      // },
-      // _deleteInvoice: function (result, detail) {
-      //   if (result == true) {
-      //     let book_id = detail.data.book_id;
-      //     this.delete('./g2g/invoice/delete/id/', detail.data.invoice_id, () => {
-      //       this.fire('get-bl-list', { detail: detail.data.contract_id });
-      //       this.fire('get-invoice-list', { detail: detail.data.contract_id });
-      //       this.fire('close-drawer', { detail: 'close-drawer' });
-      //       this.fire('toast', {
-      //         status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
-      //         callback: () => {
-
-      //           //  detail.el.fire('get-contract-detail',{contractId:detail.data.id});
-      //         }
-      //       });
-      //     });
-      //   }
-      // },
+      deteleInvoice: function () {
+        this.fire('toast', {  //คำสั่งสำหรับเปิด toast dialog
+          status: 'openDialog',
+          text: 'ต้องการลบใบแจ้งหนี้ใช่หรือไม่ ?',
+          confirmed: (result) =>{
+            if(result === true){
+              this.dispatchAction('INVOICE_DELETE', this.data);
+            }
+          }
+        });
+      },
+      cancelInvoice: function(){
+        this.dispatchAction('BOOK_GET_ID_DATA', this.data.id);
+        // this.dispatchAction('SET_STATE', {
+        //     isInsert: false,
+        //     btnDisabled: true,
+        //     hiddend: true
+        // });
+      },
       checkDate: function (data) {
         // console.log(data);
         // this._toWords(data.base.amount_usd);
