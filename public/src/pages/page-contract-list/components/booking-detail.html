@@ -87,8 +87,9 @@
           </gl-grid-col>
 
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-            <gl-combo-box label="{{localize.label_shipping_agent}}" always-float-label item-label-path="shipline_name" disabled="[[commonState.btnDisabled]]"
-              item-value-path="shipline_id" items="{{shiplineList}}" value="{{data.shipline_id}}" on-selected-item-changed="getObjectShipline">
+            <gl-combo-box required class="required" label="{{localize.label_shipping_agent}}" always-float-label item-label-path="shipline_name"
+              disabled="[[commonState.btnDisabled]]" item-value-path="shipline_id" items="{{shiplineList}}" value="{{data.shipline_id}}"
+              on-selected-item-changed="getObjectShipline">
               <template>
                 [[item.shipline_name]]
               </template>
@@ -97,7 +98,7 @@
 
           <template is="dom-repeat" items="[[data.ship]]">
             <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-              [[_getShip(data.shipline_id,shipList)]]
+              [[_getShip(shipList)]]
               <div class="autocomplete-wrapper">
                 <gl-form-input id="ship-[[index]]" required class="required" disabled="[[commonState.btnDisabled]]" always-float-label label="{{localize.label_vessel}} [[_ObcountIndex(index)]]"
                   value="{{item.ship_name}}" on-blur="getShipId" index="[[index]]"></gl-form-input>
@@ -149,8 +150,9 @@
         <!--</gl-grid-col>-->
         <gl-grid-row width="{{getWidth}}">
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,12]]">
-            <gl-combo-box label="ที่อยู่ผู้รับสินค้า (ยัง)" always-float-label item-label-path="notify_name" disabled="[[commonState.btnDisabled]]"
-              item-value-path="notify_id" items="{{notifyList}}" on-selected-item-changed="getObjectNotify" value="{{data.notify_id}}">
+            <gl-combo-box required class="required" label="ที่อยู่ผู้รับสินค้า (ยัง)" always-float-label item-label-path="notify_name"
+              disabled="[[commonState.btnDisabled]]" item-value-path="notify_id" items="{{notifyList}}" on-selected-item-changed="getObjectNotify"
+              value="{{data.notify_id}}">
               <template>
                 [[item.notify_name]]
               </template>
@@ -476,17 +478,19 @@
       // },
       _resiveDataBook: function () {
         return new Promise((res, rej) => {
+          // console.log(this.data);
           let dataResive = this.data
-          // dataResive.ship_name =  this.data.ship_name
+          for (var index = 0; index < this.data.ship.length; index++) {
+            let name = this.shipList.find((item) => item.ship_name === this.data.ship[index].ship_name)
+            this.data.ship[index].ship_id = name.ship_id
+          }
           dataResive.shipline = this.dataShow.shipline
           dataResive.notify_party = this.dataShow.notify
           dataResive.surveyor = this.dataShow.surveyor
           dataResive.load_port = this.dataShow.load_port
           dataResive.deli_port = this.dataShow.deli_port
           dataResive.dest_port = this.dataShow.dest_port
-          dataResive.ship = ''
-          // dataResive.id = this.data.id,
-
+          dataResive.ship = this.data.ship
           delete dataResive.date_updated
           delete dataResive.date_created
           res(dataResive)
@@ -494,18 +498,18 @@
       },
       _resiveFormBook: function () {
         return new Promise((res, rej) => {
-          // if (this.validateForm('.required')) {
-          this._resiveDataBook().then((data) => {
-            res(data)
-          })
-          // } else {
-          //   this.fire('toast', {
-          //     status: 'connectError', text: 'กรุณากรอกข้อมูลให้ครบทุกช่อง', //คำสั่งสำหรับเปิด toast error
-          //     callback: function () {
-          //       rej('error')
-          //     }
-          //   })
-          // }
+          if (this.validateForm('.required')) {
+            this._resiveDataBook().then((data) => {
+              res(data)
+            })
+          } else {
+            this.fire('toast', {
+              status: 'connectError', text: 'กรุณากรอกข้อมูลให้ครบทุกช่อง', //คำสั่งสำหรับเปิด toast error
+              callback: function () {
+                rej('error')
+              }
+            })
+          }
         })
       },
       insertBook: function () {
@@ -513,8 +517,28 @@
         // console.log(this.dataShow);
         this._resiveFormBook()
           .then((res) => {
-            console.log(this.data);
-            console.log(res);
+            // console.log(this.data);
+            this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
+            console.log(res.cl_id);
+            this.dispatchAction('POST_CONFIRM', res)
+              .then((response) => {
+                let url = { cl_id: res.cl_id }
+                this.dispatchAction('GET_BOOK_LIST', this.genUrl(url));
+                this.dispatchAction('_list-book', 'list-of-booking');
+                this.fire('toast', {
+                  status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
+                  callback: () => {
+                    this.queryFrom('.required').map((el) => { el.reset(); });
+                    // this.backPage()
+                  }
+                });
+              })
+
+            // this.dispatchAction('POST_BOOK',res)
+            // console.log(this.data.ship);
+          })
+          .catch((error) => {
+            console.log(error);
           })
         //   let ship_lot = this.data.ship_lot
         //   // console.log(this.dataBookNo);
@@ -788,10 +812,12 @@
         // console.log(shipline_id, dataForSelect);
         // console.log(this.data);
         // let shipline_id = e.detail.value;
-        if (shipline_id) {
+        // if (shipline_id) {
+
+        // this.dataForSelect.ships = ships;
+        // this.notifyPath('dataForSelect.ships');
+        try {
           let ships = this.shipList
-          // this.dataForSelect.ships = ships;
-          // this.notifyPath('dataForSelect.ships');
           this.async(() => {
             let comboboxs, arrForItem, itemif;
             for (var i = 0; i < this.data.ship.length; i++) {
@@ -815,7 +841,11 @@
 
             }
           }, 1);
+        } catch (e) {
+
         }
+
+        // }
       },
       // cancelInsertShipment: function () {
       //   //shipment-detail.html

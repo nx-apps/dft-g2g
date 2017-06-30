@@ -138,7 +138,18 @@
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
           <gl-form-input type="date" always-float-label class="required" required disabled="[[_checkArrayTrue(commonState.btnDisabled,data.contract_status)]]"
             label="{{localize.label_date}}" error-message="{{localize.label_error_date}}" value="{{data.contract_date}}">
-            </vaadin-date-picker>
+            </gl-form-input>
+        </gl-grid-col>
+      </gl-grid-row>
+      <gl-grid-row width="{{getWidth}}">
+        <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,9]]">
+          <gl-form-input type="number" required class="required" disabled="[[_checkArrayTrue(commonState.btnDisabled,data.contract_status)]]" error-message="{{localize.label_error_contract}}"
+            label="เลขที่สัญญา (ยัง)" value="{{data.contract_no}}" placeholder="เลขที่สัญญา (ยัง)"></gl-form-input>
+        </gl-grid-col>
+        <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
+          <!--<gl-form-input type="date" always-float-label class="required" required disabled="[[_checkArrayTrue(commonState.btnDisabled,data.contract_status)]]"
+            label="{{localize.label_date}}" error-message="{{localize.label_error_date}}" value="{{data.contract_date}}">
+            </vaadin-date-picker>-->
         </gl-grid-col>
       </gl-grid-row>
 
