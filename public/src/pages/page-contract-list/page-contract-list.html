@@ -425,7 +425,7 @@ hip
             },
             _getListShipment: function (e) {
                 //     // 
-                console.log(e.detail);
+                // console.log(e.detail);
                 let url = { contract_id: e.detail.contract_id, status: true }
                 this.dispatchAction('GET_CONFIRM_LIST', this.genUrl(url))
                 this.dispatchAction('GET_HAMONIZE_OF_CONTRACT', this.genUrl(url))

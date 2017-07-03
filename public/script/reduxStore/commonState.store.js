@@ -5,6 +5,7 @@ const initialState = {
     setState:{},
     contractId:{},
     confirmId:{},
+    bookId:{},
     contryNameEn:{}
 }
 export function commonStateReducer(state = initialState, action) {
@@ -15,6 +16,8 @@ export function commonStateReducer(state = initialState, action) {
             return Object.assign({}, state, { contractId: action.payload });
         case 'SET_CONFIRM_ID':
             return Object.assign({}, state, { confirmId: action.payload });
+        case 'SET_BOOK_ID':
+            return Object.assign({}, state, { bookId: action.payload });
         case 'SET_COUNTRY_NAME_EN':
             return Object.assign({}, state, { contryNameEn: action.payload });
         default:
@@ -35,8 +38,13 @@ export function commonStateAction(store) {
             // return axios.get('/external/upload/list/' + ref + '/' + com)
         },
         SET_CONFIRM_ID: function (data) {
-            // console.log(data);
+            console.log(data);
             store.dispatch({ type: 'SET_CONFIRM_ID', payload: data })
+            // return axios.get('/external/upload/list/' + ref + '/' + com)
+        },
+        SET_BOOK_ID: function (data) {
+            // console.log(data);
+            store.dispatch({ type: 'SET_BOOK_ID', payload: data })
             // return axios.get('/external/upload/list/' + ref + '/' + com)
         },
         SET_COUNTRY_NAME_EN: function (data) {

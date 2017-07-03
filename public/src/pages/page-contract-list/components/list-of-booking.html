@@ -55,7 +55,7 @@
     <iron-pages selected="{{pageSelected}}" attr-for-selected="name">
       <div name="list-of-booking">
         <!--<list-of-booking-exporter></list-of-booking-exporter>-->
-        <gl-combo-box placeholder="สัญญาย่อย" items="{{confirmLetterlist}}" item-label-path="label" label="สัญญาย่อย" item-value-path="id"
+        <gl-combo-box placeholder="งวดที่ (ยัง)" items="{{confirmLetterlist}}" item-label-path="label" label="งวดที่ (ยัง)" item-value-path="id"
           on-value-changed="getShowByBook" value="{{cl_id}}" on-selected-item-changed="getObjectCl">
           <template>
             [[item.label]]
@@ -186,6 +186,8 @@
         if (e.detail.value !== null) {
           this.set('dataShow', e.detail.value)
           // console.log(e.detail.value);
+          let clData = { cl_id: e.detail.value.id, cl_no: e.detail.value.cl_no }
+          this.dispatchAction('SET_CONFIRM_ID', clData)
         }
 
       },
@@ -215,7 +217,8 @@
             let url = { cl_id: e.detail.value }
             this.dispatchAction('GET_BOOK_LIST', this.genUrl(url));
             this.dispatchAction('GET_BOOK_HAMONIZE_LIST', this.genUrl(url));
-        // GET_BOOK_HAMONIZE_LIST
+
+            // GET_BOOK_HAMONIZE_LIST
           } else {
             this.dispatchAction('CLEAR_BOOK_LIST')
           }
@@ -251,7 +254,7 @@
 
       _changeIronPage: function (data) {
         this.set('pageSelected', data.detail)
-        console.log(data.detail);
+        // console.log(data.detail);
       },
       createBooking: function () {
 
@@ -263,13 +266,13 @@
         }
         let data = {
           contract_id: this.contractId.contract_id,
-          contract_no : this.contractId.contract_no,
+          contract_no: this.contractId.contract_no,
           cl_id: this.dataShow.id,
           cl_no: this.dataShow.cl_no,
-          ship_lot: ship_lot+1
+          ship_lot: ship_lot + 1
         }
         // console.log(data);
-        this.dispatchAction('CLEAR_BOOK_DETAIL',data)
+        this.dispatchAction('CLEAR_BOOK_DETAIL', data)
         this.dispatchAction('SET_STATE', {
           isInsert: true,
           btnDisabled: false,
@@ -278,17 +281,19 @@
         this.async(() => {
           this.fire('toast', {
             status: 'success', text: 'โหลดสำเร็จ', callback: () => {
-              this.set('pageSelected','list-of-booking-add')
+              this.set('pageSelected', 'list-of-booking-add')
             }
           })
         }, 500)
       },
-      getBookingExporter: function(e){
-        // console.log(e.currentTarget.data);
+      getBookingExporter: function (e) {
+        console.log(e.currentTarget.data);
         this.dispatchAction('GET_COMMON_EXPORTER_LIST')
-        
+
         // console.log(1111);
         let url = { book_id: e.currentTarget.data.id }
+        let bookData = { book_id: e.currentTarget.data.id, book_no: e.currentTarget.data.book_no }
+        this.dispatchAction('SET_BOOK_ID', bookData)
         this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
         this.dispatchAction('SET_STATE', {
           isInsert: false,

@@ -586,16 +586,26 @@
             this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
             this.dispatchAction('POST_CONFIRM', res)
               .then((response) => {
-                let url = { contract_id: this.contractId.contract_id, status: 'all' }
-                this.dispatchAction('GET_CONFIRM_LIST', this.genUrl(url))
-                this.dispatchAction('GET_CONTRACT_OF_BUYER', this.getCookieBhv("buyerId"));
-                this.fire('toast', {
-                  status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
-                  callback: () => {
-                    this.queryFrom('.required').map((el) => { el.reset(); });
-                    this.backPage()
-                  }
-                });
+                if (response.data.inserted !== undefined && response.data.inserted.length !== 0) {
+
+                  let url = { contract_id: this.contractId.contract_id, status: 'all' }
+                  this.dispatchAction('GET_CONFIRM_LIST', this.genUrl(url))
+                  this.dispatchAction('GET_CONTRACT_OF_BUYER', this.getCookieBhv("buyerId"));
+                  this.fire('toast', {
+                    status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
+                    callback: () => {
+                      this.queryFrom('.required').map((el) => { el.reset(); });
+                      this.backPage()
+                    }
+                  })
+                } else {
+                  // console.log(1111);
+                  this.fire('toast', {
+                    status: 'connectError', text: response.data, //คำสั่งสำหรับเปิด toast error
+                    callback: () => {
+                    }
+                  })
+                }
               })
           })
           .catch((error) => {
@@ -650,20 +660,29 @@
                   this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
                   this.dispatchAction('PUT_CONFIRM', res)
                     .then((response) => {
-                      let url = { contract_id: this.contractId.contract_id, status: 'all' }
-                      this.dispatchAction('GET_CONFIRM_LIST', this.genUrl(url))
-                      this.dispatchAction('GET_CONTRACT_OF_BUYER', this.getCookieBhv("buyerId"));
-                      this.queryFrom('.required').map((el) => { el.reset(); });
-                      this.dispatchAction('SET_STATE', {
-                        isInsert: false,
-                        btnDisabled: true,
-                        hiddend: true
-                      })
-                      this.fire('toast', {
-                        status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
-                        callback: () => {
-                        }
-                      });
+                      if (response.data.replaced !== undefined && response.data.replaced.length !== 0) {
+                        let url = { contract_id: this.contractId.contract_id, status: 'all' }
+                        this.dispatchAction('GET_CONFIRM_LIST', this.genUrl(url))
+                        this.dispatchAction('GET_CONTRACT_OF_BUYER', this.getCookieBhv("buyerId"));
+                        this.queryFrom('.required').map((el) => { el.reset(); });
+                        this.dispatchAction('SET_STATE', {
+                          isInsert: false,
+                          btnDisabled: true,
+                          hiddend: true
+                        })
+                        this.fire('toast', {
+                          status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
+                          callback: () => {
+                          }
+                        })
+                      } else {
+                        // console.log(1111);
+                        this.fire('toast', {
+                          status: 'connectError', text: response.data, //คำสั่งสำหรับเปิด toast error
+                          callback: () => {
+                          }
+                        })
+                      }
                     })
                 })
                 .catch((error) => {
@@ -724,20 +743,29 @@
                   this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
                   this.dispatchAction('PUT_CONFIRM', res)
                     .then((response) => {
-                      let url = { contract_id: this.contractId.contract_id, status: 'all' }
-                      this.dispatchAction('GET_CONFIRM_LIST', this.genUrl(url))
-                      this.dispatchAction('GET_CONTRACT_OF_BUYER', this.getCookieBhv("buyerId"));
-                      this.queryFrom('.required').map((el) => { el.reset(); });
-                      this.dispatchAction('SET_STATE', {
-                        isInsert: false,
-                        btnDisabled: true,
-                        hiddend: true
-                      })
-                      this.fire('toast', {
-                        status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
-                        callback: () => {
-                        }
-                      });
+                      if (response.data.replaced !== undefined && response.data.replaced.length !== 0) {
+                        let url = { contract_id: this.contractId.contract_id, status: 'all' }
+                        this.dispatchAction('GET_CONFIRM_LIST', this.genUrl(url))
+                        this.dispatchAction('GET_CONTRACT_OF_BUYER', this.getCookieBhv("buyerId"));
+                        this.queryFrom('.required').map((el) => { el.reset(); });
+                        this.dispatchAction('SET_STATE', {
+                          isInsert: false,
+                          btnDisabled: true,
+                          hiddend: true
+                        })
+                        this.fire('toast', {
+                          status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
+                          callback: () => {
+                          }
+                        })
+                      } else {
+                        // console.log(1111);
+                        this.fire('toast', {
+                          status: 'connectError', text: response.data, //คำสั่งสำหรับเปิด toast error
+                          callback: () => {
+                          }
+                        })
+                      }
                     })
                 })
                 .catch((error) => {
@@ -794,15 +822,24 @@
               this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
               this.dispatchAction('DELETE_CONFIRM', this.data.id)
                 .then((response) => {
-                  this.dispatchAction('GET_CONTRACT_OF_BUYER', this.getCookieBhv("buyerId"));
-                  let url = { contract_id: this.contractId.contract_id, status: 'all' }
-                  this.dispatchAction('GET_CONFIRM_LIST', this.genUrl(url))
-                  this.fire('toast', {
-                    status: 'success', text: 'ลบสำเร็จ',  // คำสั่งสำหรับเปิด toast success
-                    callback: () => {
-                      this.backPage()
-                    }
-                  })
+                  if (response.data.deleted !== undefined && response.data.deleted.length !== 0) {
+                    this.dispatchAction('GET_CONTRACT_OF_BUYER', this.getCookieBhv("buyerId"));
+                    let url = { contract_id: this.contractId.contract_id, status: 'all' }
+                    this.dispatchAction('GET_CONFIRM_LIST', this.genUrl(url))
+                    this.fire('toast', {
+                      status: 'success', text: 'ลบสำเร็จ',  // คำสั่งสำหรับเปิด toast success
+                      callback: () => {
+                        this.backPage()
+                      }
+                    })
+                  } else {
+                    // console.log(1111);
+                    this.fire('toast', {
+                      status: 'connectError', text: response.data, //คำสั่งสำหรับเปิด toast error
+                      callback: () => {
+                      }
+                    })
+                  }
                 })
             }
           }
