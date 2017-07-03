@@ -77,9 +77,7 @@ exports.update = function (req, res) {
 }
 exports.delete = function (req, res) {
     var r = req.r;
-    var result = { result: false, message: null, id: null };
     if (req.params.id != '' || req.params.id != null) {
-        result.id = req.params.id;
         var q = r.table("book").get(req.params.id).do(function (result) {
             return r.branch(
                 result('book_status').eq(false)
@@ -92,19 +90,13 @@ exports.delete = function (req, res) {
         })
         q.run()
             .then(function (response) {
-                result.message = response;
-                if (response.errors == 0) {
-                    result.result = true;
-                }
-                res.json(result);
+                res.json(response);
             })
             .error(function (err) {
-                result.message = err;
-                res.json(result);
+                res.json(err);
             })
     } else {
-        result.message = 'require field id';
-        res.json(result);
+        res.json('require field id');
     }
 }
 exports.approve = function (req, res) {
@@ -218,7 +210,6 @@ exports.getDetailById = function (req, res) {
 exports.insertDetail = function (req, res) {
     var valid = req.ajv.validate('g2g.book_detail', req.body);
     var r = req.r;
-    var result = { result: false, message: null, id: null };
     if (valid) {
         var obj = Object.assign(req.body, {
             date_created: r.now().inTimezone('+07'),
@@ -230,28 +221,19 @@ exports.insertDetail = function (req, res) {
             .insert(obj)
             .run()
             .then(function (response) {
-                result.message = response;
-                if (response.errors == 0) {
-                    result.result = true;
-                    result.id = response.generated_keys;
-                }
-                res.json(result);
+                res.json(response);
             })
             .error(function (err) {
-                result.message = err;
-                res.json(result);
+                res.json(err);
             })
     } else {
-        result.message = req.ajv.errorsText()
-        res.json(result);
+        res.json(req.ajv.errorsText());
     }
 }
 exports.updateDetail = function (req, res) {
     var valid = req.ajv.validate('g2g.book_detail', req.body);
     var r = req.r;
-    var result = { result: false, message: null, id: null };
     if (req.body.id != '' && req.body.id != null && typeof req.body.id != 'undefined') {
-        result.id = req.body.id;
         if (valid) {
             var obj = Object.assign(req.body, {
                 date_updated: r.now().inTimezone('+07'),
@@ -262,30 +244,21 @@ exports.updateDetail = function (req, res) {
                 .update(obj)
                 .run()
                 .then(function (response) {
-                    result.message = response;
-                    if (response.errors == 0) {
-                        result.result = true;
-                    }
-                    res.json(result);
+                    res.json(response);
                 })
                 .error(function (err) {
-                    result.message = err;
-                    res.json(result);
+                    res.json(err);
                 })
         } else {
-            result.message = req.ajv.errorsText()
-            res.json(result);
+            res.json(req.ajv.errorsText());
         }
     } else {
-        result.message = 'require field id';
-        res.json(result);
+        res.json('require field id');
     }
 }
 exports.deleteDetail = function (req, res) {
     var r = req.r;
-    var result = { result: false, message: null, id: null };
     if (req.params.id != '' || req.params.id != null) {
-        result.id = req.params.id;
         var q = r.table("book_detail").get(req.params.id).do(function (result) {
             return r.branch(
                 r.table('book').get(result('book_id')).getField('book_status').eq(false)
@@ -295,18 +268,12 @@ exports.deleteDetail = function (req, res) {
         })
         q.run()
             .then(function (response) {
-                result.message = response;
-                if (response.errors == 0) {
-                    result.result = true;
-                }
-                res.json(result);
+                res.json(response);
             })
             .error(function (err) {
-                result.message = err;
-                res.json(result);
+                res.json(err);
             })
     } else {
-        result.message = 'require field id';
-        res.json(result);
+        res.json('require field id');
     }
 }
