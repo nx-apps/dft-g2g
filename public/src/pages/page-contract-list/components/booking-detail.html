@@ -68,24 +68,25 @@
           </gl-grid-col>
         </gl-grid-row>
         <gl-grid-row width="{{getWidth}}">
-          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+          <!--<gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
             <gl-form-input required class="required" label="{{localize.label_booking_no}}" always-float-label placeholder="{{localize.label_booking_no}}"
               value="{{data.book_no}}" disabled="[[commonState.btnDisabled]]"></gl-form-input>
-          </gl-grid-col>
+          </gl-grid-col>-->
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
             <gl-form-input required class="required" label="{{localize.label_bill_of_lading}}" always-float-label placeholder="{{localize.label_bill_of_lading}}"
               value="{{data.bl_no}}" disabled="[[commonState.btnDisabled]]"></gl-form-input>
           </gl-grid-col>
 
-          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-            <!--<gl-combo-box label="ที่อยู่ผู้รับสินค้า (ยัง)" always-float-label item-label-path="notify_name" disabled="[[commonState.btnDisabled]]"
+          <!--<gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">-->
+          <!--<gl-combo-box label="ที่อยู่ผู้รับสินค้า (ยัง)" always-float-label item-label-path="notify_name" disabled="[[commonState.btnDisabled]]"
               item-value-path="notify_id" items="{{notifyList}}" value="{{data.notify_id}}">
               <template>
                 [[item.notify_name]]
               </template>
             </gl-combo-box>-->
-          </gl-grid-col>
-
+          <!--</gl-grid-col>-->
+        </gl-grid-row>
+        <gl-grid-row>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
             <gl-combo-box required class="required" label="{{localize.label_shipping_agent}}" always-float-label item-label-path="shipline_name"
               disabled="[[commonState.btnDisabled]]" item-value-path="shipline_id" items="{{shiplineList}}" value="{{data.shipline_id}}"
@@ -266,7 +267,11 @@
         </template>
         <template is="dom-if" if="[[commonState.btnDisabled]]">
           <paper-button class="gl-btn-default" raised on-tap="cancelInsertShipment"> {{localize.btn_back_ward}}</paper-button>
-          <paper-button class="gl-btn-info" raised on-tap="confirmDrawer" hidden="[[data.contract_status]]">{{localize.btn_confirm}}</paper-button>
+          <paper-button class="gl-btn-info" raised on-tap="confirmDrawer" hidden="[[data.book_status]]">{{localize.btn_confirm}}</paper-button>
+        </template>
+
+        <template is="dom-if" if="[[data.book_status]]">
+          <paper-button class="gl-btn-danger  " raised on-tap="cancelconfirmDrawer" hidden="[[data.invoice_status]]">ยกเลิกการยืนยัน</paper-button>
         </template>
       </div>
   </template>
@@ -712,6 +717,132 @@
           }
         })
       },
+      confirmDrawer: function () {
+        this.fire('toast', {
+          status: 'openDialog',
+          text: 'ต้องการยืนยันข้อมูลใช่หรือไม่ ?',
+          confirmed: (result) => {
+            if (result == true) {
+              this._resiveFormBook()
+                .then((res) => {
+                  res.book_status = true
+                  // console.log(res);
+                  this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
+                  this.dispatchAction('PUT_BOOK_APPROVE', res)
+                    .then((response) => {
+                      if (response.data.replaced !== undefined && response.data.replaced.length !== 0) {
+                        // this.dispatchAction('GET_CONTRACT_OF_BUYER', res.buyer_id);
+                        // this.dispatchAction('GET_CONTRACT', res.id)
+                        this.queryFrom('.required').map((el) => { el.reset(); });
+                        this.dispatchAction('SET_STATE', {
+                          isInsert: false,
+                          btnDisabled: true,
+                          hiddend: true
+                        })
+                        this.fire('toast', {
+                          status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
+                          callback: () => {
+                            let url = { cl_id: this.data.cl_id }
+                            let urlBook = { id: this.data.id }
+                            this.dispatchAction('GET_BOOK_DETAIL', this.genUrl(urlBook))
+                            this.dispatchAction('GET_BOOK_LIST', this.genUrl(url));
+                            this.dispatchAction('GET_COMMON_SHIP_LIST');
+                          }
+                        })
+                      } else {
+                        // console.log(1111);
+                        this.fire('toast', {
+                          status: 'connectError', text: response.data, //คำสั่งสำหรับเปิด toast error
+                          callback: () => {
+                          }
+                        })
+                      }
+                    })
+                  // if (response.data.replaced !== undefined && response.data.replaced.length !== 0) {
+                  //       // this.dispatchAction('GET_CONTRACT_OF_BUYER', res.buyer_id);
+                  //       // this.dispatchAction('GET_CONTRACT', res.id)
+                  //       this.queryFrom('.required').map((el) => { el.reset(); });
+                  //       this.dispatchAction('SET_STATE', {
+                  //         isInsert: false,
+                  //         btnDisabled: true,
+                  //         hiddend: true
+                  //       })
+                  //       this.fire('toast', {
+                  //         status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
+                  //         callback: () => {
+                  //           let url = { cl_id: this.data.cl_id }
+                  //           let urlBook = { id: this.data.id }
+                  //           this.dispatchAction('GET_BOOK_EXPORTER_DETAIL', this.genUrl(urlBook))
+                  //           this.dispatchAction('GET_BOOK_LIST', this.genUrl(url));
+                  //         }
+                  //       })
+                  //     } else {
+                  //       // console.log(1111);
+                  //       this.fire('toast', {
+                  //         status: 'connectError', text: response.data, //คำสั่งสำหรับเปิด toast error
+                  //         callback: () => {
+                  //         }
+                  //       })
+                  //     }
+
+                })
+                .catch((error) => {
+                  console.log(error);
+                });
+            }
+          }
+        })
+      },
+      cancelconfirmDrawer: function () {
+        this.fire('toast', {
+          status: 'openDialog',
+          text: 'ต้องการยกเลิกยืนยันข้อมูลใช่หรือไม่ ?',
+          confirmed: (result) => {
+            if (result == true) {
+              this._resiveFormBook()
+                .then((res) => {
+                  res.book_status = false
+                  // console.log(res);
+                  this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
+                  this.dispatchAction('PUT_BOOK_APPROVE', res)
+                    .then((response) => {
+                      if (response.data.replaced !== undefined && response.data.replaced.length !== 0) {
+                        // this.dispatchAction('GET_CONTRACT_OF_BUYER', res.buyer_id);
+                        // this.dispatchAction('GET_CONTRACT', res.id)
+                        this.queryFrom('.required').map((el) => { el.reset(); });
+                        this.dispatchAction('SET_STATE', {
+                          isInsert: false,
+                          btnDisabled: true,
+                          hiddend: true
+                        })
+                        this.fire('toast', {
+                          status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
+                          callback: () => {
+                            let url = { cl_id: this.data.cl_id }
+                            let urlBook = { id: this.data.id }
+                            this.dispatchAction('GET_BOOK_DETAIL', this.genUrl(urlBook))
+                            this.dispatchAction('GET_BOOK_LIST', this.genUrl(url));
+                            this.dispatchAction('GET_COMMON_SHIP_LIST');
+                          }
+                        })
+                      } else {
+                        // console.log(1111);
+                        this.fire('toast', {
+                          status: 'connectError', text: response.data, //คำสั่งสำหรับเปิด toast error
+                          callback: () => {
+                          }
+                        })
+                      }
+                    })
+
+                })
+                .catch((error) => {
+                  console.log(error);
+                });
+            }
+          }
+        })
+      },
       // _deleteBooking: function (result, detail) {
       //   if (result == true) {
       //     this.delete('./g2g/book/delete/id/', detail.data.id, () => {
@@ -811,14 +942,14 @@
       //     });
       //   }
       // },
-      _oBChangeBooking: function (book_no) {
-        if (typeof book_no !== 'undefined' && book_no !== 'undefined') {
-          if (this.data.bl_no.length < this.data.book_no.length) {
-            this.data.bl_no = book_no;
-            this.notifyPath('data.bl_no')
-          }
-        }
-      },
+      // _oBChangeBooking: function (book_no) {
+      //   if (typeof book_no !== 'undefined' && book_no !== 'undefined') {
+      //     if (this.data.bl_no.length < this.data.book_no.length) {
+      //       this.data.bl_no = book_no;
+      //       this.notifyPath('data.bl_no')
+      //     }
+      //   }
+      // },
       _oBChangePod: function (dest_port_id) {
         this.data.deli_port_id = dest_port_id;
         this.notifyPath('data.deli_port_id');

@@ -95,7 +95,6 @@
                 },
                 crumbs: {
                     statePath: 'commonState.breadCrumbs',
-                    observer:'setddd'
                 },
                 // feeList: {
                 //     type: Object
@@ -129,9 +128,6 @@
                 //     type: Object,
                 //     value: { listOfConfirm: 'listOfConfirm', listOfShipment: 'listOfShipment' }
                 // }
-            },
-            setddd(d){
-                console.log(d)
             },
             listeners: {
                 // 'refresh-contract': '_getContractList',
@@ -289,8 +285,8 @@
                 // ]
                 // this.setBreadcrumbs(datass)
                 // this.g2gPageSeleted = 'addContract';
-                // this.titlePanelRight = 'เพิ่มข้อมูลผู้สั่งซื้อ'
-                
+                this.titlePanelRight = 'เพิ่มข้อมูลผู้สั่งซื้อ'
+                this.g2gPageSeleted = 'addContract'
                 this.fire('toast', { status: 'load' });
                 this.dispatchAction('SET_STATE', {
                     isInsert: true,
@@ -316,7 +312,7 @@
                 this.g2gPageSeleted = 'contractDetail'
                 // // console.log(typeof e.detail.data === 'undefined');
                 // if (typeof e.detail.data !== 'undefined') {
-                // this.titlePanelRight = 'ข้อมูลผู้สั่งซื้อ : ' + e.detail.data.contract_name
+                this.titlePanelRight = 'สัญญาที่  : ' + e.detail.contract_no
                 // let datass = [
                 //     {
                 //     label: e.detail.data.contract_name,
@@ -345,6 +341,7 @@
                 }, 500)
             },
             _getListConfirm: function (e) {
+                // console.log(e.detail)
                 let url = { contract_id: e.detail.contract_id, status: 'all' }
                 this.dispatchAction('SET_BREADCRUMBS',[{
                         label: 'สัญญาที่ '+e.detail.contract_no ,
@@ -361,7 +358,7 @@
                 //     this.g2gPageSeleted = 'listOfConfirm';
                 //     if (typeof e.detail.contractId == "undefined") {
                 //     // console.log(e.detail.data)
-                //     this.titlePanelRight = 'รายละเอียดสัญญา : ' + e.detail.data.contract_name
+                    this.titlePanelRight = 'สัญญาที่  : ' + e.detail.contract_no
                 //     let datass = [
                 //         {
                 //         label: e.detail.data.contract_name,
@@ -456,7 +453,7 @@
                 //     // console.log(e.detail.contractId);
                 //     if (typeof e.detail.contractId == "undefined") {
                 //     this.set('pageSelected', 'list-of-booking')
-                //     this.titlePanelRight = 'รายการส่งมอบสินค้า : ' + e.detail.data.contract_name
+               this.titlePanelRight = 'สัญญาที่  : ' + e.detail.contract_no
                 //     this.set('dataForSelected.dataForBooking.contract_name', e.detail.data.contract_name)
                 //     // console.log(this.dataForSelected.dataForBooking)
                 //     // console.log(e.detail.data.book);

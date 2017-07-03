@@ -3,6 +3,11 @@
 <link rel="import" href="./../../../../bower_components/gl-grid/gl-grid-col.html">
 <link rel="import" href="./../../../../bower_components/gl-form/gl-form-input.html">
 <link rel="import" href="./../../../../bower_components/vaadin-date-picker/vaadin-date-picker.html">
+
+<link rel="import" href="./../../../../bower_components/iron-collapse/iron-collapse.html">
+
+<link rel="import" href="./../../../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="./../../../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="./../../../../bower_components/gl-form/gl-combo-box.html">
 <link rel="import" href="./../../../../bower_components/gl-form/gl-form-textarea.html">
 <link rel="import" href="./../../../../bower_components/gl-form/gl-form-panel-footer.html">
@@ -117,7 +122,23 @@
     }
 
     div.sub-item {
-      margin: 5px 20px;
+      margin: 5px 50px;
+      /*display: block;*/
+      /*width: 100%;*/
+    }
+
+    span.namesub {
+      display: inline-block;
+      /*background-color: blue;*/
+      width: 70%;
+    }
+
+    span.year {
+      display: inline-block;
+      width: 20%;
+      /*background-color: red;*/
+      /*display: inline;*/
+      /*float: right;*/
     }
   </style>
   <template>
@@ -252,21 +273,49 @@
               </template>
             </tbody>
           </table>-->
+          <span class="namesub">
+                      ชื่อข้าว
+                      </span>
+          <span class="year">
+                        ปีที่ตั้งรหัส Hamonize 
+                        <gl-combo-box class="required" required disabled="[[commonState.btnDisabled]]" label="รหัส Hamonize (ยัง)"
+            error-message="{{localize.label_error_payment_type}}" placeholder="รหัส Hamonize (ยัง)" items="[[hamonizeYear.year]]"
+            item-label-path="label" item-value-path="label" on-value-changed="searchHamonizeInYear">
+            <template>
+              [[item.label]]
+            </template>
+          </gl-combo-box>
+                      </span>
           <div class="main">
+
             <template is="dom-repeat" items={{hamonizeList}} index-as="indexroot">
               <div class="item">
+
+                <iron-icon icon="chevron-right" index="[[indexroot]]" on-tap="toggle"></iron-icon>
+
                 <paper-checkbox checked="{{item.check}}" id="{{indexroot}}" on-tap="getCheckChild" disabled="[[commonState.btnDisabled]]">
                   <!--{{item.check}}||-->
                   [[item.name_th]] || [[item.value]]
                 </paper-checkbox>
-                <template is="dom-repeat" items={{item.sub}} as="subChild">
-                  <div class="sub-item">
-                    <paper-checkbox id="{{indexroot}}" checked="{{subChild.check}}" on-tap="getSelect" disabled="[[commonState.btnDisabled]]">
-                      <!--{{subChild.check}}|| -->
-                      [[subChild.hamonize_th]] || [[subChild.hamonize_year]]
-                      <!--|| [[item.value]]</paper-checkbox>-->
+                <iron-collapse id="collapse-[[indexroot]]" toggle="true">
+                  <div>
+                    <template is="dom-repeat" items={{item.sub}} as="subChild">
+                      <div class="sub-item" hidden="{{subChild.hiddend}}">
+                        <paper-checkbox id="{{indexroot}}" checked="{{subChild.check}}" on-tap="getSelect" disabled="[[commonState.btnDisabled]]">
+                          <!--{{subChild.check}}|| -->
+
+                          <!--|| [[item.value]]-->
+                        </paper-checkbox>
+                        <span class="namesub">
+                        [[subChild.hamonize_th]]//{{item.hiddend}}//
+                      </span>
+                        <span class="year">
+                        [[subChild.hamonize_year]]
+                      </span>
+                      </div>
+                    </template>
                   </div>
-                </template>
+                </iron-collapse>
               </div>
               <br>
             </template>
@@ -324,6 +373,10 @@
         },
         hamonizeList: {
           statePath: 'commonG2g.hamonizeList',
+          // observer: 'get'
+        },
+        hamonizeYear: {
+          statePath: 'commonG2g.hamonizeYear',
           // observer: 'get'
         },
         // dataForSelect: {
@@ -402,6 +455,31 @@
           btnDisabled: false,
           hiddend: true
         })
+      },
+      searchHamonizeInYear(e) {
+        try {
+          let newHamonize = []
+          let seletedYear = e.detail.value
+          for (var index = 0; index < this.hamonizeList.length; index++) {
+            for (var index2 = 0; index2 < this.hamonizeList[index].sub.length; index2++) {
+              if ((String(this.hamonizeList[index].sub[index2].hamonize_year) === e.detail.value) ||
+                (e.detail.value === '' || e.detail.value === undefined)) {
+                this.set('hamonizeList.' + index + '.sub.' + index2 + '.hiddend', false)
+              } else {
+                this.set('hamonizeList.' + index + '.sub.' + index2 + '.hiddend', true)
+              }
+
+            }
+          }
+        } catch (e) {
+
+        }
+
+      },
+      toggle: function (e) {
+        let index = e.currentTarget.index
+        // console.log(collapse-);
+        console.log(this.$$('#collapse-'+index).toggle());
       },
       _getBuyerAddress: function (e) {
         if (e.detail.value) {

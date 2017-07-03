@@ -73,9 +73,9 @@
         </paper-dialog>
       </div>
       <gl-form-panel-head label="{{localize.text_list_exporter_name}}" set-padding="10px" set-border="1px">
-        <!--<template is="dom-if" if={{_confirmBook(data)}}>-->
+        <template is="dom-if" if={{!data.book_status}}>
           <paper-button class="gl-btn-primary" raised on-tap="addBookExporter">{{localize.btn_add_exporter}}</paper-button>
-        <!--</template>-->
+        </template>
       </gl-form-panel-head>
 
       <table class="gl-table-default">
@@ -170,65 +170,123 @@
         },
         data: {
           statePath: 'book.bookExporterList'
-        }
+        },
+        contractId: {
+          statePath: 'commonState.contractId',
+          // observer: 'get'
+        },
+        confirmId: {
+          statePath: 'commonState.confirmId',
+          // observer: 'get'
+        },
+        bookId: {
+          statePath: 'commonState.bookId',
+          // observer: 'get'
+        },
       },
       backWard2Booking: function () {
         // console.log(this.dataForSelect);
-        this.fire('_list-book',  'list-of-booking' )
+        this.fire('_list-book', 'list-of-booking')
+        this.dispatchAction('SET_BREADCRUMBS', [{
+          label: 'สัญญาที่ ' + this.contractId.contract_no,
+          href: ''
+        },
+        {
+          label: 'งวดที่ ' + this.confirmId.cl_no,
+          href: ''
+        },
+        ])
         // this.fire('_set-breadcrumbs', this.dataForSelect.breadcrumbs)
       },
       printShipment: function () {
         let book_id = this.data.id
         if (this.printReport.typeReport == '0') {
-          window.open(window._config.reportServer+'/api/shipment/report1/' + book_id + '?export=' + this.printReport.typeFile, '1');
+          window.open(window._config.reportServer + '/api/shipment/report1/' + book_id + '?export=' + this.printReport.typeFile, '1');
         } else if (this.printReport.typeReport == '1') {
           this.$.printShipmentReport.toggle();
         } else if (this.printReport.typeReport == '2') {
-          window.open(window._config.reportServer+'/api/shipment/report3?book_id=' + book_id + '&export=' + this.printReport.typeFile, '1');
-        }else if (this.printReport.typeReport == '3') {
-          window.open(window._config.reportServer+'/api/shipment/report3_1/' + book_id + '?export=' + this.printReport.typeFile, '1');
-        }else if (this.printReport.typeReport == '4') {
-          window.open(window._config.reportServer+'/api/shipment/report3_2/' + book_id + '?export=' + this.printReport.typeFile, '1');
+          window.open(window._config.reportServer + '/api/shipment/report3?book_id=' + book_id + '&export=' + this.printReport.typeFile, '1');
+        } else if (this.printReport.typeReport == '3') {
+          window.open(window._config.reportServer + '/api/shipment/report3_1/' + book_id + '?export=' + this.printReport.typeFile, '1');
+        } else if (this.printReport.typeReport == '4') {
+          window.open(window._config.reportServer + '/api/shipment/report3_2/' + book_id + '?export=' + this.printReport.typeFile, '1');
         }
-        
+
       },
       printShipmentReports: function () {
         let book_id = this.data.id
         // console.log(this.dataForSelect.book_id);
         // console.log(book_id);
         // window.open(window._config.reportServer+'/api/shipment/report1?shm_id='+this.data.shm_id+'&ori='+this.printReport.ori+'&nn='+this.printReport.nn,'1');
-        window.open(window._config.reportServer+'/api/shipment/report2/' + book_id + '?ori=' + this.printReport.ori + '&nn=' + this.printReport.nn + '&export=' + this.printReport.typeFile, '1');
+        window.open(window._config.reportServer + '/api/shipment/report2/' + book_id + '?ori=' + this.printReport.ori + '&nn=' + this.printReport.nn + '&export=' + this.printReport.typeFile, '1');
       },
-      bookExporterDetail: function(e){
+      bookExporterDetail: function (e) {
         let url = { id: e.currentTarget.data.id }
+        this.dispatchAction('SET_BREADCRUMBS', [{
+          label: 'สัญญาที่ ' + this.contractId.contract_no,
+          href: ''
+        },
+        {
+          label: 'งวดที่ ' + this.confirmId.cl_no,
+          href: ''
+        },
+        {
+          label: 'เรื่อลำที่ ' + this.bookId.ship_lot,
+          href: ''
+        },
+        {
+          label: 'ผู้ส่งออก ' + e.currentTarget.data.company.company_name_th,
+          href: ''
+        },
+        ])
+        // console.log(e.currentTarget.data.company.company_name_th)
         this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
         this.dispatchAction('SET_STATE', {
           isInsert: false,
           btnDisabled: true,
           hiddend: true
         })
+
         this.dispatchAction('GET_BOOK_EXPORTER_DETAIL', this.genUrl(url))
         this.async(() => {
           this.fire('toast', {
             status: 'success', text: 'โหลดสำเร็จ', callback: () => {
-              this.fire('_list-book',  'list-of-booking-exporter-detail' )
+              this.fire('_list-book', 'list-of-booking-exporter-detail')
             }
           })
         }, 500)
-        
+
       },
-      addBookExporter: function(e){
+      addBookExporter: function (e) {
         this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
+        this.dispatchAction('CLEAR_BOOK_DETAIL_EXPORTER')
         this.dispatchAction('SET_STATE', {
           isInsert: true,
           btnDisabled: false,
           hiddend: true
         })
+        this.dispatchAction('SET_BREADCRUMBS', [{
+          label: 'สัญญาที่ ' + this.contractId.contract_no,
+          href: ''
+        },
+        {
+          label: 'งวดที่ ' + this.confirmId.cl_no,
+          href: ''
+        },
+        {
+          label: 'เรื่อลำที่ ' + this.bookId.ship_lot,
+          href: ''
+        },
+        {
+          label: 'เพิ่มผู้ส่งออก ',
+          href: ''
+        },
+        ])
         // this.dispatchAction('GET_BOOK_EXPORTER_DETAIL', this.genUrl(url))
         this.async(() => {
           this.fire('toast', {
             status: 'success', text: 'โหลดสำเร็จ', callback: () => {
-              this.fire('_list-book',  'list-of-booking-exporter-detail' )
+              this.fire('_list-book', 'list-of-booking-exporter-detail')
             }
           })
         }, 500)

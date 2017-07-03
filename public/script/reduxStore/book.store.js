@@ -15,9 +15,9 @@ const initialState = {
     list: [],
     bookList: [],
     bookDetail: {},
-    bookHamonizeList:[],
-    bookExporterList:[],
-    bookExporterDetail:[],
+    bookHamonizeList: [],
+    bookExporterList: [],
+    bookExporterDetail: {},
     data: {}
 }
 export function bookReducer(state = initialState, action) {
@@ -85,7 +85,7 @@ export function bookAction(store) {
                 .then(function (response) {
                     for (var index = 0; index < response.data.length; index++) {
                         // response.data[index].label = ''
-                        response.data[index].label = '['+response.data[index].hamonize.hamonize_code+'] '+response.data[index].hamonize.hamonize_en
+                        response.data[index].label = '[' + response.data[index].hamonize.hamonize_code + '] ' + response.data[index].hamonize.hamonize_en
                         // console.log(response.data[index].hamonize.hamonize_en );
                     }
                     store.dispatch({ type: 'GET_BOOK_HAMONIZE_LIST', payload: response.data })
@@ -132,15 +132,28 @@ export function bookAction(store) {
         POST_BOOK: function (data) {
             return axios.post('./book/insert', data)
         },
+        POST_BOOK_DETAIL: function (data) {
+            console.log(data);
+            return axios.post('./book/detail/insert', data)
+        },
         // END POST
         // PUT
         PUT_BOOK: function (data) {
             return axios.put('./book/update', data)
         },
+        PUT_BOOK_APPROVE: function (data) {
+            return axios.put('./book/approve', data)
+        },
+        PUT_BOOK_DETAIL: function (data) {
+            return axios.put('./book/detail/update', data)
+        },
         // END PUT
         // DELETE
-        DELETE_BOOK: function (confirmId) {
-            return axios.delete('./book/delete/' + confirmId)
+        DELETE_BOOK: function (bookId) {
+            return axios.delete('./book/delete/' + bookId)
+        },
+        DELETE_BOOK_DETAIL: function (bookDetailId) {
+            return axios.delete('./book/detail/delete/' + bookDetailId)
         },
         // END DELETE
         // CLEAR
@@ -197,6 +210,36 @@ export function bookAction(store) {
                 weight_container: 25
             }
             store.dispatch({ type: 'GET_BOOK_DETAIL', payload: BookDetail })
+        },
+        CLEAR_BOOK_DETAIL_EXPORTER: function (data) {
+            let date = new Date().toISOString().split('T')[0]
+            // console.log(date);
+            let BookDetail = {
+                book_id: "",
+                book_no: "",
+                cl_id: "",
+                cl_no: 0,
+                company: {},
+                company_taxno: "",
+                ontract_id: "",
+                contract_no: 0,
+                exporter_id: "",
+                exporter_no: 0,
+                gross_weight: 0,
+                hamonize: {},
+                hamonize_id: "",
+                net_weight: 0,
+                num_of_container: 0,
+                package: {},
+                package_amount: 0,
+                package_id: "",
+                price_d: 0,
+                project_en: "",
+                project_th: "",
+                tare_weight: 0,
+                value_d: 0
+            }
+            store.dispatch({ type: 'GET_BOOK_EXPORTER_DETAIL', payload: BookDetail })
         },
         BOOK_GET_LIST_DATA: function (id) {
             axios.get('./bl/contract?id=' + id)

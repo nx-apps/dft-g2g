@@ -197,21 +197,26 @@
         return data === ''
       },
       getObjectCl: function (e) {
-        if (e.detail.value !== null) {
-          this.set('dataShow', e.detail.value)
-          // console.log(e.detail.value);
-          let clData = { cl_id: e.detail.value.id, cl_no: e.detail.value.cl_no }
-          this.dispatchAction('SET_CONFIRM_ID', clData)
-          console.log(this.contractId)
-          // this.dispatchAction('SET_BREADCRUMBS', [{
-          //   label: 'สัญญาที่ ' + this.contractId.contract_no,
-          //   href: ''
-          // },
-          // {
-          //   label: 'งวดที่ ' + e.detail.value.cl_no,
-          //   href: ''
-          // },
-          // ])
+        try {
+          if (e.detail.value !== null) {
+
+            this.set('dataShow', e.detail.value)
+            console.log(e.detail.value);
+            let clData = { cl_id: e.detail.value.id, cl_no: e.detail.value.cl_no }
+            this.dispatchAction('SET_CONFIRM_ID', clData)
+            // console.log(this.contractId)
+            this.dispatchAction('SET_BREADCRUMBS', [{
+              label: 'สัญญาที่ ' + this.contractId.contract_no,
+              href: ''
+            },
+            {
+              label: 'งวดที่ ' + e.detail.value.cl_no,
+              href: ''
+            },
+            ])
+          }
+        } catch (e) {
+          // console.log(e);
         }
 
       },
@@ -224,18 +229,18 @@
           hiddend: true
         })
         this.dispatchAction('SET_BREADCRUMBS', [{
-            label: 'สัญญาที่ ' + this.contractId.contract_no,
-            href: ''
-          },
-          {
-            label: 'งวดที่ ' + this.dataShow.cl_no,
-            href: ''
-          },
-          {
-            label: 'Booking ' + e.currentTarget.data.book_no,
-            href: ''
-          },
-          ])
+          label: 'สัญญาที่ ' + this.contractId.contract_no,
+          href: ''
+        },
+        {
+          label: 'งวดที่ ' + this.dataShow.cl_no,
+          href: ''
+        },
+        {
+          label: 'เรื่อลำที่ ' + e.currentTarget.data.ship_lot,
+          href: ''
+        },
+        ])
         this.dispatchAction('GET_BOOK_DETAIL', this.genUrl(url))
         this.async(() => {
           this.fire('toast', {
@@ -255,7 +260,6 @@
 
             this.dispatchAction('GET_BOOK_LIST', this.genUrl(url));
             this.dispatchAction('GET_BOOK_HAMONIZE_LIST', this.genUrl(url));
-
             // GET_BOOK_HAMONIZE_LIST
           } else {
             this.dispatchAction('CLEAR_BOOK_LIST')
@@ -292,6 +296,15 @@
 
       _changeIronPage: function (data) {
         this.set('pageSelected', data.detail)
+        // this.dispatchAction('SET_BREADCRUMBS', [{
+        //   label: 'สัญญาที่ ' + this.contractId.contract_no,
+        //   href: ''
+        // },
+        // {
+        //   label: 'งวดที่ ' + this.dataShow.cl_no,
+        //   href: ''
+        // },
+        // ])
         // console.log(data.detail);
       },
       createBooking: function () {
@@ -318,7 +331,7 @@
             href: ''
           },
           {
-            label: 'เพิ่ม Booking ',
+            label: 'เพิ่มลำเรือ ',
             href: ''
           },
           ])
@@ -341,12 +354,15 @@
         }
       },
       getBookingExporter: function (e) {
-        console.log(e.currentTarget.data);
+        // console.log(e.currentTarget.data);
         this.dispatchAction('GET_COMMON_EXPORTER_LIST')
 
         // console.log(1111);
         let url = { book_id: e.currentTarget.data.id }
-        let bookData = { book_id: e.currentTarget.data.id, book_no: e.currentTarget.data.book_no }
+        let bookData = {
+          book_id: e.currentTarget.data.id,
+          ship_lot: e.currentTarget.data.ship_lot
+        }
         this.dispatchAction('SET_BOOK_ID', bookData)
         this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
         this.dispatchAction('SET_STATE', {
@@ -354,6 +370,19 @@
           btnDisabled: true,
           hiddend: true
         })
+        this.dispatchAction('SET_BREADCRUMBS', [{
+          label: 'สัญญาที่ ' + this.contractId.contract_no,
+          href: ''
+        },
+        {
+          label: 'งวดที่ ' + this.dataShow.cl_no,
+          href: ''
+        },
+        {
+          label: 'เรื่อลำที่ ' + e.currentTarget.data.ship_lot,
+          href: ''
+        },
+        ])
         this.dispatchAction('GET_BOOK_EXPORTER_LIST', this.genUrl(url))
         this.async(() => {
           this.fire('toast', {

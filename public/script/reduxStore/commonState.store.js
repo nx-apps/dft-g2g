@@ -42,7 +42,7 @@ export function commonStateAction(store) {
             // return axios.get('/external/upload/list/' + ref + '/' + com)
         },
         SET_BREADCRUMBS: function (data) {
-            console.log(data);
+            // console.log(data);
             store.dispatch({ type: 'SET_BREADCRUMBS', payload: data })
             // return axios.get('/external/upload/list/' + ref + '/' + com)
         },

@@ -289,13 +289,13 @@
         window.open(window._config.reportServer + '/api/shipment/report4/' + e.currentTarget.data.cl_id, '1');
         // console.log(e.currentTarget.data);
       },
-      checkMInus(cl_quantity_tolerance) {
+      checkMInus: function (cl_quantity_tolerance) {
         var str = this.formatNumberNoZero(cl_quantity_tolerance);
         //   // console.log(this.formatNumberNoZero(0));
         if (cl_quantity_tolerance > 0) str = "+" + str;
         return typeof cl_quantity_tolerance === "undefined" ? '' : "(" + str + ")";
       },
-      getShowByExport(e) {
+      getShowByExport: function (e) {
         // console.log(e);
         try {
           this.set('title', 'แสดงปริมาณการส่งมอบ')

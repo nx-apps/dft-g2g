@@ -6,6 +6,7 @@ const initialState = {
     bankList: [],
     buyerList: [],
     hamonizeList: [],
+    hamonizeYear: {},
     carrierList: [],
     incotermsList: [],
     notifyList: [],
@@ -14,7 +15,7 @@ const initialState = {
     shipList: [],
     shiplineList: [],
     surveyorList: [],
-    exporterList:[]
+    exporterList: []
 }
 export function commonG2gReducer(state = initialState, action) {
     switch (action.type) {
@@ -24,6 +25,8 @@ export function commonG2gReducer(state = initialState, action) {
             return Object.assign({}, state, { buyerList: action.payload });
         case 'GET_COMMON_HAMONIZE_LIST':
             return Object.assign({}, state, { hamonizeList: action.payload });
+        case 'GET_COMMON_HAMONIZE_YEAR':
+            return Object.assign({}, state, { hamonizeYear: action.payload });
         case 'GET_COMMON_CARRIER_LIST':
             return Object.assign({}, state, { carrierList: action.payload });
         case 'GET_COMMON_INCOTERMS_LIST':
@@ -76,6 +79,19 @@ export function commonG2gAction(store) {
         GET_COMMON_HAMONIZE_LIST: function (data) {
             axios.get(window._config.externalServerCommon + '/api/groupItem?group_id=9c5514af-407f-4a07-b2c9-8e97f951dd16')
                 .then(function (response) {
+                    var hamonizeList = response.data.reduce(function (prev, curr) {
+                        return [...prev, ...curr.sub];
+                    },[]);
+                    let lisyYear = []
+                    let groupYear = groupArray(hamonizeList, 'hamonize_year')
+                    for (var variable in groupYear) {
+                        if (groupYear.hasOwnProperty(variable)) {
+                            lisyYear.push({label:variable,value:variable})
+                        }
+                    }
+                    let xData =  { year :lisyYear ,hamonize:hamonizeList}
+                    
+                    store.dispatch({ type: 'GET_COMMON_HAMONIZE_YEAR', payload: xData })
                     store.dispatch({ type: 'GET_COMMON_HAMONIZE_LIST', payload: response.data })
                 })
                 .catch(function (error) {
@@ -129,7 +145,7 @@ export function commonG2gAction(store) {
             axios.get(window._config.externalServerCommon + '/api/port')
                 .then(function (response) {
                     let group = groupArray(response.data, 'country_name_en')
-                    store.dispatch({ type: 'GET_COMMON_PORT_LIST', payload: group})
+                    store.dispatch({ type: 'GET_COMMON_PORT_LIST', payload: group })
                 })
                 .catch(function (error) {
                     console.log('error');
@@ -140,9 +156,9 @@ export function commonG2gAction(store) {
             axios.get(window._config.externalServerCommon + '/api/ship')
                 .then(function (response) {
                     for (var index = 0; index < response.data.length; index++) {
-                         response.data[index].text =  response.data[index].ship_name
-                         response.data[index].value =response.data[index].ship_name
-                        
+                        response.data[index].text = response.data[index].ship_name
+                        response.data[index].value = response.data[index].ship_name
+
                     }
                     store.dispatch({ type: 'GET_COMMON_SHIP_LIST', payload: response.data })
                 })
@@ -175,7 +191,7 @@ export function commonG2gAction(store) {
             axios.get(window._config.externalServer + '/api/external/exporter/search?type_lic_id=NORMAL')
                 .then(function (response) {
                     for (var index = 0; index < response.data.length; index++) {
-                        response.data[index].label = '['+response.data[index].company_taxno+'] '+response.data[index].company.company_name_th
+                        response.data[index].label = '[' + response.data[index].company_taxno + '] ' + response.data[index].company.company_name_th
                     }
                     // console.log(response.data);
                     store.dispatch({ type: 'GET_COMMON_EXPORTER_LIST', payload: response.data })
