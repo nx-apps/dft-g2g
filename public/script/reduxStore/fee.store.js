@@ -21,7 +21,7 @@ export function feeAction(store) {
     return [commonAction(),
     {
         FEE_GET_LIST_DATA: function(id){
-            axios.get('./fee/contract?id='+id)
+            axios.get('./fee/contract?id='+id+'&view=fin')
             .then((response) => {
                 store.dispatch({ type: 'FEE_GET_LIST_DATA', payload: response.data});
             })

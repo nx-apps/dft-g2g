@@ -17,7 +17,7 @@ exports.calc = function (req, res) {
                 fee_in_b: 0
             }
         })
-        .without('id', 'creater', 'updater', 'date_created', 'date_updated','book_status')
+        .without('id', 'creater', 'updater', 'date_created', 'date_updated', 'book_status')
         // .pluck('book_id', 'invoice_no', 'cl_id', 'contract_id', 'invoice_date', 'cl_no', 'ship', 'ship_lot')
         .orderBy('invoice_no')
         .merge(function (m) {
@@ -91,6 +91,7 @@ exports.insert = function (req, res) {
                 date_updated: r.now().inTimezone('+07'),
                 fin_status: false,
                 rice_status: false,
+                fee_status: false,
                 creater: 'admin',
                 updater: 'admin'
             })
@@ -98,13 +99,17 @@ exports.insert = function (req, res) {
     updateFee("insert", obj, res);
 }
 exports.getByContractId = function (req, res) {
-    req.r.table('fee').getAll([req.query.id, false], { index: 'contractFinStatus' })
-        .merge(function (m) {
-            return {
-                invoice_count: m('book').count(),
-                invoice_no: m('book').getField('invoice_no').reduce(function (lf, rt) { return lf.add(',', rt) })
-            }
-        })
+    var get = r.table('fee').getAll([req.query.id, false, true, true], [req.query.id, false, false, false], { index: 'contractFeeFinRiceStatus' });
+    if (typeof req.query.view !== "undefined" && req.query.view == "rice") {
+        get = r.table('fee').getAll([req.query.id, false, true, false], { index: 'contractFeeFinRiceStatus' });
+    }
+    // req.r.table('fee').getAll([req.query.id, false,], { index: 'contractFeeFinRiceStatus' })
+    get.merge(function (m) {
+        return {
+            invoice_count: m('book').count(),
+            invoice_no: m('book').getField('invoice_no').reduce(function (lf, rt) { return lf.add(',', rt) })
+        }
+    })
         .pluck('id', 'cl_no', 'fee_no', 'fee_round', 'fee_date', 'net_weight',
         'value_d', 'rate_bank_b', 'value_b', 'value_fee_b', 'value_tax_b', 'value_final_b',
         'fin_status', 'rice_status', 'invoice_count', 'invoice_no')
@@ -228,6 +233,9 @@ exports.approve = function (req, res) {
     }
     if (typeof req.body.fin_status !== 'undefined') {
         updata.fin_status = req.body.fin_status;
+    }
+    if (typeof req.body.fee_status !== 'undefined') {
+        updata.fee_status = req.body.fee_status;
     }
     if (req.body.id != '' && req.body.id != null && typeof req.body.id !== 'undefined') {
         req.r.table('fee')
