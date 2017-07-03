@@ -120,6 +120,20 @@ exports.approve = function (req, res) {
             res.json(data);
         })
 }
+exports.getBookNo = function (req, res) {
+    req.r.table('book_detail').getAll(req.query.id, { index: 'book_id' })
+        .group('book_no').ungroup()
+        .map(function (m) {
+            return {
+                book_no: m('group')
+            }
+        })
+        .orderBy('book_no')
+        .run()
+        .then(function (data) {
+            res.json(data)
+        })
+}
 function insertShip(datas, req, res, cb) {
     var ship = [];
     async.waterfall([
