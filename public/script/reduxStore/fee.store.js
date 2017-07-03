@@ -36,6 +36,29 @@ export function feeAction(store) {
                 console.log(err);
             })
         },
+        FEE_INSERT: function (data){
+            // console.log(data);
+            var contract_id = this.getCookieBhv("contract_id");
+            axios.post('./fee/insert', data)
+            .then((response) =>{
+                this.fire('toast', {
+                    status: 'success', text: 'บันทึกสำเร็จ',
+                    callback: () => {
+                        this.INVOICE_GET_LIST_DATA(contract_id);
+                        this.BOOK_GET_LIST_DATA(contract_id);
+                        this._flipDrawerClose();
+                        // this.SET_STATE({
+                        //     isInsert: false,
+                        //     btnDisabled: true,
+                        //     hiddend: true
+                        // });
+                    }
+                });
+            })
+            .catch((err) => {
+                console.log(err);
+            })
+        }
     }
     ]
 }

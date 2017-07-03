@@ -2,6 +2,7 @@
 <link rel="import" href="./../../../../bower_components/gl-form/gl-form-panel-body.html">
 <link rel="import" href="./../../../../bower_components/gl-form/gl-form-input.html">
 <link rel="import" href="./../../components/g2g-logic-behavior.html">
+<link rel="import" href="./../../components/validateFormBehaviors.html">
 
 <dom-module id="fee-exports-invoice">
   <style is="custom-style" include="iron-flex iron-flex-alignment gl-styles page-style">
@@ -222,7 +223,7 @@
           statePath : 'commonState.setState'
         }
       },
-      behaviors: [ReduxBehavior, g2gLogicBehavior],
+      behaviors: [ReduxBehavior, g2gLogicBehavior, ValidateFormBehavior],
       observers: [
         // '_oBcheckValue(data.invoice_detail.*)'
         // // '_changeDataPayrf(item.invoice_date)'
@@ -387,7 +388,33 @@
       //   }
       // },
       addPayment: function (){
-        console.log(this.data);
+        let newData = {
+          rate_bank_b : parseFloat(this.rateBank), 
+          rate_tt_b : parseFloat(this.rateTt), 
+          fee_date : this.data.fee_date+'T00:00:00+07:00', 
+          book : this.data.book
+        };
+        newData.book.map((item) => {
+          delete item.totalAmountUsdInvoices;
+          delete item.totalTonInvoices;
+        })
+        // console.log(newData);
+        this.fire('check-required');
+        if(this.checkRequired === true){
+          this.fire('toast', {
+            status: 'openDialog', 
+            text: 'ต้องการเพิ่มค่าธรรมเนียมใช่หรือไม่',
+            confirmed: (result) =>{
+              if(result === true){
+                this.dispatchAction('FEE_INSERT', newData);
+              }
+            }
+          });
+        }else{
+          this.fire('toast', {
+            status: 'connectError', text: 'กรุณากรอกข้อมูลให้ครบถ้วน',callback: () => {}
+          });
+        }
       }
     });
   </script>

@@ -12,6 +12,8 @@
 <link rel="import" href="./../../../../bower_components/gl-grid/gl-grid-row.html">
 <link rel="import" href="./../../../../bower_components/gl-grid/gl-grid-col.html">
 <link rel="import" href="./../../components/format-number-behavior.html">
+<link rel="import" href="./../../components/validateFormBehaviors.html">
+
 
 <dom-module id="fee-exports">
   <style include="iron-flex iron-flex-factors iron-flex-alignment gl-styles page-style">
@@ -111,7 +113,7 @@
                       </gl-combo-box> [[addFeeno(data.fee_id)]]
                     </gl-grid-col>-->
                     <gl-grid-col width="[[getWidth]]" grid="[[300,6],[500,3]]">
-                      <vaadin-date-picker class="required test" required disabled="[[common.btnDisabled]]" label="{{localize.received_date}}"
+                      <vaadin-date-picker class="required" required disabled="[[common.btnDisabled]]" label="{{localize.received_date}}"
                         value="{{data.fee_date}}" always-float-label></vaadin-date-picker>
                     </gl-grid-col>
                     <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
@@ -168,9 +170,11 @@
                 fee-ex="{{data.fee_internal}}"
                 fee-in="{{data.fee_foreign}}"
                 rate-bank="{{data.rate_bank}}" 
+                rate-tt="{{data.rate_tt}}"
                 invoice-index="[[_ObcountIndex(index)]]"
                 invoice-page="[[data.invoicePage]]" 
-                is-input-disabled="[[common.btnDisabled]]"></fee-exports-invoice>
+                is-input-disabled="[[common.btnDisabled]]"
+                check-required="{{check_required}}"></fee-exports-invoice>
 
                 <!--<gl-form-panel>
                   <fee-exports-sum total-invoice="[[data.invoice]]"></fee-exports-sum>
@@ -214,14 +218,13 @@
   <script>
     Polymer({
       is: "fee-exports",
-      behaviors: [ReduxBehavior, nylonBehavior, FormatNumberBehavior, g2gLogicBehavior],
+      behaviors: [ReduxBehavior, nylonBehavior, FormatNumberBehavior, g2gLogicBehavior, ValidateFormBehavior],
       properties: {
         localize:{
           statePath : 'i18n.fee'
         },
         data: {
-          statePath : 'fee.list_calc',
-          observer : '_checkdata'
+          statePath : 'fee.list_calc'
         },
         pages: {
           type: String,
@@ -229,6 +232,11 @@
         },
         common:{
           statePath : 'commonState.setState'
+        },
+        check_required:{
+          type: Boolean,
+          value: false,
+          notify: true
         }
       },
       observers: [
@@ -237,12 +245,14 @@
         // '_changeDataFee(data.fee_date_receipt)',
         // '_getFeeNo(data.*)'
       ],
-      // listeners: {
-      //   'edit-input': 'editInput',
-      //   'delete-input': 'deleteFee'
-      // },
-      _checkdata:function(data){
-        // console.log(data);
+      listeners: {
+        // 'edit-input': 'editInput',
+        // 'delete-input': 'deleteFee'
+        'check-required': 'checkRequired'
+      },
+      checkRequired:function(){
+        var check = this.validateForm('.required');
+        this.set('check_required', check);
       },
       _getUSD:function(data){
         if(typeof data.book !== 'undefined'){
