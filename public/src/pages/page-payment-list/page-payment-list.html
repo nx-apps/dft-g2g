@@ -12,11 +12,11 @@
 <link rel="import" href="./component/list-of-invoice.html">
 <link rel="import" href="./component/fee-exports.html">
 <link rel="import" href="./component/commercial-invoice.html">
-<!--<link rel="import" href="./component/list-of-fee.html">
-<link rel="import" href="./component/list-of-cheque.html">
+<link rel="import" href="./component/list-of-fee.html">
+<link rel="import" href="./component/list-of-fee-detail.html">
+<!--<link rel="import" href="./component/list-of-cheque.html">
 <link rel="import" href="./component/list-of-payments.html">
 <link rel="import" href="./component/list-of-history.html">
-<link rel="import" href="./component/list-of-fee-detail.html">
 <link rel="import" href="./component/cheque-detail.html">
 <link rel="import" href="./component/payment-detail.html">
 <link rel="import" href="./component/history-detail.html">-->
@@ -246,7 +246,7 @@
                 // 'get-fee-list': '_getFeeListFire',
                 'get-select-draftPayment': '_getInvoiceDetail',
                 // 'get-fee-list-in-shm-event': '_getFeeListInShmEvent',
-                // 'get-fee-detail': '_getFeeDetail',
+                'get-fee-detail': '_getFeeDetail',
                 // 'get-Cheque-list': '_getChequeListFire',
                 // 'get-cheque-detail': '_getChequeDetail',
                 // 'get-payment-list': '_getPaymentsFire',
@@ -264,120 +264,19 @@
                 var buyer_id = this.getCookieBhv("buyerId");
                 this.dispatchAction('BOOK_GET_LIST_DATA', contract_id);
                 this.dispatchAction('INVOICE_GET_LIST_DATA', contract_id);
+                this.dispatchAction('FEE_GET_LIST_DATA', contract_id);
             },
             // ready: function () {
-            //     let contract_id = this._getUrl();
-            //     this._getBlList(contract_id);
-            //     this._getInvoiceList(contract_id);
-            //     this._getFeeList(contract_id);
             //     this._getChequeList(contract_id);
             //     this._getPaymentsList(contract_id);
             //     this._getHistoryList(contract_id);
             //     this._getBank()
-            // },
-            // nylonPageActive: function () {
-            //     // console.log(111);
-            //     // let shmId = this._getUrl();
-            //     // this._getBlList(shmId);
-            //     // this._getInvoiceList(shmId);
-            //     // this._getFeeList(shmId);
             // },
             // setEventBreadcrumbs: function (data) {
             //     this.setBreadcrumbs(data.detail)
             // },
             // setBreadcrumbs: function (data) {
             //     this.set('crumbs', data)
-            // },
-            // _getCookie: function (name) {
-            //     var value = "; " + document.cookie;
-            //     var parts = value.split("; " + name + "=");
-            //     if (parts.length == 2) return parts.pop().split(";").shift();
-            // },
-            // _getUrl: function () {
-            //     this.set('dataForSelect.nameContract', this._getCookie("contractName"));
-            //     this.set('dataForSelect.contract_id', this._getCookie("contract_id"));
-            //     this.set('dataForSelect.buyer_id', this._getCookie("buyer_id"));
-            //     return this._getCookie("contract_id");
-            // },
-            // _getBlListFire: function (e) {
-            //     this._getBlList(e.detail.detail);
-            // },
-            // _getBlList: function (shmId) {
-            //     this.read('./g2g/book/contract/id/' + shmId, (data) => {
-            //     this.dataListPay.blShipment = data;
-            //     this.notifyPath('dataListPay.blShipment');
-            //     });
-            // },
-            // _getInvoiceListFire: function (e) {
-            //     this._getInvoiceList(e.detail.detail);
-            // },
-            // _getInvoiceList: function (shmId) {
-            //     this.read('./g2g/invoice/contract/id/' + shmId, (data) => {
-            //     this.dataListPay.invoiceList = data;
-            //     this.notifyPath('dataListPay.invoiceList');
-            //     });
-            // },
-            // _getFeeListFire: function (e) {
-            //     this._getFeeList(e.detail.detail);
-            // },
-            // _getFeeList: function (contractId) {
-            //     // console.log(contractId);
-            //     this.read('./g2g/fee/contract/id/' + contractId, (data) => {
-            //     this.dataListPay.feeList = data;
-            //     this.notifyPath('dataListPay.feeList');
-            //     });
-            // },
-            // _getChequeListFire: function (e) {
-            //     this._getChequeList(e.detail.detail);
-            // },
-            // _getChequeList: function (contractId) {
-            //     this.read('./g2g/fee/payment/contract/id/' + contractId, (data) => {
-            //     this.dataListPay.chequeList = data;
-            //     this.notifyPath('dataListPay.chequeList');
-            //     // console.log(this.dataListPay.chequeList);
-            //     });
-            // },
-            // _getPaymentsFire: function (e) {
-            //     this._getPaymentsList(e.detail.detail);
-            // },
-            // _getPaymentsList: function (contractId) {
-            //     this.read('./g2g/payment/contract/id/' + contractId, (data) => {
-            //     this.dataListPay.payments = data;
-            //     this.notifyPath('dataListPay.payments');
-            //     // console.log(this.dataListPay.chequeList);
-            //     });
-            // },
-            // _getHistoryListFire: function (e) {
-            //     this._getHistoryList(e.detail.detail);
-            // },
-            // _getHistoryList: function (contractId) {
-            //     this.read('./g2g/paid/contract/id/' + contractId, (data) => {
-            //     this.dataListPay.history = data;
-            //     this.notifyPath('dataListPay.history');
-            //     });
-            // },
-            // _getFeeListInShmEvent: function (e) {
-            //     // console.log(e.detail.data);
-            //     this._getFeeListInShm(e.detail.data);
-            // },
-            // _getFeeListInShm: function (clId) {
-            //     // console.log(clId,'11111');
-            //     this.read('./g2g/fee/confirm/id/' + clId, (data) => {
-            //     this.dataForSelect.feeListinShm = data;
-            //     this.dataForSelect.feeListinShmCombobox = this.g2gClone(data);
-            //     // this.push('dataForSelect.feeListinShm',{fee_no :'เพิ่ม ID',fee_id:0})
-            //     this.notifyPath('dataForSelect.feeListinShm');
-            //     this.notifyPath('dataForSelect.feeListinShmCombobox');
-            //     // console.log(this.dataForSelect.feeListinShm);
-            //     // this._getFeeList(this._getUrl());
-            //     });
-            // },
-            // _getBank: function () {
-            //     this.read(window._config.externalServerCommon+'/api/bank', (data) => {
-            //     this.dataForSelect.dataBank = data;
-            //     this.notifyPath('dataForSelect.dataBank');
-            //     // console.log(this.dataForSelect.dataBank);
-            //     });
             // },
             _getBlDetail: function (e) {
                 let book_id = e.detail.detail.id;
@@ -391,44 +290,6 @@
                 });
                 this.paymentsPageSeleted = 'blPage';
                 this._flipDrawer();
-                // let datass = [
-                // {
-                //     label: this.dataForSelect.nameContract,
-                //     href: ''
-                // },
-                // {
-                //     label: 'รายละเอียดใบ Invoice',
-                //     href: ''
-                // },
-                // ]
-                // this.setBreadcrumbs(datass)
-                // this.fire('toast', { status: 'load' });
-                // this.read('./g2g/book/id/' + book_id, (data) => {
-                // this.dataSelected = data;
-                // // console.log(this.dataSelected);
-                // this.paymentsPageSeleted = 'blPage';
-                // });
-                // if (this.checkRenderPage.commercialInvoice != true) {
-                // this.async(() => {
-                //     this.importHref(
-                //     this.resolveUrl('./payment/component/commercial-invoice.html'),
-                //     () => {
-                //         this.async(() => {
-                //         this.fire('toast', { status: 'load' });
-
-                //         this._flipDrawer();
-                //         this.checkRenderPage.commercialInvoice = true;
-                //         }, 500)
-                //     }, null, true
-                //     );
-                // }, 1000);
-                // } else {
-                // this.async(() => {
-                //     this.fire('toast', { status: 'load' });
-                // this._flipDrawer();
-                // }, 500)
-                // }
-
             },
             _getBlInvoiceDetail: function (e) {
                 this.titlePanelRight = 'รายละเอียดใบกำกับสินค้า'
@@ -442,43 +303,6 @@
                 });
                 this.paymentsPageSeleted = 'invoicePage';
                 this._flipDrawer();
-                //     this.fire('toast', { status: 'load' });
-                //     // console.log(1)
-                //     let datass = [
-                //     {
-                //         label: this.dataForSelect.nameContract,
-                //         href: ''
-                //     },
-                //     {
-                //         label: 'รายละเอียดใบ Invoice',
-                //         href: ''
-                //     },
-                //     ]
-                //     this.setBreadcrumbs(datass)
-                //     this.read('./g2g/invoice/id/' + e.detail.detail.invoice_id, (data) => {
-                //     this.dataSelected = data;
-                // this.paymentsPageSeleted = 'invoicePage';
-                //     });
-                //     if (this.checkRenderPage.commercialInvoice != true) {
-                //     this.async(() => {
-                //         this.importHref(
-                //         this.resolveUrl('./payment/component/commercial-invoice.html'),
-                //         () => {
-                //             this.async(() => {
-                //             this.fire('toast', { status: 'load' });
-
-                //             this._flipDrawer();
-                //             this.checkRenderPage.commercialInvoice = true;
-                //             }, 500)
-                //         }, null, true
-                //         );
-                //     }, 1000);
-                //     } else {
-                //     this.async(() => {
-                //         this.fire('toast', { status: 'load' });
-                // this._flipDrawer();
-                //     }, 500)
-                //     }
             },
             _getInvoiceDetail: function (e) {
                 var datas = e.detail.detail;
@@ -498,129 +322,20 @@
                 });
                 this.paymentsPageSeleted = 'blInvoicePage';
                 this._flipDrawer();
-                //     // this.dataSelected = e.detail.detail;
-                //     // window.nameContract = this.dataForSelect.nameContract 
-                //     let datass = [
-                //     {
-                //         label: this.dataForSelect.nameContract,
-                //         href: ''
-                //     },
-                //     {
-                //         label: 'รายละเอียดการคำนวนการถัวเฉลี่ย',
-                //         href: ''
-                //     },
-                //     ]
-                //     this.setBreadcrumbs(datass)
-                //     let url = '', cl_id;
-                //     e.detail.detail.map((el, index) => {
-                //     cl_id = el.data.cl_id;
-                //     if (index == 0) {
-                //         url = url + el.data.invoice_id;
-                //     } else {
-                //         url = url + '_' + el.data.invoice_id;
-                //     }
-                //     });
-                //     //เรียกให้อัพเดตรายชื่อ fee ที่อยู่ใน contract
-                //     if (cl_id !== undefined) {
-                //     this._getFeeListInShm(cl_id);
-                //     }
-
-                //     //
-                //     // console.log(e.detail.detail);
-                //     this.fire('toast', { status: 'load' });
-                //     this.read('./g2g/fee/invoice/id/' + url, (data) => {
-                //     // console.log(data);
-                //     // console.log(data.invoice[0]);
-                //     // this.set('dataForSelect.shm_id', data.shm_id);
-                //     // console.log(this.dataForSelect);
-                //     this.set('dataForSelect.cl_id', data.cl_id);
-                //     // console.log(this.dataForSelect);
-                //     this.dataSelected.draft = data;
-                //     this.dataSelected.draft.rate_tt = 0;
-                //     this.dataSelected.draft.rate_bank = 0;
-                //     this.dataSelected.draft.fee_internal = 0;
-                //     this.dataSelected.draft.fee_foreign = 0;
-                //     this.dataSelected.draft.fee_other = 0;
-                //     this.dataSelected.draft.shmId = this.dataForSelect.contract_id;
-                //     this.dataSelected.draft.feeList = this.dataForSelect.feeList;
-                //     this.notifyPath('dataSelected.draft');
-                //     this.paymentsPageSeleted = 'blInvoicePage';
-                //     if (this.checkRenderPage.feeExports != true) {
-                //         this.async(() => {
-                //         this.importHref(
-                //             this.resolveUrl('./payment/component/fee-exports.html'),
-                //             () => {
-                //             this.async(() => {
-                //                 this.fire('toast', { status: 'load' });
-                //                 this._flipDrawer();
-                //                 this.checkRenderPage.feeExports = true;
-                //             }, 500)
-                //             }, null, true
-                //         );
-                //         }, 1000);
-                //     } else {
-                //         this.async(() => {
-                //         this.fire('toast', { status: 'load' });
-                //         this._flipDrawer();
-                //         }, 500)
-                //     }
-
-                //     });
             },
-            // _getFeeDetail: function (e) {
-            //     this.set('pageSelected', 'listOfFeedetail')
-            //     this.fire('toast', { status: 'load' });
-            //     this.titlePanelRight = 'รอบที่คิดค่าธรรมเนียมครั้งที่ ' + e.detail.detail.fee_no
-            //     // console.log(e.detail.detail.fee_id);
-            //     //เรียกให้อัพเดตรายชื่อ fee ที่อยู่ใน contract
-            //     // console.log(e.detail.detail);
-            //     // this.set('dataSelected.fee_no',e.detail.detail.fee_no)
-
-            //     if (e.detail.detail.cl_id !== undefined) {
-            //     this._getFeeListInShm(e.detail.detail.cl_id);
-            //     }
-
-            //     //
-            //     this.read('./g2g/fee/id/' + e.detail.detail.fee_id, (data) => {
-            //     this.set('dataForSelect.cl_id', data.cl_id);
-            //     this.dataSelected.fee = data;
-            //     let datass = [
-            //         {
-            //         label: this.dataForSelect.nameContract,
-            //         href: ''
-            //         },
-            //         {
-            //         label: 'รอบที่คิดค่าธรรมเนียมครั้งที่ ' + this.dataSelected.fee.fee_no,
-            //         href: ''
-            //         },
-            //     ]
-            //     // console.log(this.dataSelected);
-            //     this.setBreadcrumbs(datass)
-            //     // console.log();
-            //     // this.dataForSelect.checked = true
-            //     this.notifyPath('dataSelected.fee');
-            //     this.paymentsPageSeleted = 'feePage';
-            //     if (this.checkRenderPage.feeExports != true) {
-            //         this.async(() => {
-            //         this.importHref(
-            //             this.resolveUrl('./payment/component/list-of-fee-detail.html'),
-            //             () => {
-            //             this.async(() => {
-            //                 this.fire('toast', { status: 'load' });
-            //                 this._flipDrawer();
-            //                 this.checkRenderPage.feeExports = true;
-            //             }, 500)
-            //             }, null, true
-            //         );
-            //         }, 1000);
-            //     } else {
-            //         this.async(() => {
-            //         this.fire('toast', { status: 'load' });
-            //         this._flipDrawer();
-            //         }, 500)
-            //     }
-            //     });
-            // },
+            _getFeeDetail: function (e) {
+                // this.fire('toast', { status: 'load' });
+                this.titlePanelRight = 'รอบที่คิดค่าธรรมเนียมครั้งที่ ' + e.detail.detail.fee_no;
+                this.paymentsPageSeleted = 'blInvoicePage';
+                this._flipDrawer();
+                var id = e.detail.detail.id;
+                this.dispatchAction('FEE_GET_ID_DATA', id);
+                this.dispatchAction('SET_STATE', {
+                    isInsert: false,
+                    btnDisabled: true,
+                    hiddend: true
+                });
+            },
             // _getChequeDetail: function (e) {
             //     // console.log(e.detail.detail.fee_no);
             //     this.titlePanelRight = 'เช็ค'

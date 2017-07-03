@@ -39,7 +39,7 @@
     }
     
     table.gl-table-default>thead.table-head>tr>th:nth-child(1) {
-      width: 20%;
+      width: 15%;
     }
     
     table.gl-table-default>tbody.table-body>tr>td:not(:first-child) {
@@ -48,7 +48,7 @@
   </style>
   <template>
     <div class="flex searchInput horizontal center-justified layout">
-      <div class="flex title">{{localize.text_of_contract}} : [[dataForSelect.nameContract]]
+      <div class="flex title">{{localize.contract_name}} : [[getCookieBhv("contractName")]]
       </div>
       <div class="flex horizontal end-justified layout">
         <div class="labelSearch">{{localize.text_fee_no}}</div>{{_searchInArray(searchInput)}}
@@ -60,21 +60,27 @@
       <table class="gl-table-default">
         <thead class="table-head">
           <tr>
-            <th>{{localize.text_fee_no}}</th>
-            <th>{{localize.label_bath_value}}</th>
-            <th>{{localize.label_invoice_fee}}</th>
-            <th>{{localize.label_expenses_one_present}}</th>
-            <th>{{localize.label_total_bath_expenses}}</th>
+            <th>{{localize.fee_no}}</th>
+            <th>{{localize.fee_round}}</th>
+            <th>{{localize.invoice_no}}</th>
+            <th>{{localize.invoice_count}}</th>
+            <th>{{localize.amount}}{{localize.money}} ({{localize.baht}})</th>
+            <th>{{localize.expenses_fee}} ({{localize.baht}})</th>
+            <th>{{localize.expenses_one_present}} ({{localize.baht}})</th>
+            <th>{{localize.balance}} ({{localize.baht}})</th>
           </tr>
         </thead>
         <tbody class="table-body">
           <template is="dom-repeat" items="[[newData]]">
             <tr data="[[item]]" on-tap="getFeeDetail">
               <td>[[item.fee_no]]</td>
-              <td>[[formatNumber(item.bath_value)]]</td>
-              <td>[[formatNumber(item.invoice_fee)]]</td>
-              <td>[[formatNumber(item.tax1percent)]]</td>
-              <td>[[formatNumber(item.bath_balance)]]</td>
+              <td>[[countRound(item.fee_round)]]</td>
+              <td><div style="text-align:left;">[[item.invoice_no]]</div></td>
+              <td>[[item.invoice_count]]</td>
+              <td>[[formatNumber(item.value_b)]]</td>
+              <td>[[formatNumber(item.value_fee_b)]]</td>
+              <td>[[formatNumber(item.value_tax_b)]]</td>
+              <td>[[formatNumber(item.value_final_b)]]</td>
             </tr>
           </template>
           <template is="dom-if" if="[[_isHave(newData)]]">
@@ -89,49 +95,43 @@
   <script>
     Polymer({
       is: "list-of-fee",
-      behaviors: [
-        ReduxBehavior,
-        nylonBehavior,
-        FormatNumberBehavior
-        // g2gCongtroller,
-        // nylonLocalizeBehavior,
-      ],
+      behaviors: [ReduxBehavior, nylonBehavior, FormatNumberBehavior, CookieBehavior, g2gLogicBehavior],
       properties: {
         localize:{
-          statePath : 'i18n.g2g'
+          statePath : 'i18n.fee'
         },
-        newData: {
-          type: Object
+        data:{
+          statePath : 'fee.list'
         }
       },
-      // observers: [
-      //   'initDataFee(data)'
-      // ],
-      // created: function () {
-      //   this.nylonLocalizeImport('/i18n-page1.json');
-      // },
-      // initDataFee: function (data) {
-      //   // console.log(data);
-      //   this.newData = this.g2gClone(data);
-      // },
-      // _searchInArray: function (searchInput) {
-      //   // console.log(searchInput == '');
-      //   if (searchInput != '') {
-      //     let arr = [];
-      //     this.data.map((el) => {
-      //       if (String(el.fee_no).search(searchInput) > -1) {
-      //         //  console.log('search==> ',el);
-      //         arr.push(el);
-      //       }
-      //     });
-      //     this.newData = arr;
-      //   } else {
-      //     this.initDataFee(this.data);
-      //   }
-      // },
-      // getFeeDetail: function (e) {
-      //   this.fire('get-fee-detail', { detail: e.currentTarget.data });
-      // }
+      observers: [
+        'initDataFee(data)'
+      ],
+      initDataFee: function (data) {
+        // console.log(data);
+        this.newData = this.g2gClone(data);
+      },
+      _searchInArray: function (searchInput) {
+        // console.log(searchInput == '');
+        if (searchInput != '') {
+          let arr = [];
+          this.data.map((el) => {
+            if (String(el.fee_no).search(searchInput) > -1) {
+              //  console.log('search==> ',el);
+              arr.push(el);
+            }
+          });
+          this.newData = arr;
+        } else {
+          this.initDataFee(this.data);
+        }
+      },
+      getFeeDetail: function (e) {
+        this.fire('get-fee-detail', { detail: e.currentTarget.data });
+      },
+      countRound: function(data){
+        return data+1;
+      }
     });
   </script>
 </dom-module>

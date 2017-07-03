@@ -32,6 +32,7 @@ export function invoiceAction(store) {
                     callback: () => {
                         this.INVOICE_GET_LIST_DATA(data.contract_id);
                         this.BOOK_GET_LIST_DATA(data.contract_id);
+                        this.FEE_GET_LIST_DATA(data.contract_id);
                         this.SET_STATE({
                             isInsert: false,
                             btnDisabled: true,
@@ -54,6 +55,7 @@ export function invoiceAction(store) {
                     callback: () => {
                         this.INVOICE_GET_LIST_DATA(data.contract_id);
                         this.BOOK_GET_LIST_DATA(data.contract_id);
+                        this.FEE_GET_LIST_DATA(data.contract_id);
                         this._flipDrawerClose();
                     }
                 });

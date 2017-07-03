@@ -1,10 +1,16 @@
 import axios from '../axios'
 import { commonAction } from '../config'
 const initialState = {
+    list: [],
+    data: {},
     list_calc: []
 }
 export function feeReducer(state = initialState, action) {
     switch (action.type) {
+        case 'FEE_GET_LIST_DATA':
+            return Object.assign({}, state, { list: action.payload });
+        case 'FEE_GET_ID_DATA':
+            return Object.assign({}, state, { list_calc: action.payload });
         case 'FEE_CALC_DATA':
             return Object.assign({}, state, { list_calc: action.payload });
         default:
@@ -14,6 +20,26 @@ export function feeReducer(state = initialState, action) {
 export function feeAction(store) {
     return [commonAction(),
     {
+        FEE_GET_LIST_DATA: function(id){
+            axios.get('./fee/contract?id='+id)
+            .then((response) => {
+                store.dispatch({ type: 'FEE_GET_LIST_DATA', payload: response.data});
+            })
+            .catch((err) => {
+                console.log(err);
+            })
+        },
+        FEE_GET_ID_DATA: function(id){
+            axios.get('./fee?id='+id)
+            .then((response) => {
+                response.data.fee_date = response.data.fee_date.split('T')[0];
+                // console.log(response.data);
+                store.dispatch({type : 'FEE_GET_ID_DATA', payload : response.data});
+            })
+            .catch((err) => {
+                console.log(err);
+            })
+        },
         FEE_CALC_DATA: function (data) {
             axios.get('./fee/calc?book_id='+data)
             .then((response) => {
@@ -36,9 +62,10 @@ export function feeAction(store) {
                 console.log(err);
             })
         },
-        FEE_INSERT: function (data){
+        FEE_INSERT: function (data){ 
             // console.log(data);
             var contract_id = this.getCookieBhv("contract_id");
+            this.fire('toast',{status:'load'});
             axios.post('./fee/insert', data)
             .then((response) =>{
                 this.fire('toast', {
@@ -46,12 +73,31 @@ export function feeAction(store) {
                     callback: () => {
                         this.INVOICE_GET_LIST_DATA(contract_id);
                         this.BOOK_GET_LIST_DATA(contract_id);
+                        this.FEE_GET_LIST_DATA(contract_id);
                         this._flipDrawerClose();
-                        // this.SET_STATE({
-                        //     isInsert: false,
-                        //     btnDisabled: true,
-                        //     hiddend: true
-                        // });
+                    }
+                });
+            })
+            .catch((err) => {
+                console.log(err);
+            })
+        },
+        FEE_UPDATE: function(data){
+            var contract_id = this.getCookieBhv("contract_id");
+            this.fire('toast',{status:'load'});
+            axios.put('./fee/update',data)
+            .then((response) => {
+                this.fire('toast', {
+                    status: 'success', text: 'บันทึกสำเร็จ',
+                    callback: () => {
+                        this.INVOICE_GET_LIST_DATA(contract_id);
+                        this.BOOK_GET_LIST_DATA(contract_id);
+                        this.FEE_GET_LIST_DATA(contract_id);
+                        this.SET_STATE({
+                            isInsert: false,
+                            btnDisabled: true,
+                            hiddend: true
+                        });
                     }
                 });
             })

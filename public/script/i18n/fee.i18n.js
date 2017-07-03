@@ -1,8 +1,11 @@
 export const fee ={
     th:{
         rice_detail_and_payout:"รายละเอียดค่าข้าวและค่าใช้จ่ายส่งมอบ",
+        fee_no:"คิดค่าธรรมเนียมครั้งที่",
+        fee_round:"รอบที่",
         received_date:"วันที่ได้รับเงิน",
         cal_no:"งวดที่",
+        contract_name:'ชื่อสัญญา',
         exchange_rate:"อัตราแลกเปลี่ยน",
         exchange_rate_bank:"อัตราแลกเปลี่ยนที่ธนาคารเสนอ",
         usd:"USD",
@@ -17,6 +20,7 @@ export const fee ={
         expenses_fee:"หักค่าธรรมเนียม",
         from:"จาก",
         invoice_no:"เลขที่ใบแจ้งหนี้",
+        invoice_count:"จำนวนใบแจ้งหนี้",
         vessel_name:"ชื่อเรือ",
         amount:"จำนวน",
         money:"เงิน",
@@ -36,6 +40,7 @@ export const fee ={
         edit:"แก้ไข",
         confirm:"ยืนยัน",
         save:"บันทึก",
-        cancel:"ยกเลิก"
+        cancel:"ยกเลิก",
+        no_data:"ไม่มีข้อมูล"
     }
 }   
