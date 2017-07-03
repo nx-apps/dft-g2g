@@ -183,25 +183,29 @@
     </gl-form-panel>
 
     <div class="horizontal end-justified layout">
-      <template is="dom-if" if="[[common.btnDisabled]]">
-        <!--<template is="dom-if" if="[[data.fee_det_status]]">-->
-          <paper-button raised on-tap="approvePayment" class="gl-btn-default" hidden="[[data.fee_det_status]]">{{localize.reset_data}}{{localize.confirm}}</paper-button>
-        <!--</template>-->
-      </template>
+
+      <!--<template is="dom-if" if="[[common.btnDisabled]]">
+        <template is="dom-if" if="[[!data.fin_status]]">
+          <paper-button raised on-tap="approvePayment" class="gl-btn-default" hidden="[[data.fee_det_status]]">{{localize.reset_data}}</paper-button>
+        </template>
+      </template>-->
+      
       <template is="dom-if" if="[[!common.btnDisabled]]">
         <paper-button raised class="gl-btn-default" on-tap="cancelFee" hidden="[[!common.isInsert]]">{{localize.reset_data}}</paper-button>
         <paper-button raised on-tap="addPayment" class="gl-btn-success" hidden="[[!common.isInsert]]">{{localize.add}}</paper-button>
       </template>
+
       <template is="dom-if" if="[[!common.btnDisabled]]">
-        <paper-button raised class="gl-btn-default" on-tap="calcelContract" hidden="[[common.isInsert]]">{{localize.reset_data}}</paper-button>
+        <paper-button raised class="gl-btn-default" on-tap="cancelContract" hidden="[[common.isInsert]]">{{localize.reset_data}}</paper-button>
+        <paper-button raised class="gl-btn-default" on-tap="cancel" hidden="[[common.isInsert]]">{{localize.cancel}}</paper-button>
         <paper-button raised class="gl-btn-success" on-tap="savePayment" hidden="[[common.isInsert]]">{{localize.save}}</paper-button>
       </template>
 
-      <!--<template is="dom-if" if="[[data.fee_det_status]]">-->
+      <template is="dom-if" if="[[data.fin_status]]">
         <template is="dom-if" if="[[common.btnDisabled]]">
           <paper-button raised class="gl-btn-danger" on-tap="editFee" hidden="[[common.isInsert]]">{{localize.cancel}}{{localize.confirm}}</paper-button>
         </template>
-      <!--</template>-->
+      </template>
     </div>
 
   </template>
@@ -224,22 +228,6 @@
         }
       },
       behaviors: [ReduxBehavior, g2gLogicBehavior, ValidateFormBehavior],
-      observers: [
-        // '_oBcheckValue(data.invoice_detail.*)'
-        // // '_changeDataPayrf(item.invoice_date)'
-      ],
-      // _oBcheckValue: function (data) {
-      //   // console.log(data);
-      // },
-      // _changeDataPayrf: function (dateUn, index) {
-      //   // this.getDateg2g(dateUn, (date) => {
-      //   // console.log(date,index);
-      //   // return date;
-      //   // this.set('item.invoice_date', date);
-      //   // console.log(this.item.invoice_date);
-      //   // this.notifyPath('item.invoice_date');
-      //   // });
-      // },
       _calcfeeEx: function(fee, index){
         if(typeof this.data.book !== 'undefined'){
           if(fee !== ''){
@@ -260,9 +248,6 @@
           }
         }
       },
-      // _countPage: function (invoiceIndex) {
-      //   return invoiceIndex + 1;
-      // },
       _obArrayShip:function(ships){
         return ships.join()
       },
@@ -336,13 +321,6 @@
           this.set('data.book.'+index+'.value_fee_b', result);
           return result;
         }
-
-        // if (isNaN(result)) {
-        //   return '0'
-        // } else {
-        //   this.set('data.'+index+'.totalFeeInvoices', result)
-        //   return result;
-        // }
       },
       _totalBalance: function (index, data) {
         var result = 0;
@@ -377,16 +355,6 @@
           return result;
         }
       },
-
-      // _totalPricePerTonUsdInvoices: function (index, data) {
-      //   var result = 0;
-      //   if(typeof data.base[index] !== 'undefined'){
-      //     data.base[index].detail.map((item) => {
-      //         result += item.price_d;
-      //     })
-      //     return result;
-      //   }
-      // },
       addPayment: function (){
         let newData = {
           rate_bank_b : parseFloat(this.rateBank), 
@@ -415,6 +383,46 @@
             status: 'connectError', text: 'กรุณากรอกข้อมูลให้ครบถ้วน',callback: () => {}
           });
         }
+      },
+      cancelFee: function(){
+        var book_id = this.data.book.map((item) => {
+          return item.book_id
+        });
+        var id = book_id.join('_');
+        this.dispatchAction('FEE_CALC_DATA', id);
+      },
+      savePayment:function(){
+        let{rate_bank_b, rate_tt_b, fee_date, book, id} = this.data;
+        let newData = {rate_bank_b, rate_tt_b, book, id};
+        newData.fee_date = this.data.fee_date+'T00:00:00+07:00';
+        // console.log(newData);
+        this.fire('check-required');
+        if(this.checkRequired === true){
+          this.fire('toast', {
+            status: 'openDialog', 
+            text: 'ต้องการเพิ่มค่าธรรมเนียมใช่หรือไม่',
+            confirmed: (result) =>{
+              if(result === true){
+                this.dispatchAction('FEE_UPDATE', newData);
+              }
+            }
+          });
+        }else{
+          this.fire('toast', {
+            status: 'connectError', text: 'กรุณากรอกข้อมูลให้ครบถ้วน',callback: () => {}
+          });
+        }
+      },
+      cancel:function(){
+        this.dispatchAction('FEE_GET_ID_DATA',this.data.id);
+        this.dispatchAction('SET_STATE',{
+            isInsert: false,
+            btnDisabled: true,
+            hiddend: true
+        });
+      },
+      cancelContract:function(){
+        this.dispatchAction('FEE_GET_ID_DATA',this.data.id);
       }
     });
   </script>

@@ -274,6 +274,7 @@ export function bookAction(store) {
                         callback: () => {
                             this.INVOICE_GET_LIST_DATA(data.contract_id);
                             this.BOOK_GET_LIST_DATA(data.contract_id);
+                            this.FEE_GET_LIST_DATA(data.contract_id);
                             this._flipDrawerClose();
                         }
                     });
@@ -284,14 +285,22 @@ export function bookAction(store) {
         },
         BOOK_DELETE: function (data) {
             // console.log(data)
+            this.fire('toast', { status: 'load' });
             axios.put('./book/approve', data)
-                .then((response) => {
-                    console.log(response);
-                })
-                .catch((err) => {
-                    console.log(err);
-                })
-
+            .then((response) => {
+                this.fire('toast', {
+                    status: 'success', text: 'บันทึกสำเร็จ',
+                    callback: () => {
+                        this.INVOICE_GET_LIST_DATA(data.contract_id);
+                        this.BOOK_GET_LIST_DATA(data.contract_id);
+                        this.FEE_GET_LIST_DATA(data.contract_id);
+                        this._flipDrawerClose();
+                    }
+                });
+            })
+            .catch((err) => {
+                console.log(err);
+            })
         }
     }
     ]

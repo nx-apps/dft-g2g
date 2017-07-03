@@ -12,6 +12,7 @@ export const invoice = {
         usd:'USD',
         baht:'บาท',
         print_invoice:'พิมพ์ใบแจ้งหนี้',
-        money_receiver:'ได้รับเงิน'
+        money_receiver:'ได้รับเงิน',
+        no_data:"ไม่มีข้อมูล"
     }
 }
