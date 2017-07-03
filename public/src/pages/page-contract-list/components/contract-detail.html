@@ -142,7 +142,7 @@
         </gl-grid-col>
       </gl-grid-row>
       <gl-grid-row width="{{getWidth}}">
-        <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,9]]">
+        <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,9]]">[[changeString2Num(data.*,'contract_no')]]
           <gl-form-input type="number" required class="required"  error-message="{{localize.label_error_contract}}"
             label="เลขที่สัญญา (ยัง)" value="{{data.contract_no}}" placeholder="เลขที่สัญญา (ยัง)"></gl-form-input>
         </gl-grid-col>

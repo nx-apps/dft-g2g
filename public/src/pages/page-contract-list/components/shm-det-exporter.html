@@ -48,7 +48,8 @@
       <gl-form-panel-head label="{{localize.label_exporter_detail}}" set-padding="10px" set-border="1px"></gl-form-panel-head>
 
       <gl-form-panel-body>
-        {{_getSellerPhone(data.company_id,dataForSelect)}} [[data.book_id]]////[[data.gross_weight]]
+        {{_getSellerPhone(data.company_id,dataForSelect)}}
+        <!--[[data.book_id]]////[[data.gross_weight]]-->
         <gl-grid-row width="{{getWidth}}">
           <template is="dom-if" if="[[commonState.isInsert]]">
             <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,8]]">
@@ -62,16 +63,16 @@
             </gl-grid-col>
 
             <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,8]]">
-              <gl-form-textarea rows="2" disabled label="{{localize.label_exporter_address}}" value="{{data.company_address}}" always-float-label></gl-form-textarea>
+              <gl-form-textarea rows="2" disabled label="{{localize.label_exporter_address}}" value="{{data.company.company_address_th}}  {{data.company.company_province_th}}" always-float-label></gl-form-textarea>
             </gl-grid-col>
           </template>
           <template is="dom-if" if="[[!commonState.isInsert]]">
             <template is="dom-if" if="[[commonState.btnDisabled]]">
               <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,8]]">
-                <gl-form-input disabled label="{{localize.text_exporter_name}}" value="{{data.company_name_th}}" always-float-label></gl-form-input>
+                <gl-form-input disabled label="{{localize.text_exporter_name}}" value="[{{data.company_taxno}}] {{data.company.company_name_th}}" always-float-label></gl-form-input>
               </gl-grid-col>
               <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,8]]">
-                <gl-form-textarea rows="2" disabled label="{{localize.label_exporter_address}}" value="{{data.company_address}}" always-float-label></gl-form-textarea>
+                <gl-form-textarea rows="2" disabled label="{{localize.label_exporter_address}}" value="{{data.company.company_address_th}}  {{data.company.company_province_th}}" always-float-label></gl-form-textarea>
               </gl-grid-col>
             </template>
             <template is="dom-if" if="[[!commonState.btnDisabled]]">
@@ -86,7 +87,7 @@
               </gl-grid-col>
 
               <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,8]]">
-                <gl-form-textarea rows="2" disabled label="{{localize.label_exporter_address}}" value="{{data.company_address}}" always-float-label></gl-form-textarea>
+                <gl-form-textarea rows="2" disabled label="{{localize.label_exporter_address}}" value="{{data.company.company_address_th}}  {{data.company.company_province_th}}" always-float-label></gl-form-textarea>
               </gl-grid-col>
             </template>
           </template>
@@ -172,14 +173,14 @@
       </gl-form-panel-body>
       <gl-form-panel-footer set-padding="10px 20px 0px 20px">
         <template is="dom-if" if="[[!commonState.btnDisabled]]">
-          <template is="dom-if" if="[[commonState.isInsert]]">
+          <template is="dom-if" if="[[!commonState.isInsert]]">
             <paper-button class="gl-btn-default" on-tap="calcelShipmentInsert" raised>{{localize.btn_cancel}}</paper-button>
             <paper-button class="gl-btn-success" raised on-tap="editExporter">
               <iron-icon class="gl-icon-size" icon="save"></iron-icon>{{localize.btn_save}}</paper-button>
           </template>
         </template>
 
-        <template is="dom-if" if="[[!commonState.isInsert]]">
+        <template is="dom-if" if="[[commonState.isInsert]]">
           <paper-button class="gl-btn-success" raised on-tap="addExporter"> {{localize.btn_add}}</paper-button>
         </template>
       </gl-form-panel-footer>
@@ -223,6 +224,18 @@
         // },
         exporterList: {
           statePath: 'commonG2g.exporterList',
+          // observer: 'get'
+        },
+        contractId: {
+          statePath: 'commonState.contractId',
+          // observer: 'get'
+        },
+        confirmId: {
+          statePath: 'commonState.confirmId',
+          // observer: 'get'
+        },
+        bookId: {
+          statePath: 'commonState.bookId',
           // observer: 'get'
         },
         // price: {
@@ -335,6 +348,7 @@
           // console.log(this.packageList);
           // console.log(package_id);
           let price = this.packageList.find((item) => item.package_id === package_id)
+
           this.set('data.price_d', price.price_d)
           this.set('data.package_weight_bag', price.package.package_weight_bag)
           let package_amount = ((parseFloat(net_weight) * parseFloat(1000)) / parseFloat(price.package.package_kg_per_bag))
@@ -435,6 +449,14 @@
       _resiveDataBookExporter: function () {
         return new Promise((res, rej) => {
           let dataResive = this.data
+          dataResive.contract_id  = this.contractId.contract_id
+          dataResive.contract_no = Number(this.contractId.contract_no)
+          dataResive.cl_id  = this.confirmId.cl_id
+          dataResive.cl_no = Number(this.confirmId.cl_no)
+          dataResive.book_id = this.bookId.book_id
+          dataResive.book_no = this.bookId.book_no
+          dataResive.value_d = dataResive.net_weight * dataResive.price_d
+          delete dataResive.package_weight_bag
           delete dataResive.date_updated
           delete dataResive.date_created
           res(dataResive)
@@ -666,7 +688,9 @@
       getObjectHamonize: function (e) {
         if (e.detail.value) {
           let data = e.detail.value
-          console.log(data);
+          // console.log(data);
+          this.set('data.project_en', data.project_en)
+          this.set('data.project_th', data.project_th)
           this.set('data.hamonize', {
             digits: data.hamonize.digits,
             hamonize_code: data.hamonize.hamonize_code,
