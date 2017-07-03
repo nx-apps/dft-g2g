@@ -55,8 +55,8 @@
     <iron-pages selected="{{pageSelected}}" attr-for-selected="name">
       <div name="list-of-booking">
         <!--<list-of-booking-exporter></list-of-booking-exporter>-->
-        <gl-combo-box placeholder="งวดที่ (ยัง)" items="{{confirmLetterlist}}" item-label-path="label" label="งวดที่ (ยัง)" item-value-path="id"
-          on-value-changed="getShowByBook" value="{{cl_id}}" on-selected-item-changed="getObjectCl">
+        <gl-combo-box id="cl_id" placeholder="งวดที่ (ยัง)" items="{{confirmLetterlist}}" item-label-path="label" label="งวดที่ (ยัง)"
+          item-value-path="id" on-value-changed="getShowByBook" value="{{cl_id}}" on-selected-item-changed="getObjectCl">
           <template>
             [[item.label]]
           </template>
@@ -145,9 +145,13 @@
           type: String,
           value: 'list-of-booking'
         },
+        setPage: {
+          statePath: 'commonState.setPageAndSearch',
+          observer: 'setPageFun'
+        },
         confirmLetterlist: {
           statePath: 'confirmLetter.confirmLetterlist',
-          observer: 'get'
+          observer: 'setConfirm'
         },
         bookList: {
           statePath: 'book.bookList'
@@ -179,6 +183,16 @@
         // '_get-fire-booking-detail': '_getFireBookingDetail',
         // '_get-fire-group-exporter': '_getFireGroupExporter'
       },
+      setPageFun: function (data) {
+        this.set('pageSelected', data.page)
+        this.$$('#cl_id').value = data.search
+        this.$$('#cl_id').reset()
+        // console.log(0)
+      },
+      setConfirm: function (data) {
+        if (data.length > 0)
+          this.$$('#cl_id').value = data[0].id
+      },
       _isSeleted: function (data) {
         return data === ''
       },
@@ -188,6 +202,16 @@
           // console.log(e.detail.value);
           let clData = { cl_id: e.detail.value.id, cl_no: e.detail.value.cl_no }
           this.dispatchAction('SET_CONFIRM_ID', clData)
+          console.log(this.contractId)
+          // this.dispatchAction('SET_BREADCRUMBS', [{
+          //   label: 'สัญญาที่ ' + this.contractId.contract_no,
+          //   href: ''
+          // },
+          // {
+          //   label: 'งวดที่ ' + e.detail.value.cl_no,
+          //   href: ''
+          // },
+          // ])
         }
 
       },
@@ -199,6 +223,19 @@
           btnDisabled: true,
           hiddend: true
         })
+        this.dispatchAction('SET_BREADCRUMBS', [{
+            label: 'สัญญาที่ ' + this.contractId.contract_no,
+            href: ''
+          },
+          {
+            label: 'งวดที่ ' + this.dataShow.cl_no,
+            href: ''
+          },
+          {
+            label: 'Booking ' + e.currentTarget.data.book_no,
+            href: ''
+          },
+          ])
         this.dispatchAction('GET_BOOK_DETAIL', this.genUrl(url))
         this.async(() => {
           this.fire('toast', {
@@ -215,6 +252,7 @@
           if (e.detail.value !== undefined && e.detail.value !== '') {
             // console.log(e.detail.value);
             let url = { cl_id: e.detail.value }
+
             this.dispatchAction('GET_BOOK_LIST', this.genUrl(url));
             this.dispatchAction('GET_BOOK_HAMONIZE_LIST', this.genUrl(url));
 
@@ -257,34 +295,50 @@
         // console.log(data.detail);
       },
       createBooking: function () {
-
-        // console.log(data.detail);
-        this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
-        let ship_lot = 0
-        if (this.bookList.length > 0) {
-          ship_lot = this.bookList[0].ship_lot
-        }
-        let data = {
-          contract_id: this.contractId.contract_id,
-          contract_no: this.contractId.contract_no,
-          cl_id: this.dataShow.id,
-          cl_no: this.dataShow.cl_no,
-          ship_lot: ship_lot + 1
-        }
-        // console.log(data);
-        this.dispatchAction('CLEAR_BOOK_DETAIL', data)
-        this.dispatchAction('SET_STATE', {
-          isInsert: true,
-          btnDisabled: false,
-          hiddend: true
-        })
-        this.async(() => {
-          this.fire('toast', {
-            status: 'success', text: 'โหลดสำเร็จ', callback: () => {
-              this.set('pageSelected', 'list-of-booking-add')
-            }
+        try {
+          // console.log(data.detail);
+          this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
+          let ship_lot = 0
+          if (this.bookList.length > 0) {
+            ship_lot = this.bookList[0].ship_lot
+          }
+          let data = {
+            contract_id: this.contractId.contract_id,
+            contract_no: this.contractId.contract_no,
+            cl_id: this.dataShow.id,
+            cl_no: this.dataShow.cl_no,
+            ship_lot: ship_lot + 1
+          }
+          this.dispatchAction('SET_BREADCRUMBS', [{
+            label: 'สัญญาที่ ' + data.contract_no,
+            href: ''
+          },
+          {
+            label: 'งวดที่ ' + data.cl_no,
+            href: ''
+          },
+          {
+            label: 'เพิ่ม Booking ',
+            href: ''
+          },
+          ])
+          // console.log(data);
+          this.dispatchAction('CLEAR_BOOK_DETAIL', data)
+          this.dispatchAction('SET_STATE', {
+            isInsert: true,
+            btnDisabled: false,
+            hiddend: true
           })
-        }, 500)
+          this.async(() => {
+            this.fire('toast', {
+              status: 'success', text: 'โหลดสำเร็จ', callback: () => {
+                this.set('pageSelected', 'list-of-booking-add')
+              }
+            })
+          }, 500)
+        } catch (e) {
+          //   // console.log(e);
+        }
       },
       getBookingExporter: function (e) {
         console.log(e.currentTarget.data);

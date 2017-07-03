@@ -94,7 +94,7 @@
                 let data = e.currentTarget.data
                 document.cookie = "buyerId=" + data.buyer_id
                 document.cookie = "country_name_en=" + data.country_name_en
-                console.log(data);
+                // console.log(data);
                 this.fire('nylon-change-page',{path:'/contract-list'})
             },
             getChartQuantity(quantity) {

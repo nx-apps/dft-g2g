@@ -47,7 +47,7 @@
         </div>
         <div class="horizontal layout wrap">
           <div id="combox" class="flex">
-            <gl-combo-box placeholder="ผู้ส่งออกทั้งหมด" items="{{confirmLetterExporterlist}}" item-label-path="label" label="ผู้ส่งออก"
+            <gl-combo-box id="cl_id" placeholder="ผู้ส่งออกทั้งหมด" items="{{confirmLetterExporterlist}}" item-label-path="label" label="ผู้ส่งออก"
               item-value-path="exporter_id" on-value-changed="getShowByExport">
               <template>
                 [[item.label]]
@@ -140,6 +140,10 @@
           value: 'listOfConfirm',
           notify: true
         },
+        setPage: {
+          statePath: 'commonState.setPageAndSearch',
+          observer: 'setPageFun'
+        },
         confirmLetterList: {
           statePath: 'confirmLetter.confirmLetterlist',
           // observer:'get'
@@ -152,6 +156,11 @@
           statePath: 'commonState.contractId',
           observer: 'get'
         },
+      },
+      setPageFun: function (data) {
+        this.set('pageSelected', data.page)
+        this.$$('#cl_id').value = data.search
+        this.$$('#cl_id').reset()
       },
       // created: function () {
       //   this.nylonLocalizeImport('/i18n-page1.json');
@@ -174,15 +183,23 @@
       //   }
       // },
       createConfirm: function () {
-        let data = {cl_no:0}
+        let data = { cl_no: 0 }
         if (this.confirmLetterList.length !== 0) {
-          data.cl_no = this.confirmLetterList[0].cl_no 
-          
+          data.cl_no = this.confirmLetterList[0].cl_no
+
         }
         data.cl_no++
         data.contract_id = this.contractId.contract_id
         data.contract_no = this.contractId.contract_no
-
+        this.dispatchAction('SET_BREADCRUMBS', [{
+          label: 'สัญญาที่ ' + this.contractId.contract_no,
+          href: ''
+        },
+        {
+          label: 'เพิ่มงวด',
+          href: ''
+        },
+        ])
         this.fire('toast', { status: 'load' });
         this.dispatchAction('SET_STATE', {
           isInsert: true,
@@ -208,6 +225,15 @@
           btnDisabled: true,
           hiddend: true
         })
+        this.dispatchAction('SET_BREADCRUMBS', [{
+          label: 'สัญญาที่ ' + this.contractId.contract_no,
+          href: ''
+        },
+        {
+          label: 'งวดที่ ' + cl.cl_no,
+          href: ''
+        },
+        ])
         this.dispatchAction('GET_CONFIRM_DETAIL', cl.id)
         this.async(() => {
           this.fire('toast', {
@@ -252,6 +278,11 @@
       // },
       _backPageConfirm: function (data) {
         this.pageSelected = 'listOfConfirm';
+        this.dispatchAction('SET_BREADCRUMBS', [{
+          label: 'สัญญาที่ ' + this.contractId.contract_no,
+          href: ''
+        },
+        ])
       },
 
       printVesel: function (e) {

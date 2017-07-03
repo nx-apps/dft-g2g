@@ -2,16 +2,25 @@ import axios from '../axios'
 import { commonAction } from '../config'
 const initialState = {
     list: [],
-    setState:{},
-    contractId:{},
-    confirmId:{},
-    bookId:{},
-    contryNameEn:{}
+    breadCrumbs: [{ label: 'Overview' },
+    { label: 'Subitem1' },
+    { label: 'Subitem2' },
+    { label: 'Subitem3' }],
+    setState: {},
+    setPageAndSearch: {},
+    contractId: {},
+    confirmId: {},
+    bookId: {},
+    contryNameEn: {}
 }
 export function commonStateReducer(state = initialState, action) {
     switch (action.type) {
         case 'SET_STATE':
             return Object.assign({}, state, { setState: action.payload });
+        case 'SET_BREADCRUMBS':
+            return Object.assign({}, state, { breadCrumbs: action.payload });
+        case 'SET_PAGE_AND_SEARCH':
+            return Object.assign({}, state, { setPageAndSearch: action.payload });
         case 'SET_CONTRACT_ID':
             return Object.assign({}, state, { contractId: action.payload });
         case 'SET_CONFIRM_ID':
@@ -30,6 +39,16 @@ export function commonStateAction(store) {
         SET_STATE: function (data) {
             // console.log(data);
             store.dispatch({ type: 'SET_STATE', payload: data })
+            // return axios.get('/external/upload/list/' + ref + '/' + com)
+        },
+        SET_BREADCRUMBS: function (data) {
+            console.log(data);
+            store.dispatch({ type: 'SET_BREADCRUMBS', payload: data })
+            // return axios.get('/external/upload/list/' + ref + '/' + com)
+        },
+        SET_PAGE_AND_SEARCH: function (data) {
+            // console.log(data);
+            store.dispatch({ type: 'SET_PAGE_AND_SEARCH', payload: data })
             // return axios.get('/external/upload/list/' + ref + '/' + com)
         },
         SET_CONTRACT_ID: function (data) {

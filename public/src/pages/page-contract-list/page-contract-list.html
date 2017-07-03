@@ -3,11 +3,11 @@
 <link rel="import" href="./../../../bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="./../../../bower_components/paper-tooltip/paper-tooltip.html">
 <link rel="import" href="./../../../bower_components/nylon-panel/nylon-panel-right.html">
+<link rel="import" href="./../../../bower_components/plutonium-breadcrumbs/plutonium-breadcrumbs.html">
 <!--<link rel="import" href="components/contract-detail.html">-->
 <!--<link rel="import" href="components/list-of-confirm.html">
 <link rel="import" href="components/list-of-booking.html">
 <link rel="import" href="components/list-of-fee-g2g.html">-->
-hip
 <link rel="import" href="./../../../bower_components/iron-pages/iron-pages.html">
 
 <link rel="import" href="./components/chart-pie-g2g.html">
@@ -16,7 +16,7 @@ hip
 <link rel="import" href="./../components/g2g-logic-behavior.html">
 <link rel="import" href="./../../layout/shared-styles.html">
 <dom-module id="page-contract-list">
-    <style media="screen" include="iron-flex iron-flex-factors iron-flex-alignment shared-styles.html">
+    <style media="screen" include="iron-flex iron-flex-factors iron-flex-alignment shared-styles">
          :host {
             --paper-fab-background: var(--paper-light-blue-500);
             --paper-fab-keyboard-focus-background: var(--paper-light-blue-900);
@@ -94,8 +94,8 @@ hip
                     statePath: 'i18n.g2g'
                 },
                 crumbs: {
-                    type: Array,
-                    value: []
+                    statePath: 'commonState.breadCrumbs',
+                    observer:'setddd'
                 },
                 // feeList: {
                 //     type: Object
@@ -129,6 +129,9 @@ hip
                 //     type: Object,
                 //     value: { listOfConfirm: 'listOfConfirm', listOfShipment: 'listOfShipment' }
                 // }
+            },
+            setddd(d){
+                console.log(d)
             },
             listeners: {
                 // 'refresh-contract': '_getContractList',
@@ -274,6 +277,10 @@ hip
             // },
             // //addContract
             addContract: function () {
+                this.dispatchAction('SET_BREADCRUMBS',[{
+                        label: 'เพิ่มสัญญา',
+                        href: ''
+                    }])
                 // let datass = [
                 //     {
                 //         label: 'เพิ่มสัญญา',
@@ -283,7 +290,7 @@ hip
                 // this.setBreadcrumbs(datass)
                 // this.g2gPageSeleted = 'addContract';
                 // this.titlePanelRight = 'เพิ่มข้อมูลผู้สั่งซื้อ'
-                this.dispatchAction('CLEAR_CONTRACT')
+                
                 this.fire('toast', { status: 'load' });
                 this.dispatchAction('SET_STATE', {
                     isInsert: true,
@@ -300,6 +307,10 @@ hip
                 }, 500)
             },
             _getContractDetail: function (e) {
+                this.dispatchAction('SET_BREADCRUMBS',[{
+                        label: 'สัญญาที่ '+e.detail.contract_no ,
+                        href: ''
+                    }])
                 // console.log(e.detail.contract_id);
                 this.dispatchAction('GET_CONTRACT', e.detail.contract_id)
                 this.g2gPageSeleted = 'contractDetail'
@@ -335,10 +346,15 @@ hip
             },
             _getListConfirm: function (e) {
                 let url = { contract_id: e.detail.contract_id, status: 'all' }
+                this.dispatchAction('SET_BREADCRUMBS',[{
+                        label: 'สัญญาที่ '+e.detail.contract_no ,
+                        href: ''
+                    }])
                 this.dispatchAction('GET_CONFIRM_LIST', this.genUrl(url))
                 this.dispatchAction('GET_HAMONIZE_OF_CONTRACT', this.genUrl(url))
                 this.dispatchAction('GET_CONFIRM_EXPORTER_LIST', this.genUrl(url))
                 this.g2gPageSeleted = 'listOfConfirm'
+                this.dispatchAction('SET_PAGE_AND_SEARCH', { page: 'listOfConfirm', search: '' })
                 // console.log(11111)
                 //     this.set('pageSelected', 'listOfConfirm')
                 //     // listOfConfirm
@@ -429,9 +445,14 @@ hip
                 let url = { contract_id: e.detail.contract_id, status: true }
                 this.dispatchAction('GET_CONFIRM_LIST', this.genUrl(url))
                 this.dispatchAction('GET_HAMONIZE_OF_CONTRACT', this.genUrl(url))
+                this.dispatchAction('SET_BREADCRUMBS',[{
+                        label: 'สัญญาที่ '+e.detail.contract_no ,
+                        href: ''
+                    }])
                 this.g2gPageSeleted = 'listOfShipment';
                 let contractData = { contract_id: e.detail.contract_id, contract_no: e.detail.contract_no }
                 this.dispatchAction('SET_CONTRACT_ID', contractData)
+                this.dispatchAction('SET_PAGE_AND_SEARCH', { page: 'list-of-booking', search: '' })
                 //     // console.log(e.detail.contractId);
                 //     if (typeof e.detail.contractId == "undefined") {
                 //     this.set('pageSelected', 'list-of-booking')
