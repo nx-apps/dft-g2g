@@ -74,13 +74,13 @@
           <tr>
             <th>{{localize.exporter}}</th>
             <th>{{localize.amount}} ({{localize.ton}})<br>(1)</th>
-            <th>{{localize.value_ton}} ({{localize.usd}})<br>(2)</th>
-            <th>{{localize.amount}}{{localize.money}} ({{localize.usd}})<br>(3)= (1)*2</th>
-            <th>{{localize.amount}}{{localize.money}} ({{localize.baht}})<br>(4)= (3)*[[rateBank]]</th>
-            <th>{{localize.expenses_fee}} ({{localize.baht}})<br>(5)</th>
-            <th>{{localize.balance}}{{localize.from}}{{localize.expenses_fee}}<br>(6)= (4)-(5)</th>
-            <th>{{localize.expenses_one_present}} ({{localize.baht}})<br> (7)= (6)*1%</th>
-            <th>{{localize.balance}} ({{localize.baht}})<br> (8)= (6)-(7)</th>
+            <!--<th>{{localize.value_ton}} ({{localize.usd}})<br>(2)</th>-->
+            <th>{{localize.amount}}{{localize.money}} ({{localize.usd}})</th>
+            <th>{{localize.amount}}{{localize.money}} ({{localize.baht}})</th>
+            <th>{{localize.expenses_fee}} ({{localize.baht}})</th>
+            <th>{{localize.balance}}{{localize.from}}{{localize.expenses_fee}}</th>
+            <th>{{localize.expenses_one_present}} ({{localize.baht}})</th>
+            <th>{{localize.balance}} ({{localize.baht}})</th>
           </tr>
           <template is="dom-repeat" items="[[totalInvoice]]" as="invoice">
             <tr>
@@ -88,27 +88,27 @@
               <td>
                 <gl-form-input class="number" format-number="on" style="width:140px;" value="[[invoice.totalTonInvoices]]" disabled></gl-form-input>
               </td>
-              <td>
+              <!--<td>
                 <gl-form-input format-number="on" style="width:140px;text-align:center;" value="[[invoice.totalPricePerTonUsdInvoices]]"
                   disabled></gl-form-input>
-              </td>
+              </td>-->
               <td>
                 <gl-form-input class="number" format-number="on" style="width:140px;" value="[[invoice.totalAmountUsdInvoices]]" disabled></gl-form-input>
               </td>
               <td>
-                <gl-form-input class="number" format-number="on" style="width:140px;" value="[[invoice.totalBathInvoices]]" disabled></gl-form-input>
+                <gl-form-input class="number" format-number="on" style="width:140px;" value="[[invoice.value_b]]" disabled></gl-form-input>
               </td>
               <td>
-                <gl-form-input style="text-align:right;" format-number="on" style="width:140px;" value="[[invoice.totalFeeInvoices]]" disabled></gl-form-input>
+                <gl-form-input style="text-align:right;" format-number="on" style="width:140px;" value="[[invoice.value_fee_b]]" disabled></gl-form-input>
               </td>
               <td>
-                <gl-form-input style="text-align:right;" format-number="on" style="width:140px;" value="[[invoice.totalBalance]]" disabled></gl-form-input>
+                <gl-form-input style="text-align:right;" format-number="on" style="width:140px;" value="[[invoice.value_bal_b]]" disabled></gl-form-input>
               </td>
               <td>
-                <gl-form-input style="text-align:right;" format-number="on" style="width:140px;" value="[[invoice.totalIncomeTaxInvoices]]" disabled></gl-form-input>
+                <gl-form-input style="text-align:right;" format-number="on" style="width:140px;" value="[[invoice.value_tax_b]]" disabled></gl-form-input>
               </td>
               <td>
-                <gl-form-input style="text-align:right;" format-number="on" style="width:140px;" value="[[invoice.totalMoneyBathInvoices]]" disabled></gl-form-input>
+                <gl-form-input style="text-align:right;" format-number="on" style="width:140px;" value="[[invoice.value_final_b]]" disabled></gl-form-input>
               </td>
             </tr>
           </template>
@@ -117,9 +117,9 @@
             <td>
               <gl-form-input class="number" style="width:140px;" format-number="on" value="[[data.totalTonInvoices]]" disabled></gl-form-input>
             </td>
-            <td>
+            <!--<td>
               <gl-form-input style="width:140px;text-align:center;" format-number="on" value="[[data.totalPricePerTonUsdInvoices]]" disabled></gl-form-input>
-            </td>
+            </td>-->
             <td>
               <gl-form-input class="number" style="width:140px;" format-number="on" value="[[data.totalAmountUsdInvoices]]" disabled></gl-form-input>
             </td>
@@ -200,7 +200,8 @@
 
             result = 0;
             this.totalInvoice.map((el) => {
-              result += el.totalBathInvoices;
+              // result += el.totalBathInvoices;
+              result += el.value_b;
             });
             this.set('data.totalBathInvoices', result)
         //     // this.data.totalBathInvoices = result
@@ -208,7 +209,8 @@
 
             result = 0;
             this.totalInvoice.map((el) => {
-              result += el.totalFeeInvoices;
+              // result += el.totalFeeInvoices;
+              result += el.value_fee_b;
             });
             this.set('data.totalFeeInvoices', result)
         //     // this.data.totalFeeInvoices = result
@@ -216,13 +218,15 @@
 
             result = 0;
             this.totalInvoice.map((el) => {
-              result += el.totalBalance;
+              // result += el.totalBalance;
+              result += el.value_bal_b;
             });
             this.set('data.totalBalance', result)
 
             result = 0;
             this.totalInvoice.map((el) => {
-              result += el.totalIncomeTaxInvoices;
+              // result += el.totalIncomeTaxInvoices;
+              result += el.value_tax_b;
             });
             this.set('data.totalIncomeTaxInvoices', result)
         //     // this.data.totalIncomeTaxInvoices = result
@@ -230,7 +234,8 @@
 
             result = 0;
             this.totalInvoice.map((el) => {
-              result += el.totalMoneyBathInvoices;
+              // result += el.totalMoneyBathInvoices;
+              result += el.value_final_b;
             });
             this.set('data.totalMoneyBathInvoices', result)
         //     // this.data.totalMoneyBathInvoices = result

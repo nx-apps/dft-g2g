@@ -221,7 +221,7 @@
         },
         data: {
           statePath : 'fee.list_calc',
-          observer : '_setDate'
+          observer : '_checkdata'
         },
         pages: {
           type: String,
@@ -241,24 +241,75 @@
       //   'edit-input': 'editInput',
       //   'delete-input': 'deleteFee'
       // },
-      _setDate:function(data){
-        if(data.length > 0){
-          if(typeof data.fee_date !== 'undefined'){
-            var date = data.fee_date.split('T')[0];
-            this.set('data.fee_date', date);
-          }else{
-            var dateNow = new Date().toISOString().split('T')[0];
-            this.set('data.fee_date', dateNow);
-          }
-        }
+      _checkdata:function(data){
+        // console.log(data);
       },
       _getUSD:function(data){
-        var total = 0;
-        data.map((item) => {
-          total += item.value_d;
-        })
-        this.set('data.amount_usd',total);
+        if(typeof data.book !== 'undefined'){
+          var total = 0;
+          data.book.map((item) => {
+            total += item.value_d;
+          })
+          this.set('data.amount_usd',total);
+        }
       },
+      _balanceLessFees(amount_usd, fee_internal) {
+        this.data.balanceLessFees = amount_usd - fee_internal
+        this.notifyPath('data.balanceLessFees');
+      },
+      calBath(rate_bank, amount_usd) {
+        return this.formatNumber(rate_bank * amount_usd)
+      },
+      calRep(rate_bank, fee_internal, fee_foreign) {
+        if(rate_bank !== '' & fee_internal !== '' & fee_foreign !== ''){
+          var calc_value_fee_b = ((parseFloat(rate_bank) * parseFloat(fee_internal)) + parseFloat(fee_foreign));
+          return calc_value_fee_b
+        }else{
+          return 0
+        }
+      },
+      _balanceChangeBath: function (rate_bank, balanceLessFees) {
+        this.data.balanceChangeBath = rate_bank * balanceLessFees;
+        this.notifyPath('data.balanceChangeBath');
+      },
+      _balanceBath(balanceChangeBath, feeTotalWithOutUsd) {
+        try {
+          this.data.totalbath = balanceChangeBath - feeTotalWithOutUsd;
+          this.notifyPath('data.totalbath');
+        } catch (e) {
+          // console.log(e);
+        }
+      },
+      // //นับหน้า
+      _invoicePage: function (invoice = 1) {
+        // console.log(invoice);
+        // try {
+        if(typeof invoice.book !== 'undefined'){
+          this.data.invoicePage = invoice.book.length;
+          this.notifyPath('data.invoicePage');
+        }
+        // } catch (e) {
+        //   // console.log(e);
+        // }
+      },
+      // _countFee: function (fee) {
+      //   try {
+      //     return fee / this.data.length;
+      //   } catch (e) {
+      //     // console.log(e);
+      //   }
+      // },
+
+      // _changeDataFee: function (dateUn) {
+      //   this.getDateg2g(dateUn, (date) => {
+      //     this.set('data.fee_date_receipt', date);
+      //     this.notifyPath('data.fee_date_receipt');
+      //   });
+      // },
+      // cancelFee: function () {
+      //   let el = Polymer.dom(this.root).querySelectorAll('.required');
+      //   el.map((el) => { el.reset(); el.value = '' });
+      // },
       // _getFeeNo: function (data) {
       //   try {
       //     this._setFee(this.data.fee_id);
@@ -307,61 +358,6 @@
       //   }
 
       // },
-      _balanceLessFees(amount_usd, fee_internal) {
-        this.data.balanceLessFees = amount_usd - fee_internal
-        this.notifyPath('data.balanceLessFees');
-      },
-      // _changeDataFee: function (dateUn) {
-      //   this.getDateg2g(dateUn, (date) => {
-      //     this.set('data.fee_date_receipt', date);
-      //     this.notifyPath('data.fee_date_receipt');
-      //   });
-      // },
-      // cancelFee: function () {
-      //   let el = Polymer.dom(this.root).querySelectorAll('.required');
-      //   el.map((el) => { el.reset(); el.value = '' });
-      // },
-      calBath(rate_bank, amount_usd) {
-        return this.formatNumber(rate_bank * amount_usd)
-      },
-      calRep(rate_bank, fee_internal, fee_foreign) {
-        if(rate_bank !== '' & fee_internal !== '' & fee_foreign !== ''){
-          var calc_value_fee_b = ((parseFloat(rate_bank) * parseFloat(fee_internal)) + parseFloat(fee_foreign));
-          return calc_value_fee_b
-        }else{
-          return 0
-        }
-      },
-      _balanceChangeBath: function (rate_bank, balanceLessFees) {
-        this.data.balanceChangeBath = rate_bank * balanceLessFees;
-        this.notifyPath('data.balanceChangeBath');
-      },
-      _balanceBath(balanceChangeBath, feeTotalWithOutUsd) {
-        try {
-          this.data.totalbath = balanceChangeBath - feeTotalWithOutUsd;
-          this.notifyPath('data.totalbath');
-        } catch (e) {
-          // console.log(e);
-        }
-
-      },
-      // //นับหน้า
-      _invoicePage: function (invoice = 1) {
-        try {
-          this.data.invoicePage = invoice.length;
-          this.notifyPath('data.invoicePage');
-        } catch (e) {
-          // console.log(e);
-        }
-
-      },
-      _countFee: function (fee) {
-        try {
-          return fee / this.data.length;
-        } catch (e) {
-          // console.log(e);
-        }
-      },
       // closeDrawerFee: function () {
       //   // this.fire('close-drawer',{detail:'close-drawer'});
       // },
