@@ -233,6 +233,8 @@
         this.fire('get-list-booking',this.data);
       },
       listFee:function () {
+        document.cookie = "contract_id="+this.data.contract_id;
+        document.cookie = "contractName="+this.data.contract_name;
         this.fire('get-list-Fee',this.data);
       },
       listPayment:function () {
