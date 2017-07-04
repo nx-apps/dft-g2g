@@ -104,7 +104,7 @@
       </gl-grid-row>
 
       <div class="top ">{{localize.label_detail}}</div>
-      [[hamonizeLimitContract]]//[[contractId.contract_weight_book_balance]] //[[dataShow.hamonize_limit]]
+      <!--[[hamonizeLimitContract]]//[[contractId.contract_weight_book_balance]] //[[dataShow.hamonize_limit]]-->
       <!--<gl-form-input class="required" id="[[index]]" required allowed-pattern="[0-9||,||.]" format-number="on" disabled="[[commonState.btnDisabled]]"
                   label="{{localize.label_quantity}}" placeholder="{{localize.label_quantity}}" error-message="{{localize.label_error_quantity}}"
                   value="{{item.hamonize_weight}}" name="hamonize_weight" on-input="getCostPrice"></gl-form-input>-->
@@ -372,7 +372,7 @@
       //   }
       // },
       _setHamonizeLimit: function (contractId, hamonizeLimitContract) {
-        console.log(1)
+        // console.log(1)
         this.set('dataShow.hamonize_limit', this.contractId.contract_weight_book_balance - this.hamonizeLimitContract)
 
         // console.log(this.hamonizeLimitContract,this.contractId.contract_weight_book_balance)
@@ -430,14 +430,15 @@
       //เปลี่ยนเป็น observer ด้วย
       getCostPrice: function (e) {
         try {
-          console.log(e)
+          // console.log(e)
           if (this.data.cl_date !== undefined && this.data.cl_date !== ''
             && e.model.item.hamonize_id !== '') {
             let index = e.currentTarget.id
             let value = e.currentTarget.value
             let hm_id = e.model.item.hamonize_id
             let date = new Date(this.data.cl_date)
-            // console.log(e.model.item);
+            let today = JSON.parse(JSON.stringify(this.data.cl_date))
+            console.log(today);
             let lastMonth = JSON.parse(JSON.stringify(new Date(date.setMonth(date.getMonth() - 3)).toISOString().split('T')[0]))
             // console.log(lastMonth)
             // this.hamonizeContract
@@ -446,7 +447,7 @@
             // console.log(index2);
             let url = {
               startDate: lastMonth,
-              endDate: this.data.cl_date,
+              endDate: today,
               hmcode: hmtype.hamonize.hamonize_code
             }
             // this.throttle
