@@ -123,17 +123,19 @@
                       disabled></gl-form-input>
                   </td>
                   <td>
-                    [[changeString2Num(item2.*,'invoice_fee')]]
+                    [[changeString2Num(item2.*,'value_fee_b')]]
                     [[_calcValueFeeB(item.fee_ex_d, rateBank, item.fee_in_b, indexData, index)]]
-                    <gl-form-input style="text-align:right;" format-number="on" value="{{item2.value_fee_b}}" disabled="[[common.inputRice]]"></gl-form-input>
+                    <gl-form-input class="riceRequired" required style="text-align:right;" format-number="on" value="{{item2.value_fee_b}}" disabled="[[common.inputRice]]"></gl-form-input>
                   </td>
+                  [[changeString2Num(item2.*,'value_bal_b')]]
                   <td>[[_calcValueBalB(item2.value_b, item2.value_fee_b, indexData, index)]]
                     <gl-form-input style="text-align:right;" format-number="on" value="{{item2.value_bal_b}}" disabled></gl-form-input>
                   </td>
                   <td>[[_calcValueTax(item2.value_bal_b, indexData, index)]]
-                    <gl-form-input style="text-align:right;" format-number="on" style="width:140px;" value="{{item2.value_tax_b}}"
+                    <gl-form-input class="riceRequired" required style="text-align:right;" format-number="on" style="width:140px;" value="{{item2.value_tax_b}}"
                       disabled="[[common.inputRice]]"></gl-form-input>
                   </td>
+                  [[changeString2Num(item2.*,'value_tax_b')]]
                   <td>[[_calcValueFinalB(item2.value_bal_b, item2.value_tax_b, indexData, index)]]
                     <gl-form-input style="text-align:right;" format-number="on" style="width:140px;" value="{{item2.value_final_b}}"
                       disabled></gl-form-input>
@@ -160,7 +162,7 @@
                     disabled></gl-form-input>
                 </td>
                 <td>
-                  <gl-form-input style="text-align:right;" format-number="on" style="width:140px;" value="[[_totalFeeInvoices(indexData,data.*)]]"
+                  <gl-form-input style="text-align:right;" format-number="on" style="width:140px;" value="{{_totalFeeInvoices(indexData,data.*)}}"
                     disabled></gl-form-input>
                 </td>
                 <td>
@@ -197,6 +199,13 @@
         <template is="dom-if" if="[[!data.fin_status]]">
           <template is="dom-if" if="[[!data.rice_status]]">
             <paper-button class="gl-btn-success" raised on-tap="approvePayment">{{localize.confirm}}</paper-button>
+          </template>
+        </template>
+        
+        <template is="dom-if" if="[[data.fin_status]]">
+          <template is="dom-if" if="[[data.rice_status]]">
+            <paper-button class="gl-btn-default" raised on-tap="rejectFee">{{localize.cancel}}</paper-button>
+            <paper-button class="gl-btn-success" raised on-tap="approveFee">{{localize.confirm}}</paper-button>
           </template>
         </template>
       </template>
@@ -314,7 +323,7 @@
         this.set('data.book.'+indexData+'.detail.'+index+'.value_tax_b', calc_value_tax_b);
       },
       _calcValueFinalB: function (value_bal_b, value_tax_b, indexData, index) {
-        var calc_value_final_b = parseFloat(value_bal_b) - parseFloat(value_tax_b);
+        var calc_value_final_b = parseFloat(value_bal_b) - numeral().unformat(value_tax_b);
         this.set('data.book.'+indexData+'.detail.'+index+'.value_final_b', calc_value_final_b);
       },
       _totalTonInvoices: function (index, data) {
@@ -478,10 +487,72 @@
         })
       },
       riceSave:function(){
-        console.log(this.data);
+        var check = this.validateForm('.riceRequired');
+        // console.log(this.data);
+        if(check === true){
+          this.fire('toast',{
+            status: 'openDialog',
+            text: 'ต้องการบันทึกการถัวเฉลี่ยค่าธรรมเนียมใช่หรือไม่',
+            confirmed: (result) =>{
+              if(result === true){
+                let{rate_bank_b, rate_tt_b, fee_date, book, id} = this.data;
+                let newData = {rate_bank_b, rate_tt_b, book, id};
+                newData.fee_date = this.data.fee_date+'T00:00:00+07:00';
+                this.dispatchAction('FEE_RICE_UPDATE', newData);
+              }
+            }
+          })
+        }else{
+          this.fire('toast',{
+            status:'connectError', text: 'กรุณากรอกข้อมูลให้ครบ',
+            callback: () =>{}
+          })
+        }
       },
       riceApprove:function(){
-        console.log(this.data);
+        let newData = {
+          id: this.data.id,
+          rice_status: true
+        }
+        this.fire('toast',{
+          status: 'openDialog',
+          text: 'ต้องการยืนยันการถัวเฉลี่ยค่าธรรมเนียมใช่หรือไม่',
+          confirmed: (result) =>{
+            if(result === true){
+              this.dispatchAction('FEE_RICE_APPROVE', newData);
+            }
+          }
+        })
+      },
+      rejectFee:function(){
+        let newData = {
+          id: this.data.id,
+          rice_status: false
+        }
+        this.fire('toast',{
+          status: 'openDialog',
+          text: 'ต้องการยกเลิกการถัวเฉลี่ยค่าธรรมเนียมใช่หรือไม่',
+          confirmed: (result) =>{
+            if(result === true){
+              this.dispatchAction('FEE_REJECT', newData);
+            }
+          }
+        })
+      },
+      approveFee:function(){
+        let newData = {
+          id: this.data.id,
+          fee_status: true
+        }
+        this.fire('toast',{
+          status: 'openDialog',
+          text: 'ต้องการยืนยันการถัวเฉลี่ยค่าธรรมเนียมใช่หรือไม่',
+          confirmed: (result) =>{
+            if(result === true){
+              this.dispatchAction('FEE_APPROVE_FINSH', newData);
+            }
+          }
+        })
       }
     });
   </script>

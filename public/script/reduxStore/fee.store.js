@@ -128,6 +128,88 @@ export function feeAction(store) {
             })
         },
         FEE_APPROVE: function(data){
+            var contract_id = this.getCookieBhv("contract_id");
+            axios.put('./fee/approve',data)
+            .then((response) => {
+                this.fire('toast',{
+                    status: 'success', text:'บันทึกสำเร็จ',
+                    callback:() => {
+                        this.INVOICE_GET_LIST_DATA(contract_id);
+                        this.BOOK_GET_LIST_DATA(contract_id);
+                        this.FEE_GET_LIST_DATA({contract_id:contract_id,view:'view'});
+                        this._flipDrawerClose();
+                    }
+                })
+            })
+            .catch((err) => {
+                console.log(err);
+            })
+        },
+        FEE_RICE_UPDATE: function(data){
+            var contract_id = this.getCookieBhv("contract_id");
+            this.fire('toast',{status:'load'});
+            axios.put('./fee/update',data)
+            .then((response) => {
+                this.fire('toast', {
+                    status: 'success', text: 'บันทึกสำเร็จ',
+                    callback: () => {
+                        this.INVOICE_GET_LIST_DATA(contract_id);
+                        this.BOOK_GET_LIST_DATA(contract_id);
+                        this.FEE_GET_LIST_DATA({contract_id:contract_id,view:'rice'});
+                        this.SET_STATE({
+                            isInsert: false,
+                            btnDisabled: true,
+                            inputRice: true,
+                            btnRice: false
+                        });
+                    }
+                });
+            })
+            .catch((err) => {
+                console.log(err);
+            })
+        },
+        FEE_RICE_APPROVE: function(data){
+            var contract_id = this.getCookieBhv("contract_id");
+            console.log(contract_id);
+            this.fire('toast',{status:'load'});
+            axios.put('./fee/approve',data)
+            .then((response) => {
+                this.fire('toast',{
+                    status: 'success', text:'บันทึกสำเร็จ',
+                    callback:() => {
+                        this.INVOICE_GET_LIST_DATA(contract_id);
+                        this.BOOK_GET_LIST_DATA(contract_id);
+                        this.FEE_GET_LIST_DATA({contract_id:contract_id,view:'rice'});
+                        this.backPageFee();
+                        // this._flipDrawerClose();
+                    }
+                })
+            })
+            .catch((err) => {
+                console.log(err);
+            })
+        },
+        FEE_REJECT: function(data){
+            var contract_id = this.getCookieBhv("contract_id");
+            axios.put('./fee/approve',data)
+            .then((response) => {
+                this.fire('toast',{
+                    status: 'success', text:'บันทึกสำเร็จ',
+                    callback:() => {
+                        this.INVOICE_GET_LIST_DATA(contract_id);
+                        this.BOOK_GET_LIST_DATA(contract_id);
+                        this.FEE_GET_LIST_DATA({contract_id:contract_id,view:'view'});
+                        this._flipDrawerClose();
+                    }
+                })
+            })
+            .catch((err) => {
+                console.log(err);
+            })
+        },
+        FEE_APPROVE_FINSH: function(data){
+            var contract_id = this.getCookieBhv("contract_id");
             axios.put('./fee/approve',data)
             .then((response) => {
                 this.fire('toast',{
