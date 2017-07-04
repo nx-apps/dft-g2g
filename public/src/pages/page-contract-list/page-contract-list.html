@@ -8,6 +8,8 @@
 <!--<link rel="import" href="components/list-of-confirm.html">
 <link rel="import" href="components/list-of-booking.html">
 <link rel="import" href="components/list-of-fee-g2g.html">-->
+
+<link rel="import" href="./../page-payment-list/component/list-of-fee.html">
 <link rel="import" href="./../../../bower_components/iron-pages/iron-pages.html">
 
 <link rel="import" href="./components/chart-pie-g2g.html">
@@ -66,7 +68,7 @@
                         <list-of-booking></list-of-booking>
                     </div>
                     <div class="addContract" name="listOfFee">
-                        <list-of-fee-g2g ></list-of-fee-g2g>
+                        <list-of-fee></list-of-fee>
                     </div>
                 </iron-pages>
             </div>
@@ -531,25 +533,25 @@
                     let contractData = { contract_id: e.detail.contract_id, contract_no: e.detail.contract_no }
                     this.dispatchAction('SET_CONTRACT_ID', contractData)
                     this.fire('toast', { status: 'load' });
-                if (this.checkRenderPage.listOfFee != true) {
-                    this.async(() => {
-                        this.importHref(
-                            this.resolveUrl('./components/list-of-fee-g2g.html'),
-                            () => {
-                                this.async(() => {
-                                    this.fire('toast', {
-                                        status: 'success', text: 'โหลดสำเร็จ', callback: () => {
-                                            this._flipDrawer();
-                                            this.checkRenderPage.listOfFee = true;
-                                        }
-                                    })
-                                    // console.log(this.dataForSelected.dataForContract);
+                // if (this.checkRenderPage.listOfFee != true) {
+                //     this.async(() => {
+                //         this.importHref(
+                //             this.resolveUrl('./../page-payment-list/component/list-of-fee.html'),
+                //             () => {
+                //                 this.async(() => {
+                //                     this.fire('toast', {
+                //                         status: 'success', text: 'โหลดสำเร็จ', callback: () => {
+                //                             this._flipDrawer();
+                //                             this.checkRenderPage.listOfFee = true;
+                //                         }
+                //                     })
+                //                     // console.log(this.dataForSelected.dataForContract);
 
-                                }, 500)
-                            }, null, true
-                        );
-                    }, 1000);
-                } else {
+                //                 }, 500)
+                //             }, null, true
+                //         );
+                //     }, 1000);
+                // } else {
                     this.async(() => {
                         this.fire('toast', {
                             status: 'success', text: 'โหลดสำเร็จ', callback: () => {
@@ -557,7 +559,7 @@
                             }
                         })
                     }, 1000);
-                }
+                // }
                     //     this.read('./g2g/fee/contract/id/' + e.detail.data.contract_id, (data) => {
                     //         //ปัญหาตรงนี้
                     //         this.set('pageSelected', 'listOfFee')
