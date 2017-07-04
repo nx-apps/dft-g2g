@@ -43,12 +43,14 @@
       <!--<template is="dom-if" if="[[commonState.btnDisabled]]">-->
 
       <!--<template is="dom-if" if="[[_checkEdit(data.book_status)]]">-->
-      <div class="horizontal end-justified layout">
-        <paper-icon-button id="editConfirm" class="crud" icon="create" raised on-tap="editBook"></paper-icon-button>
-        <paper-tooltip for="editConfirm" offset="0">Edit Booking</paper-tooltip>
-        <paper-icon-button id="deleteConfirm" class="crud" icon="delete" raised on-tap="deleteBooking"></paper-icon-button>
-        <paper-tooltip for="deleteConfirm" offset="0">Delete Booking</paper-tooltip>
-      </div>
+      <template is="dom-if" if="[[!data.book_status]]">
+        <div class="horizontal end-justified layout">
+          <paper-icon-button id="editConfirm" class="crud" icon="create" raised on-tap="editBook"></paper-icon-button>
+          <paper-tooltip for="editConfirm" offset="0">Edit Booking</paper-tooltip>
+          <paper-icon-button id="deleteConfirm" class="crud" icon="delete" raised on-tap="deleteBooking"></paper-icon-button>
+          <paper-tooltip for="deleteConfirm" offset="0">Delete Booking</paper-tooltip>
+        </div>
+      </template>
       <!--</template>-->
 
       <!--</template>-->
@@ -861,7 +863,7 @@
       // },
       addShip: function () {
         try {
-          this.push('data.ship', { ship_id: '', ship_voy_no: '' });
+          this.push('data.ship', { ship_id: '', ship_voy: '' });
           this.notifyPath('data.ship');
         } catch (e) {
           // console.log(e);
@@ -1005,9 +1007,9 @@
       //   }
       //   data.ship.map((ships) => {
       //     if (ships.ship_id != '') {
-      //       newData.ship.push({ ship_id: ships.ship_id, ship_voy_no: ships.ship_voy_no });
+      //       newData.ship.push({ ship_id: ships.ship_id, ship_voy: ships.ship_voy });
       //     } else {
-      //       newData.ship.push({ ship_name: ships.ship_name, ship_voy_no: ships.ship_voy_no });
+      //       newData.ship.push({ ship_name: ships.ship_name, ship_voy: ships.ship_voy });
       //     }
       //   });
       //   data.surveyor.map((surveyors) => {
