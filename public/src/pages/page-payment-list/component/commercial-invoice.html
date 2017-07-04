@@ -326,7 +326,9 @@
       },
       _obSetUpper: function (data) {
         if(typeof data !== 'undefined'){
-          return data.toUpperCase()
+          if(data !== null){
+            return data.toUpperCase()
+          }
         }
       },
       // _changeDataCommercial: function (dateUn) {
