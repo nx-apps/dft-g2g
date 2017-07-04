@@ -121,7 +121,7 @@
                 <template is="dom-if" if={{data.fin_status}}>
                   <template is="dom-if" if={{!data.rice_status}}>
                     <div class="horizontal end-justified layout">
-                      <paper-icon-button id="edit" class="crud" icon="create" raised on-tap="editInputRice" disabled="[[!common.btnDisabled]]"></paper-icon-button>
+                      <paper-icon-button id="edit" class="crud" icon="create" raised on-tap="editInputRice" disabled="[[common.btnRice]]"></paper-icon-button>
                       <paper-tooltip for="edit" offset="0">{{localize.edit}}</paper-tooltip>
                     </div>
                   </template>
@@ -330,7 +330,8 @@
         this.dispatchAction('SET_STATE', {
             isInsert: false,
             btnDisabled: false,
-            inputRice: true
+            inputRice: true,
+            btnRice: true
         });
       },
       _delete: function(){
@@ -348,7 +349,8 @@
         this.dispatchAction('SET_STATE', {
             isInsert: true,
             btnDisabled: true,
-            inputRice: false
+            inputRice: false,
+            btnRice: true
         });
       }
       // _countFee: function (fee) {
