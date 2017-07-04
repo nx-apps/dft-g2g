@@ -137,12 +137,16 @@
       observers: [
         'initDataFee(data)'
       ],
-      // listeners: {
-      //   '_list-Fee': '_changeIronPage',
-      // },
+      listeners: {
+        '_list-Fee': '_changeIronPage',
+      },
       initDataFee: function (data) {
         // console.log(data);
         this.newData = this.g2gClone(data);
+      },
+      _changeIronPage: function (data) {
+        this.set('pageSelected', data.detail)
+        // console.log(0)
       },
       setPageFun: function (data) {
         this.set('pageSelected', data.page)
