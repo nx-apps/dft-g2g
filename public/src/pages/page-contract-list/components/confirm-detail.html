@@ -104,7 +104,9 @@
       </gl-grid-row>
 
       <div class="top ">{{localize.label_detail}}</div>
-
+      <!--<gl-form-input class="required" id="[[index]]" required allowed-pattern="[0-9||,||.]" format-number="on" disabled="[[commonState.btnDisabled]]"
+                  label="{{localize.label_quantity}}" placeholder="{{localize.label_quantity}}" error-message="{{localize.label_error_quantity}}"
+                  value="{{item.hamonize_weight}}" name="hamonize_weight" on-input="getCostPrice"></gl-form-input>-->
       <template is="dom-repeat" items="{{data.cl_hamonize}}">
         <div class="bg">
           <gl-form-panel set-padding="10px 20px 10px 20px" set-border="1px">
@@ -130,7 +132,7 @@
                 [[changeString2Num(item.*,'hamonize_weight')]] [[_obCalcWeight(item.*,'hamonize_weight')]]
                 <gl-form-input class="required" id="[[index]]" required allowed-pattern="[0-9||,||.]" format-number="on" disabled="[[commonState.btnDisabled]]"
                   label="{{localize.label_quantity}}" placeholder="{{localize.label_quantity}}" error-message="{{localize.label_error_quantity}}"
-                  value="{{item.hamonize_weight}}" name="hamonize_weight" on-value-changed="getCostPrice"></gl-form-input>
+                  value="{{item.hamonize_weight}}" name="hamonize_weight" on-input="getCostPrice"></gl-form-input>
 
               </gl-grid-col>
               <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">[[changeString2Num(item.*,'tolerance_rate')]]
@@ -153,7 +155,7 @@
                   value="{{item.project_en}}" error-message="{{localize.label_error_project_en}}"></gl-form-input>
               </gl-grid-col>
               <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
-                [[changeString2Num(item.*,'cost_price')]]
+                [[changeString2Num(item.*,'cost_price')]][[_obCalPrice(item.*,'cost_price')]]
                 <gl-form-input disabled="[[commonState.btnDisabled]]" format-number="on" value="{{item.cost_price}}" label="{{localize.label_cost_price_ton}}"></gl-form-input>
               </gl-grid-col>
               <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
@@ -417,6 +419,7 @@
       //เปลี่ยนเป็น observer ด้วย
       getCostPrice: function (e) {
         try {
+          console.log(e)
           if (this.data.cl_date !== undefined && this.data.cl_date !== ''
             && e.model.item.hamonize_id !== '') {
             let index = e.currentTarget.id
@@ -435,15 +438,13 @@
               endDate: this.data.cl_date,
               hmcode: hmtype.hamonize.hamonize_code
             }
+            // this.throttle
             this.dispatchAction('GET_CONFIRM_FP', this.genUrl(url))
               .then((res) => {
-                this.set('data.cl_hamonize.'+index+'.cost_price', res.data[0].fp2)
-                this.set('data.cl_hamonize.'+index+'.cost_value', res.data[0].fp2 * (value * 1000) )
-                console.log(res.data[0].fp2);
-                let plus = this.data.cl_hamonize
-                let cost_price = Object.keys(plus).reduce((previous, current) => previous + plus[current].cost_price, 0)
-                
-                this.set('dataShow.cost_price_perton',cost_price)
+                this.set('data.cl_hamonize.' + index + '.cost_price', res.data[0].fp2)
+                this.set('data.cl_hamonize.' + index + '.cost_value', res.data[0].fp2 * (value * 1000))
+                // console.log(res.data[0].fp2);
+
               })
 
             console.log(url)
@@ -483,6 +484,13 @@
           // console.log(e);
         }
 
+      },
+      _obCalPrice: function (e) {
+        // console.log(e)
+        let plus = this.data.cl_hamonize
+        let cost_price = Object.keys(plus).reduce((previous, current) => previous + plus[current].cost_price, 0)
+
+        this.set('dataShow.cost_price_perton', cost_price)
       },
       addNewTypeRice: function () {
         this.push('data.cl_hamonize', {
