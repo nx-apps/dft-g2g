@@ -430,17 +430,37 @@
           delete item.totalTonInvoices;
         })
         // console.log(newData);
+        var sumEx = 0;
+        var checkSumFeeEx = newData.book.map((item) => {
+          return sumEx += item.fee_ex_d
+        })
+        var indexCheckEx = checkSumFeeEx.length - 1;
+        var changeTypeEx = Number(this.feeEx);
+
+        var sumIn = 0;
+        var checkSumFeeIn = newData.book.map((item) => {
+          return sumIn += item.fee_in_b
+        })
+        var indexCheckIn = checkSumFeeIn.length - 1;
+        var changeTypeIn = Number(this.feeIn);
+
         this.fire('check-required');
         if (this.checkRequired === true && check === true) {
-          this.fire('toast', {
-            status: 'openDialog',
-            text: 'ต้องการเพิ่มการคิดค่าธรรมเนียมใช่หรือไม่',
-            confirmed: (result) => {
-              if (result === true) {
-                this.dispatchAction('FEE_INSERT', newData);
+          if((checkSumFeeEx[indexCheckEx] == changeTypeEx) && (checkSumFeeIn[indexCheckIn] == changeTypeIn)){
+            this.fire('toast', {
+              status: 'openDialog',
+              text: 'ต้องการเพิ่มการคิดค่าธรรมเนียมใช่หรือไม่',
+              confirmed: (result) => {
+                if (result === true) {
+                  this.dispatchAction('FEE_INSERT', newData);
+                }
               }
-            }
-          });
+            });
+          }else{
+            this.fire('toast', {
+              status: 'connectError', text: 'กรุณาทำการเฉลี่ยค่าธรรมเนียมใหม่', callback: () => { }
+            });
+          }
         } else {
           this.fire('toast', {
             status: 'connectError', text: 'กรุณากรอกข้อมูลให้ครบถ้วน', callback: () => { }
