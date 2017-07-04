@@ -106,21 +106,23 @@
                     </div>
                   </template>
                 </template>
-
-                <template is="dom-if" if={{data.fin_status}}>
-                  <template is="dom-if" if={{!data.rice_status}}>
-                    <div class="horizontal end-justified layout">
-                      <paper-icon-button id="edit" class="crud" icon="create" raised on-tap="editInputRice" disabled="[[!common.btnDisabled]]"></paper-icon-button>
-                      <paper-tooltip for="edit" offset="0">{{localize.edit}}</paper-tooltip>
-                    </div>
-                  </template>
-                </template>
-
+                
                 <template is="dom-if" if={{data.fin_status}}>
                   <template is="dom-if" if={{data.rice_status}}>
                     <div class="horizontal end-justified layout">
                       <paper-icon-button id="delete" class="crud" icon="delete" raised on-tap="_delete" disabled="[[!common.btnDisabled]]"></paper-icon-button>
                       <paper-tooltip for="edit" offset="0">{{localize.delete}}</paper-tooltip>
+                    </div>
+                  </template>
+                </template>
+              </template>
+
+              <template is="dom-if" if="[[!common.riceInput]]">
+                <template is="dom-if" if={{data.fin_status}}>
+                  <template is="dom-if" if={{!data.rice_status}}>
+                    <div class="horizontal end-justified layout">
+                      <paper-icon-button id="edit" class="crud" icon="create" raised on-tap="editInputRice" disabled="[[!common.btnDisabled]]"></paper-icon-button>
+                      <paper-tooltip for="edit" offset="0">{{localize.edit}}</paper-tooltip>
                     </div>
                   </template>
                 </template>
@@ -328,7 +330,7 @@
         this.dispatchAction('SET_STATE', {
             isInsert: false,
             btnDisabled: false,
-            hiddend: true
+            inputRice: true
         });
       },
       _delete: function(){
@@ -343,7 +345,11 @@
         })
       },
       editInputRice: function(){
-        console.log('test');
+        this.dispatchAction('SET_STATE', {
+            isInsert: true,
+            btnDisabled: true,
+            inputRice: false
+        });
       }
       // _countFee: function (fee) {
       //   try {

@@ -75,7 +75,7 @@ export function feeAction(store) {
                     callback: () => {
                         this.INVOICE_GET_LIST_DATA(contract_id);
                         this.BOOK_GET_LIST_DATA(contract_id);
-                        this.FEE_GET_LIST_DATA(contract_id);
+                        this.FEE_GET_LIST_DATA({contract_id:contract_id,view:'view'});
                         this._flipDrawerClose();
                     }
                 });
@@ -94,7 +94,7 @@ export function feeAction(store) {
                     callback: () => {
                         this.INVOICE_GET_LIST_DATA(contract_id);
                         this.BOOK_GET_LIST_DATA(contract_id);
-                        this.FEE_GET_LIST_DATA(contract_id);
+                        this.FEE_GET_LIST_DATA({contract_id:contract_id,view:'view'});
                         this.SET_STATE({
                             isInsert: false,
                             btnDisabled: true,
@@ -117,7 +117,7 @@ export function feeAction(store) {
                     callback: () => {
                         this.INVOICE_GET_LIST_DATA(contract_id);
                         this.BOOK_GET_LIST_DATA(contract_id);
-                        this.FEE_GET_LIST_DATA(contract_id);
+                        this.FEE_GET_LIST_DATA({contract_id:contract_id,view:'view'});
                         this._flipDrawerClose();
                     }
                 });
@@ -134,7 +134,7 @@ export function feeAction(store) {
                     callback:() => {
                         this.INVOICE_GET_LIST_DATA(contract_id);
                         this.BOOK_GET_LIST_DATA(contract_id);
-                        this.FEE_GET_LIST_DATA(contract_id);
+                        this.FEE_GET_LIST_DATA({contract_id:contract_id,view:'view'});
                         this._flipDrawerClose();
                     }
                 })

@@ -121,14 +121,14 @@
                   <td>
                     [[changeString2Num(item2.*,'invoice_fee')]]
                     [[_calcValueFeeB(item.fee_ex_d, rateBank, item.fee_in_b, indexData, index)]]
-                    <gl-form-input style="text-align:right;" format-number="on" value="{{item2.value_fee_b}}" disabled="{{inputRice}}"></gl-form-input>
+                    <gl-form-input style="text-align:right;" format-number="on" value="{{item2.value_fee_b}}" disabled="[[common.inputRice]]"></gl-form-input>
                   </td>
                   <td>[[_calcValueBalB(item2.value_b, item2.value_fee_b, indexData, index)]]
                     <gl-form-input style="text-align:right;" format-number="on" value="{{item2.value_bal_b}}" disabled></gl-form-input>
                   </td>
                   <td>[[_calcValueTax(item2.value_bal_b, indexData, index)]]
                     <gl-form-input style="text-align:right;" format-number="on" style="width:140px;" value="{{item2.value_tax_b}}"
-                      disabled="{{inputRice}}"></gl-form-input>
+                      disabled="[[common.inputRice]]"></gl-form-input>
                   </td>
                   <td>[[_calcValueFinalB(item2.value_bal_b, item2.value_tax_b, indexData, index)]]
                     <gl-form-input style="text-align:right;" format-number="on" style="width:140px;" value="{{item2.value_final_b}}"
@@ -192,16 +192,38 @@
       <template is="dom-if" if="[[common.btnDisabled]]">
         <template is="dom-if" if="[[!data.fin_status]]">
           <template is="dom-if" if="[[!data.rice_status]]">
-            <paper-button class="gl-btn-success" raised on-tap="approvePayment" class="gl-btn-default">{{localize.confirm}}</paper-button>
+            <paper-button class="gl-btn-success" raised on-tap="approvePayment">{{localize.confirm}}</paper-button>
+          </template>
+        </template>
+      </template>
+      
+      <template is="dom-if" if="[[!common.btnDisabled]]">
+        <template is="dom-if" if="[[!data.fin_status]]">
+          <template is="dom-if" if="[[!data.rice_status]]">
+            <paper-button raised class="gl-btn-default" on-tap="cancelContract" hidden="[[common.isInsert]]">{{localize.reset_data}}</paper-button>
+            <paper-button raised class="gl-btn-default" on-tap="cancel" hidden="[[common.isInsert]]">{{localize.cancel}}</paper-button>
+            <paper-button raised class="gl-btn-success" on-tap="savePayment" hidden="[[common.isInsert]]">{{localize.save}}</paper-button>
           </template>
         </template>
       </template>
 
-      <!--<template is="dom-if" if="[[!common.btnDisabled]]">
-        <paper-button raised class="gl-btn-default" on-tap="cancelContract" hidden="[[common.isInsert]]">{{localize.reset_data}}</paper-button>
-        <paper-button raised class="gl-btn-default" on-tap="cancel" hidden="[[common.isInsert]]">{{localize.cancel}}</paper-button>
-        <paper-button raised class="gl-btn-success" on-tap="savePayment" hidden="[[common.isInsert]]">{{localize.save}}</paper-button>
-      </template>-->
+      <template is="dom-if" if="[[common.inputRice]]">
+        <template is="dom-if" if="[[data.fin_status]]">
+          <template is="dom-if" if="[[!data.rice_status]]">
+            <paper-button class="gl-btn-success" raised on-tap="riceApprove">{{localize.confirm}}</paper-button>
+          </template>
+        </template>
+      </template>
+
+      <template is="dom-if" if="[[!common.inputRice]]">
+        <template is="dom-if" if="[[data.fin_status]]">
+          <template is="dom-if" if="[[!data.rice_status]]">
+            <paper-button raised class="gl-btn-default" on-tap="cancelFee" hidden="[[!common.isInsert]]">{{localize.reset_data}}</paper-button>
+            <paper-button raised class="gl-btn-default" on-tap="cancel" hidden="[[!common.isInsert]]">{{localize.cancel}}</paper-button>
+            <paper-button class="gl-btn-success" raised on-tap="riceSave">{{localize.save}}</paper-button>
+          </template>
+        </template>
+      </template>
 
       <!--<template is="dom-if" if="[[data.fin_status]]">
         <template is="dom-if" if="[[common.btnDisabled]]">
@@ -420,7 +442,7 @@
         this.dispatchAction('SET_STATE',{
             isInsert: false,
             btnDisabled: true,
-            hiddend: true
+            inputRice: true
         });
       },
       cancelContract:function(){
@@ -440,6 +462,12 @@
             }
           }
         })
+      },
+      riceSave:function(){
+        console.log(this.data);
+      },
+      riceApprove:function(){
+        console.log(this.data);
       }
     });
   </script>
