@@ -38,7 +38,7 @@
       <div name="listOfConfirm">
         <div class="addconfirm horizontal end-justified layout">
           <!--<paper-button raised class="gl-btn-primary" disabled="[[!dataForSelect.contract_status]]" on-tap="createConfirm">{{localize.btn_add}}</paper-button>-->
-          <paper-button raised class="gl-btn-primary" on-tap="createConfirm">{{localize.btn_add}}</paper-button>
+          <paper-button raised class="gl-btn-primary" on-tap="createConfirm" disabled="{{!contractId.contract_status}}">{{localize.btn_add}}</paper-button>
 
         </div>
         <br>

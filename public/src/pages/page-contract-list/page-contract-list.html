@@ -273,10 +273,10 @@
             // },
             // //addContract
             addContract: function () {
-                this.dispatchAction('SET_BREADCRUMBS',[{
-                        label: 'เพิ่มสัญญา',
-                        href: ''
-                    }])
+                this.dispatchAction('SET_BREADCRUMBS', [{
+                    label: 'เพิ่มสัญญา',
+                    href: ''
+                }])
                 // let datass = [
                 //     {
                 //         label: 'เพิ่มสัญญา',
@@ -303,10 +303,10 @@
                 }, 500)
             },
             _getContractDetail: function (e) {
-                this.dispatchAction('SET_BREADCRUMBS',[{
-                        label: 'สัญญาที่ '+e.detail.contract_no ,
-                        href: ''
-                    }])
+                this.dispatchAction('SET_BREADCRUMBS', [{
+                    label: 'สัญญาที่ ' + e.detail.contract_no,
+                    href: ''
+                }])
                 // console.log(e.detail.contract_id);
                 this.dispatchAction('GET_CONTRACT', e.detail.contract_id)
                 this.g2gPageSeleted = 'contractDetail'
@@ -343,10 +343,10 @@
             _getListConfirm: function (e) {
                 // console.log(e.detail)
                 let url = { contract_id: e.detail.contract_id, status: 'all' }
-                this.dispatchAction('SET_BREADCRUMBS',[{
-                        label: 'สัญญาที่ '+e.detail.contract_no ,
-                        href: ''
-                    }])
+                this.dispatchAction('SET_BREADCRUMBS', [{
+                    label: 'สัญญาที่ ' + e.detail.contract_no,
+                    href: ''
+                }])
                 this.dispatchAction('GET_CONFIRM_LIST', this.genUrl(url))
                 this.dispatchAction('GET_HAMONIZE_OF_CONTRACT', this.genUrl(url))
                 this.dispatchAction('GET_CONFIRM_EXPORTER_LIST', this.genUrl(url))
@@ -358,7 +358,7 @@
                 //     this.g2gPageSeleted = 'listOfConfirm';
                 //     if (typeof e.detail.contractId == "undefined") {
                 //     // console.log(e.detail.data)
-                    this.titlePanelRight = 'สัญญาที่  : ' + e.detail.contract_no
+                this.titlePanelRight = 'สัญญาที่  : ' + e.detail.contract_no
                 //     let datass = [
                 //         {
                 //         label: e.detail.data.contract_name,
@@ -375,7 +375,11 @@
                     btnDisabled: false,
                     hiddend: true,
                 })
-                let contractData = { contract_id: e.detail.contract_id, contract_no: e.detail.contract_no }
+                let contractData = {
+                    contract_id: e.detail.contract_id,
+                    contract_no: e.detail.contract_no,
+                    contract_status: e.detail.contract_status
+                }
                 this.dispatchAction('SET_CONTRACT_ID', contractData)
                 // console.log(11111)
                 // console.log(e.detail.contract_id)
@@ -442,10 +446,10 @@
                 let url = { contract_id: e.detail.contract_id, status: true }
                 this.dispatchAction('GET_CONFIRM_LIST', this.genUrl(url))
                 this.dispatchAction('GET_HAMONIZE_OF_CONTRACT', this.genUrl(url))
-                this.dispatchAction('SET_BREADCRUMBS',[{
-                        label: 'สัญญาที่ '+e.detail.contract_no ,
-                        href: ''
-                    }])
+                this.dispatchAction('SET_BREADCRUMBS', [{
+                    label: 'สัญญาที่ ' + e.detail.contract_no,
+                    href: ''
+                }])
                 this.g2gPageSeleted = 'listOfShipment';
                 let contractData = { contract_id: e.detail.contract_id, contract_no: e.detail.contract_no }
                 this.dispatchAction('SET_CONTRACT_ID', contractData)
@@ -453,7 +457,7 @@
                 //     // console.log(e.detail.contractId);
                 //     if (typeof e.detail.contractId == "undefined") {
                 //     this.set('pageSelected', 'list-of-booking')
-               this.titlePanelRight = 'สัญญาที่  : ' + e.detail.contract_no
+                this.titlePanelRight = 'สัญญาที่  : ' + e.detail.contract_no
                 //     this.set('dataForSelected.dataForBooking.contract_name', e.detail.data.contract_name)
                 //     // console.log(this.dataForSelected.dataForBooking)
                 //     // console.log(e.detail.data.book);
