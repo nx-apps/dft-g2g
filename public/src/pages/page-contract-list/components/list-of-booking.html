@@ -201,7 +201,7 @@
           if (e.detail.value !== null) {
 
             this.set('dataShow', e.detail.value)
-            console.log(e.detail.value);
+            // console.log(e.detail.value);
             let clData = { cl_id: e.detail.value.id, cl_no: e.detail.value.cl_no }
             this.dispatchAction('SET_CONFIRM_ID', clData)
             // console.log(this.contractId)
