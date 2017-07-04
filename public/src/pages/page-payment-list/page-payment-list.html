@@ -13,7 +13,7 @@
 <link rel="import" href="./component/fee-exports.html">
 <link rel="import" href="./component/commercial-invoice.html">
 <link rel="import" href="./component/list-of-fee.html">
-<link rel="import" href="./component/list-of-fee-detail.html">
+<!--<link rel="import" href="./component/list-of-fee-detail.html">-->
 <!--<link rel="import" href="./component/list-of-cheque.html">
 <link rel="import" href="./component/list-of-payments.html">
 <link rel="import" href="./component/list-of-history.html">
@@ -264,7 +264,7 @@
                 var buyer_id = this.getCookieBhv("buyerId");
                 this.dispatchAction('BOOK_GET_LIST_DATA', contract_id);
                 this.dispatchAction('INVOICE_GET_LIST_DATA', contract_id);
-                this.dispatchAction('FEE_GET_LIST_DATA', contract_id);
+                this.dispatchAction('FEE_GET_LIST_DATA', {contract_id:contract_id,view:'fin'});
             },
             // ready: function () {
             //     this._getChequeList(contract_id);

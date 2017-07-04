@@ -28,6 +28,7 @@ export const bl = {
         quantity:'Quantity',
         descriptions:'Descriptions',
         amount_en:'Amount',
-        tools:'เครื่องมือ'
+        tools:'เครื่องมือ',
+        no_data:"ไม่มีข้อมูล"
     }
 }
