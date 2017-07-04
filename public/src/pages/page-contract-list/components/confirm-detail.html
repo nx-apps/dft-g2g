@@ -104,6 +104,7 @@
       </gl-grid-row>
 
       <div class="top ">{{localize.label_detail}}</div>
+      [[hamonizeLimitContract]]//[[contractId.contract_weight_book_balance]] //[[dataShow.hamonize_limit]]
       <!--<gl-form-input class="required" id="[[index]]" required allowed-pattern="[0-9||,||.]" format-number="on" disabled="[[commonState.btnDisabled]]"
                   label="{{localize.label_quantity}}" placeholder="{{localize.label_quantity}}" error-message="{{localize.label_error_quantity}}"
                   value="{{item.hamonize_weight}}" name="hamonize_weight" on-input="getCostPrice"></gl-form-input>-->
@@ -297,6 +298,9 @@
         data: {
           statePath: 'confirmLetter.contractDetail',
         },
+        hamonizeLimitContract: {
+          statePath: 'confirmLetter.hamonizeLimitContract',
+        },
         hamonizeContract: {
           statePath: 'confirmLetter.hamonizeContract',
           // observer: 'get'
@@ -323,7 +327,8 @@
           value: {
             cl_hamonize: [],
             cl_hamonize_pk: [{ package: [{ package: {} }] }]
-            , incoterms: []
+            , incoterms: [],
+            hamonize_limit: 0
           }
         },
 
@@ -334,7 +339,7 @@
       },
 
       observers: [
-        // '_changeDataConfirm(data.cl_date)',
+        '_setHamonizeLimit(contractId,hamonizeLimitContract)',
         '_typeRiceConfirm(data.*)',
         '_typePackageConfirm(data.*)',
         '_incotermsConfirm(data.*)',
@@ -366,6 +371,12 @@
 
       //   }
       // },
+      _setHamonizeLimit: function (contractId, hamonizeLimitContract) {
+        console.log(1)
+        this.set('dataShow.hamonize_limit', this.contractId.contract_weight_book_balance - this.hamonizeLimitContract)
+
+        // console.log(this.hamonizeLimitContract,this.contractId.contract_weight_book_balance)
+      },
       canncelConfirm: function () {
         this.fire('toast', {
           status: 'openDialog',
@@ -443,11 +454,9 @@
               .then((res) => {
                 this.set('data.cl_hamonize.' + index + '.cost_price', res.data[0].fp2)
                 this.set('data.cl_hamonize.' + index + '.cost_value', res.data[0].fp2 * (value * 1000))
-                // console.log(res.data[0].fp2);
 
               })
-
-            console.log(url)
+            // console.log(url)
 
           }
 
@@ -614,31 +623,43 @@
       insertConfirm: function () {
         this._resiveFormConfirm()
           .then((res) => {
-            // console.log(res);
-            this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
-            this.dispatchAction('POST_CONFIRM', res)
-              .then((response) => {
-                if (response.data.inserted !== undefined && response.data.inserted.length !== 0) {
-
-                  let url = { contract_id: this.contractId.contract_id, status: 'all' }
-                  this.dispatchAction('GET_CONFIRM_LIST', this.genUrl(url))
-                  this.dispatchAction('GET_CONTRACT_OF_BUYER', this.getCookieBhv("buyerId"));
-                  this.fire('toast', {
-                    status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
-                    callback: () => {
-                      this.queryFrom('.required').map((el) => { el.reset(); });
-                      this.backPage()
-                    }
-                  })
-                } else {
-                  // console.log(1111);
-                  this.fire('toast', {
-                    status: 'connectError', text: response.data, //คำสั่งสำหรับเปิด toast error
-                    callback: () => {
-                    }
-                  })
+            console.log(res);
+            let sum = this.dataShow.cl_total_quantity - this.dataShow.hamonize_limit
+            if (this.dataShow.cl_total_quantity > this.dataShow.hamonize_limit) {
+              this.fire('toast', {
+                status: 'connectError', text: 'ปริมาณสินค้าเกินที่มีในสัญญาไป ' + this.formatNumberNoZero(sum) + ' ตัน', //คำสั่งสำหรับเปิด toast error
+                callback: () => {
                 }
               })
+            } else {
+              // console.log(this.dataShow.cl_total_quantity)
+              // console.log(this.dataShow.hamonize_limit)
+              this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
+              this.dispatchAction('POST_CONFIRM', res)
+                .then((response) => {
+              if (response.data.inserted !== undefined && response.data.inserted.length !== 0) {
+
+                let url = { contract_id: this.contractId.contract_id, status: 'all' }
+                this.dispatchAction('GET_CONFIRM_LIST', this.genUrl(url))
+                this.dispatchAction('GET_CONTRACT_OF_BUYER', this.getCookieBhv("buyerId"));
+                this.fire('toast', {
+                  status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
+                  callback: () => {
+                    this.queryFrom('.required').map((el) => { el.reset(); });
+                    this.backPage()
+                  }
+                })
+              } else {
+                // console.log(1111);
+                this.fire('toast', {
+                  status: 'connectError', text: response.data, //คำสั่งสำหรับเปิด toast error
+                  callback: () => {
+                  }
+                })
+              }
+              })
+            }
+
           })
           .catch((error) => {
             console.log(error);
@@ -687,39 +708,49 @@
             if (result == true) {
               this._resiveFormConfirm()
                 .then((res) => {
-                  // console.log(res);
-                  // console.log(this.dataShow);
-                  this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
-                  this.dispatchAction('PUT_CONFIRM', res)
-                    .then((response) => {
-                      if (response.data.replaced !== undefined && response.data.replaced.length !== 0) {
-                        let url = { contract_id: this.contractId.contract_id, status: 'all' }
-                        this.dispatchAction('GET_CONFIRM_LIST', this.genUrl(url))
-                        this.dispatchAction('GET_CONTRACT_OF_BUYER', this.getCookieBhv("buyerId"));
-                        this.queryFrom('.required').map((el) => { el.reset(); });
-                        this.dispatchAction('SET_STATE', {
-                          isInsert: false,
-                          btnDisabled: true,
-                          hiddend: true
-                        })
-                        this.fire('toast', {
-                          status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
-                          callback: () => {
-                          }
-                        })
-                      } else {
-                        // console.log(1111);
-                        this.fire('toast', {
-                          status: 'connectError', text: response.data, //คำสั่งสำหรับเปิด toast error
-                          callback: () => {
-                          }
-                        })
+                  let sum = this.dataShow.cl_total_quantity - this.dataShow.hamonize_limit
+                  if (this.dataShow.cl_total_quantity > this.dataShow.hamonize_limit) {
+                    this.fire('toast', {
+                      status: 'connectError', text: 'ปริมาณสินค้าเกินที่มีในสัญญาไป ' + this.formatNumberNoZero(sum) + ' ตัน', //คำสั่งสำหรับเปิด toast error
+                      callback: () => {
                       }
                     })
+                  } else {
+                    this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
+                    this.dispatchAction('PUT_CONFIRM', res)
+                      .then((response) => {
+                        if (response.data.replaced !== undefined && response.data.replaced.length !== 0) {
+                          let url = { contract_id: this.contractId.contract_id, status: 'all' }
+                          this.dispatchAction('GET_CONFIRM_LIST', this.genUrl(url))
+                          this.dispatchAction('GET_CONTRACT_OF_BUYER', this.getCookieBhv("buyerId"));
+                          this.queryFrom('.required').map((el) => { el.reset(); });
+                          this.dispatchAction('SET_STATE', {
+                            isInsert: false,
+                            btnDisabled: true,
+                            hiddend: true
+                          })
+                          this.fire('toast', {
+                            status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
+                            callback: () => {
+                            }
+                          })
+                        } else {
+                          // console.log(1111);
+                          this.fire('toast', {
+                            status: 'connectError', text: response.data, //คำสั่งสำหรับเปิด toast error
+                            callback: () => {
+                            }
+                          })
+                        }
+                      })
+                  }
+                  // console.log(res);
+                  // console.log(this.dataShow);
+
                 })
                 .catch((error) => {
                   console.log(error);
-                });
+                })
               // }
 
             }

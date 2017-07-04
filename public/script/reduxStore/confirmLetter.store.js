@@ -14,6 +14,7 @@ const cutDataInObject = (data, namePop) => {
 const initialState = {
     confirmLetterlist: [],
     confirmLetterExporterlist: [],
+    hamonizeLimitContract: {},
     hamonizeContract: [],
     contractDetail: {},
     // hamonizeFp: {}
@@ -24,6 +25,8 @@ export function confirmLetterReducer(state = initialState, action) {
             return Object.assign({}, state, { confirmLetterlist: action.payload });
         case 'GET_CONFIRM_EXPORTER_LIST':
             return Object.assign({}, state, { confirmLetterExporterlist: action.payload });
+        case 'SET_HAMONIZE_LIMIT_OF_CONTRACT':
+            return Object.assign({}, state, { hamonizeLimitContract: action.payload });
         case 'GET_HAMONIZE_OF_CONTRACT':
             return Object.assign({}, state, { hamonizeContract: action.payload });
         case 'GET_CONFIRM_DETAIL':
@@ -42,8 +45,13 @@ export function confirmLetterAction(store) {
             axios.get('./confirm/contract?' + link)
                 .then(function (response) {
                     for (var index = 0; index < response.data.length; index++) {
-                        response.data[index].label = 'งวดที่ ' + response.data[index].cl_no + ' ปริมาณ' + response.data[index].cl_weight_balance + ' ตัน'
+                        response.data[index].label = 'งวดที่ ' + response.data[index].cl_no + ' ปริมาณ ' + response.data[index].cl_weight_balance + ' ตัน'
                     }
+                    let hamonize = response.data
+                    let cost_price = Object.keys(hamonize).reduce((previous, current) => previous + hamonize[current].cl_weight, 0)
+                    console.log(cost_price);
+                    // cl_weight
+                    store.dispatch({ type: 'SET_HAMONIZE_LIMIT_OF_CONTRACT', payload: cost_price})
                     store.dispatch({ type: 'GET_CONFIRM_LIST', payload: response.data })
                 })
                 .catch(function (error) {
@@ -88,14 +96,14 @@ export function confirmLetterAction(store) {
                 });
         },
         GET_CONFIRM_FP: function (data) {
-            return axios.get('./confirm/fp?'+ data)
-                // .then(function (response) {
-                //     console.log(response.data);
-                //     store.dispatch({ type: 'GET_CONFIRM_FP', payload: response.data })
-                // })
-                // .catch(function (error) {
-                //     console.log(error);
-                // });
+            return axios.get('./confirm/fp?' + data)
+            // .then(function (response) {
+            //     console.log(response.data);
+            //     store.dispatch({ type: 'GET_CONFIRM_FP', payload: response.data })
+            // })
+            // .catch(function (error) {
+            //     console.log(error);
+            // });
         },
         // END GET
         // POST
