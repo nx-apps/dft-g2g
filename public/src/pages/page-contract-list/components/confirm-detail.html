@@ -623,7 +623,7 @@
       insertConfirm: function () {
         this._resiveFormConfirm()
           .then((res) => {
-            console.log(res);
+            // console.log(res);
             let sum = this.dataShow.cl_total_quantity - this.dataShow.hamonize_limit
             if (this.dataShow.cl_total_quantity > this.dataShow.hamonize_limit) {
               this.fire('toast', {
