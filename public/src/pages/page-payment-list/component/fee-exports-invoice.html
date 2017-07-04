@@ -121,14 +121,14 @@
                   <td>
                     [[changeString2Num(item2.*,'invoice_fee')]]
                     [[_calcValueFeeB(item.fee_ex_d, rateBank, item.fee_in_b, indexData, index)]]
-                    <gl-form-input disabled style="text-align:right;" format-number="on" value="{{item2.value_fee_b}}"></gl-form-input>
+                    <gl-form-input style="text-align:right;" format-number="on" value="{{item2.value_fee_b}}" disabled="{{inputRice}}"></gl-form-input>
                   </td>
                   <td>[[_calcValueBalB(item2.value_b, item2.value_fee_b, indexData, index)]]
-                    <gl-form-input disabled style="text-align:right;" format-number="on" value="{{item2.value_bal_b}}"></gl-form-input>
+                    <gl-form-input style="text-align:right;" format-number="on" value="{{item2.value_bal_b}}" disabled></gl-form-input>
                   </td>
                   <td>[[_calcValueTax(item2.value_bal_b, indexData, index)]]
                     <gl-form-input style="text-align:right;" format-number="on" style="width:140px;" value="{{item2.value_tax_b}}"
-                      disabled></gl-form-input>
+                      disabled="{{inputRice}}"></gl-form-input>
                   </td>
                   <td>[[_calcValueFinalB(item2.value_bal_b, item2.value_tax_b, indexData, index)]]
                     <gl-form-input style="text-align:right;" format-number="on" style="width:140px;" value="{{item2.value_final_b}}"
@@ -183,29 +183,31 @@
     </gl-form-panel>
 
     <div class="horizontal end-justified layout">
-
-      <!--<template is="dom-if" if="[[common.btnDisabled]]">
-        <template is="dom-if" if="[[!data.fin_status]]">
-          <paper-button raised on-tap="approvePayment" class="gl-btn-default" hidden="[[data.fee_det_status]]">{{localize.reset_data}}</paper-button>
-        </template>
-      </template>-->
       
       <template is="dom-if" if="[[!common.btnDisabled]]">
         <paper-button raised class="gl-btn-default" on-tap="cancelFee" hidden="[[!common.isInsert]]">{{localize.reset_data}}</paper-button>
         <paper-button raised on-tap="addPayment" class="gl-btn-success" hidden="[[!common.isInsert]]">{{localize.add}}</paper-button>
       </template>
 
-      <template is="dom-if" if="[[!common.btnDisabled]]">
+      <template is="dom-if" if="[[common.btnDisabled]]">
+        <template is="dom-if" if="[[!data.fin_status]]">
+          <template is="dom-if" if="[[!data.rice_status]]">
+            <paper-button class="gl-btn-success" raised on-tap="approvePayment" class="gl-btn-default">{{localize.confirm}}</paper-button>
+          </template>
+        </template>
+      </template>
+
+      <!--<template is="dom-if" if="[[!common.btnDisabled]]">
         <paper-button raised class="gl-btn-default" on-tap="cancelContract" hidden="[[common.isInsert]]">{{localize.reset_data}}</paper-button>
         <paper-button raised class="gl-btn-default" on-tap="cancel" hidden="[[common.isInsert]]">{{localize.cancel}}</paper-button>
         <paper-button raised class="gl-btn-success" on-tap="savePayment" hidden="[[common.isInsert]]">{{localize.save}}</paper-button>
-      </template>
+      </template>-->
 
-      <template is="dom-if" if="[[data.fin_status]]">
+      <!--<template is="dom-if" if="[[data.fin_status]]">
         <template is="dom-if" if="[[common.btnDisabled]]">
           <paper-button raised class="gl-btn-danger" on-tap="editFee" hidden="[[common.isInsert]]">{{localize.cancel}}{{localize.confirm}}</paper-button>
         </template>
-      </template>
+      </template>-->
     </div>
 
   </template>
@@ -371,7 +373,7 @@
         if(this.checkRequired === true){
           this.fire('toast', {
             status: 'openDialog', 
-            text: 'ต้องการเพิ่มค่าธรรมเนียมใช่หรือไม่',
+            text: 'ต้องการเพิ่มการคิดค่าธรรมเนียมใช่หรือไม่',
             confirmed: (result) =>{
               if(result === true){
                 this.dispatchAction('FEE_INSERT', newData);
@@ -423,6 +425,21 @@
       },
       cancelContract:function(){
         this.dispatchAction('FEE_GET_ID_DATA',this.data.id);
+      },
+      approvePayment:function(){
+        var newData = {
+          id: this.data.id,
+          fin_status: true
+        };
+        this.fire('toast',{
+          status: 'openDialog',
+          text: 'ต้องการยืนยันการคิดค่าธรรมเนียมใช่หรือไม่',
+          confirmed: (result) =>{
+            if(result === true){
+              this.dispatchAction('FEE_APPROVE', newData);
+            }
+          }
+        })
       }
     });
   </script>

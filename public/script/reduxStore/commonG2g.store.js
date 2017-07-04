@@ -84,7 +84,7 @@ export function commonG2gAction(store) {
                     },[]);
                     for (var index = 0; index < hamonizeList.length; index++) {
                         // response.data[index].label = ''
-                        hamonizeList[index].label = '[' + hamonizeList[index].hamonize_code + '] ' + hamonizeList[index].hamonize_th
+                        hamonizeList[index].label = '[' + hamonizeList[index].hamonize_code + '] ' + hamonizeList[index].hamonize_th2
                         // console.log(response.data[index].hamonize.hamonize_en );
                     }
                     let lisyYear = []

@@ -1,201 +1,193 @@
-<link rel="import" href="fee-exports-g2g.html">
-<link rel="import" href="list-of-fee-detail-g2g.html">
-<link rel="import" href="./../../../../bower_components/iron-pages/iron-pages.html">
-<link rel="import" href="./../../../../bower_components/gl-form/gl-form-panel.html">
+<link rel="import" href="./../../components/format-number-behavior.html">
+<link rel="import" href="./../../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="./../../../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="./../../components/cookie-behavior.html">
+<link rel="import" href="./../../components/g2g-logic-behavior.html">
 
-<dom-module id="list-of-fee-g2g">
+<link rel="import" href="../../page-payment-list/component/fee-exports.html">
+
+
+<dom-module id="list-of-fee">
   <style include="iron-flex iron-flex-factors iron-flex-alignment gl-styles">
      :host {
       display: block;
     }
-    
+
     * {
       font-family: 'CSChatThaiUI', sans-serif;
       -webkit-font-smoothing: antialiased;
     }
-    
+
+    .labelSearch {
+      font-size: var(--font-size-h4);
+      margin: 10px 10px 10px 10px;
+    }
+
+    .table-body>tr>td {
+      cursor: pointer;
+    }
+
+    .title {
+      margin: 16px;
+      text-align: left;
+      font-size: var(--font-size-h4);
+    }
+
     table.gl-table-default {
       width: 98%;
       border: 1px solid #ddd;
       margin-bottom: 15px;
     }
-    
-    .labelSearch {
-      font-size: var(--font-size-h4);
-      margin: 10px 10px 10px 10px;
-    }
-    
-    .table-body>tr>td {
-      cursor: pointer;
-    }
-    
-    .title {
-      margin: 16px;
+
+    table.gl-table-default>thead.table-head>tr>th {
       text-align: center;
-      font-size: var(--font-size-h4);
+    }
+
+    table.gl-table-default>thead.table-head>tr>th:nth-child(1) {
+      width: 15%;
+    }
+
+    table.gl-table-default>tbody.table-body>tr>td:not(:first-child) {
+      text-align: right;
     }
   </style>
   <template>
+
     <iron-pages selected="{{pageSelected}}" attr-for-selected="name">
-      <div name="listOfFee">
-        <gl-form-panel set-padding="10px 20px 10px 20px" set-border="1px">
-          <div class="flex searchInput ">
-            <div class="horizontal end-justified layout">
-            </div>
+      <section name="listOfFee">
+        <div class="flex searchInput horizontal center-justified layout">
+          <div class="flex title">
           </div>
+          <div class="flex horizontal end-justified layout">
+            <div class="labelSearch">{{localize.text_fee_no}}</div>{{_searchInArray(searchInput)}}
+            <paper-input label=" " no-label-float value="{{searchInput}}"></paper-input>
+            <paper-icon-button icon="search"></paper-icon-button>
+          </div>
+        </div>
+        <div class="horizontal center-justified layout">
           <table class="gl-table-default">
             <thead class="table-head">
               <tr>
-                <th>{{localize.text_fee_no}}</th>
-                <th>{{localize.label_bath_value}}</th>
-                <th>{{localize.label_invoice_fee}}</th>
-                <th>{{localize.label_expenses_one_present}}</th>
-                <th>{{localize.label_total_bath_expenses}}</th>
+                <th>{{localize.fee_no}}</th>
+                <th>{{localize.fee_round}}</th>
+                <th>{{localize.invoice_no}}</th>
+                <th>{{localize.invoice_count}}</th>
+                <th>{{localize.amount}}{{localize.money}} ({{localize.baht}})</th>
+                <th>{{localize.expenses_fee}} ({{localize.baht}})</th>
+                <th>{{localize.expenses_one_present}} ({{localize.baht}})</th>
+                <th>{{localize.balance}} ({{localize.baht}})</th>
               </tr>
             </thead>
             <tbody class="table-body">
               <template is="dom-repeat" items="[[newData]]">
-                <tr data="[[item]]" on-tap="getFeeDetailList">
+                <tr data="[[item]]" on-tap="getFeeDetail">
                   <td>[[item.fee_no]]</td>
-                  <td style="text-align: right  !important">[[formatNumber(item.bath_value)]]</td>
-                  <td style="text-align: right  !important">[[formatNumber(item.invoice_fee)]]</td>
-                  <td style="text-align: right  !important">[[formatNumber(item.tax1percent)]]</td>
-                  <td style="text-align: right  !important">[[formatNumber(item.bath_balance)]]</td>
+                  <td>[[countRound(item.fee_round)]]</td>
+                  <td>
+                    <div style="text-align:left;">[[item.invoice_no]]</div>
+                  </td>
+                  <td>[[item.invoice_count]]</td>
+                  <td>[[formatNumber(item.value_b)]]</td>
+                  <td>[[formatNumber(item.value_fee_b)]]</td>
+                  <td>[[formatNumber(item.value_tax_b)]]</td>
+                  <td>[[formatNumber(item.value_final_b)]]</td>
                 </tr>
               </template>
               <template is="dom-if" if="[[_isHave(newData)]]">
                 <tr>
-                  <td colspan="5" style="text-align:center"> {{localize.text_no_data}}</td>
+                  <td colspan="8" style="text-align:center"> {{localize.no_data}}</td>
                 </tr>
               </template>
             </tbody>
           </table>
-        </gl-form-panel>
-      </div>
-      <div name="feeDetailList">
-        <list-of-fee-detail-g2g data="[[dataSelected.feeDetail]]"  data-for-select="{{dataForSelect}}"></list-of-fee-detail-g2g>
-      </div>
-      <div name="feeDetail">
-        <fee-exports-g2g data="[[dataSelected.fee]]" data-for-select="[[dataForSelect]]" is-input-disabled="[[isInputDisabled]]"></fee-exports-g2g>
-      </div>
+        </div>
+      </section>
+      <section name="feeDetail">
+        <fee-exports></fee-exports>
+      </section>
     </iron-pages>
+
+
   </template>
   <script>
     Polymer({
-      is: "list-of-fee-g2g",
-      // observers: [
-      //   'initDataFee(data)'
-      // ],
-      behaviors: [
-        ReduxBehavior,
-        nylonBehavior,
-        FormatNumberBehavior
-        // g2gCongtroller,
-        // g2gModelBehavior,
-        // nylonLocalizeBehavior,
-      ],
-      // listeners: {
-      //   'page-change': '_pageChange',
-      //   'get-Fee-Detail': '_getFeeDetail',
-      //   'get-new-fee-list': '_getFeeListEvent',
-      //   'get-new-fee-list-detail': '_getFeeDetail',
-      // },
+      is: "list-of-fee",
+      behaviors: [ReduxBehavior, nylonBehavior, FormatNumberBehavior, CookieBehavior, g2gLogicBehavior],
       properties: {
-        localize:{
-          statePath : 'i18n.g2g'
+        localize: {
+          statePath: 'i18n.fee'
         },
-        newData: {
-          type: Object
+        data: {
+          statePath: 'fee.list'
         },
-        pageSelected: {
-          type: String,
-          value: 'listOfFee',
-          notify: true
+        pageSelected:{
+          type:String,
+          value:'listOfFee'
         },
-        dataSelected: {
-          type: Object,
-          value: { dataSelected: '', fee: '' }
+        contractId: {
+          statePath: 'commonState.contractId',
+          // observer: 'get'
+        },
+      },
+      observers: [
+        'initDataFee(data)'
+      ],
+      initDataFee: function (data) {
+        // console.log(data);
+        this.newData = this.g2gClone(data);
+      },
+      _searchInArray: function (searchInput) {
+        // console.log(searchInput == '');
+        if (searchInput != '') {
+          let arr = [];
+          this.data.map((el) => {
+            if (String(el.fee_no).search(searchInput) > -1) {
+              //  console.log('search==> ',el);
+              arr.push(el);
+            }
+          });
+          this.newData = arr;
+        } else {
+          this.initDataFee(this.data);
         }
       },
-      // created: function () {
-      //   this.nylonLocalizeImport('/i18n-page1.json');
-      // },
-      // initDataFee: function (data) {
-      //   // console.log(data);
-      //   this.newData = this.g2gClone(data);
-      // },
-      // _getFeeListEvent: function (e) {
-      //   this._getDbFeeDetailList(e.detail.fee_id, (data) => {
-      //     this.dataSelected.feeDetail = data;
-      //     this.notifyPath('dataSelected.feeDetail');
-      //   })
-      // },
-      // _searchInArray: function (searchInput) {
-      //   // console.log(searchInput == '');
-      //   if (searchInput != '') {
-      //     let arr = [];
-      //     this.data.map((el) => {
-      //       if (el.fee_name.search(searchInput) > -1) {
-      //         //  console.log('search==> ',el);
-      //         arr.push(el);
-      //       }
-      //     });
-      //     this.newData = arr;
-      //   } else {
-      //     this.initDataFee(this.data);
-      //   }
-      // },
-      // // ฟังชั่นเปลี่ยนหน้า
-      // _pageChange: function (e) {
-      //   this.pageSelected = e.detail.page;
-      // },
-      // getFeeDetailList: function (e) {
-      //   this.fire('toast', { status: 'load' });
-      //   this._getDbFeeDetailList(e.currentTarget.data.fee_id, (data) => {
-      //     this.fire('toast', { status: 'load' });
-      //     this.dataSelected.feeDetail = data;
-      //     this.notifyPath('dataSelected.feeDetail');
-      //     this.pageSelected = 'feeDetailList';
-      //   })
-      //   let breadcrumbs = datass = [
-      //     {
-      //       label: this.dataForSelect.contract_name,
-      //       href: ''
-      //     },
-      //     {
-      //       label: 'รายการค่าธรรมเนียมครั้งที่ '+e.currentTarget.data.fee_no,
-      //       href: ''
-      //     },
-      //   ]
-      //   this.set('dataForSelect.fee_no', e.currentTarget.data.fee_no)
-      //   // th
-      //   // console.log(breadcrumbs);
-      //   this.fire('_set-breadcrumbs', breadcrumbs)
-      //   // console.log(this.dataForSelect);
-      //   // console.log(e.currentTarget.data);
-      // },
-      // _getFeeDetail: function (e) {
-      //   // console.log(e.detail.data);
-      //   this.fire('toast', { status: 'load' });
-      //   this._getDbFeeDetail(e.detail.data, (data) => {
-      //     this.fire('toast', { status: 'load' });
-      //     this.dataSelected.fee = data;
-      //     // console.log(this.dataSelected);
-      //     this.notifyPath('dataSelected.fee');
-      //     this.pageSelected = 'feeDetail';
-      //   })
-      // },
-      // //callback
-      // _getDbFeeDetailList: function (fee_id, callback) {
-      //   this.read('./g2g/fee/id/' + fee_id, (data) => {
-      //     callback(data);
-      //   });
-      // },
-      // _getDbFeeDetail: function (fee_det_id, callback) {
-      //   this.read('./g2g/fee_detail/id/' + fee_det_id, (data) => {
-      //     callback(data);
-      //   });
-      // }
+      getFeeDetail: function (e) {
+        this.dispatchAction('SET_BREADCRUMBS', [{
+          label: 'สัญญาที่ ' + this.contractId.contract_no,
+          href: ''
+        },
+        {
+          label: 'คิดค่าธรรมเนียมครั้งที่'+e.currentTarget.data.fee_no,
+          href: ''
+        },
+        {
+          label: 'รอบที่'+this.countRound(e.currentTarget.data.fee_round),
+          href: ''
+        },
+        ])	
+        // console.log(e.currentTarget.data);
+        this.fire('toast', { status: 'load' });
+        this.dispatchAction('SET_STATE', {
+          isInsert: false,
+          btnDisabled: true,
+          hiddend: true
+        })
+        this.dispatchAction('FEE_GET_ID_DATA', e.currentTarget.data.id)
+        this.async(() => {
+          this.fire('toast', {
+            status: 'success', text: 'โหลดสำเร็จ', callback: () => {
+              
+              this.set('pageSelected','feeDetail')
+            }
+          })
+        }, 500)
+        
+        
+        // this.fire('get-fee-detail', { detail: e.currentTarget.data });
+      },
+      countRound: function (data) {
+        return data + 1;
+      }
     });
   </script>
 </dom-module>

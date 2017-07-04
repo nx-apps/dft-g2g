@@ -8,6 +8,7 @@
 <!--<link rel="import" href="components/list-of-confirm.html">
 <link rel="import" href="components/list-of-booking.html">
 <link rel="import" href="components/list-of-fee-g2g.html">-->
+
 <link rel="import" href="./../../../bower_components/iron-pages/iron-pages.html">
 
 <link rel="import" href="./components/chart-pie-g2g.html">
@@ -65,9 +66,9 @@
                     <div class="addContract" name="listOfShipment">
                         <list-of-booking></list-of-booking>
                     </div>
-                    <!--<div class="addContract" name="listOfFee">
-                        <list-of-fee-g2g page-selected="{{pageSelected}}" data-for-select="[[dataForSelected.dataForFee]]" data="[[feeList]]"></list-of-fee-g2g>
-                    </div>-->
+                    <div class="addContract" name="listOfFee">
+                        <list-of-fee></list-of-fee>
+                    </div>
                 </iron-pages>
             </div>
         </nylon-panel-right>
@@ -81,7 +82,7 @@
             is: 'page-contract-list',
             behaviors: [ReduxBehavior, nylonBehavior, i18nAction, CookieBehavior,
                 contractAction, commonStateAction, commonG2gAction, confirmLetterAction, g2gLogicBehavior,
-                bookAction],
+                bookAction, feeAction],
             properties: {
                 layerContent: {
                     type: String,
@@ -518,53 +519,92 @@
                 //     });
                 //     }
             },
-            // _getlistFee: function (e) {
-            //     try {
-            //     this.read('./g2g/fee/contract/id/' + e.detail.data.contract_id, (data) => {
-            //         //ปัญหาตรงนี้
-            //         this.set('pageSelected', 'listOfFee')
-            //         this.feeList = data;
-            //         this.titlePanelRight = 'ค่าธรรมเนียม : ' + e.detail.data.contract_name
-            //         this.dataForSelected.dataForFee.feeListinShm = data;
-            //         this.notifyPath('dataForSelected.dataForFee.feeListinShm');
-            //         let datass = [
-            //             {
-            //                 label: e.detail.data.contract_name,
-            //                 href: ''
-            //             },
-            //             {
-            //                 label: 'รายการค่าธรรมเนียม',
-            //                 href: ''
-            //             },
-            //         ]
-            //         this.set('dataForSelected.dataForFee.contract_name', e.detail.data.contract_name);
-            //         this.setBreadcrumbs(datass)
-            //         this.g2gPageSeleted = 'listOfFee';
-            //         if (this.checkRenderPage.listOfFee != true) {
+            _getlistFee: function (e) {
+                try {
+                    let url = { contract_id: e.detail.contract_id, view: 'rice' }
+                    this.dispatchAction('FEE_GET_LIST_DATA',url)
+                    // this.dispatchAction('GET_HAMONIZE_OF_CONTRACT', this.genUrl(url))
+                    this.dispatchAction('SET_BREADCRUMBS', [{
+                        label: 'สัญญาที่ ' + e.detail.contract_no,
+                        href: ''
+                    }])
+                    this.g2gPageSeleted = 'listOfFee';
+                    let contractData = { contract_id: e.detail.contract_id, contract_no: e.detail.contract_no }
+                    this.dispatchAction('SET_CONTRACT_ID', contractData)
+                    this.titlePanelRight = 'สัญญาที่  : ' + e.detail.contract_no
+                    this.fire('toast', { status: 'load' });
+                if (this.checkRenderPage.listOfFee != true) {
+                    this.async(() => {
+                        this.importHref(
+                            this.resolveUrl('./components/list-of-fee-g2g.html'),
+                            () => {
+                                this.async(() => {
+                                    this.fire('toast', {
+                                        status: 'success', text: 'โหลดสำเร็จ', callback: () => {
+                                            this._flipDrawer();
+                                            this.checkRenderPage.listOfFee = true;
+                                        }
+                                    })
+                                    // console.log(this.dataForSelected.dataForContract);
 
-            //         this.fire('toast', { status: 'load' });
-            //         this.async(() => {
-            //             this.importHref(
-            //             this.resolveUrl('./g2g/component/list-of-fee-g2g.html'),
-            //             () => {
-            //                 this.async(() => {
-            //                 this.fire('toast', { status: 'load' });
-            //                 // console.log(this.dataForSelected.dataForContract);
-            //                 this._flipDrawer();
-            //                 this.checkRenderPage.listOfFee = true;
-            //                 }, 500)
-            //             }, null, true
-            //             );
-            //         }, 1000);
-            //         } else {
-            //         this._flipDrawer();
-            //         }
+                                }, 500)
+                            }, null, true
+                        );
+                    }, 1000);
+                } else {
+                    this.async(() => {
+                        this.fire('toast', {
+                            status: 'success', text: 'โหลดสำเร็จ', callback: () => {
+                                this._flipDrawer();
+                            }
+                        })
+                    }, 1000);
+                }
+                    //     this.read('./g2g/fee/contract/id/' + e.detail.data.contract_id, (data) => {
+                    //         //ปัญหาตรงนี้
+                    //         this.set('pageSelected', 'listOfFee')
+                    //         this.feeList = data;
+                    //         this.titlePanelRight = 'ค่าธรรมเนียม : ' + e.detail.data.contract_name
+                    //         this.dataForSelected.dataForFee.feeListinShm = data;
+                    //         this.notifyPath('dataForSelected.dataForFee.feeListinShm');
+                    //         let datass = [
+                    //             {
+                    //                 label: e.detail.data.contract_name,
+                    //                 href: ''
+                    //             },
+                    //             {
+                    //                 label: 'รายการค่าธรรมเนียม',
+                    //                 href: ''
+                    //             },
+                    //         ]
+                    //         this.set('dataForSelected.dataForFee.contract_name', e.detail.data.contract_name);
+                    //         this.setBreadcrumbs(datass)
+                    //         this.g2gPageSeleted = 'listOfFee';
+                    //         if (this.checkRenderPage.listOfFee != true) {
 
-            //     });
-            //     } catch (e) {
-            //     // console.log(e);
-            //     }
-            // },
+                    //         this.fire('toast', { status: 'load' });
+                    //         this.async(() => {
+                    //             this.importHref(
+                    //             this.resolveUrl('./g2g/component/list-of-fee-g2g.html'),
+                    //             () => {
+                    //                 this.async(() => {
+                    //                 this.fire('toast', { status: 'load' });
+                    //                 // console.log(this.dataForSelected.dataForContract);
+                    //                 this._flipDrawer();
+                    //                 this.checkRenderPage.listOfFee = true;
+                    //                 }, 500)
+                    //             }, null, true
+                    //             );
+                    //         }, 1000);
+                    //         } else {
+                    //         this._flipDrawer();
+                    //         }
+
+                    //     });
+                } catch (e) {
+                    // console.log(e);
+                }
+            },
             // okload: function () {
             //     this.checkLoad = true;
             // },

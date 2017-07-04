@@ -94,14 +94,38 @@
         <paper-material elevation="1" class="paper-meterial">
           <div class="horizontal center-justified layout wrap">
             <gl-form-panel set-padding="0px 0px 0px 0px" set-border="0px">
+
               <template is="dom-if" if="[[!common.isInsert]]">
                 <template is="dom-if" if={{!data.fin_status}}>
-                  <div class="horizontal end-justified layout">
-                    <paper-icon-button id="edit" class="crud" icon="create" raised on-tap="editInput" disabled="[[!common.btnDisabled]]"></paper-icon-button>
-                    <paper-tooltip for="edit" offset="0">{{localize.edit}}</paper-tooltip>
-                  </div>
+                  <template is="dom-if" if={{!data.rice_status}}>
+                    <div class="horizontal end-justified layout">
+                      <paper-icon-button id="edit" class="crud" icon="create" raised on-tap="editInput" disabled="[[!common.btnDisabled]]"></paper-icon-button>
+                      <paper-tooltip for="edit" offset="0">{{localize.edit}}</paper-tooltip>
+                      <paper-icon-button id="delete" class="crud" icon="delete" raised on-tap="_delete" disabled="[[!common.btnDisabled]]"></paper-icon-button>
+                      <paper-tooltip for="edit" offset="0">{{localize.delete}}</paper-tooltip>
+                    </div>
+                  </template>
+                </template>
+
+                <template is="dom-if" if={{data.fin_status}}>
+                  <template is="dom-if" if={{!data.rice_status}}>
+                    <div class="horizontal end-justified layout">
+                      <paper-icon-button id="edit" class="crud" icon="create" raised on-tap="editInputRice" disabled="[[!common.btnDisabled]]"></paper-icon-button>
+                      <paper-tooltip for="edit" offset="0">{{localize.edit}}</paper-tooltip>
+                    </div>
+                  </template>
+                </template>
+
+                <template is="dom-if" if={{data.fin_status}}>
+                  <template is="dom-if" if={{data.rice_status}}>
+                    <div class="horizontal end-justified layout">
+                      <paper-icon-button id="delete" class="crud" icon="delete" raised on-tap="_delete" disabled="[[!common.btnDisabled]]"></paper-icon-button>
+                      <paper-tooltip for="edit" offset="0">{{localize.delete}}</paper-tooltip>
+                    </div>
+                  </template>
                 </template>
               </template>
+
               <div name="averagePage">
                 <div class="flex-center-justified">
                   <div class="text-header">{{localize.rice_detail_and_payout}}</div>
@@ -292,20 +316,13 @@
           this.data.totalbath = balanceChangeBath - feeTotalWithOutUsd;
           this.notifyPath('data.totalbath');
         } catch (e) {
-          // console.log(e);
         }
       },
-      // //นับหน้า
       _invoicePage: function (invoice = 1) {
-        // console.log(invoice);
-        // try {
         if(typeof invoice.book !== 'undefined'){
           this.data.invoicePage = invoice.book.length;
           this.notifyPath('data.invoicePage');
         }
-        // } catch (e) {
-        //   // console.log(e);
-        // }
       },
       editInput: function(){
         this.dispatchAction('SET_STATE', {
@@ -313,6 +330,20 @@
             btnDisabled: false,
             hiddend: true
         });
+      },
+      _delete: function(){
+        this.fire('toast', {
+          status: 'openDialog',
+          text: 'ต้องการลบคิดค่าธรรมเนียมใช่หรือไม่',
+          confirmed: (result) =>{
+            if(result === true){
+              this.dispatchAction('FEE_DELETE', this.data.id);
+            }
+          }
+        })
+      },
+      editInputRice: function(){
+        console.log('test');
       }
       // _countFee: function (fee) {
       //   try {

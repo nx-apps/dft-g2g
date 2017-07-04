@@ -41,6 +41,7 @@ export const fee ={
         confirm:"ยืนยัน",
         save:"บันทึก",
         cancel:"ยกเลิก",
-        no_data:"ไม่มีข้อมูล"
+        no_data:"ไม่มีข้อมูล",
+        delete:"ลบ"
     }
 }   

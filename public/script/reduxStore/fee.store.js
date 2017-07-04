@@ -20,8 +20,8 @@ export function feeReducer(state = initialState, action) {
 export function feeAction(store) {
     return [commonAction(),
     {
-        FEE_GET_LIST_DATA: function(id){
-            axios.get('./fee/contract?id='+id+'&view=fin')
+        FEE_GET_LIST_DATA: function(data){
+            axios.get('./fee/contract?id='+data.contract_id+'&view='+data.view)
             .then((response) => {
                 store.dispatch({ type: 'FEE_GET_LIST_DATA', payload: response.data});
             })
@@ -45,7 +45,9 @@ export function feeAction(store) {
             .then((response) => {
                 let newData = {
                     rate_bank_b : 0,
-                    rate_lt_b : 0,
+                    rate_tt_b : 0,
+                    fee_ex_d : 0,
+                    fee_in_b : 0,
                     book: response.data
                 }
                 if(typeof newData.fee_date !== 'undefined'){
@@ -100,6 +102,42 @@ export function feeAction(store) {
                         });
                     }
                 });
+            })
+            .catch((err) => {
+                console.log(err);
+            })
+        },
+        FEE_DELETE: function(id){
+            var contract_id = this.getCookieBhv("contract_id");
+            this.fire('toast',{status:'load'});
+            axios.delete('./fee/delete/'+id)
+            .then((response) => {
+                this.fire('toast', {
+                    status: 'success', text: 'ลบข้อมูลสำเร็จ',
+                    callback: () => {
+                        this.INVOICE_GET_LIST_DATA(contract_id);
+                        this.BOOK_GET_LIST_DATA(contract_id);
+                        this.FEE_GET_LIST_DATA(contract_id);
+                        this._flipDrawerClose();
+                    }
+                });
+            })
+            .catch((err) => {
+                console.log(err);
+            })
+        },
+        FEE_APPROVE: function(data){
+            axios.put('./fee/approve',data)
+            .then((response) => {
+                this.fire('toast',{
+                    status: 'success', text:'บันทึกสำเร็จ',
+                    callback:() => {
+                        this.INVOICE_GET_LIST_DATA(contract_id);
+                        this.BOOK_GET_LIST_DATA(contract_id);
+                        this.FEE_GET_LIST_DATA(contract_id);
+                        this._flipDrawerClose();
+                    }
+                })
             })
             .catch((err) => {
                 console.log(err);
