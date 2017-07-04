@@ -180,9 +180,9 @@ function updateFee(act, obj, res) {
             });
     } else if ('delete') {
         status = false;
-        fee = obj(0).delete();
         book = clearValue(book);
         detail = clearValue(detail);
+        fee = obj(0).delete();
         function clearValue(val) {
             return val.merge(function (m) {
                 return {
@@ -207,11 +207,6 @@ function updateFee(act, obj, res) {
         return r.table('book_detail').get(fe('detail_id')).update(fe.without('company', 'detail_id'))
     });
     async.parallel({
-        fee: function (callback) {
-            fee.run().then(function (res1) {
-                callback(null, res1)
-            })
-        },
         book: function (callback) {
             updateBook.run().then(function (res2) {
                 callback(null, res2)
@@ -222,8 +217,16 @@ function updateFee(act, obj, res) {
                 callback(null, res3)
             })
         }
+        // fee: function (callback) {
+        //     fee.run().then(function (res1) {
+        //         callback(null, res1)
+        //     })
+        // }
     }, function (err, results) {
-        res.json(results.fee);
+        fee.run().then(function (data) {
+            results.fee = data;
+            res.json(results);
+        });
     });
 }
 exports.approve = function (req, res) {
