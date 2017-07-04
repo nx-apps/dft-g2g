@@ -103,6 +103,7 @@
         </div>
       </section>
       <section name="feeDetail">
+        <paper-button raised on-tap="backPage" class="gl-btn-default">ย้อนกลับ (ยัง)</paper-button>
         <fee-exports></fee-exports>
       </section>
     </iron-pages>
@@ -120,9 +121,13 @@
         data: {
           statePath: 'fee.list'
         },
-        pageSelected:{
-          type:String,
-          value:'listOfFee'
+        pageSelected: {
+          type: String,
+          value: 'listOfFee'
+        },
+        setPage: {
+          statePath: 'commonState.setPageAndSearch',
+          observer: 'setPageFun'
         },
         contractId: {
           statePath: 'commonState.contractId',
@@ -132,9 +137,19 @@
       observers: [
         'initDataFee(data)'
       ],
+      // listeners: {
+      //   '_list-Fee': '_changeIronPage',
+      // },
       initDataFee: function (data) {
         // console.log(data);
         this.newData = this.g2gClone(data);
+      },
+      setPageFun: function (data) {
+        this.set('pageSelected', data.page)
+        // console.log(0)
+      },
+      backPage: function (data) {
+        this.set('pageSelected','listOfFee')
       },
       _searchInArray: function (searchInput) {
         // console.log(searchInput == '');
@@ -157,14 +172,14 @@
           href: ''
         },
         {
-          label: 'คิดค่าธรรมเนียมครั้งที่'+e.currentTarget.data.fee_no,
+          label: 'คิดค่าธรรมเนียมครั้งที่' + e.currentTarget.data.fee_no,
           href: ''
         },
         {
-          label: 'รอบที่'+this.countRound(e.currentTarget.data.fee_round),
+          label: 'รอบที่' + this.countRound(e.currentTarget.data.fee_round),
           href: ''
         },
-        ])	
+        ])
         // console.log(e.currentTarget.data);
         this.fire('toast', { status: 'load' });
         this.dispatchAction('SET_STATE', {
@@ -176,13 +191,13 @@
         this.async(() => {
           this.fire('toast', {
             status: 'success', text: 'โหลดสำเร็จ', callback: () => {
-              
-              this.set('pageSelected','feeDetail')
+
+              this.set('pageSelected', 'feeDetail')
             }
           })
         }, 500)
-        
-        
+
+
         // this.fire('get-fee-detail', { detail: e.currentTarget.data });
       },
       countRound: function (data) {

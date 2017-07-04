@@ -76,17 +76,21 @@
             <div class="horizontal justified layout">
               <div>{{localize.invoice_no}} : [[item.invoice_no]]</div>
               <div>{{localize.cal_no}} : [[item.cl_no]]</div>
-              <div>{{localize.fee_out}} : [[item.fee_ex_d]]</div> {{_calcfeeEx(feeEx, indexData)}}
-              <div>{{localize.fee_in}} : [[item.fee_in_b]]</div> {{_calcfeeIn(feeIn, indexData)}}
-              
+              <div>{{localize.ship_lot}} : [[item.ship_lot]]</div>
+              <div>{{localize.vessel_name}} : [[_obArrayShip(item.ship)]]</div>
               <div style="width:20px"></div>
               <div>[[_ObcountIndex(indexData)]]/[[invoicePage]]</div>
             </div>
             <div class="horizontal layout">
-              <div>{{localize.ship_lot}} : [[item.ship_lot]]</div>
-              <div style="margin-left:100px;">{{localize.vessel_name}} :
-                [[_obArrayShip(item.ship)]]
-              </div>
+              {{_calcfeeEx(feeEx, indexData)}}
+              <gl-form-input label="{{localize.fee_out}}" class="number required" required format-number="on" style="width:200px;" value="{{item.fee_ex_d}}" disabled="[[common.btnDisabled]]"></gl-form-input>
+              [[_calcFeeExChange(item.fee_ex_d, indexData)]]
+
+              {{_calcfeeIn(feeIn, indexData)}}
+              <gl-form-input label="{{localize.fee_in}}" class="number required" required format-number="on" style="width:200px; margin-left:50px;" value="{{item.fee_in_b}}" disabled="[[common.btnDisabled]]"></gl-form-input>
+              [[_calcFeeInChange(item.fee_in_b, indexData)]]
+              <!--<div>{{localize.fee_out}} : [[item.fee_ex_d]]</div> 
+              <div>{{localize.fee_in}} : [[item.fee_in_b]]</div> -->
             </div>
           </div>
           <div style="overflow-x:auto;">
@@ -218,7 +222,7 @@
       <template is="dom-if" if="[[!common.inputRice]]">
         <template is="dom-if" if="[[data.fin_status]]">
           <template is="dom-if" if="[[!data.rice_status]]">
-            <paper-button raised class="gl-btn-default" on-tap="cancelFee" hidden="[[!common.isInsert]]">{{localize.reset_data}}</paper-button>
+            <paper-button raised class="gl-btn-default" on-tap="cancelContract" hidden="[[!common.isInsert]]">{{localize.reset_data}}</paper-button>
             <paper-button raised class="gl-btn-default" on-tap="cancel" hidden="[[!common.isInsert]]">{{localize.cancel}}</paper-button>
             <paper-button class="gl-btn-success" raised on-tap="riceSave">{{localize.save}}</paper-button>
           </template>
@@ -255,22 +259,31 @@
       _calcfeeEx: function(fee, index){
         if(typeof this.data.book !== 'undefined'){
           if(fee !== ''){
-            var calc_fee_ex = parseInt(fee)/this.data.book.length;
+            var calc_fee_ex = parseFloat(fee)/this.data.book.length;
             this.set('data.book.'+index+'.fee_ex_d', calc_fee_ex);
           }else{
             this.set('data.book.'+index+'.fee_ex_d', 0);
           }
         }
       },
+      _calcFeeExChange:function(fee, index){
+        // console.log(fee, index);
+        var changeFee =parseFloat(fee);
+        this.set('data.book.'+index+'.fee_ex_d', changeFee);
+      },
       _calcfeeIn: function(fee, index){
         if(typeof this.data.book !== 'undefined'){
           if(fee !== ''){
-            var calc_fee_in = parseInt(fee)/this.data.book.length;
+            var calc_fee_in = parseFloat(fee)/this.data.book.length;
             this.set('data.book.'+index+'.fee_in_b', calc_fee_in);
           }else{
             this.set('data.book.'+index+'.fee_in_b', 0);
           }
         }
+      },
+      _calcFeeInChange:function(fee, index){
+        var changeFee =parseFloat(fee);
+        this.set('data.book.'+index+'.fee_in_b', changeFee);
       },
       _obArrayShip:function(ships){
         return ships.join()
@@ -328,7 +341,7 @@
         var result = 0;
         if(typeof data.base.book[index] !== 'undefined'){
           data.base.book[index].detail.map((item) => {
-              result += item.value_b;
+              result += parseFloat(item.value_b);
           })
           // this.set('data.'+index+'.totalBathInvoices', result);
           this.set('data.book.'+index+'.value_b', result);
@@ -339,7 +352,7 @@
         var result = 0;
         if(typeof data.base.book[index] !== 'undefined'){
           data.base.book[index].detail.map((item) => {
-              result += item.value_fee_b;
+              result += parseFloat(item.value_fee_b);
           })
           // this.set('data.'+index+'.totalFeeInvoices', result);
           this.set('data.book.'+index+'.value_fee_b', result);
@@ -350,7 +363,7 @@
         var result = 0;
         if(typeof data.base.book[index] !== 'undefined'){
           data.base.book[index].detail.map((item) => {
-              result += item.value_bal_b;
+              result += parseFloat(item.value_bal_b);
           })
           // this.set('data.'+index+'.totalBalance', result);
           this.set('data.book.'+index+'.value_bal_b', result);
@@ -361,7 +374,7 @@
         var result = 0;
         if(typeof data.base.book[index] !== 'undefined'){
           data.base.book[index].detail.map((item) => {
-              result += item.value_tax_b;
+              result += parseFloat(item.value_tax_b);
           })
           // this.set('data.'+index+'.totalIncomeTaxInvoices', result);
           this.set('data.book.'+index+'.value_tax_b', result);
@@ -372,7 +385,7 @@
         var result = 0;
         if(typeof data.base.book[index] !== 'undefined'){
           data.base.book[index].detail.map((item) => {
-              result += item.value_final_b;
+              result += parseFloat(item.value_final_b);
           })
           // this.set('data.'+index+'.totalMoneyBathInvoices', result);
           this.set('data.book.'+index+'.value_final_b', result);
@@ -380,6 +393,7 @@
         }
       },
       addPayment: function (){
+        var check = this.validateForm('.required');
         let newData = {
           rate_bank_b : parseFloat(this.rateBank), 
           rate_tt_b : parseFloat(this.rateTt), 
@@ -392,7 +406,7 @@
         })
         // console.log(newData);
         this.fire('check-required');
-        if(this.checkRequired === true){
+        if(this.checkRequired === true && check === true){
           this.fire('toast', {
             status: 'openDialog', 
             text: 'ต้องการเพิ่มการคิดค่าธรรมเนียมใช่หรือไม่',

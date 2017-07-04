@@ -98,7 +98,8 @@ export function feeAction(store) {
                         this.SET_STATE({
                             isInsert: false,
                             btnDisabled: true,
-                            hiddend: true
+                            riceInput: true,
+                            btnRice: true
                         });
                     }
                 });
