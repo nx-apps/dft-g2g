@@ -34,8 +34,8 @@ exports.getByBookId = function (req, res) {
                     ship: r.branch(m('ship').count().gt(1),
                         m('ship').reduce(function (lf, rt) {
                             return r.branch(lf.hasFields('data'),
-                                { data: lf('data').add(', ', rt('shipname'), ' V.', rt('ship_voy')) },
-                                { data: lf('shipname').add(' V.', lf('ship_voy'), ', ', rt('shipname'), ' V.', rt('ship_voy')) }
+                                { data: lf('data').add(', ', rt('ship_name'), ' V.', rt('ship_voy')) },
+                                { data: lf('ship_name').add(' V.', lf('ship_voy'), ', ', rt('ship_name'), ' V.', rt('ship_voy')) }
                             )
                         })('data'),
                         m('ship')(0)('ship_name').add(' V.', m('ship')(0)('ship_voy'))
