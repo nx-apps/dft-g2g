@@ -18,8 +18,9 @@ exports.getByBookId = function (req, res) {
         .merge(function (m) {
             var detail = r.table('book_detail').getAll(req.query.id, { index: 'book_id' })
                 .coerceTo('array')
-                .pluck('package_amount', 'package', 'price_d', 'gross_weight', 'tare_weight', 'net_weight', 'value_d',
+                .pluck('package_amount', 'package', 'package_id', 'price_d', 'gross_weight', 'tare_weight', 'net_weight', 'value_d',
                 'hamonize', 'hamonize_id', 'project_en');
+            var inct = r.table('confirm_letter').get(m('cl_id')).getField('incoterms');
             return r.table('contract').get(m('contract_id')).pluck('buyer', 'contract_name')
                 .merge({
                     invoice_of: detail.group('hamonize_id').ungroup()
@@ -39,8 +40,25 @@ exports.getByBookId = function (req, res) {
                         })('data'),
                         m('ship')(0)('ship_name').add(' V.', m('ship')(0)('ship_voy'))
                     ),
-                    detail: detail,
-                    incoterms: r.table('confirm_letter').get(m('cl_id')).getField('incoterms'),
+                    detail: detail.group(function (g) {
+                        return g.pluck('hamonize_id', 'package_id')
+                    }).ungroup().map(function (m2) {
+                        var data = m2('reduction');
+                        return data(0).pluck('hamonize', 'package', 'project_en', 'price_d')
+                            .merge({
+                                gross_weight: data.sum('gross_weight'),
+                                net_weight: data.sum('net_weight'),
+                                tare_weight: data.sum('tare_weight'),
+                                value_d: data.sum('value_d'),
+                                package_amount: data.sum('package_amount'),
+                                incoterms: inct.concatMap(function (m3) {
+                                    return [m3('inct_name')]
+                                }).reduce(function (left, right) {
+                                    return left.add(', ', right)
+                                })
+                            })
+                    }),
+                    incoterms: inct,
                     package_amount: detail.sum('package_amount'),
                     gross_weight: detail.sum('gross_weight'),
                     tare_weight: detail.sum('tare_weight'),
@@ -89,7 +107,7 @@ exports.reject = function (req, res) {
         invoice_no: r.literal(),
         invoice_date: r.literal(),
         made_out_to: r.literal(),
-        fee_status:r.literal(),
+        fee_status: r.literal(),
         invoice_status: false,
         date_updated: r.now().inTimezone('+07'),
         updater: 'admin'
