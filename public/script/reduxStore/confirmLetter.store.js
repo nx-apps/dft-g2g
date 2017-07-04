@@ -16,7 +16,7 @@ const initialState = {
     confirmLetterExporterlist: [],
     hamonizeContract: [],
     contractDetail: {},
-    hamonizeFp: {}
+    // hamonizeFp: {}
 }
 export function confirmLetterReducer(state = initialState, action) {
     switch (action.type) {
@@ -28,8 +28,8 @@ export function confirmLetterReducer(state = initialState, action) {
             return Object.assign({}, state, { hamonizeContract: action.payload });
         case 'GET_CONFIRM_DETAIL':
             return Object.assign({}, state, { contractDetail: action.payload });
-        case 'GET_CONFIRM_FP':
-            return Object.assign({}, state, { hamonizeFp: action.payload });
+        // case 'GET_CONFIRM_FP':
+        //     return Object.assign({}, state, { hamonizeFp: action.payload });
         default:
             return state
     }
@@ -88,14 +88,14 @@ export function confirmLetterAction(store) {
                 });
         },
         GET_CONFIRM_FP: function (data) {
-            axios.get('./confirm/fp?='+ data)
-                .then(function (response) {
-                    // console.log(response.data);
-                    store.dispatch({ type: 'GET_CONFIRM_FP', payload: response.data })
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
+            return axios.get('./confirm/fp?'+ data)
+                // .then(function (response) {
+                //     console.log(response.data);
+                //     store.dispatch({ type: 'GET_CONFIRM_FP', payload: response.data })
+                // })
+                // .catch(function (error) {
+                //     console.log(error);
+                // });
         },
         // END GET
         // POST
