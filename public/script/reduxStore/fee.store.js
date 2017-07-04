@@ -170,8 +170,10 @@ export function feeAction(store) {
             })
         },
         FEE_RICE_APPROVE: function(data){
-            var contract_id = this.getCookieBhv("contract_id");
-            console.log(contract_id);
+            // console.log(data.contract_id);
+            var contract_id = data.contract_id || this.getCookieBhv("contract_id");
+            // console.log(contract_id);
+            // console.log(contract_id);
             this.fire('toast',{status:'load'});
             axios.put('./fee/approve',data)
             .then((response) => {

@@ -8,60 +8,75 @@
   <style is="custom-style" include="iron-flex iron-flex-alignment gl-styles page-style">
     .flexchild-1 {
       @apply(--layout-flex);
-    }    
+    }
+
     .flexchild-2 {
       @apply(--layout-flex-2);
-    }    
+    }
+
     .flexchild-5 {
       @apply(--layout-flex-5);
-    }    
+    }
+
     .flex-center-justified {
       @apply(--layout-horizontal);
       @apply(--layout-center-justified);
-    }    
+    }
+
     .header {
       text-align: center;
-    }    
+    }
+
     .text {
       margin-top: 10px;
       margin-right: 10px;
-    }    
+    }
+
     .setText {
       font-weight: bold;
       font-size: 18px;
       color: #737373;
-    }    
+    }
+
     .inputHeader {
       width: 40%;
-    }    
+    }
+
     .container {
       padding: 10px;
-    }    
+    }
+
     table.default {
       border-collapse: collapse;
       width: 100%
-    }    
+    }
+
     table.default,
     th,
     td {
       border-bottom: 1px solid #ddd;
-    }    
+    }
+
     th,
     td {
       padding: 7px;
-    }    
+    }
+
     th {
       text-align: center;
       background-color: #F1F1F1;
       white-space: nowrap;
-    }    
+    }
+
     td {
       text-align: left;
       white-space: nowrap;
-    }    
+    }
+
     tr:hover {
       background-color: #F1F1F1;
-    }    
+    }
+
     gl-form-input.number {
       --paper-input-container-input: {
         text-align: right;
@@ -83,11 +98,11 @@
             </div>
             <div class="horizontal layout">
               {{_calcfeeEx(feeEx, indexData)}}
-              <gl-form-input label="{{localize.fee_out}}" class="number required" required format-number="on" style="width:200px;" value="{{item.fee_ex_d}}" disabled="[[common.btnDisabled]]"></gl-form-input>
-              [[_calcFeeExChange(item.fee_ex_d, indexData)]]
-
-              {{_calcfeeIn(feeIn, indexData)}}
-              <gl-form-input label="{{localize.fee_in}}" class="number required" required format-number="on" style="width:200px; margin-left:50px;" value="{{item.fee_in_b}}" disabled="[[common.btnDisabled]]"></gl-form-input>
+              <gl-form-input label="{{localize.fee_out}}" class="number required" required format-number="on" style="width:200px;" value="{{item.fee_ex_d}}"
+                disabled="[[common.btnDisabled]]"></gl-form-input>
+              [[_calcFeeExChange(item.fee_ex_d, indexData)]] {{_calcfeeIn(feeIn, indexData)}}
+              <gl-form-input label="{{localize.fee_in}}" class="number required" required format-number="on" style="width:200px; margin-left:50px;"
+                value="{{item.fee_in_b}}" disabled="[[common.btnDisabled]]"></gl-form-input>
               [[_calcFeeInChange(item.fee_in_b, indexData)]]
               <!--<div>{{localize.fee_out}} : [[item.fee_ex_d]]</div> 
               <div>{{localize.fee_in}} : [[item.fee_in_b]]</div> -->
@@ -108,7 +123,9 @@
               </tr>
               <template is="dom-repeat" items="{{item.detail}}" as="item2">
                 <tr>
-                  <td><div style="margin-top: 15px;">[[item2.company.company_name_th]]</div></td>
+                  <td>
+                    <div style="margin-top: 15px;">[[item2.company.company_name_th]]</div>
+                  </td>
                   <td>
                     <gl-form-input class="number" format-number="on" style="width:140px;" value="[[item2.net_weight]]" disabled></gl-form-input>
                   </td>
@@ -119,12 +136,10 @@
                     <gl-form-input class="number" format-number="on" style="width:140px;" value="[[item2.value_d]]" disabled></gl-form-input>
                   </td>
                   <td>[[_calcValueB(item2.value_d, rateBank, indexData, index)]]
-                    <gl-form-input class="number" format-number="on" style="width:140px;" value="{{item2.value_b}}"
-                      disabled></gl-form-input>
+                    <gl-form-input class="number" format-number="on" style="width:140px;" value="{{item2.value_b}}" disabled></gl-form-input>
                   </td>
                   <td>
-                    [[changeString2Num(item2.*,'value_fee_b')]]
-                    [[_calcValueFeeB(item.fee_ex_d, rateBank, item.fee_in_b, indexData, index)]]
+                    [[changeString2Num(item2.*,'value_fee_b')]] [[_calcValueFeeB(item.fee_ex_d, rateBank, item.fee_in_b, indexData, index)]]
                     <gl-form-input class="riceRequired" required style="text-align:right;" format-number="on" value="{{item2.value_fee_b}}" disabled="[[common.inputRice]]"></gl-form-input>
                   </td>
                   [[changeString2Num(item2.*,'value_bal_b')]]
@@ -137,8 +152,7 @@
                   </td>
                   [[changeString2Num(item2.*,'value_tax_b')]]
                   <td>[[_calcValueFinalB(item2.value_bal_b, item2.value_tax_b, indexData, index)]]
-                    <gl-form-input style="text-align:right;" format-number="on" style="width:140px;" value="{{item2.value_final_b}}"
-                      disabled></gl-form-input>
+                    <gl-form-input style="text-align:right;" format-number="on" style="width:140px;" value="{{item2.value_final_b}}" disabled></gl-form-input>
                   </td>
                 </tr>
               </template>
@@ -146,8 +160,7 @@
               <tr>
                 <td>{{localize.total}}</td>
                 <td>
-                  <gl-form-input class="number" format-number="on" style="width:140px;" value="[[_totalTonInvoices(indexData,data.*)]]"
-                    disabled></gl-form-input>
+                  <gl-form-input class="number" format-number="on" style="width:140px;" value="[[_totalTonInvoices(indexData,data.*)]]" disabled></gl-form-input>
                 </td>
                 <td>
                   <!--<gl-form-input format-number="on" style="width:140px;text-align:center;" value="[[_totalPricePerTonUsdInvoices(indexData,data.*)]]"
@@ -158,8 +171,7 @@
                     disabled></gl-form-input>
                 </td>
                 <td>
-                  <gl-form-input class="number" format-number="on" style="width:140px;" value="[[_totalBathInvoices(indexData,data.*)]]"
-                    disabled></gl-form-input>
+                  <gl-form-input class="number" format-number="on" style="width:140px;" value="[[_totalBathInvoices(indexData,data.*)]]" disabled></gl-form-input>
                 </td>
                 <td>
                   <gl-form-input style="text-align:right;" format-number="on" style="width:140px;" value="{{_totalFeeInvoices(indexData,data.*)}}"
@@ -189,7 +201,7 @@
     </gl-form-panel>
 
     <div class="horizontal end-justified layout">
-      
+      <!--[[contractId.contract_id]]-->
       <template is="dom-if" if="[[!common.btnDisabled]]">
         <paper-button raised class="gl-btn-default" on-tap="cancelFee" hidden="[[!common.isInsert]]">{{localize.reset_data}}</paper-button>
         <paper-button raised on-tap="addPayment" class="gl-btn-success" hidden="[[!common.isInsert]]">{{localize.add}}</paper-button>
@@ -201,7 +213,7 @@
             <paper-button class="gl-btn-success" raised on-tap="approvePayment">{{localize.confirm}}</paper-button>
           </template>
         </template>
-        
+
         <template is="dom-if" if="[[data.fin_status]]">
           <template is="dom-if" if="[[data.rice_status]]">
             <paper-button class="gl-btn-default" raised on-tap="rejectFee">{{localize.cancel}}</paper-button>
@@ -209,7 +221,7 @@
           </template>
         </template>
       </template>
-      
+
       <template is="dom-if" if="[[!common.btnDisabled]]">
         <template is="dom-if" if="[[!data.fin_status]]">
           <template is="dom-if" if="[[!data.rice_status]]">
@@ -250,164 +262,168 @@
     Polymer({
       is: "fee-exports-invoice",
       properties: {
-        localize:{
-          statePath : 'i18n.fee'
+        localize: {
+          statePath: 'i18n.fee'
         },
         data: {
-          statePath : 'fee.list_calc'
+          statePath: 'fee.list_calc'
         },
         totalInvoice: {
           type: Array,
           notify: true
         },
-        common:{
-          statePath : 'commonState.setState'
-        }
+        common: {
+          statePath: 'commonState.setState'
+        },
+        contractId: {
+          statePath: 'commonState.contractId',
+          // observer: 'get'
+        },
       },
       behaviors: [ReduxBehavior, g2gLogicBehavior, ValidateFormBehavior],
-      _calcfeeEx: function(fee, index){
-        if(typeof this.data.book !== 'undefined'){
-          if(fee !== ''){
-            var calc_fee_ex = parseFloat(fee)/this.data.book.length;
-            this.set('data.book.'+index+'.fee_ex_d', calc_fee_ex);
-          }else{
-            this.set('data.book.'+index+'.fee_ex_d', 0);
+      _calcfeeEx: function (fee, index) {
+        if (typeof this.data.book !== 'undefined') {
+          if (fee !== '') {
+            var calc_fee_ex = parseFloat(fee) / this.data.book.length;
+            this.set('data.book.' + index + '.fee_ex_d', calc_fee_ex);
+          } else {
+            this.set('data.book.' + index + '.fee_ex_d', 0);
           }
         }
       },
-      _calcFeeExChange:function(fee, index){
+      _calcFeeExChange: function (fee, index) {
         // console.log(fee, index);
-        var changeFee =parseFloat(fee);
-        this.set('data.book.'+index+'.fee_ex_d', changeFee);
+        var changeFee = parseFloat(fee);
+        this.set('data.book.' + index + '.fee_ex_d', changeFee);
       },
-      _calcfeeIn: function(fee, index){
-        if(typeof this.data.book !== 'undefined'){
-          if(fee !== ''){
-            var calc_fee_in = parseFloat(fee)/this.data.book.length;
-            this.set('data.book.'+index+'.fee_in_b', calc_fee_in);
-          }else{
-            this.set('data.book.'+index+'.fee_in_b', 0);
+      _calcfeeIn: function (fee, index) {
+        if (typeof this.data.book !== 'undefined') {
+          if (fee !== '') {
+            var calc_fee_in = parseFloat(fee) / this.data.book.length;
+            this.set('data.book.' + index + '.fee_in_b', calc_fee_in);
+          } else {
+            this.set('data.book.' + index + '.fee_in_b', 0);
           }
         }
       },
-      _calcFeeInChange:function(fee, index){
-        var changeFee =parseFloat(fee);
-        this.set('data.book.'+index+'.fee_in_b', changeFee);
+      _calcFeeInChange: function (fee, index) {
+        var changeFee = parseFloat(fee);
+        this.set('data.book.' + index + '.fee_in_b', changeFee);
       },
-      _obArrayShip:function(ships){
+      _obArrayShip: function (ships) {
         return ships.join()
       },
       _calcValueB: function (usd, rate_bank, indexData, index) {
-        if(rate_bank !== ''){
+        if (rate_bank !== '') {
           var calc_value_b = usd * parseFloat(rate_bank);
-          this.set('data.book.'+indexData+'.detail.'+index+'.value_b',calc_value_b);
-        }else{
-          this.set('data.book.'+indexData+'.detail.'+index+'.value_b',0);
+          this.set('data.book.' + indexData + '.detail.' + index + '.value_b', calc_value_b);
+        } else {
+          this.set('data.book.' + indexData + '.detail.' + index + '.value_b', 0);
         }
       },
       _calcValueFeeB: function (fee_ex_d, rate_bank, fee_in_b, indexData, index) {
-        if(rate_bank !== ''){
+        if (rate_bank !== '') {
           var countDetail = this.data.book[indexData].detail.length;
           var calc_value_fee_b = ((parseFloat(fee_ex_d) * parseFloat(rate_bank)) + parseFloat(fee_in_b)) / countDetail;
-          this.set('data.book.'+indexData+'.detail.'+index+'.value_fee_b', calc_value_fee_b);
-        }else{
-          this.set('data.book.'+indexData+'.detail.'+index+'.value_fee_b', 0);
+          this.set('data.book.' + indexData + '.detail.' + index + '.value_fee_b', calc_value_fee_b);
+        } else {
+          this.set('data.book.' + indexData + '.detail.' + index + '.value_fee_b', 0);
         }
       },
       _calcValueBalB: function (value_b, value_fee_b, indexData, index) {
         var calc_value_bal_b = parseFloat(value_b) - parseFloat(value_fee_b);
-        this.set('data.book.'+indexData+'.detail.'+index+'.value_bal_b', calc_value_bal_b);
+        this.set('data.book.' + indexData + '.detail.' + index + '.value_bal_b', calc_value_bal_b);
       },
-      _calcValueTax: function(value_bal_b, indexData, index){
+      _calcValueTax: function (value_bal_b, indexData, index) {
         var calc_value_tax_b = (parseFloat(value_bal_b) * 1) / 100;
-        this.set('data.book.'+indexData+'.detail.'+index+'.value_tax_b', calc_value_tax_b);
+        this.set('data.book.' + indexData + '.detail.' + index + '.value_tax_b', calc_value_tax_b);
       },
       _calcValueFinalB: function (value_bal_b, value_tax_b, indexData, index) {
         var calc_value_final_b = parseFloat(value_bal_b) - numeral().unformat(value_tax_b);
-        this.set('data.book.'+indexData+'.detail.'+index+'.value_final_b', calc_value_final_b);
+        this.set('data.book.' + indexData + '.detail.' + index + '.value_final_b', calc_value_final_b);
       },
       _totalTonInvoices: function (index, data) {
         var result = 0;
-        if(typeof data.base.book[index] !== 'undefined'){
+        if (typeof data.base.book[index] !== 'undefined') {
           data.base.book[index].detail.map((item) => {
-              result += item.net_weight;
+            result += item.net_weight;
           })
-          this.set('data.book.'+index+'.totalTonInvoices', result);
+          this.set('data.book.' + index + '.totalTonInvoices', result);
           return result
         }
       },
       _totalAmountUsdInvoices: function (index, data) {
         var result = 0;
-        if(typeof data.base.book[index] !== 'undefined'){
+        if (typeof data.base.book[index] !== 'undefined') {
           data.base.book[index].detail.map((item) => {
-              result += item.value_d;
+            result += item.value_d;
           })
-          this.set('data.book.'+index+'.totalAmountUsdInvoices', result);
+          this.set('data.book.' + index + '.totalAmountUsdInvoices', result);
           return result;
         }
       },
       _totalBathInvoices: function (index, data) {
         var result = 0;
-        if(typeof data.base.book[index] !== 'undefined'){
+        if (typeof data.base.book[index] !== 'undefined') {
           data.base.book[index].detail.map((item) => {
-              result += parseFloat(item.value_b);
+            result += parseFloat(item.value_b);
           })
           // this.set('data.'+index+'.totalBathInvoices', result);
-          this.set('data.book.'+index+'.value_b', result);
+          this.set('data.book.' + index + '.value_b', result);
           return result;
         }
       },
       _totalFeeInvoices: function (index, data) {
         var result = 0;
-        if(typeof data.base.book[index] !== 'undefined'){
+        if (typeof data.base.book[index] !== 'undefined') {
           data.base.book[index].detail.map((item) => {
-              result += parseFloat(item.value_fee_b);
+            result += parseFloat(item.value_fee_b);
           })
           // this.set('data.'+index+'.totalFeeInvoices', result);
-          this.set('data.book.'+index+'.value_fee_b', result);
+          this.set('data.book.' + index + '.value_fee_b', result);
           return result;
         }
       },
       _totalBalance: function (index, data) {
         var result = 0;
-        if(typeof data.base.book[index] !== 'undefined'){
+        if (typeof data.base.book[index] !== 'undefined') {
           data.base.book[index].detail.map((item) => {
-              result += parseFloat(item.value_bal_b);
+            result += parseFloat(item.value_bal_b);
           })
           // this.set('data.'+index+'.totalBalance', result);
-          this.set('data.book.'+index+'.value_bal_b', result);
+          this.set('data.book.' + index + '.value_bal_b', result);
           return result;
         }
       },
       _totalIncomeTaxInvoices: function (index, data) {
         var result = 0;
-        if(typeof data.base.book[index] !== 'undefined'){
+        if (typeof data.base.book[index] !== 'undefined') {
           data.base.book[index].detail.map((item) => {
-              result += parseFloat(item.value_tax_b);
+            result += parseFloat(item.value_tax_b);
           })
           // this.set('data.'+index+'.totalIncomeTaxInvoices', result);
-          this.set('data.book.'+index+'.value_tax_b', result);
+          this.set('data.book.' + index + '.value_tax_b', result);
           return result;
         }
       },
       _totalMoneyBathInvoices: function (index, data) {
         var result = 0;
-        if(typeof data.base.book[index] !== 'undefined'){
+        if (typeof data.base.book[index] !== 'undefined') {
           data.base.book[index].detail.map((item) => {
-              result += parseFloat(item.value_final_b);
+            result += parseFloat(item.value_final_b);
           })
           // this.set('data.'+index+'.totalMoneyBathInvoices', result);
-          this.set('data.book.'+index+'.value_final_b', result);
+          this.set('data.book.' + index + '.value_final_b', result);
           return result;
         }
       },
-      addPayment: function (){
+      addPayment: function () {
         var check = this.validateForm('.required');
         let newData = {
-          rate_bank_b : parseFloat(this.rateBank), 
-          rate_tt_b : parseFloat(this.rateTt), 
-          fee_date : this.data.fee_date+'T00:00:00+07:00', 
-          book : this.data.book
+          rate_bank_b: parseFloat(this.rateBank),
+          rate_tt_b: parseFloat(this.rateTt),
+          fee_date: this.data.fee_date + 'T00:00:00+07:00',
+          book: this.data.book
         };
         newData.book.map((item) => {
           delete item.totalAmountUsdInvoices;
@@ -415,140 +431,142 @@
         })
         // console.log(newData);
         this.fire('check-required');
-        if(this.checkRequired === true && check === true){
+        if (this.checkRequired === true && check === true) {
           this.fire('toast', {
-            status: 'openDialog', 
+            status: 'openDialog',
             text: 'ต้องการเพิ่มการคิดค่าธรรมเนียมใช่หรือไม่',
-            confirmed: (result) =>{
-              if(result === true){
+            confirmed: (result) => {
+              if (result === true) {
                 this.dispatchAction('FEE_INSERT', newData);
               }
             }
           });
-        }else{
+        } else {
           this.fire('toast', {
-            status: 'connectError', text: 'กรุณากรอกข้อมูลให้ครบถ้วน',callback: () => {}
+            status: 'connectError', text: 'กรุณากรอกข้อมูลให้ครบถ้วน', callback: () => { }
           });
         }
       },
-      cancelFee: function(){
+      cancelFee: function () {
         var book_id = this.data.book.map((item) => {
           return item.book_id
         });
         var id = book_id.join('_');
         this.dispatchAction('FEE_CALC_DATA', id);
       },
-      savePayment:function(){
-        let{rate_bank_b, rate_tt_b, fee_date, book, id} = this.data;
-        let newData = {rate_bank_b, rate_tt_b, book, id};
-        newData.fee_date = this.data.fee_date+'T00:00:00+07:00';
+      savePayment: function () {
+        let { rate_bank_b, rate_tt_b, fee_date, book, id } = this.data;
+        let newData = { rate_bank_b, rate_tt_b, book, id };
+        newData.fee_date = this.data.fee_date + 'T00:00:00+07:00';
         // console.log(newData);
         this.fire('check-required');
-        if(this.checkRequired === true){
+        if (this.checkRequired === true) {
           this.fire('toast', {
-            status: 'openDialog', 
+            status: 'openDialog',
             text: 'ต้องการเพิ่มค่าธรรมเนียมใช่หรือไม่',
-            confirmed: (result) =>{
-              if(result === true){
+            confirmed: (result) => {
+              if (result === true) {
                 this.dispatchAction('FEE_UPDATE', newData);
               }
             }
           });
-        }else{
+        } else {
           this.fire('toast', {
-            status: 'connectError', text: 'กรุณากรอกข้อมูลให้ครบถ้วน',callback: () => {}
+            status: 'connectError', text: 'กรุณากรอกข้อมูลให้ครบถ้วน', callback: () => { }
           });
         }
       },
-      cancel:function(){
-        this.dispatchAction('FEE_GET_ID_DATA',this.data.id);
-        this.dispatchAction('SET_STATE',{
-            isInsert: false,
-            btnDisabled: true,
-            inputRice: true
+      cancel: function () {
+        this.dispatchAction('FEE_GET_ID_DATA', this.data.id);
+        this.dispatchAction('SET_STATE', {
+          isInsert: false,
+          btnDisabled: true,
+          inputRice: true
         });
       },
-      cancelContract:function(){
-        this.dispatchAction('FEE_GET_ID_DATA',this.data.id);
+      cancelContract: function () {
+        this.dispatchAction('FEE_GET_ID_DATA', this.data.id);
       },
-      approvePayment:function(){
+      approvePayment: function () {
         var newData = {
           id: this.data.id,
           fin_status: true
         };
-        this.fire('toast',{
+        this.fire('toast', {
           status: 'openDialog',
           text: 'ต้องการยืนยันการคิดค่าธรรมเนียมใช่หรือไม่',
-          confirmed: (result) =>{
-            if(result === true){
+          confirmed: (result) => {
+            if (result === true) {
               this.dispatchAction('FEE_APPROVE', newData);
             }
           }
         })
       },
-      riceSave:function(){
+      riceSave: function () {
         var check = this.validateForm('.riceRequired');
         // console.log(this.data);
-        if(check === true){
-          this.fire('toast',{
+        if (check === true) {
+          this.fire('toast', {
             status: 'openDialog',
             text: 'ต้องการบันทึกการถัวเฉลี่ยค่าธรรมเนียมใช่หรือไม่',
-            confirmed: (result) =>{
-              if(result === true){
-                let{rate_bank_b, rate_tt_b, fee_date, book, id} = this.data;
-                let newData = {rate_bank_b, rate_tt_b, book, id};
-                newData.fee_date = this.data.fee_date+'T00:00:00+07:00';
+            confirmed: (result) => {
+              if (result === true) {
+                let { rate_bank_b, rate_tt_b, fee_date, book, id } = this.data;
+                let newData = { rate_bank_b, rate_tt_b, book, id };
+                newData.fee_date = this.data.fee_date + 'T00:00:00+07:00';
                 this.dispatchAction('FEE_RICE_UPDATE', newData);
               }
             }
           })
-        }else{
-          this.fire('toast',{
-            status:'connectError', text: 'กรุณากรอกข้อมูลให้ครบ',
-            callback: () =>{}
+        } else {
+          this.fire('toast', {
+            status: 'connectError', text: 'กรุณากรอกข้อมูลให้ครบ',
+            callback: () => { }
           })
         }
       },
-      riceApprove:function(){
+      riceApprove: function () {
         let newData = {
           id: this.data.id,
-          rice_status: true
+          rice_status: true,
+          contract_id :this.contractId.contract_id
         }
-        this.fire('toast',{
+        this.fire('toast', {
           status: 'openDialog',
           text: 'ต้องการยืนยันการถัวเฉลี่ยค่าธรรมเนียมใช่หรือไม่',
-          confirmed: (result) =>{
-            if(result === true){
+          confirmed: (result) => {
+            if (result === true) {
               this.dispatchAction('FEE_RICE_APPROVE', newData);
             }
           }
         })
       },
-      rejectFee:function(){
+      rejectFee: function () {
         let newData = {
           id: this.data.id,
           rice_status: false
         }
-        this.fire('toast',{
+        this.fire('toast', {
           status: 'openDialog',
           text: 'ต้องการยกเลิกการถัวเฉลี่ยค่าธรรมเนียมใช่หรือไม่',
-          confirmed: (result) =>{
-            if(result === true){
+          confirmed: (result) => {
+            if (result === true) {
               this.dispatchAction('FEE_REJECT', newData);
             }
           }
         })
       },
-      approveFee:function(){
+      approveFee: function () {
         let newData = {
           id: this.data.id,
-          fee_status: true
+          fee_status: true,
+
         }
-        this.fire('toast',{
+        this.fire('toast', {
           status: 'openDialog',
           text: 'ต้องการยืนยันการถัวเฉลี่ยค่าธรรมเนียมใช่หรือไม่',
-          confirmed: (result) =>{
-            if(result === true){
+          confirmed: (result) => {
+            if (result === true) {
               this.dispatchAction('FEE_APPROVE_FINSH', newData);
             }
           }
