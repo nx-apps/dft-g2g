@@ -275,27 +275,35 @@
           </table>-->
           <span class="namesub">
                       ชื่อข้าว
+            <gl-combo-box id="hamonizeCode" disabled="[[commonState.btnDisabled]]" label="{{localize.label_rice_type}}"
+            error-message="{{localize.label_error_payment_type}}" placeholder="{{localize.label_rice_type}}" items="[[hamonizeYear.hamonize]]"
+            item-label-path="label" item-value-path="id" on-value-changed="searchHamonizeInCode">
+              <template>
+                [[item.label]]
+              </template>
+          </gl-combo-box>
                       </span>
           <span class="year">
                         ปีที่ตั้งรหัส Hamonize 
-                        <gl-combo-box class="required" required disabled="[[commonState.btnDisabled]]" label="รหัส Hamonize (ยัง)"
+            <gl-combo-box id="hamonizeYear" disabled="[[commonState.btnDisabled]]" label="รหัส Hamonize (ยัง)"
             error-message="{{localize.label_error_payment_type}}" placeholder="รหัส Hamonize (ยัง)" items="[[hamonizeYear.year]]"
             item-label-path="label" item-value-path="label" on-value-changed="searchHamonizeInYear">
-            <template>
-              [[item.label]]
-            </template>
-          </gl-combo-box>
+              <template>
+                [[item.label]]
+              </template>
+            </gl-combo-box>
                       </span>
           <div class="main">
 
             <template is="dom-repeat" items={{hamonizeList}} index-as="indexroot">
-              <div class="item">
+              <div class="item" hidden="{{item.hiddend}}">
 
                 <iron-icon icon="chevron-right" index="[[indexroot]]" on-tap="toggle"></iron-icon>
 
                 <paper-checkbox checked="{{item.check}}" id="{{indexroot}}" on-tap="getCheckChild" disabled="[[commonState.btnDisabled]]">
                   <!--{{item.check}}||-->
-                  [[item.name_th]] || [[item.value]]
+                  [[item.name_th]]
+                  <!--|| [[item.value]]-->
                 </paper-checkbox>
                 <iron-collapse id="collapse-[[indexroot]]" toggle="true">
                   <div>
@@ -307,7 +315,7 @@
                           <!--|| [[item.value]]-->
                         </paper-checkbox>
                         <span class="namesub">
-                        [[subChild.hamonize_th]]//{{item.hiddend}}//
+                        [[subChild.hamonize_th]]
                       </span>
                         <span class="year">
                         [[subChild.hamonize_year]]
@@ -456,7 +464,7 @@
           hiddend: true
         })
       },
-      searchHamonizeInYear(e) {
+      searchHamonizeInYear: function (e) {
         try {
           let newHamonize = []
           let seletedYear = e.detail.value
@@ -468,9 +476,44 @@
               } else {
                 this.set('hamonizeList.' + index + '.sub.' + index2 + '.hiddend', true)
               }
-
+            }
+            let checkkFalse = this.hamonizeList[index].sub.find((item) => item.hiddend === false)
+            if (checkkFalse === undefined) {
+              this.set('hamonizeList.' + index + '.hiddend', true)
+            } else {
+              this.set('hamonizeList.' + index + '.hiddend', false)
             }
           }
+          this.$$('#hamonizeCode').value = ''
+          
+
+        } catch (e) {
+
+        }
+
+      },
+      searchHamonizeInCode: function (e) {
+        try {
+          let newHamonize = []
+          let seletedCode = e.detail.value
+          // console.log(seletedCode);
+          for (var index = 0; index < this.hamonizeList.length; index++) {
+            for (var index2 = 0; index2 < this.hamonizeList[index].sub.length; index2++) {
+              if ((String(this.hamonizeList[index].sub[index2].sub_id) === seletedCode) ||
+                (seletedCode === '' || seletedCode === undefined)) {
+                this.set('hamonizeList.' + index + '.sub.' + index2 + '.hiddend', false)
+              } else {
+                this.set('hamonizeList.' + index + '.sub.' + index2 + '.hiddend', true)
+              }
+            }
+            let checkkFalse = this.hamonizeList[index].sub.find((item) => item.hiddend === false)
+            if (checkkFalse === undefined) {
+              this.set('hamonizeList.' + index + '.hiddend', true)
+            } else {
+              this.set('hamonizeList.' + index + '.hiddend', false)
+            }
+          }
+          this.$$('#hamonizeYear').value = ''
         } catch (e) {
 
         }
@@ -479,7 +522,7 @@
       toggle: function (e) {
         let index = e.currentTarget.index
         // console.log(collapse-);
-        console.log(this.$$('#collapse-'+index).toggle());
+        this.$$('#collapse-' + index).toggle()
       },
       _getBuyerAddress: function (e) {
         if (e.detail.value) {

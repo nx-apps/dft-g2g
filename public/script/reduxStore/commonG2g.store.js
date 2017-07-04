@@ -82,6 +82,11 @@ export function commonG2gAction(store) {
                     var hamonizeList = response.data.reduce(function (prev, curr) {
                         return [...prev, ...curr.sub];
                     },[]);
+                    for (var index = 0; index < hamonizeList.length; index++) {
+                        // response.data[index].label = ''
+                        hamonizeList[index].label = '[' + hamonizeList[index].hamonize_code + '] ' + hamonizeList[index].hamonize_th
+                        // console.log(response.data[index].hamonize.hamonize_en );
+                    }
                     let lisyYear = []
                     let groupYear = groupArray(hamonizeList, 'hamonize_year')
                     for (var variable in groupYear) {
