@@ -48,7 +48,7 @@
         <div class="horizontal layout wrap">
           <div id="combox" class="flex">
             <gl-combo-box id="cl_id" placeholder="ผู้ส่งออกทั้งหมด" items="{{confirmLetterExporterlist}}" item-label-path="label" label="ผู้ส่งออก"
-              item-value-path="exporter_id" on-value-changed="getShowByExport">
+              item-value-path="exporter_id" on-value-changed="getShowByExport" on-selected-item-changed="getObjectConfirm">
               <template>
                 [[item.label]]
               </template>
@@ -312,6 +312,9 @@
         } catch (e) {
           // console.log(e);
         }
+      },
+      getObjectConfirm: function (e){
+        console.log(e)
       }
 
     });

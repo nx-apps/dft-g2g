@@ -30,10 +30,10 @@
     <!--<template is="dom-if" if="[[!commonState.isInsert]]">
       <paper-button class="gl-btn-default" raised on-tap="cancelEditShipment">{{localize.btn_back_ward}}</paper-button>
     </template>-->
-    <!--<template is="dom-if" if={{commonState.btnDisabled}}>-->
-    <paper-button class="gl-btn-default" raised on-tap="cancelEditShipment">
-      {{localize.btn_back_ward}}</paper-button>
-    <!--</template>-->
+    <template is="dom-if" if={!{checkTrue.book_status}}>
+      <paper-button class="gl-btn-default" raised on-tap="cancelEditShipment">
+        {{localize.btn_back_ward}}</paper-button>
+    </template>
 
     <gl-form-panel set-padding="10px 20px 10px 20px">
       <div class="horizontal end-justified layout">
@@ -233,6 +233,9 @@
         packageList: {
           type: Array,
           value: []
+        },
+        checkTrue: {
+          statePath: 'book.bookExporterList'
         },
         // packageList: {
         //   statePath: 'commonG2g.packageList',
@@ -589,10 +592,10 @@
                   // this.dispatchAction('GET_CONTRACT_OF_BUYER', res.buyer_id);
                   this.dispatchAction('GET_BOOK_EXPORTER_LIST', this.genUrl(url))
                   this.dispatchAction('SET_STATE', {
-                          isInsert: false,
-                          btnDisabled: true,
-                          hiddend: true
-                        })
+                    isInsert: false,
+                    btnDisabled: true,
+                    hiddend: true
+                  })
                   this.fire('toast', {
                     status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
                     callback: () => {

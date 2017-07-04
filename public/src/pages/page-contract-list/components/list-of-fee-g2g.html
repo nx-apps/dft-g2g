@@ -7,7 +7,7 @@
 <link rel="import" href="../../page-payment-list/component/fee-exports.html">
 
 
-<dom-module id="list-of-fee">
+<dom-module id="list-of-fee-g2g">
   <style include="iron-flex iron-flex-factors iron-flex-alignment gl-styles">
      :host {
       display: block;
@@ -112,7 +112,7 @@
   </template>
   <script>
     Polymer({
-      is: "list-of-fee",
+      is: "list-of-fee-g2g",
       behaviors: [ReduxBehavior, nylonBehavior, FormatNumberBehavior, CookieBehavior, g2gLogicBehavior],
       properties: {
         localize: {
