@@ -414,16 +414,21 @@
           if (this.data.cl_date !== undefined && this.data.cl_date !== ''
             && e.model.item.hamonize_id !== '') {
             let index = e.currentTarget.id
+            let hm_id = e.model.item.hamonize_id
             let date = new Date(this.data.cl_date)
             let lastMonth = new Date(date.setMonth(date.getMonth() - 3)).toISOString().split('T')[0]
             // console.log(lastMonth)
+            // this.hamonizeContract
+            let hmtype = this.hamonizeContract.find((item)=> item.hamonize_id === hm_id)
+              console.log(hmtype.hamonize.hamonize_code);
+              // console.log(index2);
             let url = {
               startDate: lastMonth,
               endDate: date.toISOString().split('T')[0],
-              hmcode: e.model.item.hamonize_id
+              hmcode: hmtype.hamonize.hamonize_code
             }
-            // this.dispatchAction('GET_CONFIRM_FP',this.genUrl(url))
-            // console.log(url)
+            this.dispatchAction('GET_CONFIRM_FP',this.genUrl(url))
+            console.log(url)
           }
 
           //     // const setData = (date)=> 

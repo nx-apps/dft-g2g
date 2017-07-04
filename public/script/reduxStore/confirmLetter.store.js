@@ -67,7 +67,7 @@ export function confirmLetterAction(store) {
             axios.get('./confirm/hamonize?' + contract_id)
                 .then(function (response) {
                     response.data.map((item) => {
-                        item.label = '[' + item.hamonize.hamonize_code + '] ' + item.hamonize.hamonize_th
+                        item.label = '[' + item.hamonize.hamonize_code + '] ' + item.hamonize.hamonize_th2
                     })
                     // console.log(response.data);
                     store.dispatch({ type: 'GET_HAMONIZE_OF_CONTRACT', payload: response.data })
@@ -88,7 +88,7 @@ export function confirmLetterAction(store) {
                 });
         },
         GET_CONFIRM_FP: function (data) {
-            axios.get('./confirm/fp', data)
+            axios.get('./confirm/fp?='+ data)
                 .then(function (response) {
                     // console.log(response.data);
                     store.dispatch({ type: 'GET_CONFIRM_FP', payload: response.data })
