@@ -165,14 +165,14 @@
           href: ''
         },
         ])	
-        console.log(e.currentTarget.data);
+        // console.log(e.currentTarget.data);
         this.fire('toast', { status: 'load' });
         this.dispatchAction('SET_STATE', {
-          isInsert: true,
-          btnDisabled: false,
+          isInsert: false,
+          btnDisabled: true,
           hiddend: true
         })
-        // this.dispatchAction('CLEAR_CONFIRM', data)
+        this.dispatchAction('FEE_GET_ID_DATA', e.currentTarget.data.id)
         this.async(() => {
           this.fire('toast', {
             status: 'success', text: 'โหลดสำเร็จ', callback: () => {
