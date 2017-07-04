@@ -90,7 +90,7 @@ exports.getFP = function (req, res) {
             newPrice as fp2
         from fn_rice_price_avg(?,?) price
         left join dft_lk_type lkt on lkt.Id = price.riceTypeId
-        where lkt.hmcode = ?
+        where lkt.hamonize_code = ?
      `, [
             req.query.startDate,
             req.query.endDate,
