@@ -531,6 +531,7 @@
                     this.g2gPageSeleted = 'listOfFee';
                     let contractData = { contract_id: e.detail.contract_id, contract_no: e.detail.contract_no }
                     this.dispatchAction('SET_CONTRACT_ID', contractData)
+                    this.titlePanelRight = 'สัญญาที่  : ' + e.detail.contract_no
                     this.fire('toast', { status: 'load' });
                 if (this.checkRenderPage.listOfFee != true) {
                     this.async(() => {
