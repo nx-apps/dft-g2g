@@ -529,6 +529,7 @@
                         label: 'สัญญาที่ ' + e.detail.contract_no,
                         href: ''
                     }])
+                    // this.backPageFee()
                     this.g2gPageSeleted = 'listOfFee';
                     let contractData = { contract_id: e.detail.contract_id, contract_no: e.detail.contract_no }
                     this.dispatchAction('SET_PAGE_AND_SEARCH', { page: 'listOfFee', search: '' })
@@ -617,6 +618,10 @@
             _flipDrawerClose: function () {
                 Polymer.dom(this.root).querySelector('#drawerRight').close();
             },
+            backPageFee: function(){
+                // console.log(this.$$('list-of-fee-g2g'))
+                this.$$('list-of-fee-g2g').backPage()
+            }
             // _namePanelRight: function (name) {
             //     this.titlePanelRight = name;
             // }
