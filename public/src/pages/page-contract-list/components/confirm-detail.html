@@ -105,7 +105,7 @@
 
       <div class="top ">{{localize.label_detail}}</div>
 
-      <template is="dom-repeat" items="[[data.cl_hamonize]]">
+      <template is="dom-repeat" items="{{data.cl_hamonize}}">
         <div class="bg">
           <gl-form-panel set-padding="10px 20px 10px 20px" set-border="1px">
             <div class="horizontal end-justified layout">
@@ -178,7 +178,7 @@
                 </tr>
               </thead>
               <tbody class="table-body">
-                <template is="dom-repeat" as="packageitem" items="[[item.package]]" index-as=indexpackeage>
+                <template is="dom-repeat" as="packageitem" items="{{item.package}}" index-as=indexpackeage>
                   <tr>
                     <td>
 
@@ -243,7 +243,7 @@
             value="{{dataShow.cl_total_quantity}}"></gl-form-input>
         </gl-grid-col>
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
-          <gl-form-input class="numberBack" disabled format-number="on" label="{{localize.label_total_cost_price_ton}}" value="[[dataShow.cl_total_costpriceton]]"></gl-form-input>
+          <gl-form-input class="numberBack" disabled format-number="on" label="{{localize.label_total_cost_price_ton}}" value="[[dataShow.cost_price_perton]]"></gl-form-input>
         </gl-grid-col>
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,5]]"></gl-grid-col>
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]"></gl-grid-col>
@@ -301,7 +301,7 @@
         },
         hamonizeFp: {
           statePath: 'confirmLetter.hamonizeFp',
-          // observer: 'get'
+          observer: 'getPriceHamonize'
         },
         contractId: {
           statePath: 'commonState.contractId',
@@ -330,10 +330,7 @@
         //   value: { cl_total_costPrice: 0, hamonize_weight: 0, cl_hamonize: [{ package: [{ package_id: '', price_d: 0, }] }], incoterms: [{ inct_id: 'd' }] }
         // },
       },
-      // get(data){
-      //   console.log(this.contractId)
-      //   console.log(this.commonState)
-      // },
+
       observers: [
         // '_changeDataConfirm(data.cl_date)',
         '_typeRiceConfirm(data.*)',
@@ -357,6 +354,15 @@
       //     this.set('data.cl_date', date);
       //     this.notifyPath('data.cl_date');
       //   });
+      // },
+      // getPriceHamonize(data) {
+      //   try {
+      //     console.log(data[0].fp2)
+      //     this.set('data.cost_price', data[0].fp2)
+      //     this.set('data.cost_value', data[0].fp2 * 1000)
+      //   } catch (error) {
+
+      //   }
       // },
       canncelConfirm: function () {
         this.fire('toast', {
@@ -414,21 +420,34 @@
           if (this.data.cl_date !== undefined && this.data.cl_date !== ''
             && e.model.item.hamonize_id !== '') {
             let index = e.currentTarget.id
+            let value = e.currentTarget.value
             let hm_id = e.model.item.hamonize_id
             let date = new Date(this.data.cl_date)
-            let lastMonth = new Date(date.setMonth(date.getMonth() - 3)).toISOString().split('T')[0]
+            // console.log(e.model.item);
+            let lastMonth = JSON.parse(JSON.stringify(new Date(date.setMonth(date.getMonth() - 3)).toISOString().split('T')[0]))
             // console.log(lastMonth)
             // this.hamonizeContract
-            let hmtype = this.hamonizeContract.find((item)=> item.hamonize_id === hm_id)
-              console.log(hmtype.hamonize.hamonize_code);
-              // console.log(index2);
+            let hmtype = this.hamonizeContract.find((item) => item.hamonize_id === hm_id)
+            // console.log(hmtype.hamonize.hamonize_code);
+            // console.log(index2);
             let url = {
               startDate: lastMonth,
-              endDate: date.toISOString().split('T')[0],
+              endDate: this.data.cl_date,
               hmcode: hmtype.hamonize.hamonize_code
             }
-            this.dispatchAction('GET_CONFIRM_FP',this.genUrl(url))
+            this.dispatchAction('GET_CONFIRM_FP', this.genUrl(url))
+              .then((res) => {
+                this.set('data.cl_hamonize.'+index+'.cost_price', res.data[0].fp2)
+                this.set('data.cl_hamonize.'+index+'.cost_value', res.data[0].fp2 * (value * 1000) )
+                console.log(res.data[0].fp2);
+                let plus = this.data.cl_hamonize
+                let cost_price = Object.keys(plus).reduce((previous, current) => previous + plus[current].cost_price, 0)
+                
+                this.set('dataShow.cost_price_perton',cost_price)
+              })
+
             console.log(url)
+
           }
 
           //     // const setData = (date)=> 
@@ -455,7 +474,7 @@
           //       let plus = this.data.cl_hamonize
 
           //       let cost_price = Object.keys(plus).reduce((previous, current) => previous + plus[current].cost_price, 0)
-          //       this.set('data.cl_total_costpriceton', this.formatNumber(this.cost_price))
+          //       this.set('data.cost_price_perton', this.formatNumber(this.cost_price))
 
           //       let costpricex = Object.keys(plus).reduce((previous, current) => previous + plus[current].costprice, 0)
           //       this.set('data.cl_total_costprice', this.formatNumber(this.costprice))
