@@ -299,7 +299,7 @@
                 this.dispatchAction('SET_STATE', {
                     isInsert: false,
                     btnDisabled: true,
-                    hiddend: true
+                    inputRice: true
                 });
                 this.paymentsPageSeleted = 'invoicePage';
                 this._flipDrawer();
@@ -318,7 +318,8 @@
                 this.dispatchAction('SET_STATE', {
                     isInsert: true,
                     btnDisabled: false,
-                    hiddend: true
+                    inputRice: true,
+                    btnRice: true
                 });
                 this.paymentsPageSeleted = 'blInvoicePage';
                 this._flipDrawer();
@@ -333,7 +334,8 @@
                 this.dispatchAction('SET_STATE', {
                     isInsert: false,
                     btnDisabled: true,
-                    hiddend: true
+                    inputRice: true,
+                    btnRice: true
                 });
             },
             // _getChequeDetail: function (e) {
