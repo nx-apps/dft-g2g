@@ -203,7 +203,7 @@ exports.listDetail = function (req, res) {
         detail: r.table('book_detail')
             .getAll(req.query.book_id, { index: 'book_id' })
             .orderBy('date_created')
-            .pluck('id', 'book_det_weight', { 'package': 'package_kg_per_bag' }, { 'company': 'company_name_th' }, { 'hamonize': 'hamonize_en' })
+            .pluck('id', 'net_weight', { 'package': 'package_kg_per_bag' }, { 'company': 'company_name_th' }, { 'hamonize': 'hamonize_en' })
         // .coerceTo('array')
     }).merge(function (m) {
         return r.table('book').get(req.query.book_id).pluck('book_status', 'invoice_status', 'id')
