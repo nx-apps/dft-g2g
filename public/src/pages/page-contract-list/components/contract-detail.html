@@ -269,7 +269,7 @@
           </table>-->
           <span class="namesub">
             <gl-combo-box id="hamonizeCode" disabled="[[commonState.btnDisabled]]" label="{{localizeContract.rice_type}}"
-            error-message="{{localizeContract.error_input}}" placeholder="{{localizeContract.rice_type}}" items="[[hamonizeYear.hamonize]]"
+             placeholder="{{localizeContract.rice_type}}" items="[[hamonizeYear.hamonize]]"
             item-label-path="label" item-value-path="id" on-value-changed="searchHamonizeInCode">
               <template>
                 [[item.label]]
@@ -279,7 +279,7 @@
           <span class="year">
                         <!--ปีที่ตั้งรหัส Hamonize -->
             <gl-combo-box id="hamonizeYear" disabled="[[commonState.btnDisabled]]" label="{{localizeContract.year}}"
-            error-message="{{localizeContract.error_input}}" placeholder="{{localizeContract.year}}" items="[[hamonizeYear.year]]"
+           placeholder="{{localizeContract.year}}" items="[[hamonizeYear.year]]"
             item-label-path="label" item-value-path="label" on-value-changed="searchHamonizeInYear">
               <template>
                 [[item.label]]

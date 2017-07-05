@@ -59,10 +59,10 @@
         <table class="gl-table-default">
           <thead class="table-head">
             <tr>
-              <th>{{localize.label_ref_no}}</th>
-              <th>{{localize.label_quantity_ship}}</th>
-              <th>{{localize.label_quantity_confirm}}</th>
-              <th>{{localize.label_quantity_confirm_delivery}}</th>
+              <th>{{localizeConfirmLetter.ref_no}}</th>
+              <th>{{localizeConfirmLetter.total_vessel}}</th>
+              <th>{{localizeConfirmLetter.total_quantity}}</th>
+              <th>{{localizeConfirmLetter.total_send}}</th>
               <th>#</th>
             </tr>
           </thead>
@@ -75,7 +75,7 @@
                 <td on-tap="getConfirmDetail" data="[[item]]">[[formatNumberNoZero(item.book_weight)]] [[checkMInus(item.cl_weight_balance)]]</td>
                 <td>
                   <paper-icon-button id="printShipment" class="crud" icon="print" raised on-tap="printVesel" data="[[item]]"></paper-icon-button>
-                  <paper-tooltip for="printShipment" offset="0">Print Invoice</paper-tooltip>
+                  <paper-tooltip for="printShipment" offset="0">{{localizeCommon.print}}</paper-tooltip>
                 </td>
               </tr>
             </template>
@@ -125,11 +125,11 @@
       //       })
       // },
       properties: {
-        localize: {
-          statePath: 'i18n.g2g'
-        },
         localizeCommon: {
           statePath: 'i18n.common'
+        },
+        localizeConfirmLetter: {
+          statePath: 'i18n.confirmLetter'
         },
         commonState: {
           statePath: 'commonState.setState'
@@ -301,7 +301,7 @@
       getShowByExport: function (e) {
         // console.log(e);
         try {
-          this.set('title', 'แสดงปริมาณการส่งมอบ')
+          this.set('title', this.localizeConfirmLetter.show_total_send)
           if (this.contractId.contract_id !== undefined) {
             if (e.currentTarget.value !== undefined && e.currentTarget.value !== '') {
               // let = e.currentTarget.value

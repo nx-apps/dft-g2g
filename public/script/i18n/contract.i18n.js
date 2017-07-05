@@ -1,6 +1,7 @@
 export const contract = {
     th:{
         Meg:"TH",
+        contract:"สัญญา",
         contract_name:"ชื่อสัญญา",
         contract_no:"เลขที่สัญญา",
         date:"วันที่",

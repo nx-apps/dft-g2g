@@ -73,11 +73,11 @@
   </style>
   <template>
     <!--<template is="dom-if" if="[[commonState.btnDisabled]]">-->
-    <paper-button raised on-tap="backPage" class="gl-btn-default">{{localize.btn_back_ward}}</paper-button>
+    <paper-button raised on-tap="backPage" class="gl-btn-default">{{localizeCommon.back_ward}}</paper-button>
     <!--</template>-->
-    <template is="dom-if" if="[[!commonState.btnDisabled]]">
-      <paper-button raised on-tap="backPageInsert" class="gl-btn-default" hidden="[[isViewSeleted]]">{{localize.btn_back_ward}}</paper-button>
-    </template>
+    <!--<template is="dom-if" if="[[!commonState.btnDisabled]]">
+      <paper-button raised on-tap="backPageInsert" class="gl-btn-default" hidden="[[isViewSeleted]]">{{localizeCommon.back_ward}}</paper-button>
+    </template>-->
     <gl-form-panel set-padding="10px 20px 10px 20px" set-border="1px">
       <template is="dom-if" if="[[!data.cl_status]]">
         <template is="dom-if" if="[[!commonState.isInsert]]">
@@ -93,17 +93,17 @@
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,2]]">
           [[changeString2Num(data.*,'cl_no')]]
           <gl-form-input class="required" required autofocus allowed-pattern="[0-9||,||.]" format-number="on" disabled="[[commonState.btnDisabled]]"
-            error-message="{{localize.label_error_order}}" required label="{{localize.label_ref_no}}" always-float-label value="{{data.cl_no}}"></gl-form-input>
+            error-message="{{localizeContract.error_input}}{{localizeConfirmLetter.ref_no}}" required label="{{localizeConfirmLetter.ref_no}}" always-float-label value="{{data.cl_no}}"></gl-form-input>
         </gl-grid-col>
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
           <!--<vaadin-date-picker class="required" required disabled="[[commonState.btnDisabled]]" label="{{localize.label_date}}" value="{{data.cl_date}}"></vaadin-date-picker>-->
-          <gl-form-input type="date" class="required" required disabled="[[commonState.btnDisabled]]" label="{{localize.label_date}}"
-            value="{{data.cl_date}}"></gl-form-input>
+          <gl-form-input type="date" class="required" required disabled="[[commonState.btnDisabled]]" label="{{localizeConfirmLetter.date}}"
+            value="{{data.cl_date}}" error-message="{{localizeContract.error_input}}{{localizeConfirmLetter.date}}"></gl-form-input>
 
         </gl-grid-col>
       </gl-grid-row>
 
-      <div class="top ">{{localize.label_detail}}</div>
+      <div class="top ">{{localizeCommon.detail}}</div>
       <!--[[hamonizeLimitContract]]//[[contractId.contract_weight_book_balance]] //[[dataShow.hamonize_limit]]-->
       <!--<gl-form-input class="required" id="[[index]]" required allowed-pattern="[0-9||,||.]" format-number="on" disabled="[[commonState.btnDisabled]]"
                   label="{{localize.label_quantity}}" placeholder="{{localize.label_quantity}}" error-message="{{localize.label_error_quantity}}"
@@ -113,14 +113,14 @@
           <gl-form-panel set-padding="10px 20px 10px 20px" set-border="1px">
             <div class="horizontal end-justified layout">
               <paper-button id="[[index]]" raised class="btnInTable gl-btn-danger" on-tap="deleteRiceType" style="margin-top:16px" hidden="[[commonState.btnDisabled]]">
-                <iron-icon icon="remove"></iron-icon>{{localize.btn_delete_rice_type}}</paper-button>
+                <iron-icon icon="remove"></iron-icon>{{localizeConfirmLetter.delete_hamonize}}</paper-button>
             </div>
             <gl-grid-row>
               <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,6]]">
 
                 <gl-combo-box id="riceType-[[index]]" index="[[index]]" class="required" required disabled="[[commonState.btnDisabled]]"
-                  error-message="{{localize.label_error_rice_type}}" placeholder="{{localize.label_rice_type}}" name="hamonize.hamonize_th"
-                  label="{{localize.label_rice_type}}" item-label-path="label" item-value-path="hamonize_id" value="{{item.hamonize_id}}"
+                  error-message="{{localizeContract.error_dropdown}}{{localizeContract.list_rice}}" placeholder="{{localizeContract.list_rice}}" name="hamonize.hamonize_th"
+                  label="{{localizeContract.list_rice}}" item-label-path="label" item-value-path="hamonize_id" value="{{item.hamonize_id}}"
                   on-selected-item-changed="getObjectHamonize" on-value-changed="_typeRiceConfirm">
                   <template>
                     [[item.label]]
@@ -132,14 +132,14 @@
 
                 [[changeString2Num(item.*,'hamonize_weight')]] [[_obCalcWeight(item.*,'hamonize_weight')]]
                 <gl-form-input class="required" id="[[index]]" required allowed-pattern="[0-9||,||.]" format-number="on" disabled="[[commonState.btnDisabled]]"
-                  label="{{localize.label_quantity}}" placeholder="{{localize.label_quantity}}" error-message="{{localize.label_error_quantity}}"
+                  label="{{localizeContract.quantity}}" placeholder="{{localizeContract.quantity}}" error-message="{{localizeContract.error_input}}{{localizeContract.quantity}}"
                   value="{{item.hamonize_weight}}" name="hamonize_weight" on-input="getCostPrice"></gl-form-input>
 
               </gl-grid-col>
               <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">[[changeString2Num(item.*,'tolerance_rate')]]
-                <gl-form-input class="required number" required maxlength="3" allowed-pattern="[0-9||,||.]" error-message="{{localize.label_error_tolerance_rate}}"
-                  disabled="[[commonState.btnDisabled]]" label="{{localize.label_tolerance_rate}}" value="{{item.tolerance_rate}}"
-                  placeholder="{{localize.label_tolerance_rate}}" error-message="{{localize.label_error_tolerance_rate}}" id="tolerance_rate">
+                <gl-form-input class="required number" required maxlength="3" allowed-pattern="[0-9||,||.]" error-message="{{localizeContract.error_input}}{{localizeConfirmLetter.quantity_tolerance}}"
+                  disabled="[[commonState.btnDisabled]]" label="{{localizeConfirmLetter.quantity_tolerance}}" value="{{item.tolerance_rate}}"
+                  placeholder="{{localizeConfirmLetter.quantity_tolerance}}"  id="tolerance_rate">
                   <div suffix>%</div>
                 </gl-form-input>
               </gl-grid-col>
@@ -148,20 +148,22 @@
 
             <gl-grid-row>
               <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
-                <gl-form-input class="required" required disabled="[[commonState.btnDisabled]]" label="{{localize.label_project_th}}" placeholder="{{localize.label_project_th}}"
-                  value="{{item.project_th}}" error-message="{{localize.label_error_project_en}}"></gl-form-input>
+                <gl-form-input class="required" required disabled="[[commonState.btnDisabled]]" label="{{localizeConfirmLetter.project_th}}" placeholder="{{localizeConfirmLetter.project_th}}"
+                  value="{{item.project_th}}" error-message="{{localizeContract.error_input}}{{localizeConfirmLetter.project_th}}"></gl-form-input>
               </gl-grid-col>
               <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
-                <gl-form-input class="required" required disabled="[[commonState.btnDisabled]]" label="{{localize.label_project_en}}" placeholder="{{localize.label_project_en}}"
-                  value="{{item.project_en}}" error-message="{{localize.label_error_project_en}}"></gl-form-input>
+                <gl-form-input class="required" required disabled="[[commonState.btnDisabled]]" label="{{localizeConfirmLetter.project_en}}" placeholder="{{localizeConfirmLetter.project_en}}"
+                  value="{{item.project_en}}" error-message="{{localizeContract.error_input}}{{localizeConfirmLetter.project_en}}"></gl-form-input>
               </gl-grid-col>
               <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
                 [[changeString2Num(item.*,'cost_price')]][[_obCalPrice(item.*,'cost_price')]]
-                <gl-form-input disabled="[[commonState.btnDisabled]]" format-number="on" value="{{item.cost_price}}" label="{{localize.label_cost_price_ton}}"></gl-form-input>
+                <gl-form-input class="required" required disabled="[[commonState.btnDisabled]]" format-number="on" value="{{item.cost_price}}" label="{{localizeConfirmLetter.cost_price_ton}}"
+                placeholder="{{localizeConfirmLetter.total_cost_price_ton}}"></gl-form-input>
               </gl-grid-col>
               <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
                 [[changeString2Num(item.*,'cost_value')]]
-                <gl-form-input disabled="[[commonState.btnDisabled]]" format-number="on" value="{{item.cost_value}}" label="ราคาบาท (ยัง)"></gl-form-input>
+                <gl-form-input class="required" required disabled="[[commonState.btnDisabled]]" format-number="on" value="{{item.cost_value}}" label="{{localizeConfirmLetter.cost_price}}"
+                placeholder="{{localizeConfirmLetter.total_cost_price}}"></gl-form-input>
 
               </gl-grid-col>
             </gl-grid-row>
@@ -170,9 +172,9 @@
             <table class="gl-table-default" id="[[index]]">
               <thead class="table-head">
                 <tr>
-                  <th style="text-align: center; width: 30%">{{localize.text_packaging_type}} <br> {{localize.text_kk_sack}}</th>
-                  <th style="text-align: center; width: 20%">{{localize.text_price}}<br> {{localize.text_usd_ton}}</th>
-                  <th style="text-align: center; width: 20%">{{localize.text_weight_sacks}} <br>{{localize.text_gram}}</th>
+                  <th style="text-align: center; width: 30%">{{localizeCommon.packaging_type}} <br> {{localizeCommon.kk_sack}}</th>
+                  <th style="text-align: center; width: 20%">{{localizeCommon.price}}<br> {{localizeCommon.usd_ton}}</th>
+                  <th style="text-align: center; width: 20%">{{localizeCommon.weight_sacks}} <br>{{localizeCommon.weight_gram}}</th>
                   <th style="text-align: center; width: 30%">
                     <template is="dom-if" if="[[!commonState.btnDisabled]]">
                       {{localize.label_action}}
@@ -186,7 +188,7 @@
                     <td>
 
                       <gl-combo-box id="package-[[index]]-[[indexpackeage]]" index="[[index]]" indexpackeage=[[indexpackeage]] class="required InTable"
-                        required disabled="[[commonState.btnDisabled]]" error-message="{{localize.label_error_package}}" placeholder="{{localize.label_package}}"
+                        required disabled="[[commonState.btnDisabled]]" error-message="{{localizeContract.error_dropdown}}{{localizeCommon.packaging_type}}" placeholder="{{localizeCommon.packaging_type}}"
                         item-label-path="package_name_th" item-value-path="package_id" value="{{packageitem.package_id}}" 
                         on-value-changed="_typePackageConfirm">
                         <!--on-selected-item-changed="getObjectPackeage"-->
@@ -198,7 +200,7 @@
                     </td>
                     <td> [[changeString2Num(packageitem.*,'price_d')]]
                       <gl-form-input class="required numberBack" required allowed-pattern="[0-9||,||.]" format-number="on" disabled="[[commonState.btnDisabled]]"
-                        placeholder="{{localize.text_price}}" error-message="{{localize.text_error_price}}" value="{{packageitem.price_d}}"
+                        placeholder="{{localizeCommon.price}}" error-message="{{localizeContract.error_input}}{{localizeCommon.price}}" value="{{packageitem.price_d}}"
                         no-label-float></gl-form-input>
                     </td>
                     <td>
@@ -217,7 +219,7 @@
             <div class="horizontal end-justified layout">
               <paper-button raised id="[[index]]" class="btnInTable gl-btn-primary" on-tap="addPackage" hidden="[[commonState.btnDisabled]]"
                 disabled="[[!_isHaveForUse(item.package,packageList,item.package.*)]]">
-                <iron-icon icon="add"></iron-icon>{{localize.btn_add_package}}</paper-button>
+                <iron-icon icon="add"></iron-icon>{{localizeConfirmLetter.add_package}}</paper-button>
             </div>
           </gl-form-panel>
         </div>
@@ -226,15 +228,15 @@
 
         <template is="dom-if" if="[[!commonState.btnDisabled]]">
           <paper-button raised on-tap="addNewTypeRice" class="gl-btn-primary" hidden="[[btnCheckDisabled]]" disabled="[[!_isHaveForUse(data.cl_hamonize,hamonizeContract,data.cl_hamonize.*)]]">
-            <iron-icon icon="add"></iron-icon>{{localize.btn_add_rice_type}}</paper-button>
+            <iron-icon icon="add"></iron-icon>{{localizeConfirmLetter.add_hamonize}}</paper-button>
         </template>
       </div>
       <gl-grid-row>
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,5]]">
           <template is="dom-repeat" items="[[data.incoterms]]">
             <gl-combo-box id="incoterms-[[index]]" index="[[index]]" class="required" required disabled="[[commonState.btnDisabled]]"
-              label="{{localize.label_incoterms}} [[_ObcountIndex(index)]]" error-message="{{localize.label_error_incoterms}} [[_ObcountIndex(index)]]"
-              placeholder="{{localize.label_incoterms}} [[_ObcountIndex(index)]]" item-label-path="inct_name" item-value-path="inct_id"
+              label="{{localizeConfirmLetter.incoterms}} [[_ObcountIndex(index)]]" error-message="{{localizeContract.error_dropdown}} {{localizeConfirmLetter.incoterms}} [[_ObcountIndex(index)]]"
+              placeholder="{{localizeConfirmLetter.incoterms}} [[_ObcountIndex(index)]]" item-label-path="inct_name" item-value-path="inct_id"
               value="{{item.inct_id}}" on-selected-item-changed="getObjectIncoterms" on-blur="_incotermsConfirm">
               <template>
                 [[item.inct_name]]
@@ -243,11 +245,11 @@
           </template>
         </gl-grid-col>
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
-          <gl-form-input class="numberBack" disabled allowed-pattern="[0-9||,||.]" format-number="on" always-float-label label="{{localize.label_total_ton}}"
+          <gl-form-input class="numberBack" disabled allowed-pattern="[0-9||,||.]" format-number="on" always-float-label label="{{localizeConfirmLetter.total_ton}}"
             value="{{dataShow.cl_total_quantity}}"></gl-form-input>
         </gl-grid-col>
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
-          <gl-form-input class="numberBack" disabled format-number="on" label="{{localize.label_total_cost_price_ton}}" value="[[dataShow.cost_price_perton]]"></gl-form-input>
+          <gl-form-input class="numberBack" disabled format-number="on" label="{{localizeConfirmLetter.total_cost_price_ton}}" value="[[dataShow.cost_price_perton]]"></gl-form-input>
         </gl-grid-col>
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,5]]"></gl-grid-col>
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]"></gl-grid-col>
@@ -290,11 +292,14 @@
         // nylonLocalizeBehavior,
       ],
       properties: {
-        localize: {
-          statePath: 'i18n.g2g'
-        },
         localizeCommon: {
           statePath: 'i18n.common'
+        },
+        localizeConfirmLetter: {
+          statePath: 'i18n.confirmLetter'
+        },
+        localizeContract: {
+          statePath: 'i18n.contract'
         },
         commonState: {
           statePath: 'commonState.setState'
