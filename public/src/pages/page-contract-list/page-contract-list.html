@@ -82,7 +82,7 @@
             is: 'page-contract-list',
             behaviors: [ReduxBehavior, nylonBehavior, i18nAction, CookieBehavior,
                 contractAction, commonStateAction, commonG2gAction, confirmLetterAction, g2gLogicBehavior,
-                bookAction, feeAction,invoiceAction],
+                bookAction, feeAction, invoiceAction],
             properties: {
                 layerContent: {
                     type: String,
@@ -94,6 +94,7 @@
                 localize: {
                     statePath: 'i18n.g2g'
                 },
+                
                 crumbs: {
                     statePath: 'commonState.breadCrumbs',
                 },
@@ -381,7 +382,7 @@
                     contract_id: e.detail.contract_id,
                     contract_no: e.detail.contract_no,
                     contract_status: e.detail.contract_status,
-                    contract_weight_book_balance : e.detail.contract_weight_book_balance,
+                    contract_weight_book_balance: e.detail.contract_weight_book_balance,
                 }
                 this.dispatchAction('SET_CONTRACT_ID', contractData)
                 // console.log(11111)
@@ -524,7 +525,7 @@
             _getlistFee: function (e) {
                 try {
                     let url = { contract_id: e.detail.contract_id, view: 'rice' }
-                    this.dispatchAction('FEE_GET_LIST_DATA',url)
+                    this.dispatchAction('FEE_GET_LIST_DATA', url)
                     // this.dispatchAction('GET_HAMONIZE_OF_CONTRACT', this.genUrl(url))
                     this.dispatchAction('SET_BREADCRUMBS', [{
                         label: 'สัญญาที่ ' + e.detail.contract_no,
@@ -537,33 +538,33 @@
                     this.dispatchAction('SET_CONTRACT_ID', contractData)
                     this.titlePanelRight = 'สัญญาที่  : ' + e.detail.contract_no
                     this.fire('toast', { status: 'load' });
-                if (this.checkRenderPage.listOfFee != true) {
-                    this.async(() => {
-                        this.importHref(
-                            this.resolveUrl('./components/list-of-fee-g2g.html'),
-                            () => {
-                                this.async(() => {
-                                    this.fire('toast', {
-                                        status: 'success', text: 'โหลดสำเร็จ', callback: () => {
-                                            this._flipDrawer();
-                                            this.checkRenderPage.listOfFee = true;
-                                        }
-                                    })
-                                    // console.log(this.dataForSelected.dataForContract);
+                    if (this.checkRenderPage.listOfFee != true) {
+                        this.async(() => {
+                            this.importHref(
+                                this.resolveUrl('./components/list-of-fee-g2g.html'),
+                                () => {
+                                    this.async(() => {
+                                        this.fire('toast', {
+                                            status: 'success', text: 'โหลดสำเร็จ', callback: () => {
+                                                this._flipDrawer();
+                                                this.checkRenderPage.listOfFee = true;
+                                            }
+                                        })
+                                        // console.log(this.dataForSelected.dataForContract);
 
-                                }, 500)
-                            }, null, true
-                        );
-                    }, 1000);
-                } else {
-                    this.async(() => {
-                        this.fire('toast', {
-                            status: 'success', text: 'โหลดสำเร็จ', callback: () => {
-                                this._flipDrawer();
-                            }
-                        })
-                    }, 1000);
-                }
+                                    }, 500)
+                                }, null, true
+                            );
+                        }, 1000);
+                    } else {
+                        this.async(() => {
+                            this.fire('toast', {
+                                status: 'success', text: 'โหลดสำเร็จ', callback: () => {
+                                    this._flipDrawer();
+                                }
+                            })
+                        }, 1000);
+                    }
                     //     this.read('./g2g/fee/contract/id/' + e.detail.data.contract_id, (data) => {
                     //         //ปัญหาตรงนี้
                     //         this.set('pageSelected', 'listOfFee')
@@ -619,7 +620,7 @@
             _flipDrawerClose: function () {
                 Polymer.dom(this.root).querySelector('#drawerRight').close();
             },
-            backPageFee: function(){
+            backPageFee: function () {
                 // console.log(this.$$('list-of-fee-g2g'))
                 this.$$('list-of-fee-g2g').backPage()
             }

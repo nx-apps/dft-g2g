@@ -650,7 +650,7 @@
             if (result == true) {
               this._resiveFormBook()
                 .then((res) => {
-                  console.log(res);
+                  // console.log(res);
                   this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
                   this.dispatchAction('PUT_BOOK', res)
                     .then((response) => {
