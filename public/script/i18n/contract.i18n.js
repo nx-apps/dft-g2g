@@ -14,7 +14,8 @@ export const contract = {
         year:"ปี",
         order:"ลำดับที่",
         rice_type:"ชนิดข้าว",
-
+        fee:"ค่าธรรมเนียม",
+        payment:"การเงิน",
         more_detail:"รายละเอียดเพิ่มเติม",
         error_input:"กรุณากรอก",
         error_dropdown:"กรุณาเลือก",

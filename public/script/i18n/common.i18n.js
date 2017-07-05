@@ -28,6 +28,7 @@ export const common = {
         print:"รายงาน",
         report_type:"รูปแบบรายงาน",
 
+        
         save_succeed:"บันทึกสำเร็จ",
         delete_succeed:"ลบสำเร็จ",
         toast_edit:"ต้องการแก้ข้อมูลใช่หรือไม่",
