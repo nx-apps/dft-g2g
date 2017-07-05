@@ -294,6 +294,7 @@
                     btnDisabled: false,
                     hiddend: true
                 })
+                this.dispatchAction('CLEAR_CONTRACT')
                 this.async(() => {
                     this.fire('toast', {
                         status: 'success', text: 'โหลดสำเร็จ', callback: () => {

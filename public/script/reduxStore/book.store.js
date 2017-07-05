@@ -16,6 +16,7 @@ const cutDataInObject = (data, namePop) => {
 const initialState = {
     list: [],
     bookList: [],
+    bookNoList: [],
     bookDetail: {},
     bookHamonizeList: [],
     bookExporterList: [],
@@ -26,6 +27,8 @@ export function bookReducer(state = initialState, action) {
     switch (action.type) {
         case 'GET_BOOK_LIST':
             return Object.assign({}, state, { bookList: action.payload });
+        case 'GET_BOOK_NO':
+            return Object.assign({}, state, { bookNoList: action.payload });
         case 'GET_BOOK_DETAIL':
             return Object.assign({}, state, { bookDetail: action.payload });
         case 'GET_BOOK_EXPORTER_LIST':
@@ -56,6 +59,19 @@ export function bookAction(store) {
                 .then(function (response) {
                     // console.log(response.data);
                     store.dispatch({ type: 'GET_BOOK_LIST', payload: response.data })
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        },
+        GET_BOOK_NO: function (book_id) {
+            axios.get('./book/no?' + book_id)
+                .then(function (response) {
+                    for (var index = 0; index < response.data.length; index++) {
+                        response.data[index].text = response.data[index].book_no,
+                        response.data[index].value = response.data[index].book_no
+                    }
+                    store.dispatch({ type: 'GET_BOOK_NO', payload: response.data })
                 })
                 .catch(function (error) {
                     console.log(error);

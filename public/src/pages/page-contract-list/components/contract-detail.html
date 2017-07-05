@@ -146,18 +146,18 @@
       <!--</template>-->
       <gl-grid-row width="{{getWidth}}">
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,9]]">
-          <gl-form-input required class="required" disabled="[[_checkArrayTrue(commonState.btnDisabled,data.contract_status)]]" error-message="{{localizeContract.error_input}}"
+          <gl-form-input required class="required" disabled="[[_checkArrayTrue(commonState.btnDisabled,data.contract_status)]]" error-message="{{localizeContract.error_input}}{{localizeContract.contract_name}}"
             label="{{localizeContract.contract_name}}" value="{{data.contract_name}}" placeholder="{{localizeContract.contract_name}}"></gl-form-input>
         </gl-grid-col>
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
           <gl-form-input type="date" always-float-label class="required" required disabled="[[_checkArrayTrue(commonState.btnDisabled,data.contract_status)]]"
-            label="{{localizeContract.date}}" error-message="{{localizeContract.error_input}}" value="{{data.contract_date}}">
+            label="{{localizeContract.date}}" error-message="{{localizeContract.error_input}}{{localizeContract.date}}" value="{{data.contract_date}}">
           </gl-form-input>
         </gl-grid-col>
       </gl-grid-row>
       <gl-grid-row width="{{getWidth}}">
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,9]]">[[changeString2Num(data.*,'contract_no')]]
-          <gl-form-input type="number" required class="required" error-message="{{localizeContract.error_input}}" disabled="[[_checkArrayTrue(commonState.btnDisabled,data.contract_status)]]"
+          <gl-form-input type="number" required class="required" error-message="{{localizeContract.error_input}}{{localizeContract.contract_no}}" disabled="[[_checkArrayTrue(commonState.btnDisabled,data.contract_status)]]"
             label="{{localizeContract.contract_no}}" value="{{data.contract_no}}" placeholder="{{localizeContract.contract_no}}"></gl-form-input>
         </gl-grid-col>
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
@@ -169,8 +169,8 @@
 
       <gl-grid-row width="{{getWidth}}">
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,9]]">
-          <gl-combo-box class="required" required disabled="[[_checkArrayTrue(commonState.btnDisabled,data.contract_status)]]" label="{{localizeContract.label_payment_type}}"
-            error-message="{{localizeContract.label_error_payment_type}}" placeholder="{{localizeContract.label_payment_type}}" items="[[payterms]]"
+          <gl-combo-box class="required" required disabled="[[_checkArrayTrue(commonState.btnDisabled,data.contract_status)]]" label="{{localizeContract.payment_type}}"
+            error-message="{{localizeContract.error_input}}{{localizeContract.payment_type}}" placeholder="{{localizeContract.payment_type}}" items="[[payterms]]"
             item-label-path="payterms_Name" item-value-path="payterms_Id" value="{{data.payterm}}">
             <template>
               [[item.payterms_Name]]
@@ -179,16 +179,17 @@
         </gl-grid-col>
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">[[changeString2Num(data.*,'contract_weight')]]
           <gl-form-input class="required number" required allowed-pattern="[0-9||,||.]" format-number="on" disabled="[[_checkArrayTrue(commonState.btnDisabled,data.contract_status)]]"
-            error-message="{{localizeContract.label_error_quantity}}" required label="{{localizeContract.label_quantity}}" value="{{data.contract_weight}}"
-            placeholder="{{localizeContract.label_quantity}}" id="contract_weight"></gl-form-input>
+            error-message="{{localizeContract.error_input}}{{localizeContract.quantity}}" required label="{{localizeContract.quantity}}" value="{{data.contract_weight}}"
+            placeholder="{{localizeContract.quantity}}" id="contract_weight"></gl-form-input>
         </gl-grid-col>
       </gl-grid-row>
 
       <gl-grid-row>
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,9]]">
           <!--[[_getBuyerAddressFromData(data)]]-->
-          <gl-combo-box class="required" always-float-label required id="buyer_id" label="{{localizeContract.label_buyer}}" disabled="[[_checkArrayTrue(commonState.btnDisabled,data.contract_status)]]"
-            items="{{buyerList}}" item-label-path="buyer_name" item-value-path="buyer_id" error-message="{{localizeContract.label_error_buyer}}"
+          <gl-combo-box class="required" always-float-label required id="buyer_id" label="{{localizeContract.buyer}}" placeholder="{{localizeContract.buyer}}" 
+          disabled="[[_checkArrayTrue(commonState.btnDisabled,data.contract_status)]]"
+            items="{{buyerList}}" item-label-path="buyer_name" item-value-path="buyer_id" error-message="{{localizeContract.error_dropdown}}{{localizeContract.buyer}}"
             value="{{data.buyer_id}}" on-selected-item-changed="_getBuyerAddress">
             <template>
               [[item.buyer_name]]
@@ -199,13 +200,13 @@
 
       <gl-grid-row>
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,9]]">
-          <gl-form-input disabled label="FAX" value="{{dataShow.buyer_fax}}" placeholder="FAX"></gl-form-input>
+          <gl-form-input disabled label="{{localizeContract.fax}}" value="{{dataShow.buyer_fax}}" placeholder="{{localizeContract.fax}}"></gl-form-input>
         </gl-grid-col>
       </gl-grid-row>
       <gl-grid-row>
 
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,6]]">
-          <gl-form-textarea rows="2" disabled label="{{localizeContract.label_buyer_address}}" placeholder="{{localizeContract.label_buyer_address}}"
+          <gl-form-textarea rows="2" disabled label="{{localizeContract.buyer_address}}" placeholder="{{localizeContract.buyer_address}}"
             value="{{dataShow.buyerAddress}}"></gl-form-textarea>
         </gl-grid-col>
       </gl-grid-row>
@@ -267,9 +268,8 @@
             </tbody>
           </table>-->
           <span class="namesub">
-                      ชื่อข้าว
-            <gl-combo-box id="hamonizeCode" disabled="[[commonState.btnDisabled]]" label="{{localizeContract.label_rice_type}}"
-            error-message="{{localizeContract.label_error_payment_type}}" placeholder="{{localizeContract.label_rice_type}}" items="[[hamonizeYear.hamonize]]"
+            <gl-combo-box id="hamonizeCode" disabled="[[commonState.btnDisabled]]" label="{{localizeContract.rice_type}}"
+            error-message="{{localizeContract.error_input}}" placeholder="{{localizeContract.rice_type}}" items="[[hamonizeYear.hamonize]]"
             item-label-path="label" item-value-path="id" on-value-changed="searchHamonizeInCode">
               <template>
                 [[item.label]]
@@ -277,9 +277,9 @@
           </gl-combo-box>
                       </span>
           <span class="year">
-                        ปีที่ตั้งรหัส Hamonize 
-            <gl-combo-box id="hamonizeYear" disabled="[[commonState.btnDisabled]]" label="รหัส Hamonize (ยัง)"
-            error-message="{{localizeContract.label_error_payment_type}}" placeholder="รหัส Hamonize (ยัง)" items="[[hamonizeYear.year]]"
+                        <!--ปีที่ตั้งรหัส Hamonize -->
+            <gl-combo-box id="hamonizeYear" disabled="[[commonState.btnDisabled]]" label="{{localizeContract.year}}"
+            error-message="{{localizeContract.error_input}}" placeholder="{{localizeContract.year}}" items="[[hamonizeYear.year]]"
             item-label-path="label" item-value-path="label" on-value-changed="searchHamonizeInYear">
               <template>
                 [[item.label]]
@@ -326,8 +326,8 @@
 
       <gl-grid-row>
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,6]]">
-          <gl-form-textarea disabled="[[_checkArrayTrue(commonState.btnDisabled,data.contract_status)]]" rows="2" label="{{localizeContract.label_more_detail}}"
-            placeholder="{{localizeContract.label_more_detail}}" value="{{data.contract_desc}}" name="contract_desc"></gl-form-textarea>
+          <gl-form-textarea disabled="[[_checkArrayTrue(commonState.btnDisabled,data.contract_status)]]" rows="2" label="{{localizeContract.more_detail}}"
+            placeholder="{{localizeContract.more_detail}}" value="{{data.contract_desc}}" name="contract_desc"></gl-form-textarea>
         </gl-grid-col>
       </gl-grid-row>
       <gl-form-panel-footer label="" set-padding="10px">
@@ -354,13 +354,13 @@
         ReduxBehavior, FormatNumberBehavior, nylonBehavior, g2gLogicBehavior, ValidateFormBehavior
       ],
       properties: {
-        
-        localizeCommon: {
-          statePath: 'i18n.common'
-        },
         localizeContract: {
           statePath: 'i18n.contract'
         },
+        localizeCommon: {
+          statePath: 'i18n.common'
+        },
+        
         commonState: {
           statePath: 'commonState.setState'
         },

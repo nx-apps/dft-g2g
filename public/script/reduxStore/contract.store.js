@@ -88,7 +88,10 @@ export function contractAction(store) {
         // END DELETE
         // CLEAR
         CLEAR_CONTRACT: function (contractId, ) {
-            let data = { contract_status: false, contract_weight: 0, contract_hamonize: [] }
+            let data = { contract_status: false,
+                 contract_weight: 0, 
+                 contract_hamonize: [],
+                contract_date: new Date().toISOString().split('T')[0] }
             store.dispatch({ type: 'GET_CONTRACT', payload: data })
         },
         // CLEAR

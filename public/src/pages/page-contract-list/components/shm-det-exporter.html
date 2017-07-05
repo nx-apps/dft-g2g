@@ -10,6 +10,8 @@
 <link rel="import" href="./../../../../bower_components/gl-grid/gl-grid-row.html">
 <link rel="import" href="./../../../../bower_components/gl-grid/gl-grid-col.html">
 <link rel="import" href="./../../../../bower_components/gl-form/gl-combo-box.html">
+<link rel="import" href="./../../../../bower_components/paper-autocomplete/paper-autocomplete-suggestions.html">
+
 <link rel="import" href="./../../../layout/shared-styles.html">
 <link rel="import" href="./../../components/validateFormBehaviors.html">
 <link rel="import" href="./../../components/format-number-behavior.html">
@@ -53,8 +55,11 @@
         <gl-grid-row width="{{getWidth}}">
           <template is="dom-if" if="[[commonState.isInsert]]">
             <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,12]]">
-              <gl-form-input required class="required" label="{{localize.label_booking_no}}" always-float-label placeholder="{{localize.label_booking_no}}"
-                value="{{data.book_no}}" disabled="[[commonState.btnDisabled]]"></gl-form-input>
+              <div class="autocomplete-wrapper">
+                <gl-form-input id="bookNo" required class="required" label="{{localize.label_booking_no}}" always-float-label placeholder="{{localize.label_booking_no}}"
+                  value="{{data.book_no}}" disabled="[[commonState.btnDisabled]]"></gl-form-input>
+                <paper-autocomplete-suggestions id="shipline-suggestions" for="bookNo" source="{{bookNo}}"></paper-autocomplete-suggestions>
+              </div>
             </gl-grid-col>
             <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,8]]">
               <gl-combo-box class="required" required id="company_id" label="{{localize.text_exporter_name}}" always-float-label item-label-path="label"
@@ -239,6 +244,9 @@
         },
         checkTrue: {
           statePath: 'book.bookExporterList'
+        },
+        bookNo: {
+          statePath: 'book.bookNoList'
         },
         // packageList: {
         //   statePath: 'commonG2g.packageList',
@@ -530,7 +538,7 @@
               .then((response) => {
                 if (response.data.inserted !== undefined && response.data.inserted.length !== 0) {
                   // this.dispatchAction('GET_CONTRACT_OF_BUYER', res.buyer_id);
-                  
+
                   this.dispatchAction('GET_BOOK_EXPORTER_LIST', this.genUrl(url))
                   this.fire('toast', {
                     status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success

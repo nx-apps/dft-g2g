@@ -17,6 +17,8 @@ export const common = {
         bath:'บาท',
         ton:'ตัน',
         no_data:"ไม่มีข้อมูล",
+        error_input:"กรุณากรอก",
+        error_dropdown:"กรุณาเลือก",
     },
     en: {
         foo: 'a',

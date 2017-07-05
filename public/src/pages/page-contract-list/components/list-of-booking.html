@@ -245,6 +245,7 @@
         },
         ])
         this.dispatchAction('GET_BOOK_DETAIL', this.genUrl(url))
+        
         this.async(() => {
           this.fire('toast', {
             status: 'success', text: 'โหลดสำเร็จ', callback: () => {
@@ -361,11 +362,12 @@
         this.dispatchAction('GET_COMMON_EXPORTER_LIST')
 
         // console.log(1111);
-        let url = { book_id: e.currentTarget.data.id }
+        let url = { book_id: e.currentTarget.data.id, id: e.currentTarget.data.id }
         let bookData = {
           book_id: e.currentTarget.data.id,
           ship_lot: e.currentTarget.data.ship_lot
         }
+        this.dispatchAction('GET_BOOK_NO', this.genUrl(url))
         this.dispatchAction('SET_BOOK_ID', bookData)
         this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
         this.dispatchAction('SET_STATE', {
