@@ -315,6 +315,10 @@
           statePath: 'confirmLetter.hamonizeContract',
           // observer: 'get'
         },
+        exchangeRate: {
+          statePath: 'confirmLetter.exchangeRate',
+          // observer: 'get'
+        },
         hamonizeFp: {
           statePath: 'confirmLetter.hamonizeFp',
           observer: 'getPriceHamonize'
@@ -463,14 +467,10 @@
             // this.throttle
             this.dispatchAction('GET_CONFIRM_FP', this.genUrl(url))
               .then((res) => {
-                this.dispatchAction('GET_CONFIRM_EXCHANG_RATE', this.genUrl(url))
-                  .then((rate) => {
-                    let rateBath = rate.data.rates.THB
-                    // console.log(rate.data.rates.THB)
-                    this.set('data.cl_hamonize.' + index + '.cost_price', res.data[0].fp2/rateBath)
-                  })
-                
-                // this.set('data.cl_hamonize.' + index + '.cost_value', res.data[0].fp2 * (value * 1000))
+                // console.log(res.data[0].fp2)
+                let rateBath = this.exchangeRate.rates.THB
+                // console.log(this.exchangeRate)
+                this.set('data.cl_hamonize.' + index + '.cost_price', res.data[0].fp2 / rateBath)
 
               })
             // console.log(url)

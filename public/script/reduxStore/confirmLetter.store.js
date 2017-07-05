@@ -20,7 +20,7 @@ const initialState = {
     hamonizeLimitContract: {},
     hamonizeContract: [],
     contractDetail: {},
-    // hamonizeFp: {}
+    exchangeRate: {}
 }
 export function confirmLetterReducer(state = initialState, action) {
     switch (action.type) {
@@ -34,8 +34,8 @@ export function confirmLetterReducer(state = initialState, action) {
             return Object.assign({}, state, { hamonizeContract: action.payload });
         case 'GET_CONFIRM_DETAIL':
             return Object.assign({}, state, { contractDetail: action.payload });
-        // case 'GET_CONFIRM_FP':
-        //     return Object.assign({}, state, { hamonizeFp: action.payload });
+        case 'GET_CONFIRM_EXCHANG_RATE':
+            return Object.assign({}, state, { exchangeRate: action.payload });
         default:
             return state
     }
@@ -104,7 +104,17 @@ export function confirmLetterAction(store) {
             return axios.get('./confirm/fp?' + data)
         },
         GET_CONFIRM_EXCHANG_RATE: function (data) {
-            return axios.get('https://api.fixer.io/latest?base=USD')
+            axios.get('https://api.fixer.io/latest?base=USD')
+            .then(function (response) {
+                    // let data = cutDataInObject(response.data, ['cl_date'])
+                    store.dispatch({
+                        type: 'GET_CONFIRM_EXCHANG_RATE',
+                        payload: response.data
+                    })
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
         },
         // END GET
         // POST
