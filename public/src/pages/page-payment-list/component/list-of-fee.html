@@ -63,6 +63,7 @@
           <tr>
             <th>{{localize.fee_no}}</th>
             <th>{{localize.fee_round}}</th>
+            <th>{{localize.cal_no}}</th>
             <th>{{localize.invoice_no}}</th>
             <th>{{localize.invoice_count}}</th>
             <th>{{localize.amount}}{{localize.money}} ({{localize.baht}})</th>
@@ -76,6 +77,7 @@
             <tr data="[[item]]" on-tap="getFeeDetail">
               <td>[[item.fee_no]]</td>
               <td>[[countRound(item.fee_round)]]</td>
+              <td>{{item.cl_no}}</td>
               <td><div style="text-align:left;">[[item.invoice_no]]</div></td>
               <td>[[item.invoice_count]]</td>
               <td>[[formatNumber(item.value_b)]]</td>

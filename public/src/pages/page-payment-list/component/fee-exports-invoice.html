@@ -89,6 +89,8 @@
               <gl-form-input label="{{localize.fee_in}}" class="number required" required format-number="on" style="width:200px; margin-left:50px;"
                 value="{{item.fee_in_b}}" disabled="[[common.btnDisabled]]"></gl-form-input>
               [[_calcFeeInChange(item.fee_in_b, indexData)]]
+              <gl-form-input label="{{localize.fee_total}} ({{localize.baht}})" class="number" format-number="on" style="width:200px; margin-left:50px;"
+                value="{{item.value_fee_b}}" disabled></gl-form-input>
             </div>
           </div>
           <div style="overflow-x:auto;">
@@ -538,7 +540,7 @@
             sum += detail.value_fee_b
           })
           console.log(sum, index);
-          console.log(calcFee = sum);
+          console.log(calcFee == sum);
         })
         if (check === true) {
           this.fire('toast', {
