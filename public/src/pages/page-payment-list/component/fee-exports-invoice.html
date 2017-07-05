@@ -3,6 +3,8 @@
 <link rel="import" href="./../../../../bower_components/gl-form/gl-form-input.html">
 <link rel="import" href="./../../components/g2g-logic-behavior.html">
 <link rel="import" href="./../../components/validateFormBehaviors.html">
+<link rel="import" href="./../../components/format-number-behavior.html">
+
 
 <dom-module id="fee-exports-invoice">
   <style is="custom-style" include="iron-flex iron-flex-alignment gl-styles page-style">
@@ -90,7 +92,7 @@
                 value="{{item.fee_in_b}}" disabled="[[common.btnDisabled]]"></gl-form-input>
               [[_calcFeeInChange(item.fee_in_b, indexData)]]
               <gl-form-input label="{{localize.fee_total}} ({{localize.baht}})" class="number" format-number="on" style="width:200px; margin-left:50px;"
-                value="{{item.value_fee_b}}" disabled></gl-form-input>
+                value="[[obCalcFee(calcFee)]]" disabled></gl-form-input>
             </div>
           </div>
           <div style="overflow-x:auto;">
@@ -257,7 +259,11 @@
           statePath: 'commonState.contractId'
         },
       },
-      behaviors: [ReduxBehavior, g2gLogicBehavior, ValidateFormBehavior],
+      behaviors: [ReduxBehavior, g2gLogicBehavior, ValidateFormBehavior, FormatNumberBehavior],
+      obCalcFee:function(fee){
+        console.log(fee);
+        return fee/this.data.book.length
+      },
       _calcfeeEx: function (fee, index) {
         if (typeof this.data.book !== 'undefined') {
           if (fee !== '') {
@@ -269,8 +275,8 @@
         }
       },
       _calcFeeExChange: function (fee, index) {
-        // console.log(fee, index);
-        var changeFee = parseFloat(fee);
+        console.log(fee, index);
+        var changeFee = parseFloat(fee).toFixed(4);
         this.set('data.book.' + index + '.fee_ex_d', changeFee);
       },
       _calcfeeIn: function (fee, index) {
@@ -284,7 +290,7 @@
         }
       },
       _calcFeeInChange: function (fee, index) {
-        var changeFee = parseFloat(fee);
+        var changeFee = parseFloat(fee).toFixed(4);
         this.set('data.book.' + index + '.fee_in_b', changeFee);
       },
       _obArrayShip: function (ships) {
@@ -413,21 +419,23 @@
         // console.log(newData);
         var sumEx = 0;
         var checkSumFeeEx = newData.book.map((item) => {
-          return sumEx += item.fee_ex_d
+          return sumEx += Number(item.fee_ex_d)
         })
         var indexCheckEx = checkSumFeeEx.length - 1;
-        var changeTypeEx = Number(this.feeEx);
+        var changeSumEx = checkSumFeeEx[indexCheckEx].toFixed(4);
+        var changeTypeEx = Number(this.feeEx).toFixed(4);
 
         var sumIn = 0;
         var checkSumFeeIn = newData.book.map((item) => {
-          return sumIn += item.fee_in_b
+          return sumIn += Number(item.fee_in_b)
         })
         var indexCheckIn = checkSumFeeIn.length - 1;
-        var changeTypeIn = Number(this.feeIn);
+        var changeSumIn = checkSumFeeIn[indexCheckIn].toFixed(4);
+        var changeTypeIn = Number(this.feeIn).toFixed(4);
 
         this.fire('check-required');
         if (this.checkRequired === true && check === true) {
-          if((checkSumFeeEx[indexCheckEx] == changeTypeEx) && (checkSumFeeIn[indexCheckIn] == changeTypeIn)){
+          if((changeSumEx == changeTypeEx) && (changeSumIn == changeTypeIn)){
             this.fire('toast', {
               status: 'openDialog',
               text: 'ต้องการเพิ่มการคิดค่าธรรมเนียมใช่หรือไม่',
@@ -527,21 +535,21 @@
       },
       riceSave: function () {
         var check = this.validateForm('.riceRequired');
-        // console.log(this.data);
+        console.log(this.data);
         // console.log(this.data.rate_bank_b);
-        this.data.book.map((item, index) => {
-          // console.log(item, index);
-          // console.log(item.fee_ex_d, item.fee_in_b);
-          var calcFee = (this.data.rate_bank_b * item.fee_ex_d) + item.fee_in_b;
-          console.log(calcFee , index);
-          var sum = 0;
-          var sumFee = item.detail.map((detail, indexDetail) => {
-            // console.log(detail, indexDetail);
-            sum += detail.value_fee_b
-          })
-          console.log(sum, index);
-          console.log(calcFee == sum);
-        })
+        // this.data.book.map((item, index) => {
+        //   // console.log(item, index);
+        //   // console.log(item.fee_ex_d, item.fee_in_b);
+        //   var calcFee = (this.data.rate_bank_b * item.fee_ex_d) + item.fee_in_b;
+        //   console.log(calcFee , index);
+        //   var sum = 0;
+        //   var sumFee = item.detail.map((detail, indexDetail) => {
+        //     // console.log(detail, indexDetail);
+        //     sum += detail.value_fee_b
+        //   })
+        //   console.log(sum, index);
+        //   console.log(calcFee == sum);
+        // })
         if (check === true) {
           this.fire('toast', {
             status: 'openDialog',
