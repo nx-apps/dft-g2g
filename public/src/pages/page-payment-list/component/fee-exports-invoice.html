@@ -526,6 +526,20 @@
       riceSave: function () {
         var check = this.validateForm('.riceRequired');
         // console.log(this.data);
+        // console.log(this.data.rate_bank_b);
+        this.data.book.map((item, index) => {
+          // console.log(item, index);
+          // console.log(item.fee_ex_d, item.fee_in_b);
+          var calcFee = (this.data.rate_bank_b * item.fee_ex_d) + item.fee_in_b;
+          console.log(calcFee , index);
+          var sum = 0;
+          var sumFee = item.detail.map((detail, indexDetail) => {
+            // console.log(detail, indexDetail);
+            sum += detail.value_fee_b
+          })
+          console.log(sum, index);
+          console.log(calcFee = sum);
+        })
         if (check === true) {
           this.fire('toast', {
             status: 'openDialog',

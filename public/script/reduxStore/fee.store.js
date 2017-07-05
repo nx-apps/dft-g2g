@@ -70,13 +70,20 @@ export function feeAction(store) {
             this.fire('toast',{status:'load'});
             axios.post('./fee/insert', data)
             .then((response) =>{
+                var fee_id = response.data.fee.generated_keys[0];
                 this.fire('toast', {
                     status: 'success', text: 'บันทึกสำเร็จ',
                     callback: () => {
                         this.INVOICE_GET_LIST_DATA(contract_id);
                         this.BOOK_GET_LIST_DATA(contract_id);
                         this.FEE_GET_LIST_DATA({contract_id:contract_id,view:'view'});
-                        this._flipDrawerClose();
+                        this.FEE_GET_ID_DATA(fee_id);
+                        this.SET_STATE({
+                            isInsert: false,
+                            btnDisabled: true,
+                            inputRice: true,
+                            btnRice: true
+                        });
                     }
                 });
             })
@@ -98,8 +105,7 @@ export function feeAction(store) {
                         this.SET_STATE({
                             isInsert: false,
                             btnDisabled: true,
-                            riceInput: true,
-                            btnRice: true
+                            inputRice: true
                         });
                     }
                 });
