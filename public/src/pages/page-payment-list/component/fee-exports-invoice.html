@@ -9,74 +9,59 @@
     .flexchild-1 {
       @apply(--layout-flex);
     }
-
     .flexchild-2 {
       @apply(--layout-flex-2);
     }
-
     .flexchild-5 {
       @apply(--layout-flex-5);
     }
-
     .flex-center-justified {
       @apply(--layout-horizontal);
       @apply(--layout-center-justified);
     }
-
     .header {
       text-align: center;
     }
-
     .text {
       margin-top: 10px;
       margin-right: 10px;
     }
-
     .setText {
       font-weight: bold;
       font-size: 18px;
       color: #737373;
     }
-
     .inputHeader {
       width: 40%;
     }
-
     .container {
       padding: 10px;
     }
-
     table.default {
       border-collapse: collapse;
       width: 100%
     }
-
     table.default,
     th,
     td {
       border-bottom: 1px solid #ddd;
     }
-
     th,
     td {
       padding: 7px;
     }
-
     th {
       text-align: center;
       background-color: #F1F1F1;
       white-space: nowrap;
     }
-
     td {
       text-align: left;
       white-space: nowrap;
     }
-
     tr:hover {
       background-color: #F1F1F1;
     }
-
     gl-form-input.number {
       --paper-input-container-input: {
         text-align: right;
@@ -104,8 +89,6 @@
               <gl-form-input label="{{localize.fee_in}}" class="number required" required format-number="on" style="width:200px; margin-left:50px;"
                 value="{{item.fee_in_b}}" disabled="[[common.btnDisabled]]"></gl-form-input>
               [[_calcFeeInChange(item.fee_in_b, indexData)]]
-              <!--<div>{{localize.fee_out}} : [[item.fee_ex_d]]</div> 
-              <div>{{localize.fee_in}} : [[item.fee_in_b]]</div> -->
             </div>
           </div>
           <div style="overflow-x:auto;">
@@ -201,7 +184,6 @@
     </gl-form-panel>
 
     <div class="horizontal end-justified layout">
-      <!--[[contractId.contract_id]]-->
       <template is="dom-if" if="[[!common.btnDisabled]]">
         <paper-button raised class="gl-btn-default" on-tap="cancelFee" hidden="[[!common.isInsert]]">{{localize.reset_data}}</paper-button>
         <paper-button raised on-tap="addPayment" class="gl-btn-success" hidden="[[!common.isInsert]]">{{localize.add}}</paper-button>
@@ -249,12 +231,6 @@
           </template>
         </template>
       </template>
-
-      <!--<template is="dom-if" if="[[data.fin_status]]">
-        <template is="dom-if" if="[[common.btnDisabled]]">
-          <paper-button raised class="gl-btn-danger" on-tap="editFee" hidden="[[common.isInsert]]">{{localize.cancel}}{{localize.confirm}}</paper-button>
-        </template>
-      </template>-->
     </div>
 
   </template>
@@ -276,8 +252,7 @@
           statePath: 'commonState.setState'
         },
         contractId: {
-          statePath: 'commonState.contractId',
-          // observer: 'get'
+          statePath: 'commonState.contractId'
         },
       },
       behaviors: [ReduxBehavior, g2gLogicBehavior, ValidateFormBehavior],
@@ -323,9 +298,13 @@
       },
       _calcValueFeeB: function (fee_ex_d, rate_bank, fee_in_b, indexData, index) {
         if (rate_bank !== '') {
-          var countDetail = this.data.book[indexData].detail.length;
-          var calc_value_fee_b = ((parseFloat(fee_ex_d) * parseFloat(rate_bank)) + parseFloat(fee_in_b)) / countDetail;
-          this.set('data.book.' + indexData + '.detail.' + index + '.value_fee_b', calc_value_fee_b);
+          if(fee_ex_d !== '' && fee_in_b !== ''){
+            var countDetail = this.data.book[indexData].detail.length;
+            var calc_value_fee_b = ((parseFloat(fee_ex_d) * parseFloat(rate_bank)) + parseFloat(fee_in_b)) / countDetail;
+            this.set('data.book.' + indexData + '.detail.' + index + '.value_fee_b', calc_value_fee_b);
+          }else{
+            this.set('data.book.' + indexData + '.detail.' + index + '.value_fee_b', 0);
+          }
         } else {
           this.set('data.book.' + indexData + '.detail.' + index + '.value_fee_b', 0);
         }
