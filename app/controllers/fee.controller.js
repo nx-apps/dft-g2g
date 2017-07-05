@@ -1,42 +1,35 @@
 var async = require('async');
 exports.calc = function (req, res) {
     req.r.table('book').getAll(r.args(r.expr(req.query.book_id.split('_'))), { index: 'id' })
-        .merge(function (m) {
+        .map(function (m) {
             var ship = m.getField('ship');
-            return {
-                book_id: m('id'),
-                ship: ship.map(function (sm) {
-                    return sm('ship_name').add(' V.', sm('ship_voy'))
-                }),
-                value_b: 0,
-                value_fee_b: 0,
-                value_bal_b: 0,
-                value_tax_b: 0,
-                value_final_b: 0,
-                fee_ex_d: 0,
-                fee_in_b: 0
-            }
-        })
-        .without('id', 'creater', 'updater', 'date_created', 'date_updated', 'book_status')
-        // .pluck('book_id', 'invoice_no', 'cl_id', 'contract_id', 'invoice_date', 'cl_no', 'ship', 'ship_lot')
-        .orderBy('invoice_no')
-        .merge(function (m) {
-            return {
-                detail: r.table('book_detail').getAll(m('book_id'), { index: 'book_id' })
-                    .coerceTo('array')
-                    .merge(function (m2) {
-                        return {
-                            detail_id: m2('id'),
-                            value_b: 0,
-                            value_fee_b: 0,
-                            value_bal_b: 0,
-                            value_tax_b: 0,
-                            value_final_b: 0
-                        }
-                    }).without('id', 'creater', 'updater', 'date_created', 'date_updated')
-                // .pluck({ 'company': 'company_name_th' }, 'hamonize', 'hamonize_id',
-                // 'detail_id', 'net_weight', 'price_d', 'value_d')
-            }
+            return m.pluck('invoice_no', 'invoice_date', 'cl_id', 'cl_no', 'contract_id', 'contract_no', 'ship', 'ship_lot')
+                .merge({
+                    book_id: m('id'),
+                    ship: ship.map(function (sm) {
+                        return sm('ship_name').add(' V.', sm('ship_voy'))
+                    }),
+                    value_b: 0,
+                    value_fee_b: 0,
+                    value_bal_b: 0,
+                    value_tax_b: 0,
+                    value_final_b: 0,
+                    fee_ex_d: 0,
+                    fee_in_b: 0,
+                    detail: r.table('book_detail').getAll(m('id'), { index: 'book_id' })
+                        .coerceTo('array')
+                        .map(function (m2) {
+                            return m2.pluck('company', 'net_weight', 'price_d', 'value_d')
+                                .merge({
+                                    detail_id: m2('id'),
+                                    value_b: 0,
+                                    value_fee_b: 0,
+                                    value_bal_b: 0,
+                                    value_tax_b: 0,
+                                    value_final_b: 0
+                                })
+                        })
+                })
         })
         .orderBy('invoice_date')
         .run()
@@ -53,8 +46,8 @@ exports.insert = function (req, res) {
     var obj = r.expr(book)
         .eqJoin('book_id', r.table('book')).pluck('left', {
             right: [
-                'cl_id', 'cl_no', 'contract_id', 'invoice_date', 'invoice_no',
-                'cut_date', 'eta_date', 'etd_date', 'packing_date', 'product_date'
+                'cl_id', 'cl_no', 'contract_id', 'invoice_date', 'invoice_no'
+                //,'cut_date', 'eta_date', 'etd_date', 'packing_date', 'product_date'
             ]
         }).zip()
         .group(function (g) {
@@ -63,7 +56,7 @@ exports.insert = function (req, res) {
         .ungroup()
         .map(function (m) {
             var fee = r.table('fee').getAll(m('group')('cl_id'), { index: 'cl_id' }).coerceTo('array');
-            var fee_round = fee.filter(function (f) { return f('fee_date').date().eq(fee_date.date()) });
+            var fee_round = fee.filter(function (f) { return f('fee_date').eq(fee_date) });
             var book = m('reduction').merge(function (m2) {
                 return {
                     net_weight: m2('detail').sum('net_weight'),
@@ -72,8 +65,7 @@ exports.insert = function (req, res) {
                     value_fee_b: m2('detail').sum('value_fee_b'),
                     value_bal_b: m2('detail').sum('value_bal_b'),
                     value_tax_b: m2('detail').sum('value_tax_b'),
-                    value_final_b: m2('detail').sum('value_final_b'),
-                    cheque_status: false
+                    value_final_b: m2('detail').sum('value_final_b')
                 }
             });
             return m('group').merge({
@@ -115,7 +107,7 @@ exports.getByContractId = function (req, res) {
             invoice_no: m('book').getField('invoice_no').reduce(function (lf, rt) { return lf.add(',', rt) })
         }
     })
-        .pluck('id', 'cl_no', 'fee_no', 'fee_round', 'fee_date', 'net_weight',
+        .pluck('id', 'cl_id', 'cl_no', 'fee_no', 'fee_round', 'fee_date', 'net_weight',
         'value_d', 'rate_bank_b', 'value_b', 'value_fee_b', 'value_tax_b', 'value_final_b',
         'fin_status', 'rice_status', 'invoice_count', 'invoice_no')
         .orderBy('cl_no', 'fee_no', 'fee_round')
@@ -175,12 +167,12 @@ function updateFee(act, obj, res) {
                 return {
                     book: m('book').merge(function (m2) {
                         return {
-                            invoice_date: r.ISO8601(m2('invoice_date')).inTimezone('+07'),
-                            cut_date: r.ISO8601(m2('cut_date')).inTimezone('+07'),
-                            eta_date: r.ISO8601(m2('eta_date')).inTimezone('+07'),
-                            etd_date: r.ISO8601(m2('etd_date')).inTimezone('+07'),
-                            packing_date: r.ISO8601(m2('packing_date')).inTimezone('+07'),
-                            product_date: r.ISO8601(m2('product_date')).inTimezone('+07')
+                            invoice_date: r.ISO8601(m2('invoice_date')).inTimezone('+07')
+                            // cut_date: r.ISO8601(m2('cut_date')).inTimezone('+07'),
+                            // eta_date: r.ISO8601(m2('eta_date')).inTimezone('+07'),
+                            // etd_date: r.ISO8601(m2('etd_date')).inTimezone('+07'),
+                            // packing_date: r.ISO8601(m2('packing_date')).inTimezone('+07'),
+                            // product_date: r.ISO8601(m2('product_date')).inTimezone('+07')
                         }
                     })
                 }
@@ -256,7 +248,11 @@ exports.approve = function (req, res) {
             .update(updata)
             .run()
             .then(function (data) {
-                res.json(data);
+                if (updata.fee_status == true) {
+
+                } else {
+                    res.json(data);
+                }
             })
     } else {
         res.json('require field "id"');
