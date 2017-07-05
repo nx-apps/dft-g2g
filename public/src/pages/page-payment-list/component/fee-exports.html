@@ -170,8 +170,15 @@
               {{_balanceChangeBath(data.rate_bank_b,data.balanceLessFees)}} [[changeString2Num(data.*,'feeTotalWithOutUsd')]]
               [[changeString2Num(data.*,'totalbath')]] [[_balanceBath(data.balanceChangeBath,data.feeTotalWithOutUsd)]]
 
-              <fee-exports-invoice fee-ex="{{data.fee_ex_d}}" fee-in="{{data.fee_in_b}}" rate-bank="{{data.rate_bank_b}}" rate-tt="{{data.rate_tt_b}}"
-                invoice-index="[[_ObcountIndex(index)]]" invoice-page="[[data.invoicePage]]" is-input-disabled="[[common.btnDisabled]]"
+              <fee-exports-invoice 
+              fee-ex="{{data.fee_ex_d}}"
+              fee-in="{{data.fee_in_b}}"
+              calc-fee="{{calc_fee}}"
+              rate-bank="{{data.rate_bank_b}}"
+              rate-tt="{{data.rate_tt_b}}"
+              invoice-index="[[_ObcountIndex(index)]]" 
+              invoice-page="[[data.invoicePage]]" 
+              is-input-disabled="[[common.btnDisabled]]"
                 check-required="{{check_required}}"></fee-exports-invoice>
             </div>
           </gl-form-panel>
@@ -235,6 +242,7 @@
       calRep(rate_bank_b, fee_ex_d, fee_in_b) {
         if (rate_bank_b !== '' & fee_ex_d !== '' & fee_in_b !== '') {
           var calc_value_fee_b = ((parseFloat(rate_bank_b) * parseFloat(fee_ex_d)) + parseFloat(fee_in_b));
+          this.calc_fee = calc_value_fee_b;
           return calc_value_fee_b
         } else {
           return 0

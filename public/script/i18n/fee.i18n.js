@@ -1,7 +1,8 @@
 export const fee ={
     th:{
         rice_detail_and_payout:"รายละเอียดค่าข้าวและค่าใช้จ่ายส่งมอบ",
-        fee_no:"คิดค่าธรรมเนียมครั้งที่",
+        fee_no:"ครั้งที่",
+        additional:"เพิ่มเติม",
         fee_round:"รอบที่",
         received_date:"วันที่ได้รับเงิน",
         cal_no:"งวดที่",
