@@ -56,13 +56,13 @@
           <template is="dom-if" if="[[commonState.isInsert]]">
             <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,12]]">
               <div class="autocomplete-wrapper">
-                <gl-form-input id="bookNo" required class="required" label="{{localize.label_booking_no}}" always-float-label placeholder="{{localize.label_booking_no}}"
+                <gl-form-input id="bookNo" required class="required" label="{{localizeBook.booking_no}}" always-float-label placeholder="{{localizeBook.booking_no}}"
                   value="{{data.book_no}}" disabled="[[commonState.btnDisabled]]"></gl-form-input>
                 <paper-autocomplete-suggestions id="shipline-suggestions" for="bookNo" source="{{bookNo}}"></paper-autocomplete-suggestions>
               </div>
             </gl-grid-col>
             <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,8]]">
-              <gl-combo-box class="required" required id="company_id" label="{{localize.text_exporter_name}}" always-float-label item-label-path="label"
+              <gl-combo-box class="required" required id="company_id" label="{{localizeBook.exporter_name}}" always-float-label item-label-path="label"
                 disabled="[[commonState.btnDisabled]]" on-selected-item-changed="_getObjectcompany" item-value-path="company_taxno"
                 items="{{exporterList}}" value="{{data.company_taxno}}">
                 <template>
@@ -72,32 +72,32 @@
             </gl-grid-col>
 
             <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,8]]">
-              <gl-form-textarea rows="2" disabled label="{{localize.label_exporter_address}}" value="{{data.company.company_address_th}}  {{data.company.company_province_th}}"
+              <gl-form-textarea rows="2" disabled label="{{localizeBook.exporter_address}}" value="{{data.company.company_address_th}}  {{data.company.company_province_th}}"
                 always-float-label></gl-form-textarea>
             </gl-grid-col>
           </template>
           <template is="dom-if" if="[[!commonState.isInsert]]">
             <template is="dom-if" if="[[commonState.btnDisabled]]">
               <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,12]]">
-                <gl-form-input required class="required" label="{{localize.label_booking_no}}" always-float-label placeholder="{{localize.label_booking_no}}"
+                <gl-form-input required class="required" label="{{localizeBook.booking_no}}" always-float-label placeholder="{{localizeBook.booking_no}}"
                   value="{{data.book_no}}" disabled></gl-form-input>
               </gl-grid-col>
               <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,8]]">
-                <gl-form-input disabled label="{{localize.text_exporter_name}}" value="[{{data.company_taxno}}] {{data.company.company_name_th}}"
+                <gl-form-input disabled label="{{localizeBook.exporter_name}}" value="[{{data.company_taxno}}] {{data.company.company_name_th}}"
                   always-float-label></gl-form-input>
               </gl-grid-col>
               <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,8]]">
-                <gl-form-textarea rows="2" disabled label="{{localize.label_exporter_address}}" value="{{data.company.company_address_th}}  {{data.company.company_province_th}}"
+                <gl-form-textarea rows="2" disabled label="{{localizeBook.exporter_address}}" value="{{data.company.company_address_th}}  {{data.company.company_province_th}}"
                   always-float-label></gl-form-textarea>
               </gl-grid-col>
             </template>
             <template is="dom-if" if="[[!commonState.btnDisabled]]">
               <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,12]]">
-                <gl-form-input required class="required" label="{{localize.label_booking_no}}" always-float-label placeholder="{{localize.label_booking_no}}"
+                <gl-form-input required class="required" label="{{localizeBook.booking_no}}" always-float-label placeholder="{{localize.booking_no}}"
                   value="{{data.book_no}}" disabled="[[commonState.btnDisabled]]"></gl-form-input>
               </gl-grid-col>
               <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,8]]">
-                <gl-combo-box class="required" required id="company_id" label="{{localize.text_exporter_name}}" always-float-label item-label-path="label"
+                <gl-combo-box class="required" required id="company_id" label="{{localizeBook.exporter_name}}" always-float-label item-label-path="label"
                   disabled="[[commonState.btnDisabled]]" on-selected-item-changed="_getObjectcompany" item-value-path="company_taxno"
                   items="{{exporterList}}" value="{{data.company_taxno}}">
                   <template>
@@ -107,7 +107,7 @@
               </gl-grid-col>
 
               <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,8]]">
-                <gl-form-textarea rows="2" disabled label="{{localize.label_exporter_address}}" value="{{data.company.company_address_th}}  {{data.company.company_province_th}}"
+                <gl-form-textarea rows="2" disabled label="{{localizeBook.exporter_address}}" value="{{data.company.company_address_th}}  {{data.company.company_province_th}}"
                   always-float-label></gl-form-textarea>
               </gl-grid-col>
             </template>
@@ -115,14 +115,14 @@
       </gl-form-panel-body>
 
       <gl-form-panel-body>
-        <div class="title">รายละเอียดการส่งมอบ</div>
+        <div class="title">{{localizeBook.detail_sender}}</div>
       </gl-form-panel-body>
 
       <gl-form-panel-body>
         <gl-grid-row>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-            <gl-form-input disabled label="{{localize.label_confirmation_letter}}" value="[[dataForSelect.cl_no]]" always-float-label
-              hidden></gl-form-input>
+            <!--<gl-form-input disabled label="{{localize.label_confirmation_letter}}" value="[[dataForSelect.cl_no]]" always-float-label
+              hidden></gl-form-input>-->
           </gl-grid-col>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,12]]">
             <!--<gl-combo-box id="hamonize_id" label="{{localize.label_rice_type}}" item-label-path="type_rice_name_en" disabled="[[commonState.btnDisabled]]"
@@ -132,8 +132,8 @@
                   [[item.type_rice_name_en]]
                 </template>
               </gl-combo-box>-->
-            <gl-combo-box class="required" required disabled="[[commonState.btnDisabled]]" error-message="{{localize.label_error_rice_type}}"
-              placeholder="{{localize.label_rice_type}}" name="hamonize.hamonize_th" items="[[bookHamonizeList]]" label="{{localize.label_rice_type}}"
+            <gl-combo-box class="required" required disabled="[[commonState.btnDisabled]]" 
+              placeholder="{{localizeContract.rice_type}}" name="hamonize.hamonize_th" items="[[bookHamonizeList]]" label="{{localizeContract.rice_type}}"
               item-label-path="label" item-value-path="hamonize_id" value="{{data.hamonize_id}}" on-selected-item-changed="getObjectHamonize"
               on-value-changed="_typeRiceConfirm">
               <template>
@@ -143,7 +143,7 @@
           </gl-grid-col>
 
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,8]]">
-            <gl-combo-box id="package_id" label="{{localize.label_package}}" item-label-path="package_name_en" disabled="[[commonState.btnDisabled]]"
+            <gl-combo-box id="package_id" label="{{localizeCommon.packaging_type}}" item-label-path="package_name_en" disabled="[[commonState.btnDisabled]]"
               class="required" required on-selected-item-changed="_getObjectPackage" item-value-path="package_id" items="[[packageList]]"
               value="{{data.package_id}}" always-float-label>
               <template>
@@ -153,7 +153,7 @@
           </gl-grid-col>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
             [[_calPriceHamonize(data.hamonize_id,data.package_id,data.net_weight)]] [[changeString2Num(data.*,'net_weight')]]
-            <gl-form-input class="required" required allowed-pattern="[0-9||,||.]" format-number="on" label="{{localize.label_quantity}}"
+            <gl-form-input class="required" required allowed-pattern="[0-9||,||.]" format-number="on" label="{{localizeBook.bl_weight}}"
               value="{{data.net_weight}}" always-float-label disabled="[[commonState.btnDisabled]]">
               <!--<div suffix>/{{dataForSelect.type_rice_quantity_limit_max_label}}</div>-->
             </gl-form-input>
@@ -161,14 +161,14 @@
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
             [[changeString2Num(data.*,'num_of_container')]]
             <gl-form-input disabled="[[commonState.btnDisabled]]" required allowed-pattern="[0-9||,||.]" format-number="on" class="required"
-              label="{{localize.label_number_of_containers}}" always-float-label value="{{data.num_of_container}}"></gl-form-input>
+              label="{{localizeBook.number_of_containers}}" always-float-label value="{{data.num_of_container}}"></gl-form-input>
           </gl-grid-col>
           [[_getPackageForPrice(data.package_id,dataForSelect)]]
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-            <gl-form-input disabled label="{{localize.label_price_usd_mt}}" value="[[data.price_d]]" always-float-label></gl-form-input>
+            <gl-form-input disabled label="{{localizeBook.price_usd_mt}}" value="[[data.price_d]]" always-float-label></gl-form-input>
           </gl-grid-col>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-            <gl-form-input disabled label="{{localize.label_weight_sacks_gram_bag}}" value="[[data.package_weight_bag]]" always-float-label></gl-form-input>
+            <gl-form-input disabled label="{{localizeBook.weight_sacks_gram_bag}}" value="[[data.package_weight_bag]]" always-float-label></gl-form-input>
           </gl-grid-col>
 
 
@@ -176,19 +176,19 @@
             <gl-form-input disabled label="{{localize.label_marks}}" value="[[dataForSelect.buyer_masks]]" always-float-label></gl-form-input>
           </gl-grid-col>-->
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-            <gl-form-input disabled label="{{localize.label_quantity_bags}}" value="[[data.package_amount]]" always-float-label></gl-form-input>
+            <gl-form-input disabled label="{{localizeBook.quantity_bags}}" value="[[data.package_amount]]" always-float-label></gl-form-input>
           </gl-grid-col>
         </gl-grid-row>
 
         <gl-grid-row>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-            <gl-form-input disabled label="{{localize.label_gross_weight}}" value="[[data.gross_weight]]" always-float-label></gl-form-input>
+            <gl-form-input disabled label="{{localizeBook.gross_weight}}" value="[[data.gross_weight]]" always-float-label></gl-form-input>
           </gl-grid-col>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-            <gl-form-input disabled label="{{localize.label_net_weight}}" value="[[data.net_weight]]" always-float-label></gl-form-input>
+            <gl-form-input disabled label="{{localizeBook.net_weight}}" value="[[data.net_weight]]" always-float-label></gl-form-input>
           </gl-grid-col>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-            <gl-form-input disabled label="{{localize.label_tare_weight}}" value="[[data.tare_weight]]" always-float-label></gl-form-input>
+            <gl-form-input disabled label="{{localizeBook.tare_weight}}" value="[[data.tare_weight]]" always-float-label></gl-form-input>
           </gl-grid-col>
         </gl-grid-row>
       </gl-form-panel-body>
@@ -222,8 +222,14 @@
         // nylonLocalizeBehavior,
       ],
       properties: {
-        localize: {
-          statePath: 'i18n.g2g'
+        localizeBook : {
+          statePath: 'i18n.book'
+        },
+        localizeContract: {
+          statePath: 'i18n.contract'
+        },
+        localizeConfirmLetter: {
+          statePath: 'i18n.confirmLetter'
         },
         localizeCommon: {
           statePath: 'i18n.common'

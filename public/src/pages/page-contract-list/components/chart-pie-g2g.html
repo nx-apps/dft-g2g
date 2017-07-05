@@ -110,12 +110,12 @@
 
         </paper-button>
         <paper-button raised on-tap="listShipment">
-          {{localize.text_list_booking}}
+          {{localizeBook.list_vessel}}
         </paper-button>
-        <paper-button id="number" raised on-tap="listFee">{{localize.btn_fee_detail}}</paper-button>
+        <paper-button id="number" raised on-tap="listFee">{{localizeContract.fee}}</paper-button>
         <!--<paper-badge for="number" label="4">
           </paper-badge>-->
-        <paper-button raised on-tap="listPayment">{{localize.btn_payment}}</paper-button>
+        <paper-button raised on-tap="listPayment">{{localizeContract.payment}}</paper-button>
       </div>
     </paper-card>
 
@@ -135,6 +135,9 @@
         },
         localizeConfirmLetter: {
           statePath: 'i18n.confirmLetter'
+        },
+        localizeBook : {
+          statePath: 'i18n.book'
         },
         data: {
           type: Object,

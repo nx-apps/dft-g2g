@@ -55,8 +55,9 @@
     <iron-pages selected="{{pageSelected}}" attr-for-selected="name">
       <div name="list-of-booking">
         <!--<list-of-booking-exporter></list-of-booking-exporter>-->
-        <gl-combo-box id="cl_id" placeholder="งวดที่ (ยัง)" items="{{confirmLetterlist}}" item-label-path="label" label="งวดที่ (ยัง)"
-          item-value-path="id" on-value-changed="getShowByBook" value="{{cl_id}}" on-selected-item-changed="getObjectCl">
+        <gl-combo-box id="cl_id" placeholder="{{localizeConfirmLetter.ref_no}}" items="{{confirmLetterlist}}" item-label-path="label"
+          label="{{localizeConfirmLetter.ref_no}}" item-value-path="id" on-value-changed="getShowByBook" value="{{cl_id}}"
+          on-selected-item-changed="getObjectCl">
           <template>
             [[item.label]]
           </template>
@@ -64,15 +65,15 @@
         <gl-form-panel set-padding="10px 20px 10px 20px" set-border="1px">
           <gl-form-panel-head set-padding="10px" set-border="1px">
 
-            <div class="addconfirm horizontal end-justified layout">
+            <!--<div class="addconfirm horizontal end-justified layout">
               <template is="dom-if" if={{clClose}}>
                 <div class="title-ber" hidden="[[_isSeleted(cl_id)]]">
                   ปิดบัญชี {{setTextCl}}
                 </div>
               </template>
+</div>-->
+            <paper-button raised class="gl-btn-primary" disabled="[[_isSeleted(cl_id)]]" on-tap="createBooking" hidden="{{clClose}}">{{localizeBook.add_booking}}</paper-button>
 
-              <paper-button raised class="gl-btn-primary" disabled="[[_isSeleted(cl_id)]]" on-tap="createBooking" hidden="{{clClose}}">{{localize.btn_add_booking}}</paper-button>
-            </div>
 
           </gl-form-panel-head>
           <br>
@@ -83,10 +84,10 @@
           <table class="gl-table-default">
             <thead class="table-head">
               <tr>
-                <th>{{localize.label_lot_no}}</th>
-                <th>{{localize.label_port_of_destination}}</th>
-                <th>{{localize.label_place_of_delivery}}</th>
-                <th>{{localize.label_action}}</th>
+                <th>{{localizeBook.lot_no}}</th>
+                <th>{{localizeBook.port_of_destination}}</th>
+                <th>{{localizeBook.place_of_delivery}}</th>
+                <th>{{localizeCommon.action}}</th>
               </tr>
             </thead>
             <tbody class="table-body">
@@ -138,11 +139,17 @@
         nylonBehavior, FormatNumberBehavior, g2gLogicBehavior, ValidateFormBehavior
       ],
       properties: {
-        localize: {
-          statePath: 'i18n.g2g'
+        localizeBook: {
+          statePath: 'i18n.book'
+        },
+        localizeContract: {
+          statePath: 'i18n.contract'
         },
         localizeCommon: {
           statePath: 'i18n.common'
+        },
+        localizeConfirmLetter: {
+          statePath: 'i18n.confirmLetter'
         },
         pageSelected: {
           type: String,
@@ -245,7 +252,7 @@
         },
         ])
         this.dispatchAction('GET_BOOK_DETAIL', this.genUrl(url))
-        
+
         this.async(() => {
           this.fire('toast', {
             status: 'success', text: 'โหลดสำเร็จ', callback: () => {

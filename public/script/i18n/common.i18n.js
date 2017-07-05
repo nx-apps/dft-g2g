@@ -13,7 +13,7 @@ export const common = {
         save: "บันทึก",
         confirm: "ยืนยัน",
         cancer_confirm: "ยกเลิกการยืนยัน",
-
+        action:'กระทำการ',
         price: 'ราคา',
         usd_ton: "(USD/ตัน)",
         kk_sack: "(กก./กระสอบ)",
@@ -25,8 +25,10 @@ export const common = {
         no_data: "ไม่มีข้อมูล",
         error_input: "กรุณากรอก",
         error_dropdown: "กรุณาเลือก",
-        print:"พิมพ์",
+        print:"รายงาน",
+        report_type:"รูปแบบรายงาน",
 
+        
         save_succeed:"บันทึกสำเร็จ",
         delete_succeed:"ลบสำเร็จ",
         toast_edit:"ต้องการแก้ข้อมูลใช่หรือไม่",
