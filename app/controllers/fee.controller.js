@@ -46,12 +46,17 @@ exports.calc = function (req, res) {
 }
 exports.insert = function (req, res) {
     var book = req.body.book;
-    var detail = req.body.detail;
+    // var detail = req.body.detail;
     var rate_bank = parseFloat(req.body.rate_bank_b);
     var rate_tt = parseFloat(req.body.rate_tt_b);
     var fee_date = r.ISO8601(req.body.fee_date).inTimezone('+07');
     var obj = r.expr(book)
-        .eqJoin('book_id', r.table('book')).pluck('left', { right: ['cl_id', 'cl_no', 'contract_id', 'invoice_date', 'invoice_no'] }).zip()
+        .eqJoin('book_id', r.table('book')).pluck('left', {
+            right: [
+                'cl_id', 'cl_no', 'contract_id', 'invoice_date', 'invoice_no',
+                'cut_date', 'eta_date', 'etd_date', 'packing_date', 'product_date'
+            ]
+        }).zip()
         .group(function (g) {
             return g.pluck('cl_id', 'cl_no', 'contract_id')
         })
@@ -170,7 +175,12 @@ function updateFee(act, obj, res) {
                 return {
                     book: m('book').merge(function (m2) {
                         return {
-                            invoice_date: r.ISO8601(m2('invoice_date')).inTimezone('+07')
+                            invoice_date: r.ISO8601(m2('invoice_date')).inTimezone('+07'),
+                            cut_date: r.ISO8601(m2('cut_date')).inTimezone('+07'),
+                            eta_date: r.ISO8601(m2('eta_date')).inTimezone('+07'),
+                            etd_date: r.ISO8601(m2('etd_date')).inTimezone('+07'),
+                            packing_date: r.ISO8601(m2('packing_date')).inTimezone('+07'),
+                            product_date: r.ISO8601(m2('product_date')).inTimezone('+07')
                         }
                     })
                 }
