@@ -77,7 +77,7 @@
             <tr data="[[item]]" on-tap="getFeeDetail">
               <td><div style="text-align:right;">{{item.cl_no}}</div></td>
               <td>[[item.fee_no]]</td>
-              <td>[[countRound(item.fee_round)]]</td>
+              <td>[[obRound(item.fee_round)]]</td>
               <td><div style="text-align:left;">[[item.invoice_no]]</div></td>
               <td>[[item.invoice_count]]</td>
               <td>[[formatNumber(item.value_b)]]</td>
@@ -132,8 +132,10 @@
       getFeeDetail: function (e) {
         this.fire('get-fee-detail', { detail: e.currentTarget.data });
       },
-      countRound: function(data){
-        return data+1;
+      obRound: function(data){
+        if(data == 0){
+          return ''
+        }
       }
     });
   </script>

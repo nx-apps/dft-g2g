@@ -300,7 +300,7 @@ export function bookAction(store) {
                         callback: () => {
                             this.INVOICE_GET_LIST_DATA(data.contract_id);
                             this.BOOK_GET_LIST_DATA(data.contract_id);
-                            this.FEE_GET_LIST_DATA(data.contract_id);
+                            this.FEE_GET_LIST_DATA({contract_id:data.contract_id,view:'view'});
                             this._flipDrawerClose();
                         }
                     });
