@@ -108,10 +108,6 @@
               [[_calcFeeInChange(item.fee_in_b, indexData)]]
               <gl-form-input label="{{localize.fee_total}} ({{localize.baht}})" class="number" format-number="on" style="width:200px; margin-left:50px;"
                 value="[[obCalcFee(rateBank, item.fee_ex_d, item.fee_in_b, indexData)]]" disabled></gl-form-input>
-              
-              
-              <gl-form-input label="{{localize.fee_total}} ({{localize.baht}})" class="number" format-number="on" style="width:200px; margin-left:50px;"
-                value="[[obCalcFeeTest(rateBank, item.fee_ex_d, item.fee_in_b, indexData)]]" disabled></gl-form-input>
             </div>
           </div>
           <div style="overflow-x:auto;">
@@ -145,7 +141,9 @@
                     <gl-form-input class="number" format-number="on" style="width:140px;" value="{{item2.value_b}}" disabled></gl-form-input>
                   </td>
                   <td>
-                    [[changeString2Num(item2.*,'value_fee_b')]] [[_calcValueFeeB(item.fee_ex_d, rateBank, item.fee_in_b, indexData, index)]]
+                    [[changeString2Num(item2.*,'value_fee_b')]]
+                    <!--[[_calcValueFeeB(item.fee_ex_d, rateBank, item.fee_in_b, indexData, index)]]-->
+                    [[_calcValueFeeB(item.feeDetail_avg, indexData, index)]]
                     <gl-form-input class="riceRequired" required style="text-align:right;" format-number="on" value="{{item2.value_fee_b}}" disabled="[[common.inputRice]]"></gl-form-input>
                   </td>
                   [[changeString2Num(item2.*,'value_bal_b')]]
@@ -290,14 +288,21 @@
             in: 0,
             ex: 0
           }
+        },
+        sumFeeDetail:{
+          type: Number,
+          value: 0
+        },
+        oldFeeDetail:{
+          type: Number,
+          value: 0
         }
       },
       behaviors: [ReduxBehavior, g2gLogicBehavior, ValidateFormBehavior, FormatNumberBehavior],
       obCalcFee: function (rateBank, fee_ex_d, fee_in_b, indexData) {
-        return Number((Number(rateBank) * Number(fee_ex_d)) + Number(fee_in_b)).toFixed(2)
-      },
-      obCalcFeeTest: function (rateBank, fee_ex_d, fee_in_b, indexData) {
-        return (Number(rateBank) * Number(fee_ex_d)) + Number(fee_in_b)
+        var feeDetail_avg = Number(Number((Number(rateBank) * Number(fee_ex_d)) + Number(fee_in_b)).toFixed(2));
+        this.set('data.book.'+ indexData + '.feeDetail_avg', feeDetail_avg);
+        return feeDetail_avg
       },
       _calcFeeAvg: function (type, fee, index) {
         fee = Number(Number(fee).toFixed(2));
@@ -316,7 +321,29 @@
           fee_avg = fee_avg + div;
         }
         this.set('sumFee.' + type, Number(this.sumFee[type]) + Number((fee_avg).toFixed(2)));
-        return fee_avg;
+        return Number(fee_avg);
+      },
+      _calcFeeDetailAvg: function(feeDetail, indexData){
+        feeDetail = Number(Number(feeDetail).toFixed(2));
+        if(this.oldFeeDetail != feeDetail){
+          this.set('sumFeeDetail', 0);
+          this.set('oldFeeDetail', feeDetail);
+        }
+        var count = this.data.book[indexData].detail.length;
+        var feeDetail_avg = Number((feeDetail / count).toFixed(2)); //จำนวน
+        var sum = this.sumFeeDetail + feeDetail_avg;
+
+        if(Number((this.sumFeeDetail + feeDetail_avg).toFixed(2)) > feeDetail){
+          var div = sum - feeDetail;
+          feeDetail_avg = feeDetail_avg - div;
+        }
+        if(Number((this.sumFeeDetail + feeDetail_avg).toFixed(2)) < feeDetail && (indexData +1) == count){
+          var div = feeDetail - sum;
+          feeDetail_avg = feeDetail_avg + div;
+        }
+        this.set('sumFeeDetail', Number((feeDetail_avg).toFixed(2)));
+        return Number(feeDetail_avg)
+        
       },
       _calcfeeEx: function (fee, index) {
         if (typeof this.data.book !== 'undefined') {
@@ -329,7 +356,7 @@
       },
       _calcFeeExChange: function (fee, index) {
         var changeFee = parseFloat(fee).toFixed(2);
-        this.set('data.book.' + index + '.fee_ex_d', changeFee);
+        this.set('data.book.' + index + '.fee_ex_d', Number(changeFee));
       },
       _calcfeeIn: function (fee, index) {
         if (typeof this.data.book !== 'undefined') {
@@ -343,7 +370,7 @@
       },
       _calcFeeInChange: function (fee, index) {
         var changeFee = parseFloat(fee).toFixed(2);
-        this.set('data.book.' + index + '.fee_in_b', changeFee);
+        this.set('data.book.' + index + '.fee_in_b', Number(changeFee));
       },
       _obArrayShip: function (ships) {
         return ships.join()
@@ -356,18 +383,22 @@
           this.set('data.book.' + indexData + '.detail.' + index + '.value_b', 0);
         }
       },
-      _calcValueFeeB: function (fee_ex_d, rate_bank, fee_in_b, indexData, index) {
-        if (rate_bank !== '') {
-          if (fee_ex_d !== '' && fee_in_b !== '') {
-            var countDetail = this.data.book[indexData].detail.length;
-            var calc_value_fee_b = ((parseFloat(fee_ex_d) * parseFloat(rate_bank)) + parseFloat(fee_in_b)) / countDetail;
-            this.set('data.book.' + indexData + '.detail.' + index + '.value_fee_b', calc_value_fee_b);
-          } else {
-            this.set('data.book.' + indexData + '.detail.' + index + '.value_fee_b', 0);
-          }
-        } else {
-          this.set('data.book.' + indexData + '.detail.' + index + '.value_fee_b', 0);
-        }
+      _calcValueFeeB: function (feeDetail, indexData, index) {
+        var calc_value_fee_b = this._calcFeeDetailAvg(feeDetail, indexData);
+        this.set('data.book.' + indexData + '.detail.' + index + '.value_fee_b', calc_value_fee_b);
+
+        // if (rate_bank !== '') {
+        //   console.log(this.data);
+        //   if (fee_ex_d !== '' && fee_in_b !== '') {
+            // var countDetail = this.data.book[indexData].detail.length;
+        //     var calc_value_fee_b = ((parseFloat(fee_ex_d) * parseFloat(rate_bank)) + parseFloat(fee_in_b)) / countDetail;
+        //     this.set('data.book.' + indexData + '.detail.' + index + '.value_fee_b', calc_value_fee_b.toFixed(2));
+        //   } else {
+        //     this.set('data.book.' + indexData + '.detail.' + index + '.value_fee_b', 0);
+        //   }
+        // } else {
+        //   this.set('data.book.' + indexData + '.detail.' + index + '.value_fee_b', 0);
+        // }
       },
       _calcValueBalB: function (value_b, value_fee_b, indexData, index) {
         var calc_value_bal_b = parseFloat(value_b) - parseFloat(value_fee_b);
