@@ -13,8 +13,9 @@
 <link rel="import" href="./component/commercial-invoice.html">
 <link rel="import" href="./component/list-of-fee.html">
 <!--<link rel="import" href="./component/list-of-fee-detail.html">-->
-<!--<link rel="import" href="./component/list-of-cheque.html">
-<link rel="import" href="./component/list-of-payments.html">
+<link rel="import" href="./component/list-of-cheque.html">
+<link rel="import" href="./component/cheque-detail.html">
+<!--<link rel="import" href="./component/list-of-payments.html">
 <link rel="import" href="./component/list-of-history.html">
 <link rel="import" href="./component/cheque-detail.html">
 <link rel="import" href="./component/payment-detail.html">
@@ -214,7 +215,7 @@
                             is-view-seleted="[[!isViewSeleted]]"></list-of-fee-detail>
                     </div>
                     <div name="chequePage">
-                        <cheque-detail data="[[dataSelected.cheque]]"></cheque-detail>
+                        <cheque-detail></cheque-detail>
                     </div>
                     <div name="paymentDetail">
                         <payment-detail data="[[dataSelected.paymentDetail]]" data-silo="[[dataSelected.silo]]" data-for-select="[[dataForSelect]]"></payment-detail>
@@ -247,7 +248,7 @@
                 // 'get-fee-list-in-shm-event': '_getFeeListInShmEvent',
                 'get-fee-detail': '_getFeeDetail',
                 // 'get-Cheque-list': '_getChequeListFire',
-                // 'get-cheque-detail': '_getChequeDetail',
+                'get-cheque-detail': '_getChequeDetail',
                 // 'get-payment-list': '_getPaymentsFire',
                 // 'get-history-payment-list': '_getHistoryListFire',
                 // 'get-payment-detail': '_getPaymentDetail',
@@ -341,10 +342,10 @@
             _countRoundFee: function(val){
                 return val+1
             },
-            // _getChequeDetail: function (e) {
-            //     // console.log(e.detail.detail.fee_no);
-            //     this.titlePanelRight = 'เช็ค'
-            //     this.fire('toast', { status: 'load' });
+            _getChequeDetail: function (e) {
+                console.log(e.detail.detail);
+                this.titlePanelRight = 'เช็ค'
+                // this.fire('toast', { status: 'load' });
             //     this.read('./g2g/payment/fee/id/' + e.detail.detail.fee_id, (data) => {
             //     // console.log(data);
             //     this.set('dataSelected.cheque', data);
@@ -360,7 +361,7 @@
             //     ]
             //     this.setBreadcrumbs(datass)
             //     // console.log('lll=>',this.dataSelected.cheque);
-            //     this.paymentsPageSeleted = 'chequePage';
+                this.paymentsPageSeleted = 'chequePage';
             //     if (this.checkRenderPage.chequeDetail != true) {
             //         this.async(() => {
             //         this.importHref(
@@ -368,7 +369,7 @@
             //             () => {
             //             this.async(() => {
             //                 this.fire('toast', { status: 'load' });
-            //                 this._flipDrawer();
+                            this._flipDrawer();
             //                 this.checkRenderPage.chequeDetail = true;
             //             }, 500)
             //             }, null, true
@@ -381,7 +382,7 @@
             //         }, 500)
             //     }
             //     });
-            // },
+            },
             // _getPaymentDetail: function (e) {
             //     // console.log(e.detail.detail);
             //     this.set('dataSelected.paymentDetail', e.detail.detail);

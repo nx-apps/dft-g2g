@@ -8,41 +8,41 @@
      :host {
       display: block;
     }
-    
+
     * {
       font-family: 'CSChatThaiUI', sans-serif;
       -webkit-font-smoothing: antialiased;
     }
-    
+
     .labelSearch {
       font-size: var(--font-size-h4);
       margin: 10px 10px 10px 10px;
     }
-    
+
     .table-body>tr>td {
       cursor: pointer;
     }
-    
+
     .title {
       margin: 16px;
       text-align: left;
       font-size: var(--font-size-h4);
     }
-    
+
     table.gl-table-default {
       width: 98%;
       border: 1px solid #ddd;
       margin-bottom: 15px;
     }
-    
+
     table.gl-table-default>thead.table-head>tr>th {
       text-align: center;
     }
-    
+
     table.gl-table-default>thead.table-head>tr>th:nth-child(1) {
-      width: 20%;
+      width: 10%;
     }
-    
+
     table.gl-table-default>tbody.table-body>tr>td:not(:first-child) {
       text-align: right;
     }
@@ -62,24 +62,33 @@
       <table class="gl-table-default">
         <thead class="table-head">
           <tr>
-            <th>{{localize.text_fee_no}}</th>
-            <th>{{localize.label_total_money}}</th>
-            <th>{{localize.label_total_payed}}</th>
-            <th>{{localize.label_balance_money}}</th>
-            <th style="width:10%">Print</th>
+            <th>
+              <paper-checkbox on-tap="_selectDataAll" checked="{{selectDataAll}}"></paper-checkbox>{{localize.select}}</th>
+            <th>งวดที่ (ยัง)</th>
+            <th>ครั้งที่ (ยัง)</th>
+            <th>เหลือบริษัท (ยัง)</th>
+            <!--<th style="width:10%">Print</th>-->
           </tr>
         </thead>
         <tbody class="table-body">
           <template is="dom-repeat" items="[[newData]]">
-            <tr  level="primary">
-              <td data="[[item]]" on-tap="getChequeDetail">[[item.fee_no]]</td>
-              <td data="[[item]]" on-tap="getChequeDetail">[[formatNumber(item.baht_net_value)]]</td>
-              <td data="[[item]]" on-tap="getChequeDetail">[[formatNumber(item.baht_pay_value)]]</td>
-              <td data="[[item]]" on-tap="getChequeDetail">[[formatNumber(item.baht_balance_value)]]</td>
-              <td>
+            <!--<template is="dom-if" if="[[item.status]]">
+              <tr level="primary" style="background-color: #F1F1F1;">
+            </template>
+            <template is="dom-if" if="[[!item.status]]">
+              <tr level="primary">
+            </template>-->
+            <tr level="primary" style="{{checkStatus(item.status)}}">
+              <td data="[[item]]">
+                <paper-checkbox data="{{item}}" disabled=[[item.status]] checked="{{item.check}}"></paper-checkbox>
+              </td>
+              <td data="[[item]]">[[item.fee_round]]</td>
+              <td data="[[item]]">[[item.fee_no]]</td>
+              <td data="[[item]]">[[item.total_company]]</td>
+              <!--<td>
                 <paper-icon-button id="printCheque" data="[[item]]" class="crud" icon="print" raised on-tap="getCheque" hidden="[[!data.shm_status]]"></paper-icon-button>
-                  <paper-tooltip for="printCheque" offset="0">{{localize.label_send_report}}</paper-tooltip>
-                </td> 
+                <paper-tooltip for="printCheque" offset="0">{{localize.label_send_report}}</paper-tooltip>
+              </td>-->
             </tr>
           </template>
           <template is="dom-if" if="[[_isHave(newData)]]">
@@ -90,6 +99,10 @@
         </tbody>
       </table>
     </div>
+    <div class="btnMoney">
+      <paper-button class="gl-btn-success" raised on-tap="getChequeDetail">กด (ยัง)</paper-button>
+    </div>
+
   </template>
   <script>
     Polymer({
@@ -102,16 +115,78 @@
         // nylonLocalizeBehavior,
       ],
       properties: {
-        localize:{
-          statePath : 'i18n.g2g'
+        localize: {
+          statePath: 'i18n.g2g'
         },
+        // newData: {
+        //   type: Object
+        // }
         newData: {
-          type: Object
+          type: Array,
+          value: [
+            {
+              check: false,
+              fee_round: 1,
+              fee_no: 1,
+              total_company: 2,
+              status: false
+            },
+            {
+              check: false,
+              fee_round: 1,
+              fee_no: 2,
+              total_company: 3,
+              status: false
+            },
+            {
+              check: false,
+              fee_round: 2,
+              fee_no: 1,
+              total_company: 4,
+              status: false
+            },
+            {
+              check: false,
+              fee_round: 2,
+              fee_no: 2,
+              total_company: 5,
+              status: false
+            },
+            {
+              check: false,
+              fee_round: 2,
+              fee_no: 3,
+              total_company: 6,
+              status: false
+            },
+            {
+              check: false,
+              fee_round: 1,
+              fee_no: 3,
+              total_company: 0,
+              status: true
+            },
+          ]
         }
       },
       observers: [
         'initDatabl(data)'
       ],
+      _selectDataAll: function (val) {
+        try {
+          this.newData.map((item, index) => {
+            if(item.status === false)
+               this.set('newData.' + index + '.check', this.selectDataAll);
+          });
+        } catch (error) {
+
+        }
+      },
+      checkStatus: function(status){
+        if(status) return 'background-color: #F1F1F1;'
+        return ''
+        // console.log(status)
+      },
       // created: function () {
       //   this.nylonLocalizeImport('/i18n-page1.json');
       // },
@@ -135,10 +210,12 @@
       //     this.initDatabl(this.data);
       //   }
       // },
-      // getChequeDetail: function (e) {
-      //   // console.log(e.currentTarget.data);
-      //   this.fire('get-cheque-detail', { detail: e.currentTarget.data });
-      // },
+      getChequeDetail: function (e) {
+        // console.log(e.currentTarget.data);
+        let getData = this.newData.filter((item) => item.check === true)
+        // console.log(getData)
+        this.fire('get-cheque-detail', { detail: getData });
+      },
       // getCheque: function (e) {
       //   // console.log(e.currentTarget.data);
       //   window.open(window._config.reportServer+'/api/payment/report10/' + e.currentTarget.data.fee_id, '1');
