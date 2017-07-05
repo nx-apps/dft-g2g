@@ -10,11 +10,13 @@
 <link rel="import" href="./../../../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="./../../../../bower_components/vaadin-date-picker/vaadin-date-picker.html">
 <link rel="import" href="./../../../../bower_components/gl-form/gl-form-panel-footer.html">
+<link rel="import" href="./../../../layout/shared-styles.html">
 <link rel="import" href="./../../components/validateFormBehaviors.html">
 <link rel="import" href="./../../components/format-number-behavior.html">
 <link rel="import" href="./../../components/g2g-logic-behavior.html">
+
 <dom-module id="booking-detail">
-  <style include="iron-flex iron-flex-factors iron-flex-alignment gl-styles page-style">
+  <style include="iron-flex iron-flex-factors iron-flex-alignment shared-styles">
     * {
       font-family: 'CSChatThaiUI', sans-serif;
       -webkit-font-smoothing: antialiased;
@@ -46,9 +48,9 @@
       <template is="dom-if" if="[[!data.book_status]]">
         <div class="horizontal end-justified layout">
           <paper-icon-button id="editConfirm" class="crud" icon="create" raised on-tap="editBook"></paper-icon-button>
-          <paper-tooltip for="editConfirm" offset="0">Edit Booking</paper-tooltip>
+          <paper-tooltip for="editConfirm" offset="0">{{localizeCommon.edit}}</paper-tooltip>
           <paper-icon-button id="deleteConfirm" class="crud" icon="delete" raised on-tap="deleteBooking"></paper-icon-button>
-          <paper-tooltip for="deleteConfirm" offset="0">Delete Booking</paper-tooltip>
+          <paper-tooltip for="deleteConfirm" offset="0">{{localizeCommon.delete}}</paper-tooltip>
         </div>
       </template>
       <!--</template>-->
@@ -259,21 +261,21 @@
       <div class="horizontal end-justified layout">
 
         <template is="dom-if" if="[[commonState.isInsert]]">
-          <paper-button class="gl-btn-default" raised on-tap="cancelInsertShipment"> {{localize.btn_back_ward}}</paper-button>
-          <paper-button class="gl-btn-primary" on-tap="insertBook" raised>{{localize.btn_add}}</paper-button>
+          <paper-button class="gl-btn-default" raised on-tap="cancelInsertShipment"> {{localizeCommon.back_ward}}</paper-button>
+          <paper-button class="gl-btn-primary" on-tap="insertBook" raised>{{localizeCommon.add}}</paper-button>
 
         </template>
         <template is="dom-if" if="[[!commonState.isInsert]]">
-          <paper-button class="gl-btn-default" on-tap="cancelBook" raised hidden="[[commonState.btnDisabled]]">{{localize.btn_cancel}}</paper-button>
-          <paper-button class="gl-btn-success" on-tap="saveBook" raised hidden="[[commonState.btnDisabled]]">{{localize.btn_save}}</paper-button>
+          <paper-button class="gl-btn-default" on-tap="cancelBook" raised hidden="[[commonState.btnDisabled]]">{{localizeCommon.cancel}}</paper-button>
+          <paper-button class="gl-btn-success" on-tap="saveBook" raised hidden="[[commonState.btnDisabled]]">{{localizeCommon.save}}</paper-button>
         </template>
         <template is="dom-if" if="[[commonState.btnDisabled]]">
-          <paper-button class="gl-btn-default" raised on-tap="cancelInsertShipment"> {{localize.btn_back_ward}}</paper-button>
-          <paper-button class="gl-btn-info" raised on-tap="confirmDrawer" hidden="[[data.book_status]]">{{localize.btn_confirm}}</paper-button>
+          <paper-button class="gl-btn-default" raised on-tap="cancelInsertShipment"> {{localizeCommon.back_ward}}</paper-button>
+          <paper-button class="gl-btn-info" raised on-tap="confirmDrawer" hidden="[[data.book_status]]">{{localizeCommon.confirm}}</paper-button>
         </template>
 
         <template is="dom-if" if="[[data.book_status]]">
-          <paper-button class="gl-btn-danger  " raised on-tap="cancelconfirmDrawer" hidden="[[data.invoice_status]]">ยกเลิกการยืนยัน</paper-button>
+          <paper-button class="gl-btn-danger  " raised on-tap="cancelconfirmDrawer" hidden="[[data.invoice_status]]">{{localizeCommon.cancer_confirm}}</paper-button>
         </template>
       </div>
   </template>
@@ -297,6 +299,9 @@
         // },
         localize: {
           statePath: 'i18n.g2g'
+        },
+        localizeCommon: {
+          statePath: 'i18n.common'
         },
         commonState: {
           statePath: 'commonState.setState'
@@ -493,11 +498,11 @@
               this.data.ship[index].ship_id = name.ship_id
 
           }
-          dataResive.cut_date = new Date(dataResive.cut_date)
-          dataResive.eta_date = new Date(dataResive.eta_date)
-          dataResive.etd_date = new Date(dataResive.etd_date)
-          dataResive.packing_date = new Date(dataResive.packing_date)
-          dataResive.product_date = new Date(dataResive.product_date)
+          dataResive.cut_date = dataResive.cut_date+ 'T00:00:00+07:00'
+          dataResive.eta_date = dataResive.eta_date+ 'T00:00:00+07:00'
+          dataResive.etd_date = dataResive.etd_date+ 'T00:00:00+07:00'
+          dataResive.packing_date = dataResive.packing_date+ 'T00:00:00+07:00'
+          dataResive.product_date = dataResive.product_date+ 'T00:00:00+07:00'
           dataResive.shipline = this.dataShow.shipline
           dataResive.notify_party = this.dataShow.notify
           dataResive.surveyor = this.dataShow.surveyor
@@ -645,7 +650,7 @@
             if (result == true) {
               this._resiveFormBook()
                 .then((res) => {
-                  // console.log(data);
+                  console.log(res);
                   this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
                   this.dispatchAction('PUT_BOOK', res)
                     .then((response) => {

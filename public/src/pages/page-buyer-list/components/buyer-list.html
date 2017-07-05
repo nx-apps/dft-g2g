@@ -67,7 +67,7 @@
                 </div>
                 <div class="foot-meterial ">
                     <div class="horizontal end-justified layout ">
-                        <paper-button raised class="" data="[[data]]" on-tap="getContractList" class="gl-bg-primary">ดูข้อมูล</paper-button>
+                        <paper-button raised class="" data="[[data]]" on-tap="getContractList" class="gl-bg-primary">{{localizeCommon.detail}}</paper-button>
                     </div>
                 </div>
 
@@ -83,6 +83,9 @@
                 page: {
                     type: Number,
                     value: 0
+                },
+                localizeCommon: {
+                    statePath: 'i18n.common'
                 },
                 title: {
                     type: String,

@@ -83,9 +83,9 @@
         <template is="dom-if" if="[[!commonState.isInsert]]">
           <div class="horizontal end-justified layout">
             <paper-icon-button id="edit" class="crud" icon="create" raised on-tap="editConfirm" disabled="[[!commonState.btnDisabled]]"></paper-icon-button>
-            <paper-tooltip for="edit" offset="0">แก้ไข</paper-tooltip>
+            <paper-tooltip for="edit" offset="0">{{localizeCommon.edit}}</paper-tooltip>
             <paper-icon-button id="delete" class="crud" icon="delete" raised on-tap="deleteConfirm" disabled="[[!commonState.btnDisabled]]"></paper-icon-button>
-            <paper-tooltip for="delete" offset="0">ลบ</paper-tooltip>
+            <paper-tooltip for="delete" offset="0">{{localizeCommon.delete}}</paper-tooltip>
           </div>
         </template>
       </template>
@@ -187,8 +187,9 @@
 
                       <gl-combo-box id="package-[[index]]-[[indexpackeage]]" index="[[index]]" indexpackeage=[[indexpackeage]] class="required InTable"
                         required disabled="[[commonState.btnDisabled]]" error-message="{{localize.label_error_package}}" placeholder="{{localize.label_package}}"
-                        item-label-path="package_name_th" item-value-path="package_id" value="{{packageitem.package_id}}" on-selected-item-changed="getObjectPackeage"
+                        item-label-path="package_name_th" item-value-path="package_id" value="{{packageitem.package_id}}" 
                         on-value-changed="_typePackageConfirm">
+                        <!--on-selected-item-changed="getObjectPackeage"-->
                         <template>
                           [[item.package_name_th]]
                         </template>
@@ -207,7 +208,7 @@
                     <td style="text-align:center;">
                       <paper-button id-packeage="[[indexpackeage]]" id-table="[[index]]" raised class="btnInTable gl-btn-danger" on-tap="delePackage"
                         hidden="[[commonState.btnDisabled]]" disabled="[[_isHaveForDelete(item.package,item.package.*)]]">
-                        <iron-icon icon="remove"></iron-icon>{{localize.btn_delete}}</paper-button>
+                        <iron-icon icon="remove"></iron-icon>{{localizeCommon.delete}}</paper-button>
                     </td>
                   </tr>
                 </template>
@@ -255,22 +256,22 @@
       <gl-grid-row>
         <div class="horizontal start-justified layout">
           <paper-button raised class="gl-btn-primary" on-tap="addincoterms" hidden="[[commonState.btnDisabled]]" disabled="[[!_isHaveForUse(data.incoterms,incotermsList,data.incoterms.*)]]">
-            <iron-icon icon="add"></iron-icon>{{localize.btn_add}}</paper-button>
+            <iron-icon icon="add"></iron-icon>{{localizeCommon.add}}</paper-button>
           <paper-button raised class="gl-btn-danger" on-tap="deleteIncoterms" hidden="[[commonState.btnDisabled]]" disabled="[[_isHaveForDelete(data.incoterms,data.incoterms.*)]]">
-            <iron-icon icon="remove"></iron-icon>{{localize.btn_delete}}</paper-button>
+            <iron-icon icon="remove"></iron-icon>{{localizeCommon.delete}}</paper-button>
         </div>
       </gl-grid-row>
 
       <div class="horizontal end-justified layout">
         <template is="dom-if" if="[[commonState.isInsert]]">
-          <paper-button class="gl-btn-primary" on-tap="insertConfirm" raised>{{localize.btn_add}}</paper-button>
+          <paper-button class="gl-btn-primary" on-tap="insertConfirm" raised>{{localizeCommon.add}}</paper-button>
         </template>
         <template is="dom-if" if="[[commonState.btnDisabled]]">
-          <paper-button class="gl-btn-info" raised on-tap="confirmConfirm" hidden="[[data.cl_status]]">{{localize.btn_confirm}}</paper-button>
+          <paper-button class="gl-btn-info" raised on-tap="confirmConfirm" hidden="[[data.cl_status]]">{{localizeCommon.confirm}}</paper-button>
         </template>
         <template is="dom-if" if="[[!commonState.isInsert]]">
-          <paper-button class="gl-btn-default" on-tap="canncelConfirm" raised hidden="[[commonState.btnDisabled]]">{{localize.btn_cancel}}</paper-button>
-          <paper-button class="gl-btn-success" on-tap="saveConfirm" raised hidden="[[commonState.btnDisabled]]">{{localize.btn_save}}</paper-button>
+          <paper-button class="gl-btn-default" on-tap="canncelConfirm" raised hidden="[[commonState.btnDisabled]]">{{localizeCommon.cancel}}</paper-button>
+          <paper-button class="gl-btn-success" on-tap="saveConfirm" raised hidden="[[commonState.btnDisabled]]">{{localizeCommon.save}}</paper-button>
         </template>
       </div>
     </gl-form-panel>
@@ -291,6 +292,9 @@
       properties: {
         localize: {
           statePath: 'i18n.g2g'
+        },
+        localizeCommon: {
+          statePath: 'i18n.common'
         },
         commonState: {
           statePath: 'commonState.setState'
@@ -438,7 +442,7 @@
             let hm_id = e.model.item.hamonize_id
             let date = new Date(this.data.cl_date)
             let today = JSON.parse(JSON.stringify(this.data.cl_date))
-            console.log(today);
+            // console.log(today);
             let lastMonth = JSON.parse(JSON.stringify(new Date(date.setMonth(date.getMonth() - 3)).toISOString().split('T')[0]))
             // console.log(lastMonth)
             // this.hamonizeContract
@@ -595,7 +599,7 @@
         return new Promise((res, rej) => {
           let dataResive = this.data
           // console.log(this.data);
-          dataResive.cl_date = new Date(this.data.cl_date),
+          dataResive.cl_date = this.data.cl_date+ 'T00:00:00+07:00',
             // dataResive.cl_hamonize = this._getHamonize(),
             dataResive.cl_status = this.data.cl_status,
             dataResive.cl_weight = this.data.cl_weight,
@@ -804,12 +808,14 @@
               this._resiveFormConfirm()
                 .then((res) => {
                   res.cl_status = true
+                  let cl_id = res.id
                   this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
                   this.dispatchAction('PUT_CONFIRM', res)
                     .then((response) => {
                       if (response.data.replaced !== undefined && response.data.replaced.length !== 0) {
                         let url = { contract_id: this.contractId.contract_id, status: 'all' }
                         this.dispatchAction('GET_CONFIRM_LIST', this.genUrl(url))
+                        this.dispatchAction('GET_CONFIRM_DETAIL', cl_id)
                         this.dispatchAction('GET_CONTRACT_OF_BUYER', this.getCookieBhv("buyerId"));
                         this.queryFrom('.required').map((el) => { el.reset(); });
                         this.dispatchAction('SET_STATE', {

@@ -32,16 +32,16 @@
     </template>-->
     <template is="dom-if" if={!{checkTrue.book_status}}>
       <paper-button class="gl-btn-default" raised on-tap="cancelEditShipment">
-        {{localize.btn_back_ward}}</paper-button>
+        {{localizeCommon.back_ward}}</paper-button>
     </template>
 
     <gl-form-panel set-padding="10px 20px 10px 20px">
       <div class="horizontal end-justified layout">
         <!--<template is="dom-if" if={{_confirmBook(data)}}>-->
-        <paper-icon-button icon="create" id="editExporter" raised on-tap="editBookDetaIl" title="Edit"></paper-icon-button>
-        <paper-tooltip for="editExporter" offset="0">Edit Exporter</paper-tooltip>
-        <paper-icon-button icon="delete" id="delExporter" raised on-tap="deleteBookDetail" title="Delete"></paper-icon-button>
-        <paper-tooltip for="delExporter" offset="0">Delete Exporter</paper-tooltip>
+        <paper-icon-button icon="create" class="crud" id="editExporter" raised on-tap="editBookDetaIl" title="Edit"></paper-icon-button>
+        <paper-tooltip for="editExporter" offset="0">{{localizeCommon.edit}}</paper-tooltip>
+        <paper-icon-button icon="delete" class="crud" id="delExporter" raised on-tap="deleteBookDetail" title="Delete"></paper-icon-button>
+        <paper-tooltip for="delExporter" offset="0">{{localizeCommon.delete}}</paper-tooltip>
         <!--</template>-->
       </div>
 
@@ -150,7 +150,7 @@
             [[_calPriceHamonize(data.hamonize_id,data.package_id,data.net_weight)]] [[changeString2Num(data.*,'net_weight')]]
             <gl-form-input class="required" required allowed-pattern="[0-9||,||.]" format-number="on" label="{{localize.label_quantity}}"
               value="{{data.net_weight}}" always-float-label disabled="[[commonState.btnDisabled]]">
-              <div suffix>/{{dataForSelect.type_rice_quantity_limit_max_label}}</div>
+              <!--<div suffix>/{{dataForSelect.type_rice_quantity_limit_max_label}}</div>-->
             </gl-form-input>
           </gl-grid-col>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
@@ -190,14 +190,14 @@
       <gl-form-panel-footer set-padding="10px 20px 0px 20px">
         <template is="dom-if" if="[[!commonState.btnDisabled]]">
           <template is="dom-if" if="[[!commonState.isInsert]]">
-            <paper-button class="gl-btn-default" on-tap="calcelShipmentInsert" raised>{{localize.btn_cancel}}</paper-button>
+            <paper-button class="gl-btn-default" on-tap="calcelBookDetail" raised>{{localizeCommon.cancel}}</paper-button>
             <paper-button class="gl-btn-success" raised on-tap="saveExporter">
-              <iron-icon class="gl-icon-size" icon="save"></iron-icon>{{localize.btn_save}}</paper-button>
+              <iron-icon class="gl-icon-size" icon="save"></iron-icon>{{localizeCommon.save}}</paper-button>
           </template>
         </template>
 
         <template is="dom-if" if="[[commonState.isInsert]]">
-          <paper-button class="gl-btn-success" raised on-tap="addExporter"> {{localize.btn_add}}</paper-button>
+          <paper-button class="gl-btn-success" raised on-tap="addExporter"> {{localizeCommon.add}}</paper-button>
         </template>
       </gl-form-panel-footer>
     </gl-form-panel>
@@ -219,6 +219,9 @@
       properties: {
         localize: {
           statePath: 'i18n.g2g'
+        },
+        localizeCommon: {
+          statePath: 'i18n.common'
         },
         commonState: {
           statePath: 'commonState.setState'
@@ -332,19 +335,32 @@
       //     return false;
       //   }
       // },
-      // calcelShipmentInsert: function () {
-
-      //   //  Object.assign(this.data,this.oldData)
-
-      //  for (var variable in this.data) {
-      //    if (this.data.hasOwnProperty(variable)) {
-      //     //  console.log(variable);
-      //      this.set('data.'+variable,this.oldData[variable])
-      //    }
-      //  }
-      //    this.editBookDetaIl();
-      //   // this.calcelContract();
-      // },
+      calcelBookDetail: function () {
+        this.fire('toast', {
+          status: 'openDialog',
+          text: 'ต้องการยกเลิกแก้ข้อมูลใช่หรือไม่ ?',
+          confirmed: (result) => {
+            if (result == true) {
+              let url = { id: this.data.id }
+              this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
+              this.dispatchAction('SET_STATE', {
+                isInsert: false,
+                btnDisabled: true,
+                hiddend: true
+              })
+              this.dispatchAction('GET_BOOK_EXPORTER_DETAIL', this.genUrl(url))
+              this.async(() => {
+                this.fire('toast', {
+                  status: 'success', text: 'โหลดสำเร็จ', callback: () => {
+                    this.queryFrom('.required').map((el) => { el.reset(); });
+                    // this.set('pageSelected', 'list-of-booking-edit')
+                  }
+                })
+              }, 500)
+            }
+          }
+        })
+      },
       // calcelContract() {
       //   this.fire('_change-component-shm', { detail: 'list-of-shm-det' })
       // },
@@ -514,7 +530,7 @@
               .then((response) => {
                 if (response.data.inserted !== undefined && response.data.inserted.length !== 0) {
                   // this.dispatchAction('GET_CONTRACT_OF_BUYER', res.buyer_id);
-
+                  
                   this.dispatchAction('GET_BOOK_EXPORTER_LIST', this.genUrl(url))
                   this.fire('toast', {
                     status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success

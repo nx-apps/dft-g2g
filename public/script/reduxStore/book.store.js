@@ -1,6 +1,7 @@
 import axios from '../axios'
 import { commonAction } from '../config'
 const cutDataInObject = (data, namePop) => {
+    data = JSON.parse(JSON.stringify(data))
     for (var key in data) {
         for (var index = 0; index < namePop.length; index++) {
             if (namePop[index] === key) {
@@ -10,6 +11,7 @@ const cutDataInObject = (data, namePop) => {
             }
         }
     }
+    return data
 }
 const initialState = {
     list: [],
@@ -63,8 +65,11 @@ export function bookAction(store) {
             axios.get('./book?' + book_id)
                 .then(function (response) {
                     // console.log(response.data);
-                    cutDataInObject(response.data, ['packing_date', 'product_date', 'etd_date', 'eta_date', 'cut_date'])
-                    store.dispatch({ type: 'GET_BOOK_DETAIL', payload: response.data })
+
+                    store.dispatch({
+                        type: 'GET_BOOK_DETAIL',
+                        payload: cutDataInObject(response.data, ['packing_date', 'product_date', 'etd_date', 'eta_date', 'cut_date'])
+                    })
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -130,18 +135,23 @@ export function bookAction(store) {
         // END GET
         // POST
         POST_BOOK: function (data) {
+            // cutDeDataInObject(data, ['packing_date', 'product_date', 'etd_date', 'eta_date', 'cut_date'])
+            // console.log(data);
             return axios.post('./book/insert', data)
         },
         POST_BOOK_DETAIL: function (data) {
-            console.log(data);
+            // console.log(data);
             return axios.post('./book/detail/insert', data)
         },
         // END POST
         // PUT
         PUT_BOOK: function (data) {
+            // cutDeDataInObject(data, ['packing_date', 'product_date', 'etd_date', 'eta_date', 'cut_date'])
+            // console.log(data);
             return axios.put('./book/update', data)
         },
         PUT_BOOK_APPROVE: function (data) {
+            // cutDeDataInObject(data, ['packing_date', 'product_date', 'etd_date', 'eta_date', 'cut_date'])
             return axios.put('./book/approve', data)
         },
         PUT_BOOK_DETAIL: function (data) {
@@ -287,20 +297,20 @@ export function bookAction(store) {
             // console.log(data)
             this.fire('toast', { status: 'load' });
             axios.put('./book/approve', data)
-            .then((response) => {
-                this.fire('toast', {
-                    status: 'success', text: 'บันทึกสำเร็จ',
-                    callback: () => {
-                        this.INVOICE_GET_LIST_DATA(data.contract_id);
-                        this.BOOK_GET_LIST_DATA(data.contract_id);
-                        this.FEE_GET_LIST_DATA(data.contract_id);
-                        this._flipDrawerClose();
-                    }
-                });
-            })
-            .catch((err) => {
-                console.log(err);
-            })
+                .then((response) => {
+                    this.fire('toast', {
+                        status: 'success', text: 'บันทึกสำเร็จ',
+                        callback: () => {
+                            this.INVOICE_GET_LIST_DATA(data.contract_id);
+                            this.BOOK_GET_LIST_DATA(data.contract_id);
+                            this.FEE_GET_LIST_DATA(data.contract_id);
+                            this._flipDrawerClose();
+                        }
+                    });
+                })
+                .catch((err) => {
+                    console.log(err);
+                })
         }
     }
     ]

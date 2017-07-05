@@ -1,6 +1,7 @@
 import axios from '../axios'
 import { commonAction } from '../config'
 const cutDataInObject = (data, namePop) => {
+    data = JSON.parse(JSON.stringify(data))
     for (var key in data) {
         for (var index = 0; index < namePop.length; index++) {
             if (namePop[index] === key) {
@@ -10,6 +11,7 @@ const cutDataInObject = (data, namePop) => {
             }
         }
     }
+    return data
 }
 const initialState = {
     buyerList: [],
@@ -56,10 +58,10 @@ export function contractAction(store) {
             axios.get('./contract?id=' + contractId)
                 .then(function (response) {
                     // console.log(response);
-                    cutDataInObject(response.data, [ 'contract_date'])
+                    
                     store.dispatch({ 
                         type: 'GET_CONTRACT',
-                        payload: response.data
+                        payload: cutDataInObject(response.data, [ 'contract_date'])
                     })
                 })
                 .catch(function (error) {
@@ -69,11 +71,13 @@ export function contractAction(store) {
         // END GET
         // POST
         POST_CONTRACT: function (data) {
+            // cutDeDataInObject(data, [ 'contract_date'])
             return axios.post('./contract/insert', data)
         },
         // END POST
         // PUT
         PUT_CONTRACT: function (data) {
+            // cutDeDataInObject(data, [ 'contract_date'])
             return axios.put('./contract/update', data)
         },
         // END PUT

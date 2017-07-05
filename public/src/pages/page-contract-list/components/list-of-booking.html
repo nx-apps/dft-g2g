@@ -97,13 +97,13 @@
                   <td on-tap="getBookingExporter" data="[[item]]"> [[item.deli_port.port_name]] </td>
                   <td>
                     <paper-button class="gl-btn-info gl-small" raised on-tap="btnEditBooking" data="[[item]]">
-                      {{localize.btn_detail}}</paper-button>
+                      {{localizeCommon.detail}}</paper-button>
                   </td>
                 </tr>
               </template>
               <template is="dom-if" if="[[_isHave(bookList)]]">
                 <tr>
-                  <td colspan="4"> {{localize.text_no_data}}</td>
+                  <td colspan="4"> {{localizeCommon.no_data}}</td>
                 </tr>
               </template>
             </tbody>
@@ -140,6 +140,9 @@
       properties: {
         localize: {
           statePath: 'i18n.g2g'
+        },
+        localizeCommon: {
+          statePath: 'i18n.common'
         },
         pageSelected: {
           type: String,

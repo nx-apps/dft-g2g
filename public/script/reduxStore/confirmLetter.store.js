@@ -1,15 +1,18 @@
 import axios from '../axios'
 import { commonAction } from '../config'
 const cutDataInObject = (data, namePop) => {
+    // console.log(1);
+    data = JSON.parse(JSON.stringify(data))
     for (var key in data) {
         for (var index = 0; index < namePop.length; index++) {
             if (namePop[index] === key) {
                 let time = new Date(data[key])
-                data[key] = new Date(time.setHours(time.getHours() - 7)).toISOString()
+                data[key] = new Date(time.setHours(time.getHours() + 7)).toISOString()
                 data[key] = data[key].split("T")[0]
             }
         }
     }
+    return data
 }
 const initialState = {
     confirmLetterlist: [],
@@ -49,9 +52,9 @@ export function confirmLetterAction(store) {
                     }
                     let hamonize = response.data
                     let cost_price = Object.keys(hamonize).reduce((previous, current) => previous + hamonize[current].cl_weight, 0)
-                    console.log(cost_price);
+                    // console.log(cost_price);
                     // cl_weight
-                    store.dispatch({ type: 'SET_HAMONIZE_LIMIT_OF_CONTRACT', payload: cost_price})
+                    store.dispatch({ type: 'SET_HAMONIZE_LIMIT_OF_CONTRACT', payload: cost_price })
                     store.dispatch({ type: 'GET_CONFIRM_LIST', payload: response.data })
                 })
                 .catch(function (error) {
@@ -87,9 +90,11 @@ export function confirmLetterAction(store) {
         GET_CONFIRM_DETAIL: function (cl_id) {
             axios.get('./confirm?id=' + cl_id)
                 .then(function (response) {
-                    // console.log(response.data);
-                    cutDataInObject(response.data, ['cl_date'])
-                    store.dispatch({ type: 'GET_CONFIRM_DETAIL', payload: response.data })
+                    // let data = cutDataInObject(response.data, ['cl_date'])
+                    store.dispatch({
+                        type: 'GET_CONFIRM_DETAIL',
+                        payload: cutDataInObject(response.data, ['cl_date'])
+                    })
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -97,18 +102,11 @@ export function confirmLetterAction(store) {
         },
         GET_CONFIRM_FP: function (data) {
             return axios.get('./confirm/fp?' + data)
-            // .then(function (response) {
-            //     console.log(response.data);
-            //     store.dispatch({ type: 'GET_CONFIRM_FP', payload: response.data })
-            // })
-            // .catch(function (error) {
-            //     console.log(error);
-            // });
         },
         // END GET
         // POST
         POST_CONFIRM: function (data) {
-            return axios.post('./confirm/insert', data)
+            return axios.post('./confirm/insert', Newdata)
         },
         // END POST
         // PUT
@@ -154,7 +152,7 @@ export function confirmLetterAction(store) {
                     }
                 ],
             }
-            console.log(confirm);
+            // console.log(confirm);
             store.dispatch({ type: 'GET_CONFIRM_DETAIL', payload: confirm })
         },
         // CLEAR

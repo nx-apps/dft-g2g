@@ -38,7 +38,7 @@
       <div name="listOfConfirm">
         <div class="addconfirm horizontal end-justified layout">
           <!--<paper-button raised class="gl-btn-primary" disabled="[[!dataForSelect.contract_status]]" on-tap="createConfirm">{{localize.btn_add}}</paper-button>-->
-          <paper-button raised class="gl-btn-primary" on-tap="createConfirm" disabled="{{!contractId.contract_status}}">{{localize.btn_add}}</paper-button>
+          <paper-button raised class="gl-btn-primary" on-tap="createConfirm" disabled="{{!contractId.contract_status}}">{{localizeCommon.add}}</paper-button>
 
         </div>
         <br>
@@ -81,7 +81,7 @@
             </template>
             <template is="dom-if" if="[[_isHave(confirmLetterList)]]">
               <tr>
-                <td colspan="5" style=" text-align: center;"> {{localize.text_no_data}}</td>
+                <td colspan="5" style=" text-align: center;"> {{localizeCommon.no_data}}</td>
               </tr>
             </template>
           </tbody>
@@ -127,6 +127,9 @@
       properties: {
         localize: {
           statePath: 'i18n.g2g'
+        },
+        localizeCommon: {
+          statePath: 'i18n.common'
         },
         commonState: {
           statePath: 'commonState.setState'
@@ -314,7 +317,7 @@
         }
       },
       getObjectConfirm: function (e){
-        console.log(e)
+        // console.log(e)
       }
 
     });
