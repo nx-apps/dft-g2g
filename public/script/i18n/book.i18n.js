@@ -5,12 +5,12 @@ export const book = {
 
         "":"Shm",
         lot:"รอบที่",
-        report:"รายงาน",
-        report_type:"รูปแบบรายงาน",
-        send_report:"ออกรายงาน",
+        
         orignals:"ต้นฉบับ",
         n_n:"สำเนา",
-        
+
+        no:"ลำดับที่",
+        list_expoter:"รายชื่อผู้ส่งออก",
         add_exporter:"เพิ่มผู้ส่งออก",
         confirm_exporter:"ยืนยันผู้ส่งออก",
         add_booking:"เพิ่มลำดับเรือ",
@@ -22,10 +22,11 @@ export const book = {
         "":"Shm_det",
         tel:"เบอร์โทร",
         exporter_address:"ที่อยู่ผู้ส่งออก",
+        detail_sender:"รายละเอียดการส่งมอบ",
         exporter_detail:"รายละเอียดผู้ส่งออก",
         confirmation_letter:"ยืนยันทำสัญญา",
         number_of_containers:"จำนวนตู้คอนเทนเนอร์",
-        price_usd_mt:"ราคา (ดอลลาร์สหรัฐอเมริกา/เมตริกตัน)",
+        price_usd_mt:"ราคา (USD /เมตริกตัน)",
         weight_sacks_gram_bag:"น้ำหนักกระสอบ (กรัม/ถุง)",
         marks:"MARKS",
         quantity_bags:"จำนวน (ถุง)",
@@ -33,7 +34,7 @@ export const book = {
         net_weight:"NET WEIGHT (M/T)",
         tare_weight:"TRAE WEIGHT (M/T)",
         metric_ton:"M/T",
-        
+        exporter_name:"ผู้ส่งออก",
         quantity_ship:"จำนวนลำเรือ",
         add_contract:"เพิ่มสัญญา",
         booking_no:"Booking no",
@@ -45,6 +46,7 @@ export const book = {
         surveyor:"Surveyor",
         address:"ที่อยู่ผู้รับสินค้า",
         lot_no:"ลำดับเรือที่",
+        list_vessel:"ลำดับเรือ",
         port_of_loading:"ท่าเรือต้นทาง",
         port_of_discharge:"ท่าเรือปลายทาง (Discharge)",
         place_of_delivery:"ท่าเรือปลายทาง (Delivery)",

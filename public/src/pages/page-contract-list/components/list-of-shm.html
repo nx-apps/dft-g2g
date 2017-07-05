@@ -34,16 +34,16 @@
   </style>
   <template>
     <paper-button class="gl-btn-default" raised on-tap="backWard2Booking">
-      {{localize.btn_back_ward}}</paper-button>
+      {{localizeCommon.back_ward}}</paper-button>
     <gl-form-panel>
       <div class="horizontal end-justified layout center">
-        <gl-combo-box always-float-label label="{{localize.label_report}}" placeholder="{{localize.label_report}}" value="{{printReport.typeReport}}"
+        <gl-combo-box always-float-label label="{{localizeCommon.print}}" placeholder="{{localizeCommon.print}}" value="{{printReport.typeReport}}"
           item-label-path="report_name" item-value-path="report_name_id" items="{{report.report_name}}">
           <template>
             [[item.report_name]]
           </template>
         </gl-combo-box>&nbsp;
-        <gl-combo-box always-float-label label="{{localize.label_report_type}}" placeholder="{{localize.label_report_type}}" value="{{printReport.typeFile}}"
+        <gl-combo-box always-float-label label="{{localizeCommon.report_type}}" placeholder="{{localizeCommon.report_type}}" value="{{printReport.typeFile}}"
           item-label-path="report_type" item-value-path="report_type_id" items="{{report.report_type}}">
           <template>
             [[item.report_type]]
@@ -51,40 +51,40 @@
         </gl-combo-box>
         <div class="icon_print">
           <paper-icon-button id="printShipment" class="crud" icon="print" raised on-tap="printShipment" hidden="[[!data.shm_status]]"></paper-icon-button>
-          <paper-tooltip for="printShipment" offset="0">{{localize.label_send_report}}</paper-tooltip>
+          <paper-tooltip for="printShipment" offset="0">{{localizeCommon.print}}</paper-tooltip>
         </div>
         <paper-dialog id="printShipmentReport">
           <gl-grid-row width="{{getWidth}}">
             <gl-grid-col width="[[getWidth]]" grid="[[500,4],[700,3]]">
               [[changeString2Num(printReport.*,'ori')]]
-              <gl-form-input allowed-pattern="[0-9||,||.]" label="{{localize.label_orignals}}" autofocus maxlength="3" format-number="on"
-                always-float-label placeholder="{{localize.label_orignals}}" value="{{printReport.ori}}"></gl-form-input>
+              <gl-form-input allowed-pattern="[0-9||,||.]" label="{{localizeBook.orignals}}" autofocus maxlength="3" format-number="on"
+                always-float-label placeholder="{{localizeBook.orignals}}" value="{{printReport.ori}}"></gl-form-input>
             </gl-grid-col>
             <gl-grid-col width="[[getWidth]]" grid="[[500,6],[700,8]]">
               [[changeString2Num(printReport.*,'nn')]]
-              <gl-form-input allowed-pattern="[0-9||,||.]" label="{{localize.label_n_n}}" maxlength="3" format-number="on" always-float-label
-                placeholder="{{localize.label_n_n}}" value="{{printReport.nn}}"></gl-form-input>
+              <gl-form-input allowed-pattern="[0-9||,||.]" label="{{localizeBook.n_n}}" maxlength="3" format-number="on" always-float-label
+                placeholder="{{localizeBook.n_n}}" value="{{printReport.nn}}"></gl-form-input>
             </gl-grid-col>
           </gl-grid-row>
           <div class="buttons">
-            <paper-button class="gl-btn-default" dialog-confirm raised>{{localize.btn_close}}</paper-button>
-            <paper-button class="gl-btn-primary" on-tap="printShipmentReports" dialog-confirm autofocus raised>{{localize.label_send_report}}</paper-button>
+            <paper-button class="gl-btn-default" dialog-confirm raised>{{localizeCommon.close}}</paper-button>
+            <paper-button class="gl-btn-primary" on-tap="printShipmentReports" dialog-confirm autofocus raised>{{localizeCommon.print}}</paper-button>
           </div>
         </paper-dialog>
       </div>
       <gl-form-panel-head label="{{localize.text_list_exporter_name}}" set-padding="10px" set-border="1px">
         <template is="dom-if" if={{!data.book_status}}>
-          <paper-button class="gl-btn-primary" raised on-tap="addBookExporter">{{localize.btn_add_exporter}}</paper-button>
+          <paper-button class="gl-btn-primary" raised on-tap="addBookExporter">{{localizeBook.add_exporter}}</paper-button>
         </template>
       </gl-form-panel-head>
 
       <table class="gl-table-default">
         <thead class="table-head">
           <tr>
-            <th>{{localize.label_order}}</th>
-            <th>{{localize.text_list_exporter_name}}</th>
-            <th>{{localize.label_rice_type}}</th>
-            <th>{{localize.label_quantity}}</th>
+            <th>{{localizeBook.no}}</th>
+            <th>{{localizeBook.list_expoter}}</th>
+            <th>{{localizeContract.rice_type}}</th>
+            <th>{{localizeContract.quantity}}</th>
           </tr>
         </thead>
         <tbody class="table-body">
@@ -98,7 +98,7 @@
           </template>
           <template is="dom-if" if="[[_isHave(data.detail)]]">
             <tr>
-              <td colspan="4" style="text-align: center"> {{localize.text_no_data}}</td>
+              <td colspan="4" style="text-align: center"> {{localizeCommon.no_data}}</td>
             </tr>
           </template>
         </tbody>
@@ -106,11 +106,11 @@
       <gl-form-panel-footer set-padding="10px 20px 0px 20px">
         <template is="dom-if" if={{!_confirmBook(data)}}>
           <paper-button class="gl-btn-danger" raised dias on-tap="cancerBook">
-            {{localize.btn_cancer_confirm}}</paper-button>
+            {{localizeCommon.cancer_confirm}}</paper-button>
         </template>
         <template is="dom-if" if={{_confirmBook(data)}}>
           <paper-button class="gl-btn-success" raised dias on-tap="approveBook" hidden="[[_isHave(data)]]">
-            {{localize.btn_confirm}}</paper-button>
+            {{localizeCommon.confirm}}</paper-button>
         </template>
       </gl-form-panel-footer>
     </gl-form-panel>
@@ -140,8 +140,17 @@
         // nylonLocalizeBehavior
       ],
       properties: {
-        localize: {
-          statePath: 'i18n.g2g'
+        localizeBook : {
+          statePath: 'i18n.book'
+        },
+        localizeContract: {
+          statePath: 'i18n.contract'
+        },
+        localizeConfirmLetter: {
+          statePath: 'i18n.confirmLetter'
+        },
+        localizeCommon: {
+          statePath: 'i18n.common'
         },
         printReport: {
           type: Object,

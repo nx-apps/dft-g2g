@@ -25,7 +25,8 @@ export const common = {
         no_data: "ไม่มีข้อมูล",
         error_input: "กรุณากรอก",
         error_dropdown: "กรุณาเลือก",
-        print:"พิมพ์",
+        print:"รายงาน",
+        report_type:"รูปแบบรายงาน",
 
         save_succeed:"บันทึกสำเร็จ",
         delete_succeed:"ลบสำเร็จ",
