@@ -105,7 +105,7 @@
           {{localizeContract.contract}}
         </paper-button>
         <paper-button raised on-tap="listConfirm">
-          งวด (ยัง)
+          {{localizeConfirmLetter.ref}}
           <!--{{localize.btn_confirm_detail}}-->
 
         </paper-button>
@@ -132,6 +132,9 @@
         },
         localizeContract: {
           statePath: 'i18n.contract'
+        },
+        localizeConfirmLetter: {
+          statePath: 'i18n.confirmLetter'
         },
         data: {
           type: Object,

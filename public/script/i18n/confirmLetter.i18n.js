@@ -12,6 +12,7 @@ export const confirmLetter = {
         total_cost_price_ton: "ราคารวมประมาณต้นทุนต่อตัน (USD)",
         total_cost_price: "ราคารวมประมาณต้นทุน (บาท)",
         ref_no: "งวดที่",
+        ref:"งวด",
         date: "วันที่",
         status: "สถานะ",
         total_vessel: "จำนวนลำเรือ",
