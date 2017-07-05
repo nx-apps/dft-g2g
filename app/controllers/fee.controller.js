@@ -3,6 +3,19 @@ exports.calc = function (req, res) {
     req.r.table('book').getAll(r.args(r.expr(req.query.book_id.split('_'))), { index: 'id' })
         .map(function (m) {
             var ship = m.getField('ship');
+            var detail = r.table('book_detail').getAll(m('id'), { index: 'book_id' })
+                .coerceTo('array')
+                .map(function (m2) {
+                    return m2.pluck('company', 'net_weight', 'price_d', 'value_d')
+                        .merge({
+                            detail_id: m2('id'),
+                            value_b: 0,
+                            value_fee_b: 0,
+                            value_bal_b: 0,
+                            value_tax_b: 0,
+                            value_final_b: 0
+                        })
+                });
             return m.pluck('invoice_no', 'invoice_date', 'cl_id', 'cl_no', 'contract_id', 'contract_no', 'ship', 'ship_lot')
                 .merge({
                     book_id: m('id'),
@@ -16,19 +29,9 @@ exports.calc = function (req, res) {
                     value_final_b: 0,
                     fee_ex_d: 0,
                     fee_in_b: 0,
-                    detail: r.table('book_detail').getAll(m('id'), { index: 'book_id' })
-                        .coerceTo('array')
-                        .map(function (m2) {
-                            return m2.pluck('company', 'net_weight', 'price_d', 'value_d')
-                                .merge({
-                                    detail_id: m2('id'),
-                                    value_b: 0,
-                                    value_fee_b: 0,
-                                    value_bal_b: 0,
-                                    value_tax_b: 0,
-                                    value_final_b: 0
-                                })
-                        })
+                    detail: detail,
+                    net_weight: detail.sum('net_weight'),
+                    value_d: detail.sum('value_d')
                 })
         })
         .orderBy('invoice_date')
