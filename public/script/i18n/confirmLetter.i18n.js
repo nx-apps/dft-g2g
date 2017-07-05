@@ -15,6 +15,7 @@ export const confirmLetter = {
         ref:"งวด",
         date: "วันที่",
         status: "สถานะ",
+        vessel:"เรือ",
         total_vessel: "จำนวนลำเรือ",
         total_quantity: "ปริมาณทั้งหมด (ตัน)",
         total_send: "ปริมาณที่ส่งมอบ (ตัน)",
