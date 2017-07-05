@@ -344,7 +344,7 @@
                 }, 500)
             },
             _getListConfirm: function (e) {
-                console.log(e.detail)
+                // console.log(e.detail)
                 let url = { contract_id: e.detail.contract_id, status: 'all' }
                 this.dispatchAction('SET_BREADCRUMBS', [{
                     label: 'สัญญาที่ ' + e.detail.contract_no,

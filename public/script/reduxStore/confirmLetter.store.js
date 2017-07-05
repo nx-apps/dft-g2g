@@ -103,6 +103,9 @@ export function confirmLetterAction(store) {
         GET_CONFIRM_FP: function (data) {
             return axios.get('./confirm/fp?' + data)
         },
+        GET_CONFIRM_EXCHANG_RATE: function (data) {
+            return axios.get('https://api.fixer.io/latest?base=USD')
+        },
         // END GET
         // POST
         POST_CONFIRM: function (data) {

@@ -93,7 +93,8 @@
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,2]]">
           [[changeString2Num(data.*,'cl_no')]]
           <gl-form-input class="required" required autofocus allowed-pattern="[0-9||,||.]" format-number="on" disabled="[[commonState.btnDisabled]]"
-            error-message="{{localizeContract.error_input}}{{localizeConfirmLetter.ref_no}}" required label="{{localizeConfirmLetter.ref_no}}" always-float-label value="{{data.cl_no}}"></gl-form-input>
+            error-message="{{localizeContract.error_input}}{{localizeConfirmLetter.ref_no}}" required label="{{localizeConfirmLetter.ref_no}}"
+            always-float-label value="{{data.cl_no}}"></gl-form-input>
         </gl-grid-col>
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
           <!--<vaadin-date-picker class="required" required disabled="[[commonState.btnDisabled]]" label="{{localize.label_date}}" value="{{data.cl_date}}"></vaadin-date-picker>-->
@@ -119,9 +120,9 @@
               <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,6]]">
 
                 <gl-combo-box id="riceType-[[index]]" index="[[index]]" class="required" required disabled="[[commonState.btnDisabled]]"
-                  error-message="{{localizeContract.error_dropdown}}{{localizeContract.list_rice}}" placeholder="{{localizeContract.list_rice}}" name="hamonize.hamonize_th"
-                  label="{{localizeContract.list_rice}}" item-label-path="label" item-value-path="hamonize_id" value="{{item.hamonize_id}}"
-                  on-selected-item-changed="getObjectHamonize" on-value-changed="_typeRiceConfirm">
+                  error-message="{{localizeContract.error_dropdown}}{{localizeContract.list_rice}}" placeholder="{{localizeContract.list_rice}}"
+                  name="hamonize.hamonize_th" label="{{localizeContract.list_rice}}" item-label-path="label" item-value-path="hamonize_id"
+                  value="{{item.hamonize_id}}" on-selected-item-changed="getObjectHamonize" on-value-changed="_typeRiceConfirm">
                   <template>
                     [[item.label]]
                   </template>
@@ -139,7 +140,7 @@
               <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">[[changeString2Num(item.*,'tolerance_rate')]]
                 <gl-form-input class="required number" required maxlength="3" allowed-pattern="[0-9||,||.]" error-message="{{localizeContract.error_input}}{{localizeConfirmLetter.quantity_tolerance}}"
                   disabled="[[commonState.btnDisabled]]" label="{{localizeConfirmLetter.quantity_tolerance}}" value="{{item.tolerance_rate}}"
-                  placeholder="{{localizeConfirmLetter.quantity_tolerance}}"  id="tolerance_rate">
+                  placeholder="{{localizeConfirmLetter.quantity_tolerance}}" id="tolerance_rate">
                   <div suffix>%</div>
                 </gl-form-input>
               </gl-grid-col>
@@ -148,22 +149,22 @@
 
             <gl-grid-row>
               <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
-                <gl-form-input class="required" required disabled="[[commonState.btnDisabled]]" label="{{localizeConfirmLetter.project_th}}" placeholder="{{localizeConfirmLetter.project_th}}"
-                  value="{{item.project_th}}" error-message="{{localizeContract.error_input}}{{localizeConfirmLetter.project_th}}"></gl-form-input>
+                <gl-form-input class="required" required disabled="[[commonState.btnDisabled]]" label="{{localizeConfirmLetter.project_th}}"
+                  placeholder="{{localizeConfirmLetter.project_th}}" value="{{item.project_th}}" error-message="{{localizeContract.error_input}}{{localizeConfirmLetter.project_th}}"></gl-form-input>
               </gl-grid-col>
               <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
-                <gl-form-input class="required" required disabled="[[commonState.btnDisabled]]" label="{{localizeConfirmLetter.project_en}}" placeholder="{{localizeConfirmLetter.project_en}}"
-                  value="{{item.project_en}}" error-message="{{localizeContract.error_input}}{{localizeConfirmLetter.project_en}}"></gl-form-input>
+                <gl-form-input class="required" required disabled="[[commonState.btnDisabled]]" label="{{localizeConfirmLetter.project_en}}"
+                  placeholder="{{localizeConfirmLetter.project_en}}" value="{{item.project_en}}" error-message="{{localizeContract.error_input}}{{localizeConfirmLetter.project_en}}"></gl-form-input>
               </gl-grid-col>
               <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
                 [[changeString2Num(item.*,'cost_price')]][[_obCalPrice(item.*,'cost_price')]]
-                <gl-form-input class="required" required disabled="[[commonState.btnDisabled]]" format-number="on" value="{{item.cost_price}}" label="{{localizeConfirmLetter.cost_price_ton}}"
-                placeholder="{{localizeConfirmLetter.total_cost_price_ton}}"></gl-form-input>
+                <gl-form-input class="required" required disabled="[[commonState.btnDisabled]]" format-number="on" value="{{item.cost_price}}"
+                  label="{{localizeConfirmLetter.cost_price_ton}}" placeholder="{{localizeConfirmLetter.total_cost_price_ton}}"></gl-form-input>
               </gl-grid-col>
               <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
-                [[changeString2Num(item.*,'cost_value')]]
-                <gl-form-input class="required" required disabled="[[commonState.btnDisabled]]" format-number="on" value="{{item.cost_value}}" label="{{localizeConfirmLetter.cost_price}}"
-                placeholder="{{localizeConfirmLetter.total_cost_price}}"></gl-form-input>
+                <!--[[changeString2Num(item.*,'cost_value')]]-->
+                <!--<gl-form-input class="required" required disabled="[[commonState.btnDisabled]]" format-number="on" value="{{item.cost_value}}"
+                  label="{{localizeConfirmLetter.cost_price}}" placeholder="{{localizeConfirmLetter.total_cost_price}}"></gl-form-input>-->
 
               </gl-grid-col>
             </gl-grid-row>
@@ -188,9 +189,9 @@
                     <td>
 
                       <gl-combo-box id="package-[[index]]-[[indexpackeage]]" index="[[index]]" indexpackeage=[[indexpackeage]] class="required InTable"
-                        required disabled="[[commonState.btnDisabled]]" error-message="{{localizeContract.error_dropdown}}{{localizeCommon.packaging_type}}" placeholder="{{localizeCommon.packaging_type}}"
-                        item-label-path="package_name_th" item-value-path="package_id" value="{{packageitem.package_id}}" 
-                        on-value-changed="_typePackageConfirm">
+                        required disabled="[[commonState.btnDisabled]]" error-message="{{localizeContract.error_dropdown}}{{localizeCommon.packaging_type}}"
+                        placeholder="{{localizeCommon.packaging_type}}" item-label-path="package_name_th" item-value-path="package_id"
+                        value="{{packageitem.package_id}}" on-value-changed="_typePackageConfirm">
                         <!--on-selected-item-changed="getObjectPackeage"-->
                         <template>
                           [[item.package_name_th]]
@@ -200,8 +201,8 @@
                     </td>
                     <td> [[changeString2Num(packageitem.*,'price_d')]]
                       <gl-form-input class="required numberBack" required allowed-pattern="[0-9||,||.]" format-number="on" disabled="[[commonState.btnDisabled]]"
-                        placeholder="{{localizeCommon.price}}" error-message="{{localizeContract.error_input}}{{localizeCommon.price}}" value="{{packageitem.price_d}}"
-                        no-label-float></gl-form-input>
+                        placeholder="{{localizeCommon.price}}" error-message="{{localizeContract.error_input}}{{localizeCommon.price}}"
+                        value="{{packageitem.price_d}}" no-label-float></gl-form-input>
                     </td>
                     <td>
                       <gl-form-input class="numberBack" disabled value="[[_obChangePrice(packageitem.package_id,packageList)]]" name="package_weight_bag"
@@ -462,8 +463,14 @@
             // this.throttle
             this.dispatchAction('GET_CONFIRM_FP', this.genUrl(url))
               .then((res) => {
-                this.set('data.cl_hamonize.' + index + '.cost_price', res.data[0].fp2)
-                this.set('data.cl_hamonize.' + index + '.cost_value', res.data[0].fp2 * (value * 1000))
+                this.dispatchAction('GET_CONFIRM_EXCHANG_RATE', this.genUrl(url))
+                  .then((rate) => {
+                    let rateBath = rate.data.rates.THB
+                    // console.log(rate.data.rates.THB)
+                    this.set('data.cl_hamonize.' + index + '.cost_price', res.data[0].fp2/rateBath)
+                  })
+                
+                // this.set('data.cl_hamonize.' + index + '.cost_value', res.data[0].fp2 * (value * 1000))
 
               })
             // console.log(url)
@@ -604,7 +611,7 @@
         return new Promise((res, rej) => {
           let dataResive = this.data
           // console.log(this.data);
-          dataResive.cl_date = this.data.cl_date+ 'T00:00:00+07:00',
+          dataResive.cl_date = this.data.cl_date + 'T00:00:00+07:00',
             // dataResive.cl_hamonize = this._getHamonize(),
             dataResive.cl_status = this.data.cl_status,
             dataResive.cl_weight = this.data.cl_weight,
@@ -647,27 +654,27 @@
               this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
               this.dispatchAction('POST_CONFIRM', res)
                 .then((response) => {
-              if (response.data.inserted !== undefined && response.data.inserted.length !== 0) {
+                  if (response.data.inserted !== undefined && response.data.inserted.length !== 0) {
 
-                let url = { contract_id: this.contractId.contract_id, status: 'all' }
-                this.dispatchAction('GET_CONFIRM_LIST', this.genUrl(url))
-                this.dispatchAction('GET_CONTRACT_OF_BUYER', this.getCookieBhv("buyerId"));
-                this.fire('toast', {
-                  status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
-                  callback: () => {
-                    this.queryFrom('.required').map((el) => { el.reset(); });
-                    this.backPage()
+                    let url = { contract_id: this.contractId.contract_id, status: 'all' }
+                    this.dispatchAction('GET_CONFIRM_LIST', this.genUrl(url))
+                    this.dispatchAction('GET_CONTRACT_OF_BUYER', this.getCookieBhv("buyerId"));
+                    this.fire('toast', {
+                      status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
+                      callback: () => {
+                        this.queryFrom('.required').map((el) => { el.reset(); });
+                        this.backPage()
+                      }
+                    })
+                  } else {
+                    // console.log(1111);
+                    this.fire('toast', {
+                      status: 'connectError', text: response.data, //คำสั่งสำหรับเปิด toast error
+                      callback: () => {
+                      }
+                    })
                   }
                 })
-              } else {
-                // console.log(1111);
-                this.fire('toast', {
-                  status: 'connectError', text: response.data, //คำสั่งสำหรับเปิด toast error
-                  callback: () => {
-                  }
-                })
-              }
-              })
             }
 
           })
