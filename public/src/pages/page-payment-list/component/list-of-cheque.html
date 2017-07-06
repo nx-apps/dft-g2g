@@ -1,6 +1,9 @@
 <link rel="import" href="./../../../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="./../../../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="./../../../../bower_components/paper-tooltip/paper-tooltip.html">
+
+<link rel="import" href="./../../../../bower_components/iron-icons/av-icons.html">
+
 <link rel="import" href="./../../components/format-number-behavior.html">
 <link rel="import" href="./../../../../bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="./../../../layout/shared-styles.html">
@@ -99,7 +102,7 @@
       <paper-button class="gl-btn-success" raised on-tap="getChequeDetail">กด (ยัง)</paper-button>
     </div>-->
     <div class="btnFab" hidden="{{fabHidden}}">
-      <paper-fab icon="add"  title="{{localize.label_add_contract}}" id="addContract" on-tap="getChequeDetail"></paper-fab>
+      <paper-fab icon="av:playlist-add-check"  title="{{localize.label_add_contract}}" id="addContract" on-tap="getChequeDetail"></paper-fab>
       <paper-tooltip for="addContract" offset="0">{{localize.label_add_contract}}</paper-tooltip>
     </div>
   </template>
