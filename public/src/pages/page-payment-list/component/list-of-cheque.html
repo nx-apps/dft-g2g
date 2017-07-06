@@ -189,7 +189,7 @@
         return ''
         // console.log(status)
       },
-      checkSelect(data){
+      checkSelect: function (data){
         let check = this.newData.find((item) => item.check === true)
         if(check !==undefined) 
           return this.set('fabHidden',false)
