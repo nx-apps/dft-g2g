@@ -2,9 +2,10 @@
 <link rel="import" href="./../../../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="./../../../../bower_components/paper-tooltip/paper-tooltip.html">
 <link rel="import" href="./../../components/format-number-behavior.html">
-
+<link rel="import" href="./../../../../bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="./../../../layout/shared-styles.html">
 <dom-module id="list-of-cheque">
-  <style include="iron-flex iron-flex-factors iron-flex-alignment gl-styles">
+  <style include="iron-flex iron-flex-factors iron-flex-alignment shared-styles">
      :host {
       display: block;
     }
@@ -57,7 +58,7 @@
         </paper-input>
       </div>
     </div>
-
+[[checkSelect(newData.*)]]
     <div class="horizontal center-justified layout">
       <table class="gl-table-default">
         <thead class="table-head">
@@ -71,13 +72,7 @@
           </tr>
         </thead>
         <tbody class="table-body">
-          <template is="dom-repeat" items="[[newData]]">
-            <!--<template is="dom-if" if="[[item.status]]">
-              <tr level="primary" style="background-color: #F1F1F1;">
-            </template>
-            <template is="dom-if" if="[[!item.status]]">
-              <tr level="primary">
-            </template>-->
+          <template is="dom-repeat" items="{{newData}}">
             <tr level="primary" style="{{checkStatus(item.status)}}">
               <td data="[[item]]">
                 <paper-checkbox data="{{item}}" disabled=[[item.status]] checked="{{item.check}}"></paper-checkbox>
@@ -99,10 +94,13 @@
         </tbody>
       </table>
     </div>
-    <div class="btnMoney">
+    <!--<div class="btnMoney">
       <paper-button class="gl-btn-success" raised on-tap="getChequeDetail">กด (ยัง)</paper-button>
+    </div>-->
+    <div class="btnFab" hidden="{{fabHidden}}">
+      <paper-fab icon="add"  title="{{localize.label_add_contract}}" id="addContract" on-tap="getChequeDetail"></paper-fab>
+      <paper-tooltip for="addContract" offset="0">{{localize.label_add_contract}}</paper-tooltip>
     </div>
-
   </template>
   <script>
     Polymer({
@@ -117,6 +115,10 @@
       properties: {
         localize: {
           statePath: 'i18n.g2g'
+        },
+        fabHidden:{
+          type:Boolean,
+          value:true
         },
         // newData: {
         //   type: Object
@@ -170,22 +172,28 @@
         }
       },
       observers: [
-        'initDatabl(data)'
+        'initDatabl(data)',
       ],
       _selectDataAll: function (val) {
         try {
           this.newData.map((item, index) => {
-            if(item.status === false)
-               this.set('newData.' + index + '.check', this.selectDataAll);
+            if (item.status === false)
+              this.set('newData.' + index + '.check', this.selectDataAll);
           });
         } catch (error) {
 
         }
       },
-      checkStatus: function(status){
-        if(status) return 'background-color: #F1F1F1;'
+      checkStatus: function (status) {
+        if (status) return 'background-color: #F1F1F1;'
         return ''
         // console.log(status)
+      },
+      checkSelect(data){
+        let check = this.newData.find((item) => item.check === true)
+        if(check !==undefined) 
+          return this.set('fabHidden',false)
+        return this.set('fabHidden',true)
       },
       // created: function () {
       //   this.nylonLocalizeImport('/i18n-page1.json');
