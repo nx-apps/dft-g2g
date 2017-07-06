@@ -62,9 +62,9 @@
           </thead>
           <tbody class="table-body">
             <template is="dom-repeat" items="[[data]]">
-              <tr>
+              <tr style="{{checkStatus(item.status)}}">
                 <td>
-                  <paper-checkbox data="{{item}}" checked="{{item.check}}"></paper-checkbox>
+                  <paper-checkbox data="{{item}}" checked="{{item.check}}" disabled="{{item.status}}" on-tap="setNoCheque"></paper-checkbox>
                 </td>
                 <td>[[item.fee]]</td>
                 <td>[[item.fee_no]]</td>
@@ -99,11 +99,16 @@
         localize: {
           statePath: 'i18n.g2g'
         },
+        no: {
+          type: Number,
+          value: 1120
+        },
         data: {
           type: Array,
           value: [
             {
               check: false,
+              status: false,
               fee: 1,
               fee_no: 1,
               fee_round: 1,
@@ -112,7 +117,44 @@
               invoice_exporter_no: '',
               invoice_exporter_date: '',
               invoice_no: ''
-            }
+            },
+            {
+              check: false,
+              status: false,
+              fee: 1,
+              fee_no: 1,
+              fee_round: 1,
+              company: 'ขายข้าว 1 จำกัด',
+              value_b: 100,
+              invoice_exporter_no: '',
+              invoice_exporter_date: '',
+              invoice_no: ''
+            },
+            {
+              check: false,
+              status: true,
+              fee: 1,
+              fee_no: 1,
+              fee_round: 1,
+              company: 'ขายข้าว 1 จำกัด',
+              value_b: 100,
+              invoice_exporter_no: '',
+              invoice_exporter_date: '',
+              invoice_no: ''
+            },
+            {
+              check: false,
+              status: false,
+              fee: 1,
+              fee_no: 1,
+              fee_round: 1,
+              company: 'ขายข้าว 1 จำกัด',
+              value_b: 100,
+              invoice_exporter_no: '',
+              invoice_exporter_date: '',
+              invoice_no: ''
+            },
+
 
           ]
         }
@@ -125,6 +167,36 @@
         } catch (error) {
 
         }
+      },
+      checkStatus: function (status) {
+        if (status) return 'background-color: #F1F1F1;'
+        return ''
+        // console.log(status)
+      },
+      _selectDataAll: function (val) {
+        try {
+          this.data.map((item, index) => {
+            if (item.status === false)
+              this.set('data.' + index + '.check', this.selectDataAll);
+          });
+        } catch (error) {
+
+        }
+      },
+      setNoCheque: function (para) {
+        console.log(para.model.__data__)
+        let item = para.model.__data__
+        if (item.item.check === false) {
+          this.set('data.' + item.index + '.invoice_no', '')
+        } else {
+          for (var index = 0; index < this.data.length; index++) {
+              console.log(this.data[index].invoice_no);
+            
+          }
+          // this.set('data.' + item.index + '.invoice_no', this.no)
+        }
+        console.log(this.no)
+
       },
     });
   </script>

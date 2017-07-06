@@ -2,6 +2,9 @@
 <link rel="import" href="./../../../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="./../../../../bower_components/paper-tooltip/paper-tooltip.html">
 <link rel="import" href="./../../../../bower_components/paper-button/paper-button.html">
+
+<link rel="import" href="./../../../../bower_components/iron-icons/editor-icons.html">
+
 <link rel="import" href="./../../components/format-number-behavior.html">
 <link rel="import" href="./../../../../bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="./../../../layout/shared-styles.html">
@@ -134,7 +137,7 @@
       
     </div>-->
     <div class="btnFab" hidden="{{fabHidden}}">
-      <paper-fab icon="add" title="{{localize.money_receiver}}" id="addContract" on-tap="payMoney"></paper-fab>
+      <paper-fab icon="editor:attach-money" title="{{localize.money_receiver}}" id="addContract" on-tap="payMoney"></paper-fab>
       <paper-tooltip for="addContract" offset="0">{{localize.money_receiver}}</paper-tooltip>
     </div>
 
