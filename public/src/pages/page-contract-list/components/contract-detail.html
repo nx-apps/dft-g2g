@@ -37,19 +37,17 @@
       margin-top: 25px;
       font-size: var(--font-size-h5);
     }
-
-    paper-button.btnInTable {
+    /*paper-button.btnInTable {
       --paper-button: {
         margin-top: 0px;
         height: 32px;
       }
-    }
+    }*/
 
     .titleName {
       margin-bottom: 10px;
     }
-
-    .table-head>tr>th:nth-child(1),
+    /*.table-head>tr>th:nth-child(1),
     .table-head>tr>th:nth-child(3),
     .table-body>tr>td:nth-child(1),
     .table-body>tr>td:nth-child(3),
@@ -63,7 +61,7 @@
     .table-body>tr>th:nth-child(2),
     .table-foot>tr>th:nth-child(2) {
       width: 60%;
-    }
+    }*/
 
     .gl-table-default {
       margin-bottom: 20px;
@@ -133,6 +131,35 @@
       /*display: inline;*/
       /*float: right;*/
     }
+
+    #table-wrapper {
+      position: relative;
+      border: 1px solid #a8a8a8;
+    }
+
+    #table-scroll {
+      height: 450px;
+      overflow: auto;
+      /*margin-top: 20px;*/
+    }
+
+    #table-wrapper table {
+      width: 100%;
+    }
+
+    #table-wrapper table * {
+      /*background: yellow;*/
+      color: black;
+    }
+
+    #table-wrapper table thead th .text {
+      position: absolute;
+      top: -20px;
+      z-index: 2;
+      height: 20px;
+      width: 35%;
+      /*border: 1px solid red;*/
+    }
   </style>
   <template>
     <gl-form-panel set-padding="10px 20px 10px 20px" set-border="1px">
@@ -157,8 +184,9 @@
       </gl-grid-row>
       <gl-grid-row width="{{getWidth}}">
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,9]]">[[changeString2Num(data.*,'contract_no')]]
-          <gl-form-input type="number" required class="required" error-message="{{localizeContract.error_input}}{{localizeContract.contract_no}}" disabled="[[_checkArrayTrue(commonState.btnDisabled,data.contract_status)]]"
-            label="{{localizeContract.contract_no}}" value="{{data.contract_no}}" placeholder="{{localizeContract.contract_no}}"></gl-form-input>
+          <gl-form-input type="number" required class="required" error-message="{{localizeContract.error_input}}{{localizeContract.contract_no}}"
+            disabled="[[_checkArrayTrue(commonState.btnDisabled,data.contract_status)]]" label="{{localizeContract.contract_no}}"
+            value="{{data.contract_no}}" placeholder="{{localizeContract.contract_no}}"></gl-form-input>
         </gl-grid-col>
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
           <!--<gl-form-input type="date" always-float-label class="required" required disabled="[[_checkArrayTrue(commonState.btnDisabled,data.contract_status)]]"
@@ -170,8 +198,8 @@
       <gl-grid-row width="{{getWidth}}">
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,9]]">
           <gl-combo-box class="required" required disabled="[[_checkArrayTrue(commonState.btnDisabled,data.contract_status)]]" label="{{localizeContract.payment_type}}"
-            error-message="{{localizeContract.error_input}}{{localizeContract.payment_type}}" placeholder="{{localizeContract.payment_type}}" items="[[payterms]]"
-            item-label-path="payterms_Name" item-value-path="payterms_Id" value="{{data.payterm}}">
+            error-message="{{localizeContract.error_input}}{{localizeContract.payment_type}}" placeholder="{{localizeContract.payment_type}}"
+            items="[[payterms]]" item-label-path="payterms_Name" item-value-path="payterms_Id" value="{{data.payterm}}">
             <template>
               [[item.payterms_Name]]
             </template>
@@ -179,18 +207,18 @@
         </gl-grid-col>
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">[[changeString2Num(data.*,'contract_weight')]]
           <gl-form-input class="required number" required allowed-pattern="[0-9||,||.]" format-number="on" disabled="[[_checkArrayTrue(commonState.btnDisabled,data.contract_status)]]"
-            error-message="{{localizeContract.error_input}}{{localizeContract.quantity}}" required label="{{localizeContract.quantity}}" value="{{data.contract_weight}}"
-            placeholder="{{localizeContract.quantity}}" id="contract_weight"></gl-form-input>
+            error-message="{{localizeContract.error_input}}{{localizeContract.quantity}}" required label="{{localizeContract.quantity}}"
+            value="{{data.contract_weight}}" placeholder="{{localizeContract.quantity}}" id="contract_weight"></gl-form-input>
         </gl-grid-col>
       </gl-grid-row>
 
       <gl-grid-row>
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,9]]">
           <!--[[_getBuyerAddressFromData(data)]]-->
-          <gl-combo-box class="required" always-float-label required id="buyer_id" label="{{localizeContract.buyer}}" placeholder="{{localizeContract.buyer}}" 
-          disabled="[[_checkArrayTrue(commonState.btnDisabled,data.contract_status)]]"
-            items="{{buyerList}}" item-label-path="buyer_name" item-value-path="buyer_id" error-message="{{localizeContract.error_dropdown}}{{localizeContract.buyer}}"
-            value="{{data.buyer_id}}" on-selected-item-changed="_getBuyerAddress">
+          <gl-combo-box class="required" always-float-label required id="buyer_id" label="{{localizeContract.buyer}}" placeholder="{{localizeContract.buyer}}"
+            disabled="[[_checkArrayTrue(commonState.btnDisabled,data.contract_status)]]" items="{{buyerList}}" item-label-path="buyer_name"
+            item-value-path="buyer_id" error-message="{{localizeContract.error_dropdown}}{{localizeContract.buyer}}" value="{{data.buyer_id}}"
+            on-selected-item-changed="_getBuyerAddress">
             <template>
               [[item.buyer_name]]
             </template>
@@ -286,7 +314,7 @@
               </template>
             </gl-combo-box>
                       </span>
-          <div class="main">
+          <!--<div class="main">
 
             <template is="dom-repeat" items={{hamonizeList}} index-as="indexroot">
               <div class="item" hidden="{{item.hiddend}}">
@@ -294,18 +322,15 @@
                 <iron-icon icon="chevron-right" index="[[indexroot]]" on-tap="toggle"></iron-icon>
 
                 <paper-checkbox checked="{{item.check}}" id="{{indexroot}}" on-tap="getCheckChild" disabled="[[commonState.btnDisabled]]">
-                  <!--{{item.check}}||-->
+               
                   [[item.name_th]]
-                  <!--|| [[item.value]]-->
                 </paper-checkbox>
                 <iron-collapse id="collapse-[[indexroot]]" opened="true">
                   <div>
                     <template is="dom-repeat" items={{item.sub}} as="subChild">
                       <div class="sub-item" hidden="{{subChild.hiddend}}">
                         <paper-checkbox id="{{indexroot}}" checked="{{subChild.check}}" on-tap="getSelect" disabled="[[commonState.btnDisabled]]">
-                          <!--{{subChild.check}}|| -->
-
-                          <!--|| [[item.value]]-->
+                      
                         </paper-checkbox>
                         <span class="namesub">
                         [[subChild.hamonize_th2]]
@@ -320,6 +345,48 @@
               </div>
               <br>
             </template>
+          </div>-->
+          <div id="table-wrapper">
+            <div id="table-scroll">
+              <table class="gl-table-default">
+                <thead class="table-head">
+                  <tr  >
+                    <th style="width:30px"></th>
+                    <th style="width:30px"></th>
+                    <th>ชื่อกลุ่มข้าว</th>
+                    <th>ชื่อข้าว</th>
+                    <th>รหัส Hamonize</th>
+                    <th>ปี</th>
+                  </tr>
+                </thead>
+                <tbody class="table-body">
+                  <template is="dom-repeat" items={{hamonizeList}} index-as="indexroot">
+                    <tr hidden="{{item.hiddend}}">
+                      <td>
+                        <paper-checkbox checked="{{item.check}}" id="{{indexroot}}" on-tap="getCheckChild" disabled="[[commonState.btnDisabled]]">
+                      </td>
+                      <td>-</td>
+                      <td>[[item.name_th]]</td>
+                      <td>-</td>
+                      <td>-</td>
+                      <td>-</td>
+                    </tr>
+                    <template is="dom-repeat" items={{item.sub}} as="subChild">
+                      <tr hidden="{{subChild.hiddend}}">
+                        <td></td>
+                        <td>
+                          <paper-checkbox id="{{indexroot}}" checked="{{subChild.check}}" on-tap="getSelect" disabled="[[commonState.btnDisabled]]">
+                        </td>
+                        <td></td>
+                        <td>[[subChild.hamonize_th2]]</td>
+                        <td>[[subChild.hamonize_code]]</td>
+                        <td>[[subChild.hamonize_year]]</td>
+                      </tr>
+                    </template>
+                  </template>
+                </tbody>
+              </table>
+            </div>
           </div>
         </gl-grid-col>
       </gl-grid-row>
@@ -360,7 +427,7 @@
         localizeCommon: {
           statePath: 'i18n.common'
         },
-        
+
         commonState: {
           statePath: 'commonState.setState'
         },
@@ -582,7 +649,7 @@
           dataResive.country = this.dataShow.obj.country
           dataResive.contract_no = Number(dataResive.contract_no)
           dataResive.country_id = this.dataShow.obj.buyer.country_id
-          dataResive.contract_date = dataResive.contract_date+ 'T00:00:00+07:00'
+          dataResive.contract_date = dataResive.contract_date + 'T00:00:00+07:00'
           delete dataResive.date_updated
           delete dataResive.date_created
           res(dataResive)
