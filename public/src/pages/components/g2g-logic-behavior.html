@@ -292,6 +292,20 @@
         timeout = setTimeout(later, wait);
         if (callNow) func.apply(context, args);
       };
+    },
+    maxNumberInArrayObject: function (arr, prop) {
+      // newCh เป็น array   'invoice_no'  คือชื่อที่ prop ที่ต้องการเรียง
+      // this.maxNumberInArrayObject(newCh, 'invoice_no')
+      // var maxCallback = (max, cur) => Math.max(max, cur)
+      // return arr.map((item) => Number(item[prop])).reduce(maxCallback, -Infinity)
+      return Math.max(...arr.map((item) => Number(item[prop])))
+    },
+    minNumberInArrayObject: function (arr, prop) {
+      // newCh เป็น array   'invoice_no'  คือชื่อที่ prop ที่ต้องการเรียง
+      // this.minNumberInArrayObject(newCh, 'invoice_no')
+      // var minCallback = (min, cur) => Math.min(cur,min)
+      // return arr.map((item) => Number(item[prop])).reduce(minCallback, -Infinity)
+      return Math.min(...arr.map((item) => Number(item[prop])))
     }
   }
 

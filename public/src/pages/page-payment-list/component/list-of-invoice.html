@@ -187,10 +187,10 @@
           return this.set('fabHidden',false)
         return this.set('fabHidden',true)
       },
-      // getInvoiceid: function (e) {
-      //   // console.log(e.currentTarget.data.invoice_id);
-      //   window.open(window._config.reportServer+'/api/payment/report1?invoice_id=' + e.currentTarget.data.invoice_id, '1');
-      // },
+      getInvoiceid: function (e) {
+        // console.log(e.currentTarget.data);
+        window.open(window._config.reportServer+'/api/finance/report1?id=' + e.currentTarget.data.id);
+      },
       payMoney: function () {
         var arr = [];
         var data = this.data.filter((val) => {

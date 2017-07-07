@@ -92,6 +92,26 @@
 
       </template>
       <gl-form-panel-body>
+        <!--<gl-grid-row width="{{getWidth}}">
+          <div style="margin-top:30px;">{{localize.label_invoice_no}} :</div>
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,2]]">
+            <gl-form-input class="required" required disabled="[[common.btnDisabled]]" label="" placeholder="{{localize.text_your_detail}}"
+              error-message="{{localize.text_enter_your_detail}}" value="{{data.invoice_type}}"></gl-form-input>
+          </gl-grid-col>
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,2]]">
+            <gl-form-input class="required" required disabled="[[common.btnDisabled]]" placeholder="{{localize.text_your_detail}}"
+              error-message="{{localize.text_enter_your_detail}}" value="{{data.invoice_no}}"></gl-form-input>
+          </gl-grid-col>
+          <div style="margin-top:30px;"> / </div>
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,2]]">
+            <gl-form-input class="required" required disabled="[[common.btnDisabled]]" placeholder="{{localize.text_your_detail}}"
+              error-message="{{localize.text_enter_your_detail}}" value="{{data.invoice_year}}"></gl-form-input>
+          </gl-grid-col>
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]"></gl-grid-col>
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,2]]">
+            <gl-form-input type="date" class="required" required disabled="[[common.btnDisabled]]" label="{{localize.label_invoice_date}}" value="{{data.invoice_date}}"></gl-form-input>
+          </gl-grid-col>
+        </gl-grid-row>-->
 
         <div class="text">{{localize.label_cm_invoice}}</div>
         <gl-grid-row width="{{getWidth}}">
@@ -338,10 +358,10 @@
       //   });
       // },
 
-      // printInvoice: function () {
-      //   // report.report_type
-      //   window.open(window._config.reportServer+'/api/payment/report1?invoice_id=' + this.data.invoice_id + '&export=' + this.printReport.typeFile, '1');
-      // },
+      printInvoice: function () {
+        // report.report_type
+        window.open(window._config.reportServer+'/api/finance/report1?id=' + this.data.id + '&export=' + this.printReport.typeFile);
+      },
       createInvoice: function () {
         // console.log(this.data);
         var data = {
