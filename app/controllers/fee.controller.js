@@ -121,6 +121,11 @@ exports.getByContractId = function (req, res) {
 }
 exports.getById = function (req, res) {
     req.r.table('fee').get(req.query.id)
+        .merge(function (m) {
+            return {
+                fee_date: m('fee_date').inTimezone('+07').toISO8601()
+            }
+        })
         .run()
         .then(function (data) {
             res.json(data)
