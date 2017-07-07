@@ -72,10 +72,12 @@
                 <td>[[item.company]] </td>
                 <td>[[item.value_b]] </td>
                 <td>
-                  <gl-form-input placeholder="เลบที่ invoice"disabled="{{item.status}}"  no-label-float value="{{item.invoice_exporter_no}}" data="[[item]]" on-blur="updateCheque"></gl-form-input>
+                  <gl-form-input placeholder="เลบที่ invoice" disabled="{{item.status}}" no-label-float value="{{item.invoice_exporter_no}}"
+                    data="[[item]]" on-blur="updateCheque"></gl-form-input>
                 </td>
                 <td>
-                  <gl-form-input type="date" placeholder="วันที่" disabled="{{item.status}}" no-label-float value="{{item.invoice_exporter_date}}" data="[[item]]"></gl-form-input>
+                  <gl-form-input type="date" placeholder="วันที่" disabled="{{item.status}}" no-label-float value="{{item.invoice_exporter_date}}"
+                    data="[[item]]"></gl-form-input>
                 </td>
                 <td>[[changeString2Num(item.*,'invoice_no')]]
                   <gl-form-input placeholder="invoice" disabled="{{item.status}}" no-label-float value="{{item.invoice_no}}" data="[[item]]"></gl-form-input>
@@ -186,46 +188,60 @@
       },
       _selectDataAll: function (val) {
         try {
+
           this.data.map((item, index) => {
             if (item.status === false) {
               this.set('data.' + index + '.check', this.selectDataAll);
+              let newCh = this.data.filter((item) => item.check === true && item.status === false)
+              let result = this.maxNumberInArrayObject(newCh, 'invoice_no')
+              if (result === 0) {
+                this.set('data.' + index + '.invoice_no', this.no + 1)
+              } else {
+                this.set('data.' + index + '.invoice_no', result + 1)
+              }
               if (this.selectDataAll === false) {
                 this.set('data.' + index + '.invoice_no', '');
               }
-
             }
-
           })
-          if (this.selectDataAll === true) {
-            let data = JSON.parse(JSON.stringify(this.data));
-            console.log(11111);
-            // console.log(this.data.sort(function (a, b) { return a.invoice_no - b.invoice_no }));
-            let x = data.filter((item) => item.check === true && item.status === false).sort(function (a, b) { return a.invoice_no - b.invoice_no })
-            console.log(x);
-          }
         } catch (error) {
 
         }
       },
       setNoCheque: function (para) {
         // console.log(para.model.__data__)
+        //เพิ่ม index ลงไปเพื่อไว้ ใส่ค่ากลับได้ถูกตำแหน่ง
+        this.data.map((item, index) => item.indexItem = index)
         let item = para.model.__data__
+        // หา item ที่ check แล่วและ status ยังเป็น false
         let newCh = this.data.filter((item) => item.check === true && item.status === false)
+        // เรียงจากนค่า invoice_no น้อยไปหามาก
+        newCh.sort(function (a, b) { return a.invoice_no + b.invoice_no })
         if (item.item.check === false) {
           this.set('data.' + item.index + '.invoice_no', '')
-          let less = newCh.filter((item) => item.check === true && item.status === false).sort(function (a, b) { return a.invoice_no - b.invoice_no })
-          newCh.map((item)=>{
-
-          })
+          // let less = newCh.filter((item) => item.check === true && item.status === false).sort(function (a, b) { return a.invoice_no - b.invoice_no })
+          let resultMin = this.minNumberInArrayObject(newCh, 'invoice_no')
+          if (this.no === resultMin-1) {
+            newCh.map((item,index) => {
+              if (item.invoice_no !== resultMin) {
+                this.set('data.' + item.indexItem + '.invoice_no', resultMin)
+              }
+              ++resultMin
+            })
+          }else {
+            let no = this.no
+            newCh.map((item,index) => {
+              this.set('data.' + item.indexItem + '.invoice_no', ++no)
+            })
+          }
         } else {
-          
+
           //อยู่ใน g2gLogicBehavior 
           let result = this.maxNumberInArrayObject(newCh, 'invoice_no')
           if (result === 0)
-            return this.set('data.' + item.index + '.invoice_no', this.no +1)
+            return this.set('data.' + item.index + '.invoice_no', this.no + 1)
           return this.set('data.' + item.index + '.invoice_no', result + 1)
         }
-        // console.log(this.no)
 
       },
     });
