@@ -54,8 +54,8 @@
               <th style="width: 70px;">รอบ</th>
               <th style="width: 240px;">บริษัท</th>
               <th style="width: 170px;">จำนวนเงิน</th>
-              <th style="width: 140px;">เลขที่ Invoice</th>
-              <th style="width: 140px;">วันที่ Invoice</th>
+              <th style="width: 140px;">เลขที่ใบแจ้งหนี้</th>
+              <th style="width: 140px;">วันที่ใบแจ้งหนี้</th>
               <th style="width: 180px">เลขที่เช็ค</th>
             </tr>
             </tr>
@@ -126,7 +126,7 @@
               fee: 1,
               fee_no: 1,
               fee_round: 1,
-              company: 'ขายข้าว 1 จำกัด',
+              company: 'ขายข้าว 2 จำกัด',
               value_b: 100,
               invoice_exporter_no: '',
               invoice_exporter_date: '',
@@ -138,11 +138,11 @@
               fee: 1,
               fee_no: 1,
               fee_round: 1,
-              company: 'ขายข้าว 1 จำกัด',
+              company: 'ขายข้าว 3 จำกัด',
               value_b: 100,
               invoice_exporter_no: '',
               invoice_exporter_date: '',
-              invoice_no: ''
+              invoice_no: 'd'
             },
             {
               check: false,
@@ -150,7 +150,7 @@
               fee: 1,
               fee_no: 1,
               fee_round: 1,
-              company: 'ขายข้าว 1 จำกัด',
+              company: 'ขายข้าว 4 จำกัด',
               value_b: 100,
               invoice_exporter_no: '',
               invoice_exporter_date: '',
@@ -162,7 +162,7 @@
               fee: 1,
               fee_no: 1,
               fee_round: 2,
-              company: 'ขายข้าว 1 จำกัด',
+              company: 'ขายข้าว 5 จำกัด',
               value_b: 100,
               invoice_exporter_no: '',
               invoice_exporter_date: '',
@@ -192,7 +192,9 @@
           this.data.map((item, index) => {
             if (item.status === false) {
               this.set('data.' + index + '.check', this.selectDataAll);
-              let newCh = this.data.filter((item) => item.check === true && item.status === false)
+              // console.log(this.data.filter((items)=> items.check === true && items.status === false && items.invoice_no === ''))
+              let newCh = this.data.filter((items) => items.check === true && items.status === false)
+              // console.log(newCh);
               let result = this.maxNumberInArrayObject(newCh, 'invoice_no')
               if (result === 0) {
                 this.set('data.' + index + '.invoice_no', this.no + 1)
@@ -215,22 +217,23 @@
         let item = para.model.__data__
         // หา item ที่ check แล่วและ status ยังเป็น false
         let newCh = this.data.filter((item) => item.check === true && item.status === false)
-        // เรียงจากนค่า invoice_no น้อยไปหามาก
-        newCh.sort(function (a, b) { return a.invoice_no + b.invoice_no })
+        newCh.sort((a, b) => Number(a.invoice_no) - Number(b.invoice_no))
         if (item.item.check === false) {
           this.set('data.' + item.index + '.invoice_no', '')
-          // let less = newCh.filter((item) => item.check === true && item.status === false).sort(function (a, b) { return a.invoice_no - b.invoice_no })
           let resultMin = this.minNumberInArrayObject(newCh, 'invoice_no')
-          if (this.no === resultMin-1) {
-            newCh.map((item,index) => {
+          
+          if (this.no === resultMin - 1) {
+            newCh.map((item, index) => {
               if (item.invoice_no !== resultMin) {
                 this.set('data.' + item.indexItem + '.invoice_no', resultMin)
               }
               ++resultMin
             })
-          }else {
+          } else {
             let no = this.no
-            newCh.map((item,index) => {
+            // เรียงจากนค่า invoice_no น้อยไปหามาก
+            // newCh.sort(function (a, b) { return a.invoice_no + b.invoice_no })
+            newCh.map((item, index) => {
               this.set('data.' + item.indexItem + '.invoice_no', ++no)
             })
           }
