@@ -17,21 +17,26 @@
      :host {
       display: block;
     }
+
     * {
       font-family: 'CSChatThaiUI', sans-serif;
       -webkit-font-smoothing: antialiased;
     }
+
     main {
       padding: 5px;
       margin: 0 auto;
     }
+
     section {
       display: none;
       border-top: 1px solid #ddd;
     }
+
     input {
       display: none;
     }
+
     label {
       display: inline-block;
       margin: 0 0 -1px;
@@ -42,15 +47,18 @@
       border: 1px solid transparent;
       background: #D5D8DC;
     }
+
     label:before {
       font-family: fontawesome;
       font-weight: normal;
       margin-right: 10px;
     }
+
     label:hover {
       color: #888;
       cursor: pointer;
     }
+
     input:checked+label {
       color: #555;
       border: 1px solid #ddd;
@@ -58,18 +66,22 @@
       border-bottom: 1px solid #fff;
       background: #fff;
     }
+
     #tab1:checked~#content1,
     #tab2:checked~#content2 {
       display: block;
     }
+
     #content1,
     fee-management,
     gl-form-panel {
       width: 98%;
     }
+
     .content-fee {
       margin: 15px;
     }
+
     .text-header {
       margin: 20px 0px 20px 0px;
       font-size: 20px;
@@ -126,7 +138,7 @@
                   </gl-grid-col>
                   <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
                     [[changeString2Num(data.*,'rate_tt_b')]]
-                    <gl-form-input class="required" required label="{{localize.exchange_rate}} [[data.payterm]]" disabled="[[common.btnDisabled]]"
+                    <gl-form-input autofocus class="required" required label="{{localize.exchange_rate}} [[data.payterm]]" disabled="[[common.btnDisabled]]"
                       allowed-pattern="[0-9||,||.]" format-number="on" value="{{data.rate_tt_b}}" always-float-label></gl-form-input>
                   </gl-grid-col>
                   <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
@@ -161,7 +173,7 @@
                       always-float-label></gl-form-input>
                   </gl-grid-col>
                   <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-                    <gl-form-input disabled format-number="on" label="{{localize.fee_total}} ({{localize.baht}})" value="{{calRep(data.rate_bank_b,data.fee_ex_d,data.fee_in_b)}}"
+                    <gl-form-input disabled format-number="on" label="{{localize.fee_total}} ({{localize.baht}})" value="{{data.value_fee_b}}"
                       always-float-label></gl-form-input>
                   </gl-grid-col>
                 </gl-grid-row>
@@ -170,15 +182,13 @@
               {{_balanceChangeBath(data.rate_bank_b,data.balanceLessFees)}} [[changeString2Num(data.*,'feeTotalWithOutUsd')]]
               [[changeString2Num(data.*,'totalbath')]] [[_balanceBath(data.balanceChangeBath,data.feeTotalWithOutUsd)]]
 
-              <fee-exports-invoice 
-              fee-ex="{{data.fee_ex_d}}"
-              fee-in="{{data.fee_in_b}}"
-              rate-bank="{{data.rate_bank_b}}"
+              <fee-exports-invoice fee-ex="{{data.fee_ex_d}}" 
+              fee-in="{{data.fee_in_b}}" 
+              rate-bank="{{data.rate_bank_b}}" 
               rate-tt="{{data.rate_tt_b}}"
               invoice-index="[[_ObcountIndex(index)]]" 
-              invoice-page="[[data.invoicePage]]" 
-              is-input-disabled="[[common.btnDisabled]]"
-                check-required="{{check_required}}"></fee-exports-invoice>
+              invoice-page="[[data.invoicePage]]"
+                is-input-disabled="[[common.btnDisabled]]" check-required="{{check_required}}"></fee-exports-invoice>
             </div>
           </gl-form-panel>
         </div>
@@ -212,7 +222,8 @@
       },
       observers: [
         '_getUSD(data)',
-        '_invoicePage(data)'
+        '_invoicePage(data)',
+        'calRep(data.rate_bank_b,data.fee_ex_d,data.fee_in_b)'
       ],
       listeners: {
         'check-required': 'checkRequired',
@@ -241,9 +252,9 @@
       calRep(rate_bank_b, fee_ex_d, fee_in_b) {
         if (rate_bank_b !== '' & fee_ex_d !== '' & fee_in_b !== '') {
           var calc_value_fee_b = ((parseFloat(rate_bank_b) * parseFloat(fee_ex_d)) + parseFloat(fee_in_b));
-          return calc_value_fee_b
+          this.set('data.value_fee_b', Number(calc_value_fee_b.toFixed(2)));
         } else {
-          return 0
+          this.set('data.value_fee_b', 0);
         }
       },
       _balanceChangeBath: function (rate_bank_b, balanceLessFees) {
