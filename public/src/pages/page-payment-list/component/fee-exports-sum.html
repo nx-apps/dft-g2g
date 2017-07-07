@@ -178,7 +178,7 @@
             this.totalInvoice.map((el) => {
               result += el.totalTonInvoices;
             });
-            this.set('data.totalTonInvoices', result)
+            this.set('data.totalTonInvoices', Number(result.toFixed(2)))
         //     // this.data.totalTonInvoices = result
         //     // this.notifyPath('data.totalTonInvoices');
 
@@ -194,7 +194,7 @@
             this.totalInvoice.map((el) => {
               result += el.totalAmountUsdInvoices;
             });
-            this.set('data.totalAmountUsdInvoices', result)
+            this.set('data.totalAmountUsdInvoices', Number(result.toFixed(2)))
         //     // this.data.totalAmountUsdInvoices = result
         //     // this.notifyPath('data.totalAmountUsdInvoices');
 
@@ -203,7 +203,7 @@
               // result += el.totalBathInvoices;
               result += el.value_b;
             });
-            this.set('data.totalBathInvoices', result)
+            this.set('data.totalBathInvoices', Number(result.toFixed(2)))
         //     // this.data.totalBathInvoices = result
         //     // this.notifyPath('data.totalBathInvoices');
 
@@ -212,7 +212,7 @@
               // result += el.totalFeeInvoices;
               result += el.value_fee_b;
             });
-            this.set('data.totalFeeInvoices', result)
+            this.set('data.totalFeeInvoices', Number(result.toFixed(2)))
         //     // this.data.totalFeeInvoices = result
         //     // this.notifyPath('data.totalFeeInvoices');
 
@@ -221,14 +221,14 @@
               // result += el.totalBalance;
               result += el.value_bal_b;
             });
-            this.set('data.totalBalance', result)
+            this.set('data.totalBalance', Number(result.toFixed(2)))
 
             result = 0;
             this.totalInvoice.map((el) => {
               // result += el.totalIncomeTaxInvoices;
               result += el.value_tax_b;
             });
-            this.set('data.totalIncomeTaxInvoices', result)
+            this.set('data.totalIncomeTaxInvoices', Number(result.toFixed(2)))
         //     // this.data.totalIncomeTaxInvoices = result
         //     // this.notifyPath('data.totalIncomeTaxInvoices');
 
@@ -237,7 +237,7 @@
               // result += el.totalMoneyBathInvoices;
               result += el.value_final_b;
             });
-            this.set('data.totalMoneyBathInvoices', result)
+            this.set('data.totalMoneyBathInvoices', Number(result.toFixed(2)))
         //     // this.data.totalMoneyBathInvoices = result
         //     // this.notifyPath('data.totalMoneyBathInvoices');
         //   } catch (e) {

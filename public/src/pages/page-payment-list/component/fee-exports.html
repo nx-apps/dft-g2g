@@ -97,6 +97,8 @@
               <template is="dom-if" if={{!data.fin_status}}>
                 <template is="dom-if" if={{!data.rice_status}}>
                   <div class="horizontal end-justified layout">
+                    <paper-icon-button id="print" class="crud" icon="print" raised on-tap="printInput" disabled="[[!common.btnDisabled]]"></paper-icon-button>
+                    <paper-tooltip for="print" offset="0">{{localize.print}}</paper-tooltip>
                     <paper-icon-button id="edit" class="crud" icon="create" raised on-tap="editInput" disabled="[[!common.btnDisabled]]"></paper-icon-button>
                     <paper-tooltip for="edit" offset="0">{{localize.edit}}</paper-tooltip>
                     <paper-icon-button id="delete" class="crud" icon="delete" raised on-tap="_delete" disabled="[[!common.btnDisabled]]"></paper-icon-button>
@@ -199,7 +201,7 @@
   <script>
     Polymer({
       is: "fee-exports",
-      behaviors: [ReduxBehavior, nylonBehavior, FormatNumberBehavior, g2gLogicBehavior, ValidateFormBehavior],
+      behaviors: [ReduxBehavior, nylonBehavior, FormatNumberBehavior, g2gLogicBehavior, ValidateFormBehavior, CookieBehavior],
       properties: {
         localize: {
           statePath: 'i18n.fee'
@@ -300,6 +302,9 @@
           inputRice: false,
           btnRice: true
         });
+      },
+      printInput: function(){
+        window.open(window._config.reportServer+'/api/finance/report3?date=' + this.data.fee_date +'&contract_id='+ this.getCookieBhv("contract_id") + '&export=' + 'pdf');
       }
     });
   </script>

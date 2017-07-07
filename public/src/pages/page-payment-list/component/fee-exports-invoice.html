@@ -284,7 +284,7 @@
             in: 0,
             ex: 0,
             fee: 0,
-            detai: 0
+            detail: 0
           }
         },
         oldFee: {
@@ -293,7 +293,7 @@
             in: 0,
             ex: 0,
             fee: 0,
-            detail: 0
+            detail: {}
           }
         }
       },
@@ -304,14 +304,26 @@
           this.value_fee_b = calc_value_fee_b;
         }
       },
-      _calcFeeAvg: function (type, fee, index, len) {
+      _calcFeeAvg: function (type, fee, indexBook, indexDetail, len) {
         fee = Number(Number(fee).toFixed(2));
-        if (this.oldFee[type] != fee) {
-          this.set('sumFee.' + type, 0);
-          this.set('oldFee.' + type, fee);
+        if (type == 'detail') {
+          var index = indexDetail;
+          if (this.oldFee[type][indexBook] != fee) {
+            this.set('sumFee.' + type + '.' + indexBook, 0);
+            this.set('oldFee.' + type + '.' + indexBook, fee);
+          }
+          var sum = this.sumFee[type][indexBook] + fee_avg; //6.17+30.85
+        } else {
+          var index = indexBook;
+          if (this.oldFee[type] != fee) {
+            this.set('sumFee.' + type, 0);
+            this.set('oldFee.' + type, fee);
+          }
+          var sum = this.sumFee[type] + fee_avg; //6.17+30.85
         }
+
         var fee_avg = Number((fee / len).toFixed(2));//6.17
-        var sum = this.sumFee[type] + fee_avg; //6.17+30.85
+
         if (Number(sum.toFixed(2)) > fee) {
           var div = sum - fee; //0.02
           fee_avg = fee_avg - div; //6.17-0.02 == 6.15
@@ -320,7 +332,11 @@
           var div = fee - sum;
           fee_avg = fee_avg + div;
         }
-        this.set('sumFee.' + type, Number(this.sumFee[type]) + Number((fee_avg).toFixed(2)));
+        if (type == 'detail') {
+          this.set('sumFee.' + type + '.' + indexBook, Number(this.sumFee[type][indexBook]) + Number((fee_avg).toFixed(2)));
+        } else {
+          this.set('sumFee.' + type, Number(this.sumFee[type]) + Number((fee_avg).toFixed(2)));
+        }
         // console.log('func ', Number(fee_avg.toFixed(2)));
         return Number(fee_avg.toFixed(2));
       },
@@ -338,14 +354,14 @@
           this.set('sumFee.' + type, 0);
           this.set('oldFee.' + type, fee);
         }
-        console.log(this.value_fee_b);
-        console.log(value_fee_b);
+        // console.log(this.value_fee_b);
+        // console.log(value_fee_b);
       },
       _calcfeeEx: function (fee, index) {
         if (typeof this.data.book !== 'undefined') {
           if (fee !== '') {
             var len = this.data.book.length;
-            this.set('data.book.' + index + '.fee_ex_d', this._calcFeeAvg('ex', Number(fee), index, len));
+            this.set('data.book.' + index + '.fee_ex_d', this._calcFeeAvg('ex', Number(fee), index, 0, len));
           } else {
             this.set('data.book.' + index + '.fee_ex_d', 0);
           }
@@ -355,7 +371,7 @@
         if (typeof this.data.book !== 'undefined') {
           if (fee !== '') {
             var len = this.data.book.length;
-            this.set('data.book.' + index + '.fee_in_b', this._calcFeeAvg('in', Number(fee), index, len));
+            this.set('data.book.' + index + '.fee_in_b', this._calcFeeAvg('in', Number(fee), index, 0, len));
           } else {
             this.set('data.book.' + index + '.fee_in_b', 0);
           }
@@ -365,7 +381,7 @@
         if (typeof this.data.book !== 'undefined') {
           if (fee !== '') {
             var len = this.data.book.length;
-            this.set('data.book.' + index + '.value_fee_b', this._calcFeeAvg('fee', fee, index, len));
+            this.set('data.book.' + index + '.value_fee_b', this._calcFeeAvg('fee', fee, index, 0, len));
           } else {
             this.set('data.book.' + index + '.value_fee_b', 0);
           }
@@ -382,10 +398,12 @@
           this.set('data.book.' + indexData + '.detail.' + index + '.value_b', 0);
         }
       },
-      _calcValueFeeB: function (feeDetail, indexData, index) {
+      _calcValueFeeB: function (feeDetail, indexData, indexDetail) {
         // console.log(feeDetail, indexData, index);
         var len = this.data.book[indexData].detail.length;
-        this.set('data.book.' + indexData + '.detail.' + index + '.value_fee_b', this._calcFeeAvg('detail', feeDetail, index, len));
+        // console.log('fee ', feeDetail);
+        // console.log(this._calcFeeAvg('detail', feeDetail, indexData, indexDetail, len));
+        this.set('data.book.' + indexData + '.detail.' + indexDetail + '.value_fee_b', this._calcFeeAvg('detail', feeDetail, indexData, indexDetail, len));
 
         // if (rate_bank !== '') {
         //   console.log(this.data);

@@ -43,6 +43,7 @@ export const fee ={
         save:"บันทึก",
         cancel:"ยกเลิก",
         no_data:"ไม่มีข้อมูล",
-        delete:"ลบ"
+        delete:"ลบ",
+        print:'พิมพ์'
     }
 }   
