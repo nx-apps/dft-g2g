@@ -253,8 +253,7 @@ exports.approve = function (req, res) {
     if (req.body.id != '' && req.body.id != null && typeof req.body.id !== 'undefined') {
         var query = r.table('fee').get(req.body.id);
         if (updata.fee_status == true) {
-            updata = query
-                .merge(updata)
+            query.merge(updata)
                 .merge(function (m) {
                     return {
                         book: m('book').merge(function (m2) {
@@ -270,12 +269,20 @@ exports.approve = function (req, res) {
                         })
                     }
                 })
+                .do(function (d) {
+                    return query.update(d)
+                })
+                .run()
+                .then(function (data) {
+                    res.json(data);
+                })
+        } else {
+            query.update(updata)
+                .run()
+                .then(function (data) {
+                    res.json(data);
+                })
         }
-        query.update(updata)
-            .run()
-            .then(function (data) {
-                res.json(data);
-            })
     } else {
         res.json('require field "id"');
     }
