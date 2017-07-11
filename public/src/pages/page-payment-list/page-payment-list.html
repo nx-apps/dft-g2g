@@ -376,12 +376,13 @@
                 this._flipDrawer();
             },
             _getFeeDetail: function (e) {
+                console.log(e.detail.detail)
                 this.dispatchAction('SET_BREADCRUMBS', [{
-                    label: 'รอบที่คิดค่าธรรมเนียมครั้งที่' + [[this._countRoundFee(e.detail.detail.fee_round)]],
+                    label: 'รอบที่คิดค่าธรรมเนียมครั้งที่' + e.detail.detail.fee_round,
                     href: ''
                 }])
                 // this.fire('toast', { status: 'load' });
-                this.titlePanelRight = 'รอบที่คิดค่าธรรมเนียมครั้งที่ ' + [[this._countRoundFee(e.detail.detail.fee_round)]];
+                this.titlePanelRight = 'รอบที่คิดค่าธรรมเนียมครั้งที่ ' + e.detail.detail.fee_round;
                 this.paymentsPageSeleted = 'blInvoicePage';
                 this._flipDrawer();
                 var id = e.detail.detail.id;
@@ -392,9 +393,6 @@
                     inputRice: true,
                     btnRice: true
                 });
-            },
-            _countRoundFee: function (val) {
-                return val + 1
             },
             _getChequeDetail: function (e) {
                 console.log(e.detail.detail);
