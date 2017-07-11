@@ -101,19 +101,16 @@
               <div>[[_ObcountIndex(indexData)]]/[[invoicePage]]</div>
             </div>
             <div class="horizontal layout">
-              {{_calcfeeEx(feeEx, indexData)}}
-              [[changeString2Num(item.*,'fee_ex_d')]]
+              {{_calcfeeEx(feeEx, indexData)}} [[changeString2Num(item.*,'fee_ex_d')]]
               <gl-form-input label="{{localize.fee_out}}" class="number required" required format-number="on" style="width:200px;" value="{{item.fee_ex_d}}"
                 disabled="[[common.btnDisabled]]"></gl-form-input>
-              {{_calcfeeIn(feeIn, indexData)}}
-              [[changeString2Num(item.*,'fee_in_b')]]
+              {{_calcfeeIn(feeIn, indexData)}} [[changeString2Num(item.*,'fee_in_b')]]
               <gl-form-input label="{{localize.fee_in}}" class="number required" required format-number="on" style="width:200px; margin-left:50px;"
                 value="{{item.fee_in_b}}" disabled="[[common.btnDisabled]]"></gl-form-input>
               <gl-form-input label="{{localize.fee_total}} ({{localize.baht}})" class="number" format-number="on" style="width:240px; margin-left:50px;"
                 value="{{item.value_fee_b}}" disabled="[[common.btnDisabled]]"></gl-form-input>
               <!--[[_calcFee(calcFee,indexData)]]-->
-              [[_calcFeeBAvg(item.fee_ex_d,item.fee_in_b, indexData)]]
-              [[changeString2Num(item.*,'value_fee_b')]]
+              [[_calcFeeBAvg(item.fee_ex_d,item.fee_in_b, indexData)]] [[changeString2Num(item.*,'value_fee_b')]]
             </div>
           </div>
           <div style="overflow-x:auto;">
@@ -150,8 +147,8 @@
                     [[changeString2Num(item2.*,'value_fee_b')]]
                     <!--[[_calcValueFeeB(item.fee_ex_d, rateBank, item.fee_in_b, indexData, index)]]-->
                     [[_calcValueFeeB(item.value_fee_b, indexData, index)]]
-                    <gl-form-input class="riceRequired" required style="text-align:right; width:170px;" format-number="on" value="{{item2.value_fee_b}}" disabled="[[common.inputRice]]"
-                     allowed-pattern="[0-9||,||.]"></gl-form-input>
+                    <gl-form-input class="riceRequired" required style="text-align:right; width:170px;" format-number="on" value="{{item2.value_fee_b}}"
+                      disabled="[[common.inputRice]]" allowed-pattern="[0-9||,||.]"></gl-form-input>
                   </td>
                   [[changeString2Num(item2.*,'value_bal_b')]]
                   <td>[[_calcValueBalB(item2.value_b, item2.value_fee_b, indexData, index)]]
@@ -159,7 +156,7 @@
                   </td>
                   <td>[[_calcValueTax(item2.value_bal_b, indexData, index)]]
                     <gl-form-input class="riceRequired" required style="text-align:right; width:170px;" format-number="on" value="{{item2.value_tax_b}}"
-                      disabled="[[common.inputRice]]"  allowed-pattern="[0-9||,||.]"></gl-form-input>
+                      disabled="[[common.inputRice]]" allowed-pattern="[0-9||,||.]"></gl-form-input>
                   </td>
                   [[changeString2Num(item2.*,'value_tax_b')]]
                   <td>[[_calcValueFinalB(item2.value_bal_b, item2.value_tax_b, indexData, index)]]
@@ -185,11 +182,11 @@
                   <gl-form-input class="number" format-number="on" style="width:140px;" value="[[_totalBathInvoices(indexData,data.*)]]" disabled></gl-form-input>
                 </td>
                 <td>
-                  <gl-form-input style="text-align:right; width:170px;" format-number="on" value="[[_totalFeeInvoices(indexData,data.*)]] " disabled></gl-form-input>
+                  <gl-form-input style="text-align:right; width:170px;" format-number="on" value="[[_totalFeeInvoices(indexData,data.*)]] "
+                    disabled></gl-form-input>
                 </td>
                 <td>
-                  <gl-form-input style="text-align:right; width:170px;" format-number="on" value="[[_totalBalance(indexData,data.*)]]"
-                    disabled></gl-form-input>
+                  <gl-form-input style="text-align:right; width:170px;" format-number="on" value="[[_totalBalance(indexData,data.*)]]" disabled></gl-form-input>
                 </td>
                 <td>
                   <gl-form-input style="text-align:right; width:170px;" format-number="on" value="[[_totalIncomeTaxInvoices(indexData,data.*)]]"
@@ -219,14 +216,16 @@
       <template is="dom-if" if="[[common.btnDisabled]]">
         <template is="dom-if" if="[[!data.fin_status]]">
           <template is="dom-if" if="[[!data.rice_status]]">
+            <div style="padding-top:15px;">{{localize.section_financial}} : {{localize.allocate}}{{localize.fee}}</div>
             <paper-button class="gl-btn-success" raised on-tap="approvePayment">{{localize.confirm}}</paper-button>
           </template>
         </template>
 
         <template is="dom-if" if="[[data.fin_status]]">
           <template is="dom-if" if="[[data.rice_status]]">
-            <paper-button class="gl-btn-default" raised on-tap="rejectFee">{{localize.cancel}}</paper-button>
-            <paper-button class="gl-btn-success" raised on-tap="approveFee">{{localize.confirm}}</paper-button>
+            <div style="padding-top:15px;">{{localize.section_rice}} : {{localize.allocate}}{{localize.fee}}</div>
+            <paper-button class="gl-btn-danger" raised on-tap="rejectFee">{{localize.incorrect}}</paper-button>
+            <paper-button class="gl-btn-success" raised on-tap="approveFee">{{localize.correct}}</paper-button>
           </template>
         </template>
       </template>
@@ -299,7 +298,7 @@
             detail: {}
           }
         },
-        list_fee:{
+        list_fee: {
           statePath: 'fee.list_id'
         }
       },
@@ -310,7 +309,7 @@
           this.value_fee_b = calc_value_fee_b;
         }
       },
-      _calcFeeAvg:function(fee,len){
+      _calcFeeAvg: function (fee, len) {
         fee = Number(Number(fee).toFixed(2));
         var fee_avg = Number((fee / len).toFixed(2));
         return Number(fee_avg.toFixed(2));
@@ -333,7 +332,7 @@
       //   //   }
       //   //   var sum = this.sumFee[type] + fee_avg; //6.17+30.85
       //   // }
-        
+
       //   // if (Number(sum.toFixed(2)) > fee) {
       //   //   var div = sum - fee; //0.02
       //   //   fee_avg = fee_avg - div; //6.17-0.02 == 6.15
@@ -406,10 +405,10 @@
         this.set('data.book.' + indexData + '.detail.' + indexDetail + '.value_fee_b', this._calcFeeAvg(Number(feeDetail), len));
       },
       _calcValueBalB: function (value_b, value_fee_b, indexData, index) {
-        if(value_fee_b !== ''){
+        if (value_fee_b !== '') {
           var calc_value_bal_b = Number(value_b) - Number(value_fee_b);
           this.set('data.book.' + indexData + '.detail.' + index + '.value_bal_b', calc_value_bal_b);
-        }else{
+        } else {
           this.set('data.book.' + indexData + '.detail.' + index + '.value_bal_b', 0);
         }
       },
@@ -511,10 +510,10 @@
         })
         // console.log(newData);
         var len = this.data.book.length;
-        var plusFeeEx = Number((Number(this.feeEx)/len).toFixed(2)) + 0.02;
-        var minusFeeEx = Number((Number(this.feeEx)/len).toFixed(2)) - 0.02;
-        var plusFeeIn = Number((Number(this.feeIn)/len).toFixed(2)) + 0.02;
-        var minusFeeIn = Number((Number(this.feeIn)/len).toFixed(2)) - 0.02;
+        var plusFeeEx = Number((Number(this.feeEx) / len).toFixed(2)) + 0.02;
+        var minusFeeEx = Number((Number(this.feeEx) / len).toFixed(2)) - 0.02;
+        var plusFeeIn = Number((Number(this.feeIn) / len).toFixed(2)) + 0.02;
+        var minusFeeIn = Number((Number(this.feeIn) / len).toFixed(2)) - 0.02;
 
         this.fire('check-required');
         if (this.checkRequired === true && check === true) {
@@ -522,9 +521,9 @@
             var value_fee_b = Number(((Number(this.rateBank) * Number(item.fee_ex_d)) + Number(item.fee_in_b)).toFixed(2));
             var plusFeeB = Number(Number(value_fee_b).toFixed(2)) + 0.02;
             var minusFeeB = Number(Number(value_fee_b).toFixed(2)) - 0.02;
-            if(Number(item.fee_ex_d) >= minusFeeEx && Number(item.fee_ex_d) <= plusFeeEx && 
-            Number(item.fee_in_b) >= minusFeeIn && Number(item.fee_in_b) <= plusFeeIn && 
-            Number(item.value_fee_b) >= minusFeeB && Number(item.value_fee_b) <= plusFeeB){
+            if (Number(item.fee_ex_d) >= minusFeeEx && Number(item.fee_ex_d) <= plusFeeEx &&
+              Number(item.fee_in_b) >= minusFeeIn && Number(item.fee_in_b) <= plusFeeIn &&
+              Number(item.value_fee_b) >= minusFeeB && Number(item.value_fee_b) <= plusFeeB) {
               this.fire('toast', {
                 status: 'openDialog',
                 text: 'ต้องการเพิ่มการคิดค่าธรรมเนียมใช่หรือไม่',
@@ -555,10 +554,10 @@
       },
       savePayment: function () {
         var len = this.data.book.length;
-        var plusFeeEx = Number((Number(this.data.fee_ex_d)/len).toFixed(2)) + 0.02;
-        var minusFeeEx = Number((Number(this.data.fee_ex_d)/len).toFixed(2)) - 0.02;
-        var plusFeeIn = Number((Number(this.data.fee_in_b)/len).toFixed(2)) + 0.02;
-        var minusFeeIn = Number((Number(this.data.fee_in_b)/len).toFixed(2)) - 0.02;
+        var plusFeeEx = Number((Number(this.data.fee_ex_d) / len).toFixed(2)) + 0.02;
+        var minusFeeEx = Number((Number(this.data.fee_ex_d) / len).toFixed(2)) - 0.02;
+        var plusFeeIn = Number((Number(this.data.fee_in_b) / len).toFixed(2)) + 0.02;
+        var minusFeeIn = Number((Number(this.data.fee_in_b) / len).toFixed(2)) - 0.02;
 
         var check = this.validateForm('.required');
         let { rate_bank_b, rate_tt_b, fee_date, book, id } = this.data;
@@ -572,9 +571,9 @@
             var value_fee_b = Number(((Number(newData.rate_bank_b) * Number(item.fee_ex_d)) + Number(item.fee_in_b)).toFixed(2));
             var plusFeeB = Number(Number(value_fee_b).toFixed(2)) + 0.02;
             var minusFeeB = Number(Number(value_fee_b).toFixed(2)) - 0.02;
-            if(Number(item.fee_ex_d) >= minusFeeEx && Number(item.fee_ex_d) <= plusFeeEx && 
-            Number(item.fee_in_b) >= minusFeeIn && Number(item.fee_in_b) <= plusFeeIn && 
-            Number(item.value_fee_b) >= minusFeeB && Number(item.value_fee_b) <= plusFeeB){
+            if (Number(item.fee_ex_d) >= minusFeeEx && Number(item.fee_ex_d) <= plusFeeEx &&
+              Number(item.fee_in_b) >= minusFeeIn && Number(item.fee_in_b) <= plusFeeIn &&
+              Number(item.value_fee_b) >= minusFeeB && Number(item.value_fee_b) <= plusFeeB) {
               this.fire('toast', {
                 status: 'openDialog',
                 text: 'ต้องการบันทึกการแก้ไขการเฉลี่ยค่าธรรมเนียมใช่หรือไม่',
@@ -608,7 +607,7 @@
         this.dispatchAction('FEE_GET_ID_DATA', this.data.id);
       },
       approvePayment: function () {
-        if(typeof this.data.id !== 'undefined'){
+        if (typeof this.data.id !== 'undefined') {
           var newData = {
             id: this.data.id,
             fin_status: true
@@ -622,7 +621,7 @@
               }
             }
           })
-        }else{
+        } else {
           // console.log(this.list_fee);
           this.fire('toast', {
             status: 'openDialog',
@@ -631,7 +630,7 @@
               if (result === true) {
                 this.list_fee.map((id) => {
                   var newData = {
-                    id : id,
+                    id: id,
                     fin_status: true
                   };
                   // console.log(newData);
@@ -655,23 +654,23 @@
           return value === true
         });
         if (check === true) {
-          if(checkSum === true){
+          if (checkSum === true) {
             this.fire('toast', {
-                  status: 'openDialog',
-                  text: 'ต้องการบันทึกการถัวเฉลี่ยค่าธรรมเนียมใช่หรือไม่',
-                  confirmed: (result) => {
-                    if (result === true) {
-                      let { rate_bank_b, rate_tt_b, fee_date, book, id } = this.data;
-                      let newData = { rate_bank_b, rate_tt_b, book, id };
-                      newData.fee_date = this.data.fee_date + 'T00:00:00+07:00';
-                      this.dispatchAction('FEE_RICE_UPDATE', newData);
-                    }
-                  }
-                });
-          }else{
+              status: 'openDialog',
+              text: 'ต้องการบันทึกการถัวเฉลี่ยค่าธรรมเนียมใช่หรือไม่',
+              confirmed: (result) => {
+                if (result === true) {
+                  let { rate_bank_b, rate_tt_b, fee_date, book, id } = this.data;
+                  let newData = { rate_bank_b, rate_tt_b, book, id };
+                  newData.fee_date = this.data.fee_date + 'T00:00:00+07:00';
+                  this.dispatchAction('FEE_RICE_UPDATE', newData);
+                }
+              }
+            });
+          } else {
             this.fire('toast', {
               status: 'connectError', text: 'กรุณาทำการถัวเฉลี่ยค่าธรรมเนียมใหม่',
-              callback: () => {}
+              callback: () => { }
             })
           }
         } else {

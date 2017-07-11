@@ -44,6 +44,12 @@ export const fee ={
         cancel:"ยกเลิก",
         no_data:"ไม่มีข้อมูล",
         delete:"ลบ",
-        print:'พิมพ์'
+        print:'พิมพ์',
+        correct:'ถูกต้อง',
+        incorrect:'ไม่ถูกต้อง',
+        section_financial:'กองคลัง',
+        fee:'ค่าธรรมเนียม',
+        allocate:'จัดสรร',
+        section_rice:'กองบริหารการค้าข้าว'
     }
 }   

@@ -79,7 +79,7 @@ export function feeAction(store) {
                     status: 'success', text: 'บันทึกสำเร็จ',
                     callback: () => {
                         this.INVOICE_GET_LIST_DATA(contract_id);
-                        this.BOOK_GET_LIST_DATA(contract_id);
+                        // this.BOOK_GET_LIST_DATA(contract_id);
                         this.FEE_GET_LIST_DATA({contract_id:contract_id,view:'view'});
                         // this.FEE_GET_ID_DATA(fee_id);
                         this.SET_STATE({
@@ -104,7 +104,7 @@ export function feeAction(store) {
                     status: 'success', text: 'บันทึกสำเร็จ',
                     callback: () => {
                         this.INVOICE_GET_LIST_DATA(contract_id);
-                        this.BOOK_GET_LIST_DATA(contract_id);
+                        // this.BOOK_GET_LIST_DATA(contract_id);
                         this.FEE_GET_LIST_DATA({contract_id:contract_id,view:'view'});
                         this.SET_STATE({
                             isInsert: false,
@@ -127,7 +127,7 @@ export function feeAction(store) {
                     status: 'success', text: 'ลบข้อมูลสำเร็จ',
                     callback: () => {
                         this.INVOICE_GET_LIST_DATA(contract_id);
-                        this.BOOK_GET_LIST_DATA(contract_id);
+                        // this.BOOK_GET_LIST_DATA(contract_id);
                         this.FEE_GET_LIST_DATA({contract_id:contract_id,view:'view'});
                         this._flipDrawerClose();
                     }
@@ -144,8 +144,8 @@ export function feeAction(store) {
                 this.fire('toast',{
                     status: 'success', text:'บันทึกสำเร็จ',
                     callback:() => {
-                        this.INVOICE_GET_LIST_DATA(contract_id);
-                        this.BOOK_GET_LIST_DATA(contract_id);
+                        // this.INVOICE_GET_LIST_DATA(contract_id);
+                        // this.BOOK_GET_LIST_DATA(contract_id);
                         this.FEE_GET_LIST_DATA({contract_id:contract_id,view:'view'});
                         this._flipDrawerClose();
                     }
@@ -164,7 +164,7 @@ export function feeAction(store) {
                     status: 'success', text: 'บันทึกสำเร็จ',
                     callback: () => {
                         this.INVOICE_GET_LIST_DATA(contract_id);
-                        this.BOOK_GET_LIST_DATA(contract_id);
+                        // this.BOOK_GET_LIST_DATA(contract_id);
                         this.FEE_GET_LIST_DATA({contract_id:contract_id,view:'rice'});
                         this.SET_STATE({
                             isInsert: false,
@@ -191,7 +191,7 @@ export function feeAction(store) {
                     status: 'success', text:'บันทึกสำเร็จ',
                     callback:() => {
                         this.INVOICE_GET_LIST_DATA(contract_id);
-                        this.BOOK_GET_LIST_DATA(contract_id);
+                        // this.BOOK_GET_LIST_DATA(contract_id);
                         this.FEE_GET_LIST_DATA({contract_id:contract_id,view:'rice'});
                         this.backPageFee();
                         // this._flipDrawerClose();
@@ -210,7 +210,7 @@ export function feeAction(store) {
                     status: 'success', text:'บันทึกสำเร็จ',
                     callback:() => {
                         this.INVOICE_GET_LIST_DATA(contract_id);
-                        this.BOOK_GET_LIST_DATA(contract_id);
+                        // this.BOOK_GET_LIST_DATA(contract_id);
                         this.FEE_GET_LIST_DATA({contract_id:contract_id,view:'view'});
                         this._flipDrawerClose();
                     }
@@ -227,8 +227,8 @@ export function feeAction(store) {
                 this.fire('toast',{
                     status: 'success', text:'บันทึกสำเร็จ',
                     callback:() => {
-                        this.INVOICE_GET_LIST_DATA(contract_id);
-                        this.BOOK_GET_LIST_DATA(contract_id);
+                        // this.INVOICE_GET_LIST_DATA(contract_id);
+                        // this.BOOK_GET_LIST_DATA(contract_id);
                         this.FEE_GET_LIST_DATA({contract_id:contract_id,view:'view'});
                         this._flipDrawerClose();
                     }
