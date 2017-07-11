@@ -315,11 +315,12 @@
                 this.dispatchAction('SET_BREADCRUMBS', [{
                     label: 'รายละเอียดใบ Invoice',
                     href: ''
-                }])
+                }]);
                 let book_id = e.detail.detail.id;
                 this.titlePanelRight = 'รายละเอียดใบ Invoice';
                 this.fire('toast', { status: 'load' });
                 this.dispatchAction('BOOK_GET_ID_DATA', book_id);
+                this.dispatchAction('BOOK_GET_MADE_OUT', this.getCookieBhv("contract_id"));
                 this.dispatchAction('SET_STATE', {
                     isInsert: true,
                     btnDisabled: false,

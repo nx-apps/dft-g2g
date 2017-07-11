@@ -21,7 +21,8 @@ const initialState = {
     bookHamonizeList: [],
     bookExporterList: [],
     bookExporterDetail: {},
-    data: {}
+    data: {},
+    list_made_out: []
 }
 export function bookReducer(state = initialState, action) {
     switch (action.type) {
@@ -41,6 +42,8 @@ export function bookReducer(state = initialState, action) {
             return Object.assign({}, state, { list: action.payload });
         case 'BOOK_GET_ID_DATA':
             return Object.assign({}, state, { data: action.payload });
+        case 'BOOK_GET_MADE_OUT':
+            return Object.assign({}, state, { list_made_out: action.payload });
         default:
             return state
     }
@@ -277,6 +280,16 @@ export function bookAction(store) {
                         }
                     });
                 })
+        },
+        BOOK_GET_MADE_OUT: function(id){
+            axios.get('./invoice/madeout?contract_id='+id)
+            .then((response) => {
+                response.data.map((item) => {
+                    item.text = item.made_out_to
+                    item.value = item.made_out_to
+                })
+                store.dispatch({type: 'BOOK_GET_MADE_OUT', payload: response.data})
+            })
         },
         BOOK_GET_ID_DATA: function (id) {
             axios.get('./invoice/book?id=' + id)
