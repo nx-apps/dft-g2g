@@ -3,9 +3,8 @@
 <link rel="import" href="./../../../../bower_components/gl-grid/gl-grid-col.html">
 <link rel="import" href="./../../../../bower_components/gl-form/gl-form-input.html">
 <link rel="import" href="./../../../../bower_components/vaadin-date-picker/vaadin-date-picker.html">
-
+<link rel="import" href="./../../../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="./../../../../bower_components/iron-collapse/iron-collapse.html">
-
 <link rel="import" href="./../../../../bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="./../../../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="./../../../../bower_components/gl-form/gl-combo-box.html">
@@ -108,16 +107,6 @@
       border: solid darkblue 1px;
     }
 
-    div.item {
-      margin: 2px 5px;
-    }
-
-    div.sub-item {
-      margin: 5px 50px;
-      /*display: block;*/
-      /*width: 100%;*/
-    }
-
     span.namesub {
       display: inline-block;
       /*background-color: blue;*/
@@ -159,6 +148,77 @@
       height: 20px;
       width: 35%;
       /*border: 1px solid red;*/
+    }
+
+    table.gl-table-default {
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    .gl-table-default,
+    th,
+    td,
+    td {
+      border-bottom: 1px solid #ddd;
+    }
+
+    th,
+    td,
+    td {
+      padding: 15px;
+    }
+
+    th {
+      text-align: left;
+      background-color: #F1F1F1;
+    }
+
+    td {
+      text-align: left;
+    }
+
+    tr:hover {
+      background-color: #F1F1F1;
+    }
+
+    .collapse-content {
+      padding: 15px;
+      width: 500px;
+      border: 1px solid #dedede;
+    }
+
+    .header-item {
+      border: 1px solid #ddd;
+      background-color: #F1F1F1;
+      padding: 15px;
+    }
+
+    .subdiv {
+      border-bottom: 1px solid #ddd;
+      border-right: 1px solid #ddd;
+      border-left: 1px solid #ddd;
+      height: 300px;
+      overflow-y: scroll;
+    }
+
+    .item,
+    .sub-item {
+      padding: 15px 0px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .item:hover,
+    .sub-item:hover {
+      background-color: #F1F1F1;
+    }
+
+    .sub-item {
+      padding-left: 60px;
+    }
+
+    paper-icon-button .hamonize {
+      margin-top: -50px;
     }
   </style>
   <template>
@@ -314,6 +374,59 @@
               </template>
             </gl-combo-box>
                       </span>
+          <!--<th style="width:30px"></th>
+          <th style="width:30px"></th>
+          <th>ชื่อกลุ่มข้าว</th>
+          <th>ชื่อข้าว</th>
+          <th>รหัส Hamonize</th>
+          <th>ปี</th>-->
+          <div class="horizontal layout header-item" warp>
+            <div class=""></div>
+            <div class="header-div flex"></div>
+            <div class="header-div flex"></div>
+            <div class="header-div flex-3">รหัส Hamonize</div>
+            <div class="header-div flex-3">ชื่อกลุ่มข้าว</div>
+            <div class="header-div flex-3">ชื่อข้าว</div>
+            <div class="header-div flex-2">ปี</div>
+          </div>
+          <div class="subdiv">
+            <template is="dom-repeat" items={{hamonizeList}} index-as="indexroot">
+              <div hidden="{{item.hiddend}}">
+                <div class="horizontal layout item">
+                  <div class="">
+                    <!--icon="chevron-right" -->
+                    <paper-icon-button style="margin-top: -50px;" icon="chevron-right" index="[[indexroot]]" on-tap="toggle"></paper-icon-button>
+                    <!--<iron-icon ></iron-icon>-->
+                  </div>
+                  <div class="row flex">
+                    <paper-checkbox checked="{{item.check}}" id="{{indexroot}}" on-tap="getCheckChild" disabled="[[commonState.btnDisabled]]">
+                  </div>
+                  <div class="row flex"></div>
+                  <div class="row flex-3"></div>
+                  <div class="row flex-3">[[item.name_th]]</div>
+                  <div class="row flex-3">-</div>
+                  <div class="row flex-2">-</div>
+                </div>
+              </div>
+              <iron-collapse id="collapse-[[indexroot]]">
+                <template is="dom-repeat" items={{item.sub}} as="subChild">
+                  <div hidden="{{subChild.hiddend}}">
+                    <div class="horizontal layout sub-item">
+                      <div class=""></div>
+                      <div class="row flex">
+                        <paper-checkbox id="{{indexroot}}" checked="{{subChild.check}}" on-tap="getSelect" disabled="[[commonState.btnDisabled]]">
+                      </div>
+                      <div class="row flex"></div>
+                      <div class="row flex-3">[[subChild.hamonize_code]]</div>
+                      <div class="row flex-3">[[item.name_th]]</div>
+                      <div class="row flex-3">[[subChild.hamonize_th2]]</div>
+                      <div class="row flex-2">[[subChild.hamonize_year]]</div>
+                    </div>
+                  </div>
+                </template>
+              </iron-collapse>
+            </template>
+          </div>
           <!--<div class="main">
 
             <template is="dom-repeat" items={{hamonizeList}} index-as="indexroot">
@@ -322,7 +435,7 @@
                 <iron-icon icon="chevron-right" index="[[indexroot]]" on-tap="toggle"></iron-icon>
 
                 <paper-checkbox checked="{{item.check}}" id="{{indexroot}}" on-tap="getCheckChild" disabled="[[commonState.btnDisabled]]">
-               
+
                   [[item.name_th]]
                 </paper-checkbox>
                 <iron-collapse id="collapse-[[indexroot]]" opened="true">
@@ -330,7 +443,7 @@
                     <template is="dom-repeat" items={{item.sub}} as="subChild">
                       <div class="sub-item" hidden="{{subChild.hiddend}}">
                         <paper-checkbox id="{{indexroot}}" checked="{{subChild.check}}" on-tap="getSelect" disabled="[[commonState.btnDisabled]]">
-                      
+
                         </paper-checkbox>
                         <span class="namesub">
                         [[subChild.hamonize_th2]]
@@ -346,11 +459,11 @@
               <br>
             </template>
           </div>-->
-          <div id="table-wrapper">
+          <!--<div id="table-wrapper">
             <div id="table-scroll">
               <table class="gl-table-default">
                 <thead class="table-head">
-                  <tr  >
+                  <tr>
                     <th style="width:30px"></th>
                     <th style="width:30px"></th>
                     <th>ชื่อกลุ่มข้าว</th>
@@ -361,7 +474,7 @@
                 </thead>
                 <tbody class="table-body">
                   <template is="dom-repeat" items={{hamonizeList}} index-as="indexroot">
-                    <tr hidden="{{item.hiddend}}">
+                    <tr hidden="{{item.hiddend}}" index="[[indexroot]]" on-tap="toggle">
                       <td>
                         <paper-checkbox checked="{{item.check}}" id="{{indexroot}}" on-tap="getCheckChild" disabled="[[commonState.btnDisabled]]">
                       </td>
@@ -371,23 +484,27 @@
                       <td>-</td>
                       <td>-</td>
                     </tr>
-                    <template is="dom-repeat" items={{item.sub}} as="subChild">
-                      <tr hidden="{{subChild.hiddend}}">
-                        <td></td>
-                        <td>
-                          <paper-checkbox id="{{indexroot}}" checked="{{subChild.check}}" on-tap="getSelect" disabled="[[commonState.btnDisabled]]">
-                        </td>
-                        <td></td>
-                        <td>[[subChild.hamonize_th2]]</td>
-                        <td>[[subChild.hamonize_code]]</td>
-                        <td>[[subChild.hamonize_year]]</td>
-                      </tr>
-                    </template>
+                        <template is="dom-repeat" items={{item.sub}} as="subChild">
+                          <iron-collapse id="collapse-[[indexroot]]" opened="true">
+                          <tr hidden="{{subChild.hiddend}}" style="width:100%">
+                            
+                            <td></td>
+                            <td>
+                              <paper-checkbox id="{{indexroot}}" checked="{{subChild.check}}" on-tap="getSelect" disabled="[[commonState.btnDisabled]]">
+                            </td>
+                            <td></td>
+                            <td>[[subChild.hamonize_th2]]</td>
+                            <td>[[subChild.hamonize_code]]</td>
+                            <td>[[subChild.hamonize_year]]</td>
+                            
+                          </tr>
+                          </iron-collapse>
+                        </template>
                   </template>
                 </tbody>
               </table>
             </div>
-          </div>
+          </div>-->
         </gl-grid-col>
       </gl-grid-row>
 
@@ -433,7 +550,7 @@
         },
         data: {
           statePath: 'contract.contractDetail',
-          observer: 'checkContract'
+          // observer: 'checkContract'
         },
         dataShow: {
           type: Object,
@@ -443,9 +560,13 @@
           statePath: 'commonG2g.buyerList',
           // observer:'get'
         },
-        hamonizeList: {
+        hamonizeListReal: {
           statePath: 'commonG2g.hamonizeList',
-          // observer: 'get'
+          observer: 'cloneHamonizeList'
+        },
+        hamonizeList: {
+          type: Array,
+          value: []
         },
         hamonizeYear: {
           statePath: 'commonG2g.hamonizeYear',
@@ -477,24 +598,30 @@
       observers: [
         '_checkHamonize(data,hamonizeList)'
       ],
-      checkContract: function (data) {
-        if (data.id === undefined) {
-          this.set('dataShow.buyer_fax', '')
-          this.set('dataShow.buyerAddress', '')
-          // console.log(211111);
-          this._checkHamonize(this.data, this.hamonizeList, false)
-        }
-        // console.log(data.id);
+      cloneHamonizeList: function (cloneHamonizeList) {
+        // JSON.parse(JSON.stringify(data));
+        this.set('hamonizeList', JSON.parse(JSON.stringify(cloneHamonizeList)))
+        // console.log(this.hamonizeList);
       },
       _checkHamonize: function (data, hamonizeList, status = true) {
         try {
           let contract_hamonize = data.contract_hamonize
-          // let hamonize = hamonizeList
-          if (data.id === undefined)
+          // เซ็ต กลับเป็นค่าเริ่มต้น
+          for (var index = 0; index < this.hamonizeList.length; index++) {
+            for (var index2 = 0; index2 < this.hamonizeList[index].sub.length; index2++) {
+              this.set('hamonizeList.' + index + '.sub.' + index2 + '.check', false)
+            }
+
+          }
+          status = true
+          if (data.id === undefined) {
             status = false
+          }
+
           for (var index = 0; index < contract_hamonize.length; index++) {
             for (var index2 = 0; index2 < hamonizeList.length; index2++) {
               for (var index3 = 0; index3 < hamonizeList[index2].sub.length; index3++) {
+                // console.log(contract_hamonize[index].hamonize_id);
                 if (contract_hamonize[index].hamonize_id === hamonizeList[index2].sub[index3].sub_id) {
                   // console.log(status);
                   this.set('hamonizeList.' + index2 + '.sub.' + index3 + '.check', status)
@@ -504,10 +631,11 @@
               }
             }
           }
+          // console.log(this.hamonizeList);
         } catch (e) {
         }
       },
-      getCheckChild(e) {
+      getCheckChild: function (e) {
         let item = e.model.__data__.item
         let indexRoot = e.currentTarget.id
         let checkHost = e.currentTarget.checked
@@ -515,13 +643,13 @@
           this.set('hamonizeList.' + indexRoot + '.sub.' + index + '.check', checkHost)
         })
       },
-      getSelect(e) {
+      getSelect: function (e) {
         let indexRoot = e.currentTarget.id
         let checkHost = e.currentTarget.checked
         let checkFalse = this.hamonizeList[indexRoot].sub.find((item) => item.check !== true)
         this.set('hamonizeList.' + indexRoot + '.check', checkFalse === undefined)
       },
-      editContract() {
+      editContract: function () {
         this.dispatchAction('SET_STATE', {
           isInsert: false,
           btnDisabled: false,
@@ -585,7 +713,14 @@
       },
       toggle: function (e) {
         let index = e.currentTarget.index
-        // console.log(collapse-);
+        if (e.currentTarget.icon === 'expand-more') {
+          e.currentTarget.icon = 'chevron-right'
+        } else {
+          e.currentTarget.icon = 'expand-more'
+        }
+        // console.log(e.currentTarget.icon);
+        // console.log(this.$$('#collapse-' + index))
+        // console.log(this.$$('#collapse-' + index).open);
         this.$$('#collapse-' + index).toggle()
       },
       _getBuyerAddress: function (e) {
