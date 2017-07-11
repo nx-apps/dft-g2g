@@ -220,6 +220,9 @@
           type: Boolean,
           value: false,
           notify: true
+        },
+        list_fee:{
+          statePath: 'fee.list_id'
         }
       },
       observers: [
@@ -285,15 +288,29 @@
         });
       },
       _delete: function () {
-        this.fire('toast', {
-          status: 'openDialog',
-          text: 'ต้องการลบคิดค่าธรรมเนียมใช่หรือไม่',
-          confirmed: (result) => {
-            if (result === true) {
-              this.dispatchAction('FEE_DELETE', this.data.id);
+        if(typeof this.data.id !== 'undefined'){
+          this.fire('toast', {
+            status: 'openDialog',
+            text: 'ต้องการลบคิดค่าธรรมเนียมใช่หรือไม่',
+            confirmed: (result) => {
+              if (result === true) {
+                this.dispatchAction('FEE_DELETE', this.data.id);
+              }
             }
-          }
-        })
+          })
+        }else{
+          this.fire('toast', {
+            status: 'openDialog',
+            text: 'ต้องการลบคิดค่าธรรมเนียมใช่หรือไม่',
+            confirmed: (result) => {
+              if (result === true) {
+                this.list_fee.map((id) => {
+                  this.dispatchAction('FEE_DELETE', id);
+                });
+              }
+            }
+          });
+        }
       },
       editInputRice: function () {
         this.dispatchAction('SET_STATE', {
