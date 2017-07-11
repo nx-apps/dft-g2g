@@ -259,8 +259,9 @@ exports.approve = function (req, res) {
                 if (updata.fee_status == true) {
 
                 } else {
-                    res.json(data);
+
                 }
+                res.json(data);
             })
     } else {
         res.json('require field "id"');
