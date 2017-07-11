@@ -107,7 +107,7 @@ exports.getByContractId = function (req, res) {
     get.merge(function (m) {
         return {
             invoice_count: m('book').count(),
-            invoice_no: m('book').getField('invoice_no').reduce(function (lf, rt) { return lf.coerceTo('string').add(',', rt.coerceTo('string')) })
+            invoice_no: m('book').orderBy('invoice_no').getField('invoice_no').reduce(function (lf, rt) { return lf.coerceTo('string').add(',', rt.coerceTo('string')) })
         }
     })
         .pluck('id', 'cl_id', 'cl_no', 'fee_no', 'fee_round', 'fee_date', 'net_weight',

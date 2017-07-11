@@ -459,7 +459,7 @@
             result += parseFloat(item.value_fee_b);
           })
           // this.set('data.'+index+'.totalFeeInvoices', result);
-          // this.set('data.book.' + index + '.value_fee_b', result);
+          this.set('data.book.' + index + '.totalValue_fee_b', result);
           return result;
         }
       },
@@ -507,6 +507,7 @@
         newData.book.map((item) => {
           delete item.totalAmountUsdInvoices;
           delete item.totalTonInvoices;
+          delete item.totalValue_fee_b;
         })
         // console.log(newData);
         var len = this.data.book.length;
@@ -553,43 +554,42 @@
         this.dispatchAction('FEE_CALC_DATA', id);
       },
       savePayment: function () {
+        var len = this.data.book.length;
+        var plusFeeEx = Number((Number(this.data.fee_ex_d)/len).toFixed(2)) + 0.02;
+        var minusFeeEx = Number((Number(this.data.fee_ex_d)/len).toFixed(2)) - 0.02;
+        var plusFeeIn = Number((Number(this.data.fee_in_b)/len).toFixed(2)) + 0.02;
+        var minusFeeIn = Number((Number(this.data.fee_in_b)/len).toFixed(2)) - 0.02;
+
         var check = this.validateForm('.required');
         let { rate_bank_b, rate_tt_b, fee_date, book, id } = this.data;
         let newData = { rate_bank_b, rate_tt_b, book, id };
         newData.fee_date = this.data.fee_date + 'T00:00:00+07:00';
         // console.log(newData);
 
-        var sumEx = 0;
-        var checkSumFeeEx = newData.book.map((item) => {
-          return sumEx += item.fee_ex_d
-        })
-        var indexCheckEx = checkSumFeeEx.length - 1;
-        var changeTypeEx = Number(this.feeEx);
-
-        var sumIn = 0;
-        var checkSumFeeIn = newData.book.map((item) => {
-          return sumIn += item.fee_in_b
-        })
-        var indexCheckIn = checkSumFeeIn.length - 1;
-        var changeTypeIn = Number(this.feeIn);
-
         this.fire('check-required');
         if (this.checkRequired === true && check === true) {
-          if ((checkSumFeeEx[indexCheckEx] == changeTypeEx) && (checkSumFeeIn[indexCheckIn] == changeTypeIn)) {
-            this.fire('toast', {
-              status: 'openDialog',
-              text: 'ต้องการบันทึกการแก้ไขการเฉลี่ยค่าธรรมเนียมใช่หรือไม่',
-              confirmed: (result) => {
-                if (result === true) {
-                  this.dispatchAction('FEE_UPDATE', newData);
+          newData.book.map((item) => {
+            var value_fee_b = Number(((Number(newData.rate_bank_b) * Number(item.fee_ex_d)) + Number(item.fee_in_b)).toFixed(2));
+            var plusFeeB = Number(Number(value_fee_b).toFixed(2)) + 0.02;
+            var minusFeeB = Number(Number(value_fee_b).toFixed(2)) - 0.02;
+            if(Number(item.fee_ex_d) >= minusFeeEx && Number(item.fee_ex_d) <= plusFeeEx && 
+            Number(item.fee_in_b) >= minusFeeIn && Number(item.fee_in_b) <= plusFeeIn && 
+            Number(item.value_fee_b) >= minusFeeB && Number(item.value_fee_b) <= plusFeeB){
+              this.fire('toast', {
+                status: 'openDialog',
+                text: 'ต้องการบันทึกการแก้ไขการเฉลี่ยค่าธรรมเนียมใช่หรือไม่',
+                confirmed: (result) => {
+                  if (result === true) {
+                    this.dispatchAction('FEE_UPDATE', newData);
+                  }
                 }
-              }
-            });
-          } else {
-            this.fire('toast', {
-              status: 'connectError', text: 'กรุณาทำการเฉลี่ยค่าธรรมเนียมใหม่', callback: () => { }
-            });
-          }
+              });
+            } else {
+              this.fire('toast', {
+                status: 'connectError', text: 'กรุณาทำการเฉลี่ยค่าธรรมเนียมใหม่', callback: () => { }
+              });
+            }
+          });
         } else {
           this.fire('toast', {
             status: 'connectError', text: 'กรุณากรอกข้อมูลให้ครบถ้วน', callback: () => { }

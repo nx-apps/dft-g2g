@@ -11,6 +11,7 @@
 <link rel="import" href="./../../../../bower_components/gl-form/gl-form-input.html">
 <link rel="import" href="./../../../../bower_components/gl-form/gl-form-textarea.html">
 <link rel="import" href="./../../../../bower_components/vaadin-date-picker/vaadin-date-picker.html">
+<link rel="import" href="./../../../../bower_components/paper-autocomplete/paper-autocomplete-suggestions.html">
 <link rel="import" href="./../../components/format-number-behavior.html">
 <link rel="import" href="./../../components/validateFormBehaviors.html">
 <link rel="import" href="./../../components/g2g-logic-behavior.html">
@@ -161,12 +162,16 @@
             <gl-form-textarea disabled value="[[data.buyer.buyer_address]]" label="{{localize.label_buyer_address_invoice}} :"></gl-form-textarea>
           </gl-grid-col>
         </gl-grid-row>
-
-
+        
         <gl-grid-row>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,12]]">
-            <gl-form-textarea class="required" required disabled="[[common.btnDisabled]]" rows="2" value="{{data.made_out_to}}" placeholder="{{localize.text_your_detail}}"
-              label="{{localize.label_made_out_to}} :"></gl-form-textarea>
+            <div class="autocomplete-wrapper">
+              <gl-form-textarea id="myInput" class="required" required disabled="[[common.btnDisabled]]" rows="2" value="{{data.made_out_to}}" placeholder="{{localize.text_your_detail}}"
+                label="{{localize.label_made_out_to}} :"></gl-form-textarea>
+              <paper-autocomplete-suggestions
+                  for="myInput"
+                  source="[[data_madeout]]"></paper-autocomplete-suggestions>
+            </div>
           </gl-grid-col>
         </gl-grid-row>
         <br>
@@ -297,6 +302,9 @@
         data:{
           statePath : 'book.data',
           observer : '_setDate'
+        },
+        data_madeout :{
+          statePath : 'book.list_made_out'
         },
         printReport: {
           type: Object,

@@ -99,7 +99,7 @@
                 <gl-form-input class="number" format-number="on" style="width:140px;" value="[[invoice.value_b]]" disabled></gl-form-input>
               </td>
               <td>
-                <gl-form-input style="text-align:right; width:170px;" format-number="on" value="[[invoice.value_fee_b]]" disabled></gl-form-input>
+                <gl-form-input style="text-align:right; width:170px;" format-number="on" value="[[invoice.totalValue_fee_b]]" disabled></gl-form-input>
               </td>
               <td>
                 <gl-form-input style="text-align:right; width:170px;" format-number="on" value="[[invoice.value_bal_b]]" disabled></gl-form-input>
@@ -210,7 +210,7 @@
             result = 0;
             this.totalInvoice.map((el) => {
               // result += el.totalFeeInvoices;
-              result += Number(el.value_fee_b);
+              result += Number(el.totalValue_fee_b);
             });
             this.set('data.totalFeeInvoices', Number(result.toFixed(2)))
         //     // this.data.totalFeeInvoices = result
