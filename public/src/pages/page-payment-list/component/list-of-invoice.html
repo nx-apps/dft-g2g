@@ -95,7 +95,7 @@
               <td>
                 <paper-checkbox data="{{item}}" checked="{{item.check}}"></paper-checkbox>
               </td>
-              <td data="[[item]]" on-tap="getInvoiceDetail">[[item.invoice_no]]</td>
+              <td data="[[item]]" on-tap="getInvoiceDetail">[[item.invoice_type]][[item.invoice_no]]/[[item.invoice_year]]</td>
               <td data="[[item]]" on-tap="getInvoiceDetail">[[item.cl_no]]</td>
               <td data="[[item]]" on-tap="getInvoiceDetail">
                 <div style="text-align:right;">[[item.ship_lot]]</div>
