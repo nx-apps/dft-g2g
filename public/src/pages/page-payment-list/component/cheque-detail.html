@@ -47,7 +47,7 @@
           <thead class="table-head">
             <tr>
               <th style="width: 50px;">
-                <paper-checkbox on-tap="_selectDataAll" checked="{{selectDataAll}}"></paper-checkbox>{{localize.select}}</th>
+                <paper-checkbox on-tap="_selectDataAll" checked="{{selectDataAll}}" ></paper-checkbox>{{localize.select}}</th>
               </th>
               <th style="width: 70px">งวดที่</th>
               <th style="width: 70px;">ครั้งที่</th>
@@ -72,7 +72,7 @@
                 <td>[[item.company]] </td>
                 <td>[[item.value_b]] </td>
                 <td>
-                  <gl-form-input placeholder="เลบที่ invoice" disabled="{{item.status}}" no-label-float value="{{item.invoice_exporter_no}}"
+                  <gl-form-input placeholder="เลขที่ใบแจ้งหนี้" disabled="{{item.status}}" no-label-float value="{{item.invoice_exporter_no}}"
                     data="[[item]]" on-blur="updateCheque"></gl-form-input>
                 </td>
                 <td>
@@ -80,7 +80,7 @@
                     data="[[item]]"></gl-form-input>
                 </td>
                 <td>[[changeString2Num(item.*,'invoice_no')]]
-                  <gl-form-input placeholder="invoice" disabled="{{item.status}}" no-label-float value="{{item.invoice_no}}" data="[[item]]"></gl-form-input>
+                  <gl-form-input placeholder="เลขที่เช็ค" disabled="{{item.status}}" no-label-float value="{{item.invoice_no}}" data="[[item]]"></gl-form-input>
                 </td>
               </tr>
             </template>
@@ -188,28 +188,50 @@
       },
       _selectDataAll: function (val) {
         try {
-
-          this.data.map((item, index) => {
-            if (item.status === false && item.check === false) {
-              this.set('data.' + index + '.check', this.selectDataAll);
-              // console.log(this.data.filter((items)=> items.check === true && items.status === false && items.invoice_no === ''))
-              let newCh = this.data.filter((items) => items.check === true && items.status === false)
-              // console.log(newCh);
-              let result = this.maxNumberInArrayObject(newCh, 'invoice_no')
-              if (result === 0) {
-                this.set('data.' + index + '.invoice_no', this.no + 1)
-              } else {
-                this.set('data.' + index + '.invoice_no', result + 1)
+          if (this.selectDataAll) {
+            this.data.map((item, index) => {
+              // if (item.status === false) {
+              if (item.status === false && item.check === false) {
+                this.set('data.' + index + '.check', true)
+                let newCh = this.data.filter((items) => items.check === true && items.status === false)
+                let result = this.maxNumberInArrayObject(newCh, 'invoice_no')
+                if (result === 0) {
+                  this.set('data.' + index + '.invoice_no', this.no + 1)
+                } else {
+                  this.set('data.' + index + '.invoice_no', result + 1)
+                }
               }
-
-            } else {
-              if (this.selectDataAll === false) {
-                this.set('data.' + index + '.check', this.selectDataAll);
+            })
+          } else {
+            this.data.map((item, index) => {
+              // console.log(item.status === true);
+              
+              if (item.status === false) {
+                this.set('data.' + index + '.check', true);
+                this.set('data.' + index + '.check', false)
                 this.set('data.' + index + '.invoice_no', '');
               }
-            }
+            })
+          }
+          // this.data.map((item, index) => {
+          //   if (item.status === false && item.check === false) {
+          //     this.set('data.' + index + '.check', this.selectDataAll);
+          //     // console.log(this.data.filter((items)=> items.check === true && items.status === false && items.invoice_no === ''))
+          //     let newCh = this.data.filter((items) => items.check === true && items.status === false)
+          //     let result = this.maxNumberInArrayObject(newCh, 'invoice_no')
+          //     if (result === 0) {
+          //       this.set('data.' + index + '.invoice_no', this.no + 1)
+          //     } else {
+          //       this.set('data.' + index + '.invoice_no', result + 1)
+          //     }
 
-          })
+          //   } else {
+          //     if (this.selectDataAll === false) {
+          //       this.set('data.' + index + '.check', this.selectDataAll);
+          //       this.set('data.' + index + '.invoice_no', '');
+          //     }
+          //   }
+
         } catch (error) {
 
         }
