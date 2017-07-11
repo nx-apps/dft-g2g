@@ -84,7 +84,7 @@
           </tr>
           <template is="dom-repeat" items="[[totalInvoice]]" as="invoice">
             <tr>
-              <td>{{localize.sum}} ({{localize.invoice_no}}: [[invoice.invoice_no]])</td>
+              <td>{{localize.sum}} ({{localize.invoice_no}}: [[invoice.invoice_type]][[invoice.invoice_no]]/[[invoice.invoice_year]])</td>
               <td>
                 <gl-form-input class="number" format-number="on" style="width:140px;" value="[[invoice.totalTonInvoices]]" disabled></gl-form-input>
               </td>
