@@ -3,7 +3,8 @@ import { commonAction } from '../config'
 const initialState = {
     list: [],
     data: {},
-    list_calc: []
+    list_calc: [],
+    list_id:[]
 }
 export function feeReducer(state = initialState, action) {
     switch (action.type) {
@@ -13,6 +14,8 @@ export function feeReducer(state = initialState, action) {
             return Object.assign({}, state, { list_calc: action.payload });
         case 'FEE_CALC_DATA':
             return Object.assign({}, state, { list_calc: action.payload });
+        case 'FEE_INSERT':
+            return Object.assign({}, state, { list_id: action.payload });
         default:
             return state
     }
@@ -70,7 +73,8 @@ export function feeAction(store) {
             this.fire('toast',{status:'load'});
             axios.post('./fee/insert', data)
             .then((response) =>{
-                var fee_id = response.data.fee.generated_keys[0];
+                var fee_id = response.data.fee.generated_keys;
+                store.dispatch({type:'FEE_INSERT', payload: fee_id});
                 this.fire('toast', {
                     status: 'success', text: 'บันทึกสำเร็จ',
                     callback: () => {

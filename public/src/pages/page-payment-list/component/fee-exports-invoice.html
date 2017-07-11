@@ -102,15 +102,18 @@
             </div>
             <div class="horizontal layout">
               {{_calcfeeEx(feeEx, indexData)}}
+              [[changeString2Num(item.*,'fee_ex_d')]]
               <gl-form-input label="{{localize.fee_out}}" class="number required" required format-number="on" style="width:200px;" value="{{item.fee_ex_d}}"
                 disabled="[[common.btnDisabled]]"></gl-form-input>
               {{_calcfeeIn(feeIn, indexData)}}
+              [[changeString2Num(item.*,'fee_in_b')]]
               <gl-form-input label="{{localize.fee_in}}" class="number required" required format-number="on" style="width:200px; margin-left:50px;"
                 value="{{item.fee_in_b}}" disabled="[[common.btnDisabled]]"></gl-form-input>
               <gl-form-input label="{{localize.fee_total}} ({{localize.baht}})" class="number" format-number="on" style="width:240px; margin-left:50px;"
-                value="{{item.value_fee_b}}" disabled></gl-form-input>
+                value="{{item.value_fee_b}}" disabled="[[common.btnDisabled]]"></gl-form-input>
               <!--[[_calcFee(calcFee,indexData)]]-->
               [[_calcFeeBAvg(item.fee_ex_d,item.fee_in_b, indexData)]]
+              [[changeString2Num(item.*,'value_fee_b')]]
             </div>
           </div>
           <div style="overflow-x:auto;">
@@ -295,6 +298,9 @@
             fee: 0,
             detail: {}
           }
+        },
+        list_fee:{
+          statePath: 'fee.list_id'
         }
       },
       behaviors: [ReduxBehavior, g2gLogicBehavior, ValidateFormBehavior, FormatNumberBehavior],
@@ -304,50 +310,56 @@
           this.value_fee_b = calc_value_fee_b;
         }
       },
-      _calcFeeAvg: function (type, fee, indexBook, indexDetail, len) {
+      _calcFeeAvg:function(fee,len){
         fee = Number(Number(fee).toFixed(2));
-        if (type == 'detail') {
-          var index = indexDetail;
-          if (this.oldFee[type][indexBook] != fee) {
-            this.set('sumFee.' + type + '.' + indexBook, 0);
-            this.set('oldFee.' + type + '.' + indexBook, fee);
-          }
-          var sum = this.sumFee[type][indexBook] + fee_avg; //6.17+30.85
-        } else {
-          var index = indexBook;
-          if (this.oldFee[type] != fee) {
-            this.set('sumFee.' + type, 0);
-            this.set('oldFee.' + type, fee);
-          }
-          var sum = this.sumFee[type] + fee_avg; //6.17+30.85
-        }
-
-        var fee_avg = Number((fee / len).toFixed(2));//6.17
-
-        if (Number(sum.toFixed(2)) > fee) {
-          var div = sum - fee; //0.02
-          fee_avg = fee_avg - div; //6.17-0.02 == 6.15
-        }
-        if (Number(sum.toFixed(2)) < fee && (index + 1) == len) { //last round
-          var div = fee - sum;
-          fee_avg = fee_avg + div;
-        }
-        if (type == 'detail') {
-          this.set('sumFee.' + type + '.' + indexBook, Number(this.sumFee[type][indexBook]) + Number((fee_avg).toFixed(2)));
-        } else {
-          this.set('sumFee.' + type, Number(this.sumFee[type]) + Number((fee_avg).toFixed(2)));
-        }
-        // console.log('func ', Number(fee_avg.toFixed(2)));
+        var fee_avg = Number((fee / len).toFixed(2));
         return Number(fee_avg.toFixed(2));
       },
+      // _calcFeeAvg: function (type, fee, indexBook, indexDetail, len) {
+      //   fee = Number(Number(fee).toFixed(2));
+      //   var fee_avg = Number((fee / len).toFixed(2));//6.17
+      //   // if (type == 'detail') {
+      //   //   var index = indexDetail;
+      //   //   if (this.oldFee[type][indexBook] != fee) {
+      //   //     this.set('sumFee.' + type + '.' + indexBook, 0);
+      //   //     this.set('oldFee.' + type + '.' + indexBook, fee);
+      //   //   }
+      //   //   var sum = this.sumFee[type][indexBook] + fee_avg; //6.17+30.85
+      //   // } else {
+      //   //   var index = indexBook;
+      //   //   if (this.oldFee[type] != fee) {
+      //   //     this.set('sumFee.' + type, 0);
+      //   //     this.set('oldFee.' + type, fee);
+      //   //   }
+      //   //   var sum = this.sumFee[type] + fee_avg; //6.17+30.85
+      //   // }
+        
+      //   // if (Number(sum.toFixed(2)) > fee) {
+      //   //   var div = sum - fee; //0.02
+      //   //   fee_avg = fee_avg - div; //6.17-0.02 == 6.15
+      //   // }
+      //   // if (Number(sum.toFixed(2)) < fee && (index + 1) == len) { //last round
+      //   //   var div = fee - sum;
+      //   //   fee_avg = fee_avg + div;
+      //   // }
+      //   // if (type == 'detail') {
+      //   //   this.set('sumFee.' + type + '.' + indexBook, Number(this.sumFee[type][indexBook]) + Number((fee_avg).toFixed(2)));
+      //   // } else {
+      //   //   this.set('sumFee.' + type, Number(this.sumFee[type]) + Number((fee_avg).toFixed(2)));
+      //   // }
+      //   // console.log('func ', Number(fee_avg.toFixed(2)));
+      //   return Number(fee_avg.toFixed(2));
+      // },
       _calcFeeBAvg: function (fee_ex_d, fee_in_b, index) {
         // console.log(this.rateBank, fee_ex_d, fee_in_b, index);
-        var value_fee_b = (Number(this.data.book[index].fee_ex_d) * Number(this.rateBank)) + Number(this.data.book[index].fee_in_b);
-        // var len = this.data.book.length;
-        value_fee_b = Number(value_fee_b.toFixed(2));
-        // this.calcFeeBAvg(value_fee_b);
-        this.set('data.book.' + index + '.value_fee_b', value_fee_b);
-        // console.log(this._calcFeeAvg('fee', this.calcFee, index, len));
+        var value_fee_b = (Number(this.rateBank) * Number(fee_ex_d)) + Number(fee_in_b);
+        this.set('data.book.' + index + '.value_fee_b', Number(value_fee_b.toFixed(2)));
+        // var value_fee_b = (Number(this.data.book[index].fee_ex_d) * Number(this.rateBank)) + Number(this.data.book[index].fee_in_b);
+        // // var len = this.data.book.length;
+        // value_fee_b = Number(value_fee_b.toFixed(2));
+        // // this.calcFeeBAvg(value_fee_b);
+        // this.set('data.book.' + index + '.value_fee_b', value_fee_b);
+        // // console.log(this._calcFeeAvg('fee', this.calcFee, index, len));
       },
       calcFeeBAvg: function (value_fee_b) {
         if (this.oldFee[type] != fee) {
@@ -361,7 +373,7 @@
         if (typeof this.data.book !== 'undefined') {
           if (fee !== '') {
             var len = this.data.book.length;
-            this.set('data.book.' + index + '.fee_ex_d', this._calcFeeAvg('ex', Number(fee), index, 0, len));
+            this.set('data.book.' + index + '.fee_ex_d', this._calcFeeAvg(Number(fee), len));
           } else {
             this.set('data.book.' + index + '.fee_ex_d', 0);
           }
@@ -371,22 +383,22 @@
         if (typeof this.data.book !== 'undefined') {
           if (fee !== '') {
             var len = this.data.book.length;
-            this.set('data.book.' + index + '.fee_in_b', this._calcFeeAvg('in', Number(fee), index, 0, len));
+            this.set('data.book.' + index + '.fee_in_b', this._calcFeeAvg(Number(fee), len));
           } else {
             this.set('data.book.' + index + '.fee_in_b', 0);
           }
         }
       },
-      _calcFee: function (fee, index) {
-        if (typeof this.data.book !== 'undefined') {
-          if (fee !== '') {
-            var len = this.data.book.length;
-            this.set('data.book.' + index + '.value_fee_b', this._calcFeeAvg('fee', fee, index, 0, len));
-          } else {
-            this.set('data.book.' + index + '.value_fee_b', 0);
-          }
-        }
-      },
+      // _calcFee: function (fee, index) {
+      //   if (typeof this.data.book !== 'undefined') {
+      //     if (fee !== '') {
+      //       var len = this.data.book.length;
+      //       this.set('data.book.' + index + '.value_fee_b', this._calcFeeAvg('fee', fee, index, 0, len));
+      //     } else {
+      //       this.set('data.book.' + index + '.value_fee_b', 0);
+      //     }
+      //   }
+      // },
       _obArrayShip: function (ships) {
         return ships.join()
       },
@@ -399,11 +411,9 @@
         }
       },
       _calcValueFeeB: function (feeDetail, indexData, indexDetail) {
-        // console.log(feeDetail, indexData, index);
+        // console.log(feeDetail, indexData, indexDetail);
         var len = this.data.book[indexData].detail.length;
-        // console.log('fee ', feeDetail);
-        // console.log(this._calcFeeAvg('detail', feeDetail, indexData, indexDetail, len));
-        this.set('data.book.' + indexData + '.detail.' + indexDetail + '.value_fee_b', this._calcFeeAvg('detail', feeDetail, indexData, indexDetail, len));
+        this.set('data.book.' + indexData + '.detail.' + indexDetail + '.value_fee_b', this._calcFeeAvg(Number(feeDetail), len));
 
         // if (rate_bank !== '') {
         //   console.log(this.data);
@@ -518,39 +528,36 @@
           delete item.totalTonInvoices;
         })
         // console.log(newData);
-        var sumEx = 0;
-        var checkSumFeeEx = newData.book.map((item) => {
-          return sumEx += Number(item.fee_ex_d)
-        })
-        var indexCheckEx = checkSumFeeEx.length - 1;
-        var changeSumEx = checkSumFeeEx[indexCheckEx].toFixed(2);
-        var changeTypeEx = Number(this.feeEx).toFixed(2);
-
-        var sumIn = 0;
-        var checkSumFeeIn = newData.book.map((item) => {
-          return sumIn += Number(item.fee_in_b)
-        })
-        var indexCheckIn = checkSumFeeIn.length - 1;
-        var changeSumIn = checkSumFeeIn[indexCheckIn].toFixed(2);
-        var changeTypeIn = Number(this.feeIn).toFixed(2);
+        var len = this.data.book.length;
+        var plusFeeEx = Number((Number(this.feeEx)/len).toFixed(2)) + 0.02;
+        var minusFeeEx = Number((Number(this.feeEx)/len).toFixed(2)) - 0.02;
+        var plusFeeIn = Number((Number(this.feeIn)/len).toFixed(2)) + 0.02;
+        var minusFeeIn = Number((Number(this.feeIn)/len).toFixed(2)) - 0.02;
 
         this.fire('check-required');
         if (this.checkRequired === true && check === true) {
-          if ((changeSumEx == changeTypeEx) && (changeSumIn == changeTypeIn)) {
-            this.fire('toast', {
-              status: 'openDialog',
-              text: 'ต้องการเพิ่มการคิดค่าธรรมเนียมใช่หรือไม่',
-              confirmed: (result) => {
-                if (result === true) {
-                  this.dispatchAction('FEE_INSERT', newData);
+          newData.book.map((item) => {
+            var value_fee_b = Number(((Number(this.rateBank) * Number(item.fee_ex_d)) + Number(item.fee_in_b)).toFixed(2));
+            var plusFeeB = Number(Number(value_fee_b).toFixed(2)) + 0.02;
+            var minusFeeB = Number(Number(value_fee_b).toFixed(2)) - 0.02;
+            if(Number(item.fee_ex_d) >= minusFeeEx && Number(item.fee_ex_d) <= plusFeeEx && 
+            Number(item.fee_in_b) >= minusFeeIn && Number(item.fee_in_b) <= plusFeeIn && 
+            Number(item.value_fee_b) >= minusFeeB && Number(item.value_fee_b) <= plusFeeB){
+              this.fire('toast', {
+                status: 'openDialog',
+                text: 'ต้องการเพิ่มการคิดค่าธรรมเนียมใช่หรือไม่',
+                confirmed: (result) => {
+                  if (result === true) {
+                    this.dispatchAction('FEE_INSERT', newData);
+                  }
                 }
-              }
-            });
-          } else {
-            this.fire('toast', {
-              status: 'connectError', text: 'กรุณาทำการเฉลี่ยค่าธรรมเนียมใหม่', callback: () => { }
-            });
-          }
+              });
+            } else {
+              this.fire('toast', {
+                status: 'connectError', text: 'กรุณาทำการเฉลี่ยค่าธรรมเนียมใหม่', callback: () => { }
+              });
+            }
+          })
         } else {
           this.fire('toast', {
             status: 'connectError', text: 'กรุณากรอกข้อมูลให้ครบถ้วน', callback: () => { }
@@ -620,19 +627,23 @@
         this.dispatchAction('FEE_GET_ID_DATA', this.data.id);
       },
       approvePayment: function () {
-        var newData = {
-          id: this.data.id,
-          fin_status: true
-        };
-        this.fire('toast', {
-          status: 'openDialog',
-          text: 'ต้องการยืนยันการคิดค่าธรรมเนียมใช่หรือไม่',
-          confirmed: (result) => {
-            if (result === true) {
-              this.dispatchAction('FEE_APPROVE', newData);
+        if(typeof this.data.id !== 'undefined'){
+          var newData = {
+            id: this.data.id,
+            fin_status: true
+          };
+          this.fire('toast', {
+            status: 'openDialog',
+            text: 'ต้องการยืนยันการคิดค่าธรรมเนียมใช่หรือไม่',
+            confirmed: (result) => {
+              if (result === true) {
+                this.dispatchAction('FEE_APPROVE', newData);
+              }
             }
-          }
-        })
+          })
+        }else{
+          console.log(this.list_fee);
+        }
       },
       riceSave: function () {
         var check = this.validateForm('.riceRequired');
