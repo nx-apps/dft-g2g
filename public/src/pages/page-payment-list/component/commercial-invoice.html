@@ -97,7 +97,7 @@
           <div style="margin-top:30px;">{{localize.label_invoice_no}} :</div>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,1]]">
             <div class="horizontal layout">
-              <gl-form-input style="width:50px;" class="required" required disabled="[[common.btnDisabled]]" value="{{data.invoice_type}}"></gl-form-input>
+              <gl-form-input style="width:50px;" class="required" required disabled="[[common.btnDisabled]]" value="{{data.invoice_type}}" on-blur="toUpper"></gl-form-input>
               <gl-form-input style="margin-left:5px;text-align:right;width:80px;" class="required" required disabled="[[common.btnDisabled]]" value="{{data.invoice_no}}"></gl-form-input>
             </div>
           </gl-grid-col>
@@ -350,6 +350,9 @@
           this.set('data.invoice_year', Number(year)+543);
         }
       },
+      toUpper:function(e){
+        this.set('data.invoice_type', e.target.value.toUpperCase());
+      },
       _getVessel: function (data) {
         if (typeof data !== 'undefined' && data !== 'undefined') {
           return data.map((e) => e.ship_name).join(", ");
@@ -418,7 +421,9 @@
         var data = {
           id : this.data.id,
           contract_id : this.data.contract_id,
-          invoice_no : this.data.invoice_no,
+          invoice_type : this.data.invoice_type,
+          invoice_no : Number(this.data.invoice_no),
+          invoice_year : this.data.invoice_year,
           invoice_date : this.data.invoice_date+'T00:00:00+07:00',
           made_out_to : this.data.made_out_to
         }

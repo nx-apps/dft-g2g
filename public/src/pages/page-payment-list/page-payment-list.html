@@ -180,7 +180,7 @@
             <section id="content2">
                 <paper-material elevation="1">
                     <div class="list horizontal center-justified layout">
-                        <list-of-invoice data="[[dataListPay.invoiceList]]" data-for-select="[[dataForSelect]]"></list-of-invoice>
+                        <list-of-invoice></list-of-invoice>
                     </div>
                 </paper-material>
             </section>
@@ -188,7 +188,7 @@
             <section id="content3">
                 <paper-material elevation="1">
                     <div class="list horizontal center-justified layout">
-                        <list-of-fee data="[[dataListPay.feeList]]" data-for-select="[[dataForSelect]]"></list-of-fee>
+                        <list-of-fee></list-of-fee>
                     </div>
                 </paper-material>
             </section>
@@ -335,7 +335,7 @@
             },
             _getBlInvoiceDetail: function (e) {
                 this.dispatchAction('SET_BREADCRUMBS', [{
-                    label: 'รายละเอียดใบกำกับสินค้า',
+                    label: 'รายละเอียดใบกำกับสินค้า : ' + e.detail.detail.invoice_type + e.detail.detail.invoice_no + '/' + e.detail.detail.invoice_year,
                     href: ''
                 }])
                 this.titlePanelRight = 'รายละเอียดใบกำกับสินค้า'
@@ -376,9 +376,8 @@
                 this._flipDrawer();
             },
             _getFeeDetail: function (e) {
-                console.log(e.detail.detail)
                 this.dispatchAction('SET_BREADCRUMBS', [{
-                    label: 'รอบที่คิดค่าธรรมเนียมครั้งที่' + e.detail.detail.fee_round,
+                    label: 'งวดที่ '+e.detail.detail.cl_no+' ครั้งที่ '+e.detail.detail.fee_no+' รอบที่คิดค่าธรรมเนียมครั้งที่ ' + e.detail.detail.fee_round,
                     href: ''
                 }])
                 // this.fire('toast', { status: 'load' });
