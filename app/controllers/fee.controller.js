@@ -251,16 +251,29 @@ exports.approve = function (req, res) {
         updata.fee_status = req.body.fee_status;
     }
     if (req.body.id != '' && req.body.id != null && typeof req.body.id !== 'undefined') {
-        req.r.table('fee')
-            .get(req.body.id)
-            .update(updata)
+        var query = r.table('fee').get(req.body.id);
+        if (updata.fee_status == true) {
+            updata = query
+                .merge(updata)
+                .merge(function (m) {
+                    return {
+                        book: m('book').merge(function (m2) {
+                            return {
+                                detail: m2('detail').merge(function (m3) {
+                                    return {
+                                        cheque_status: false,
+                                        invoice_company_no: '',
+                                        invoice_company_date: ''
+                                    }
+                                })
+                            }
+                        })
+                    }
+                })
+        }
+        query.update(updata)
             .run()
             .then(function (data) {
-                if (updata.fee_status == true) {
-
-                } else {
-
-                }
                 res.json(data);
             })
     } else {
