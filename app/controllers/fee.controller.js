@@ -260,9 +260,7 @@ exports.approve = function (req, res) {
                             return {
                                 detail: m2('detail').merge(function (m3) {
                                     return {
-                                        cheque_status: false,
-                                        invoice_company_no: '',
-                                        invoice_company_date: ''
+                                        cheque_status: false
                                     }
                                 })
                             }
