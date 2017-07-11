@@ -46,8 +46,69 @@
     table.gl-table-default>tbody.table-body>tr>td:not(:first-child) {
       text-align: right;
     }
+    main {
+      padding: 5px;
+      margin: 0 auto;
+    }
+
+    section {
+      display: none;
+      border-top: 1px solid #ddd;
+    }
+
+    input {
+      display: none;
+    }
+
+    label {
+      display: inline-block;
+      margin: 0 0 -1px;
+      padding: 15px 25px;
+      font-weight: 600;
+      text-align: center;
+      color: #bbb;
+      border: 1px solid transparent;
+      background: #D5D8DC;
+    }
+
+    label:before {
+      font-family: fontawesome;
+      font-weight: normal;
+      margin-right: 10px;
+    }
+
+    label:hover {
+      color: #888;
+      cursor: pointer;
+    }
+
+    input:checked+label {
+      color: #555;
+      border: 1px solid #ddd;
+      border-top: 3px solid orange;
+      border-bottom: 1px solid #fff;
+      background: #fff;
+    }
+
+    #tab1:checked~#content1,
+    #tab2:checked~#content2 {
+      display: block;
+    }
   </style>
   <template>
+    <!--<main>
+        <input id="tab1" type="radio" name="tabs" checked>
+        <label for="tab1">1.{{localize.text_bill_of_lading}}</label>
+
+        <input id="tab2" type="radio" name="tabs">
+        <label for="tab2">2.{{localize.text_invoice}}</label>
+
+        <section id="content1">
+        </section>
+
+        <section id="content2">
+        </section>
+    </main>-->
     <div class="flex searchInput horizontal center-justified layout">
       <div class="flex title">{{localize.contract_name}} : [[getCookieBhv("contractName")]]
       </div>
@@ -70,6 +131,7 @@
             <th>{{localize.expenses_fee}} ({{localize.baht}})</th>
             <th>{{localize.expenses_one_present}} ({{localize.baht}})</th>
             <th>{{localize.balance}} ({{localize.baht}})</th>
+            <th>{{localize.status}}</th>
           </tr>
         </thead>
         <tbody class="table-body">
@@ -84,6 +146,7 @@
               <td>[[formatNumber(item.value_fee_b)]]</td>
               <td>[[formatNumber(item.value_tax_b)]]</td>
               <td>[[formatNumber(item.value_final_b)]]</td>
+              <td><div style="text-align:left;">[[obStatus(item.rice_status)]]</div></td>
             </tr>
           </template>
           <template is="dom-if" if="[[_isHave(newData)]]">
@@ -137,6 +200,13 @@
           return ''
         }else{
           return data
+        }
+      },
+      obStatus: function(data){
+        if(data === true){
+          return 'จัดสรรแล้ว'
+        }else{
+          return 'ยังไม่จัดสรร'
         }
       }
     });
