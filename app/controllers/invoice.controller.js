@@ -2,7 +2,7 @@ exports.getByContractId = function (req, res) {
     var r = req.r;
     r.table('book')
         .getAll([req.query.id, false], { index: 'contractFeeStatus' })
-        .pluck('confirm_lot', 'invoice_no', 'id', 'ship_lot', 'cl_no', 'invoice_date', 'net_weight', 'invoice_status', 'value_d')
+        .pluck('confirm_lot', 'invoice_type', 'invoice_no', 'invoice_year', 'id', 'ship_lot', 'cl_no', 'invoice_date', 'net_weight', 'invoice_status', 'value_d')
         .orderBy('invoice_date')
         .run()
         .then(function (result) {
@@ -14,7 +14,7 @@ exports.getByContractId = function (req, res) {
 }
 exports.getByBookId = function (req, res) {
     req.r.table('book').get(req.query.id)
-        .pluck('id', 'cl_id', 'ship', 'load_port', 'dest_port', 'deli_port', 'bl_no', 'contract_id', 'invoice_no', 'invoice_date', 'made_out_to', 'invoice_status')
+        .pluck('id', 'cl_id', 'ship', 'load_port', 'dest_port', 'deli_port', 'bl_no', 'contract_id', 'invoice_type', 'invoice_no', 'invoice_year', 'invoice_date', 'made_out_to', 'invoice_status')
         .merge(function (m) {
             var detail = r.table('book_detail').getAll(req.query.id, { index: 'book_id' })
                 .coerceTo('array')
@@ -75,7 +75,9 @@ exports.update = function (req, res) {
     var valid = req.ajv.validate('g2g.book', req.body);
     if (valid) {
         var obj = {
+            invoice_type: req.body.invoice_type,
             invoice_no: req.body.invoice_no,
+            invoice_year: req.body.invoice_year,
             invoice_date: r.ISO8601(req.body.invoice_date).inTimezone('+07'),
             made_out_to: req.body.made_out_to,
             // package_amount: parseFloat(req.body.package_amount),
@@ -104,7 +106,9 @@ exports.update = function (req, res) {
 }
 exports.reject = function (req, res) {
     var obj = {
+        invoice_type: r.literal(),
         invoice_no: r.literal(),
+        invoice_year: r.literal(),
         invoice_date: r.literal(),
         made_out_to: r.literal(),
         fee_status: r.literal(),

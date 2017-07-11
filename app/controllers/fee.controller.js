@@ -16,7 +16,7 @@ exports.calc = function (req, res) {
                             value_final_b: 0
                         })
                 });
-            return m.pluck('invoice_no', 'invoice_date', 'cl_id', 'cl_no', 'contract_id', 'contract_no', 'ship', 'ship_lot')
+            return m.pluck('invoice_type', 'invoice_no', 'invoice_year', 'invoice_date', 'cl_id', 'cl_no', 'contract_id', 'contract_no', 'ship', 'ship_lot')
                 .merge({
                     book_id: m('id'),
                     ship: ship.map(function (sm) {
@@ -49,7 +49,7 @@ exports.insert = function (req, res) {
     var obj = r.expr(book)
         .eqJoin('book_id', r.table('book')).pluck('left', {
             right: [
-                'cl_id', 'cl_no', 'contract_id', 'invoice_date', 'invoice_no'
+                'cl_id', 'cl_no', 'contract_id', 'invoice_date', 'invoice_type', 'invoice_no', 'invoice_year'
                 //,'cut_date', 'eta_date', 'etd_date', 'packing_date', 'product_date'
             ]
         }).zip()
@@ -107,12 +107,12 @@ exports.getByContractId = function (req, res) {
     get.merge(function (m) {
         return {
             invoice_count: m('book').count(),
-            invoice_no: m('book').getField('invoice_no').reduce(function (lf, rt) { return lf.add(',', rt) })
+            invoice_no: m('book').getField('invoice_no').reduce(function (lf, rt) { return lf.coerceTo('string').add(',', rt.coerceTo('string')) })
         }
     })
         .pluck('id', 'cl_id', 'cl_no', 'fee_no', 'fee_round', 'fee_date', 'net_weight',
         'value_d', 'rate_bank_b', 'value_b', 'value_fee_b', 'value_tax_b', 'value_final_b',
-        'fin_status', 'rice_status', 'invoice_count', 'invoice_no')
+        'fin_status', 'rice_status', 'invoice_count', 'invoice_type', 'invoice_no', 'invoice_year')
         .orderBy('cl_no', 'fee_no', 'fee_round')
         .run()
         .then(function (data) {
