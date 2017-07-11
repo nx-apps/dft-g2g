@@ -8,6 +8,8 @@
 <link rel="import" href="./../../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="./../components/g2g-logic-behavior.html">
 
+<link rel="import" href="./../../../bower_components/paper-fab/paper-fab.html">
+
 <link rel="import" href="./../../layout/shared-styles.html">
 
 <link rel="import" href="./component/list-of-bl-pm.html">
@@ -27,21 +29,21 @@
 <dom-module id="page-payment-list">
     <style media="screen" include="shared-styles">
          :host {
-            --paper-fab-background: var(--paper-light-blue-500);
-            --paper-fab-keyboard-focus-background: var(--paper-light-blue-900);
+            /*--paper-fab-background: var(--paper-light-blue-500);
+            --paper-fab-keyboard-focus-background: var(--paper-light-blue-900);*/
         }
 
         * {
             font-family: 'CSChatThaiUI', sans-serif;
             -webkit-font-smoothing: antialiased;
         }
-
+/*
         paper-fab {
             position: fixed;
             right: 16px;
             bottom: 16px;
             color: var(--gl-white-color);
-        }
+        }*/
 
         paper-material {
             background-color: var(--gl-white-color);
@@ -124,25 +126,24 @@
 
         .btnBackPage {
             margin: 30px;
+            color: black
+        }
+        paper-fab {
+            left: 25px;
+            --paper-fab-iron-icon: {
+               color: black
+            };
+            --paper-fab-background: #fff
+            /*--paper-fab-background: #fff;*/
         }
     </style>
     <template>
-        <div class="btnBackPage horizontal layout">
-            <div class="flex">
+        <!--<div class="btnBackPage horizontal layout">-->
+            <!--<div class="flex">-->
                 <!--{{localize.contract_name}} ทดสอบ : {{contract_name}}-->
-            </div>
-            <div class="flex ">
-                <div class="horizontal end-justified layout">
-                    <div>
-                        <paper-button class="gl-btn-default" raised on-click="backPage">
-                            <iron-icon icon="exit-to-app"></iron-icon>
-                            ย้อนกลับ (ยัง)</paper-button>
-                    </div>
-                </div>
+            <!--</div>-->
 
-            </div>
-
-        </div>
+        <!--</div>-->
         <main>
             <input id="tab1" type="radio" name="tabs" checked>
             <label for="tab1">1.{{localize.text_bill_of_lading}}</label>
@@ -248,7 +249,10 @@
                 </iron-pages>
             </div>
         </nylon-panel-right>
-
+        <div class="btnFab">
+            <paper-fab icon="arrow-back" title="ย้อนกลับ" id="backWard" on-tap="getChequeDetail"></paper-fab>
+            <paper-tooltip for="addContract" offset="0">ย้อนกลับ</paper-tooltip>
+        </div>
     </template>
     <script>
         Polymer({
@@ -372,7 +376,7 @@
             },
             _getFeeDetail: function (e) {
                 this.dispatchAction('SET_BREADCRUMBS', [{
-                    label: 'รอบที่คิดค่าธรรมเนียมครั้งที่'+ [[this._countRoundFee(e.detail.detail.fee_round)]],
+                    label: 'รอบที่คิดค่าธรรมเนียมครั้งที่' + [[this._countRoundFee(e.detail.detail.fee_round)]],
                     href: ''
                 }])
                 // this.fire('toast', { status: 'load' });
