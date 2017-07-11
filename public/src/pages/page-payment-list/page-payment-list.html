@@ -262,7 +262,10 @@
                 contractName: {
                     type: String,
                     value: '1'
-                }
+                },
+                crumbs: {
+                    statePath: 'commonState.breadCrumbs',
+                },
             },
             listeners: {
                 // 'get-bl-list': '_getBlListFire',
@@ -309,6 +312,10 @@
             //     this.set('crumbs', data)
             // },
             _getBlDetail: function (e) {
+                this.dispatchAction('SET_BREADCRUMBS', [{
+                    label: 'รายละเอียดใบ Invoice',
+                    href: ''
+                }])
                 let book_id = e.detail.detail.id;
                 this.titlePanelRight = 'รายละเอียดใบ Invoice';
                 this.fire('toast', { status: 'load' });
@@ -322,6 +329,10 @@
                 this._flipDrawer();
             },
             _getBlInvoiceDetail: function (e) {
+                this.dispatchAction('SET_BREADCRUMBS', [{
+                    label: 'รายละเอียดใบกำกับสินค้า',
+                    href: ''
+                }])
                 this.titlePanelRight = 'รายละเอียดใบกำกับสินค้า'
                 // console.log(e.detail.detail);
                 this.fire('toast', { status: 'load' });
@@ -335,6 +346,10 @@
                 this._flipDrawer();
             },
             _getInvoiceDetail: function (e) {
+                this.dispatchAction('SET_BREADCRUMBS', [{
+                    label: 'เพิ่มรอบการคิดค่าธรรมเนียม',
+                    href: ''
+                }])
                 var datas = e.detail.detail;
                 this.titlePanelRight = 'เพิ่มรอบการคิดค่าธรรมเนียม'
                 let url = '';
@@ -356,6 +371,10 @@
                 this._flipDrawer();
             },
             _getFeeDetail: function (e) {
+                this.dispatchAction('SET_BREADCRUMBS', [{
+                    label: 'รอบที่คิดค่าธรรมเนียมครั้งที่'+ [[this._countRoundFee(e.detail.detail.fee_round)]],
+                    href: ''
+                }])
                 // this.fire('toast', { status: 'load' });
                 this.titlePanelRight = 'รอบที่คิดค่าธรรมเนียมครั้งที่ ' + [[this._countRoundFee(e.detail.detail.fee_round)]];
                 this.paymentsPageSeleted = 'blInvoicePage';

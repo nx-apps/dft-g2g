@@ -43,11 +43,11 @@
       text-align: center;
     }
 
-    table.gl-table-default>thead.table-head>tr>th:nth-child(1) {
+    /*table.gl-table-default>thead.table-head>tr>th:nth-child(1) {
       width: 15%;
-    }
+    }*/
 
-    table.gl-table-default>tbody.table-body>tr>td:not(:first-child) {
+    table.gl-table-default>tbody.table-body>tr>td {
       text-align: right;
     }
   </style>
@@ -68,9 +68,9 @@
           <table class="gl-table-default">
             <thead class="table-head">
               <tr>
+                <th>{{localize.cal_no}}</th>
                 <th>{{localize.fee_no}}</th>
                 <th>{{localize.fee_round}}</th>
-                <th>{{localize.cal_no}}</th>
                 <th>{{localize.invoice_no}}</th>
                 <th>{{localize.invoice_count}}</th>
                 <th>{{localize.amount}}{{localize.money}} ({{localize.baht}})</th>
@@ -82,9 +82,9 @@
             <tbody class="table-body">
               <template is="dom-repeat" items="[[newData]]">
                 <tr data="[[item]]" on-tap="getFeeDetail">
+                  <td>{{item.cl_no}}</td>
                   <td>[[item.fee_no]]</td>
                   <td>[[countRound(item.fee_round)]]</td>
-                  <td>{{item.cl_no}}</td>
                   <td>
                     <div style="text-align:left;">[[item.invoice_no]]</div>
                   </td>

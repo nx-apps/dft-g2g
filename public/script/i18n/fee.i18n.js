@@ -6,7 +6,7 @@ export const fee ={
         fee_round:"รอบที่",
         received_date:"วันที่ได้รับเงิน",
         cal_no:"งวดที่",
-        contract_name:'ชื่อสัญญา',
+        contract_name_th:'ชื่อสัญญา',
         exchange_rate:"อัตราแลกเปลี่ยน",
         exchange_rate_bank:"อัตราแลกเปลี่ยนที่ธนาคารเสนอ",
         usd:"USD",

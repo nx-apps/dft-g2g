@@ -92,28 +92,30 @@
 
       </template>
       <gl-form-panel-body>
-        <!--<gl-grid-row width="{{getWidth}}">
+        <gl-grid-row width="{{getWidth}}">
           <div style="margin-top:30px;">{{localize.label_invoice_no}} :</div>
-          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,2]]">
-            <gl-form-input class="required" required disabled="[[common.btnDisabled]]" label="" placeholder="{{localize.text_your_detail}}"
-              error-message="{{localize.text_enter_your_detail}}" value="{{data.invoice_type}}"></gl-form-input>
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,1]]">
+            <div class="horizontal layout">
+              <gl-form-input style="width:50px;" class="required" required disabled="[[common.btnDisabled]]" value="{{data.invoice_type}}"></gl-form-input>
+              <gl-form-input style="margin-left:5px;text-align:right;width:80px;" class="required" required disabled="[[common.btnDisabled]]" value="{{data.invoice_no}}"></gl-form-input>
+            </div>
           </gl-grid-col>
-          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,2]]">
-            <gl-form-input class="required" required disabled="[[common.btnDisabled]]" placeholder="{{localize.text_your_detail}}"
+          <!--<gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,1]]">
+            <gl-form-input style="width:50px" class="required" required disabled="[[common.btnDisabled]]"
               error-message="{{localize.text_enter_your_detail}}" value="{{data.invoice_no}}"></gl-form-input>
-          </gl-grid-col>
+          </gl-grid-col>-->
           <div style="margin-top:30px;"> / </div>
-          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,2]]">
-            <gl-form-input class="required" required disabled="[[common.btnDisabled]]" placeholder="{{localize.text_your_detail}}"
-              error-message="{{localize.text_enter_your_detail}}" value="{{data.invoice_year}}"></gl-form-input>
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,1]]">
+            [[setYear(data.invoice_date)]]
+            <gl-form-input class="required" required disabled value="{{data.invoice_year}}"></gl-form-input>
           </gl-grid-col>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]"></gl-grid-col>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,2]]">
             <gl-form-input type="date" class="required" required disabled="[[common.btnDisabled]]" label="{{localize.label_invoice_date}}" value="{{data.invoice_date}}"></gl-form-input>
           </gl-grid-col>
-        </gl-grid-row>-->
+        </gl-grid-row>
 
-        <div class="text">{{localize.label_cm_invoice}}</div>
+        <!--<div class="text">{{localize.label_cm_invoice}}</div>
         <gl-grid-row width="{{getWidth}}">
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,2]]">
             <gl-form-input class="required" required disabled="[[common.btnDisabled]]" label="{{localize.label_invoice_no}} :" placeholder="{{localize.text_your_detail}}"
@@ -122,9 +124,9 @@
           <gl-grid-col width="[[getWidth]]" grid="[[300,0],[500,8]]"></gl-grid-col>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,2]]">
             <gl-form-input type="date" class="required" required disabled="[[common.btnDisabled]]" label="{{localize.label_invoice_date}}" value="{{data.invoice_date}}"></gl-form-input>
-            <!--<vaadin-date-picker class="required" required disabled="[[common.btnDisabled]]" label="{{localize.label_invoice_date}}" value="{{data.invoice_date}}"></vaadin-date-picker>-->
+            <vaadin-date-picker class="required" required disabled="[[common.btnDisabled]]" label="{{localize.label_invoice_date}}" value="{{data.invoice_date}}"></vaadin-date-picker>
           </gl-grid-col>
-        </gl-grid-row>
+        </gl-grid-row>-->
 
         <gl-grid-row>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,12]]">
@@ -334,6 +336,12 @@
           }
         }
       },
+      setYear:function(date){
+        if(typeof date !== 'undefined'){
+          var year = date.split('-')[0];
+          this.set('data.invoice_year', Number(year)+543);
+        }
+      },
       _getVessel: function (data) {
         if (typeof data !== 'undefined' && data !== 'undefined') {
           return data.map((e) => e.ship_name).join(", ");
@@ -367,11 +375,13 @@
         var data = {
           id : this.data.id,
           contract_id : this.data.contract_id,
-          invoice_no : this.data.invoice_no,
+          invoice_type : this.data.invoice_type,
+          invoice_no : Number(this.data.invoice_no),
+          invoice_year : this.data.invoice_year,
           invoice_date : this.data.invoice_date+'T00:00:00+07:00',
           made_out_to : this.data.made_out_to
         }
-        // console.log(data);
+        console.log(data);
         var check = this.validateForm('.required');
         if(check === true){
           this.fire('toast', {
