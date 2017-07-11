@@ -71,6 +71,19 @@ exports.getByBookId = function (req, res) {
             res.json(data);
         })
 }
+exports.getMadeOut = function (req, res) {
+    r.table('book').getAll(req.query.contract_id, { index: 'contract_id' })
+        .filter(function (f) {
+            return f.hasFields('made_out_to')
+        })
+        .pluck('made_out_to')
+        // .getField('made_out_to')
+        .distinct()
+        .run()
+        .then(function (data) {
+            res.json(data);
+        })
+}
 exports.update = function (req, res) {
     var valid = req.ajv.validate('g2g.book', req.body);
     if (valid) {
