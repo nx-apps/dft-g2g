@@ -69,8 +69,14 @@
             "type": "string",
             "format": "date-time"
         },
-        "invoice_no": {
+        "invoice_type": {
             "type": "string"
+        },
+        "invoice_no": {
+            "type": "number"
+        },
+        "invoice_year": {
+            "type": "number"
         },
         "invoice_status": {
             "type": "boolean"
