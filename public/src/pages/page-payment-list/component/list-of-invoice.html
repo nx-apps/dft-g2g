@@ -11,6 +11,7 @@
 <link rel="import" href="./../../components/format-number-behavior.html">
 <link rel="import" href="./../../../../bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="./../../../layout/shared-styles.html">
+<link rel="import" href="./../../components/g2g-logic-behavior.html">
 <dom-module id="list-of-invoice">
   <style custrom include="iron-flex iron-flex-factors iron-flex-alignment shared-styles">
      :host {
@@ -147,7 +148,7 @@
       
        src="https://assets-cdn.github.com/images/modules/logos_page/Octocat.png"
     </div>-->
-    <div class="btnFab">
+    <div class="btnFab" hidden="{{fabHidden}}">
 
       <paper-fab icon="fa:calculator" title="{{localize.money_receiver}}" id="addContract" on-tap="payMoney"></paper-fab>
       <paper-tooltip for="addContract" offset="0">{{localize.money_receiver}}</paper-tooltip>
@@ -157,7 +158,7 @@
   <script>
     Polymer({
       is: "list-of-invoice",
-      behaviors: [ReduxBehavior, FormatNumberBehavior, CookieBehavior],
+      behaviors: [ReduxBehavior, FormatNumberBehavior, CookieBehavior, g2gLogicBehavior],
       properties: {
         localize: {
           statePath: 'i18n.invoice'
@@ -172,13 +173,6 @@
         selectDataAll: {
           type: Boolean,
           value: false
-        }
-      },
-      _isHave: function (data) {
-        if (data.length < 1) {
-          return true;
-        } else {
-          return false
         }
       },
       _selectDataAll: function (val) {

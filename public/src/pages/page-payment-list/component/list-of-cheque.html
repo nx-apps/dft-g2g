@@ -1,7 +1,7 @@
 <link rel="import" href="./../../../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="./../../../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="./../../../../bower_components/paper-tooltip/paper-tooltip.html">
-
+<link rel="import" href="./../../components/g2g-logic-behavior.html">
 <link rel="import" href="./../../../../bower_components/iron-icons/av-icons.html">
 
 <link rel="import" href="./../../components/format-number-behavior.html">
@@ -109,13 +109,7 @@
   <script>
     Polymer({
       is: "list-of-cheque",
-      behaviors: [
-        ReduxBehavior,
-        nylonBehavior,
-        FormatNumberBehavior
-        // g2gCongtroller,
-        // nylonLocalizeBehavior,
-      ],
+      behaviors: [ReduxBehavior, FormatNumberBehavior, g2gLogicBehavior],
       properties: {
         localize: {
           statePath: 'i18n.g2g'
@@ -208,7 +202,7 @@
       //   // console.log('clone new==>',this.newData);
       //   // console.log('org==>',this.data);
       // },
-      // _searchInArray: function (searchInput) {
+      _searchInArray: function (searchInput) {
       //   // console.log(searchInput == '');
       //   if (searchInput != '') {
       //     let arr = [];
@@ -221,7 +215,7 @@
       //   } else {
       //     this.initDatabl(this.data);
       //   }
-      // },
+      },
       getChequeDetail: function (e) {
         // console.log(e.currentTarget.data);
         let getData = this.newData.filter((item) => item.check === true)
