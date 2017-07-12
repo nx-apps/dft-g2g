@@ -44,7 +44,8 @@ export function feeAction(store) {
             })
         },
         FEE_CALC_DATA: function (data) {
-            axios.get('./fee/calc?book_id='+data)
+            axios.post('./fee/calc',data)
+            // axios.get('./fee/calc?book_id='+data)
             .then((response) => {
                 let newData = {
                     rate_bank_b : 0,

@@ -148,10 +148,10 @@
             <input id="tab1" type="radio" name="tabs" checked>
             <label for="tab1">1.{{localize.text_bill_of_lading}}</label>
 
-            <input id="tab2" type="radio" name="tabs">
+            <input id="tab2" type="radio" name="tabs" on-tap="_getListInvoice">
             <label for="tab2">2.{{localize.text_invoice}}</label>
 
-            <input id="tab3" type="radio" name="tabs">
+            <input id="tab3" type="radio" name="tabs" on-tap="_getListFee">
             <label for="tab3">3.{{localize.text_fee}}</label>
 
             <input id="tab4" type="radio" name="tabs">
@@ -300,10 +300,10 @@
                 // console.log(this.contractName);
                 var buyer_id = this.getCookieBhv("buyerId");
                 this.dispatchAction('BOOK_GET_LIST_DATA', contract_id);
-                this.dispatchAction('INVOICE_GET_LIST_DATA', contract_id);
-                this.dispatchAction('FEE_GET_LIST_DATA', { contract_id: contract_id, view: 'fin' , status:'false'})
+                // this.dispatchAction('INVOICE_GET_LIST_DATA', contract_id);
+                // this.dispatchAction('FEE_GET_LIST_DATA', { contract_id: contract_id, view: 'fin', status:'false'});
                 this.dispatchAction('GET_CHEQUE_LIST', contract_id);
-            },
+        },
             // ready: function () {
             //     this._getChequeList(contract_id);
             //     this._getPaymentsList(contract_id);
@@ -334,6 +334,9 @@
                 this.paymentsPageSeleted = 'blPage';
                 this._flipDrawer();
             },
+            _getListInvoice: function(){
+                this.dispatchAction('INVOICE_GET_LIST_DATA', this.getCookieBhv("contract_id"));
+            },
             _getBlInvoiceDetail: function (e) {
                 this.dispatchAction('SET_BREADCRUMBS', [{
                     label: 'รายละเอียดใบกำกับสินค้า : ' + e.detail.detail.invoice_type + e.detail.detail.invoice_no + '/' + e.detail.detail.invoice_year,
@@ -358,15 +361,19 @@
                 }])
                 var datas = e.detail.detail;
                 this.titlePanelRight = 'เพิ่มรอบการคิดค่าธรรมเนียม'
-                let url = '';
-                datas.map((item, index) => {
-                    if (index === 0) {
-                        url = url + item.id;
-                    } else {
-                        url = url + '_' + item.id;
-                    }
-                });
-                this.dispatchAction('FEE_CALC_DATA', url);
+                // let url = '';
+                // datas.map((item, index) => {
+                //     if (index === 0) {
+                //         url = url + item.id;
+                //     } else {
+                //         url = url + '_' + item.id;
+                //     }
+                // });
+                let arr = {book_id:[]};
+                datas.map((item) => {
+                    arr.book_id.push(item.id);
+                })
+                this.dispatchAction('FEE_CALC_DATA', arr);
                 this.dispatchAction('SET_STATE', {
                     isInsert: true,
                     btnDisabled: false,
@@ -375,6 +382,14 @@
                 });
                 this.paymentsPageSeleted = 'blInvoicePage';
                 this._flipDrawer();
+            },
+            _getListFee: function(){
+                var data = {
+                    contract_id: this.getCookieBhv("contract_id"),
+                    view: 'fin',
+                    status:'false'
+                }
+                this.dispatchAction('FEE_GET_LIST_DATA', data);
             },
             _getFeeDetail: function (e) {
                 var round = '';
