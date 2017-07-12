@@ -23,34 +23,104 @@
         "bank_branch": {
             "type": "string"
         },
-        "payment_detail": {
-            "type": "array",
-            "items": {
-                "type": "object",
-                "properties": {
-                    "pay_det_id": {
-                        "type": "string"
-                    },
-                    "invoice_id": {
-                        "type": "string"
-                    },
-                    "book_id": {
-                        "type": "string"
-                    },
-                    "contract_id": {
-                        "type": "string"
-                    },
-                    "cl_id": {
-                        "type": "string"
-                    },
-                    "book_det_id": {
-                        "type": "string"
-                    },
-                    "fee_det_id": {
-                        "type": "string"
-                    }
-                }
-            }
+        "book_id": {
+            "type": "string"
+        },
+        "cheque_status": {
+            "type": "boolean"
+        },
+        "cl_id": {
+            "type": "string"
+        },
+        "cl_no": {
+            "type": "number"
+        },
+        "company": {
+            "type": "object"
+        },
+        "contract_id": {
+            "type": "string"
+        },
+        "contract_no": {
+            "type": "number"
+        },
+        "detail_id": {
+            "type": "string"
+        },
+        "fee_date": {
+            "type": "string",
+            "format": "date-time"
+        },
+        "fee_id": {
+            "type": "string"
+        },
+        "fee_no": {
+            "type": "number"
+        },
+        "fee_round": {
+            "type": "number"
+        },
+        "invoice_date": {
+            "type": "string",
+            "format": "date-time"
+        },
+        "invoice_no": {
+            "type": "number"
+        },
+        "invoice_type": {
+            "type": "string"
+        },
+        "invoice_year": {
+            "type": "number"
+        },
+        "invoice_company_date": {
+            "type": "string",
+            "format": "date-time"
+        },
+        "invoice_company_no": {
+            "type": "string"
+        },
+        "net_weight": {
+            "type": "number"
+        },
+        "pay_status": {
+            "type": "boolean"
+        },
+        "price_d": {
+            "type": "number"
+        },
+        "rate_bank_b": {
+            "type": "number"
+        },
+        "rate_tt_b": {
+            "type": "number"
+        },
+        "ship": {
+            "type": "array"
+        },
+        "ship_lot": {
+            "type": "number"
+        },
+        "value_b": {
+            "type": "number"
+        },
+        "value_bal_b": {
+            "type": "number"
+        },
+        "value_d": {
+            "type": "number"
+        },
+        "value_fee_b": {
+            "type": "number"
+        },
+        "value_final_b": {
+            "type": "number"
+        },
+        "value_tax_b": {
+            "type": "number"
+        },
+        "pay_runing": {
+            "type": "number"
         }
     }
 }

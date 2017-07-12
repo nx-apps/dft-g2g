@@ -1,6 +1,8 @@
 var async = require('async');
+var common = require('../global/common');
 exports.calc = function (req, res) {
-    req.r.table('book').getAll(r.args(r.expr(req.query.book_id.split('_'))), { index: 'id' })
+    var book_id = common.getArrVal(req, 'book_id', '_');
+    req.r.table('book').getAll(r.args(book_id))
         .map(function (m) {
             var ship = m.getField('ship');
             var detail = r.table('book_detail').getAll(m('id'), { index: 'book_id' })
