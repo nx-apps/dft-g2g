@@ -401,6 +401,7 @@
             confirmed: (result) =>{
               if(result === true){
                 this.dispatchAction('BOOK_INSERT', data);
+                this.queryFrom('.required').map((el) => { el.reset(); });
               }
             }
           });
@@ -436,6 +437,7 @@
             confirmed: (result) =>{
               if(result === true){
                 this.dispatchAction('INVOICE_SAVE', data);
+                this.queryFrom('.required').map((el) => { el.reset(); });
               }
             }
           });

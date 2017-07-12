@@ -232,11 +232,15 @@
       ],
       listeners: {
         'check-required': 'checkRequired',
+        'reset-form': '_resetForm',
         'cancel-fee': 'cancelFee'
       },
       checkRequired: function () {
         var check = this.validateForm('.required');
         this.set('check_required', check);
+      },
+      _resetForm: function(){
+        this.queryFrom('.required').map((el) => { el.reset(); });
       },
       _getUSD: function (data) {
         if (typeof data.book !== 'undefined') {
@@ -252,11 +256,11 @@
         this.notifyPath('data.balanceLessFees');
       },
       calBath(rate_bank_b, amount_usd) {
-        return this.formatNumber(rate_bank_b * amount_usd)
+        return this.formatNumber(numeral().unformat(rate_bank_b) * amount_usd)
       },
       calRep(rate_bank_b, fee_ex_d, fee_in_b) {
         if (rate_bank_b !== '' & fee_ex_d !== '' & fee_in_b !== '') {
-          var calc_value_fee_b = ((parseFloat(rate_bank_b) * parseFloat(fee_ex_d)) + parseFloat(fee_in_b));
+          var calc_value_fee_b = ((numeral().unformat(rate_bank_b) * numeral().unformat(fee_ex_d)) + numeral().unformat(fee_in_b));
           this.set('data.value_fee_b', Number(calc_value_fee_b.toFixed(2)));
         } else {
           this.set('data.value_fee_b', 0);

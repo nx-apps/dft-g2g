@@ -1,6 +1,8 @@
 var async = require('async');
+var common = require('../global/common');
 exports.calc = function (req, res) {
-    req.r.table('book').getAll(r.args(r.expr(req.query.book_id.split('_'))), { index: 'id' })
+    var book_id = common.getArrVal(req, 'book_id', '_');
+    req.r.table('book').getAll(r.args(book_id))
         .map(function (m) {
             var ship = m.getField('ship');
             var detail = r.table('book_detail').getAll(m('id'), { index: 'book_id' })
@@ -49,12 +51,12 @@ exports.insert = function (req, res) {
     var obj = r.expr(book)
         .eqJoin('book_id', r.table('book')).pluck('left', {
             right: [
-                'cl_id', 'cl_no', 'contract_id', 'invoice_date', 'invoice_type', 'invoice_no', 'invoice_year'
+                'cl_id', 'cl_no', 'contract_id', 'contract_no', 'invoice_date', 'invoice_type', 'invoice_no', 'invoice_year'
                 //,'cut_date', 'eta_date', 'etd_date', 'packing_date', 'product_date'
             ]
         }).zip()
         .group(function (g) {
-            return g.pluck('cl_id', 'cl_no', 'contract_id')
+            return g.pluck('cl_id', 'cl_no', 'contract_id', 'contract_no')
         })
         .ungroup()
         .map(function (m) {
@@ -99,9 +101,13 @@ exports.insert = function (req, res) {
     updateFee("insert", obj, res);
 }
 exports.getByContractId = function (req, res) {
-    var get = r.table('fee').getAll([req.query.id, false, true, true], [req.query.id, false, false, false], { index: 'contractFeeFinRiceStatus' });
+    var get;// = r.table('fee').getAll([req.query.id, false, true, true], [req.query.id, false, false, false], { index: 'contractFeeFinRiceStatus' });
     if (typeof req.query.view !== "undefined" && req.query.view == "rice") {
         get = r.table('fee').getAll([req.query.id, false, true, false], { index: 'contractFeeFinRiceStatus' });
+    } else if (req.query.view == "fin" && req.query.status == "false") {
+        get = r.table('fee').getAll([req.query.id, false, false, false], { index: 'contractFeeFinRiceStatus' });
+    } else if (req.query.view == "fin" && req.query.status == "true") {
+        get = r.table('fee').getAll([req.query.id, false, true, true], { index: 'contractFeeFinRiceStatus' });
     }
     // req.r.table('fee').getAll([req.query.id, false,], { index: 'contractFeeFinRiceStatus' })
     get.merge(function (m) {
@@ -251,36 +257,49 @@ exports.approve = function (req, res) {
         updata.fee_status = req.body.fee_status;
     }
     if (req.body.id != '' && req.body.id != null && typeof req.body.id !== 'undefined') {
-        var query = r.table('fee').get(req.body.id);
+        var fee = r.table('fee').get(req.body.id);
         if (updata.fee_status == true) {
-            query.merge(updata)
-                .merge(function (m) {
-                    return {
-                        book: m('book').merge(function (m2) {
-                            return {
-                                detail: m2('detail').merge(function (m3) {
-                                    return {
-                                        cheque_status: false
-                                    }
-                                })
-                            }
+            async.parallel({
+                fee: function (callback) {
+                    fee.update(updata).run().then(function (res2) {
+                        callback(null, res2)
+                    })
+                },
+                payment: function (callback) {
+                    var payment = fee.merge(function (m) {
+                        return m('book').map(function (m2) {
+                            return m2('detail').merge(
+                                m2.pluck('book_id', 'invoice_date', 'invoice_no', 'invoice_type', 'invoice_year', 'ship', 'ship_lot'),
+                                m.pluck('contract_id', 'contract_no', 'cl_id', 'cl_no', 'fee_no', 'fee_round', 'fee_date', 'rate_bank_b', 'rate_tt_b'),
+                                {
+                                    fee_id: m('id'),
+                                    cheque_status: false,
+                                    pay_status: false,
+                                    creater: 'admin',
+                                    updater: 'admin',
+                                    date_created: r.now().inTimezone('+07'),
+                                    date_updated: r.now().inTimezone('+07')
+                                }
+                            )
                         })
-                    }
-                })
-                .do(function (d) {
-                    return query.update(d)
-                })
-                .run()
-                .then(function (data) {
-                    res.json(data);
-                })
+                            .reduce(function (left, right) {
+                                return left.add(right)
+                            })
+                    });
+                    r.table('payment').insert(payment).run().then(function (res3) {
+                        callback(null, res3)
+                    })
+                }
+            }, function (err, results) {
+                res.json(results);
+            });
         } else {
-            query.update(updata)
-                .run()
-                .then(function (data) {
-                    res.json(data);
-                })
+            fee.update(updata).run().then(function (results) {
+                res.json(results);
+            })
         }
+
+
     } else {
         res.json('require field "id"');
     }

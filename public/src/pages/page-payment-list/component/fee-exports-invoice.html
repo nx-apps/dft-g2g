@@ -110,7 +110,7 @@
               <gl-form-input label="{{localize.fee_total}} ({{localize.baht}})" class="number" format-number="on" style="width:240px; margin-left:50px;"
                 value="{{item.value_fee_b}}" disabled="[[common.btnDisabled]]"></gl-form-input>
               <!--[[_calcFee(calcFee,indexData)]]-->
-              [[_calcFeeBAvg(item.fee_ex_d,item.fee_in_b, indexData)]] [[changeString2Num(item.*,'value_fee_b')]]
+              [[_calcFeeBAvg(rateBank, item.fee_ex_d,item.fee_in_b, indexData)]] [[changeString2Num(item.*,'value_fee_b')]]
             </div>
           </div>
           <div style="overflow-x:auto;">
@@ -305,7 +305,7 @@
       behaviors: [ReduxBehavior, g2gLogicBehavior, ValidateFormBehavior, FormatNumberBehavior],
       calcValueFeeB: function (rateBank, feeEx, feeIn) {
         if (rateBank !== undefined & feeEx !== undefined & feeIn !== undefined) {
-          var calc_value_fee_b = ((parseFloat(rateBank) * parseFloat(feeEx)) + parseFloat(feeIn));
+          var calc_value_fee_b = ((numeral().unformat(rateBank) * numeral().unformat(feeEx)) + numeral().unformat(feeIn));
           this.value_fee_b = calc_value_fee_b;
         }
       },
@@ -349,8 +349,8 @@
       //   // console.log('func ', Number(fee_avg.toFixed(2)));
       //   return Number(fee_avg.toFixed(2));
       // },
-      _calcFeeBAvg: function (fee_ex_d, fee_in_b, index) {
-        var value_fee_b = (Number(this.rateBank) * Number(fee_ex_d)) + Number(fee_in_b);
+      _calcFeeBAvg: function (rateBank, fee_ex_d, fee_in_b, index) {
+        var value_fee_b = (numeral().unformat(rateBank) * numeral().unformat(fee_ex_d)) + numeral().unformat(fee_in_b);
         this.set('data.book.' + index + '.value_fee_b', Number(value_fee_b.toFixed(2)));
       },
       calcFeeBAvg: function (value_fee_b) {
@@ -363,7 +363,7 @@
         if (typeof this.data.book !== 'undefined') {
           if (fee !== '') {
             var len = this.data.book.length;
-            this.set('data.book.' + index + '.fee_ex_d', this._calcFeeAvg(Number(fee), len));
+            this.set('data.book.' + index + '.fee_ex_d', this._calcFeeAvg(numeral().unformat(fee), len));
           } else {
             this.set('data.book.' + index + '.fee_ex_d', 0);
           }
@@ -373,7 +373,7 @@
         if (typeof this.data.book !== 'undefined') {
           if (fee !== '') {
             var len = this.data.book.length;
-            this.set('data.book.' + index + '.fee_in_b', this._calcFeeAvg(Number(fee), len));
+            this.set('data.book.' + index + '.fee_in_b', this._calcFeeAvg(numeral().unformat(fee), len));
           } else {
             this.set('data.book.' + index + '.fee_in_b', 0);
           }
@@ -394,7 +394,7 @@
       },
       _calcValueB: function (usd, rate_bank, indexData, index) {
         if (rate_bank !== '') {
-          var calc_value_b = usd * parseFloat(rate_bank);
+          var calc_value_b = usd * numeral().unformat(rate_bank);
           this.set('data.book.' + indexData + '.detail.' + index + '.value_b', Number(calc_value_b.toFixed(2)));
         } else {
           this.set('data.book.' + indexData + '.detail.' + index + '.value_b', 0);
@@ -402,11 +402,11 @@
       },
       _calcValueFeeB: function (feeDetail, indexData, indexDetail) {
         var len = this.data.book[indexData].detail.length;
-        this.set('data.book.' + indexData + '.detail.' + indexDetail + '.value_fee_b', this._calcFeeAvg(Number(feeDetail), len));
+        this.set('data.book.' + indexData + '.detail.' + indexDetail + '.value_fee_b', this._calcFeeAvg(numeral().unformat(feeDetail), len));
       },
       _calcValueBalB: function (value_b, value_fee_b, indexData, index) {
         if (value_fee_b !== '') {
-          var calc_value_bal_b = Number(value_b) - Number(value_fee_b);
+          var calc_value_bal_b = Number(value_b) - numeral().unformat(value_fee_b);
           this.set('data.book.' + indexData + '.detail.' + index + '.value_bal_b', calc_value_bal_b);
         } else {
           this.set('data.book.' + indexData + '.detail.' + index + '.value_bal_b', 0);
@@ -426,8 +426,8 @@
           data.base.book[index].detail.map((item) => {
             result += item.net_weight;
           })
-          this.set('data.book.' + index + '.totalTonInvoices', result);
-          return result
+          this.set('data.book.' + index + '.totalTonInvoices', Number(result.toFixed(2)));
+          return Number(result.toFixed(2))
         }
       },
       _totalAmountUsdInvoices: function (index, data) {
@@ -436,8 +436,8 @@
           data.base.book[index].detail.map((item) => {
             result += item.value_d;
           })
-          this.set('data.book.' + index + '.totalAmountUsdInvoices', result);
-          return result;
+          this.set('data.book.' + index + '.totalAmountUsdInvoices', Number(result.toFixed(2)));
+          return Number(result.toFixed(2));
         }
       },
       _totalBathInvoices: function (index, data) {
@@ -447,8 +447,8 @@
             result += parseFloat(item.value_b);
           })
           // this.set('data.'+index+'.totalBathInvoices', result);
-          this.set('data.book.' + index + '.value_b', result);
-          return result;
+          this.set('data.book.' + index + '.value_b', Number(result.toFixed(2)));
+          return Number(result.toFixed(2));
         }
       },
       _totalFeeInvoices: function (index, data) {
@@ -458,8 +458,8 @@
             result += parseFloat(item.value_fee_b);
           })
           // this.set('data.'+index+'.totalFeeInvoices', result);
-          this.set('data.book.' + index + '.totalValue_fee_b', result);
-          return result;
+          this.set('data.book.' + index + '.totalValue_fee_b', Number(result.toFixed(2)));
+          return Number(result.toFixed(2));
         }
       },
       _totalBalance: function (index, data) {
@@ -469,8 +469,8 @@
             result += parseFloat(item.value_bal_b);
           })
           // this.set('data.'+index+'.totalBalance', result);
-          this.set('data.book.' + index + '.value_bal_b', result);
-          return result;
+          this.set('data.book.' + index + '.value_bal_b', Number(result.toFixed(2)));
+          return Number(result.toFixed(2));
         }
       },
       _totalIncomeTaxInvoices: function (index, data) {
@@ -480,8 +480,8 @@
             result += parseFloat(item.value_tax_b);
           })
           // this.set('data.'+index+'.totalIncomeTaxInvoices', result);
-          this.set('data.book.' + index + '.value_tax_b', result);
-          return result;
+          this.set('data.book.' + index + '.value_tax_b', Number(result.toFixed(2)));
+          return Number(result.toFixed(2));
         }
       },
       _totalMoneyBathInvoices: function (index, data) {
@@ -491,8 +491,8 @@
             result += parseFloat(item.value_final_b);
           })
           // this.set('data.'+index+'.totalMoneyBathInvoices', result);
-          this.set('data.book.' + index + '.value_final_b', result);
-          return result;
+          this.set('data.book.' + index + '.value_final_b', Number(result.toFixed(2)));
+          return Number(result.toFixed(2));
         }
       },
       addPayment: function () {
@@ -530,6 +530,8 @@
                 confirmed: (result) => {
                   if (result === true) {
                     this.dispatchAction('FEE_INSERT', newData);
+                    this.fire('reset-form');
+                    this.queryFrom('.required').map((el) => { el.reset(); });
                   }
                 }
               });
@@ -580,6 +582,8 @@
                 confirmed: (result) => {
                   if (result === true) {
                     this.dispatchAction('FEE_UPDATE', newData);
+                    this.fire('reset-form');
+                    this.queryFrom('.required').map((el) => { el.reset(); });
                   }
                 }
               });
@@ -622,7 +626,6 @@
             }
           })
         } else {
-          // console.log(this.list_fee);
           this.fire('toast', {
             status: 'openDialog',
             text: 'ต้องการยืนยันการคิดค่าธรรมเนียมใช่หรือไม่',
@@ -633,7 +636,6 @@
                     id: id,
                     fin_status: true
                   };
-                  // console.log(newData);
                   this.dispatchAction('FEE_APPROVE', newData);
                 });
               }
@@ -657,7 +659,7 @@
           if (checkSum === true) {
             this.fire('toast', {
               status: 'openDialog',
-              text: 'ต้องการบันทึกการถัวเฉลี่ยค่าธรรมเนียมใช่หรือไม่',
+              text: 'ต้องการบันทึกการจัดสรรค่าธรรมเนียมใช่หรือไม่',
               confirmed: (result) => {
                 if (result === true) {
                   let { rate_bank_b, rate_tt_b, fee_date, book, id } = this.data;
@@ -688,7 +690,7 @@
         }
         this.fire('toast', {
           status: 'openDialog',
-          text: 'ต้องการยืนยันการถัวเฉลี่ยค่าธรรมเนียมใช่หรือไม่',
+          text: 'ต้องการยืนยันการจัดสรรค่าธรรมเนียมใช่หรือไม่',
           confirmed: (result) => {
             if (result === true) {
               this.dispatchAction('FEE_RICE_APPROVE', newData);
@@ -703,7 +705,7 @@
         }
         this.fire('toast', {
           status: 'openDialog',
-          text: 'ต้องการยกเลิกการถัวเฉลี่ยค่าธรรมเนียมใช่หรือไม่',
+          text: 'ต้องการยกเลิกการจัดสรรค่าธรรมเนียมใช่หรือไม่',
           confirmed: (result) => {
             if (result === true) {
               this.dispatchAction('FEE_REJECT', newData);
@@ -719,7 +721,7 @@
         }
         this.fire('toast', {
           status: 'openDialog',
-          text: 'ต้องการยืนยันการถัวเฉลี่ยค่าธรรมเนียมใช่หรือไม่',
+          text: 'ต้องการยืนยันการจัดสรรค่าธรรมเนียมใช่หรือไม่',
           confirmed: (result) => {
             if (result === true) {
               this.dispatchAction('FEE_APPROVE_FINSH', newData);

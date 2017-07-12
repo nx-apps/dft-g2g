@@ -12,3 +12,4 @@
 npm-debug*
 .DS_Store
 yarn.lock
+public/bundle.js

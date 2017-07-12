@@ -1,6 +1,6 @@
 module.exports = function (app) {
     var controller = require('../controllers/fee.controller');
-    app.get('/calc', controller.calc);
+    app.route('/calc').get(controller.calc).post(controller.calc);
     app.post('/insert', controller.insert);
     app.get('/contract', controller.getByContractId);
     app.get('', controller.getById);

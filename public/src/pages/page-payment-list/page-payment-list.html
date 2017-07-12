@@ -301,7 +301,7 @@
                 var buyer_id = this.getCookieBhv("buyerId");
                 this.dispatchAction('BOOK_GET_LIST_DATA', contract_id);
                 this.dispatchAction('INVOICE_GET_LIST_DATA', contract_id);
-                this.dispatchAction('FEE_GET_LIST_DATA', { contract_id: contract_id, view: 'fin' });
+                this.dispatchAction('FEE_GET_LIST_DATA', { contract_id: contract_id, view: 'fin' , status:'false'});
             },
             // ready: function () {
             //     this._getChequeList(contract_id);
@@ -376,8 +376,14 @@
                 this._flipDrawer();
             },
             _getFeeDetail: function (e) {
+                var round = '';
+                if(e.detail.detail.fee_round == 0){
+                    round = '';
+                }else{
+                    round = e.detail.detail.fee_round;
+                }
                 this.dispatchAction('SET_BREADCRUMBS', [{
-                    label: 'งวดที่ '+e.detail.detail.cl_no+' ครั้งที่ '+e.detail.detail.fee_no+' รอบที่คิดค่าธรรมเนียมครั้งที่ ' + e.detail.detail.fee_round,
+                    label: 'งวดที่ '+e.detail.detail.cl_no+' ครั้งที่ '+e.detail.detail.fee_no+' รอบที่คิดค่าธรรมเนียมครั้งที่ ' + round,
                     href: ''
                 }])
                 // this.fire('toast', { status: 'load' });
