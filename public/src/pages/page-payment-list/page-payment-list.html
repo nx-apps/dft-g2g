@@ -357,15 +357,19 @@
                 }])
                 var datas = e.detail.detail;
                 this.titlePanelRight = 'เพิ่มรอบการคิดค่าธรรมเนียม'
-                let url = '';
-                datas.map((item, index) => {
-                    if (index === 0) {
-                        url = url + item.id;
-                    } else {
-                        url = url + '_' + item.id;
-                    }
-                });
-                this.dispatchAction('FEE_CALC_DATA', url);
+                // let url = '';
+                // datas.map((item, index) => {
+                //     if (index === 0) {
+                //         url = url + item.id;
+                //     } else {
+                //         url = url + '_' + item.id;
+                //     }
+                // });
+                let arr = {book_id:[]};
+                datas.map((item) => {
+                    arr.book_id.push(item.id);
+                })
+                this.dispatchAction('FEE_CALC_DATA', arr);
                 this.dispatchAction('SET_STATE', {
                     isInsert: true,
                     btnDisabled: false,
