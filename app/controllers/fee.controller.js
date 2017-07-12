@@ -99,9 +99,13 @@ exports.insert = function (req, res) {
     updateFee("insert", obj, res);
 }
 exports.getByContractId = function (req, res) {
-    var get = r.table('fee').getAll([req.query.id, false, true, true], [req.query.id, false, false, false], { index: 'contractFeeFinRiceStatus' });
+    var get;// = r.table('fee').getAll([req.query.id, false, true, true], [req.query.id, false, false, false], { index: 'contractFeeFinRiceStatus' });
     if (typeof req.query.view !== "undefined" && req.query.view == "rice") {
         get = r.table('fee').getAll([req.query.id, false, true, false], { index: 'contractFeeFinRiceStatus' });
+    } else if (req.query.view == "fin" && req.query.status == "false") {
+        get = r.table('fee').getAll([req.query.id, false, false, false], { index: 'contractFeeFinRiceStatus' });
+    } else if (req.query.view == "fin" && req.query.status == "true") {
+        get = r.table('fee').getAll([req.query.id, false, true, true], { index: 'contractFeeFinRiceStatus' });
     }
     // req.r.table('fee').getAll([req.query.id, false,], { index: 'contractFeeFinRiceStatus' })
     get.merge(function (m) {
