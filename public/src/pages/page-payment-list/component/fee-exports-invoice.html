@@ -659,7 +659,7 @@
           if (checkSum === true) {
             this.fire('toast', {
               status: 'openDialog',
-              text: 'ต้องการบันทึกการถัวเฉลี่ยค่าธรรมเนียมใช่หรือไม่',
+              text: 'ต้องการบันทึกการจัดสรรค่าธรรมเนียมใช่หรือไม่',
               confirmed: (result) => {
                 if (result === true) {
                   let { rate_bank_b, rate_tt_b, fee_date, book, id } = this.data;
@@ -690,7 +690,7 @@
         }
         this.fire('toast', {
           status: 'openDialog',
-          text: 'ต้องการยืนยันการถัวเฉลี่ยค่าธรรมเนียมใช่หรือไม่',
+          text: 'ต้องการยืนยันการจัดสรรค่าธรรมเนียมใช่หรือไม่',
           confirmed: (result) => {
             if (result === true) {
               this.dispatchAction('FEE_RICE_APPROVE', newData);
@@ -705,7 +705,7 @@
         }
         this.fire('toast', {
           status: 'openDialog',
-          text: 'ต้องการยกเลิกการถัวเฉลี่ยค่าธรรมเนียมใช่หรือไม่',
+          text: 'ต้องการยกเลิกการจัดสรรค่าธรรมเนียมใช่หรือไม่',
           confirmed: (result) => {
             if (result === true) {
               this.dispatchAction('FEE_REJECT', newData);
@@ -721,7 +721,7 @@
         }
         this.fire('toast', {
           status: 'openDialog',
-          text: 'ต้องการยืนยันการถัวเฉลี่ยค่าธรรมเนียมใช่หรือไม่',
+          text: 'ต้องการยืนยันการจัดสรรค่าธรรมเนียมใช่หรือไม่',
           confirmed: (result) => {
             if (result === true) {
               this.dispatchAction('FEE_APPROVE_FINSH', newData);
