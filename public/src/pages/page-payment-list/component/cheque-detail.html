@@ -91,7 +91,7 @@
         </table>
       </div>
       <div class="btnMoney horizontal end-justified layout">
-        <paper-button class="gl-btn-success" raised on-tap="getChequeDetail">ขึ้นเช็ค</paper-button>
+        <paper-button class="gl-btn-success" raised on-tap="getChequeDetail" disabled="[[checkTrue(data.*)]]">ขึ้นเช็ค</paper-button>
       </div>
       <!--</template>-->
     </gl-form-panel>
@@ -257,6 +257,12 @@
             // })
             this.dispatchAction('GET_CHEQUE_DETAIL_LIST',{id:this.dataUrl})
           })
+      },
+      checkTrue(data){
+        if(this.data.find((item)=> item.check === true ) !== undefined)
+          return false
+        return true
+        // console.log(data);
       }
     });
   </script>
