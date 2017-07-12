@@ -258,7 +258,7 @@
         Polymer({
             is: 'page-payment-list',
             behaviors: [ReduxBehavior, nylonBehavior, CookieBehavior, i18nAction, bookAction, invoiceAction,
-                commonStateAction, feeAction],
+                commonStateAction, feeAction,chequeAction],
             properties: {
                 localize: {
                     statePath: 'i18n.g2g'
@@ -301,7 +301,8 @@
                 var buyer_id = this.getCookieBhv("buyerId");
                 this.dispatchAction('BOOK_GET_LIST_DATA', contract_id);
                 this.dispatchAction('INVOICE_GET_LIST_DATA', contract_id);
-                this.dispatchAction('FEE_GET_LIST_DATA', { contract_id: contract_id, view: 'fin' , status:'false'});
+                this.dispatchAction('FEE_GET_LIST_DATA', { contract_id: contract_id, view: 'fin' , status:'false'})
+                this.dispatchAction('GET_CHEQUE_LIST', contract_id);
             },
             // ready: function () {
             //     this._getChequeList(contract_id);
@@ -401,7 +402,12 @@
             },
             _getChequeDetail: function (e) {
                 console.log(e.detail.detail);
+                this.dispatchAction('SET_BREADCRUMBS', [{
+                    label: 'ขึ้นเช็ค ',
+                    href: ''
+                }])
                 this.titlePanelRight = 'เช็ค'
+                this.dispatchAction('GET_CHEQUE_DETAIL_LIST',{id:e.detail.detail})
                 // this.fire('toast', { status: 'load' });
                 //     this.read('./g2g/payment/fee/id/' + e.detail.detail.fee_id, (data) => {
                 //     // console.log(data);

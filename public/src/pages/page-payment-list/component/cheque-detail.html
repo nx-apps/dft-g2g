@@ -1,5 +1,7 @@
 <!--<link rel="import" href="cheque-detail-invoice.html">-->
 <link rel="import" href="./../../../../bower_components/gl-form/gl-form-input.html">
+<link rel="import" href="./../../components/validateFormBehaviors.html">
+<link rel="import" href="./../../components/format-number-behavior.html">
 <link rel="import" href="./../../../../bower_components/vaadin-date-picker/vaadin-date-picker.html">
 <link rel="import" href="./../../../../bower_components/gl-form/gl-form-panel.html">
 <link rel="import" href="./../../../../bower_components/gl-grid/gl-grid-row.html">
@@ -47,13 +49,13 @@
           <thead class="table-head">
             <tr>
               <th style="width: 50px;">
-                <paper-checkbox on-tap="_selectDataAll" checked="{{selectDataAll}}" ></paper-checkbox>{{localize.select}}</th>
+                <paper-checkbox on-tap="_selectDataAll" checked="{{selectDataAll}}"></paper-checkbox>{{localize.select}}</th>
               </th>
               <th style="width: 70px">งวดที่</th>
               <th style="width: 70px;">ครั้งที่</th>
               <th style="width: 70px;">รอบ</th>
               <th style="width: 240px;">บริษัท</th>
-              <th style="width: 170px;">จำนวนเงิน</th>
+              <th style="width: 170px; text-align: right;">จำนวนเงิน</th>
               <th style="width: 140px;">เลขที่ใบแจ้งหนี้</th>
               <th style="width: 140px;">วันที่ใบแจ้งหนี้</th>
               <th style="width: 180px">เลขที่เช็ค</th>
@@ -61,26 +63,27 @@
             </tr>
           </thead>
           <tbody class="table-body">
-            <template is="dom-repeat" items="[[data]]">
-              <tr style="{{checkStatus(item.status)}}">
+            <template is="dom-repeat" items="{{data}}">
+              <tr style="{{checkStatus(item.cheque_status)}}">
                 <td>
-                  <paper-checkbox data="{{item}}" checked="{{item.check}}" disabled="{{item.status}}" on-tap="setNoCheque"></paper-checkbox>
+                  <paper-checkbox data="{{item}}" checked="{{item.check}}" disabled="{{item.cheque_status}}" on-tap="setNoCheque"></paper-checkbox>
                 </td>
-                <td>[[item.fee]]</td>
+                <td>[[item.cl_no]]</td>
                 <td>[[item.fee_no]]</td>
                 <td>[[item.fee_round]]</td>
-                <td>[[item.company]] </td>
-                <td>[[item.value_b]] </td>
+                <td>[[item.company.company_name_th]] </td>
+                <td style="text-align: right;">[[formatNumber(item.value_final_b)]] </td>
                 <td>
-                  <gl-form-input placeholder="เลขที่ใบแจ้งหนี้" disabled="{{item.status}}" no-label-float value="{{item.invoice_exporter_no}}"
+                  <gl-form-input placeholder="เลขที่ใบแจ้งหนี้" disabled="{{item.cheque_status}}" no-label-float value="{{item.payment_no}}"
                     data="[[item]]" on-blur="updateCheque"></gl-form-input>
                 </td>
                 <td>
-                  <gl-form-input type="date" placeholder="วันที่" disabled="{{item.status}}" no-label-float value="{{item.invoice_exporter_date}}"
-                    data="[[item]]"></gl-form-input>
+                  <gl-form-input type="date" class="required" required="{{item.check}}"  placeholder="วันที่" disabled="{{item.cheque_status}}" no-label-float
+                    value="{{item.invoice_company_date}}" data="[[item]]"></gl-form-input>
                 </td>
-                <td>[[changeString2Num(item.*,'invoice_no')]]
-                  <gl-form-input placeholder="เลขที่เช็ค" disabled="{{item.status}}" no-label-float value="{{item.invoice_no}}" data="[[item]]"></gl-form-input>
+                <td>[[changeString2Num(item.*,'invoice_company_no')]]
+                  <gl-form-input placeholder="เลขที่เช็ค" class="required" required="{{item.check}}" disabled="{{item.cheque_status}}" no-label-float value="{{item.invoice_company_no}}"
+                    data="[[item]]"></gl-form-input>
                 </td>
               </tr>
             </template>
@@ -96,7 +99,7 @@
   <script>
     Polymer({
       is: "cheque-detail",
-      behaviors: [ReduxBehavior, g2gLogicBehavior],
+      behaviors: [ReduxBehavior, g2gLogicBehavior, FormatNumberBehavior, ValidateFormBehavior],
       properties: {
         localize: {
           statePath: 'i18n.g2g'
@@ -106,71 +109,11 @@
           value: 1120
         },
         data: {
-          type: Array,
-          value: [
-            {
-              check: false,
-              status: false,
-              fee: 1,
-              fee_no: 1,
-              fee_round: 1,
-              company: 'ขายข้าว 1 จำกัด',
-              value_b: 100,
-              invoice_exporter_no: '',
-              invoice_exporter_date: '',
-              invoice_no: ''
-            },
-            {
-              check: false,
-              status: false,
-              fee: 1,
-              fee_no: 1,
-              fee_round: 1,
-              company: 'ขายข้าว 2 จำกัด',
-              value_b: 100,
-              invoice_exporter_no: '',
-              invoice_exporter_date: '',
-              invoice_no: ''
-            },
-            {
-              check: false,
-              status: true,
-              fee: 1,
-              fee_no: 1,
-              fee_round: 1,
-              company: 'ขายข้าว 3 จำกัด',
-              value_b: 100,
-              invoice_exporter_no: '',
-              invoice_exporter_date: '',
-              invoice_no: 'd'
-            },
-            {
-              check: false,
-              status: false,
-              fee: 1,
-              fee_no: 1,
-              fee_round: 1,
-              company: 'ขายข้าว 4 จำกัด',
-              value_b: 100,
-              invoice_exporter_no: '',
-              invoice_exporter_date: '',
-              invoice_no: ''
-            },
-            {
-              check: false,
-              status: false,
-              fee: 1,
-              fee_no: 1,
-              fee_round: 2,
-              company: 'ขายข้าว 5 จำกัด',
-              value_b: 100,
-              invoice_exporter_no: '',
-              invoice_exporter_date: '',
-              invoice_no: ''
-            },
-
-          ]
-        }
+          statePath: 'cheque.cheque_detail_list',
+        },
+        dataUrl: {
+          statePath: 'cheque.dataUrl',
+        },
       },
       _selectDataAll: function (val) {
         try {
@@ -181,54 +124,54 @@
 
         }
       },
-      checkStatus: function (status) {
-        if (status) return 'background-color: #F1F1F1;'
+      checkStatus: function (cheque_status) {
+        if (cheque_status) return 'background-color: #F1F1F1;'
         return ''
-        // console.log(status)
+        // console.log(cheque_status)
       },
       _selectDataAll: function (val) {
         try {
           if (this.selectDataAll) {
             this.data.map((item, index) => {
-              // if (item.status === false) {
-              if (item.status === false && item.check === false) {
+              // if (item.cheque_status === false) {
+              if (item.cheque_status === false && item.check === false) {
                 this.set('data.' + index + '.check', true)
-                let newCh = this.data.filter((items) => items.check === true && items.status === false)
-                let result = this.maxNumberInArrayObject(newCh, 'invoice_no')
+                let newCh = this.data.filter((items) => items.check === true && items.cheque_status === false)
+                let result = this.maxNumberInArrayObject(newCh, 'invoice_company_no')
                 if (result === 0) {
-                  this.set('data.' + index + '.invoice_no', this.no + 1)
+                  this.set('data.' + index + '.invoice_company_no', this.no + 1)
                 } else {
-                  this.set('data.' + index + '.invoice_no', result + 1)
+                  this.set('data.' + index + '.invoice_company_no', result + 1)
                 }
               }
             })
           } else {
             this.data.map((item, index) => {
-              // console.log(item.status === true);
-              
-              if (item.status === false) {
+              // console.log(item.cheque_status === true);
+
+              if (item.cheque_status === false) {
                 this.set('data.' + index + '.check', true);
                 this.set('data.' + index + '.check', false)
-                this.set('data.' + index + '.invoice_no', '');
+                this.set('data.' + index + '.invoice_company_no', '');
               }
             })
           }
           // this.data.map((item, index) => {
-          //   if (item.status === false && item.check === false) {
+          //   if (item.cheque_status === false && item.check === false) {
           //     this.set('data.' + index + '.check', this.selectDataAll);
-          //     // console.log(this.data.filter((items)=> items.check === true && items.status === false && items.invoice_no === ''))
-          //     let newCh = this.data.filter((items) => items.check === true && items.status === false)
-          //     let result = this.maxNumberInArrayObject(newCh, 'invoice_no')
+          //     // console.log(this.data.filter((items)=> items.check === true && items.cheque_status === false && items.invoice_company_no === ''))
+          //     let newCh = this.data.filter((items) => items.check === true && items.cheque_status === false)
+          //     let result = this.maxNumberInArrayObject(newCh, 'invoice_company_no')
           //     if (result === 0) {
-          //       this.set('data.' + index + '.invoice_no', this.no + 1)
+          //       this.set('data.' + index + '.invoice_company_no', this.no + 1)
           //     } else {
-          //       this.set('data.' + index + '.invoice_no', result + 1)
+          //       this.set('data.' + index + '.invoice_company_no', result + 1)
           //     }
 
           //   } else {
           //     if (this.selectDataAll === false) {
           //       this.set('data.' + index + '.check', this.selectDataAll);
-          //       this.set('data.' + index + '.invoice_no', '');
+          //       this.set('data.' + index + '.invoice_company_no', '');
           //     }
           //   }
 
@@ -241,38 +184,80 @@
         //เพิ่ม index ลงไปเพื่อไว้ ใส่ค่ากลับได้ถูกตำแหน่ง
         this.data.map((item, index) => item.indexItem = index)
         let item = para.model.__data__
-        // หา item ที่ check แล่วและ status ยังเป็น false
-        let newCh = this.data.filter((item) => item.check === true && item.status === false)
-        newCh.sort((a, b) => Number(a.invoice_no) - Number(b.invoice_no))
+        // หา item ที่ check แล่วและ cheque_status ยังเป็น false
+        let newCh = this.data.filter((item) => item.check === true && item.cheque_status === false)
+        newCh.sort((a, b) => Number(a.invoice_company_no) - Number(b.invoice_company_no))
         if (item.item.check === false) {
-          this.set('data.' + item.index + '.invoice_no', '')
-          let resultMin = this.minNumberInArrayObject(newCh, 'invoice_no')
+          this.set('data.' + item.index + '.invoice_company_no', '')
+          let resultMin = this.minNumberInArrayObject(newCh, 'invoice_company_no')
 
           if (this.no === resultMin - 1) {
             newCh.map((item, index) => {
-              if (item.invoice_no !== resultMin) {
-                this.set('data.' + item.indexItem + '.invoice_no', resultMin)
+              if (item.invoice_company_no !== resultMin) {
+                this.set('data.' + item.indexItem + '.invoice_company_no', resultMin)
               }
               ++resultMin
             })
           } else {
             let no = this.no
-            // เรียงจากนค่า invoice_no น้อยไปหามาก
-            // newCh.sort(function (a, b) { return a.invoice_no + b.invoice_no })
+            // เรียงจากนค่า invoice_company_no น้อยไปหามาก
+            // newCh.sort(function (a, b) { return a.invoice_company_no + b.invoice_company_no })
             newCh.map((item, index) => {
-              this.set('data.' + item.indexItem + '.invoice_no', ++no)
+              this.set('data.' + item.indexItem + '.invoice_company_no', ++no)
             })
           }
         } else {
 
           //อยู่ใน g2gLogicBehavior 
-          let result = this.maxNumberInArrayObject(newCh, 'invoice_no')
+          let result = this.maxNumberInArrayObject(newCh, 'invoice_company_no')
           if (result === 0)
-            return this.set('data.' + item.index + '.invoice_no', this.no + 1)
-          return this.set('data.' + item.index + '.invoice_no', result + 1)
+            return this.set('data.' + item.index + '.invoice_company_no', this.no + 1)
+          return this.set('data.' + item.index + '.invoice_company_no', result + 1)
         }
 
       },
+      _resiveDataContract(){
+        return new Promise((res, rej) => {
+          let dataResive = this.data.filter((item)=> item.check === true )
+          dataResive.map((date)=>{
+            delete date.check
+            delete date.indexItem
+            return date.invoice_company_date = date.invoice_company_date + 'T00:00:00+07:00'
+          })
+          // dataResive.invoice_exporter_date = dataResive.invoice_exporter_date + 'T00:00:00+07:00'
+          // delete dataResive.date_updated
+          // delete dataResive.date_created
+          res(dataResive)
+        })
+      },
+      _resiveChequeForm: function () {
+        return new Promise((res, rej) => {
+          if (this.validateForm('.required')) {
+            this._resiveDataContract().then((data) => {
+              res(data)
+            })
+          } else {
+            this.fire('toast', {
+              status: 'connectError', text: 'กรุณากรอกข้อมูลให้ครบทุกช่อง', //คำสั่งสำหรับเปิด toast error
+              callback: function () {
+                rej('error')
+              }
+            })
+          }
+        })
+      },
+      getChequeDetail: function () {
+         this._resiveChequeForm()
+          .then((res) => {
+            // this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
+            console.log(res)
+            // this.dispatchAction('PUT_CHEQUE_DETAIL_LIST',res)
+            // .then((res)=>{
+            //   console.log(res);
+            // })
+            this.dispatchAction('GET_CHEQUE_DETAIL_LIST',{id:this.dataUrl})
+          })
+      }
     });
   </script>
 </dom-module>

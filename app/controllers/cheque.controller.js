@@ -28,6 +28,7 @@ exports.getByFeeId = function (req, res) {
         })
 }
 exports.update = function (req, res) {
+    console.log(req.body);
     var valid = req.ajv.validate('g2g.payment', req.body);
     if (req.body.id != '' && req.body.id != null && typeof req.body.id !== 'undefined') {
         if (valid) {

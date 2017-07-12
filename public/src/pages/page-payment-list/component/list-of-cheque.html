@@ -81,9 +81,9 @@
               <td data="[[item]]">
                 <paper-checkbox data="{{item}}" disabled=[[item.status]] checked="{{item.check}}"></paper-checkbox>
               </td>
-              <td data="[[item]]">[[item.fee_round]]</td>
+              <td data="[[item]]">[[item.cl_no]]</td>
               <td data="[[item]]">[[item.fee_no]]</td>
-              <td data="[[item]]">[[item.total_company]]</td>
+              <td data="[[item]]">[[item.cheque_count]]</td>
               <!--<td>
                 <paper-icon-button id="printCheque" data="[[item]]" class="crud" icon="print" raised on-tap="getCheque" hidden="[[!data.shm_status]]"></paper-icon-button>
                 <paper-tooltip for="printCheque" offset="0">{{localize.label_send_report}}</paper-tooltip>
@@ -122,51 +122,51 @@
         //   type: Object
         // }
         newData: {
-          type: Array,
-          value: [
-            {
-              check: false,
-              fee_round: 1,
-              fee_no: 1,
-              total_company: 2,
-              status: false
-            },
-            {
-              check: false,
-              fee_round: 1,
-              fee_no: 2,
-              total_company: 3,
-              status: false
-            },
-            {
-              check: false,
-              fee_round: 2,
-              fee_no: 1,
-              total_company: 4,
-              status: false
-            },
-            {
-              check: false,
-              fee_round: 2,
-              fee_no: 2,
-              total_company: 5,
-              status: false
-            },
-            {
-              check: false,
-              fee_round: 2,
-              fee_no: 3,
-              total_company: 6,
-              status: false
-            },
-            {
-              check: false,
-              fee_round: 1,
-              fee_no: 3,
-              total_company: 0,
-              status: true
-            },
-          ]
+          statePath: 'cheque.cheque_list',
+          // value: [
+          //   {
+          //     check: false,
+          //     fee_round: 1,
+          //     fee_no: 1,
+          //     total_company: 2,
+          //     status: false
+          //   },
+          //   {
+          //     check: false,
+          //     fee_round: 1,
+          //     fee_no: 2,
+          //     total_company: 3,
+          //     status: false
+          //   },
+          //   {
+          //     check: false,
+          //     fee_round: 2,
+          //     fee_no: 1,
+          //     total_company: 4,
+          //     status: false
+          //   },
+          //   {
+          //     check: false,
+          //     fee_round: 2,
+          //     fee_no: 2,
+          //     total_company: 5,
+          //     status: false
+          //   },
+          //   {
+          //     check: false,
+          //     fee_round: 2,
+          //     fee_no: 3,
+          //     total_company: 6,
+          //     status: false
+          //   },
+          //   {
+          //     check: false,
+          //     fee_round: 1,
+          //     fee_no: 3,
+          //     total_company: 0,
+          //     status: true
+          //   },
+          // ]
         }
       },
       observers: [
@@ -219,8 +219,17 @@
       getChequeDetail: function (e) {
         // console.log(e.currentTarget.data);
         let getData = this.newData.filter((item) => item.check === true)
-        // console.log(getData)
-        this.fire('get-cheque-detail', { detail: getData });
+        let fee_id = []
+        getData.map((item)=>{
+          fee_id.push(item.fee_id)
+          // console.log(item.fee_id);
+        })//fee_id
+        
+        let arr = fee_id.reduce((pre,curr)=>pre.concat(curr),[])
+        // console.log(arr)
+        this.dispatchAction('SET_CHEQUE_DETAIL_LIST',arr)
+        this.fire('get-cheque-detail', { detail: arr });
+        
       },
       // getCheque: function (e) {
       //   // console.log(e.currentTarget.data);
