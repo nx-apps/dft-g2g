@@ -21,7 +21,7 @@ exports.getByFeeId = function (req, res) {
     var fee_id = common.getArrVal(req, 'id', '_');
     r.table('payment').getAll(r.args(fee_id), { index: 'fee_id' })
         .pluck('id', 'cl_no', 'fee_no', 'fee_round', { 'company': 'company_name_th' }, 'value_final_b',
-        'invoice_company_no', 'invoice_company_date', 'cheque_no', 'cheque_status')
+        'invoice_company_no', 'invoice_company_date', 'cheque_no', 'cheque_status','pay_no')
         .run()
         .then(function (data) {
             res.json(data)
