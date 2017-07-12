@@ -301,7 +301,7 @@
                 var buyer_id = this.getCookieBhv("buyerId");
                 this.dispatchAction('BOOK_GET_LIST_DATA', contract_id);
                 this.dispatchAction('INVOICE_GET_LIST_DATA', contract_id);
-                this.dispatchAction('FEE_GET_LIST_DATA', { contract_id: contract_id, view: 'fin' });
+                this.dispatchAction('FEE_GET_LIST_DATA', { contract_id: contract_id, view: 'fin' , status:'false'});
             },
             // ready: function () {
             //     this._getChequeList(contract_id);
