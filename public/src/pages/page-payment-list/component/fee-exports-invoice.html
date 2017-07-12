@@ -110,7 +110,7 @@
               <gl-form-input label="{{localize.fee_total}} ({{localize.baht}})" class="number" format-number="on" style="width:240px; margin-left:50px;"
                 value="{{item.value_fee_b}}" disabled="[[common.btnDisabled]]"></gl-form-input>
               <!--[[_calcFee(calcFee,indexData)]]-->
-              [[_calcFeeBAvg(item.fee_ex_d,item.fee_in_b, indexData)]] [[changeString2Num(item.*,'value_fee_b')]]
+              [[_calcFeeBAvg(rateBank, item.fee_ex_d,item.fee_in_b, indexData)]] [[changeString2Num(item.*,'value_fee_b')]]
             </div>
           </div>
           <div style="overflow-x:auto;">
@@ -349,8 +349,8 @@
       //   // console.log('func ', Number(fee_avg.toFixed(2)));
       //   return Number(fee_avg.toFixed(2));
       // },
-      _calcFeeBAvg: function (fee_ex_d, fee_in_b, index) {
-        var value_fee_b = (numeral().unformat(this.rateBank) * numeral().unformat(fee_ex_d)) + numeral().unformat(fee_in_b);
+      _calcFeeBAvg: function (rateBank, fee_ex_d, fee_in_b, index) {
+        var value_fee_b = (numeral().unformat(rateBank) * numeral().unformat(fee_ex_d)) + numeral().unformat(fee_in_b);
         this.set('data.book.' + index + '.value_fee_b', Number(value_fee_b.toFixed(2)));
       },
       calcFeeBAvg: function (value_fee_b) {
@@ -402,7 +402,7 @@
       },
       _calcValueFeeB: function (feeDetail, indexData, indexDetail) {
         var len = this.data.book[indexData].detail.length;
-        this.set('data.book.' + indexData + '.detail.' + indexDetail + '.value_fee_b', this._calcFeeAvg(Number(feeDetail), len));
+        this.set('data.book.' + indexData + '.detail.' + indexDetail + '.value_fee_b', this._calcFeeAvg(numeral().unformat(feeDetail), len));
       },
       _calcValueBalB: function (value_b, value_fee_b, indexData, index) {
         if (value_fee_b !== '') {
