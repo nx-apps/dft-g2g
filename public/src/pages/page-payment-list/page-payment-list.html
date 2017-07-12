@@ -151,7 +151,7 @@
             <input id="tab2" type="radio" name="tabs">
             <label for="tab2">2.{{localize.text_invoice}}</label>
 
-            <input id="tab3" type="radio" name="tabs">
+            <input id="tab3" type="radio" name="tabs" on-tap="_getFee">
             <label for="tab3">3.{{localize.text_fee}}</label>
 
             <input id="tab4" type="radio" name="tabs">
@@ -301,7 +301,7 @@
                 var buyer_id = this.getCookieBhv("buyerId");
                 this.dispatchAction('BOOK_GET_LIST_DATA', contract_id);
                 this.dispatchAction('INVOICE_GET_LIST_DATA', contract_id);
-                this.dispatchAction('FEE_GET_LIST_DATA', { contract_id: contract_id, view: 'fin' , status:'false'});
+                // this.dispatchAction('FEE_GET_LIST_DATA', { contract_id: contract_id, view: 'fin', status:'false'});
             },
             // ready: function () {
             //     this._getChequeList(contract_id);
@@ -378,6 +378,9 @@
                 });
                 this.paymentsPageSeleted = 'blInvoicePage';
                 this._flipDrawer();
+            },
+            _getFee: function(){
+                this.dispatchAction('FEE_GET_LIST_DATA', { contract_id: this.getCookieBhv("contract_id"), view: 'fin', status:'false'});
             },
             _getFeeDetail: function (e) {
                 var round = '';

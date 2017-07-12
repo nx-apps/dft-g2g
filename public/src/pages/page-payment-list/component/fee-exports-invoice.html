@@ -107,7 +107,7 @@
               {{_calcfeeIn(feeIn, indexData)}} [[changeString2Num(item.*,'fee_in_b')]]
               <gl-form-input label="{{localize.fee_in}}" class="number required" required format-number="on" style="width:200px; margin-left:50px;"
                 value="{{item.fee_in_b}}" disabled="[[common.btnDisabled]]"></gl-form-input>
-              <gl-form-input label="{{localize.fee_total}} ({{localize.baht}})" class="number" format-number="on" style="width:240px; margin-left:50px;"
+              <gl-form-input label="{{localize.fee_total}} ({{localize.baht}})" class="number required" required format-number="on" style="width:240px; margin-left:50px;"
                 value="{{item.value_fee_b}}" disabled="[[common.btnDisabled]]"></gl-form-input>
               <!--[[_calcFee(calcFee,indexData)]]-->
               [[_calcFeeBAvg(rateBank, item.fee_ex_d,item.fee_in_b, indexData)]] [[changeString2Num(item.*,'value_fee_b')]]
