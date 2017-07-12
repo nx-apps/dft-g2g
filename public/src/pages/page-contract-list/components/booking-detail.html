@@ -497,7 +497,7 @@
       _resiveDataBook: function () {
         return new Promise((res, rej) => {
           // console.log(this.data);
-          let dataResive = this.data
+          let dataResive = JSON.parse(JSON.stringify(this.data))
           for (var index = 0; index < this.data.ship.length; index++) {
             let name = this.shipList.find((item) => item.ship_name === this.data.ship[index].ship_name)
             if (name !== undefined)

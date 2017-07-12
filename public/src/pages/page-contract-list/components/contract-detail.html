@@ -778,7 +778,7 @@
       },
       _resiveDataContract: function () {
         return new Promise((res, rej) => {
-          let dataResive = this.data
+          let dataResive = JSON.parse(JSON.stringify(this.data))
           dataResive.contract_hamonize = this._getHamonize()
           dataResive.buyer = this.dataShow.obj.buyer
           dataResive.country = this.dataShow.obj.country

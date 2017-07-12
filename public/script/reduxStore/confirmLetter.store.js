@@ -119,7 +119,7 @@ export function confirmLetterAction(store) {
         // END GET
         // POST
         POST_CONFIRM: function (data) {
-            return axios.post('./confirm/insert', Newdata)
+            return axios.post('./confirm/insert', data)
         },
         // END POST
         // PUT

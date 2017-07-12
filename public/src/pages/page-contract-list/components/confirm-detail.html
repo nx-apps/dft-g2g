@@ -335,6 +335,10 @@
           statePath: 'commonG2g.incotermsList',
           // observer: 'get'
         },
+        confirmLetterList: {
+          statePath: 'confirmLetter.confirmLetterlist',
+          // observer:'get'
+        },
 
         dataShow: {
           type: Object,
@@ -609,12 +613,13 @@
       _resiveDataConfirm: function () {
         this._getHamonize()
         return new Promise((res, rej) => {
-          let dataResive = this.data
-          // console.log(this.data);
-          dataResive.cl_date = this.data.cl_date + 'T00:00:00+07:00',
+          let dataResive = JSON.parse(JSON.stringify(this.data))
+          if(this.confirmLetterList.find((item)=> item.cl_no === dataResive.cl_no) !==undefined)
+               rej('เลข cl_no ซ้ำ')
+          dataResive.cl_date = dataResive.cl_date + 'T00:00:00+07:00',
             // dataResive.cl_hamonize = this._getHamonize(),
-            dataResive.cl_status = this.data.cl_status,
-            dataResive.cl_weight = this.data.cl_weight,
+            dataResive.cl_status = dataResive.cl_status,
+            dataResive.cl_weight = dataResive.cl_weight,
             dataResive.incoterms = this.dataShow.incoterms//this._getIncoterms()
           delete dataResive.date_updated
           delete dataResive.date_created
@@ -626,6 +631,15 @@
           if (this.validateForm('.required')) {
             this._resiveDataConfirm().then((data) => {
               res(data)
+            })
+            .catch((err)=>{
+              this.fire('toast', {
+              status: 'connectError', text: 'เลขงวดซ้ำกัน', //คำสั่งสำหรับเปิด toast error
+              callback: function () {
+                rej(err)
+              }
+            })
+              // console.log(err);
             })
           } else {
             this.fire('toast', {
