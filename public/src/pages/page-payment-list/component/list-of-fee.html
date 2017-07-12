@@ -1,8 +1,5 @@
-<link rel="import" href="./../../components/format-number-behavior.html">
-<link rel="import" href="./../../../../bower_components/paper-input/paper-input.html">
-<link rel="import" href="./../../../../bower_components/paper-icon-button/paper-icon-button.html">
-<link rel="import" href="./../../components/cookie-behavior.html">
-<link rel="import" href="./../../components/g2g-logic-behavior.html">
+<link rel="import" href="./list-of-fee-detail.html">
+
 <dom-module id="list-of-fee">
   <style include="iron-flex iron-flex-factors iron-flex-alignment gl-styles">
      :host {
@@ -104,105 +101,11 @@
         <label for="tab2">2.{{localize.allocate_success}}</label>
 
         <section id="content1">
-          <div class="flex searchInput horizontal center-justified layout">
-            <div class="flex title">{{localize.contract_name}} : [[getCookieBhv("contractName")]]
-            </div>
-            <div class="flex horizontal end-justified layout">
-              <div class="labelSearch">{{localize.text_fee_no}}</div>{{_searchInArray(searchInput)}}
-              <paper-input label=" " no-label-float value="{{searchInput}}"></paper-input>
-              <paper-icon-button icon="search"></paper-icon-button>
-            </div>
-          </div>
-          <div class="horizontal center-justified layout">
-            <table class="gl-table-default">
-              <thead class="table-head">
-                <tr>
-                  <th>{{localize.cal_no}}</th>
-                  <th>{{localize.fee_no}}</th>
-                  <th>{{localize.additional}}<br>{{localize.fee_round}}</th>
-                  <th>{{localize.invoice_no}}</th>
-                  <th>{{localize.invoice_count}}</th>
-                  <th>{{localize.amount}}{{localize.money}} ({{localize.baht}})</th>
-                  <th>{{localize.expenses_fee}} ({{localize.baht}})</th>
-                  <th>{{localize.expenses_one_present}} ({{localize.baht}})</th>
-                  <th>{{localize.balance}} ({{localize.baht}})</th>
-                  <!-- <th>{{localize.status}}</th> -->
-                </tr>
-              </thead>
-              <tbody class="table-body">
-                <template is="dom-repeat" items="[[newData]]">
-                  <tr data="[[item]]" on-tap="getFeeDetail">
-                    <td><div style="text-align:right;">{{item.cl_no}}</div></td>
-                    <td>[[item.fee_no]]</td>
-                    <td>[[obRound(item.fee_round)]]</td>
-                    <td><div style="text-align:left;">[[item.invoice_no]]</div></td>
-                    <td>[[item.invoice_count]]</td>
-                    <td>[[formatNumber(item.value_b)]]</td>
-                    <td>[[formatNumber(item.value_fee_b)]]</td>
-                    <td>[[formatNumber(item.value_tax_b)]]</td>
-                    <td>[[formatNumber(item.value_final_b)]]</td>
-                    <!-- <td><div style="text-align:left;">[[obStatus(item.rice_status)]]</div></td> -->
-                  </tr>
-                </template>
-                <template is="dom-if" if="[[_isHave(newData)]]">
-                  <tr>
-                    <td colspan="9" style="text-align:center"> {{localize.no_data}}</td>
-                  </tr>
-                </template>
-              </tbody>
-            </table>
-          </div>
+          <list-of-fee-detail></list-of-fee-detail>
         </section>
 
         <section id="content2">
-          <div class="flex searchInput horizontal center-justified layout">
-            <div class="flex title">{{localize.contract_name}} : [[getCookieBhv("contractName")]]
-            </div>
-            <div class="flex horizontal end-justified layout">
-              <div class="labelSearch">{{localize.text_fee_no}}</div>{{_searchInArray(searchInput)}}
-              <paper-input label=" " no-label-float value="{{searchInput}}"></paper-input>
-              <paper-icon-button icon="search"></paper-icon-button>
-            </div>
-          </div>
-          <div class="horizontal center-justified layout">
-            <table class="gl-table-default">
-              <thead class="table-head">
-                <tr>
-                  <th>{{localize.cal_no}}</th>
-                  <th>{{localize.fee_no}}</th>
-                  <th>{{localize.additional}}<br>{{localize.fee_round}}</th>
-                  <th>{{localize.invoice_no}}</th>
-                  <th>{{localize.invoice_count}}</th>
-                  <th>{{localize.amount}}{{localize.money}} ({{localize.baht}})</th>
-                  <th>{{localize.expenses_fee}} ({{localize.baht}})</th>
-                  <th>{{localize.expenses_one_present}} ({{localize.baht}})</th>
-                  <th>{{localize.balance}} ({{localize.baht}})</th>
-                  <th>{{localize.status}}</th>
-                </tr>
-              </thead>
-              <tbody class="table-body">
-                <template is="dom-repeat" items="[[newData]]">
-                  <tr data="[[item]]" on-tap="getFeeDetail">
-                    <td><div style="text-align:right;">{{item.cl_no}}</div></td>
-                    <td>[[item.fee_no]]</td>
-                    <td>[[obRound(item.fee_round)]]</td>
-                    <td><div style="text-align:left;">[[item.invoice_no]]</div></td>
-                    <td>[[item.invoice_count]]</td>
-                    <td>[[formatNumber(item.value_b)]]</td>
-                    <td>[[formatNumber(item.value_fee_b)]]</td>
-                    <td>[[formatNumber(item.value_tax_b)]]</td>
-                    <td>[[formatNumber(item.value_final_b)]]</td>
-                    <td><div style="text-align:left;">[[obStatus(item.rice_status)]]</div></td>
-                  </tr>
-                </template>
-                <template is="dom-if" if="[[_isHave(newData)]]">
-                  <tr>
-                    <td colspan="9" style="text-align:center"> {{localize.no_data}}</td>
-                  </tr>
-                </template>
-              </tbody>
-            </table>
-          </div>
+          <list-of-fee-detail></list-of-fee-detail>
         </section>
     </main>
     <!-- <div class="flex searchInput horizontal center-justified layout">
@@ -261,50 +164,8 @@
       properties: {
         localize:{
           statePath : 'i18n.fee'
-        },
-        data:{
-          statePath : 'fee.list'
         }
       },
-      observers: [
-        'initDataFee(data)'
-      ],
-      initDataFee: function (data) {
-        // console.log(data);
-        this.newData = this.g2gClone(data);
-      },
-      _searchInArray: function (searchInput) {
-        // console.log(searchInput == '');
-        if (searchInput != '') {
-          let arr = [];
-          this.data.map((el) => {
-            if (String(el.fee_no).search(searchInput) > -1) {
-              //  console.log('search==> ',el);
-              arr.push(el);
-            }
-          });
-          this.newData = arr;
-        } else {
-          this.initDataFee(this.data);
-        }
-      },
-      getFeeDetail: function (e) {
-        this.fire('get-fee-detail', { detail: e.currentTarget.data });
-      },
-      obRound: function(data){
-        if(data == 0){
-          return ''
-        }else{
-          return data
-        }
-      },
-      // obStatus: function(data){
-      //   if(data === true){
-      //     return 'จัดสรรแล้ว'
-      //   }else{
-      //     return 'ยังไม่จัดสรร'
-      //   }
-      // },
       tap1: function(){
         this.dispatchAction('FEE_GET_LIST_DATA', { contract_id: this.getCookieBhv("contract_id"), view: 'fin' , status:'false'});
       },

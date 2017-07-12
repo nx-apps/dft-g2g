@@ -1,9 +1,7 @@
-<link rel="import" href="fee-exports.html">
-<link rel="import" href="./../../../../bower_components/iron-pages/iron-pages.html">
-<link rel="import" href="./../../../../bower_components/gl-form/gl-form-panel.html">
-<link rel="import" href="./../../../../bower_components/gl-form/gl-form-panel-head.html">
-<link rel="import" href="./../../../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="./../../components/format-number-behavior.html">
+<link rel="import" href="./../../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="./../../../../bower_components/paper-icon-button/paper-icon-button.html">
+<!-- <link rel="import" href="./../../components/cookie-behavior.html"> -->
 <link rel="import" href="./../../components/g2g-logic-behavior.html">
 
 <dom-module id="list-of-fee-detail">
@@ -12,226 +10,125 @@
       font-family: 'CSChatThaiUI', sans-serif;
       -webkit-font-smoothing: antialiased;
     }
-    
+    .labelSearch {
+      font-size: var(--font-size-h4);
+      margin: 10px 10px 10px 10px;
+    }    
     .table-body>tr>td {
-      cursor: pointer
-    }
-    
-    .table-head>tr>th:nth-child(1),
-    .table-body>tr>td:nth-child(1) {
+      cursor: pointer;
+    }    
+    .title {
+      margin: 16px;
+      text-align: left;
+      font-size: var(--font-size-h4);
+    }    
+    table.gl-table-default {
+      width: 98%;
+      border: 1px solid #ddd;
+      margin-bottom: 15px;
+    }    
+    table.gl-table-default>thead.table-head>tr>th {
       text-align: center;
-      width: 10%;
-    }
-    
-    .table-head>tr>th:nth-child(3),
-    .table-body>tr>td:nth-child(3),
-    .table-head>tr>th:nth-child(4),
-    .table-head>tr>th:nth-child(5),
-    .table-body>tr>td:nth-child(5),
-    .table-head>tr>th:nth-child(6),
-    .table-body>tr>td:nth-child(6) {
-      width: 17.5%;
-      text-align: center;
-    }
-    
-    .table-head>tr>th:nth-child(2),
-    .table-body>tr>th:nth-child(2) {
-      width: 20%;
-    }
-    
-    .table-body>tr>td:nth-child(4) {
+    }    
+    /*table.gl-table-default>thead.table-head>tr>th:nth-child(1) {
+      width: 15%;
+    }*/    
+    table.gl-table-default>tbody.table-body>tr>td:not(:first-child) {
       text-align: right;
-    }
-    
-    .table-foot>tr>td {
-      padding: 16px;
-    }
-    
-    .addconfirm {
-      margin-bottom: 16px;
     }
   </style>
   <template>
-    <iron-pages selected="{{pageSelected}}" attr-for-selected="name">
-      <div name="listOfFeedetail">
-        <gl-form-panel set-padding="10px 20px 10px 20px" set-border="1px">
-          <gl-form-panel-head label="" set-padding="10px" set-border="1px">
-          </gl-form-panel-head>
-          <table class="gl-table-default">
-            <thead class="table-head">
-              <tr>
-                <th>{{localize.label_order}}</th>
-                <th>{{localize.text_invoice_no}}</th>
-                <th>{{localize.text_invoice_no_count}}</th>
-                <th>{{localize.label_total_bath_expenses}}</th>
-                <th>{{localize.label_cheque_date}}</th>
-                <th>{{localize.label_status}}</th>
-              </tr>
-            </thead>
-            <tbody class="table-body">
-              <template is="dom-repeat" items="[[data.book]]">
-                <tr on-tap="getFeeDetail" data="[[item]]">
-                  <td>[[_ObcountIndex(index)]] </td>
-                  <td>[[item.invoice_no]]</td>
-                  <td>[[item.invoice_count]]</td>
-                  <td>[[formatNumber(item.value_final_b)]]</td>
-                  <td>[[changeDateCC(data.fee_date)]]</td>
-                  <td>[[item.cheque_status]]</td>
-                </tr>
-              </template>
-              <template is="dom-if" if="[[_isHave(data.book)]]">
-                <tr>
-                  <td colspan="6"> {{localize.text_no_data}}</td>
-                </tr>
-              </template>
-            </tbody>
-          </table>
-          <div class="layout horizontal end-justified">
-            <paper-button class="gl-btn-info" raised on-tap="approveFee" disabled="[[_confirmFee(data.fee_detail)]]">{{localize.btn_confirm_fee}}</paper-button>
-          </div>
-        </gl-form-panel>
+    <div class="flex searchInput horizontal center-justified layout">
+      <div class="flex title">{{localize.contract_name}} : [[getCookieBhv("contractName")]]
       </div>
-      <div name="feeDetail">
-        <fee-exports data="[[dataSelected]]" data-for-select="[[dataForSelect]]" is-input-disabled="[[isInputDisabled]]" is-view-seleted="[[isViewSeleted]]"></fee-exports>
+      <div class="flex horizontal end-justified layout">
+        <div class="labelSearch">{{localize.text_fee_no}}</div>{{_searchInArray(searchInput)}}
+        <paper-input label=" " no-label-float value="{{searchInput}}"></paper-input>
+        <paper-icon-button icon="search"></paper-icon-button>
       </div>
-    </iron-pages>
+    </div>
+    <div class="horizontal center-justified layout">
+      <table class="gl-table-default">
+        <thead class="table-head">
+          <tr>
+            <th>{{localize.cal_no}}</th>
+            <th>{{localize.fee_no}}</th>
+            <th>{{localize.additional}}<br>{{localize.fee_round}}</th>
+            <th>{{localize.invoice_no}}</th>
+            <th>{{localize.invoice_count}}</th>
+            <th>{{localize.amount}}{{localize.money}} ({{localize.baht}})</th>
+            <th>{{localize.expenses_fee}} ({{localize.baht}})</th>
+            <th>{{localize.expenses_one_present}} ({{localize.baht}})</th>
+            <th>{{localize.balance}} ({{localize.baht}})</th>
+          </tr>
+        </thead>
+        <tbody class="table-body">
+          <template is="dom-repeat" items="[[newData]]">
+            <tr data="[[item]]" on-tap="getFeeDetail">
+              <td><div style="text-align:right;">{{item.cl_no}}</div></td>
+              <td>[[item.fee_no]]</td>
+              <td>[[obRound(item.fee_round)]]</td>
+              <td><div style="text-align:left;">[[item.invoice_no]]</div></td>
+              <td>[[item.invoice_count]]</td>
+              <td>[[formatNumber(item.value_b)]]</td>
+              <td>[[formatNumber(item.value_fee_b)]]</td>
+              <td>[[formatNumber(item.value_tax_b)]]</td>
+              <td>[[formatNumber(item.value_final_b)]]</td>
+            </tr>
+          </template>
+          <template is="dom-if" if="[[_isHave(newData)]]">
+            <tr>
+              <td colspan="9" style="text-align:center"> {{localize.no_data}}</td>
+            </tr>
+          </template>
+        </tbody>
+      </table>
+    </div>
   </template>
   <script>
     Polymer({
       is: "list-of-fee-detail",
-      behaviors: [ReduxBehavior, FormatNumberBehavior, g2gLogicBehavior],
+      behaviors: [ReduxBehavior, FormatNumberBehavior, g2gLogicBehavior, CookieBehavior],
       properties: {
         localize:{
-          statePath : 'i18n.g2g'
+          statePath : 'i18n.fee'
         },
         data:{
-          statePath : 'fee.data',
-          // observer : 'check'
+          statePath : 'fee.list'
         }
-        // pageSelected: {
-        //   type: String,
-        //   value: 'listOfFeedetail',
-        //   notify:true
-        // },
-        // dataForSelect: {
-        //   type: Object,
-        //   value: {}
-        // },
-        // dataSelected: {
-        //   type: Object,
-        //   value:{}
-        // },
       },
-      // check:function(data){console.log(data)}
-      // listeners: {
-      //   'back-page-fee-detail': '_backPageFeedetail',
-      //   'get-fee-list-detail': '_getFeeList'
-      // },
-      // _getFeeList: function (e) {
-      //   this.set('dataSelected',{})
-      //   this.read('./g2g/fee_detail/id/' + e.detail.detail, (data) => {
-      //     this.dataSelected = data;
-      //     this.notifyPath('dataSelected');
-      //     this.pageSelected = 'feeDetail';
-      //   });
-      // },
-      // _confirmFee: function (data) {
-      //   if ((data.every(status => status.fee_det_status == true))) {
-      //     return false;
-      //   } else {
-      //     return true;
-      //   }
-      // },
-      // getFeeDetail: function (e) {
-      //   // console.log(this.dataForSelect);
-      //   // console.log(e.currentTarget.data.invoice_no);
-      //   let fee_det_id = e.currentTarget.data.fee_det_id;
-      //   this.fire('toast', { status: 'load' });
-      //   this.async(() => {
-      //     this.read('./g2g/fee_detail/id/' + fee_det_id, (data) => {
-      //       this.fire('toast', { status: 'load' });
-      //       this.dataSelected = data;
-      //       this.notifyPath('dataSelected');
-      //       this.pageSelected = 'feeDetail';
-      //     });
-      //   }, 500);
-      //   // console.log(this.dataForSelect.nameContract);
-      //   let breadcrumbs = datass = [
-      //     {
-      //       label: this.dataForSelect.nameContract,
-      //       href: ''
-      //     },
-      //     {
-      //       label: 'รอบที่คิดค่าธรรมเนียมครั้งที่ '+ this.data.fee_no,
-      //       href: ''
-      //     },
-      //     {
-      //       label: 'เลขที่ใบแจ้งหนี้	 '+ e.currentTarget.data.invoice_no,
-      //       href: ''
-      //     },
-      //   ]
-      //   this.set('dataForSelect.fee_no',this.data.fee_no)
-      //   // th
-      //   // console.log(this.data);
-      //   // console.log(breadcrumbs);
-      //   this.fire('_set-breadcrumbs', breadcrumbs)
-      // },
-      // _backPageFeedetail: function (data) {
-      //   this.pageSelected = 'listOfFeedetail';
-        
-      //   let breadcrumbs = datass = [
-      //     {
-      //       label: this.dataForSelect.nameContract,
-      //       href: ''
-      //     },
-      //     {
-      //       label: 'รอบที่คิดค่าธรรมเนียมครั้งที่ '+ this.data.fee_no,
-      //       href: ''
-      //     },
-      //   ]
-      //   // th
-      //   // console.log(this.data);
-      //   // console.log(breadcrumbs);
-      //   this.fire('_set-breadcrumbs', breadcrumbs)
-      // },
-      // approveFee: function () {
-      //   this._cleanDataFee(this.data, (data) => {
-      //     data.id = this.data.fee_id
-      //     data.fee_status = this.approve(data.fee_status);
-      //     this.fire('toast', {  //คำสั่งสำหรับเปิด toast dialog
-      //       status: 'dialog',
-      //       text: 'ต้องยืนยันข้อมูลใช่หรือไม่ ?',
-      //       confirmed: this._approveFee.bind(this), //function ที่ใช้รับค่า ปุ่ม
-      //       el: this, // compontents
-      //       data: data // ข้อมูลที่ส่งไป เช่น id ที่จะใช้ลบข้อมูล ใน db
-      //     });
-      //   })
-      // },
-      // _approveFee: function (result, detail) {
-      //   if (result == true) {
-      //     // console.log(detail.data.id);
-      //     this.read('./g2g/fee/approve/id/' + detail.data.id, (data) => {
-      //       // console.log(data);
-      //       this.fire('toast', {
-      //         status: 'success', text: 'ยืนยันสำเร็จ',  // คำสั่งสำหรับเปิด toast success
-      //         callback: () => {
-      //           this.fire('close-drawer', { detail: 'close-drawer' });
-      //           let contract_id = this._getUrl();
-      //           this.fire('get-Cheque-list', { detail: contract_id });
-      //           this.fire('get-fee-list', { detail: contract_id });
-      //         }
-      //       });
-
-      //     });
-      //   }
-      // },
-      // _cleanDataFee: function (data, callback) {
-      //   let {fee_no, fee_name, fee_status, shm_id} = data
-      //   let newData = { fee_no, fee_name, fee_status, shm_id }
-      //   callback(newData);
-      // },
-
+      observers: [
+        'initDataFee(data)'
+      ],
+      initDataFee: function (data) {
+        // console.log(data);
+        this.newData = this.g2gClone(data);
+      },
+      _searchInArray: function (searchInput) {
+        // console.log(searchInput == '');
+        if (searchInput != '') {
+          let arr = [];
+          this.data.map((el) => {
+            if (String(el.fee_no).search(searchInput) > -1) {
+              //  console.log('search==> ',el);
+              arr.push(el);
+            }
+          });
+          this.newData = arr;
+        } else {
+          this.initDataFee(this.data);
+        }
+      },
+      getFeeDetail: function (e) {
+        this.fire('get-fee-detail', { detail: e.currentTarget.data });
+      },
+      obRound: function(data){
+        if(data == 0){
+          return ''
+        }else{
+          return data
+        }
+      }
     });
-
   </script>
 </dom-module>
