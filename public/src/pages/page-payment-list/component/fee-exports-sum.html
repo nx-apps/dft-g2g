@@ -168,82 +168,53 @@
         'check(totalInvoice.*)'
       ],
       check: function (totalInvoice) {
-        // console.log(totalInvoice);
-        // this.async(() => {
-        //   try {
-        //     // return items.filter((item) => item.fee_status == false);
+        var result = 0;
+        this.totalInvoice.map((el) => {
+          result += el.totalTonInvoices;
+        });
+        this.set('data.totalTonInvoices', Number(result.toFixed(2)))
 
-        //     // console.log('totalInvoice =>',this.totalInvoice);
-            var result = 0;
-            this.totalInvoice.map((el) => {
-              result += el.totalTonInvoices;
-            });
-            this.set('data.totalTonInvoices', Number(result.toFixed(2)))
-        //     // this.data.totalTonInvoices = result
-        //     // this.notifyPath('data.totalTonInvoices');
+        // result = 0;
+        // this.totalInvoice.map((el) => {
+        //   result += el.totalPricePerTonUsdInvoices;
+        // });
+        // this.set('data.totalPricePerTonUsdInvoices', result)
 
-            // result = 0;
-            // this.totalInvoice.map((el) => {
-            //   result += el.totalPricePerTonUsdInvoices;
-            // });
-            // this.set('data.totalPricePerTonUsdInvoices', result)
-        //     // this.data.totalPricePerTonUsdInvoices = result
-        //     // this.notifyPath('data.totalPricePerTonUsdInvoices');
+        result = 0;
+        this.totalInvoice.map((el) => {
+          result += el.totalAmountUsdInvoices;
+        });
+        this.set('data.totalAmountUsdInvoices', Number(result.toFixed(2)))
 
-            result = 0;
-            this.totalInvoice.map((el) => {
-              result += el.totalAmountUsdInvoices;
-            });
-            this.set('data.totalAmountUsdInvoices', Number(result.toFixed(2)))
-        //     // this.data.totalAmountUsdInvoices = result
-        //     // this.notifyPath('data.totalAmountUsdInvoices');
+        result = 0;
+        this.totalInvoice.map((el) => {
+          result += el.value_b;
+        });
+        this.set('data.totalBathInvoices', Number(result.toFixed(2)))
 
-            result = 0;
-            this.totalInvoice.map((el) => {
-              // result += el.totalBathInvoices;
-              result += el.value_b;
-            });
-            this.set('data.totalBathInvoices', Number(result.toFixed(2)))
-        //     // this.data.totalBathInvoices = result
-        //     // this.notifyPath('data.totalBathInvoices');
+        result = 0;
+        this.totalInvoice.map((el) => {
+          result += Number(el.totalValue_fee_b);
+        });
+        this.set('data.totalFeeInvoices', Number(result.toFixed(2)))
 
-            result = 0;
-            this.totalInvoice.map((el) => {
-              // result += el.totalFeeInvoices;
-              result += Number(el.totalValue_fee_b);
-            });
-            this.set('data.totalFeeInvoices', Number(result.toFixed(2)))
-        //     // this.data.totalFeeInvoices = result
-        //     // this.notifyPath('data.totalFeeInvoices');
+        result = 0;
+        this.totalInvoice.map((el) => {
+          result += el.value_bal_b;
+        });
+        this.set('data.totalBalance', Number(result.toFixed(2)))
 
-            result = 0;
-            this.totalInvoice.map((el) => {
-              // result += el.totalBalance;
-              result += el.value_bal_b;
-            });
-            this.set('data.totalBalance', Number(result.toFixed(2)))
+        result = 0;
+        this.totalInvoice.map((el) => {
+          result += el.value_tax_b;
+        });
+        this.set('data.totalIncomeTaxInvoices', Number(result.toFixed(2)))
 
-            result = 0;
-            this.totalInvoice.map((el) => {
-              // result += el.totalIncomeTaxInvoices;
-              result += el.value_tax_b;
-            });
-            this.set('data.totalIncomeTaxInvoices', Number(result.toFixed(2)))
-        //     // this.data.totalIncomeTaxInvoices = result
-        //     // this.notifyPath('data.totalIncomeTaxInvoices');
-
-            result = 0;
-            this.totalInvoice.map((el) => {
-              // result += el.totalMoneyBathInvoices;
-              result += el.value_final_b;
-            });
-            this.set('data.totalMoneyBathInvoices', Number(result.toFixed(2)))
-        //     // this.data.totalMoneyBathInvoices = result
-        //     // this.notifyPath('data.totalMoneyBathInvoices');
-        //   } catch (e) {
-        //     // console.log(e)
-        //   }
-        // }, 500)
+        result = 0;
+        this.totalInvoice.map((el) => {
+          result += el.value_final_b;
+        });
+        this.set('data.totalMoneyBathInvoices', Number(result.toFixed(2)))
       }
     });
   </script>

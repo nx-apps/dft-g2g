@@ -232,11 +232,15 @@
       ],
       listeners: {
         'check-required': 'checkRequired',
+        'reset-form': '_resetForm',
         'cancel-fee': 'cancelFee'
       },
       checkRequired: function () {
         var check = this.validateForm('.required');
         this.set('check_required', check);
+      },
+      _resetForm: function(){
+        this.queryFrom('.required').map((el) => { el.reset(); });
       },
       _getUSD: function (data) {
         if (typeof data.book !== 'undefined') {

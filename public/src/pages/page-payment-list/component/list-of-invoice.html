@@ -104,7 +104,7 @@
           <template is="dom-repeat" items="{{data}}">
             <tr>
               <td>
-                <paper-checkbox data="{{item}}" checked="{{item.check}}"></paper-checkbox>
+                <paper-checkbox data="{{item}}" checked="{{item.check}}" on-tap="_checkData"></paper-checkbox>
               </td>
               <td data="[[item]]" on-tap="getInvoiceDetail">[[item.invoice_type]][[item.invoice_no]]/[[item.invoice_year]]</td>
               <td data="[[item]]" on-tap="getInvoiceDetail">[[item.cl_no]]</td>
@@ -183,6 +183,12 @@
         } catch (error) {
 
         }
+      },
+      _checkData:function(e){
+          var index = e.model.index;
+          if(this.data[index].check === false){
+              this.set('selectDataAll', false)
+          }
       },
       getInvoiceDetail: function (e) {
         this.fire('get-invoice-detail', { detail: e.currentTarget.data });

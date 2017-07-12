@@ -406,7 +406,7 @@
       },
       _calcValueBalB: function (value_b, value_fee_b, indexData, index) {
         if (value_fee_b !== '') {
-          var calc_value_bal_b = Number(value_b) - Number(value_fee_b);
+          var calc_value_bal_b = Number(value_b) - numeral().unformat(value_fee_b);
           this.set('data.book.' + indexData + '.detail.' + index + '.value_bal_b', calc_value_bal_b);
         } else {
           this.set('data.book.' + indexData + '.detail.' + index + '.value_bal_b', 0);
@@ -426,8 +426,8 @@
           data.base.book[index].detail.map((item) => {
             result += item.net_weight;
           })
-          this.set('data.book.' + index + '.totalTonInvoices', result);
-          return result
+          this.set('data.book.' + index + '.totalTonInvoices', Number(result.toFixed(2)));
+          return Number(result.toFixed(2))
         }
       },
       _totalAmountUsdInvoices: function (index, data) {
@@ -436,8 +436,8 @@
           data.base.book[index].detail.map((item) => {
             result += item.value_d;
           })
-          this.set('data.book.' + index + '.totalAmountUsdInvoices', result);
-          return result;
+          this.set('data.book.' + index + '.totalAmountUsdInvoices', Number(result.toFixed(2)));
+          return Number(result.toFixed(2));
         }
       },
       _totalBathInvoices: function (index, data) {
@@ -447,8 +447,8 @@
             result += parseFloat(item.value_b);
           })
           // this.set('data.'+index+'.totalBathInvoices', result);
-          this.set('data.book.' + index + '.value_b', result);
-          return result;
+          this.set('data.book.' + index + '.value_b', Number(result.toFixed(2)));
+          return Number(result.toFixed(2));
         }
       },
       _totalFeeInvoices: function (index, data) {
@@ -458,8 +458,8 @@
             result += parseFloat(item.value_fee_b);
           })
           // this.set('data.'+index+'.totalFeeInvoices', result);
-          this.set('data.book.' + index + '.totalValue_fee_b', result);
-          return result;
+          this.set('data.book.' + index + '.totalValue_fee_b', Number(result.toFixed(2)));
+          return Number(result.toFixed(2));
         }
       },
       _totalBalance: function (index, data) {
@@ -469,8 +469,8 @@
             result += parseFloat(item.value_bal_b);
           })
           // this.set('data.'+index+'.totalBalance', result);
-          this.set('data.book.' + index + '.value_bal_b', result);
-          return result;
+          this.set('data.book.' + index + '.value_bal_b', Number(result.toFixed(2)));
+          return Number(result.toFixed(2));
         }
       },
       _totalIncomeTaxInvoices: function (index, data) {
@@ -480,8 +480,8 @@
             result += parseFloat(item.value_tax_b);
           })
           // this.set('data.'+index+'.totalIncomeTaxInvoices', result);
-          this.set('data.book.' + index + '.value_tax_b', result);
-          return result;
+          this.set('data.book.' + index + '.value_tax_b', Number(result.toFixed(2)));
+          return Number(result.toFixed(2));
         }
       },
       _totalMoneyBathInvoices: function (index, data) {
@@ -491,8 +491,8 @@
             result += parseFloat(item.value_final_b);
           })
           // this.set('data.'+index+'.totalMoneyBathInvoices', result);
-          this.set('data.book.' + index + '.value_final_b', result);
-          return result;
+          this.set('data.book.' + index + '.value_final_b', Number(result.toFixed(2)));
+          return Number(result.toFixed(2));
         }
       },
       addPayment: function () {
@@ -530,6 +530,8 @@
                 confirmed: (result) => {
                   if (result === true) {
                     this.dispatchAction('FEE_INSERT', newData);
+                    this.fire('reset-form');
+                    this.queryFrom('.required').map((el) => { el.reset(); });
                   }
                 }
               });
@@ -580,6 +582,8 @@
                 confirmed: (result) => {
                   if (result === true) {
                     this.dispatchAction('FEE_UPDATE', newData);
+                    this.fire('reset-form');
+                    this.queryFrom('.required').map((el) => { el.reset(); });
                   }
                 }
               });
@@ -622,7 +626,6 @@
             }
           })
         } else {
-          // console.log(this.list_fee);
           this.fire('toast', {
             status: 'openDialog',
             text: 'ต้องการยืนยันการคิดค่าธรรมเนียมใช่หรือไม่',
@@ -633,7 +636,6 @@
                     id: id,
                     fin_status: true
                   };
-                  // console.log(newData);
                   this.dispatchAction('FEE_APPROVE', newData);
                 });
               }
