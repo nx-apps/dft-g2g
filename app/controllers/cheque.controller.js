@@ -27,6 +27,18 @@ exports.getByFeeId = function (req, res) {
             res.json(data)
         })
 }
+exports.getChequeNo = function (req, res) {
+    var cheque = r.table('payment').filter(function (f) {
+        return f('pay_date').year().eq(r.now().year())
+    }).coerceTo('array');
+
+    r.expr({
+        pay_no: r.branch(cheque.count().eq(0), 1, cheque.max('pay_no')('pay_no').add(1))
+    })
+        .run().then(function (data) {
+            res.json(data);
+        })
+}
 exports.update = function (req, res) {
     // req.ajv._opts.coerceTypes = true;
     var valid = req.ajv.validate('g2g.payment_array', req.body);
