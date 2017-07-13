@@ -37,14 +37,14 @@ export function feeAction(store) {
             
             axios.get('./fee/contract?id=' + data.contract_id + '&view=' + data.view + '&status=' + data.status)
                 .then((response) => {
-                    console.log(data.view , data.status);
+                    // console.log(data.view , data.status);
                     if (data.view === 'fin' && data.status === 'false') {
-                        console.log(1);
-                        console.log( response.data);
+                        // console.log(1);
+                        // console.log( response.data);
                         store.dispatch({ type: 'FEE_GET_LIST_UNALLOCATED_FEES', payload: response.data }); 
                     }else if (data.view === 'fin' && data.status === 'true') {
-                        console.log(2);
-                        console.log( response.data);
+                        // console.log(2);
+                        // console.log( response.data);
                         store.dispatch({ type: 'FEE_GET_LIST_ALLOCATED_FEES', payload: response.data });
                     }
                     store.dispatch({ type: 'FEE_GET_LIST_DATA', payload: response.data });
