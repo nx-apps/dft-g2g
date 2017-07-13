@@ -178,7 +178,7 @@
             <input id="tab3" type="radio" name="tabs" on-tap="_getListFee">
             <label for="tab3"><div class="container" tabindex="0">
                 <span>3.{{localize.text_fee}}</span>
-                <paper-badge label="2"></paper-badge>
+                <paper-badge label="{{fee_list_no}}"></paper-badge>
                 </div>
             </label>
 
@@ -218,7 +218,7 @@
             <section id="content3">
                 <paper-material elevation="1">
                     <div class="list horizontal center-justified layout">
-                        <list-of-fee></list-of-fee>
+                        <list-of-fee check-tap="[[checkTap]]"></list-of-fee>
                     </div>
                 </paper-material>
             </section>
@@ -303,8 +303,29 @@
                 invlice_list: {
                     statePath: 'invoice.list'
                 },
+                fee_list_no: {
+                    type: Number,
+                    value: 0
+                },
+                unallocated_fees: {
+                    statePath: 'fee.unallocated_fees'
+                },
+                allocate_fees: {
+                    statePath: 'fee.allocate_fees'
+                },
                 crumbs: {
                     statePath: 'commonState.breadCrumbs',
+                },
+                checkTap: {
+                    type: Object,
+                    value: {
+                        one: true,
+                        two: false
+                    }
+                },
+                contractId: {
+                    statePath: 'commonState.contractId',
+                    // observer: 'get'
                 },
             },
             listeners: {
@@ -326,6 +347,9 @@
                 // 'close-drawer': '_flipDrawerClose',
                 // '_set-breadcrumbs': 'setEventBreadcrumbs'
             },
+            observers: [
+                'sumCheque(unallocated_fees,allocate_fees)'
+            ],
             nylonPageActive: function () {
                 this.fire('toast', { status: 'load' });
                 var contract_id = this.getCookieBhv("contract_id");
@@ -334,10 +358,14 @@
                 // this.notifyPath('contractName')
                 // this.set('contractName',contract_name)
                 // console.log(this.contractName);
+                let contractData = { contract_id: contract_id, contract_name: contract_name }
+                this.dispatchAction('SET_CONTRACT_ID', contractData)
                 var buyer_id = this.getCookieBhv("buyerId");
                 this.dispatchAction('BOOK_GET_LIST_DATA', contract_id);
-                // this.dispatchAction('INVOICE_GET_LIST_DATA', contract_id);
-                // this.dispatchAction('FEE_GET_LIST_DATA', { contract_id: contract_id, view: 'fin', status:'false'});
+                this.dispatchAction('INVOICE_GET_LIST_DATA', contract_id);
+                this.dispatchAction('FEE_GET_LIST_DATA', { contract_id: this.getCookieBhv("contract_id"), view: 'fin', status: 'true' });
+                this.dispatchAction('FEE_GET_LIST_DATA', { contract_id: this.getCookieBhv("contract_id"), view: 'fin', status: 'false' });
+
                 this.dispatchAction('GET_CHEQUE_LIST', contract_id);
             },
             // ready: function () {
@@ -352,6 +380,9 @@
             // setBreadcrumbs: function (data) {
             //     this.set('crumbs', data)
             // },
+            sumCheque(unallocated_fees, allocate_fees) {
+                this.set('fee_list_no', unallocated_fees.length + allocate_fees.length)
+            },
             _getBlDetail: function (e) {
                 this.dispatchAction('SET_BREADCRUMBS', [{
                     label: 'รายละเอียดใบ Invoice',
@@ -371,7 +402,7 @@
                 this._flipDrawer();
             },
             _getListInvoice: function () {
-                this.dispatchAction('INVOICE_GET_LIST_DATA', this.getCookieBhv("contract_id"));
+                // this.dispatchAction('INVOICE_GET_LIST_DATA', this.getCookieBhv("contract_id"));
             },
             _getBlInvoiceDetail: function (e) {
                 this.dispatchAction('SET_BREADCRUMBS', [{
@@ -420,12 +451,12 @@
                 this._flipDrawer();
             },
             _getListFee: function () {
-                var data = {
-                    contract_id: this.getCookieBhv("contract_id"),
-                    view: 'fin',
-                    status: 'false'
-                }
-                this.dispatchAction('FEE_GET_LIST_DATA', data);
+                // var data = {
+                //     contract_id: this.getCookieBhv("contract_id"),
+                //     view: 'fin',
+                //     status: 'false'
+                // }
+                // this.dispatchAction('FEE_GET_LIST_DATA', data)
             },
             _getFeeDetail: function (e) {
                 var round = '';

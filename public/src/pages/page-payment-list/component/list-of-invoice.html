@@ -83,7 +83,7 @@
   <template>
     <!--<i class="fa fa-calendar" aria-hidden="true"></i>-->
     <div class="flex searchInput horizontal center-justified layout">
-      <div class="flex title">{{localize.contract_name}} : [[getCookieBhv("contractName")]]</div>
+      <div class="flex title">{{localize.contract_name}} :  [[contractId.contract_name]]</div>
     </div>
     [[checkSelect(data.*)]]
     <div class="horizontal center-justified layout">
@@ -173,7 +173,11 @@
         selectDataAll: {
           type: Boolean,
           value: false
-        }
+        },
+        contractId: {
+          statePath: 'commonState.contractId',
+          // observer: 'get'
+        },
       },
       _selectDataAll: function (val) {
         try {

@@ -112,24 +112,24 @@
       <label for="tab1">
         <div class="container" tabindex="0">
         <span>1.{{localize.allocate_unsuccess}}</span>
-        <paper-badge label="0" style="left: 244.813px; top: 28px;"></paper-badge>
+        <paper-badge label="{{unallocated_fees.length}}" style="left: 244.813px; top: 28px;"></paper-badge>
       </div>
       </label>
 
-      <input id="tab2" type="radio" name="tabs" on-tap="tap2">
+      <input id="tab2" type="radio" name="tabs"  on-tap="tap2">
       <label for="tab2">
         <div class="container" tabindex="0">
           <span>2.{{localize.allocate_success}}</span>
-          <paper-badge label="2" style="left: 529.234px; top: 28px;"></paper-badge>
+          <paper-badge label="{{allocate_fees.length}}" style="left: 529.234px; top: 28px;"></paper-badge>
           </div>
       </label>
 
       <section id="content1">
-        <list-of-fee-detail></list-of-fee-detail>
+        <list-of-fee-detail data="{{list_fee}}"></list-of-fee-detail>
       </section>
 
       <section id="content2">
-        <list-of-fee-detail></list-of-fee-detail>
+        <list-of-fee-detail data="{{list_fee}}"></list-of-fee-detail>
       </section>
     </main>
     <!-- <div class="flex searchInput horizontal center-justified layout">
@@ -188,7 +188,16 @@
       properties: {
         localize: {
           statePath: 'i18n.fee'
-        }
+        },
+        list_fee: {
+          statePath: 'fee.list'
+        },
+        unallocated_fees: {
+          statePath: 'fee.unallocated_fees'
+        },
+        allocate_fees: {
+          statePath: 'fee.allocate_fees'
+        },
       },
       tap1: function () {
         this.dispatchAction('FEE_GET_LIST_DATA', { contract_id: this.getCookieBhv("contract_id"), view: 'fin', status: 'false' });
