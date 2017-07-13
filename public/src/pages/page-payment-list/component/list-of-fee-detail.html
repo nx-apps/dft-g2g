@@ -39,7 +39,7 @@
   </style>
   <template>
     <div class="flex searchInput horizontal center-justified layout">
-      <div class="flex title">{{localize.contract_name}} : [[getCookieBhv("contractName")]]
+      <div class="flex title">{{localize.contract_name}} : [[contractId.contract_name]]
       </div>
       <div class="flex horizontal end-justified layout">
         <div class="labelSearch">{{localize.text_fee_no}}</div>{{_searchInArray(searchInput)}}
@@ -93,9 +93,13 @@
         localize:{
           statePath : 'i18n.fee'
         },
-        data:{
-          statePath : 'fee.list'
-        }
+        // data:{
+        //   statePath : 'fee.list'
+        // }
+        contractId: {
+          statePath: 'commonState.contractId',
+          // observer: 'get'
+        },
       },
       observers: [
         'initDataFee(data)'

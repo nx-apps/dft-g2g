@@ -1,4 +1,3 @@
-<link rel="import" href="./../components/cookie-behavior.html">
 <link rel="import" href="./../../../bower_components/polymer/polymer.html">
 <link rel="import" href="./../../../bower_components/paper-material/paper-material.html">
 <link rel="import" href="./../../../bower_components/nylon-panel/nylon-panel-right.html">
@@ -6,10 +5,10 @@
 <link rel="import" href="./../../../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="./../../../bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="./../../../bower_components/iron-icons/iron-icons.html">
-<link rel="import" href="./../components/g2g-logic-behavior.html">
-
+<link rel="import" href="./../../../bower_components/paper-badge/paper-badge.html">
 <link rel="import" href="./../../../bower_components/paper-fab/paper-fab.html">
-
+<link rel="import" href="./../components/cookie-behavior.html">
+<link rel="import" href="./../components/g2g-logic-behavior.html">
 <link rel="import" href="./../../layout/shared-styles.html">
 
 <link rel="import" href="./component/list-of-bl-pm.html">
@@ -37,7 +36,7 @@
             font-family: 'CSChatThaiUI', sans-serif;
             -webkit-font-smoothing: antialiased;
         }
-/*
+        /*
         paper-fab {
             position: fixed;
             right: 16px;
@@ -128,40 +127,74 @@
             margin: 30px;
             color: black
         }
+
         paper-fab {
             left: 25px;
             --paper-fab-iron-icon: {
-               color: black
-            };
+                color: black
+            }
+            ;
             --paper-fab-background: #fff
             /*--paper-fab-background: #fff;*/
+        }
+
+        .container {
+            display: inline-block;
+            margin-left: 30px;
+            margin-right: 30px;
+        }
+        /* Need to position the badge to look like a text superscript */
+
+        .container>paper-badge {
+            --paper-badge-margin-left: 20px;
+            --paper-badge-margin-bottom: 0px;
         }
     </style>
     <template>
         <!--<div class="btnBackPage horizontal layout">-->
-            <!--<div class="flex">-->
-                <!--{{localize.contract_name}} ทดสอบ : {{contract_name}}-->
-            <!--</div>-->
+        <!--<div class="flex">-->
+        <!--{{localize.contract_name}} ทดสอบ : {{contract_name}}-->
+        <!--</div>-->
 
         <!--</div>-->
+
         <main>
             <input id="tab1" type="radio" name="tabs" checked>
-            <label for="tab1">1.{{localize.text_bill_of_lading}}</label>
+            <label for="tab1">
+                <div class="container" tabindex="0">
+                <span>1.{{localizeBl.bill_of_lading_bl}}</span>
+                <paper-badge label="{{bl_list.length}}"></paper-badge>
+                </div>
+            </label>
 
             <input id="tab2" type="radio" name="tabs" on-tap="_getListInvoice">
-            <label for="tab2">2.{{localize.text_invoice}}</label>
+            <label for="tab2">
+                <div class="container" tabindex="0">
+                <span>2.{{localize.text_invoice}}</span>
+                <paper-badge label="{{invlice_list.length}}"></paper-badge>
+                </div>
+            </label>
 
             <input id="tab3" type="radio" name="tabs" on-tap="_getListFee">
-            <label for="tab3">3.{{localize.text_fee}}</label>
+            <label for="tab3"><div class="container" tabindex="0">
+                <span>3.{{localize.text_fee}}</span>
+                <paper-badge label="{{fee_list_no}}"></paper-badge>
+                </div>
+            </label>
 
             <input id="tab4" type="radio" name="tabs">
-            <label for="tab4">4.{{localize.text_cheque_no}}</label>
+            <label for="tab4"><div class="container" tabindex="0">
+                <span>4. {{localizeCheque.send_cheque}} </span>
+                <paper-badge label="00"></paper-badge>
+                </div>
+                <!--{{localize.text_cheque_no}}-->
+                </label>
 
             <input id="tab5" type="radio" name="tabs">
             <label for="tab5">5.{{localize.text_payment}}</label>
 
-            <input id="tab6" type="radio" name="tabs">
-            <label for="tab6">6.{{localize.history_pay}}</label>
+            <!--<input id="tab6" type="radio" name="tabs">
+            <label for="tab6">6.{{localize.history_pay}}</label>-->
 
             <!--<input id="tab1" type="radio" name="tabs">
             <label for="tab1" on-click="backPage">
@@ -188,7 +221,7 @@
             <section id="content3">
                 <paper-material elevation="1">
                     <div class="list horizontal center-justified layout">
-                        <list-of-fee></list-of-fee>
+                        <list-of-fee check-tap="[[checkTap]]"></list-of-fee>
                     </div>
                 </paper-material>
             </section>
@@ -196,7 +229,7 @@
             <section id="content4">
                 <paper-material elevation="1">
                     <div class="list horizontal center-justified layout">
-                        <list-of-cheque data="[[dataListPay.chequeList]]" data-for-select="[[dataForSelect]]"></list-of-cheque>
+                        <list-of-cheque></list-of-cheque>
                     </div>
                 </paper-material>
             </section>
@@ -258,17 +291,50 @@
         Polymer({
             is: 'page-payment-list',
             behaviors: [ReduxBehavior, nylonBehavior, CookieBehavior, i18nAction, bookAction, invoiceAction,
-                commonStateAction, feeAction,chequeAction],
+                commonStateAction, feeAction, chequeAction],
             properties: {
                 localize: {
                     statePath: 'i18n.g2g'
+                },
+                localizeBl: {
+                    statePath: 'i18n.book'
+                },
+                localizeCheque: {
+                    statePath: 'i18n.cheque'
                 },
                 contractName: {
                     type: String,
                     value: '1'
                 },
+                bl_list: {
+                    statePath: 'book.list',
+                },
+                invlice_list: {
+                    statePath: 'invoice.list'
+                },
+                fee_list_no: {
+                    type: Number,
+                    value: 0
+                },
+                unallocated_fees: {
+                    statePath: 'fee.unallocated_fees'
+                },
+                allocate_fees: {
+                    statePath: 'fee.allocate_fees'
+                },
                 crumbs: {
                     statePath: 'commonState.breadCrumbs',
+                },
+                checkTap: {
+                    type: Object,
+                    value: {
+                        one: true,
+                        two: false
+                    }
+                },
+                contractId: {
+                    statePath: 'commonState.contractId',
+                    // observer: 'get'
                 },
             },
             listeners: {
@@ -290,6 +356,9 @@
                 // 'close-drawer': '_flipDrawerClose',
                 // '_set-breadcrumbs': 'setEventBreadcrumbs'
             },
+            observers: [
+                'sumCheque(unallocated_fees,allocate_fees)'
+            ],
             nylonPageActive: function () {
                 this.fire('toast', { status: 'load' });
                 var contract_id = this.getCookieBhv("contract_id");
@@ -298,12 +367,16 @@
                 // this.notifyPath('contractName')
                 // this.set('contractName',contract_name)
                 // console.log(this.contractName);
+                let contractData = { contract_id: contract_id, contract_name: contract_name }
+                this.dispatchAction('SET_CONTRACT_ID', contractData)
                 var buyer_id = this.getCookieBhv("buyerId");
                 this.dispatchAction('BOOK_GET_LIST_DATA', contract_id);
-                // this.dispatchAction('INVOICE_GET_LIST_DATA', contract_id);
-                // this.dispatchAction('FEE_GET_LIST_DATA', { contract_id: contract_id, view: 'fin', status:'false'});
+                this.dispatchAction('INVOICE_GET_LIST_DATA', contract_id);
+                this.dispatchAction('FEE_GET_LIST_DATA', { contract_id: this.getCookieBhv("contract_id"), view: 'fin', status: 'true' });
+                this.dispatchAction('FEE_GET_LIST_DATA', { contract_id: this.getCookieBhv("contract_id"), view: 'fin', status: 'false' });
+
                 this.dispatchAction('GET_CHEQUE_LIST', contract_id);
-        },
+            },
             // ready: function () {
             //     this._getChequeList(contract_id);
             //     this._getPaymentsList(contract_id);
@@ -316,6 +389,9 @@
             // setBreadcrumbs: function (data) {
             //     this.set('crumbs', data)
             // },
+            sumCheque(unallocated_fees, allocate_fees) {
+                this.set('fee_list_no', unallocated_fees.length + allocate_fees.length)
+            },
             _getBlDetail: function (e) {
                 this.dispatchAction('SET_BREADCRUMBS', [{
                     label: 'รายละเอียดใบ Invoice',
@@ -334,8 +410,8 @@
                 this.paymentsPageSeleted = 'blPage';
                 this._flipDrawer();
             },
-            _getListInvoice: function(){
-                this.dispatchAction('INVOICE_GET_LIST_DATA', this.getCookieBhv("contract_id"));
+            _getListInvoice: function () {
+                // this.dispatchAction('INVOICE_GET_LIST_DATA', this.getCookieBhv("contract_id"));
             },
             _getBlInvoiceDetail: function (e) {
                 this.dispatchAction('SET_BREADCRUMBS', [{
@@ -369,7 +445,7 @@
                 //         url = url + '_' + item.id;
                 //     }
                 // });
-                let arr = {book_id:[]};
+                let arr = { book_id: [] };
                 datas.map((item) => {
                     arr.book_id.push(item.id);
                 })
@@ -383,23 +459,23 @@
                 this.paymentsPageSeleted = 'blInvoicePage';
                 this._flipDrawer();
             },
-            _getListFee: function(){
-                var data = {
-                    contract_id: this.getCookieBhv("contract_id"),
-                    view: 'fin',
-                    status:'false'
-                }
-                this.dispatchAction('FEE_GET_LIST_DATA', data);
+            _getListFee: function () {
+                // var data = {
+                //     contract_id: this.getCookieBhv("contract_id"),
+                //     view: 'fin',
+                //     status: 'false'
+                // }
+                // this.dispatchAction('FEE_GET_LIST_DATA', data)
             },
             _getFeeDetail: function (e) {
                 var round = '';
-                if(e.detail.detail.fee_round == 0){
+                if (e.detail.detail.fee_round == 0) {
                     round = '';
-                }else{
+                } else {
                     round = e.detail.detail.fee_round;
                 }
                 this.dispatchAction('SET_BREADCRUMBS', [{
-                    label: 'งวดที่ '+e.detail.detail.cl_no+' ครั้งที่ '+e.detail.detail.fee_no+' รอบที่คิดค่าธรรมเนียมครั้งที่ ' + round,
+                    label: 'งวดที่ ' + e.detail.detail.cl_no + ' ครั้งที่ ' + e.detail.detail.fee_no + ' รอบที่คิดค่าธรรมเนียมครั้งที่ ' + round,
                     href: ''
                 }])
                 // this.fire('toast', { status: 'load' });
@@ -416,13 +492,14 @@
                 });
             },
             _getChequeDetail: function (e) {
-                console.log(e.detail.detail);
+                // console.log(e.detail.detail);
                 this.dispatchAction('SET_BREADCRUMBS', [{
                     label: 'ขึ้นเช็ค ',
                     href: ''
                 }])
                 this.titlePanelRight = 'เช็ค'
-                this.dispatchAction('GET_CHEQUE_DETAIL_LIST',{id:e.detail.detail})
+                this.dispatchAction('GET_CHEQUE_DETAIL_LIST', { id: e.detail.detail })
+                this.dispatchAction('GET_CHEQUE_NO')
                 // this.fire('toast', { status: 'load' });
                 //     this.read('./g2g/payment/fee/id/' + e.detail.detail.fee_id, (data) => {
                 //     // console.log(data);

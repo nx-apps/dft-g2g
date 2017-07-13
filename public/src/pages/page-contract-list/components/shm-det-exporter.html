@@ -32,19 +32,19 @@
     <!--<template is="dom-if" if="[[!commonState.isInsert]]">
       <paper-button class="gl-btn-default" raised on-tap="cancelEditShipment">{{localize.btn_back_ward}}</paper-button>
     </template>-->
-    <template is="dom-if" if={!{checkTrue.book_status}}>
+    <!--<template is="dom-if" if={{!checkTrue.book_status}}>-->
       <paper-button class="gl-btn-default" raised on-tap="cancelEditShipment">
         {{localizeCommon.back_ward}}</paper-button>
-    </template>
+    <!--</template>-->
 
     <gl-form-panel set-padding="10px 20px 10px 20px">
       <div class="horizontal end-justified layout">
-        <!--<template is="dom-if" if={{_confirmBook(data)}}>-->
+        <template is="dom-if" if={{!checkTrue.book_status}}>
         <paper-icon-button icon="create" class="crud" id="editExporter" raised on-tap="editBookDetaIl" title="Edit"></paper-icon-button>
         <paper-tooltip for="editExporter" offset="0">{{localizeCommon.edit}}</paper-tooltip>
         <paper-icon-button icon="delete" class="crud" id="delExporter" raised on-tap="deleteBookDetail" title="Delete"></paper-icon-button>
         <paper-tooltip for="delExporter" offset="0">{{localizeCommon.delete}}</paper-tooltip>
-        <!--</template>-->
+        </template>
       </div>
 
       <gl-form-panel-head label="{{localize.label_exporter_detail}}" set-padding="10px" set-border="1px"></gl-form-panel-head>

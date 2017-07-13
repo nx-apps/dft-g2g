@@ -5,7 +5,7 @@
             "type": "string"
         },
         "pay_no": {
-            "type": "string"
+            "type": "number"
         },
         "pay_amount": {
             "type": "number"
@@ -72,6 +72,10 @@
         },
         "invoice_year": {
             "type": "number"
+        },
+        "deliver_date": {
+            "type": "string",
+            "format": "date-time"
         },
         "invoice_company_date": {
             "type": "string",

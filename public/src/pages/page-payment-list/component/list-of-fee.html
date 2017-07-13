@@ -1,48 +1,50 @@
 <link rel="import" href="./list-of-fee-detail.html">
+<link rel="import" href="../../../../bower_components/paper-badge/paper-badge.html">
+
+<link rel="import" href="./../../../layout/shared-styles.html">
 
 <dom-module id="list-of-fee">
-  <style include="iron-flex iron-flex-factors iron-flex-alignment gl-styles">
+  <style media="screen" include="shared-styles">
      :host {
       display: block;
     }
-    
+
     * {
       font-family: 'CSChatThaiUI', sans-serif;
       -webkit-font-smoothing: antialiased;
     }
-    
+
     .labelSearch {
       font-size: var(--font-size-h4);
       margin: 10px 10px 10px 10px;
     }
-    
+
     .table-body>tr>td {
       cursor: pointer;
     }
-    
+
     .title {
       margin: 16px;
       text-align: left;
       font-size: var(--font-size-h4);
     }
-    
-    table.gl-table-default {
+    /*table.gl-table-default {
       width: 98%;
       border: 1px solid #ddd;
       margin-bottom: 15px;
     }
-    
+
     table.gl-table-default>thead.table-head>tr>th {
       text-align: center;
     }
-    
-    /*table.gl-table-default>thead.table-head>tr>th:nth-child(1) {
+    table.gl-table-default>thead.table-head>tr>th:nth-child(1) {
       width: 15%;
-    }*/
-    
+    }
+
     table.gl-table-default>tbody.table-body>tr>td:not(:first-child) {
       text-align: right;
-    }
+    }*/
+
     main {
       padding: 5px;
       margin: 0 auto;
@@ -91,22 +93,44 @@
     #tab2:checked~#content2 {
       display: block;
     }
+
+    .container {
+      display: inline-block;
+      margin-left: 30px;
+      margin-right: 30px;
+    }
+    /* Need to position the badge to look like a text superscript */
+
+    .container>paper-badge {
+      --paper-badge-margin-left: 20px;
+      --paper-badge-margin-bottom: 0px;
+    }
   </style>
   <template>
     <main>
-        <input id="tab1" type="radio" name="tabs" checked on-tap="tap1">
-        <label for="tab1">1.{{localize.allocate_unsuccess}}</label>
+      <input id="tab1" type="radio" name="tabs" checked on-tap="tap1">
+      <label for="tab1">
+        <div class="container" tabindex="0">
+        <span>1.{{localize.allocate_unsuccess}}</span>
+        <paper-badge label="{{unallocated_fees.length}}" style="left: 244.813px; top: 28px;"></paper-badge>
+      </div>
+      </label>
 
-        <input id="tab2" type="radio" name="tabs" on-tap="tap2">
-        <label for="tab2">2.{{localize.allocate_success}}</label>
+      <input id="tab2" type="radio" name="tabs"  on-tap="tap2">
+      <label for="tab2">
+        <div class="container" tabindex="0">
+          <span>2.{{localize.allocate_success}}</span>
+          <paper-badge label="{{allocate_fees.length}}" style="left: 529.234px; top: 28px;"></paper-badge>
+          </div>
+      </label>
 
-        <section id="content1">
-          <list-of-fee-detail></list-of-fee-detail>
-        </section>
+      <section id="content1">
+        <list-of-fee-detail data="{{list_fee}}"></list-of-fee-detail>
+      </section>
 
-        <section id="content2">
-          <list-of-fee-detail></list-of-fee-detail>
-        </section>
+      <section id="content2">
+        <list-of-fee-detail data="{{list_fee}}"></list-of-fee-detail>
+      </section>
     </main>
     <!-- <div class="flex searchInput horizontal center-justified layout">
       <div class="flex title">{{localize.contract_name}} : [[getCookieBhv("contractName")]]
@@ -162,15 +186,24 @@
       is: "list-of-fee",
       behaviors: [ReduxBehavior, nylonBehavior, FormatNumberBehavior, CookieBehavior, g2gLogicBehavior],
       properties: {
-        localize:{
-          statePath : 'i18n.fee'
-        }
+        localize: {
+          statePath: 'i18n.fee'
+        },
+        list_fee: {
+          statePath: 'fee.list'
+        },
+        unallocated_fees: {
+          statePath: 'fee.unallocated_fees'
+        },
+        allocate_fees: {
+          statePath: 'fee.allocate_fees'
+        },
       },
-      tap1: function(){
-        this.dispatchAction('FEE_GET_LIST_DATA', { contract_id: this.getCookieBhv("contract_id"), view: 'fin' , status:'false'});
+      tap1: function () {
+        this.dispatchAction('FEE_GET_LIST_DATA', { contract_id: this.getCookieBhv("contract_id"), view: 'fin', status: 'false' });
       },
-      tap2: function(){
-        this.dispatchAction('FEE_GET_LIST_DATA', { contract_id: this.getCookieBhv("contract_id"), view: 'fin' , status:'true'});
+      tap2: function () {
+        this.dispatchAction('FEE_GET_LIST_DATA', { contract_id: this.getCookieBhv("contract_id"), view: 'fin', status: 'true' });
       }
     });
   </script>
