@@ -58,7 +58,7 @@
     }
   </style>
   <template>
-    <paper-card class="statistic" heading="สัญญาที่ (ยัง){{data.contract_no}}" alt="สัญญาที่ (ยัง){{data.contract_no}}">
+    <paper-card class="statistic" heading="{{localizeContract.contract_at}} {{data.contract_no}}" alt="{{localizeContract.contract_at}} {{data.contract_no}}">
       <div class="layout horizontal">
         <div class="horizontal layout center">
           <iron-icon icon="chevron-left" item-icon on-tap="chartPiePrevious"></iron-icon>
@@ -67,7 +67,7 @@
           <!-- <iron-pages selected="{{seleteChartPie}}"> -->
           <div>
             <div class="title" id="titleChart">
-              ปริมาณข้าวที่ทำสัญญา / ปริมาณข้าวที่ส่งมอบ
+              <!--ปริมาณข้าวที่ทำสัญญา / ปริมาณข้าวที่ส่งมอบ-->
             </div>
             <div class="horizontal layout">
               <div class="flex-8">
@@ -76,9 +76,9 @@
 
               <div class="flex-8 layout horizontal textSum">
                 <div class="flex">
-                  <div class="flex">{{localize.label_total}}</div>
+                  <div class="flex">{{localizeContract.total}}</div>
                   <div class="flex">[[_labelNames(seleteChartPie)]]</div>
-                  <div class="flex">{{localize.label_balance}}</div>
+                  <div class="flex">{{localizeContract.balance}}</div>
                 </div>
                 <div class="flex">
                   <div class="flex">[[formatNumberNoZero(data.contract_weight_book_balance)]]</div>
@@ -127,9 +127,9 @@
         ReduxBehavior, FormatNumberBehavior, nylonBehavior
       ],
       properties: {
-        localize: {
-          statePath: 'i18n.g2g'
-        },
+        // localize: {
+        //   statePath: 'i18n.g2g'
+        // },
         localizeContract: {
           statePath: 'i18n.contract'
         },
@@ -172,7 +172,7 @@
           labels: [
             // "ทั้งหมด (ตัน)",
             name,
-            "คงเหลือ (ตัน)"
+            this.localizeContract.balance+"(ตัน)"
           ],
           datasets: [
             {
@@ -214,7 +214,7 @@
         this.seleteChartPie = 0;
         // ปริมาณข้าวที่ทำสัญญา /
         //  ปริมาณข้าวทีส่งมอบ
-        this.$$('#titleChart').innerHTML = 'ปริมาณข้าวที่ทำสัญญา';
+        this.$$('#titleChart').innerHTML = this.localizeContract.rice_sender
         this.$.chartContract.icon = 'radio-button-checked';
         this.$.chartShipment.icon = 'radio-button-unchecked';
         // this.dataChartPie = this._computeChartPie(this.data.contract_quantity_book,this.data.contract_quantity_book_balance,this.nameChart[1],this.colorPie[1]);
@@ -224,7 +224,7 @@
       },
       chartPieNext: function () {
         this.seleteChartPie = 1;
-        this.$$('#titleChart').innerHTML = 'ปริมาณข้าวที่ส่งมอบ';
+        this.$$('#titleChart').innerHTML = this.localizeContract.rice_sender
         this.$.chartContract.icon = 'radio-button-unchecked';
         this.$.chartShipment.icon = 'radio-button-checked';
         this.dataChartPie = this._computeChartPie(this.data.contract_weight_book, this.data.contract_weight_book_balance, this.nameChart[1], this.colorPie[1], this.colorBg[1]);

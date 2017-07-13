@@ -2,6 +2,7 @@ export const contract = {
     th:{
         Meg:"TH",
         contract:"สัญญา",
+        contract_at :"สัญญาที่",
         contract_name:"ชื่อสัญญา",
         contract_no:"เลขที่สัญญา",
         date:"วันที่",
@@ -19,6 +20,11 @@ export const contract = {
         more_detail:"รายละเอียดเพิ่มเติม",
         error_input:"กรุณากรอก",
         error_dropdown:"กรุณาเลือก",
+
+        rice_contract:"ปริมาณข้าวที่ทำสัญญา",
+        rice_sender:"ปริมาณข้าวที่ส่งมอบ",
+        total:"ทั้งหมด",
+        balance:"คงเหลือ",
 
         
     },
