@@ -38,6 +38,7 @@ export const book = {
         quantity_ship:"จำนวนลำเรือ",
         add_contract:"เพิ่มสัญญา",
         booking_no:"Booking no",
+        bill_of_lading_bl:"ใบตราส่งสินค้าทางทะเล",
         bill_of_lading:"Bill of Lading Number",
         shipping_agent:"เอเย่นต์เรือ",
         shipping_line:"สายเรือ",

@@ -162,7 +162,7 @@
             <input id="tab1" type="radio" name="tabs" checked>
             <label for="tab1">
                 <div class="container" tabindex="0">
-                <span>1.{{localize.text_bill_of_lading}}</span>
+                <span>1.{{localizeBl.bill_of_lading_bl}}</span>
                 <paper-badge label="{{bl_list.length}}"></paper-badge>
                 </div>
             </label>
@@ -183,7 +183,7 @@
             </label>
 
             <input id="tab4" type="radio" name="tabs">
-            <label for="tab4">4. นำส่งเลขที่เช็ค 
+            <label for="tab4">4. {{localizeCheque.send_cheque}} 
                 <!--{{localize.text_cheque_no}}-->
                 </label>
 
@@ -292,6 +292,12 @@
             properties: {
                 localize: {
                     statePath: 'i18n.g2g'
+                },
+                localizeBl: {
+                    statePath: 'i18n.book'
+                },
+                localizeCheque: {
+                    statePath: 'i18n.cheque'
                 },
                 contractName: {
                     type: String,
