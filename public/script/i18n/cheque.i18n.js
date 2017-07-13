@@ -2,7 +2,7 @@ export const cheque = {
     th: {
         send_cheque: "นำส่งเลขที่เช็ค",
         send_director: "นำส่งอธิบดี",
-        wait_director: "รออธิบดีอนุมติ",
+        wait_director: "รออธิบดีอนุมัติ",
         name_of_contract:"ชื่อสัญญา",
         fee_no:"คิดค่าธรรมเนียมครั้งที่",
         period_no: "งวดที่",
