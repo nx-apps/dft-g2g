@@ -42,7 +42,6 @@
     table.gl-table-default>thead.table-head>tr>th {
       text-align: center;
     }
-
     /*table.gl-table-default>thead.table-head>tr>th:nth-child(1) {
       width: 15%;
     }*/
@@ -105,7 +104,7 @@
         </div>
       </section>
       <section name="feeDetail">
-        <paper-button raised on-tap="backPage" class="gl-btn-default">ย้อนกลับ (ยัง)</paper-button>
+        <paper-button raised on-tap="backPage" class="gl-btn-default">{{localizeCommon.back_ward}}</paper-button>
         <fee-exports></fee-exports>
       </section>
     </iron-pages>
@@ -122,6 +121,9 @@
         },
         data: {
           statePath: 'fee.list'
+        },
+        localizeCommon: {
+          statePath: 'i18n.common'
         },
         pageSelected: {
           type: String,
@@ -157,7 +159,12 @@
       },
       backPage: function (data) {
         // console.log(11);
-        this.set('pageSelected','listOfFee')
+        this.dispatchAction('SET_BREADCRUMBS', [{
+          label: 'สัญญาที่ ' + this.contractId.contract_no,
+          href: ''
+        },
+        ])
+        this.set('pageSelected', 'listOfFee')
       },
       _searchInArray: function (searchInput) {
         // console.log(searchInput == '');
