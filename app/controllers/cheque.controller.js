@@ -37,9 +37,11 @@ exports.update = function (req, res) {
                     date_updated: r.now().inTimezone('+07'),
                     updater: 'admin'
                 };
-                return r.branch(m.hasFields('invoice_company_date'),
-                    r.expr(updata).merge({ invoice_company_date: r.ISO8601(m('invoice_company_date')).inTimezone('+07') }),
-                    updata)
+                // return r.branch(m.hasFields('invoice_company_date'),
+                return r.expr(updata).merge(
+                    r.branch(m.hasFields('invoice_company_date'), { invoice_company_date: r.ISO8601(m('invoice_company_date')).inTimezone('+07') }, {}),
+                    r.branch(m.hasFields('deliver_date'), { deliver_date: r.ISO8601(m('deliver_date')).inTimezone('+07') }, {})
+                )
             })
             .filter(function (f) {
                 return f.hasFields('id')

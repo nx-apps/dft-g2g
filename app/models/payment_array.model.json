@@ -76,6 +76,10 @@
             "invoice_year": {
                 "type": "number"
             },
+            "deliver_date": {
+                "type": "string",
+                "format": "date-time"
+            },
             "invoice_company_date": {
                 "type": "string",
                 "format": "date-time"
