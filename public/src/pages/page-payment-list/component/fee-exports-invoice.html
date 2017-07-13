@@ -155,8 +155,8 @@
                     <gl-form-input style="text-align:right; width:170px;" format-number="on" value="{{item2.value_bal_b}}" disabled></gl-form-input>
                   </td>
                   <td>[[_calcValueTax(item2.value_bal_b, indexData, index)]]
-                    <gl-form-input class="riceRequired" required style="text-align:right; width:170px;" format-number="on" value="{{item2.value_tax_b}}"
-                      disabled="[[common.inputRice]]" allowed-pattern="[0-9||,||.]"></gl-form-input>
+                    <gl-form-input style="text-align:right; width:170px;" format-number="on" value="{{item2.value_tax_b}}"
+                      disabled allowed-pattern="[0-9||,||.]"></gl-form-input>
                   </td>
                   [[changeString2Num(item2.*,'value_tax_b')]]
                   <td>[[_calcValueFinalB(item2.value_bal_b, item2.value_tax_b, indexData, index)]]
