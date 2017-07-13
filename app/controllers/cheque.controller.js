@@ -29,7 +29,7 @@ exports.getByFeeId = function (req, res) {
 }
 exports.getChequeNo = function (req, res) {
     var cheque = r.table('payment').filter(function (f) {
-        return f('pay_date').year().eq(r.now().year())
+        return f('invoice_company_date').year().eq(r.now().year())
     }).coerceTo('array');
 
     r.expr({
