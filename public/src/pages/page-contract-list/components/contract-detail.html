@@ -12,6 +12,8 @@
 <link rel="import" href="./../../../../bower_components/gl-form/gl-form-panel-footer.html">
 <link rel="import" href="./../../../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="./../../../../bower_components/paper-checkbox/paper-checkbox.html">
+<link rel="import" href="./../../../../bower_components/paper-radio-group/paper-radio-group.html">
+<link rel="import" href="./../../../../bower_components/iron-input/iron-input.html">
 <link rel="import" href="./../../components/validateFormBehaviors.html">
 <link rel="import" href="./../../components/format-number-behavior.html">
 <link rel="import" href="./../../components/g2g-logic-behavior.html">
@@ -303,59 +305,7 @@
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,12]]">
 
           <div class="titleName">{{localizeContract.label_list_rice}}</div>
-          <!--<table class="gl-table-default">
-            <thead class="table-head">
-              <tr>
-                <th>{{localizeContract.label_order}}</th>
-                <th>{{localizeContract.label_rice_type}}</th>
-                <th>
-                  <template is="dom-if" if="[[!_isViewing(commonState.btnDisabled)]]">
-                    {{localizeContract.label_action}}
-                  </template>
-                </th>
-              </tr>
-            </thead>
-            <template is="dom-if" if="[[!_isViewing(commonState.btnDisabled)]]">
-              <tfoot class="table-foot">
-                <tr>
-                  <td></td>
-                  <td></td>
-                  <td>
-                    <paper-button hidden="[[commonState.btnDisabled]]" raised id="[[index]]" on-tap="addTypeRice" class="btnInTable gl-btn-primary">
-                      <iron-icon icon="add"></iron-icon>{{localizeContract.btn_add}}</paper-button>
-                  </td>
-                </tr>
-              </tfoot>
-            </template>
-            <tbody class="table-body">
-              <template is="dom-repeat" items="[[data.contract_type_rice]]">
-                <tr>
-                  <td>
-                    [[_ObcountIndex(index)]]
-                  </td>
-                  <td>
-                    <div class="upGlComboBox">
-                      <gl-combo-box id="rice-[[index]]" class="required" required disabled="[[commonState.btnDisabled]]" error-message="{{localizeContract.label_error_rice_type}}"
-                        placeholder="{{localizeContract.label_rice_type}}" name="type_rice_name" item-label-path="type_rice_name_th"
-                        item-value-path="type_rice_id" value="{{item.type_rice_id}}" on-value-changed="_typeRiceContract">
-                        <template>
-                          [[item.type_rice_name_th]]
-                        </template>
-                      </gl-combo-box>
-                    </div>
-                  </td>
-                  <td>
-                    <template is="dom-if" if="[[!_isViewing(data.isInputDisabled)]]">
-                      <paper-button hidden="[[commonState.btnDisabled]]" raised id="[[index]]" on-tap="deleteTypeRice" class="btnInTable gl-btn-danger"
-                        title="ลบชนิดข้าว">
-                        <iron-icon icon="remove"></iron-icon>{{localizeContract.btn_delete}}</paper-button>
-                    </template>
-                  </td>
-                </tr>
-              </template>
-            </tbody>
-          </table>-->
-          <span class="namesub">
+          <!--<span class="namesub">
             <gl-combo-box id="hamonizeCode" disabled="[[commonState.btnDisabled]]" label="{{localizeContract.rice_type}}"
              placeholder="{{localizeContract.rice_type}}" items="[[hamonizeYear.hamonize]]"
             item-label-path="label" item-value-path="id" on-value-changed="searchHamonizeInCode">
@@ -365,7 +315,6 @@
           </gl-combo-box>
                       </span>
           <span class="year">
-                        <!--ปีที่ตั้งรหัส Hamonize -->
             <gl-combo-box id="hamonizeYear" disabled="[[commonState.btnDisabled]]" label="{{localizeContract.year}}"
            placeholder="{{localizeContract.year}}" items="[[hamonizeYear.year]]"
             item-label-path="label" item-value-path="label" on-value-changed="searchHamonizeInYear">
@@ -373,138 +322,117 @@
                 [[item.label]]
               </template>
             </gl-combo-box>
-                      </span>
+                      </span>-->
           <!--<th style="width:30px"></th>
           <th style="width:30px"></th>
           <th>ชื่อกลุ่มข้าว</th>
           <th>ชื่อข้าว</th>
           <th>รหัส Hamonize</th>
           <th>ปี</th>-->
+
+
           <div class="horizontal layout header-item" warp>
-            <div class=""></div>
-            <div class="header-div flex"></div>
-            <div class="header-div flex"></div>
-            <div class="header-div flex-3">รหัส Hamonize</div>
-            <div class="header-div flex-3">ชื่อกลุ่มข้าว</div>
-            <div class="header-div flex-3">ชื่อข้าว</div>
-            <div class="header-div flex-2">ปี</div>
-          </div>
-          <div class="subdiv">
-            <template is="dom-repeat" items={{hamonizeList}} index-as="indexroot">
-              <div hidden="{{item.hiddend}}">
-                <div class="horizontal layout item">
-                  <div class="">
-                    <!--icon="chevron-right" -->
-                    <paper-icon-button style="margin-top: -50px;" icon="chevron-right" index="[[indexroot]]" on-tap="toggle"></paper-icon-button>
-                    <!--<iron-icon ></iron-icon>-->
-                  </div>
-                  <div class="row flex">
-                    <paper-checkbox checked="{{item.check}}" id="{{indexroot}}" on-tap="getCheckChild" disabled="[[commonState.btnDisabled]]">
-                  </div>
-                  <div class="row flex"></div>
-                  <div class="row flex-3"></div>
-                  <div class="row flex-3">[[item.name_th]]</div>
-                  <div class="row flex-3">-</div>
-                  <div class="row flex-2">-</div>
-                </div>
-              </div>
-              <iron-collapse id="collapse-[[indexroot]]">
-                <template is="dom-repeat" items={{item.sub}} as="subChild">
-                  <div hidden="{{subChild.hiddend}}">
-                    <div class="horizontal layout sub-item">
-                      <div class=""></div>
-                      <div class="row flex">
-                        <paper-checkbox id="{{indexroot}}" checked="{{subChild.check}}" on-tap="getSelect" disabled="[[commonState.btnDisabled]]">
-                      </div>
-                      <div class="row flex"></div>
-                      <div class="row flex-3">[[subChild.hamonize_code]]</div>
-                      <div class="row flex-3">[[item.name_th]]</div>
-                      <div class="row flex-3">[[subChild.hamonize_th2]]</div>
-                      <div class="row flex-2">[[subChild.hamonize_year]]</div>
-                    </div>
-                  </div>
+            <div class="header-div flex">
+              <gl-combo-box id="hamonizeYear" label="{{localizeContract.year}}" placeholder="{{localizeContract.year}}" items="[[hamonizeYear.year]]"
+                item-label-path="label" item-value-path="label" on-value-changed="searchHamonizeInYear">
+                <template>
+                  [[item.label]]
                 </template>
-              </iron-collapse>
-            </template>
+              </gl-combo-box>
+            </div>
+            <div class="header-div flex">
+              <div style="padding: 10px 15px;">
+                รูปแบบการดู
+                <paper-radio-group selected="{{typeSelete}}" allow-empty-selection>
+                  <paper-radio-button name="list">รายการ</paper-radio-button>
+                  <paper-radio-button name="group">กลุ่ม</paper-radio-button>
+                </paper-radio-group>
+              </div>
+            </div>
           </div>
-          <!--<div class="main">
-
-            <template is="dom-repeat" items={{hamonizeList}} index-as="indexroot">
-              <div class="item" hidden="{{item.hiddend}}">
-
-                <iron-icon icon="chevron-right" index="[[indexroot]]" on-tap="toggle"></iron-icon>
-
-                <paper-checkbox checked="{{item.check}}" id="{{indexroot}}" on-tap="getCheckChild" disabled="[[commonState.btnDisabled]]">
-
-                  [[item.name_th]]
-                </paper-checkbox>
-                <iron-collapse id="collapse-[[indexroot]]" opened="true">
-                  <div>
+          <iron-pages selected="{{typeSelete}}" attr-for-selected="name">
+            <div name="list">
+              <div class="horizontal layout header-item" warp>
+                <div class="header-div flex"></div>
+                <div class="header-div flex-3">รหัส Hamonize <br>
+                  <gl-form-input label="ค้นหา" type="search" value="{{dataSeleted.hamonize_code}}" on-value-changed="searchHamonizeCode"></gl-form-input>
+                </div>
+                <div class="header-div flex-3">ชื่อข้าว<br>
+                  <gl-form-input style="padding-left:20px;" value="{{dataSeleted.hamonize_th2}}" label="ค้นหา" type="search" on-value-changed="searchHamonizeTh"></gl-form-input>
+                </div>
+                <!--<div class="header-div flex-2">ปี</div>-->
+              </div>
+              <div class="subdiv">
+                <template is="dom-repeat" items={{hamonizeList}} index-as="indexroot">
+                  <div hidden="{{item.hiddend}}">
                     <template is="dom-repeat" items={{item.sub}} as="subChild">
-                      <div class="sub-item" hidden="{{subChild.hiddend}}">
-                        <paper-checkbox id="{{indexroot}}" checked="{{subChild.check}}" on-tap="getSelect" disabled="[[commonState.btnDisabled]]">
-
-                        </paper-checkbox>
-                        <span class="namesub">
-                        [[subChild.hamonize_th2]]
-                      </span>
-                        <span class="year">
-                        [[subChild.hamonize_year]]
-                      </span>
+                      <div hidden="{{subChild.hiddend}}">
+                        <div class="horizontal layout item">
+                          <div class="row flex">
+                            <paper-checkbox style="padding-left:25px;" id="{{indexroot}}" checked="{{subChild.check}}" on-tap="getSelect" disabled="[[commonState.btnDisabled]]">
+                          </div>
+                          <div class="row flex-3">[[subChild.hamonize_code]]</div>
+                          <div class="row flex-3">[[subChild.hamonize_th2]]</div>
+                          <!--<div class="row flex-2">[[subChild.hamonize_year]]</div>-->
+                        </div>
                       </div>
                     </template>
-                  </div>
-                </iron-collapse>
+                </template>
+                </div>
               </div>
-              <br>
-            </template>
-          </div>-->
-          <!--<div id="table-wrapper">
-            <div id="table-scroll">
-              <table class="gl-table-default">
-                <thead class="table-head">
-                  <tr>
-                    <th style="width:30px"></th>
-                    <th style="width:30px"></th>
-                    <th>ชื่อกลุ่มข้าว</th>
-                    <th>ชื่อข้าว</th>
-                    <th>รหัส Hamonize</th>
-                    <th>ปี</th>
-                  </tr>
-                </thead>
-                <tbody class="table-body">
+              <div name="group">
+                <div class="horizontal layout header-item" warp>
+                  <div class=""></div>
+                  <div class="header-div flex"></div>
+                  <div class="header-div flex"></div>
+                  <div class="header-div flex-3">รหัส Hamonize
+                    <gl-form-input label="ค้นหา" type="search" value="{{dataSeleted.hamonize_code}}" on-value-changed="searchHamonizeCode"></gl-form-input>
+                  </div>
+                  <div class="header-div flex-3">ชื่อกลุ่มข้าว</div>
+                  <div class="header-div flex-3">ชื่อข้าว
+                    <gl-form-input style="padding-left:20px;" value="{{dataSeleted.hamonize_th2}}" label="ค้นหา" type="search" on-value-changed="searchHamonizeTh"></gl-form-input>
+                  </div>
+                  <div class="header-div flex-2">ปี</div>
+                </div>
+                <div class="subdiv">
                   <template is="dom-repeat" items={{hamonizeList}} index-as="indexroot">
-                    <tr hidden="{{item.hiddend}}" index="[[indexroot]]" on-tap="toggle">
-                      <td>
-                        <paper-checkbox checked="{{item.check}}" id="{{indexroot}}" on-tap="getCheckChild" disabled="[[commonState.btnDisabled]]">
-                      </td>
-                      <td>-</td>
-                      <td>[[item.name_th]]</td>
-                      <td>-</td>
-                      <td>-</td>
-                      <td>-</td>
-                    </tr>
-                        <template is="dom-repeat" items={{item.sub}} as="subChild">
-                          <iron-collapse id="collapse-[[indexroot]]" opened="true">
-                          <tr hidden="{{subChild.hiddend}}" style="width:100%">
-                            
-                            <td></td>
-                            <td>
+                    <div hidden="{{item.hiddend}}">
+                      <div class="horizontal layout item">
+                        <div class="">
+                          <paper-icon-button style="margin-top: -50px;" icon="chevron-right" index="[[indexroot]]" on-tap="toggle"></paper-icon-button>
+                        </div>
+                        <div class="row flex">
+                          <paper-checkbox checked="{{item.check}}" id="{{indexroot}}" on-tap="getCheckChild" disabled="[[commonState.btnDisabled]]">
+                        </div>
+                        <div class="row flex"></div>
+                        <div class="row flex-3"></div>
+                        <div class="row flex-3">[[item.name_th]]</div>
+                        <div class="row flex-3">-</div>
+                        <div class="row flex-2">-</div>
+                      </div>
+                    </div>
+                    <iron-collapse id="collapse-[[indexroot]]">
+                      <template is="dom-repeat" items={{item.sub}} as="subChild">
+                        <div hidden="{{subChild.hiddend}}">
+                          <div class="horizontal layout sub-item">
+                            <div class=""></div>
+                            <div class="row flex">
                               <paper-checkbox id="{{indexroot}}" checked="{{subChild.check}}" on-tap="getSelect" disabled="[[commonState.btnDisabled]]">
-                            </td>
-                            <td></td>
-                            <td>[[subChild.hamonize_th2]]</td>
-                            <td>[[subChild.hamonize_code]]</td>
-                            <td>[[subChild.hamonize_year]]</td>
-                            
-                          </tr>
-                          </iron-collapse>
-                        </template>
+                            </div>
+                            <div class="row flex"></div>
+                            <div class="row flex-3">[[subChild.hamonize_code]]</div>
+                            <div class="row flex-3">[[item.name_th]]</div>
+                            <div class="row flex-3">[[subChild.hamonize_th2]]</div>
+                            <div class="row flex-2">[[subChild.hamonize_year]]</div>
+                          </div>
+                        </div>
+                      </template>
+                    </iron-collapse>
                   </template>
-                </tbody>
-              </table>
-            </div>
-          </div>-->
+                </div>
+              </div>
+          </iron-pages>
+
         </gl-grid-col>
       </gl-grid-row>
 
@@ -535,7 +463,7 @@
     Polymer({
       is: "contract-detail",
       behaviors: [
-        ReduxBehavior, FormatNumberBehavior, nylonBehavior, g2gLogicBehavior, ValidateFormBehavior
+        ReduxBehavior, FormatNumberBehavior, nylonBehavior, g2gLogicBehavior, ValidateFormBehavior, Polymer.IronValidatorBehavior
       ],
       properties: {
         localizeContract: {
@@ -556,6 +484,13 @@
           type: Object,
           value: {}
         },
+        dataSeleted: {
+          type: Object,
+          value: {
+            hamonize_code: '',
+            hamonize_th2: '',
+          }
+        },
         buyerList: {
           statePath: 'commonG2g.buyerList',
           // observer:'get'
@@ -571,6 +506,10 @@
         hamonizeYear: {
           statePath: 'commonG2g.hamonizeYear',
           // observer: 'get'
+        },
+        typeSelete: {
+          type: String,
+          value: 'list'
         },
         // dataForSelect: {
         //   type: Object,
@@ -710,6 +649,65 @@
 
         }
 
+      },
+      searchHamonizeCode: function (e) {
+        try {
+          let newHamonize = []
+          let seletedCode = this.dataSeleted.hamonize_code
+
+          let year = this.$$('#hamonizeYear').value
+          // console.log(seletedCode);
+          for (var index = 0; index < this.hamonizeList.length; index++) {
+            for (var index2 = 0; index2 < this.hamonizeList[index].sub.length; index2++) {
+              // console.log((seletedCode).toString().search((this.hamonizeList[index].sub[index2].hamonize_code).toString()))
+              // console.log(String(this.hamonizeList[index].sub[index2].hamonize_code));
+              // if (String(seletedCode).search(String(this.hamonizeList[index].sub[index2].hamonize_code)) > -1) {
+              if (String(this.hamonizeList[index].sub[index2].hamonize_code).search(String(seletedCode)) > -1
+                && String(this.hamonizeList[index].sub[index2].hamonize_year) === year) {
+                this.set('hamonizeList.' + index + '.sub.' + index2 + '.hiddend', false)
+              } else {
+                this.set('hamonizeList.' + index + '.sub.' + index2 + '.hiddend', true)
+              }
+            }
+            let checkkFalse = this.hamonizeList[index].sub.find((item) => item.hiddend === false)
+            if (checkkFalse === undefined) {
+              this.set('hamonizeList.' + index + '.hiddend', true)
+            } else {
+              this.set('hamonizeList.' + index + '.hiddend', false)
+            }
+          }
+          // this.$$('#hamonizeYear').value = ''
+        } catch (e) {
+
+        }
+      },
+      searchHamonizeTh: function (e) {
+        try {
+          let newHamonize = []
+          let seletedCode = this.dataSeleted.hamonize_th2
+          let year = this.$$('#hamonizeYear').value
+          // console.log(seletedCode);
+          for (var index = 0; index < this.hamonizeList.length; index++) {
+            for (var index2 = 0; index2 < this.hamonizeList[index].sub.length; index2++) {
+              // if (String(seletedCode).search(String(this.hamonizeList[index].sub[index2].hamonize_code)) > -1) {
+              if (String(this.hamonizeList[index].sub[index2].hamonize_th2).search(String(seletedCode)) > -1
+                && String(this.hamonizeList[index].sub[index2].hamonize_year) === year) {
+                this.set('hamonizeList.' + index + '.sub.' + index2 + '.hiddend', false)
+              } else {
+                this.set('hamonizeList.' + index + '.sub.' + index2 + '.hiddend', true)
+              }
+            }
+            let checkkFalse = this.hamonizeList[index].sub.find((item) => item.hiddend === false)
+            if (checkkFalse === undefined) {
+              this.set('hamonizeList.' + index + '.hiddend', true)
+            } else {
+              this.set('hamonizeList.' + index + '.hiddend', false)
+            }
+          }
+          // this.$$('#hamonizeYear').value = ''
+        } catch (e) {
+
+        }
       },
       toggle: function (e) {
         let index = e.currentTarget.index
