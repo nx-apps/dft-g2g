@@ -89,16 +89,19 @@ exports.approve = function (req, res) {
         var valid = req.ajv.validate('g2g.payment', req.body);
         if (valid) {
             r.expr(req.body)
-                .merge(function (m) {
-                    return r.branch(m.hasFields('pay_date'),
-                        { pay_date: r.ISO8601(m('pay_date')).inTimezone('+07') },
-                        { cheque_status: false, deliver_date: r.literal() }
-                    )
-                })
+                // .merge(function (m) {
+                //     return r.branch(m.hasFields('pay_date'),
+                //         { pay_date: r.ISO8601(m('pay_date')).inTimezone('+07') },
+                //         { cheque_status: false, deliver_date: r.literal() }
+                //     )
+                // })
                 .do(function (d) {
                     return r.table('payment').filter(function (f) {
                         return f('deliver_date').eq(r.ISO8601(d('deliver_date')))
-                    }).update(d)
+                    }).update(r.branch(d.hasFields('pay_date'),
+                        { pay_date: r.ISO8601(d('pay_date')).inTimezone('+07') },
+                        { cheque_status: false, deliver_date: r.literal() }
+                    ))
                 })
                 .run().then(function (data) {
                     res.json(data)
