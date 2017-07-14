@@ -42,10 +42,7 @@ exports.getByFeeId = function (req, res) {
         })
 }
 exports.getChequeNo = function (req, res) {
-    var cheque = r.table('payment').filter(function (f) {
-        return f('pay_date').year().eq(r.now().year())
-    }).coerceTo('array');
-
+    var cheque = r.table('payment').getAll(r.now().year(), { index: 'yearDeliverDate' }).coerceTo('array');
     r.expr({
         pay_no: r.branch(cheque.count().eq(0), 1, cheque.max('pay_no')('pay_no').add(1))
     })
@@ -72,14 +69,20 @@ exports.update = function (req, res) {
                 return f.hasFields('id')
             })
             .do(function (d) {
+                var no = [];
                 return r.branch(d.eq([]), "Data doesn't have 'id' field / No data.", d.forEach(function (fe) {
-                    var payno = r.table('payment').getAll(fe('pay_no'), fe('invoice_company_date').year(), { index: 'checkPayNo' }).count();
+                    var payno = r.table('payment').getAll([fe('pay_no'), fe('deliver_date').year()], { index: 'checkPayNo' }).count();
                     return r.branch(payno.eq(0),
                         r.table('payment').get(fe('id')).update(fe),
-                        { pay_no: fe('pay_no'), msg: 'pay_no is already exist.' }
-                    )
+                        r.expr(no).append(fe('pay_no')).do(function (d) {
+                            return { pay_no: d.distinct(), msg: 'pay_no is already exist.' }
+                        })
 
+                    )
                 }))
+                    .merge(function (m) {
+                        return r.branch(m.hasFields('pay_no'), { pay_no: m('pay_no').distinct() }, {})
+                    })
             })
             .run()
             .then(function (data) {
@@ -94,13 +97,15 @@ exports.approve = function (req, res) {
     if (valid) {
         r.expr(req.body)
             .forEach(function (fe) {
-                var updata = r.branch(fe.hasFields('pay_date'),
-                    { pay_date: r.ISO8601(fe('pay_date')).inTimezone('+07') },
-                    { cheque_status: false }
-                );
-                return r.table('payment')
+                var tb = r.table('payment')
                     .getAll(r.ISO8601(fe('deliver_date')), { index: 'deliver_date' })
-                    .update(updata)
+                    .filter({ pay_status: false })
+                //var updata = 
+                return r.branch(fe.hasFields('pay_date'),
+                    tb.update({ pay_date: r.ISO8601(fe('pay_date')).inTimezone('+07') }),
+                    tb.update({ cheque_status: false, pay_no: r.literal(), deliver_date: r.literal() })
+                )
+
             })
             .run().then(function (data) {
                 res.json(data)
