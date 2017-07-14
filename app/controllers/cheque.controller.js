@@ -1,6 +1,6 @@
 var common = require('../global/common');
 exports.getByContractId = function (req, res) {
-    r.table('payment').getAll([req.query.id, false], { index: 'contractCheque' })
+    var tb = r.table('payment').getAll([req.query.id, false, false], { index: 'contractChequePay' })
         .group(function (g) {
             return g.pluck('contract_id', 'cl_no', 'fee_no')
         })
@@ -11,8 +11,22 @@ exports.getByContractId = function (req, res) {
                 cheque_count: m('reduction').count(),
                 fee_date: m('reduction')(0)('fee_date').inTimezone('+07')
             })
-        })
-        .run()
+        });
+    if (req.query.status == "true") {
+        tb = r.table('payment').getAll([req.query.id, true, false], { index: 'contractChequePay' })
+            .filter(function (f) {
+                return f.hasFields('pay_date').eq(false)
+            })
+            .group('deliver_date').ungroup()
+            .map(function (m) {
+                var pay = m('reduction').orderBy('pay_no').getField('pay_no');
+                return {
+                    deliver_date: m('group'),
+                    pay_no: r.branch(pay.count().eq(1), pay(0).coerceTo('string'), pay(0).coerceTo('string').add(' - ', pay.nth(-1).coerceTo('string')))
+                }
+            })
+    }
+    tb.run()
         .then(function (data) {
             res.json(data);
         })
@@ -49,10 +63,9 @@ exports.update = function (req, res) {
                     date_updated: r.now().inTimezone('+07'),
                     updater: 'admin'
                 };
-                // return r.branch(m.hasFields('invoice_company_date'),
                 return r.expr(updata).merge(
                     r.branch(m.hasFields('invoice_company_date'), { invoice_company_date: r.ISO8601(m('invoice_company_date')).inTimezone('+07') }, {}),
-                    r.branch(m.hasFields('deliver_date'), { deliver_date: r.ISO8601(m('deliver_date')).inTimezone('+07') }, {})
+                    r.branch(m.hasFields('deliver_date'), { deliver_date: r.ISO8601(m('deliver_date')).inTimezone('+07'), cheque_status: true }, {})
                 )
             })
             .filter(function (f) {
@@ -69,5 +82,27 @@ exports.update = function (req, res) {
             })
     } else {
         res.json(req.ajv.errorsText());
+    }
+}
+exports.approve = function (req, res) {
+    if (req.body.hasOwnProperty('deliver_date')) {
+        var valid = req.ajv.validate('g2g.payment', req.body);
+        if (valid) {
+            r.expr(req.body)
+                .merge(function (m) {
+                    return r.branch(m.hasFields('pay_date'),
+                        { pay_date: r.ISO8601(m('pay_date')).inTimezone('+07') },
+                        { cheque_status: false, deliver_date: r.literal() }
+                    )
+                })
+                .do(function (d) {
+                    return r.table('payment').filter(function (f) {
+                        return f('deliver_date').eq(r.ISO8601(d('deliver_date')))
+                    }).update(d)
+                })
+                .run().then(function (data) {
+                    res.json(data)
+                })
+        }
     }
 }

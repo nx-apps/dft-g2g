@@ -4,4 +4,5 @@ module.exports = function (app) {
     app.route('/fee').get(controller.getByFeeId).post(controller.getByFeeId);
     app.get('/no', controller.getChequeNo);
     app.put('/update', controller.update);
+    app.put('/approve',controller.approve);
 }
