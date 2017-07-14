@@ -143,7 +143,7 @@
       <label for="tab1">
          <div class="container" tabindex="0">
                 <span>1. {{localize.send_director}}</span>
-                <paper-badge label="{{chequeFasle.length}}" style="left: 144.813px; top: 28px;"></paper-badge>
+                <paper-badge label="{{chequeFasleCount}}" style="left: 144.813px; top: 28px;"></paper-badge>
          </div>
       </label>
 
@@ -181,11 +181,11 @@
               <template is="dom-repeat" items="{{chequeFasle}}">
                 <tr level="primary" style="{{checkStatus(item.status)}}">
                   <td data="[[item]]">
-                    <paper-checkbox data="{{item}}" disabled=[[item.status]] checked="{{item.check}}"></paper-checkbox>
+                    <paper-checkbox data="{{item}}" checked="{{item.check}}"></paper-checkbox>
                   </td>
                   <td data="[[item]]">[[item.cl_no]]</td>
                   <td data="[[item]]">[[item.fee_no]]</td>
-                  <td data="[[item]]">[[item.cheque_count]]</td>
+                  <td data="[[item]]">[[item.cheque_count]]/[[item.cheque_all]]</td>
                 </tr>
               </template>
               <template is="dom-if" if="[[_isHave(chequeFasle)]]">
@@ -227,7 +227,7 @@
               <template is="dom-repeat" items="{{chequeTrue}}">
                 <tr level="primary" style="{{checkStatus(item.status)}}">
                   <td data="[[item]]">
-                    <paper-checkbox data="{{item}}" disabled=[[item.status]] checked="{{item.check}}"></paper-checkbox>
+                    <paper-checkbox data="{{item}}" checked="{{item.check}}"></paper-checkbox>
                   </td>
                   <td data="[[item]]">[[item.pay_no]]</td>
                   <td data="[[item]]">[[item.deliver_date]]</td>
@@ -256,7 +256,7 @@
       <h2>{{localize.pay_date}}</h2>
       <gl-form-input type="date" placeholder="{{localize.pay_date}}" class="required" required no-label-float value="{{pay_date}}"></gl-form-input>
       <div class="buttons">
-        <paper-button dialog-dismiss class="gl-btn-default">{{localize.cancel}}</paper-button>
+        <paper-button dialog-dismiss raised class="gl-btn-default">{{localize.cancel}}</paper-button>
         <paper-button autofocus class="gl-btn-success" raised on-tap="approveCheck">{{localize.submit}}</paper-button>
       </div>
     </paper-dialog>
@@ -275,11 +275,19 @@
           value: true
         },
         pay_date: {
-          type: String
+          type: String,
+          value: function () {
+            return new Date().toISOString().split('T')[0]
+          }
         },
         chequeFasle: {
           statePath: 'cheque.cheque_list_fasle',
-          value: []
+          value: [],
+          observer: 'countChequeFasle'
+        },
+        chequeFasleCount: {
+          type: Number,
+          value: 0
         },
         chequeTrue: {
           statePath: 'cheque.cheque_list_true',
@@ -293,6 +301,13 @@
       observers: [
         'initDatabl(data)',
       ],
+      countChequeFasle: function (data) {
+        let count = data.reduce((pre, cur) => {
+          return pre + cur.cheque_count
+        }, 0)
+        this.set('chequeFasleCount',count)
+        // console.log(count);
+      },
       _selectDataAll: function (val) {
         try {
           this.chequeFasle.map((item, index) => {
@@ -340,6 +355,7 @@
       //   window.open(window._config.reportServer+'/api/payment/report10/' + e.currentTarget.data.fee_id, '1');
       // },
       getChequeReject: function () {
+        // console.log(1111);
         let getData = this.chequeTrue.filter((item) => item.check === true)
         let newArr = []
         getData.map((item) => {
@@ -406,6 +422,7 @@
                     callback: () => {
                     }
                   })
+                  this.$.payDate.close()
                   let chequeTrue = { id: this.contractId.contract_id, status: true }
                   let chequeFasle = { id: this.contractId.contract_id, status: false }
                   this.dispatchAction('GET_CHEQUE_LIST', this.genUrl(chequeTrue))

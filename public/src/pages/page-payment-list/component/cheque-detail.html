@@ -87,8 +87,8 @@
                     no-label-float value="{{item.invoice_company_date}}" data="[[item]]"></gl-form-input>
                 </td>
                 <td>[[changeString2Num(item.*,'pay_no')]]
-                  <gl-form-input placeholder="{{localize.cheque_no}}" class="required" required="{{item.check}}" disabled="{{item.cheque_status}}"
-                    no-label-float value="{{item.pay_no}}" data="[[item]]"></gl-form-input>
+                  <gl-form-input type="number" placeholder="{{localize.cheque_no}}" class="required" required="{{item.check}}" disabled="{{item.cheque_status}}"
+                    no-label-float value="{{item.pay_no}}" data="[[item]]" on-blur="checkDuplicatePayNo"></gl-form-input>
                 </td>
               </tr>
             </template>
@@ -96,7 +96,7 @@
         </table>
       </div>
       <div class="btnMoney horizontal end-justified layout">
-        <paper-button class="gl-btn-success" raised on-tap="setDeliverDate" disabled="[[checkTrue(data.*)]]">{{localize.check_up}}</paper-button>
+        <paper-button class="gl-btn-success" raised on-tap="setDeliverDate" disabled="[[checkTrue(data.*,notDupPayno)]]">{{localize.check_up}}</paper-button>
         <!--<paper-button class="gl-btn-success" raised on-tap="getChequeDetail" disabled="[[checkTrue(data.*)]]">ขึ้นเช็ค</paper-button>-->
       </div>
       <!--</template>-->
@@ -105,8 +105,8 @@
       <h2>{{localize.delivery_date}}</h2>
       <gl-form-input type="date" placeholder="{{localize.delivery_date}}" class="required" required no-label-float value="{{deliver_date}}"></gl-form-input>
       <div class="buttons">
-        <paper-button dialog-dismiss class="gl-btn-default">{{localize.cancel}}</paper-button>
-        <paper-button dialog-confirm autofocus class="gl-btn-success" raised on-tap="getChequeDetail" disabled="[[checkTrue(data.*)]]">{{localize.submit}}</paper-button>
+        <paper-button dialog-dismiss raised class="gl-btn-default">{{localize.cancel}}</paper-button>
+        <paper-button dialog-confirm autofocus class="gl-btn-success" raised on-tap="getChequeDetail">{{localize.submit}}</paper-button>
       </div>
     </paper-dialog>
   </template>
@@ -123,6 +123,11 @@
         },
         data: {
           statePath: 'cheque.cheque_detail_list',
+          observer:'setDataCheque'
+        },
+        dataCheck: {
+          type:Array,
+          value:[]
         },
         dataUrl: {
           statePath: 'cheque.dataUrl',
@@ -136,7 +141,14 @@
           value: function () {
             return new Date().toISOString().split('T')[0]
           }
+        },
+        notDupPayno:{
+          type:Boolean,
+          value:true
         }
+      },
+      setDataCheque(data){
+          this.set('dataCheck',JSON.parse(JSON.stringify(data)))
       },
       _selectDataAll: function (val) {
         try {
@@ -202,6 +214,21 @@
 
         }
       },
+      checkDuplicatePayNo(e) {
+        let value = Number(e.currentTarget.value)
+        // console.log(this.dataCheck.find((item) => item.pay_no === value) );
+        if (this.dataCheck.find((item) => item.pay_no === value) !== undefined) {
+          this.set('notDupPayno',false)
+          this.fire('toast', {
+            status: 'connectError', text: `เลขที่เช็ค ${value} มีอยู่แล้ว`, //คำสั่งสำหรับเปิด toast error
+            callback: () => {
+            }
+          })
+        }else {
+          this.set('notDupPayno',true)
+        }
+        // console.log(e.currentTarget.errorMessage = 'เลขซ้ำ');
+      },
       setNoCheque: function (para) {
         // console.log(para.model.__data__)
         //เพิ่ม index ลงไปเพื่อไว้ ใส่ค่ากลับได้ถูกตำแหน่ง
@@ -241,7 +268,7 @@
       },
       _resiveDataContract() {
         return new Promise((res, rej) => {
-          let dataResive = this.data.filter((item) => item.check === true)
+          let dataResive = JSON.parse(JSON.stringify(this.data.filter((item) => item.check === true)))
           // console.log(this.deliver_date);
           dataResive.map((date) => {
             // date.cheque_status = true
@@ -295,8 +322,12 @@
                   this.dispatchAction('GET_CHEQUE_DETAIL_LIST', { id: this.dataUrl })
                 } else {
                   // console.log(1111);
+                  let text = response.data.pay_no.map((item) => {
+                    return " " + item + ","
+                  })
+                  console.log(text);
                   this.fire('toast', {
-                    status: 'connectError', text: response.data, //คำสั่งสำหรับเปิด toast error
+                    status: 'connectError', text: `เลขที่เช็ค ${text} มีอยู่แล้ว`, //คำสั่งสำหรับเปิด toast error
                     callback: () => {
                     }
                   })
@@ -320,8 +351,8 @@
         }
 
       },
-      checkTrue(data) {
-        if (this.data.find((item) => item.check === true) !== undefined)
+      checkTrue(data,notDupPayno) {
+        if (this.data.find((item) => item.check === true) !== undefined && notDupPayno === true)
           return false
         return true
         // console.log(data);

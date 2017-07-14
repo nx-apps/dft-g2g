@@ -407,8 +407,11 @@
             sumFee(unallocated_fees, allocate_fees) {
                 this.set('fee_list_no', unallocated_fees.length + allocate_fees.length)
             },
-            sumCheque(chequeFasle,chequeTrue) {
-                this.set('cheque_list_no', chequeFasle.length + chequeTrue.length)
+            sumCheque(chequeFasle, chequeTrue) {
+                let count = chequeFasle.reduce((pre, cur) => {
+                    return pre + cur.cheque_count
+                }, 0)
+                this.set('cheque_list_no', count + chequeTrue.length)
             },
             _getBlDetail: function (e) {
                 this.dispatchAction('SET_BREADCRUMBS', [{
