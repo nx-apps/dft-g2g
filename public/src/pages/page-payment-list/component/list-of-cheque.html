@@ -245,10 +245,10 @@
       <paper-button class="gl-btn-success" raised on-tap="getChequeDetail">กด (ยัง)</paper-button>
     </div>-->
         <div class="btnFab" hidden="{{fabHiddenTrue}}">
-          <paper-fab id="fabCancel" icon="clear" title="{{localize.send_cheque}}" id="addContract" on-tap="getChequeReject"></paper-fab>
-          <paper-tooltip for="addContract" offset="0">{{localize.send_cheque}}</paper-tooltip>
-          <paper-fab id="fabPay" icon="fa:pencil" title="{{localize.send_cheque}}" id="addContract" on-tap="getChequeApprove"></paper-fab>
-          <paper-tooltip for="addContract" offset="0">{{localize.send_cheque}}</paper-tooltip>
+          <paper-fab id="fabCancel" icon="clear" title="{{localize.cancel}}" on-tap="getChequeReject"></paper-fab>
+          <paper-tooltip for="fabCancel" offset="0">{{localize.cancel}}</paper-tooltip>
+          <paper-fab id="fabPay" icon="fa:pencil" title="{{localize.submit}}" on-tap="getChequeApprove"></paper-fab>
+          <paper-tooltip for="fabPay" offset="0">{{localize.submit}}</paper-tooltip>
         </div>
       </section>
     </main>
@@ -351,18 +351,25 @@
           confirmed: (result) => {
             if (result == true) {
               this.dispatchAction('PUT_REJECT_CHEQUE_LIST', newArr)
-                .then((res) => {
-                  // console.log(res);
-                  this.fire('toast', {
-                    status: 'success', text: 'ยกเลิกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
-                    callback: () => {
-                    }
-                  })
-                  let chequeTrue = { id: this.contractId.contract_id, status: true }
-                  let chequeFasle = { id: this.contractId.contract_id, status: false }
-                  this.dispatchAction('GET_CHEQUE_LIST', this.genUrl(chequeTrue))
-                  this.dispatchAction('GET_CHEQUE_LIST', this.genUrl(chequeFasle))
-                  // this.$.payDate.close()
+                .then((response) => {
+                  if (response.data.replaced !== undefined && response.data.replaced.length !== 0) {
+                    this.fire('toast', {
+                      status: 'success', text: 'ยกเลิกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
+                      callback: () => {
+                      }
+                    })
+                    let chequeTrue = { id: this.contractId.contract_id, status: true }
+                    let chequeFasle = { id: this.contractId.contract_id, status: false }
+                    this.dispatchAction('GET_CHEQUE_LIST', this.genUrl(chequeTrue))
+                    this.dispatchAction('GET_CHEQUE_LIST', this.genUrl(chequeFasle))
+                  } else {
+                    // console.log(1111);
+                    this.fire('toast', {
+                      status: 'connectError', text: response.data, //คำสั่งสำหรับเปิด toast error
+                      callback: () => {
+                      }
+                    })
+                  }
                 })
                 .catch((error) => {
                   this.fire('toast', {
@@ -392,10 +399,10 @@
           text: 'ต้องการยืนยันเช็คใช่หรือไม่ ?',
           confirmed: (result) => {
             if (result == true) {
-              this.dispatchAction('PUT_APPROVE_CHEQUE_LIST', getData)
+              this.dispatchAction('PUT_APPROVE_CHEQUE_LIST', newArr)
                 .then((res) => {
                   this.fire('toast', {
-                    status: 'success', text: 'ยื่นยันแล้ว',  // คำสั่งสำหรับเปิด toast success
+                    status: 'success', text: 'ยืนยันแล้ว',  // คำสั่งสำหรับเปิด toast success
                     callback: () => {
                     }
                   })
