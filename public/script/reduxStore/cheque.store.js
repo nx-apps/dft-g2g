@@ -111,7 +111,7 @@ export function chequeAction(store) {
         // PUT
         PUT_CHEQUE_DETAIL_LIST: function (fee) {
             console.log(fee);
-            return axios.put('./cheque/approve',fee)
+            return axios.put('./cheque/update',fee)
         },
         PUT_REJECT_CHEQUE_LIST: function (fee) {
             console.log(fee);
@@ -119,7 +119,7 @@ export function chequeAction(store) {
         },
         PUT_APPROVE_CHEQUE_LIST: function (fee) {
             console.log(fee);
-            //
+            //return axios.put('./cheque/approve',fee)
         }
         // PUT
     }
