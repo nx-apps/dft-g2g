@@ -291,7 +291,7 @@
         Polymer({
             is: 'page-payment-list',
             behaviors: [ReduxBehavior, nylonBehavior, CookieBehavior, i18nAction, bookAction, invoiceAction,
-                commonStateAction, feeAction, chequeAction],
+                commonStateAction, feeAction, chequeAction ,g2gLogicBehavior],
             properties: {
                 localize: {
                     statePath: 'i18n.g2g'
@@ -375,7 +375,11 @@
                 this.dispatchAction('FEE_GET_LIST_DATA', { contract_id: this.getCookieBhv("contract_id"), view: 'fin', status: 'true' });
                 this.dispatchAction('FEE_GET_LIST_DATA', { contract_id: this.getCookieBhv("contract_id"), view: 'fin', status: 'false' });
 
-                this.dispatchAction('GET_CHEQUE_LIST', contract_id);
+                let chequeTrue = { id : contract_id , status : true}
+                let chequeFasle = { id : contract_id , status : false}
+                this.dispatchAction('GET_CHEQUE_LIST', this.genUrl(chequeTrue))
+                console.log(chequeFasle);
+                this.dispatchAction('GET_CHEQUE_LIST', this.genUrl(chequeFasle))
             },
             // ready: function () {
             //     this._getChequeList(contract_id);
@@ -498,6 +502,7 @@
                     href: ''
                 }])
                 this.titlePanelRight = 'เช็ค'
+                this.genUrl(url)
                 this.dispatchAction('GET_CHEQUE_DETAIL_LIST', { id: e.detail.detail })
                 this.dispatchAction('GET_CHEQUE_NO')
                 // this.fire('toast', { status: 'load' });

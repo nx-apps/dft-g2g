@@ -3,7 +3,8 @@ import { commonAction } from '../config'
 const initialState = {
     list: [],
     dataUrl : [],
-    cheque_list: [],
+    cheque_list_fasle: [],
+    cheque_list_true: [],
     cheque_detail_list: [],
     cheque_no:[]
 }
@@ -11,8 +12,10 @@ export function chequeReducer(state = initialState, action) {
     switch (action.type) {
         case 'SET_CHEQUE_DETAIL_LIST':
             return Object.assign({}, state, { dataUrl: action.payload });
-        case 'GET_CHEQUE_LIST':
-            return Object.assign({}, state, { cheque_list: action.payload });
+        case 'GET_CHEQUE_LIST_FALSE':
+            return Object.assign({}, state, { cheque_list_fasle: action.payload });
+        case 'GET_CHEQUE_LIST_TRUE':
+            return Object.assign({}, state, { cheque_list_true: action.payload });
         case 'GET_CHEQUE_DETAIL_LIST':
             return Object.assign({}, state, { cheque_detail_list: action.payload });
         case 'GET_CHEQUE_NO':
@@ -30,15 +33,26 @@ export function chequeAction(store) {
         },
         // END SET
         // GET
-        GET_CHEQUE_LIST: function (contract_id) {
-            axios.get('./cheque/contract?id='+contract_id)
+        GET_CHEQUE_LIST: function (contract_idStatus) {
+            axios.get('./cheque/contract?'+contract_idStatus)
                 .then(function (response) {
+                    // console.log(contract_idStatus)
                     // console.log(response.data);
                     response.data.map((item)=>{
                         item.check =  false,
                         item.status =  false
                     })
-                    store.dispatch({ type: 'GET_CHEQUE_LIST', payload: response.data })
+                    console.log(contract_idStatus.search(String('true')));
+                    if(contract_idStatus.search(String('true')) > -1){
+                        store.dispatch({ type: 'GET_CHEQUE_LIST_TRUE', payload: response.data })
+                        // เซ็ตค่าว่าง
+                        store.dispatch({ type: 'GET_CHEQUE_LIST_FALSE', payload: [] })
+                    }else {
+                        store.dispatch({ type: 'GET_CHEQUE_LIST_FALSE', payload: response.data })
+                        // เซ็ตค่าว่าง
+                        store.dispatch({ type: 'GET_CHEQUE_LIST_TRUE', payload: [] })
+                    }
+                    
                 })
                 .catch(function (error) {
                     console.log(error);

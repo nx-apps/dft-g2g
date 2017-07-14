@@ -118,81 +118,117 @@
     <main>
       <input id="tab1" type="radio" name="tabs" checked>
       <label for="tab1">
-                <div class="container" tabindex="0">
+         <div class="container" tabindex="0">
                 <span>1. {{localize.send_director}}</span>
-                <paper-badge label="1" style="left: 144.813px; top: 28px;"></paper-badge>
-                </div>
-            </label>
+                <paper-badge label="{{newData.length}}" style="left: 144.813px; top: 28px;"></paper-badge>
+         </div>
+      </label>
 
       <input id="tab2" type="radio" name="tabs">
       <label for="tab2">
-                <div class="container" tabindex="0">
+         <div class="container" tabindex="0">
                 <span>2. {{localize.wait_director}}</span>
-                <paper-badge label="2" style="left: 375.234px; top: 28px;"></paper-badge>
-                </div>
-            </label>
+                <paper-badge label="{{chequeTrue.length}}" style="left: 375.234px; top: 28px;"></paper-badge>
+          </div>
+        </label>
 
       <section id="content1">
-        <div class="list horizontal center-justified layout">1
-          <!--<list-of-bl-pm data="[[dataListPay.blShipment]]" data-for-select="[[dataForSelect]]"></list-of-bl-pm>-->
+        <div class="flex searchInput horizontal center-justified layout">
+          <div class="flex title">{{localize.name_of_contract}} : [[contractId.contract_name]]</div>
+          <div class="flex horizontal end-justified layout">
+            <div class="labelSearch">{{localize.fee_no}}.</div>{{_searchInArray(searchInput)}}
+            <paper-input label=" " no-label-float value="{{searchInput}}"></paper-input>
+            <paper-icon-button icon="search"></paper-icon-button>
+            </paper-input>
+          </div>
         </div>
-        </paper-material>
+        [[checkSelect(newData.*)]]
+        <div class="horizontal center-justified layout">
+          <table class="gl-table-default">
+            <thead class="table-head">
+              <tr>
+                <th>
+                  <paper-checkbox on-tap="_selectDataAll" checked="{{selectDataAll}}"></paper-checkbox>{{localize.select}}</th>
+                <th>{{localize.period_no}}</th>
+                <th>{{localize.order_no}}</th>
+                <th>{{localize.total_company}}</th>
+              </tr>
+            </thead>
+            <tbody class="table-body">
+              <template is="dom-repeat" items="{{newData}}">
+                <tr level="primary" style="{{checkStatus(item.status)}}">
+                  <td data="[[item]]">
+                    <paper-checkbox data="{{item}}" disabled=[[item.status]] checked="{{item.check}}"></paper-checkbox>
+                  </td>
+                  <td data="[[item]]">[[item.cl_no]]</td>
+                  <td data="[[item]]">[[item.fee_no]]</td>
+                  <td data="[[item]]">[[item.cheque_count]]</td>
+                </tr>
+              </template>
+              <template is="dom-if" if="[[_isHave(newData)]]">
+                <tr>
+                  <td colspan="4" style="text-align:center"> {{localize.no_data}}</td>
+                </tr>
+              </template>
+            </tbody>
+          </table>
+        </div>
+        <div class="btnFab" hidden="{{fabHidden}}">
+          <paper-fab icon="av:playlist-add-check" title="{{localize.send_cheque}}" id="addContract" on-tap="getChequeDetail"></paper-fab>
+          <paper-tooltip for="addContract" offset="0">{{localize.send_cheque}}</paper-tooltip>
+        </div>
       </section>
 
       <section id="content2">
-        <div class="list horizontal center-justified layout">
-          <!--<list-of-invoice></list-of-invoice>-->2
+        <div class="flex searchInput horizontal center-justified layout">
+          <div class="flex title">{{localize.name_of_contract}} : [[contractId.contract_name]]</div>
+          <div class="flex horizontal end-justified layout">
+            <div class="labelSearch">{{localize.fee_no}}.</div>{{_searchInArray(searchInput)}}
+            <paper-input label=" " no-label-float value="{{searchInput}}"></paper-input>
+            <paper-icon-button icon="search"></paper-icon-button>
+            </paper-input>
+          </div>
+        </div>
+        <!--[[checkSelect(chequeTrue.*)]]-->
+        <div class="horizontal center-justified layout">
+          <table class="gl-table-default">
+            <thead class="table-head">
+              <tr>
+                <th>
+                  <paper-checkbox on-tap="_selectDataAll" checked="{{selectDataAll}}"></paper-checkbox>{{localize.select}}</th>
+                <th>เลขที่เช็ค</th>
+                <th>วันที่นำส่ง</th>
+              </tr>
+            </thead>
+            <tbody class="table-body">
+              <template is="dom-repeat" items="{{chequeTrue}}">
+                <tr level="primary" style="{{checkStatus(item.status)}}">
+                  <td data="[[item]]">
+                    <paper-checkbox data="{{item}}" disabled=[[item.status]] checked="{{item.check}}"></paper-checkbox>
+                  </td>
+                  <td data="[[item]]">[[item.pay_no]]</td>
+                  <td data="[[item]]">[[item.deliver_date]]</td>
+                </tr>
+              </template>
+              <template is="dom-if" if="[[_isHave(chequeTrue)]]">
+                <tr>
+                  <td colspan="4" style="text-align:center"> {{localize.no_data}}</td>
+                </tr>
+              </template>
+            </tbody>
+          </table>
+        </div>
+        <!--<div class="btnMoney">
+      <paper-button class="gl-btn-success" raised on-tap="getChequeDetail">กด (ยัง)</paper-button>
+    </div>-->
+        <div class="btnFab" hidden="{{fabHidden}}">
+          <paper-fab icon="av:playlist-add-check" title="{{localize.send_cheque}}" id="addContract" on-tap="getChequeDetail"></paper-fab>
+          <paper-tooltip for="addContract" offset="0">{{localize.send_cheque}}</paper-tooltip>
         </div>
       </section>
     </main>
 
-    <div class="flex searchInput horizontal center-justified layout">
-      <div class="flex title">{{localize.name_of_contract}} : [[contractId.contract_name]]</div>
-      <div class="flex horizontal end-justified layout">
-        <div class="labelSearch">{{localize.fee_no}}.</div>{{_searchInArray(searchInput)}}
-        <paper-input label=" " no-label-float value="{{searchInput}}"></paper-input>
-        <paper-icon-button icon="search"></paper-icon-button>
-        </paper-input>
-      </div>
-    </div>
-    [[checkSelect(newData.*)]]
-    <div class="horizontal center-justified layout">
-      <table class="gl-table-default">
-        <thead class="table-head">
-          <tr>
-            <th>
-              <paper-checkbox on-tap="_selectDataAll" checked="{{selectDataAll}}"></paper-checkbox>{{localize.select}}</th>
-            <th>{{localize.period_no}}</th>
-            <th>{{localize.order_no}}</th>
-            <th>{{localize.total_company}}</th>
-          </tr>
-        </thead>
-        <tbody class="table-body">
-          <template is="dom-repeat" items="{{newData}}">
-            <tr level="primary" style="{{checkStatus(item.status)}}">
-              <td data="[[item]]">
-                <paper-checkbox data="{{item}}" disabled=[[item.status]] checked="{{item.check}}"></paper-checkbox>
-              </td>
-              <td data="[[item]]">[[item.cl_no]]</td>
-              <td data="[[item]]">[[item.fee_no]]</td>
-              <td data="[[item]]">[[item.cheque_count]]</td>
-            </tr>
-          </template>
-          <template is="dom-if" if="[[_isHave(newData)]]">
-            <tr>
-              <td colspan="4" style="text-align:center"> {{localize.no_data}}</td>
-            </tr>
-          </template>
-        </tbody>
-      </table>
-    </div>
-    <!--<div class="btnMoney">
-      <paper-button class="gl-btn-success" raised on-tap="getChequeDetail">กด (ยัง)</paper-button>
-    </div>-->
-    <div class="btnFab" hidden="{{fabHidden}}">
-      <paper-fab icon="av:playlist-add-check" title="{{localize.send_cheque}}" id="addContract" on-tap="getChequeDetail"></paper-fab>
-      <paper-tooltip for="addContract" offset="0">{{localize.send_cheque}}</paper-tooltip>
-    </div>
+
   </template>
   <script>
     Polymer({
@@ -210,7 +246,10 @@
         //   type: Object
         // }
         newData: {
-          statePath: 'cheque.cheque_list',
+          statePath: 'cheque.cheque_list_false',
+        },
+        chequeTrue: {
+          statePath: 'cheque.cheque_list_true',
         },
         contractId: {
           statePath: 'commonState.contractId',
