@@ -1,6 +1,7 @@
 var common = require('../global/common');
 exports.getByContractId = function (req, res) {
-    var tb = r.table('payment').getAll([req.query.id, false, false], { index: 'contractChequePay' })
+    // var tb = r.table('payment').getAll([req.query.id, false, false], { index: 'contractChequePay' })
+    var tb = r.table('payment').getAll(req.query.id, { index: 'contract_id' })
         .group(function (g) {
             return g.pluck('contract_id', 'cl_no', 'fee_no')
         })
@@ -8,10 +9,10 @@ exports.getByContractId = function (req, res) {
         .map(function (m) {
             return m('group').merge({
                 fee_id: m('reduction').getField('fee_id').distinct(),
-                cheque_count: m('reduction').count(),
+                cheque_count: m('reduction').filter({ cheque_status: false }).count(),
                 fee_date: m('reduction')(0)('fee_date').inTimezone('+07')
             })
-        });
+        }).orderBy('cl_no', 'fee_no');
     if (req.query.status == "true") {
         tb = r.table('payment').getAll([req.query.id, true, false], { index: 'contractChequePay' })
             .filter(function (f) {
@@ -24,7 +25,7 @@ exports.getByContractId = function (req, res) {
                     deliver_date: m('group'),
                     pay_no: r.branch(pay.count().eq(1), pay(0).coerceTo('string'), pay(0).coerceTo('string').add(' - ', pay.nth(-1).coerceTo('string')))
                 }
-            })
+            }).orderBy('deliver_date')
     }
     tb.run()
         .then(function (data) {
