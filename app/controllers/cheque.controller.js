@@ -100,7 +100,9 @@ exports.approve = function (req, res) {
             .forEach(function (fe) {
                 var tb = r.table('payment')
                     .getAll(r.ISO8601(fe('deliver_date')), { index: 'deliver_date' })
-                    .filter({ pay_status: false })
+                    .filter(function (f) {
+                        return f.hasFields('pay_date').eq(false)
+                    })
                 //var updata = 
                 return r.branch(fe.hasFields('pay_date'),
                     tb.update({ pay_date: r.ISO8601(fe('pay_date')).inTimezone('+07') }),
