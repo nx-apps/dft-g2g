@@ -43,7 +43,7 @@ exports.getByFeeId = function (req, res) {
 }
 exports.getChequeNo = function (req, res) {
     var cheque = r.table('payment').filter(function (f) {
-        return f('invoice_company_date').year().eq(r.now().year())
+        return f('pay_date').year().eq(r.now().year())
     }).coerceTo('array');
 
     r.expr({
@@ -73,7 +73,12 @@ exports.update = function (req, res) {
             })
             .do(function (d) {
                 return r.branch(d.eq([]), "Data doesn't have 'id' field / No data.", d.forEach(function (fe) {
-                    return r.table('payment').get(fe('id')).update(fe)
+                    var payno = r.table('payment').getAll(fe('pay_no'), fe('invoice_company_date').year(), { index: 'checkPayNo' }).count();
+                    return r.branch(payno.eq(0),
+                        r.table('payment').get(fe('id')).update(fe),
+                        { pay_no: fe('pay_no'), msg: 'pay_no is already exist.' }
+                    )
+
                 }))
             })
             .run()
@@ -85,31 +90,22 @@ exports.update = function (req, res) {
     }
 }
 exports.approve = function (req, res) {
-    if (req.body.hasOwnProperty('deliver_date')) {
-        var valid = req.ajv.validate('g2g.payment', req.body);
-        if (valid) {
-            r.expr(req.body)
-                // .merge(function (m) {
-                //     return r.branch(m.hasFields('pay_date'),
-                //         { pay_date: r.ISO8601(m('pay_date')).inTimezone('+07') },
-                //         { cheque_status: false, deliver_date: r.literal() }
-                //     )
-                // })
-                .do(function (d) {
-                    return r.table('payment').filter(function (f) {
-                        return f('deliver_date').eq(r.ISO8601(d('deliver_date')))
-                    }).update(r.branch(d.hasFields('pay_date'),
-                        { pay_date: r.ISO8601(d('pay_date')).inTimezone('+07') },
-                        { cheque_status: false, deliver_date: r.literal() }
-                    ))
-                })
-                .run().then(function (data) {
-                    res.json(data)
-                })
-        } else {
-            res.json(req.ajv.errorsText());
-        }
+    var valid = req.ajv.validate('g2g.payment_array', req.body);
+    if (valid) {
+        r.expr(req.body)
+            .forEach(function (fe) {
+                var updata = r.branch(fe.hasFields('pay_date'),
+                    { pay_date: r.ISO8601(fe('pay_date')).inTimezone('+07') },
+                    { cheque_status: false }
+                );
+                return r.table('payment')
+                    .getAll(r.ISO8601(fe('deliver_date')), { index: 'deliver_date' })
+                    .update(updata)
+            })
+            .run().then(function (data) {
+                res.json(data)
+            })
     } else {
-        res.json("Data doesn't have 'deliver_date' field");
+        res.json(req.ajv.errorsText());
     }
 }
