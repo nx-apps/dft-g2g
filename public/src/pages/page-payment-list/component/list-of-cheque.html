@@ -206,7 +206,7 @@
         <div class="flex searchInput horizontal center-justified layout">
           <div class="flex title">{{localize.name_of_contract}} : [[contractId.contract_name]]</div>
           <div class="flex horizontal end-justified layout">
-            <div class="labelSearch">{{localize.fee_no}}.</div>{{_searchInArray(searchInput)}}
+            <div class="labelSearch">เลขที่เช็ค.</div>{{_searchInChequeTrue(searchInput)}}
             <paper-input label=" " no-label-float value="{{searchInput}}"></paper-input>
             <paper-icon-button icon="search"></paper-icon-button>
             </paper-input>
@@ -299,7 +299,7 @@
         },
       },
       observers: [
-        'initDatabl(data)',
+        'initDatabl(chequeFasle)',
       ],
       countChequeFasle: function (data) {
         let count = data.reduce((pre, cur) => {
@@ -307,6 +307,38 @@
         }, 0)
         this.set('chequeFasleCount', count)
         // console.log(count);
+      },
+      // initDatabl: function (data) {
+      //   // console.log(data);
+      //   this.newData = this.g2gClone(data);
+      //   // console.log('clone new==>',this.newData);
+      //   // console.log('org==>',this.data);
+      // },
+      // _searchInArray: function (searchInput) {
+      //   // console.log(searchInput == '');
+      //   if (searchInput != '') {
+      //     let arr = [];
+      //     this.data.map((el) => {
+      //       if (String(el.fee_no).search(searchInput) > -1) {
+      //         arr.push(el);
+      //       }
+      //     });
+      //     this.newData = arr;
+      //   } else {
+      //     this.initDatabl(this.data);
+      //   }
+      // },
+      _searchInChequeTrue(search){
+        
+        for (var index = 0; index < this.chequeTrue.length; index++) {
+            if (String(this.chequeTrue[index].pay_no).search(String(search)) > -1 ) {
+                this.set('chequeTrue.'+index+'.hidden',false)
+            }else {
+                this.set('chequeTrue.'+index+'.hidden',true)
+            }
+          
+        }
+        console.log(search);
       },
       _selectDataAll: function (val) {
         try {
@@ -358,7 +390,6 @@
         let fee_id = data.fee_id
         if (data.status) {
           let arr = fee_id
-          // console.log(arr)
           this.dispatchAction('SET_CHEQUE_DETAIL_LIST', arr)
           this.fire('get-cheque-detail', { detail: arr });
         }

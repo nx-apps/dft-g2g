@@ -98,7 +98,7 @@ export function chequeAction(store) {
                         }
 
                     })
-                    console.log(response.data);
+                    // console.log(response.data);
                     store.dispatch({ type: 'GET_CHEQUE_DETAIL_LIST', payload: response.data })
                 })
                 .catch(function (error) {
