@@ -10,6 +10,7 @@ exports.getByContractId = function (req, res) {
             return m('group').merge({
                 fee_id: m('reduction').getField('fee_id').distinct(),
                 cheque_count: m('reduction').filter({ cheque_status: false }).count(),
+                cheque_all: m('reduction').count(),
                 fee_date: m('reduction')(0)('fee_date').inTimezone('+07')
             })
         }).orderBy('cl_no', 'fee_no');
