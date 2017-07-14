@@ -3,6 +3,11 @@
 <link rel="import" href="./../../../../bower_components/paper-tooltip/paper-tooltip.html">
 <link rel="import" href="./../../components/g2g-logic-behavior.html">
 <link rel="import" href="./../../../../bower_components/iron-icons/av-icons.html">
+<link rel="import" href="./../../components/icon-set-g2g.html">
+<link rel="import" href="./../../../../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="./../../../../bower_components/neon-animation/animations/scale-up-animation.html">
+<link rel="import" href="./../../../../bower_components/neon-animation/animations/fade-out-animation.html">
+<link rel="import" href="./../../../../bower_components/iron-icons/iron-icons.html">
 
 <link rel="import" href="./../../components/format-number-behavior.html">
 <link rel="import" href="./../../../../bower_components/paper-fab/paper-fab.html">
@@ -112,6 +117,22 @@
       --paper-badge-margin-left: 20px;
       --paper-badge-margin-bottom: 0px;
     }
+
+    paper-fab#fabCancel {
+      right: 90px;
+      /*--paper-fab-iron-icon: {
+        color: black
+      };*/
+      /*--paper-fab-background: #fff*/
+      --paper-fab-background: var(--gl-danger-color);
+      /*--paper-fab-background: #fff;*/
+    }
+
+    paper-fab#fabPay {
+      right: 20px;
+      --paper-fab-background: var(--gl-primary-color);
+      /*--paper-fab-background: #fff;*/
+    }
   </style>
   <template>
 
@@ -189,7 +210,7 @@
             </paper-input>
           </div>
         </div>
-        <!--[[checkSelect(chequeTrue.*)]]-->
+        [[checkSelectListTrue(chequeTrue.*)]]
         <div class="horizontal center-justified layout">
           <table class="gl-table-default">
             <thead class="table-head">
@@ -221,13 +242,22 @@
         <!--<div class="btnMoney">
       <paper-button class="gl-btn-success" raised on-tap="getChequeDetail">กด (ยัง)</paper-button>
     </div>-->
-        <!--<div class="btnFab" hidden="{{fabHidden}}">
-          <paper-fab icon="av:playlist-add-check" title="{{localize.send_cheque}}" id="addContract" on-tap="getChequeDetail"></paper-fab>
-          <paper-tooltip for="addContract" offset="0">{{localize.send_cheque}}</paper-tooltip>
-        </div>-->
+        <div class="btnFab" hidden="{{fabHiddenTrue}}">
+        <paper-fab id="fabCancel" icon="clear" title="{{localize.send_cheque}}" id="addContract" on-tap="getChequeReject"></paper-fab>
+        <paper-tooltip for="addContract" offset="0">{{localize.send_cheque}}</paper-tooltip>
+        <paper-fab id="fabPay" icon="fa:pencil" title="{{localize.send_cheque}}" id="addContract" on-tap="getChequeApprove"></paper-fab>
+        <paper-tooltip for="addContract" offset="0">{{localize.send_cheque}}</paper-tooltip>
+        </div>
       </section>
     </main>
-
+    <paper-dialog id="payDate" entry-animation="scale-up-animation" exit-animation="fade-out-animation" modal>
+      <h2>{{localize.pay_date}}</h2>
+      <gl-form-input type="date" placeholder="{{localize.pay_date}}" class="required" required no-label-float value="{{pay_date}}"></gl-form-input>
+      <div class="buttons">
+        <paper-button dialog-dismiss class="gl-btn-default">{{localize.cancel}}</paper-button>
+        <paper-button autofocus class="gl-btn-success" raised on-tap="approveCheck" >{{localize.submit}}</paper-button>
+      </div>
+    </paper-dialog>
 
   </template>
   <script>
@@ -242,16 +272,16 @@
           type: Boolean,
           value: true
         },
-        // chequeFasle: {
-        //   type: Object
-        // }
+        pay_date: {
+          type: String
+        },
         chequeFasle: {
           statePath: 'cheque.cheque_list_fasle',
-          value:[]
+          value: []
         },
         chequeTrue: {
           statePath: 'cheque.cheque_list_true',
-          value:[]
+          value: []
         },
         contractId: {
           statePath: 'commonState.contractId',
@@ -282,6 +312,12 @@
           return this.set('fabHidden', false)
         return this.set('fabHidden', true)
       },
+      checkSelectListTrue: function (data) {
+        let check = this.chequeTrue.find((item) => item.check === true)
+        if (check !== undefined)
+          return this.set('fabHiddenTrue', false)
+        return this.set('fabHiddenTrue', true)
+      },
       getChequeDetail: function (e) {
         // console.log(e.currentTarget.data);
         let getData = this.chequeFasle.filter((item) => item.check === true)
@@ -301,6 +337,46 @@
       //   // console.log(e.currentTarget.data);
       //   window.open(window._config.reportServer+'/api/payment/report10/' + e.currentTarget.data.fee_id, '1');
       // },
+      getChequeReject: function () {
+        let getData = this.chequeTrue.filter((item) => item.check === true)
+        let newArr = []
+        getData.map((item) => {
+          newArr.push({ deliver_date: item.deliver_date })
+        })
+        this.fire('toast', {
+          status: 'openDialog',
+          text: 'ต้องการยกเลิกใช่หรือไม่ ?',
+          confirmed: (result) => {
+            if (result == true) {
+              this.dispatchAction('PUT_REJECT_CHEQUE_LIST', newArr)
+            }
+          }
+        })
+      },
+      getChequeApprove: function () {
+        this.$.payDate.open()
+      },
+      approveCheck: function (e) {
+        let getData = this.chequeTrue.filter((item) => item.check === true)
+        let newObj = { 
+          pay_date: this.pay_date + 'T00:00:00+07:00',
+          newArr : []
+        }
+        getData.map((item) => {
+          newObj.newArr.push({ deliver_date: item.deliver_date })
+        })
+        this.fire('toast', {
+          status: 'openDialog',
+          text: 'ต้องการยืนยันเช็คใช่หรือไม่ ?',
+          confirmed: (result) => {
+            if (result == true) {
+              this.dispatchAction('PUT_APPROVE_CHEQUE_LIST', newObj)
+              this.$.payDate.close()
+            }
+          }
+        })
+      }
+
     });
   </script>
 </dom-module>

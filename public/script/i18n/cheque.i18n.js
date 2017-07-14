@@ -19,6 +19,7 @@ export const cheque = {
         delivery_date:"วันที่นำส่ง",
         total_company: "เหลือบริษัท",
         no_data:"ไม่มีข้อมูล",
-        select:"เลือก"
+        select:"เลือก",
+        pay_date:"วันที่เช็ค"
     }
 }   

@@ -1,5 +1,18 @@
 import axios from '../axios'
 import { commonAction } from '../config'
+const cutDataInObject = (data, namePop) => {
+    data = JSON.parse(JSON.stringify(data))
+    for (var key in data) {
+        for (var index = 0; index < namePop.length; index++) {
+            if (namePop[index] === key) {
+                let time = new Date(data[key])
+                data[key] = new Date(time.setHours(time.getHours() + 7)).toISOString()
+                data[key] = data[key].split("T")[0]
+            }
+        }
+    }
+    return data
+}
 const initialState = {
     list: [],
     dataUrl : [],
@@ -42,15 +55,19 @@ export function chequeAction(store) {
                         item.check =  false,
                         item.status =  false
                     })
-                    console.log(contract_idStatus.search(String('true')));
+                    // console.log(contract_idStatus.search(String('true')));
                     if(contract_idStatus.search(String('true')) > -1){
-                        console.log('รอเซ็น'+ response.data.length);
+                        // console.log('รอเซ็น'+ response.data.length);
+                       response.data =  response.data.map((item)=>{
+                            item = cutDataInObject(item, [ 'deliver_date'])
+                           return item
+                        })
                         store.dispatch({ type: 'GET_CHEQUE_LIST_TRUE', payload: response.data })
                         // เซ็ตค่าว่าง
                         // store.dispatch({ type: 'GET_CHEQUE_LIST_FALSE', payload: [{cl_no:1}] })
                     }else {
                         store.dispatch({ type: 'GET_CHEQUE_LIST_FALSE', payload: response.data })
-                        console.log('ยัง'+ response.data.length);
+                        // console.log('ยัง'+ response.data.length);
                         // เซ็ตค่าว่าง
                         // store.dispatch({ type: 'GET_CHEQUE_LIST_TRUE', payload: [{cl_no:1}] })
                     }
@@ -93,8 +110,17 @@ export function chequeAction(store) {
         // END GET
         // PUT
         PUT_CHEQUE_DETAIL_LIST: function (fee) {
-            return axios.put('./cheque/update',fee)
+            console.log(fee);
+            return axios.put('./cheque/approve',fee)
         },
+        PUT_REJECT_CHEQUE_LIST: function (fee) {
+            console.log(fee);
+            // return axios.put('./cheque/approve',fee)
+        },
+        PUT_APPROVE_CHEQUE_LIST: function (fee) {
+            console.log(fee);
+            //
+        }
         // PUT
     }
     ]
