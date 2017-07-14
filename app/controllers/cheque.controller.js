@@ -103,6 +103,10 @@ exports.approve = function (req, res) {
                 .run().then(function (data) {
                     res.json(data)
                 })
+        } else {
+            res.json(req.ajv.errorsText());
         }
+    } else {
+        res.json("Data doesn't have 'deliver_date' field");
     }
 }
