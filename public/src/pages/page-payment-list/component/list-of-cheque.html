@@ -179,9 +179,9 @@
             </thead>
             <tbody class="table-body">
               <template is="dom-repeat" items="{{chequeFasle}}">
-                <tr level="primary" style="{{checkStatus(item.status)}}">
+                <tr level="primary" style="{{checkStatus(item.status)}}" data="{{item}}" on-tap="getDetailCheque">
                   <td data="[[item]]">
-                    <paper-checkbox data="{{item}}" checked="{{item.check}}"></paper-checkbox>
+                    <paper-checkbox data="{{item}}" checked="{{item.check}}" disabled="{{item.status}}"></paper-checkbox>
                   </td>
                   <td data="[[item]]">[[item.cl_no]]</td>
                   <td data="[[item]]">[[item.fee_no]]</td>
@@ -305,7 +305,7 @@
         let count = data.reduce((pre, cur) => {
           return pre + cur.cheque_count
         }, 0)
-        this.set('chequeFasleCount',count)
+        this.set('chequeFasleCount', count)
         // console.log(count);
       },
       _selectDataAll: function (val) {
@@ -341,7 +341,6 @@
         let fee_id = []
         getData.map((item) => {
           fee_id.push(item.fee_id)
-          // console.log(item.fee_id);
         })//fee_id
 
         let arr = fee_id.reduce((pre, curr) => pre.concat(curr), [])
@@ -354,6 +353,17 @@
       //   // console.log(e.currentTarget.data);
       //   window.open(window._config.reportServer+'/api/payment/report10/' + e.currentTarget.data.fee_id, '1');
       // },
+      getDetailCheque(e) {
+        let data = e.currentTarget.data
+        let fee_id = data.fee_id
+        if (data.status) {
+          let arr = fee_id
+          // console.log(arr)
+          this.dispatchAction('SET_CHEQUE_DETAIL_LIST', arr)
+          this.fire('get-cheque-detail', { detail: arr });
+        }
+
+      },
       getChequeReject: function () {
         // console.log(1111);
         let getData = this.chequeTrue.filter((item) => item.check === true)
