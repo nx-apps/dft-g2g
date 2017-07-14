@@ -44,13 +44,13 @@ export function chequeAction(store) {
                     })
                     console.log(contract_idStatus.search(String('true')));
                     if(contract_idStatus.search(String('true')) > -1){
-                        console.log('รอเซ็น');
+                        console.log('รอเซ็น'+ response.data.length);
                         store.dispatch({ type: 'GET_CHEQUE_LIST_TRUE', payload: response.data })
                         // เซ็ตค่าว่าง
                         // store.dispatch({ type: 'GET_CHEQUE_LIST_FALSE', payload: [{cl_no:1}] })
                     }else {
                         store.dispatch({ type: 'GET_CHEQUE_LIST_FALSE', payload: response.data })
-                        console.log('ยัง');
+                        console.log('ยัง'+ response.data.length);
                         // เซ็ตค่าว่าง
                         // store.dispatch({ type: 'GET_CHEQUE_LIST_TRUE', payload: [{cl_no:1}] })
                     }

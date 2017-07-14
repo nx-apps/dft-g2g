@@ -120,7 +120,7 @@
       <label for="tab1">
          <div class="container" tabindex="0">
                 <span>1. {{localize.send_director}}</span>
-                <paper-badge label="{{newData.length}}" style="left: 144.813px; top: 28px;"></paper-badge>
+                <paper-badge label="{{chequeFasle.length}}" style="left: 144.813px; top: 28px;"></paper-badge>
          </div>
       </label>
 
@@ -142,7 +142,7 @@
             </paper-input>
           </div>
         </div>
-        <!--[[checkSelect(newData.*)]]-->
+        [[checkSelect(chequeFasle.*)]]
         <div class="horizontal center-justified layout">
           <table class="gl-table-default">
             <thead class="table-head">
@@ -155,7 +155,7 @@
               </tr>
             </thead>
             <tbody class="table-body">
-              <template is="dom-repeat" items="{{newData}}">
+              <template is="dom-repeat" items="{{chequeFasle}}">
                 <tr level="primary" style="{{checkStatus(item.status)}}">
                   <td data="[[item]]">
                     <paper-checkbox data="{{item}}" disabled=[[item.status]] checked="{{item.check}}"></paper-checkbox>
@@ -165,7 +165,7 @@
                   <td data="[[item]]">[[item.cheque_count]]</td>
                 </tr>
               </template>
-              <template is="dom-if" if="[[_isHave(newData)]]">
+              <template is="dom-if" if="[[_isHave(chequeFasle)]]">
                 <tr>
                   <td colspan="4" style="text-align:center"> {{localize.no_data}}</td>
                 </tr>
@@ -221,10 +221,10 @@
         <!--<div class="btnMoney">
       <paper-button class="gl-btn-success" raised on-tap="getChequeDetail">กด (ยัง)</paper-button>
     </div>-->
-        <div class="btnFab" hidden="{{fabHidden}}">
+        <!--<div class="btnFab" hidden="{{fabHidden}}">
           <paper-fab icon="av:playlist-add-check" title="{{localize.send_cheque}}" id="addContract" on-tap="getChequeDetail"></paper-fab>
           <paper-tooltip for="addContract" offset="0">{{localize.send_cheque}}</paper-tooltip>
-        </div>
+        </div>-->
       </section>
     </main>
 
@@ -242,11 +242,11 @@
           type: Boolean,
           value: true
         },
-        // newData: {
+        // chequeFasle: {
         //   type: Object
         // }
-        newData: {
-          statePath: 'cheque.cheque_list_false',
+        chequeFasle: {
+          statePath: 'cheque.cheque_list_fasle',
           value:[]
         },
         chequeTrue: {
@@ -263,9 +263,9 @@
       ],
       _selectDataAll: function (val) {
         try {
-          this.newData.map((item, index) => {
+          this.chequeFasle.map((item, index) => {
             if (item.status === false)
-              this.set('newData.' + index + '.check', this.selectDataAll);
+              this.set('chequeFasle.' + index + '.check', this.selectDataAll);
           });
         } catch (error) {
 
@@ -277,14 +277,14 @@
         // console.log(status)
       },
       checkSelect: function (data) {
-        let check = this.newData.find((item) => item.check === true)
+        let check = this.chequeFasle.find((item) => item.check === true)
         if (check !== undefined)
           return this.set('fabHidden', false)
         return this.set('fabHidden', true)
       },
       getChequeDetail: function (e) {
         // console.log(e.currentTarget.data);
-        let getData = this.newData.filter((item) => item.check === true)
+        let getData = this.chequeFasle.filter((item) => item.check === true)
         let fee_id = []
         getData.map((item) => {
           fee_id.push(item.fee_id)

@@ -53,7 +53,8 @@
           <thead class="table-head">
             <tr>
               <th style="width: 50px;">
-                <paper-checkbox on-tap="_selectDataAll" checked="{{selectDataAll}}"></paper-checkbox></th>
+                <paper-checkbox on-tap="_selectDataAll" checked="{{selectDataAll}}"></paper-checkbox>
+              </th>
               </th>
               <th style="width: 70px">{{localize.period_no}}</th>
               <th style="width: 70px;">{{localize.order_no}}</th>
@@ -125,6 +126,10 @@
         },
         dataUrl: {
           statePath: 'cheque.dataUrl',
+        },
+        contractId: {
+          statePath: 'commonState.contractId',
+          // observer: 'get'
         },
         deliver_date: {
           type: String,
@@ -276,6 +281,9 @@
               .then((response) => {
                 if (response.data.replaced !== undefined && response.data.replaced.length !== 0) {
                   // console.log(res);
+                  // contractId
+                  let chequeFasle = { id: this.contractId.contract_id, status: false }
+                  this.dispatchAction('GET_CHEQUE_LIST', this.genUrl(chequeFasle))
                   this.dispatchAction('GET_CHEQUE_DETAIL_LIST', { id: this.dataUrl })
                 } else {
                   // console.log(1111);
