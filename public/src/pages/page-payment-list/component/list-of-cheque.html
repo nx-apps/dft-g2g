@@ -12,6 +12,8 @@
 <link rel="import" href="./../../components/format-number-behavior.html">
 <link rel="import" href="./../../../../bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="./../../../layout/shared-styles.html">
+<link rel="import" href="./../../components/g2g-logic-behavior.html">
+
 <dom-module id="list-of-cheque">
   <style include="iron-flex iron-flex-factors iron-flex-alignment shared-styles">
      :host {
@@ -243,10 +245,10 @@
       <paper-button class="gl-btn-success" raised on-tap="getChequeDetail">กด (ยัง)</paper-button>
     </div>-->
         <div class="btnFab" hidden="{{fabHiddenTrue}}">
-        <paper-fab id="fabCancel" icon="clear" title="{{localize.send_cheque}}" id="addContract" on-tap="getChequeReject"></paper-fab>
-        <paper-tooltip for="addContract" offset="0">{{localize.send_cheque}}</paper-tooltip>
-        <paper-fab id="fabPay" icon="fa:pencil" title="{{localize.send_cheque}}" id="addContract" on-tap="getChequeApprove"></paper-fab>
-        <paper-tooltip for="addContract" offset="0">{{localize.send_cheque}}</paper-tooltip>
+          <paper-fab id="fabCancel" icon="clear" title="{{localize.send_cheque}}" id="addContract" on-tap="getChequeReject"></paper-fab>
+          <paper-tooltip for="addContract" offset="0">{{localize.send_cheque}}</paper-tooltip>
+          <paper-fab id="fabPay" icon="fa:pencil" title="{{localize.send_cheque}}" id="addContract" on-tap="getChequeApprove"></paper-fab>
+          <paper-tooltip for="addContract" offset="0">{{localize.send_cheque}}</paper-tooltip>
         </div>
       </section>
     </main>
@@ -255,7 +257,7 @@
       <gl-form-input type="date" placeholder="{{localize.pay_date}}" class="required" required no-label-float value="{{pay_date}}"></gl-form-input>
       <div class="buttons">
         <paper-button dialog-dismiss class="gl-btn-default">{{localize.cancel}}</paper-button>
-        <paper-button autofocus class="gl-btn-success" raised on-tap="approveCheck" >{{localize.submit}}</paper-button>
+        <paper-button autofocus class="gl-btn-success" raised on-tap="approveCheck">{{localize.submit}}</paper-button>
       </div>
     </paper-dialog>
 
@@ -341,7 +343,7 @@
         let getData = this.chequeTrue.filter((item) => item.check === true)
         let newArr = []
         getData.map((item) => {
-          newArr.push({ deliver_date: item.deliver_date })
+          newArr.push({ deliver_date: item.deliver_date + 'T00:00:00+07:00' })
         })
         this.fire('toast', {
           status: 'openDialog',
@@ -349,6 +351,26 @@
           confirmed: (result) => {
             if (result == true) {
               this.dispatchAction('PUT_REJECT_CHEQUE_LIST', newArr)
+                .then((res) => {
+                  // console.log(res);
+                  this.fire('toast', {
+                    status: 'success', text: 'ยกเลิกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
+                    callback: () => {
+                    }
+                  })
+                  let chequeTrue = { id: this.contractId.contract_id, status: true }
+                  let chequeFasle = { id: this.contractId.contract_id, status: false }
+                  this.dispatchAction('GET_CHEQUE_LIST', this.genUrl(chequeTrue))
+                  this.dispatchAction('GET_CHEQUE_LIST', this.genUrl(chequeFasle))
+                  // this.$.payDate.close()
+                })
+                .catch((error) => {
+                  this.fire('toast', {
+                    status: 'connectError', text: error, //คำสั่งสำหรับเปิด toast error
+                    callback: () => {
+                    }
+                  })
+                })
             }
           }
         })
@@ -358,20 +380,37 @@
       },
       approveCheck: function (e) {
         let getData = this.chequeTrue.filter((item) => item.check === true)
-        let newObj = { 
-          pay_date: this.pay_date + 'T00:00:00+07:00',
-          newArr : []
-        }
+        newArr = []
         getData.map((item) => {
-          newObj.newArr.push({ deliver_date: item.deliver_date })
+          newArr.push({
+            deliver_date: item.deliver_date + 'T00:00:00+07:00',
+            pay_date: this.pay_date + 'T00:00:00+07:00'
+          })
         })
         this.fire('toast', {
           status: 'openDialog',
           text: 'ต้องการยืนยันเช็คใช่หรือไม่ ?',
           confirmed: (result) => {
             if (result == true) {
-              this.dispatchAction('PUT_APPROVE_CHEQUE_LIST', newObj)
-              this.$.payDate.close()
+              this.dispatchAction('PUT_APPROVE_CHEQUE_LIST', getData)
+                .then((res) => {
+                  this.fire('toast', {
+                    status: 'success', text: 'ยื่นยันแล้ว',  // คำสั่งสำหรับเปิด toast success
+                    callback: () => {
+                    }
+                  })
+                  let chequeTrue = { id: this.contractId.contract_id, status: true }
+                  let chequeFasle = { id: this.contractId.contract_id, status: false }
+                  this.dispatchAction('GET_CHEQUE_LIST', this.genUrl(chequeTrue))
+                  this.dispatchAction('GET_CHEQUE_LIST', this.genUrl(chequeFasle))
+                })
+                .catch((error) => {
+                  this.fire('toast', {
+                    status: 'connectError', text: error, //คำสั่งสำหรับเปิด toast error
+                    callback: () => {
+                    }
+                  })
+                })
             }
           }
         })
