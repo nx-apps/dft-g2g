@@ -142,7 +142,7 @@
             </paper-input>
           </div>
         </div>
-        [[checkSelect(newData.*)]]
+        <!--[[checkSelect(newData.*)]]-->
         <div class="horizontal center-justified layout">
           <table class="gl-table-default">
             <thead class="table-head">
@@ -247,9 +247,11 @@
         // }
         newData: {
           statePath: 'cheque.cheque_list_false',
+          value:[]
         },
         chequeTrue: {
           statePath: 'cheque.cheque_list_true',
+          value:[]
         },
         contractId: {
           statePath: 'commonState.contractId',
@@ -279,29 +281,6 @@
         if (check !== undefined)
           return this.set('fabHidden', false)
         return this.set('fabHidden', true)
-      },
-      // created: function () {
-      //   this.nylonLocalizeImport('/i18n-page1.json');
-      // },
-      // initDatabl: function (data) {
-      //   // console.log(data);
-      //   this.newData = this.g2gClone(data);
-      //   // console.log('clone new==>',this.newData);
-      //   // console.log('org==>',this.data);
-      // },
-      _searchInArray: function (searchInput) {
-        //   // console.log(searchInput == '');
-        //   if (searchInput != '') {
-        //     let arr = [];
-        //     this.data.map((el) => {
-        //       if (String(el.fee_no).search(searchInput) > -1) {
-        //         arr.push(el);
-        //       }
-        //     });
-        //     this.newData = arr;
-        //   } else {
-        //     this.initDatabl(this.data);
-        //   }
       },
       getChequeDetail: function (e) {
         // console.log(e.currentTarget.data);
