@@ -2,13 +2,20 @@
 <link rel="import" href="./../../../../bower_components/gl-grid/gl-grid-row.html">
 <link rel="import" href="./../../../../bower_components/gl-grid/gl-grid-col.html">
 <link rel="import" href="./../../../../bower_components/gl-form/gl-form-input.html">
-<link rel="import" href="./../../../../bower_components/vaadin-date-picker/vaadin-date-picker.html">
+<!--<link rel="import" href="./../../../../bower_components/vaadin-date-picker/vaadin-date-picker.html">-->
 <link rel="import" href="./../../../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="./../../../../bower_components/iron-collapse/iron-collapse.html">
 <link rel="import" href="./../../../../bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="./../../../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="./../../../../bower_components/gl-form/gl-combo-box.html">
 <link rel="import" href="./../../../../bower_components/gl-form/gl-form-textarea.html">
+
+<link rel="import" href="./../../../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="./../../../../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="./../../../../bower_components/paper-item/paper-item.html">
+
+<link rel="import" href="./../../../../bower_components/paper-input/paper-input.html">
+
 <link rel="import" href="./../../../../bower_components/gl-form/gl-form-panel-footer.html">
 <link rel="import" href="./../../../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="./../../../../bower_components/paper-checkbox/paper-checkbox.html">
@@ -329,16 +336,24 @@
           <th>ชื่อข้าว</th>
           <th>รหัส Hamonize</th>
           <th>ปี</th>-->
+          <!--<input list="browsers">-->
 
 
           <div class="horizontal layout header-item" warp>
             <div class="header-div flex">
-              <gl-combo-box id="hamonizeYear" label="{{localizeContract.year}}" placeholder="{{localizeContract.year}}" items="[[hamonizeYear.year]]"
-                item-label-path="label" item-value-path="label" on-value-changed="searchHamonizeInYear">
+              <paper-dropdown-menu label="{{localizeContract.year}}">
+                <paper-listbox class="dropdown-content"  attr-for-selected="name" selected="{{dataSeleted.year}}" on-selected-changed="searchHamonizeInYear">
+                  <template is="dom-repeat" items={{hamonizeYear.year}}>
+                    <paper-item name="{{item.label}}">{{item.label}}</paper-item>
+                  </template>
+                </paper-listbox>
+              </paper-dropdown-menu>
+              <!--<gl-combo-box id="hamonizeYear" label="{{localizeContract.year}}" placeholder="{{localizeContract.year}}" items="[[hamonizeYear.year]]"
+                item-label-path="label" value="{{dataSeleted.year}}" item-value-path="label" on-value-changed="searchHamonizeInYear">
                 <template>
                   [[item.label]]
                 </template>
-              </gl-combo-box>
+              </gl-combo-box>-->
             </div>
             <div class="header-div flex">
               <div style="padding: 10px 15px;">
@@ -355,13 +370,15 @@
               <div class="horizontal layout header-item" warp>
                 <div class="header-div flex"></div>
                 <div class="header-div flex-3">รหัส Hamonize <br>
-                  <gl-form-input label="ค้นหา" type="search" value="{{dataSeleted.hamonize_code}}" on-value-changed="searchHamonizeCode"></gl-form-input>
+                  <gl-form-input label="ค้นหา" disabled="{{!dataSeleted.year}}" type="search" value="{{dataSeleted.hamonize_code}}" on-value-changed="searchHamonizeCode"></gl-form-input>
                 </div>
                 <div class="header-div flex-3">ชื่อข้าว<br>
-                  <gl-form-input style="padding-left:20px;" value="{{dataSeleted.hamonize_th2}}" label="ค้นหา" type="search" on-value-changed="searchHamonizeTh"></gl-form-input>
+                  <gl-form-input style="padding-left:20px;" disabled="{{!dataSeleted.year}}" value="{{dataSeleted.hamonize_th2}}" label="ค้นหา"
+                    type="search" on-value-changed="searchHamonizeTh"></gl-form-input>
                 </div>
                 <!--<div class="header-div flex-2">ปี</div>-->
               </div>
+              <!--{{hamonizeList.length}}///-->
               <div class="subdiv">
                 <template is="dom-repeat" items={{hamonizeList}} index-as="indexroot">
                   <div hidden="{{item.hiddend}}">
@@ -386,15 +403,17 @@
                   <div class="header-div flex"></div>
                   <div class="header-div flex"></div>
                   <div class="header-div flex-3">รหัส Hamonize
-                    <gl-form-input label="ค้นหา" type="search" value="{{dataSeleted.hamonize_code}}" on-value-changed="searchHamonizeCode"></gl-form-input>
+                    <gl-form-input label="ค้นหา" type="search" disabled="{{!dataSeleted.year}}" value="{{dataSeleted.hamonize_code}}" on-value-changed="searchHamonizeCode"></gl-form-input>
                   </div>
                   <div class="header-div flex-3">ชื่อกลุ่มข้าว</div>
                   <div class="header-div flex-3">ชื่อข้าว
-                    <gl-form-input style="padding-left:20px;" value="{{dataSeleted.hamonize_th2}}" label="ค้นหา" type="search" on-value-changed="searchHamonizeTh"></gl-form-input>
+                    <gl-form-input style="padding-left:20px;" disabled="{{!dataSeleted.year}}" value="{{dataSeleted.hamonize_th2}}" label="ค้นหา"
+                      type="search" on-value-changed="searchHamonizeTh"></gl-form-input>
                   </div>
                   <div class="header-div flex-2">ปี</div>
                 </div>
                 <div class="subdiv">
+
                   <template is="dom-repeat" items={{hamonizeList}} index-as="indexroot">
                     <div hidden="{{item.hiddend}}">
                       <div class="horizontal layout item">
@@ -535,7 +554,8 @@
         // console.log(data);
       },
       observers: [
-        '_checkHamonize(data,hamonizeList)'
+        '_checkHamonize(data,hamonizeList)',
+        'resetSearch(dataSeleted.year)'
       ],
       cloneHamonizeList: function (cloneHamonizeList) {
         // JSON.parse(JSON.stringify(data));
@@ -599,6 +619,7 @@
         try {
           let newHamonize = []
           let seletedYear = e.detail.value
+          // console.log(1111);
           for (var index = 0; index < this.hamonizeList.length; index++) {
             for (var index2 = 0; index2 < this.hamonizeList[index].sub.length; index2++) {
               if ((String(this.hamonizeList[index].sub[index2].hamonize_year) === e.detail.value) ||
@@ -615,46 +636,58 @@
               this.set('hamonizeList.' + index + '.hiddend', false)
             }
           }
-          this.$$('#hamonizeCode').value = ''
-
+          // console.log(1212);
+          // console.log(this.hamonizeList.length);
+          // this.$$('#hamonizeCode').value = ''
 
         } catch (e) {
 
         }
 
       },
-      searchHamonizeInCode: function (e) {
-        try {
-          let newHamonize = []
-          let seletedCode = e.detail.value
-          // console.log(seletedCode);
-          for (var index = 0; index < this.hamonizeList.length; index++) {
-            for (var index2 = 0; index2 < this.hamonizeList[index].sub.length; index2++) {
-              if ((String(this.hamonizeList[index].sub[index2].sub_id) === seletedCode) ||
-                (seletedCode === '' || seletedCode === undefined)) {
-                this.set('hamonizeList.' + index + '.sub.' + index2 + '.hiddend', false)
-              } else {
-                this.set('hamonizeList.' + index + '.sub.' + index2 + '.hiddend', true)
-              }
-            }
-            let checkkFalse = this.hamonizeList[index].sub.find((item) => item.hiddend === false)
-            if (checkkFalse === undefined) {
-              this.set('hamonizeList.' + index + '.hiddend', true)
-            } else {
-              this.set('hamonizeList.' + index + '.hiddend', false)
-            }
-          }
-          this.$$('#hamonizeYear').value = ''
-        } catch (e) {
-
+      resetSearch(year) {
+console.log(year);
+        if (year === '' || year === undefined) {
+          // console.log(year);
+          // console.log(this.dataSeleted.hamonize_code);
+          // this.set('dataSeleted.hamonize_code','')
+          // // console.log(this.dataSeleted.hamonize_code);
+          // this.set('dataSeleted.hamonize_th2','')
         }
-
       },
+      // searchHamonizeInCode: function (e) {
+      //   try {
+      //     let newHamonize = []
+      //     let seletedCode = e.detail.value
+      //     // console.log(seletedCode);
+      //     for (var index = 0; index < this.hamonizeList.length; index++) {
+      //       for (var index2 = 0; index2 < this.hamonizeList[index].sub.length; index2++) {
+      //         if ((String(this.hamonizeList[index].sub[index2].sub_id) === seletedCode) ||
+      //           (seletedCode === '' || seletedCode === undefined)) {
+      //           this.set('hamonizeList.' + index + '.sub.' + index2 + '.hiddend', false)
+      //         } else {
+      //           this.set('hamonizeList.' + index + '.sub.' + index2 + '.hiddend', true)
+      //         }
+      //       }
+      //       let checkkFalse = this.hamonizeList[index].sub.find((item) => item.hiddend === false)
+      //       if (checkkFalse === undefined) {
+      //         this.set('hamonizeList.' + index + '.hiddend', true)
+      //       } else {
+      //         this.set('hamonizeList.' + index + '.hiddend', false)
+      //       }
+      //     }
+      //     this.$$('#hamonizeYear').value = ''
+      //   } catch (e) {
+
+      //   }
+
+      // },
       searchHamonizeCode: function (e) {
         try {
           let newHamonize = []
+          // console.log(this.dataSeleted.hamonize_code);
           let seletedCode = this.dataSeleted.hamonize_code
-
+          let hamonize_th2 = this.dataSeleted.hamonize_th2
           let year = this.$$('#hamonizeYear').value
           // console.log(seletedCode);
           for (var index = 0; index < this.hamonizeList.length; index++) {
@@ -663,6 +696,7 @@
               // console.log(String(this.hamonizeList[index].sub[index2].hamonize_code));
               // if (String(seletedCode).search(String(this.hamonizeList[index].sub[index2].hamonize_code)) > -1) {
               if (String(this.hamonizeList[index].sub[index2].hamonize_code).search(String(seletedCode)) > -1
+                && String(this.hamonizeList[index].sub[index2].hamonize_th2).search(String(hamonize_th2)) > -1
                 && String(this.hamonizeList[index].sub[index2].hamonize_year) === year) {
                 this.set('hamonizeList.' + index + '.sub.' + index2 + '.hiddend', false)
               } else {
@@ -676,6 +710,8 @@
               this.set('hamonizeList.' + index + '.hiddend', false)
             }
           }
+          // console.log(this.hamonizeList.length);
+          // console.log(2222);
           // this.$$('#hamonizeYear').value = ''
         } catch (e) {
 
@@ -684,6 +720,7 @@
       searchHamonizeTh: function (e) {
         try {
           let newHamonize = []
+          let hamonize_code = this.dataSeleted.hamonize_code
           let seletedCode = this.dataSeleted.hamonize_th2
           let year = this.$$('#hamonizeYear').value
           // console.log(seletedCode);
@@ -691,6 +728,7 @@
             for (var index2 = 0; index2 < this.hamonizeList[index].sub.length; index2++) {
               // if (String(seletedCode).search(String(this.hamonizeList[index].sub[index2].hamonize_code)) > -1) {
               if (String(this.hamonizeList[index].sub[index2].hamonize_th2).search(String(seletedCode)) > -1
+                && String(this.hamonizeList[index].sub[index2].hamonize_code).search(String(hamonize_code)) > -1
                 && String(this.hamonizeList[index].sub[index2].hamonize_year) === year) {
                 this.set('hamonizeList.' + index + '.sub.' + index2 + '.hiddend', false)
               } else {
