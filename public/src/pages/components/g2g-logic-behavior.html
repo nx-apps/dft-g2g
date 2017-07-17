@@ -183,28 +183,8 @@
       if (result == true) {
         let el = Polymer.dom(this.root).querySelectorAll('.required');
         el.map((el) => { el.reset(); });
-        //  this.data.contract_type_rice=[];
-        //Object.assign(this.data,this.oldData);
-        // this.data.contract_type_rice=   this.g2gClone(this.oldData.contract_type_rice);
         this.data = this.oldData;
         this.editInput();
-        //  this.notifyPath('data.contract_name');
-        //  this.notifyPath('data.buyer_id');
-        //   this.notifyPath('data.contract_date');
-        //   this.notifyPath('data.contract_desc');
-        //   this.notifyPath('data.contract_name');
-        //   this.notifyPath('data.contract_quantity');
-        //   this.notifyPath('data.contract_status');
-        //   this.notifyPath('data.tolerance_rate');
-        //   this.data.contract_type_rice.map((riceCode,index)=>{
-        //     this.notifyPath('data.'+index+'.type_rice_id');
-        //   });
-        //  console.log('this.oldData=>',this.oldData);
-        // let el = Polymer.dom(this.root).querySelectorAll('.required');
-        // el.map((el)=> {el.reset(); el.value=''});
-        //  this.fire('refresh-contract',{detail:'refresh-contract'});
-        //  console.log(detail.data.contract_id);
-        //  this.fire('get-contract-detail',{contractId:detail.data.contract_id});
         //
       }
     },
@@ -306,6 +286,16 @@
       // var minCallback = (min, cur) => Math.min(cur,min)
       // return arr.map((item) => Number(item[prop])).reduce(minCallback, -Infinity)
       return Math.min(...arr.map((item) => Number(item[prop])))
+    },
+    _isShow: function (data,dataLoop) {
+      try {
+        let resulte = data.every((item) => item.hidden === true)
+        // console.log(resulte);
+        return resulte
+      } catch (error) {
+
+      }
+
     }
   }
 

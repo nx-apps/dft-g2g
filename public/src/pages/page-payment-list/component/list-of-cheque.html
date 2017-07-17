@@ -179,7 +179,7 @@
             </thead>
             <tbody class="table-body">
               <template is="dom-repeat" items="{{chequeFasle}}">
-                <tr level="primary" style="{{checkStatus(item.status)}}" data="{{item}}" on-tap="getDetailCheque">
+                <tr level="primary" style="{{checkStatus(item.status)}}" hidden="{{item.hidden}}" data="{{item}}" on-tap="getDetailCheque">
                   <td data="[[item]]">
                     <paper-checkbox data="{{item}}" checked="{{item.check}}" disabled="{{item.status}}"></paper-checkbox>
                   </td>
@@ -188,7 +188,7 @@
                   <td data="[[item]]">[[item.cheque_count]]/[[item.cheque_all]]</td>
                 </tr>
               </template>
-              <template is="dom-if" if="[[_isHave(chequeFasle)]]">
+              <template is="dom-if" if="[[_isShow(chequeFasle,chequeFasle.*)]]">
                 <tr>
                   <td colspan="4" style="text-align:center"> {{localize.no_data}}</td>
                 </tr>
@@ -225,7 +225,7 @@
             </thead>
             <tbody class="table-body">
               <template is="dom-repeat" items="{{chequeTrue}}">
-                <tr level="primary" style="{{checkStatus(item.status)}}">
+                <tr level="primary" hidden="{{item.hidden}}">
                   <td data="[[item]]">
                     <paper-checkbox data="{{item}}" checked="{{item.check}}"></paper-checkbox>
                   </td>
@@ -233,7 +233,7 @@
                   <td data="[[item]]">[[item.deliver_date]]</td>
                 </tr>
               </template>
-              <template is="dom-if" if="[[_isHave(chequeTrue)]]">
+              <template is="dom-if" if="[[_isShow(chequeTrue,chequeTrue.*)]]">
                 <tr>
                   <td colspan="4" style="text-align:center"> {{localize.no_data}}</td>
                 </tr>
@@ -298,9 +298,9 @@
           // observer: 'get'
         },
       },
-      observers: [
-        'initDatabl(chequeFasle)',
-      ],
+      // observers: [
+      //   'initDatabl(chequeFasle)',
+      // ],
       countChequeFasle: function (data) {
         let count = data.reduce((pre, cur) => {
           return pre + cur.cheque_count
@@ -314,31 +314,42 @@
       //   // console.log('clone new==>',this.newData);
       //   // console.log('org==>',this.data);
       // },
-      // _searchInArray: function (searchInput) {
-      //   // console.log(searchInput == '');
-      //   if (searchInput != '') {
-      //     let arr = [];
-      //     this.data.map((el) => {
-      //       if (String(el.fee_no).search(searchInput) > -1) {
-      //         arr.push(el);
-      //       }
-      //     });
-      //     this.newData = arr;
-      //   } else {
-      //     this.initDatabl(this.data);
-      //   }
-      // },
+      _searchInArray: function (searchInput) {
+        // console.log(searchInput == '');
+        // if (searchInput != '') {
+        //   let arr = [];
+        //   this.data.map((el) => {
+        //     if (String(el.fee_no).search(searchInput) > -1) {
+        //       arr.push(el);
+        //     }
+        //   });
+        //   this.newData = arr;
+        // } else {
+        //   this.initDatabl(this.data);
+        // }
+        // console.log(searchInput);
+        for (var index = 0; index < this.chequeFasle.length; index++) {
+            if (String(this.chequeFasle[index].fee_no).search(String(searchInput)) > -1 ) {
+
+                this.set('chequeFasle.'+index+'.hidden',false)
+            }else {
+                this.set('chequeFasle.'+index+'.hidden',true)
+            }
+          
+        }
+      },
       _searchInChequeTrue(search){
         
         for (var index = 0; index < this.chequeTrue.length; index++) {
             if (String(this.chequeTrue[index].pay_no).search(String(search)) > -1 ) {
+
                 this.set('chequeTrue.'+index+'.hidden',false)
             }else {
                 this.set('chequeTrue.'+index+'.hidden',true)
             }
           
         }
-        console.log(search);
+        // console.log(search);
       },
       _selectDataAll: function (val) {
         try {

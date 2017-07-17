@@ -63,8 +63,8 @@
           </tr>
         </thead>
         <tbody class="table-body">
-          <template is="dom-repeat" items="[[newData]]">
-            <tr data="[[item]]" on-tap="getFeeDetail">
+          <template is="dom-repeat" items="{{data}}">
+            <tr data="[[item]]" on-tap="getFeeDetail"  hidden="{{item.hidden}}">
               <td><div style="text-align:right;">{{item.cl_no}}</div></td>
               <td>[[item.fee_no]]</td>
               <td>[[obRound(item.fee_round)]]</td>
@@ -76,7 +76,7 @@
               <td>[[formatNumber(item.value_final_b)]]</td>
             </tr>
           </template>
-          <template is="dom-if" if="[[_isHave(newData)]]">
+          <template is="dom-if" if="[[_isShow(data,data.*)]]">
             <tr>
               <td colspan="9" style="text-align:center"> {{localize.no_data}}</td>
             </tr>
@@ -93,34 +93,46 @@
         localize:{
           statePath : 'i18n.fee'
         },
-        // data:{
-        //   statePath : 'fee.list'
-        // }
+        data:{
+          // statePath : 'fee.list'
+        },
         contractId: {
           statePath: 'commonState.contractId',
           // observer: 'get'
         },
       },
-      observers: [
-        'initDataFee(data)'
-      ],
-      initDataFee: function (data) {
-        // console.log(data);
-        this.newData = this.g2gClone(data);
-      },
+      // observers: [
+      //   'initDataFee(data)'
+      // ],
+      // initDataFee: function (data) {
+      //   // console.log(data);
+      //   this.newData = this.g2gClone(data);
+      // },
       _searchInArray: function (searchInput) {
         // console.log(searchInput == '');
-        if (searchInput != '') {
-          let arr = [];
-          this.data.map((el) => {
-            if (String(el.fee_no).search(searchInput) > -1) {
-              //  console.log('search==> ',el);
-              arr.push(el);
+        // if (searchInput != '') {
+        //   let arr = [];
+        //   this.data.map((el) => {
+        //     if (String(el.fee_no).search(searchInput) > -1) {
+        //       //  console.log('search==> ',el);
+        //       arr.push(el);
+        //     }
+        //   });
+        //   this.newData = arr;
+        // } else {
+        //   this.initDataFee(this.data);
+        // }
+        try {
+          for (var index = 0; index < this.data.length; index++) {
+            if (String(this.data[index].fee_no).search(String(searchInput)) > -1) {
+
+              this.set('data.' + index + '.hidden', false)
+            } else {
+              this.set('data.' + index + '.hidden', true)
             }
-          });
-          this.newData = arr;
-        } else {
-          this.initDataFee(this.data);
+          }
+        } catch (e) {
+
         }
       },
       getFeeDetail: function (e) {
