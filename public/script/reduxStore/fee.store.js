@@ -252,6 +252,7 @@ export function feeAction(store) {
                             // this.INVOICE_GET_LIST_DATA(contract_id);
                             // this.BOOK_GET_LIST_DATA(contract_id);
                             this.FEE_GET_LIST_DATA({ contract_id: contract_id, view: 'fin', status: 'true' });
+                            this.dispatchAction('FEE_GET_LIST_DATA', { contract_id: contract_id, view: 'fin', status: 'false' })
                             this._flipDrawerClose();
                         }
                     })

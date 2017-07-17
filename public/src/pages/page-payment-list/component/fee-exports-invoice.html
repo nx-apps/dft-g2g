@@ -530,6 +530,7 @@
                 confirmed: (result) => {
                   if (result === true) {
                     this.dispatchAction('FEE_INSERT', newData);
+                    this.fire('close-drawer')
                     this.fire('reset-form');
                     this.queryFrom('.required').map((el) => { el.reset(); });
                   }
@@ -724,6 +725,8 @@
           text: 'ต้องการยืนยันการจัดสรรค่าธรรมเนียมใช่หรือไม่',
           confirmed: (result) => {
             if (result === true) {
+              
+              // console.log(this.data.contract_id);
               this.dispatchAction('FEE_APPROVE_FINSH', newData);
             }
           }
