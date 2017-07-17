@@ -32,6 +32,12 @@
                                 "company": {
                                     "type": "object"
                                 },
+                                "company_taxno": {
+                                    "type": "string"
+                                },
+                                "exporter_id": {
+                                    "type": "string"
+                                },
                                 "detail_id": {
                                     "type": "string"
                                 },

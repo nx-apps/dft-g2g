@@ -104,12 +104,11 @@ exports.approve = function (req, res) {
                     .filter(function (f) {
                         return f.hasFields('pay_date').eq(false)
                     })
-                //var updata = 
+                var pay_date = r.ISO8601(fe('pay_date')).inTimezone('+07');
                 return r.branch(fe.hasFields('pay_date'),
-                    tb.update({ pay_date: r.ISO8601(fe('pay_date')).inTimezone('+07') }),
+                    tb.update({ pay_date: pay_date, pay_year: pay_date.year().add(543) }),
                     tb.update({ cheque_status: false, pay_no: r.literal(), deliver_date: r.literal() })
                 )
-
             })
             .run().then(function (data) {
                 res.json(data)

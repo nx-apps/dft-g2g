@@ -14,6 +14,15 @@
             "type": "string",
             "format": "date-time"
         },
+        "pay_runing": {
+            "type": "number"
+        },
+        "pay_year": {
+            "type": "number"
+        },
+        "pay_status": {
+            "type": "boolean"
+        },
         "bank_id": {
             "type": "string"
         },
@@ -37,6 +46,12 @@
         },
         "company": {
             "type": "object"
+        },
+        "company_taxno": {
+            "type": "string"
+        },
+        "exporter_id": {
+            "type": "string"
         },
         "contract_id": {
             "type": "string"
@@ -87,9 +102,6 @@
         "net_weight": {
             "type": "number"
         },
-        "pay_status": {
-            "type": "boolean"
-        },
         "price_d": {
             "type": "number"
         },
@@ -121,9 +133,6 @@
             "type": "number"
         },
         "value_tax_b": {
-            "type": "number"
-        },
-        "pay_runing": {
             "type": "number"
         }
     }

@@ -8,7 +8,7 @@ exports.calc = function (req, res) {
             var detail = r.table('book_detail').getAll(m('id'), { index: 'book_id' })
                 .coerceTo('array')
                 .map(function (m2) {
-                    return m2.pluck('company', 'net_weight', 'price_d', 'value_d')
+                    return m2.pluck('company', 'net_weight', 'price_d', 'value_d', 'company_taxno', 'exporter_id')
                         .merge({
                             detail_id: m2('id'),
                             value_b: 0,
@@ -220,7 +220,7 @@ function updateFee(act, obj, res) {
         )
     });
     var updateDetail = detail.forEach(function (fe) {
-        return r.table('book_detail').get(fe('detail_id')).update(fe.without('company', 'detail_id'))
+        return r.table('book_detail').get(fe('detail_id')).update(fe.without('company', 'detail_id','company_taxno','exporter_id'))
     });
     async.parallel({
         book: function (callback) {
