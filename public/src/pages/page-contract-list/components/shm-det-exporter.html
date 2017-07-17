@@ -165,10 +165,10 @@
           </gl-grid-col>
           [[_getPackageForPrice(data.package_id,dataForSelect)]]
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-            <gl-form-input disabled label="{{localizeBook.price_usd_mt}}" value="[[data.price_d]]" always-float-label></gl-form-input>
+            <gl-form-input disabled label="{{localizeBook.price_usd_mt}}" format-number="on" value="[[data.price_d]]" always-float-label></gl-form-input>
           </gl-grid-col>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-            <gl-form-input disabled label="{{localizeBook.weight_sacks_gram_bag}}" value="[[data.package_weight_bag]]" always-float-label></gl-form-input>
+            <gl-form-input disabled label="{{localizeBook.weight_sacks_gram_bag}}"format-number="on" value="[[data.package_weight_bag]]" always-float-label></gl-form-input>
           </gl-grid-col>
 
 
@@ -176,19 +176,19 @@
             <gl-form-input disabled label="{{localize.label_marks}}" value="[[dataForSelect.buyer_masks]]" always-float-label></gl-form-input>
           </gl-grid-col>-->
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-            <gl-form-input disabled label="{{localizeBook.quantity_bags}}" value="[[data.package_amount]]" always-float-label></gl-form-input>
+            <gl-form-input disabled label="{{localizeBook.quantity_bags}}"format-number="on" value="[[data.package_amount]]" always-float-label></gl-form-input>
           </gl-grid-col>
         </gl-grid-row>
 
         <gl-grid-row>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-            <gl-form-input disabled label="{{localizeBook.gross_weight}}" value="[[data.gross_weight]]" always-float-label></gl-form-input>
+            <gl-form-input disabled label="{{localizeBook.gross_weight}}" format-number="on" value="[[data.gross_weight]]" always-float-label></gl-form-input>
           </gl-grid-col>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-            <gl-form-input disabled label="{{localizeBook.net_weight}}" value="[[data.net_weight]]" always-float-label></gl-form-input>
+            <gl-form-input disabled label="{{localizeBook.net_weight}}" format-number="on" value="[[data.net_weight]]" always-float-label></gl-form-input>
           </gl-grid-col>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-            <gl-form-input disabled label="{{localizeBook.tare_weight}}" value="[[data.tare_weight]]" always-float-label></gl-form-input>
+            <gl-form-input disabled label="{{localizeBook.tare_weight}}" format-number="on" value="[[data.tare_weight]]" always-float-label></gl-form-input>
           </gl-grid-col>
         </gl-grid-row>
       </gl-form-panel-body>
@@ -407,7 +407,11 @@
 
           this.set('data.price_d', price.price_d)
           this.set('data.package_weight_bag', price.package.package_weight_bag)
-          let package_amount = ((parseFloat(net_weight) * parseFloat(1000)) / parseFloat(price.package.package_kg_per_bag))
+          net_weight = numeral().unformat(net_weight)
+          // console.log('net_weight'+numeral().unformat(net_weight));
+          let ne = parseFloat(net_weight) * parseFloat(1000)
+          // console.log(ne);
+          let package_amount = ne/ parseFloat(price.package.package_kg_per_bag)
           this.set('data.package_amount', package_amount)
           let gw = ((parseFloat(package_amount) * (parseFloat(price.package.package_kg_per_bag) + (parseFloat(price.package.package_weight_bag) / parseFloat(1000))) / parseFloat(1000)));
           this.set('data.gross_weight', gw)

@@ -610,12 +610,16 @@
         }
 
       },
-      _resiveDataConfirm: function () {
+      _resiveDataConfirm: function (type) {
         this._getHamonize()
         return new Promise((res, rej) => {
           let dataResive = JSON.parse(JSON.stringify(this.data))
-          if(this.confirmLetterList.find((item)=> item.cl_no === dataResive.cl_no) !==undefined)
+          // console.log(type);
+          if (type === 'insert') {
+            if(this.confirmLetterList.find((item)=> item.cl_no === dataResive.cl_no) !==undefined)
                rej('เลข cl_no ซ้ำ')
+          }
+          
           dataResive.cl_date = dataResive.cl_date + 'T00:00:00+07:00',
             // dataResive.cl_hamonize = this._getHamonize(),
             dataResive.cl_status = dataResive.cl_status,
@@ -626,10 +630,10 @@
           res(dataResive)
         })
       },
-      _resiveFormConfirm: function () {
+      _resiveFormConfirm: function (type = 'insert') {
         return new Promise((res, rej) => {
           if (this.validateForm('.required')) {
-            this._resiveDataConfirm().then((data) => {
+            this._resiveDataConfirm(type).then((data) => {
               res(data)
             })
             .catch((err)=>{
@@ -652,7 +656,7 @@
         })
       },
       insertConfirm: function () {
-        this._resiveFormConfirm()
+        this._resiveFormConfirm('insert')
           .then((res) => {
             // console.log(res);
             let sum = this.dataShow.cl_total_quantity - this.dataShow.hamonize_limit
@@ -737,7 +741,7 @@
           text: 'ต้องการแก้ข้อมูลใช่หรือไม่ ?',
           confirmed: (result) => {
             if (result == true) {
-              this._resiveFormConfirm()
+              this._resiveFormConfirm('edit')
                 .then((res) => {
                   let sum = this.dataShow.cl_total_quantity - this.dataShow.hamonize_limit
                   if (this.dataShow.cl_total_quantity > this.dataShow.hamonize_limit) {
@@ -831,7 +835,7 @@
           text: 'ต้องการยืนยันสัญญาใช่หรือไม่ ?',
           confirmed: (result) => {
             if (result == true) {
-              this._resiveFormConfirm()
+              this._resiveFormConfirm('approve')
                 .then((res) => {
                   res.cl_status = true
                   let cl_id = res.id
