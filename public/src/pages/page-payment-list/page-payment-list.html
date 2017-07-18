@@ -19,10 +19,11 @@
 <!--<link rel="import" href="./component/list-of-fee-detail.html">-->
 <link rel="import" href="./component/list-of-cheque.html">
 <link rel="import" href="./component/cheque-detail.html">
-<!--<link rel="import" href="./component/list-of-payments.html">
-<link rel="import" href="./component/list-of-history.html">
+<link rel="import" href="./component/list-of-payments.html">
+<!--<link rel="import" href="./component/payment-detail.html">-->
+<!--<link rel="import" href="./component/list-of-history.html">
 <link rel="import" href="./component/cheque-detail.html">
-<link rel="import" href="./component/payment-detail.html">
+
 <link rel="import" href="./component/history-detail.html">-->
 
 <dom-module id="page-payment-list">
@@ -191,7 +192,11 @@
                 </label>
 
             <input id="tab5" type="radio" name="tabs">
-            <label for="tab5">5.{{localize.text_payment}}</label>
+            <label for="tab5">
+                <div class="container" tabindex="0">
+                <span>5.{{localize.text_payment}}</span>
+                <paper-badge label="{{payments.length}}"></paper-badge>
+                </div></label>
 
             <!--<input id="tab6" type="radio" name="tabs">
             <label for="tab6">6.{{localize.history_pay}}</label>-->
@@ -237,7 +242,7 @@
             <section id="content5">
                 <paper-material elevation="1">
                     <div class="list horizontal center-justified layout">
-                        <list-of-payments data="[[dataListPay.payments]]" data-for-select="[[dataForSelect]]"></list-of-payments>
+                        <list-of-payments></list-of-payments>
                     </div>
                 </paper-material>
             </section>
@@ -274,7 +279,7 @@
                         <cheque-detail></cheque-detail>
                     </div>
                     <div name="paymentDetail">
-                        <payment-detail data="[[dataSelected.paymentDetail]]" data-silo="[[dataSelected.silo]]" data-for-select="[[dataForSelect]]"></payment-detail>
+                        <payment-detail></payment-detail>
                     </div>
                     <div name="historyDetail">
                         <history-detail data="[[dataSelected.historyDetail]]" data-for-select="[[dataForSelect]]"></history-detail>
@@ -291,7 +296,7 @@
         Polymer({
             is: 'page-payment-list',
             behaviors: [ReduxBehavior, nylonBehavior, CookieBehavior, i18nAction, bookAction, invoiceAction,
-                commonStateAction, feeAction, chequeAction, g2gLogicBehavior],
+                commonStateAction, feeAction, chequeAction, paymentAction, g2gLogicBehavior, commonG2gAction],
             properties: {
                 localize: {
                     statePath: 'i18n.g2g'
@@ -332,6 +337,9 @@
                 chequeTrue: {
                     statePath: 'cheque.cheque_list_true',
                 },
+                payments: {
+                    statePath: 'payment.listPayment'
+                },
                 crumbs: {
                     statePath: 'commonState.breadCrumbs',
                 },
@@ -345,6 +353,12 @@
                 contractId: {
                     statePath: 'commonState.contractId',
                     // observer: 'get'
+                },
+                checkRenderPage: {
+                    type: Object,
+                    value: {
+                        paymentDetail: false,
+                    }
                 },
             },
             listeners: {
@@ -360,7 +374,7 @@
                 'get-cheque-detail': '_getChequeDetail',
                 // 'get-payment-list': '_getPaymentsFire',
                 // 'get-history-payment-list': '_getHistoryListFire',
-                // 'get-payment-detail': '_getPaymentDetail',
+                'get-payment-detail': '_getPaymentDetail',
                 // 'get-history-detail': '_getHistoryDetail',
                 // 'flipDrawer': '_flipDrawer',
                 'close-drawer': '_flipDrawerClose',
@@ -380,6 +394,7 @@
                 // console.log(this.contractName);
                 let contractData = { contract_id: contract_id, contract_name: contract_name }
                 this.dispatchAction('SET_CONTRACT_ID', contractData)
+                this.dispatchAction('GET_COMMON_BANK_LIST');
                 var buyer_id = this.getCookieBhv("buyerId");
                 this.dispatchAction('BOOK_GET_LIST_DATA', contract_id);
                 this.dispatchAction('INVOICE_GET_LIST_DATA', contract_id);
@@ -391,6 +406,8 @@
                 this.dispatchAction('GET_CHEQUE_LIST', this.genUrl(chequeTrue))
                 // console.log(chequeFasle);
                 this.dispatchAction('GET_CHEQUE_LIST', this.genUrl(chequeFasle))
+
+                this.dispatchAction('PAYMENT_GET_LIST_DATA', contract_id)
             },
             // ready: function () {
             //     this._getChequeList(contract_id);
@@ -560,57 +577,80 @@
                 //     }
                 //     });
             },
-            // _getPaymentDetail: function (e) {
-            //     // console.log(e.detail.detail);
-            //     this.set('dataSelected.paymentDetail', e.detail.detail);
-            //     this.read('g2g/payment/silo', (data) => {
-            //     this.set('dataSelected.silo', data);
-            //     // console.log(this.dataSelected.silo)
-            //     });
-            //     this.read('g2g/payment/checkno/buyer/id/' + this.dataForSelect.buyer_id, (data) => {
-            //     // this.dataSelected.pay_no = data.check_no
-            //     this.set('dataSelected.paymentDetail.pay_no', data.check_no)
-            //     });
+            _getPaymentDetail: function (e) {
+                this.dispatchAction('SET_BREADCRUMBS', [{
+                    label: 'จ่ายเงิน ',
+                    href: ''
+                }])
+                this.titlePanelRight = 'จ่ายเงิน'
+                // this.genUrl(url)
+                let url = { contract_id: this.getCookieBhv("contract_id"), company_taxno: e.detail.detail.company_taxno }
+                // console.log(url );
+                // contract_id=60bae3b3-4fb8-4da1-ad66-05bba1662dc4&company_taxno=0185555000021
+                this.dispatchAction('PAYMENT_GET_DETAIL_DATA', this.genUrl(url))
+                this.dispatchAction('SET_DATE_PAYMENY')
+                this.paymentsPageSeleted = 'paymentDetail';
+                // this._flipDrawer();
+                //     // console.log(e.detail.detail);
+                //     this.set('dataSelected.paymentDetail', e.detail.detail);
+                //     this.read('g2g/payment/silo', (data) => {
+                //     this.set('dataSelected.silo', data);
+                //     // console.log(this.dataSelected.silo)
+                //     });
+                //     this.read('g2g/payment/checkno/buyer/id/' + this.dataForSelect.buyer_id, (data) => {
+                //     // this.dataSelected.pay_no = data.check_no
+                //     this.set('dataSelected.paymentDetail.pay_no', data.check_no)
+                //     });
 
-            //     this.fire('toast', { status: 'load' });
-            //     this.set('dataSelected.paymentDetail.bank_id', 'KTB')
-            //     this.set('dataSelected.paymentDetail.bank_branch', 'กระทรวงพาณิชย์')
-            //     // console.log(e.detail.detail);
-            //     let datass = [
-            //     {
-            //         label: this.dataForSelect.nameContract,
-            //         href: ''
-            //     },
-            //     {
-            //         label: 'ใบแจ้งหนี้ ' + e.detail.detail.invoice_no,
-            //         href: ''
-            //     },
-            //     ]
-            //     this.setBreadcrumbs(datass)
-            //     // console.log(this.dataSelected);
-            //     // this._getBank();
-            //     this.paymentsPageSeleted = 'paymentDetail';
-            //     if (this.checkRenderPage.paymentDetail != true) {
-            //     this.async(() => {
-            //         this.importHref(
-            //         this.resolveUrl('./payment/component/payment-detail.html'),
-            //         () => {
-            //             this.async(() => {
-            //             this.fire('toast', { status: 'load' });
+                this.fire('toast', { status: 'load' });
+                //     this.set('dataSelected.paymentDetail.bank_id', 'KTB')
+                //     this.set('dataSelected.paymentDetail.bank_branch', 'กระทรวงพาณิชย์')
+                //     // console.log(e.detail.detail);
+                //     let datass = [
+                //     {
+                //         label: this.dataForSelect.nameContract,
+                //         href: ''
+                //     },
+                //     {
+                //         label: 'ใบแจ้งหนี้ ' + e.detail.detail.invoice_no,
+                //         href: ''
+                //     },
+                //     ]
+                //     this.setBreadcrumbs(datass)
+                //     // console.log(this.dataSelected);
+                //     // this._getBank();
+                //     this.paymentsPageSeleted = 'paymentDetail';
+                console.log(111);
+                if (this.checkRenderPage.paymentDetail != true) {
+                    this.async(() => {
+                        this.importHref(
+                            this.resolveUrl('./component/payment-detail.html'),
+                            () => {
+                                this.async(() => {
+                                    this.fire('toast', {
+                                        status: 'success', text: 'โหลดสำเร็จ', callback: () => {
+                                            // this.fire('toast', { status: 'load' });
+                                            this._flipDrawer();
+                                            this.checkRenderPage.paymentDetail = true;
+                                        }
+                                    })
 
-            //             this._flipDrawer();
-            //             this.checkRenderPage.paymentDetail = true;
-            //             }, 500)
-            //         }, null, true
-            //         );
-            //     }, 1000);
-            //     } else {
-            //     this.async(() => {
-            //         this.fire('toast', { status: 'load' });
-            //         this._flipDrawer();
-            //     }, 500)
-            //     }
-            // },
+                                }, 500)
+                            }, null, true
+                        );
+                    }, 1000);
+                } else {
+                    this.async(() => {
+                        this.fire('toast', {
+                                        status: 'success', text: 'โหลดสำเร็จ', callback: () => {
+                                            // this.fire('toast', { status: 'load' });
+                                            this._flipDrawer();
+                                            // this.checkRenderPage.paymentDetail = true;
+                                        }
+                                    })
+                    }, 500)
+                }
+            },
             // _getHistoryDetail: function (e) {
             //     this.set('dataSelected.historyDetail', e.detail.detail);
             //     this.fire('toast', { status: 'load' });

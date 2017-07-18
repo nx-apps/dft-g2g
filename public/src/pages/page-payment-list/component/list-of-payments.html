@@ -1,6 +1,8 @@
 <link rel="import" href="./../../../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="./../../../../bower_components/paper-icon-button/paper-icon-button.html">
-
+<link rel="import" href="./../../../layout/shared-styles.html">
+<link rel="import" href="./../../components/format-number-behavior.html">
+<link rel="import" href="./../../components/g2g-logic-behavior.html">
 <dom-module id="list-of-payments">
   <style include="iron-flex iron-flex-factors iron-flex-alignment gl-styles">
      :host {
@@ -39,10 +41,13 @@
     }
     
     table.gl-table-default>thead.table-head>tr>th:nth-child(1) {
-      width: 80%;
+      width: 20%;
     }
-    
     table.gl-table-default>thead.table-head>tr>th:nth-child(2) {
+      text-align: left;
+      width: 60%;
+    }
+    table.gl-table-default>thead.table-head>tr>th:nth-child(3) {
       width: 20%;
     }
   </style>
@@ -56,27 +61,28 @@
         </paper-input>
       </div>
     </div>
-
     <div class="horizontal center-justified layout">
       <table class="gl-table-default">
         <thead class="table-head">
           <tr>
-            <th>{{localize.text_invoice_no}}</th>
-            <th>{{localize.label_invoice_create_date}}</th>
+            <th>เลขประจำตัวผู้เสียภาษี</th>
+            <th>ชื่อบริษัท</th>
+            <th>จำนวนเช็ค</th>
           </tr>
         </thead>
         <tbody class="table-body">
-          <template is="dom-repeat" items="[[newData]]">
-            <tr data="[[item]]" on-tap="getChequeDetail" level="primary">
-              <td>[[item.invoice_no]]</td>
-              <td>[[changeDateCC(item.invoice_date)]]</td>
+          <template is="dom-repeat" items="{{data}}">
+            <tr data="[[item]]" on-tap="getPaymentDetail" level="primary">
+              <td>[[item.company_taxno]]</td>
+              <td>[[item.company.company_name_th]]</td>
+              <td>[[item.cheque_count]]</td>
             </tr>
           </template>
-          <template is="dom-if" if="[[_isHave(newData)]]">
+          <!--<template is="dom-if" if="[[_isHave(newData)]]">
             <tr>
               <td colspan="2" style="text-align:center"> {{localize.text_no_data}}</td>
             </tr>
-          </template>
+          </template>-->
         </tbody>
       </table>
     </div>
@@ -86,16 +92,14 @@
       is: "list-of-payments",
       behaviors: [
         ReduxBehavior,
-        nylonBehavior
-        // g2gCongtroller,
-        // nylonLocalizeBehavior
+        FormatNumberBehavior, CookieBehavior, g2gLogicBehavior
       ],
       properties: {
         localize:{
           statePath : 'i18n.g2g'
         },
-        newData: {
-          type: Object
+        data: {
+          statePath: 'payment.listPayment'
         }
       },
       // observers: [
@@ -124,10 +128,10 @@
       //     this.initDatabl(this.data);
       //   }
       // },
-      // getChequeDetail: function (e) {
-      //   // console.log(e.currentTarget.data.invoice_no);
-      //   this.fire('get-payment-detail', { detail: e.currentTarget.data });
-      // }
+      getPaymentDetail: function (e) {
+        // console.log(e.currentTarget.data.invoice_no);
+        this.fire('get-payment-detail', { detail: e.currentTarget.data });
+      }
     });
   </script>
 </dom-module>
