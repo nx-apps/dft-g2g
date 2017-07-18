@@ -10,10 +10,14 @@
             "pay_no": {
                 "type": "number"
             },
-            "pay_amount": {
+            "pay_value_b": {
                 "type": "number"
             },
             "pay_date": {
+                "type": "string",
+                "format": "date-time"
+            },
+            "paid_date": {
                 "type": "string",
                 "format": "date-time"
             },

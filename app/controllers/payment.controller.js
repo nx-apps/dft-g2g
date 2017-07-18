@@ -18,8 +18,42 @@ exports.getSilo = function (req, res) {
 }
 exports.getByContractId = function (req, res) {
     r.table('payment').getAll([req.query.id, false], { index: 'contractPayStatus' })
+        .group(r.row.pluck('company_taxno'))
+        .ungroup()
+        .map(function (m) {
+            return m('group').merge(
+                m('reduction')(0).pluck('company', 'exporter_id'),
+                { cheque_count: m('reduction').count() }
+            )
+        })
         .run()
         .then(function (data) {
             res.json(data)
         })
+}
+exports.getByCompany = function (req, res) {
+    r.table('payment').getAll([req.query.contract_id, req.query.company_taxno, false], { index: 'contractTaxIdPayStatus' })
+        .pluck('id', 'pay_no', 'pay_year', 'pay_date', 'value_bal_b', 'value_tax_b', 'value_final_b', 'invoice_company_no', 'invoice_company_date')
+        .run()
+        .then(function (data) {
+            res.json(data);
+        })
+}
+exports.update = function (req, res) {
+    var valid = req.ajv.validate('g2g.payment_array', req.body);
+    if (valid) {
+        // r.expr(req.body)
+        //     .forEach(function (fe) {
+        //         var paid_date = r.ISO8601(fe('paid_date')).inTimezone('+07');
+        //         return r.branch(fe.hasFields('pay_date'),
+        //             tb.update({ pay_date: pay_date, pay_year: pay_date.year().add(543) }),
+        //             tb.update({ cheque_status: false, pay_no: r.literal(), deliver_date: r.literal() })
+        //         )
+        //     })
+        //     .run().then(function (data) {
+        //         res.json(data)
+        //     })
+    } else {
+        res.json(req.ajv.errorsText());
+    }
 }
