@@ -57,7 +57,7 @@
         </tr>
       </thead>
       <tbody class="table-body">
-        <template is="dom-repeat" items="[[dataFake]]">
+        <template is="dom-repeat" items="[[data]]">
           <tr>
             <td>
               <paper-checkbox id="[[index]]" class="checkBox" data="{{item}}" exporter-id="{{item.exporter_id}}" on-tap="calR2R" checked="{{item.status}}"></paper-checkbox>
@@ -94,9 +94,11 @@
           statePath : 'i18n.g2g'
         },
         data: {
-          type: Object,
-          value: {}
-        }
+          statePath: 'payment.siloDetail',
+          // type: Object,
+          // value: {},
+          // observer: '_setCheckBox'
+        },
       },
       // created:function(){
       //     this.nylonLocalizeImport('/i18n-page1.json');

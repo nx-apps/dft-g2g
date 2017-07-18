@@ -148,8 +148,8 @@
             <br>
             <paper-checkbox class="checkBox" on-tap="toggle" aria-labelledby="label3"></paper-checkbox>
             <!--<label id="label3">-->
-              {{localize.label_rice_from_stock}}
-              <!--</label>-->
+            {{localize.label_rice_from_stock}}
+            <!--</label>-->
           </gl-grid-col>
         </gl-grid-row>
 
@@ -221,7 +221,7 @@
         // this._checkBoxDisabled(e.currentTarget.exporterId);
         // this._checkBoxEabled(dataPay);
       },
-      _getBankObject(e){
+      _getBankObject(e) {
         this.set('dataSet.bank', e.detail.value);
       },
       // _checkBoxDisabled: function (exporter_id) {
@@ -242,21 +242,57 @@
       //     })
       //   }
       // },
-      addPayment: function () {
-        let newData = JSON.parse(JSON.stringify(this.data.filter((item) => item.status == true)))
-        let dataForSend = []
-        newData.map((item) => {
-          dataForSend.push({
-          pay_runnig : this.dataSet.pay_runnig,
-          bank : this.dataSet.bank,
-          bank_branch : this.dataSet.bank_branch,
-          bank_id : this.dataSet.bank_id,
-          paid_date : this.dataSet.paid_date+ 'T00:00:00+07:00',
-          pay_status : this.dataSet.pay_status,
-          pay_value_b : this.dataSet.pay_value_b
+      _resiveDataPayment: function () {
+        return new Promise((res, rej) => {
+          let newData = JSON.parse(JSON.stringify(this.data.filter((item) => item.status == true)))
+          let dataForSend = []
+          newData.map((item) => {
+            dataForSend.push({
+              pay_runnig: this.dataSet.pay_runnig,
+              bank: this.dataSet.bank,
+              bank_branch: this.dataSet.bank_branch,
+              bank_id: this.dataSet.bank_id,
+              paid_date: this.dataSet.paid_date + 'T00:00:00+07:00',
+              pay_status: this.dataSet.pay_status,
+              pay_value_b: this.dataSet.pay_value_b
+            })
           })
+          // console.log(dataForSend);
+          res(dataForSend)
         })
-        console.log(dataForSend);
+      },
+      _resiveFormPayment: function () {
+        return new Promise((res, rej) => {
+          if (this.validateForm('.required')) {
+            this._resiveDataPayment().then((data) => {
+              res(data)
+            })
+          } else {
+            this.fire('toast', {
+              status: 'connectError', text: 'กรุณากรอกข้อมูลให้ครบทุกช่อง', //คำสั่งสำหรับเปิด toast error
+              callback: function () {
+                rej('error')
+              }
+            })
+          }
+        })
+      },
+      addPayment: function () {
+        this.fire('toast', {
+          status: 'openDialog',
+          text: 'ต้องการชำระเงินใช่หรือไม่ ?',
+          confirmed: (result) => {
+            if (result == true) {
+              this._resiveFormPayment()
+                .then((res) => {
+                  console.log(res);
+                })
+                .catch((error) => {
+                  console.log(error);
+                })
+            }
+          }
+        })
         //   // / console.log(result, data);
         //   this.set('data.tags', []);
         //   // if (payDetId.status) {

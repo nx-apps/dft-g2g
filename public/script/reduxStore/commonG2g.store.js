@@ -57,8 +57,8 @@ export function commonG2gAction(store) {
             // console.log(window._config.externalServerCommon);
             axios.get(window._config.externalServerCommon + '/api/bank')
                 .then(function (response) {
-                    console.log(response);
-                    console.log(1);
+                    // console.log(response);
+                    // console.log(1);
                     store.dispatch({ type: 'GET_COMMON_BANK_LIST', payload: response.data })
                 })
                 .catch(function (error) {
