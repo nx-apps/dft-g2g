@@ -28,6 +28,7 @@ export function paymentAction(store) {
         SET_DATE_PAYMENY: function () {
             let set = {
                 pay_value_b: 0,
+                pay_runnig:0,
                 bank_id: 'KTB',
                 bank: {},
                 pay_status: true,
@@ -51,9 +52,16 @@ export function paymentAction(store) {
         PAYMENT_GET_DETAIL_DATA: function (contractTaxno) {
             axios.get('./payment/company?' + contractTaxno)
                 .then((response) => {
-                    // response.data.map((val) => {
-                    //     return val.check = false
-                    // })
+                    response.data.map((val) => {
+                        if (val.pay_status !== true) {
+                            val.pay_status = false
+                        }
+                        if (val.pay_runnig === undefined) {
+                            val.pay_runnig = ''
+                        }
+                        val.check = false
+                        return val
+                    })
                     store.dispatch({ type: 'PAYMENT_GET_DETAIL_DATA', payload: response.data })
                 })
         },

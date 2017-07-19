@@ -150,15 +150,15 @@
       setDataCheque(data){
           this.set('dataCheck',JSON.parse(JSON.stringify(data)))
       },
-      _selectDataAll: function (val) {
-        try {
-          this.data.map((item, index) => {
-            this.set('data.' + index + '.check', this.selectDataAll);
-          });
-        } catch (error) {
+      // _selectDataAll: function (val) {
+      //   try {
+      //     this.data.map((item, index) => {
+      //       this.set('data.' + index + '.check', this.selectDataAll);
+      //     });
+      //   } catch (error) {
 
-        }
-      },
+      //   }
+      // },
       checkStatus: function (cheque_status) {
         if (cheque_status) return 'background-color: #F1F1F1;'
         return ''

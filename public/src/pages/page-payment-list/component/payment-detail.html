@@ -66,7 +66,9 @@
         <table class="gl-table-default">
           <thead class="table-head">
             <tr>
-              <th>{{localize.text_check_box}}</th>
+              <th>
+                <paper-checkbox on-tap="_selectDataAll" checked="{{selectDataAll}}"></paper-checkbox>
+                {{localize.text_check_box}}</th>
               <th>เลขที่เช็ค
                 <!--{{localize.label_order}}-->
               </th>
@@ -82,6 +84,9 @@
               <th>เลขที่ใบแจ้งนี้
                 <!--{{localize.label_total_value_pay_tax}}-->
               </th>
+              <th>รอบการจ่ายเงิน
+              <!--{{localize.label_total_value_bath}}-->
+              </th>
               <!--<th>-->
               <!--{{localize.label_total_value_bath}}-->
               <!--</th>-->
@@ -91,14 +96,18 @@
             <template is="dom-repeat" items="{{data}}">
               <tr>
                 <td>
-                  <paper-checkbox id="index" class="checkBoxPay" data="{{item}}" on-tap="checkData" checked="{{item.status}}"></paper-checkbox>
+                  <paper-checkbox id="index" class="checkBoxPay" data="{{item}}" on-tap="checkData" checked="{{item.check}}"></paper-checkbox>
                 </td>
                 <td>[[_ObcountIndex(index)]]</td>
                 <td>[[formatNumber(item.value_bal_b)]]</td>
                 <td>[[formatNumber(item.value_tax_b)]]</td>
                 <td>[[formatNumber(item.value_final_b)]]</td>
                 <td>[[item.invoice_company_no]]</td>
-                <!--<td>[[item.invoice_company_no]]</td>-->
+                <td>
+                  [[changeString2Num(item.*,'pay_runnig')]]
+                  <gl-form-input type="number" class="required" required="{{item.check}}"
+                    no-label-float value="{{item.pay_runnig}}" data="[[item]]" on-blur="checkDuplicatePayNo"></gl-form-input>
+                </td>
               </tr>
             </template>
           </tbody>
@@ -107,17 +116,8 @@
       <!--[[calValue(data.*)]]-->
       <gl-form-panel-body label="" set-padding="10px" set-border="1px">
         <br> {{localize.label_detail}}
+        
         <gl-grid-row width="{{getWidth}}">
-          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,2]]"></gl-grid-col>
-          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-            <gl-form-input class="required" required label="{{localize.label_order}} :" placeholder="{{localize.label_pay_times}}" value="{{dataSet.pay_times}}"></gl-form-input>
-          </gl-grid-col>
-          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-            <gl-form-input class="required" required label="{{localize.text_cheque_no}} :" allowed-pattern="[0-9||,||.]" placeholder="{{localize.text_cheque_no}}"
-              value="{{dataSet.pay_no}}"></gl-form-input>
-          </gl-grid-col>
-        </gl-grid-row>
-        <gl-grid-row>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,2]]"></gl-grid-col>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
             <gl-combo-box class="required" required id="bank" label="ธนาคาร" item-label-path="bank_name_th" item-value-path="bank_id"
@@ -137,10 +137,10 @@
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
             <gl-form-input type="date" class="required" required label="{{localize.label_cheque_date_approve}}" value="{{dataSet.paid_date}}"></gl-form-input>
           </gl-grid-col>
-          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+          <!--<gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
             <gl-form-input class="required" required label="{{localize.text_amount}} :" placeholder="{{localize.text_amount}}" readonly
               value="{{formatNumber(dataSet.pay_value_b)}}"></gl-form-input>
-          </gl-grid-col>
+          </gl-grid-col>-->
         </gl-grid-row>
         <gl-grid-row>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,2]]"></gl-grid-col>
@@ -181,6 +181,11 @@
           // type: Object,
           // value: {},
           // observer: '_setCheckBox'
+        },
+        no: {
+          // statePath: 'cheque.cheque_no',
+          type: Number,
+          value:1
         },
         dataSet: {
           statePath: 'payment.dataSetPayment',
@@ -224,6 +229,41 @@
       _getBankObject(e) {
         this.set('dataSet.bank', e.detail.value);
       },
+      _selectDataAll: function (val) {
+        try {
+          if (this.selectDataAll) {
+            this.data.map((item, index) => {
+              // console.log(111);
+              // console.log(item.pay_status === false);
+              // if (item.pay_status === false) {
+              if (item.pay_status === false && item.check === false) {
+                this.set('data.' + index + '.check', true)
+                let newCh = this.data.filter((items) => items.check === true && items.pay_status === false)
+                let result = this.maxNumberInArrayObject(newCh, 'pay_runnig')
+                // console.log(result);
+                if (result === 0) {
+                  this.set('data.' + index + '.pay_runnig', this.no.pay_no)
+                } else {
+                  this.set('data.' + index + '.pay_runnig', result + 1)
+                }
+              }
+            })
+          } else {
+            this.data.map((item, index) => {
+              console.log(23);
+
+              if (item.pay_status === false) {
+                this.set('data.' + index + '.check', true);
+                this.set('data.' + index + '.check', false)
+                this.set('data.' + index + '.pay_runnig', '');
+              }
+            })
+          }
+
+        } catch (error) {
+
+        }
+      },
       // _checkBoxDisabled: function (exporter_id) {
       //   let notCheck = Polymer.dom(this.root).querySelectorAll('paper-checkbox.checkBoxPay')
       //   notCheck.map((el) => {
@@ -254,7 +294,7 @@
               bank_id: this.dataSet.bank_id,
               paid_date: this.dataSet.paid_date + 'T00:00:00+07:00',
               pay_status: this.dataSet.pay_status,
-              pay_value_b: this.dataSet.pay_value_b
+              pay_value_b: item.value_final_b
             })
           })
           // console.log(dataForSend);
@@ -278,21 +318,23 @@
         })
       },
       addPayment: function () {
-        this.fire('toast', {
-          status: 'openDialog',
-          text: 'ต้องการชำระเงินใช่หรือไม่ ?',
-          confirmed: (result) => {
-            if (result == true) {
-              this._resiveFormPayment()
-                .then((res) => {
-                  console.log(res);
-                })
-                .catch((error) => {
-                  console.log(error);
-                })
-            }
-          }
-        })
+        console.log(this.data);
+        // this.fire('toast', {
+        //   status: 'openDialog',
+        //   text: 'ต้องการชำระเงินใช่หรือไม่ ?',
+        //   confirmed: (result) => {
+        //     if (result == true) {
+        //       this._resiveFormPayment()
+        //         .then((res) => {
+        //           console.log(res);
+        //         })
+        //         .catch((error) => {
+        //           console.log(error);
+        //         })
+        //     }
+        //   }
+        // })
+
         //   // / console.log(result, data);
         //   this.set('data.tags', []);
         //   // if (payDetId.status) {

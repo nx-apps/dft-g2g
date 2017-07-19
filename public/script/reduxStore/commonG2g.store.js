@@ -77,7 +77,7 @@ export function commonG2gAction(store) {
                 });
         },
         GET_COMMON_HAMONIZE_LIST: function (data) {
-            axios.get(window._config.externalServerCommon + '/api/groupItem?group_id=9c5514af-407f-4a07-b2c9-8e97f951dd16')
+            axios.get(window._config.externalServerCommon + '/api/groupItem?group_id=752621d5-655c-479e-b74f-ab43b567b983')
                 .then(function (response) {
                     var hamonizeList = response.data.reduce(function (prev, curr) {
                         return [...prev, ...curr.sub];
