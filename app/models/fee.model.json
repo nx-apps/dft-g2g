@@ -9,9 +9,6 @@
                     "book_id": {
                         "type": "string"
                     },
-                    "cheque_status": {
-                        "type": "boolean"
-                    },
                     "cl_id": {
                         "type": "string"
                     },

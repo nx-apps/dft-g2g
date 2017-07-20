@@ -39,6 +39,18 @@ exports.getByCompany = function (req, res) {
             res.json(data);
         })
 }
+exports.getPayRuning = function (req, res) {
+    var run = r.table('payment').getAll(r.now().inTimezone('+07').year(), { index: 'yearPayDate' })
+        .filter(function (f) {
+            return f.hasFields('pay_runing')
+        });
+
+    r.expr({
+        pay_runing: r.branch(run.count().eq(0), 1, run.max('pay_runing')('pay_runing').add(1))
+    }).run().then(function (data) {
+        res.json(data)
+    })
+}
 exports.update = function (req, res) {
     var valid = req.ajv.validate('g2g.payment_array', req.body);
     if (valid) {

@@ -3,5 +3,6 @@ module.exports = function (app) {
     app.get('/silo', controller.getSilo);
     app.get('/contract', controller.getByContractId);
     app.get('/company',controller.getByCompany);
+    app.get('/running',controller.getPayRuning);
     app.put('/update',controller.update);
 }
