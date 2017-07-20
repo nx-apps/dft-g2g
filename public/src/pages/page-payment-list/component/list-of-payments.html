@@ -35,8 +35,7 @@
       margin-bottom: 15px;
     }
     
-    table.gl-table-default>thead.table-head>tr>th,
-    table.gl-table-default>tbody.table-body>tr>td:nth-child(2) {
+    table.gl-table-default>thead.table-head>tr>th, {
       text-align: center;
     }
     
@@ -55,7 +54,7 @@
     <div class="flex searchInput horizontal center-justified layout">
       <div class="flex title">{{localize.text_of_contract}} : [[dataForSelect.nameContract]]</div>
       <div class="flex horizontal end-justified layout">
-        <div class="labelSearch">{{localize.text_invoice_no}}</div>{{_searchInArray(searchInput)}}
+        <div class="labelSearch">เลขประจำตัวผู้เสียภาษี</div>{{_searchInArray(searchInput)}}
         <paper-input label=" " no-label-float value="{{searchInput}}"></paper-input>
         <paper-icon-button icon="search"></paper-icon-button>
         </paper-input>
@@ -72,17 +71,17 @@
         </thead>
         <tbody class="table-body">
           <template is="dom-repeat" items="{{data}}">
-            <tr data="[[item]]" on-tap="getPaymentDetail" level="primary">
+            <tr data="[[item]]" on-tap="getPaymentDetail" level="primary" hidden="{{item.hidden}}">
               <td>[[item.company_taxno]]</td>
               <td>[[item.company.company_name_th]]</td>
               <td>[[item.cheque_count]]</td>
             </tr>
           </template>
-          <!--<template is="dom-if" if="[[_isHave(newData)]]">
+          <template is="dom-if" if="[[_isShow(data,data.*)]]">
             <tr>
-              <td colspan="2" style="text-align:center"> {{localize.text_no_data}}</td>
+              <td colspan="3" style="text-align:center"> {{localize.no_data}}</td>
             </tr>
-          </template>-->
+          </template>
         </tbody>
       </table>
     </div>
@@ -114,20 +113,32 @@
       //   // console.log('clone new==>',this.newData);
       //   // console.log('org==>',this.data);
       // },
-      // _searchInArray: function (searchInput) {
-      //   // console.log(searchInput == '');
-      //   if (searchInput != '') {
-      //     let arr = [];
-      //     this.data.map((el) => {
-      //       if (String(el.invoice_no).search(searchInput) > -1) {
-      //         arr.push(el);
-      //       }
-      //     });
-      //     this.newData = arr;
-      //   } else {
-      //     this.initDatabl(this.data);
-      //   }
-      // },
+      _searchInArray: function (searchInput) {
+        // console.log(searchInput == '');
+        // if (searchInput != '') {
+        //   let arr = [];
+        //   this.data.map((el) => {
+        //     if (String(el.invoice_no).search(searchInput) > -1) {
+        //       arr.push(el);
+        //     }
+        //   });
+        //   this.newData = arr;
+        // } else {
+        //   this.initDatabl(this.data);
+        // }
+        try {
+          for (var index = 0; index < this.data.length; index++) {
+            if (String(this.data[index].company_taxno).search(String(searchInput)) > -1) {
+
+              this.set('data.' + index + '.hidden', false)
+            } else {
+              this.set('data.' + index + '.hidden', true)
+            }
+          }
+        } catch (e) {
+
+        }
+      },
       getPaymentDetail: function (e) {
         // console.log(e.currentTarget.data.invoice_no);
         this.fire('get-payment-detail', { detail: e.currentTarget.data });
