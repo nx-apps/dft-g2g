@@ -84,8 +84,8 @@
               <th>เลขที่ใบแจ้งนี้
                 <!--{{localize.label_total_value_pay_tax}}-->
               </th>
-              <th>รอบการจ่ายเงิน
-              <!--{{localize.label_total_value_bath}}-->
+              <th>เลขที่ใบหักภาษี ณ ที่จ่าย
+                <!--{{localize.label_total_value_bath}}-->
               </th>
               <!--<th>-->
               <!--{{localize.label_total_value_bath}}-->
@@ -96,7 +96,7 @@
             <template is="dom-repeat" items="{{data}}">
               <tr>
                 <td>
-                  <paper-checkbox id="index" class="checkBoxPay" data="{{item}}" on-tap="checkData" checked="{{item.check}}"></paper-checkbox>
+                  <paper-checkbox id="index" class="checkBoxPay" data="{{item}}" on-tap="checkData" on-click="setNoCheque" checked="{{item.check}}"></paper-checkbox>
                 </td>
                 <td>[[_ObcountIndex(index)]]</td>
                 <td>[[formatNumber(item.value_bal_b)]]</td>
@@ -105,8 +105,9 @@
                 <td>[[item.invoice_company_no]]</td>
                 <td>
                   [[changeString2Num(item.*,'pay_runnig')]]
-                  <gl-form-input type="number" class="required" required="{{item.check}}"
-                    no-label-float value="{{item.pay_runnig}}" data="[[item]]" on-blur="checkDuplicatePayNo"></gl-form-input>
+                  <gl-form-input type="number" class="required" required="{{item.check}}"  no-label-float value="{{item.pay_runnig}}" data="[[item]]"
+                    on-blur="checkDuplicatePayNo"></gl-form-input>
+                     <!--on-blur="checkDuplicatePayNo"-->
                 </td>
               </tr>
             </template>
@@ -116,7 +117,7 @@
       <!--[[calValue(data.*)]]-->
       <gl-form-panel-body label="" set-padding="10px" set-border="1px">
         <br> {{localize.label_detail}}
-        
+
         <gl-grid-row width="{{getWidth}}">
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,2]]"></gl-grid-col>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
@@ -184,8 +185,10 @@
         },
         no: {
           // statePath: 'cheque.cheque_no',
-          type: Number,
-          value:1
+          type: Object,
+          value: {
+            pay_runnig:1
+          }
         },
         dataSet: {
           statePath: 'payment.dataSetPayment',
@@ -242,7 +245,7 @@
                 let result = this.maxNumberInArrayObject(newCh, 'pay_runnig')
                 // console.log(result);
                 if (result === 0) {
-                  this.set('data.' + index + '.pay_runnig', this.no.pay_no)
+                  this.set('data.' + index + '.pay_runnig', this.no.pay_runnig)
                 } else {
                   this.set('data.' + index + '.pay_runnig', result + 1)
                 }
@@ -250,7 +253,6 @@
             })
           } else {
             this.data.map((item, index) => {
-              console.log(23);
 
               if (item.pay_status === false) {
                 this.set('data.' + index + '.check', true);
@@ -263,6 +265,41 @@
         } catch (error) {
 
         }
+      },
+      setNoCheque: function (para) {
+        // console.log(para.model.__data__)
+        //เพิ่ม index ลงไปเพื่อไว้ ใส่ค่ากลับได้ถูกตำแหน่ง
+        this.data.map((item, index) => item.indexItem = index)
+        let item = para.model.__data__
+        // หา item ที่ check แล่วและ pay_status ยังเป็น false
+        let newCh = this.data.filter((item) => item.check === true && item.pay_status === false)
+        newCh.sort((a, b) => Number(a.pay_runnig) - Number(b.pay_runnig))
+        if (item.item.check === false) {
+          this.set('data.' + item.index + '.pay_runnig', '')
+          let resultMin = this.minNumberInArrayObject(newCh, 'pay_runnig')
+          if (this.no.pay_runnig === resultMin - 1) {
+            newCh.map((item, index) => {
+              if (item.pay_runnig !== resultMin) {
+                this.set('data.' + item.indexItem + '.pay_runnig', resultMin)
+              }
+              ++resultMin
+            })
+          } else {
+            let no = this.no.pay_runnig
+            // เรียงจากนค่า pay_runnig น้อยไปหามาก
+            newCh.map((item, index) => {
+              this.set('data.' + item.indexItem + '.pay_runnig', ++no)
+            })
+          }
+        } else {
+
+          //อยู่ใน g2gLogicBehavior 
+          let result = this.maxNumberInArrayObject(newCh, 'pay_runnig')
+          if (result === 0)
+            return this.set('data.' + item.index + '.pay_runnig', this.no.pay_runnig)
+          return this.set('data.' + item.index + '.pay_runnig', result + 1)
+        }
+
       },
       // _checkBoxDisabled: function (exporter_id) {
       //   let notCheck = Polymer.dom(this.root).querySelectorAll('paper-checkbox.checkBoxPay')
@@ -284,11 +321,11 @@
       // },
       _resiveDataPayment: function () {
         return new Promise((res, rej) => {
-          let newData = JSON.parse(JSON.stringify(this.data.filter((item) => item.status == true)))
+          let newData = JSON.parse(JSON.stringify(this.data.filter((item) => item.check == true)))
           let dataForSend = []
           newData.map((item) => {
             dataForSend.push({
-              pay_runnig: this.dataSet.pay_runnig,
+              pay_runnig: item.pay_runnig,
               bank: this.dataSet.bank,
               bank_branch: this.dataSet.bank_branch,
               bank_id: this.dataSet.bank_id,
@@ -318,22 +355,22 @@
         })
       },
       addPayment: function () {
-        console.log(this.data);
-        // this.fire('toast', {
-        //   status: 'openDialog',
-        //   text: 'ต้องการชำระเงินใช่หรือไม่ ?',
-        //   confirmed: (result) => {
-        //     if (result == true) {
-        //       this._resiveFormPayment()
-        //         .then((res) => {
-        //           console.log(res);
-        //         })
-        //         .catch((error) => {
-        //           console.log(error);
-        //         })
-        //     }
-        //   }
-        // })
+        // console.log(this.data);
+        this.fire('toast', {
+          status: 'openDialog',
+          text: 'ต้องการชำระเงินใช่หรือไม่ ?',
+          confirmed: (result) => {
+            if (result == true) {
+              this._resiveFormPayment()
+                .then((res) => {
+                  console.log(res);
+                })
+                .catch((error) => {
+                  console.log(error);
+                })
+            }
+          }
+        })
 
         //   // / console.log(result, data);
         //   this.set('data.tags', []);
@@ -396,8 +433,8 @@
       //   let el = Polymer.dom(this.root).querySelectorAll('.required');
       //   let stat = el.map((el) => el.validate());
       //   if (stat.every(elem => elem == true)) {
-      //     let { bank_branch, bank_id, exporter_id, fee_id, pay_value_b, pay_date, pay_no, pay_times,pay_full,pay_tax } = data;
-      //     let newData = { bank_branch, bank_id, exporter_id, fee_id, pay_value_b, pay_date, pay_no, pay_times,pay_full,pay_tax  };
+      //     let { bank_branch, bank_id, exporter_id, fee_id, pay_value_b, pay_date, pay_runnig, pay_times,pay_full,pay_tax } = data;
+      //     let newData = { bank_branch, bank_id, exporter_id, fee_id, pay_value_b, pay_date, pay_runnig, pay_times,pay_full,pay_tax  };
       //     newData.payment_detail = new Array();
       //     data.payment_detail.map((payDetId) => {
       //       if (payDetId.status) {
