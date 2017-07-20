@@ -129,6 +129,72 @@
             .gl-btn-danger {
                 background-color: #FF3B3B;
             }
+            vaadin-grid#material {
+                font-family: 'CSChatThaiUI', sans-serif;
+                -webkit-font-smoothing: antialiased;
+                --divider-color: rgba(0, 0, 0, var(--dark-divider-opacity));
+                --vaadin-grid-cell: {
+                    padding: 0;
+                }
+                ;
+                --vaadin-grid-header-cell: {
+                    min-height: 64px;
+                    color: rgba(0, 0, 0, var(--dark-secondary-opacity));
+                    font-size: 16px;
+                    font-weight: bold;
+                    background-color: #F1F1F1;
+                    padding:5px 5px;
+                    /*border-bottom: 1px solid red;*/
+                    /*border: 0.5px solid rgba(0, 0, 0, var(--dark-secondary-opacity));*/
+                }
+                ;
+                --vaadin-grid-body-cell: {
+                    min-height: 48px;
+                    color: rgba(0, 0, 0, var(--dark-primary-opacity));
+                    word-warp font-size: 17px;
+                }
+                ;
+                --vaadin-grid-footer-cell: {
+                    min-height: 64px;
+                    color: rgba(0, 0, 0, var(--dark-secondary-opacity));
+                    font-size: 16px;
+                    font-weight: bold;
+                }
+                ;
+                --vaadin-grid-body-row-hover-cell: {
+                    background-color: var(--paper-grey-200);
+                }
+                ;
+                --vaadin-grid-body-row-selected-cell: {
+                    background-color: var(--paper-grey-100);
+                }
+                ;
+                --vaadin-grid-focused-cell: {
+                    box-shadow: none;
+                    font-weight: bold;
+                }
+                ;
+            }
+
+            vaadin-grid#material .text-left {
+                text-align: left;
+                padding-right: 10px;
+            }
+
+            vaadin-grid#material .text-center {
+                text-align: center;
+            }
+
+            vaadin-grid#material .text-right {
+                text-align: right;
+                padding-right: 10px;
+            }
+
+
+
+            vaadin-grid#material .cursor {
+                cursor: pointer
+            }
         </style>
     </template>
 </dom-module>

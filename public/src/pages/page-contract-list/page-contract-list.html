@@ -39,6 +39,15 @@
                 background-color: #FF5000;
             }
         }
+        .btnFabBack > paper-fab {
+            left: 25px;
+            --paper-fab-iron-icon: {
+                color: black
+            }
+            ;
+            --paper-fab-background: #fff
+            /*--paper-fab-background: #fff;*/
+        }
     </style>
     <template>
         <div class="layout vertical">
@@ -72,6 +81,10 @@
                 </iron-pages>
             </div>
         </nylon-panel-right>
+        <div class="btnFabBack">
+            <paper-fab icon="arrow-back" title="ย้อนกลับ" id="backWard" on-tap="backPage"></paper-fab>
+            <paper-tooltip for="addContract" offset="0">ย้อนกลับ</paper-tooltip>
+        </div>
         <div class="btnFab">
             <paper-fab icon="add" title="{{localize.label_add_contract}}" id="addContract" on-tap="addContract"></paper-fab>
             <paper-tooltip for="addContract" offset="0">{{localize.label_add_contract}}</paper-tooltip>
@@ -624,6 +637,11 @@
             backPageFee: function () {
                 // console.log(this.$$('list-of-fee-g2g'))
                 this.$$('list-of-fee-g2g').backPage()
+            },
+            backPage: function() {
+                // console.log(11111);
+                // console.log(this.$$('#tab7').checked);
+                this.fire('nylon-change-page', { path: '/buyer-list' })
             }
             // _namePanelRight: function (name) {
             //     this.titlePanelRight = name;

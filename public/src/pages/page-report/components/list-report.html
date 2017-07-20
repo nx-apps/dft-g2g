@@ -23,13 +23,19 @@
             .text-center {
                 text-align: center;
             }
+            paper-button.btnInTable {
+                --paper-button: {
+                    margin-top: 0px;
+                    height: 32px;
+                }
+            }
         </style>
         <paper-material elevation="1">
             <div class="container">
                 <div class="flex-horizontal-with-ratios">
                     <!--<div class="flexchild"></div>-->
                     <!--<div class="flex4child">-->
-                    <vaadin-grid aria-label="Report" class="material" items="[[report]]">
+                    <vaadin-grid id="material" class="material" items="[[report]]">
                         <vaadin-grid-column width="10%" flex-grow="0">
                             <template class="header ">
                                 <div class="text-center">ลำดับ</div>
