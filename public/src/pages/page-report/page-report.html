@@ -1,71 +1,102 @@
-<link rel="import" href="components/box-menu.html">
-<link rel="import" href="components/box-menu-search.html">
-<link rel="import" href="components/month-behavior.html">
-<link rel="import" href="../../nylon-behavior.html">
+<link rel="import" href="./../../../bower_components/paper-dialog/paper-dialog.html">
 
-<link rel="import" href="./../../../bower_components/gl-form/gl-combo-box.html">
+<link rel="import" href="./components/list-report.html">
+<link rel="import" href="./../../layout/shared-styles.html">
+<!--<link rel="import" href="./../../l">-->
 
 <dom-module id="page-report">
-  <style include="iron-flex iron-flex-factors iron-flex-alignment gl-styles">
-    :host {
-      display: block;
-    }
-    .btn-search {
-      margin-top: 15px;
-    }
-  </style>
-  <template>
-    <div class="layout horizontal center-justified wrap">
-      <box-menu-search>
-        <div class="title-head" style="font-size:40px">
-           ภงด 53
-        </div>
-        <div class="layout horizontal center-justified">
-          <div class="menu">
-            เดือน
-          </div>
-          <div class="layout horizontal center-justified">
-            <gl-combo-box always-float-label  
-             items="[[getMonth()]]" item-label-path="name"   item-value-path="id"  value="{{data.month}}"  >
-             <template>
-                [[item.name]]
-              </template>
-            </gl-combo-box>
-          </div>
-          <div class="btn-search">
-            <paper-button raised class="gl-btn-primary" on-tap="getReportPay">เลือก</paper-button>
-          </div>
+    <template>
+        <!--<button type="ddd" on-tap="_print">df</button>-->
+        <style include="shared-styles">
+            /*main {
+                padding: 5px;
+                margin: 0 auto;
+            }
 
+            section {
+                display: none;
+                border-top: 1px solid #ddd;
+            }
+
+            input {
+                display: none;
+            }
+
+            label {
+                display: inline-block;
+                margin: 0 0 -1px;
+                padding: 15px 25px;
+                font-weight: 600;
+                text-align: center;
+                color: #bbb;
+                border: 1px solid transparent;
+                background: #D5D8DC;
+            }
+
+            label:before {
+                font-family: fontawesome;
+                font-weight: normal;
+                margin-right: 10px;
+            }
+            label:hover {
+                color: #888;
+                cursor: pointer;
+            }
+
+            input:checked+label {
+                color: #555;
+                border: 1px solid #ddd;
+                border-top: 3px solid orange;
+                border-bottom: 1px solid #fff;
+                background: #fff;
+            }
+
+            #tab1:checked~#content1,
+            #tab2:checked~#content2,{
+                display: block;
+            }*/
+            /*list-of-bl-pm,
+            list-of-invoice, {
+                margin-top: 15px;
+                width: 98%;
+            }*/
+
+            .title {
+                margin: 30px;
+                font-size: 36px;
+            }
+        </style>
+
+        <div class="xcontainer">
+            <div class="title">
+                รายงาน
+            </div>
+            <div class="container">
+                <list-report></list-report>
+            </div>
         </div>
-      </box-menu-search>
-    </div>
-  </template>
-  <script>
-    Polymer({
-      is: "page-report",
-      behaviors: [
-          MonthBehavior,
-          nylonBehavior,
-          // nylonLocalizeBehavior
-      ],
-      properties: {
-        data:{
-          type: Object,
-          value:{}
-        },
-      },
-      created:function(){
-          // this.nylonLocalizeImport('/i18n-page1.json');
-      },
-      getReportPay:function () {
-        // console.log(this.data);
-        var toYear = new Date().toISOString().split('-')[0];
-        var toMonth = new Date().toISOString().split('-')[1];
-        typeof this.data.month == 'undefined' ? this.data.month = toMonth : this.data.month ;
-        this.data.month < 10 ? this.data.month=this.data.month : this.data.month;
-        window.open(window._config.reportServer+'/api/payment/report7?date_start='+toYear+'-'+this.data.month+'-01&date_end='+toYear+'-'+this.data.month+'-31','_blank');
-        window.open(window._config.reportServer+'/api/payment/report8?date_start='+toYear+'-'+this.data.month+'-01&date_end='+toYear+'-'+this.data.month+'-31','_blank');
-      }
-    });
-  </script>
+    </template>
+    <script>
+        Polymer({
+            is: 'page-report',
+            behaviors: [ReduxBehavior, nylonBehavior, i18nAction],
+            // properties: {
+            // },
+            nylonPageActive: function () {
+                // this.dispatchAction('GET_CONTRACT_OF_BUYER', this.getCookieBhv("buyerId"))
+                // this.dispatchAction('SET_COUNTRY_NAME_EN', this.getCookieBhv("country_name_en"));
+            }
+            // urlToReport(e) {
+            //     window.open('./api' + e.currentTarget.data.path)
+            // },
+            // _print: function () {
+            //     this.$$('#report').open()
+
+            // },
+            // printReport() {
+            //     this.data
+            //     window.open('./api/report/daily/company?date=' + this.data)
+            // }
+        });
+    </script>
 </dom-module>

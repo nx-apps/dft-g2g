@@ -104,8 +104,8 @@
                 <td>[[formatNumber(item.value_final_b)]]</td>
                 <td>[[item.invoice_company_no]]</td>
                 <td>
-                  [[changeString2Num(item.*,'pay_runnig')]]
-                  <gl-form-input type="number" class="required" required="{{item.check}}"  no-label-float value="{{item.pay_runnig}}" data="[[item]]"
+                  [[changeString2Num(item.*,'pay_runing')]]
+                  <gl-form-input type="number" class="required" required="{{item.check}}"  no-label-float value="{{item.pay_runing}}" data="[[item]]"
                     on-blur="checkDuplicatePayNo"></gl-form-input>
                      <!--on-blur="checkDuplicatePayNo"-->
                 </td>
@@ -184,11 +184,11 @@
           // observer: '_setCheckBox'
         },
         no: {
-          // statePath: 'cheque.cheque_no',
-          type: Object,
-          value: {
-            pay_runnig:1
-          }
+          statePath: 'payment.payRunning',
+          // type: Object,
+          // value: {
+          //   pay_runing:1
+          // }
         },
         dataSet: {
           statePath: 'payment.dataSetPayment',
@@ -242,12 +242,12 @@
               if (item.pay_status === false && item.check === false) {
                 this.set('data.' + index + '.check', true)
                 let newCh = this.data.filter((items) => items.check === true && items.pay_status === false)
-                let result = this.maxNumberInArrayObject(newCh, 'pay_runnig')
+                let result = this.maxNumberInArrayObject(newCh, 'pay_runing')
                 // console.log(result);
                 if (result === 0) {
-                  this.set('data.' + index + '.pay_runnig', this.no.pay_runnig)
+                  this.set('data.' + index + '.pay_runing', this.no.pay_runing)
                 } else {
-                  this.set('data.' + index + '.pay_runnig', result + 1)
+                  this.set('data.' + index + '.pay_runing', result + 1)
                 }
               }
             })
@@ -257,7 +257,7 @@
               if (item.pay_status === false) {
                 this.set('data.' + index + '.check', true);
                 this.set('data.' + index + '.check', false)
-                this.set('data.' + index + '.pay_runnig', '');
+                this.set('data.' + index + '.pay_runing', '');
               }
             })
           }
@@ -273,31 +273,31 @@
         let item = para.model.__data__
         // หา item ที่ check แล่วและ pay_status ยังเป็น false
         let newCh = this.data.filter((item) => item.check === true && item.pay_status === false)
-        newCh.sort((a, b) => Number(a.pay_runnig) - Number(b.pay_runnig))
+        newCh.sort((a, b) => Number(a.pay_runing) - Number(b.pay_runing))
         if (item.item.check === false) {
-          this.set('data.' + item.index + '.pay_runnig', '')
-          let resultMin = this.minNumberInArrayObject(newCh, 'pay_runnig')
-          if (this.no.pay_runnig === resultMin - 1) {
+          this.set('data.' + item.index + '.pay_runing', '')
+          let resultMin = this.minNumberInArrayObject(newCh, 'pay_runing')
+          if (this.no.pay_runing === resultMin - 1) {
             newCh.map((item, index) => {
-              if (item.pay_runnig !== resultMin) {
-                this.set('data.' + item.indexItem + '.pay_runnig', resultMin)
+              if (item.pay_runing !== resultMin) {
+                this.set('data.' + item.indexItem + '.pay_runing', resultMin)
               }
               ++resultMin
             })
           } else {
-            let no = this.no.pay_runnig
-            // เรียงจากนค่า pay_runnig น้อยไปหามาก
+            let no = this.no.pay_runing
+            // เรียงจากนค่า pay_runing น้อยไปหามาก
             newCh.map((item, index) => {
-              this.set('data.' + item.indexItem + '.pay_runnig', ++no)
+              this.set('data.' + item.indexItem + '.pay_runing', ++no)
             })
           }
         } else {
 
           //อยู่ใน g2gLogicBehavior 
-          let result = this.maxNumberInArrayObject(newCh, 'pay_runnig')
+          let result = this.maxNumberInArrayObject(newCh, 'pay_runing')
           if (result === 0)
-            return this.set('data.' + item.index + '.pay_runnig', this.no.pay_runnig)
-          return this.set('data.' + item.index + '.pay_runnig', result + 1)
+            return this.set('data.' + item.index + '.pay_runing', this.no.pay_runing)
+          return this.set('data.' + item.index + '.pay_runing', result + 1)
         }
 
       },
@@ -325,7 +325,7 @@
           let dataForSend = []
           newData.map((item) => {
             dataForSend.push({
-              pay_runnig: item.pay_runnig,
+              pay_runing: item.pay_runing,
               bank: this.dataSet.bank,
               bank_branch: this.dataSet.bank_branch,
               bank_id: this.dataSet.bank_id,
@@ -433,8 +433,8 @@
       //   let el = Polymer.dom(this.root).querySelectorAll('.required');
       //   let stat = el.map((el) => el.validate());
       //   if (stat.every(elem => elem == true)) {
-      //     let { bank_branch, bank_id, exporter_id, fee_id, pay_value_b, pay_date, pay_runnig, pay_times,pay_full,pay_tax } = data;
-      //     let newData = { bank_branch, bank_id, exporter_id, fee_id, pay_value_b, pay_date, pay_runnig, pay_times,pay_full,pay_tax  };
+      //     let { bank_branch, bank_id, exporter_id, fee_id, pay_value_b, pay_date, pay_runing, pay_times,pay_full,pay_tax } = data;
+      //     let newData = { bank_branch, bank_id, exporter_id, fee_id, pay_value_b, pay_date, pay_runing, pay_times,pay_full,pay_tax  };
       //     newData.payment_detail = new Array();
       //     data.payment_detail.map((payDetId) => {
       //       if (payDetId.status) {

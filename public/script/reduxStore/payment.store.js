@@ -3,20 +3,23 @@ import { commonAction } from '../config'
 const initialState = {
     list: [],
     listPayment: [],
+    payRunning:{},
     paymentDetail: [],
     dataSetPayment: {},
     siloDetail: []
 }
 export function paymentReducer(state = initialState, action) {
     switch (action.type) {
+        case 'SET_DATE_PAYMENY':
+            return Object.assign({}, state, { dataSetPayment: action.payload });
+        case 'PAYMENT_GET_RUNNING_NO':
+            return Object.assign({}, state, { payRunning: action.payload });
         case 'PAYMENT_GET_LIST_DATA':
             return Object.assign({}, state, { listPayment: action.payload });
         case 'PAYMENT_GET_DETAIL_DATA':
             return Object.assign({}, state, { paymentDetail: action.payload });
         case 'PAYMENT_GET_SILO_DATA':
             return Object.assign({}, state, { siloDetail: action.payload });
-        case 'SET_DATE_PAYMENY':
-            return Object.assign({}, state, { dataSetPayment: action.payload });
         default:
             return state
     }
@@ -28,7 +31,7 @@ export function paymentAction(store) {
         SET_DATE_PAYMENY: function () {
             let set = {
                 pay_value_b: 0,
-                pay_runnig:0,
+                pay_runing:0,
                 bank_id: 'KTB',
                 bank: {},
                 pay_status: true,
@@ -40,6 +43,16 @@ export function paymentAction(store) {
         },
         // END SET DATA
         // GET DATA
+        
+        PAYMENT_GET_RUNNING_NO: function () {
+            axios.get('./payment/running')
+                .then((response) => {
+                    // response.data.map((val) => {
+                    //     return val.check = false
+                    // })
+                    store.dispatch({ type: 'PAYMENT_GET_RUNNING_NO', payload: response.data })
+                })
+        },
         PAYMENT_GET_LIST_DATA: function (id) {
             axios.get('./payment/contract?id=' + id)
                 .then((response) => {
@@ -56,8 +69,8 @@ export function paymentAction(store) {
                         if (val.pay_status !== true) {
                             val.pay_status = false
                         }
-                        if (val.pay_runnig === undefined) {
-                            val.pay_runnig = ''
+                        if (val.pay_runing === undefined) {
+                            val.pay_runing = ''
                         }
                         val.check = false
                         return val

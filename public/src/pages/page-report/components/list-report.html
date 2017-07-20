@@ -1,0 +1,221 @@
+<link rel="import" href="./../../../../bower_components/vaadin-grid/vaadin-grid.html">
+<link rel="import" href="./../../../../bower_components/gl-form/gl-form-input.html">
+<link rel="import" href="./../../components/cookie-behavior.html">
+<link rel="import" href="./../../components/g2g-logic-behavior.html">
+<link rel="import" href="./../../../layout/shared-styles.html">
+
+<dom-module id="list-report">
+    <template>
+        <style include="shared-styles">
+            vaadin-grid {
+                margin: 0px;
+                width: 100%;
+                height: auto;
+            }
+
+            .img {
+                width: 24px;
+                height: 24px;
+                margin: 0px 10px;
+                /*background-color: lightgray;*/
+            }
+
+            .text-center {
+                text-align: center;
+            }
+        </style>
+        <paper-material elevation="1">
+            <div class="container">
+                <div class="flex-horizontal-with-ratios">
+                    <!--<div class="flexchild"></div>-->
+                    <!--<div class="flex4child">-->
+                    <vaadin-grid aria-label="Report" class="material" items="[[report]]">
+                        <vaadin-grid-column width="10%" flex-grow="0">
+                            <template class="header ">
+                                <div class="text-center">ลำดับ</div>
+                            </template>
+                            <template>
+                                <div class="text-center">[[item.report_id]]</div>
+                            </template>
+                        </vaadin-grid-column>
+
+
+                        <vaadin-grid-column width="53.9%" flex-grow="0">
+                            <template class="header">ชื่อรายงาน</template>
+                            <template>[[item.report_name]]</template>
+                        </vaadin-grid-column>
+
+                        <vaadin-grid-column width="12%" flex-grow="0">
+                            <template class="header">
+                                <div class="text-center">PDF</div>
+                            </template>
+                            <template>
+                                <paper-button raised class="btnInTable" id="PDF" on-tap="print">
+                                    <iron-image class="img" sizing="cover" preload src="/images/icon/type_report/pdf.png"></iron-image>
+                                    PDF</paper-button>
+                            </template>
+                        </vaadin-grid-column>
+
+                        <vaadin-grid-column width="12%" flex-grow="0">
+                            <template class="header">
+                                <div class="text-center">WORD</div>
+                            </template>
+                            <template>
+                                <paper-button raised class="btnInTable" id="WORD" on-tap="print">
+                                    <iron-image class="img" sizing="cover" preload src="/images/icon/type_report/Microsoft_Word_2013_logo.svg.png"></iron-image>
+                                    WORD</paper-button>
+                            </template>
+                        </vaadin-grid-column>
+
+                        <vaadin-grid-column width="12%" flex-grow="0">
+                            <template class="header">
+                                <div class="text-center">EXCEL</div>
+                            </template>
+                            <template>
+                                <paper-button raised class="btnInTable" id="EXCEL" on-tap="print">
+                                    <iron-image class="img" sizing="cover" preload src="/images/icon/type_report/Microsoft_Excel_2013_logo.svg.png"></iron-image>
+                                    EXCEL</paper-button>
+                            </template>
+                        </vaadin-grid-column>
+                    </vaadin-grid>
+                    <!--</div>-->
+                    <!--<div class="flexchild"></div>-->
+                </div>
+            </div>
+
+
+        </paper-material>
+        <paper-dialog id="report">
+            <div class="layout horizontal start-justified">
+                <div class="flex" style=" margin-right: 30px">
+                    <gl-form-input label="วันที่ที่ต้องการดู:" placeholder="วันที่ที่ต้องการดู" type="date" value="{{data}}"></gl-form-input>
+                    <!--<vaadin-date-picker always-float-label label="วันที่ที่ต้องการดู" value="{{data}}"></vaadin-date-picker>-->
+                </div>
+
+                <div class="flex horizontal end-justified layout buttons">
+                    <paper-button raised class="gl-btn-default" dialog-dismiss>ปิด</paper-button>
+                    <paper-button raised class="gl-btn-primary" on-tap="printReport" dialog-confirm autofocus>ออกรายงาน</paper-button>
+                </div>
+        </paper-dialog>
+    </template>
+    <script>
+        Polymer({
+            is: 'list-report',
+            behaviors: [ReduxBehavior, nylonBehavior, i18nAction,g2gLogicBehavior,CookieBehavior],
+            properties: {
+                date: {
+                    type: Object,
+                    value: { type: 'PDF' }
+                },
+                report: {
+                    type: Array,
+                    value: [
+                        {
+                            report_id: 1,
+                            report_name: 'รายงานการส่งมอบข้าวให้รัฐบาล',
+                            report_link: '/rice/report1'
+                        },
+                        {
+                            report_id: 2,
+                            report_name: 'แบบร่าง BL',
+                            report_link: '/rice/report2'
+                        },
+                        {
+                            report_id: 3,
+                            report_name: 'หนังสือการส่งมอบข้าวรัฐบาล',
+                            report_link: '/rice/report3'
+                        },
+                        {
+                            report_id: 4,
+                            report_name: 'ใบรายการลำเรือ',
+                            report_link: '/rice/report4'
+                        },
+                        {
+                            report_id: 5,
+                            report_name: 'ออกใบแจ้งหนี้ (Invoice)',
+                            report_link: '/finance/report1'
+                        },
+                        {
+                            report_id: 6,
+                            report_name: 'ทะเบียนคุมการส่งมอบข้าว',
+                            report_link: '/finance/report2'
+                        },
+                        {
+                            report_id: 7,
+                            report_name: 'เอกสารที่ได้รับเงินการส่งออกข้าว',
+                            report_link: '/finance/report3'
+                        },
+                        {
+                            report_id: 8,
+                            report_name: 'รายละเอียดการรับเงินค่าข้าว',
+                            report_link: '/finance/report4'
+                        },
+                        {
+                            report_id: 9,
+                            report_name: 'การเงิน 5',
+                            report_link: '/finance/report5'
+                        },
+                        {
+                            report_id: 10,
+                            report_name: 'การเงิน 6',
+                            report_link: '/finance/report6'
+                        },
+                        {
+                            report_id: 11,
+                            report_name: 'หนังสือรับรองการหักภาษี ณ ที่จ่าย',
+                            report_link: '/finance/report7'
+                        },
+                        {
+                            report_id: 12,
+                            report_name: 'รายการจ่ายเงินค่าข้าวโครงการขายข้าว',
+                            report_link: '/finance/report8'
+                        },
+                    ]
+                },
+                setType: {
+                    type: Object,
+                    value: {}
+                },
+                data:{
+                    type : Object,
+                    value: {}
+                },
+                contractList:{
+
+                },
+                confirmList :{
+
+                },
+                bookList:{
+
+                },
+                fee_noList:{
+
+                },
+                paymentList:{
+
+                }
+            },
+            print(e) {
+                let link = e.model.item.report_link
+                let type = e.currentTarget.id
+                let data = e.model.__data__.item
+                let url = `${link}?`
+                // console.log(this.genUrl(url));
+                console.log(url);
+                // export
+                // console.log(link,type);
+                // this.set('date.type', type)
+                // this.set('date.link', link)
+                // // console.log(e.model.item);
+                // // console.log(e.currentTarget.id);
+                // this.$$('#report').open()
+            },
+            printReport() {
+                let buyerId = this.getCookieBhv("buyerId")
+                window.open('./api/report/daily/company?date=' + this.data)
+            }
+
+        });
+    </script>
+</dom-module>
