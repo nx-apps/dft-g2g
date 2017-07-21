@@ -4,6 +4,9 @@
         "id": {
             "type": "string"
         },
+        "buyer_id": {
+            "type": "string"
+        },
         "contract_id": {
             "type": "string"
         },

@@ -8,6 +8,9 @@
             "book_no": {
                 "type": "string"
             },
+            "buyer_id": {
+                "type": "string"
+            },
             "cl_id": {
                 "type": "string"
             },
