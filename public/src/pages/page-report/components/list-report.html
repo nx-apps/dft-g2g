@@ -23,6 +23,7 @@
             .text-center {
                 text-align: center;
             }
+
             paper-button.btnInTable {
                 --paper-button: {
                     margin-top: 0px;
@@ -91,13 +92,175 @@
 
 
         </paper-material>
-        <paper-dialog id="report">
-            <div class="layout horizontal start-justified">
-                <div class="flex" style=" margin-right: 30px">
-                    <gl-form-input label="วันที่ที่ต้องการดู:" placeholder="วันที่ที่ต้องการดู" type="date" value="{{data}}"></gl-form-input>
-                    <!--<vaadin-date-picker always-float-label label="วันที่ที่ต้องการดู" value="{{data}}"></vaadin-date-picker>-->
-                </div>
 
+        <paper-dialog id="report_cl_id">
+            <div class="layout start-justified">
+                <div class="flex" style=" margin-right: 30px">
+                    <gl-combo-box always-float-label required label="สัญญา" placeholder="สัญญา"
+                        items="{{contractList}}" item-label-path="contract_no" item-value-path="contract_id"
+                        value="{{data.contract_id}}">
+                        <template>
+                            [[item.contract_no]]
+                        </template>
+                    </gl-combo-box>
+                </div>
+                <div class="flex" style=" margin-right: 30px">
+                    <gl-combo-box always-float-label required label="งวด" placeholder="งวด"
+                        items="{{confirmList}}" item-label-path="cl_no" item-value-path="cl_id"
+                        value="{{data.cl_id}}">
+                        <template>
+                            [[item.cl_no]]
+                        </template>
+                    </gl-combo-box>
+                </div>
+                <div class="flex horizontal end-justified layout buttons">
+                    <paper-button raised class="gl-btn-default" dialog-dismiss>ปิด</paper-button>
+                    <paper-button raised class="gl-btn-primary" on-tap="printReport" dialog-confirm autofocus>ออกรายงาน</paper-button>
+                </div>
+        </paper-dialog>
+
+
+        <paper-dialog id="report_book_id">
+            <div class="layout start-justified">
+                <div class="flex" style=" margin-right: 30px">
+                    <gl-combo-box always-float-label required label="สัญญา" placeholder="สัญญา"
+                        items="{{contractList}}" item-label-path="contract_no" item-value-path="contract_id"
+                        value="{{data.contract_id}}">
+                        <template>
+                            [[item.contract_no]]
+                        </template>
+                    </gl-combo-box>
+                </div>
+                <div class="flex" style=" margin-right: 30px">
+                    <gl-combo-box always-float-label required label="งวด" placeholder="งวด"
+                        items="{{confirmList}}" item-label-path="cl_no" item-value-path="cl_id"
+                        value="{{data.cl_id}}">
+                        <template>
+                            [[item.cl_no]]
+                        </template>
+                    </gl-combo-box>
+                </div>
+                <div class="flex" style=" margin-right: 30px">
+                    <gl-combo-box always-float-label required label="Booking" placeholder="Booking"
+                        items="{{bookList}}" item-label-path="book_no" item-value-path="book_id"
+                        value="{{data.book_id}}">
+                        <template>
+                            [[item.book_no]]
+                        </template>
+                    </gl-combo-box>
+                </div>
+                <div class="flex horizontal end-justified layout buttons">
+                    <paper-button raised class="gl-btn-default" dialog-dismiss>ปิด</paper-button>
+                    <paper-button raised class="gl-btn-primary" on-tap="printReport" dialog-confirm autofocus>ออกรายงาน</paper-button>
+                </div>
+        </paper-dialog>
+
+        <paper-dialog id="report_book_of_id">
+            <div class="layout start-justified">
+                <div class="flex" style=" margin-right: 30px">
+                    <gl-combo-box always-float-label required label="สัญญา" placeholder="สัญญา"
+                        items="{{contractList}}" item-label-path="contract_no" item-value-path="contract_id"
+                        value="{{data.contract_id}}">
+                        <template>
+                            [[item.contract_no]]
+                        </template>
+                    </gl-combo-box>
+                </div>
+                <div class="flex" style=" margin-right: 30px">
+                    <gl-combo-box always-float-label required label="งวด" placeholder="งวด"
+                        items="{{confirmList}}" item-label-path="cl_no" item-value-path="cl_id"
+                        value="{{data.cl_id}}">
+                        <template>
+                            [[item.cl_no]]
+                        </template>
+                    </gl-combo-box>
+                </div>
+                <div class="flex" style=" margin-right: 30px">
+                    <gl-combo-box always-float-label required label="Booking" placeholder="Booking"
+                        items="{{bookList}}" item-label-path="book_no" item-value-path="book_id"
+                        value="{{data.id}}">
+                        <template>
+                            [[item.book_no]]
+                        </template>
+                    </gl-combo-box>
+                </div>
+                <div class="flex horizontal end-justified layout buttons">
+                    <paper-button raised class="gl-btn-default" dialog-dismiss>ปิด</paper-button>
+                    <paper-button raised class="gl-btn-primary" on-tap="printReport" dialog-confirm autofocus>ออกรายงาน</paper-button>
+                </div>
+        </paper-dialog>
+
+        <paper-dialog id="report_date_contract">
+            <div class="layout start-justified">
+                <div class="flex" style=" margin-right: 30px">
+                    <gl-combo-box always-float-label required label="สัญญา" placeholder="สัญญา"
+                        items="{{contractList}}" item-label-path="contract_no" item-value-path="contract_id"
+                        value="{{data.contract_id}}">
+                        <template>
+                            [[item.contract_no]]
+                        </template>
+                    </gl-combo-box>
+                </div>
+                <div class="flex" style=" margin-right: 30px">
+                    <gl-form-input label="วันที่ที่ต้องการดู:" placeholder="วันที่ที่ต้องการดู" type="date" value="{{data.date}}"></gl-form-input>
+                 </div>
+
+                <div class="flex horizontal end-justified layout buttons">
+                    <paper-button raised class="gl-btn-default" dialog-dismiss>ปิด</paper-button>
+                    <paper-button raised class="gl-btn-primary" on-tap="printReport" dialog-confirm autofocus>ออกรายงาน</paper-button>
+                </div>
+        </paper-dialog>
+
+        <paper-dialog id="report_date_devr_contract">
+            <div class="layout start-justified">
+                <div class="flex" style=" margin-right: 30px">
+                    <gl-combo-box always-float-label required label="สัญญา" placeholder="สัญญา"
+                        items="{{contractList}}" item-label-path="contract_no" item-value-path="contract_id"
+                        value="{{data.contract_id}}">
+                        <template>
+                            [[item.contract_no]]
+                        </template>
+                    </gl-combo-box>
+                </div>
+                <div class="flex" style=" margin-right: 30px">
+                    <gl-form-input label="วันที่ที่ต้องการดู:" placeholder="วันที่ที่ต้องการดู" type="date" value="{{data.deliver_date}}"></gl-form-input>
+                 </div>
+
+                <div class="flex horizontal end-justified layout buttons">
+                    <paper-button raised class="gl-btn-default" dialog-dismiss>ปิด</paper-button>
+                    <paper-button raised class="gl-btn-primary" on-tap="printReport" dialog-confirm autofocus>ออกรายงาน</paper-button>
+                </div>
+        </paper-dialog>
+
+        <paper-dialog id="report_contract_cl_fee">
+            <div class="layout start-justified">
+                <div class="flex" style=" margin-right: 30px">
+                    <gl-combo-box always-float-label required label="สัญญา" placeholder="สัญญา"
+                        items="{{contractList}}" item-label-path="contract_no" item-value-path="contract_id"
+                        value="{{data.contract_id}}">
+                        <template>
+                            [[item.contract_no]]
+                        </template>
+                    </gl-combo-box>
+                </div>
+                <div class="flex" style=" margin-right: 30px">
+                    <gl-combo-box always-float-label required label="งวด" placeholder="งวด"
+                        items="{{confirmList}}" item-label-path="cl_no" item-value-path="cl_id"
+                        value="{{data.cl_id}}">
+                        <template>
+                            [[item.cl_no]]
+                        </template>
+                    </gl-combo-box>
+                </div>
+                <div class="flex" style=" margin-right: 30px">
+                    <gl-combo-box always-float-label required label="Booking" placeholder="Booking"
+                        items="{{fee_noList}}" item-label-path="fee_no" item-value-path="fee_no"
+                        value="{{data.fee_no}}">
+                        <template>
+                            [[item.fee_no]]
+                        </template>
+                    </gl-combo-box>
+                </div>
                 <div class="flex horizontal end-justified layout buttons">
                     <paper-button raised class="gl-btn-default" dialog-dismiss>ปิด</paper-button>
                     <paper-button raised class="gl-btn-primary" on-tap="printReport" dialog-confirm autofocus>ออกรายงาน</paper-button>
@@ -107,7 +270,7 @@
     <script>
         Polymer({
             is: 'list-report',
-            behaviors: [ReduxBehavior, nylonBehavior, i18nAction,g2gLogicBehavior,CookieBehavior],
+            behaviors: [ReduxBehavior, nylonBehavior, i18nAction, g2gLogicBehavior, CookieBehavior],
             properties: {
                 date: {
                     type: Object,
@@ -182,23 +345,23 @@
                     type: Object,
                     value: {}
                 },
-                data:{
-                    type : Object,
+                data: {
+                    type: Object,
                     value: {}
                 },
-                contractList:{
+                contractList: {
 
                 },
-                confirmList :{
+                confirmList: {
 
                 },
-                bookList:{
+                bookList: {
 
                 },
-                fee_noList:{
+                fee_noList: {
 
                 },
-                paymentList:{
+                paymentList: {
 
                 }
             },

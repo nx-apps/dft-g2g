@@ -4,7 +4,7 @@
 <link rel="import" href="./../../components/format-number-behavior.html">
 <link rel="import" href="./../../components/g2g-logic-behavior.html">
 <dom-module id="list-of-payments">
-  <style include="iron-flex iron-flex-factors iron-flex-alignment gl-styles">
+  <style include="shared-styles">
      :host {
       display: block;
     }
@@ -52,7 +52,7 @@
   </style>
   <template>
     <div class="flex searchInput horizontal center-justified layout">
-      <div class="flex title">{{localize.text_of_contract}} : [[dataForSelect.nameContract]]</div>
+      <div class="flex title">{{localize.text_of_contract}} : [[contractId.contract_name]]</div>
       <div class="flex horizontal end-justified layout">
         <div class="labelSearch">เลขประจำตัวผู้เสียภาษี</div>{{_searchInArray(searchInput)}}
         <paper-input label=" " no-label-float value="{{searchInput}}"></paper-input>
@@ -99,7 +99,11 @@
         },
         data: {
           statePath: 'payment.listPayment'
-        }
+        },
+        contractId: {
+          statePath: 'commonState.contractId',
+          // observer: 'get'
+        },
       },
       // observers: [
       //   'initDatabl(data)'
