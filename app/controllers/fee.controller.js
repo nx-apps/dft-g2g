@@ -18,7 +18,7 @@ exports.calc = function (req, res) {
                             value_final_b: 0
                         })
                 });
-            return m.pluck('invoice_type', 'invoice_no', 'invoice_year', 'invoice_date', 'cl_id', 'cl_no', 'contract_id', 'contract_no', 'ship', 'ship_lot')
+            return m.pluck('invoice_type', 'invoice_no', 'invoice_year', 'invoice_date', 'cl_id', 'cl_no', 'contract_id', 'contract_no','buyer_id', 'ship', 'ship_lot')
                 .merge({
                     book_id: m('id'),
                     ship: ship.map(function (sm) {
@@ -51,12 +51,12 @@ exports.insert = function (req, res) {
     var obj = r.expr(book)
         .eqJoin('book_id', r.table('book')).pluck('left', {
             right: [
-                'cl_id', 'cl_no', 'contract_id', 'contract_no', 'invoice_date', 'invoice_type', 'invoice_no', 'invoice_year'
+                'cl_id', 'cl_no', 'contract_id', 'contract_no','buyer_id', 'invoice_date', 'invoice_type', 'invoice_no', 'invoice_year'
                 //,'cut_date', 'eta_date', 'etd_date', 'packing_date', 'product_date'
             ]
         }).zip()
         .group(function (g) {
-            return g.pluck('cl_id', 'cl_no', 'contract_id', 'contract_no')
+            return g.pluck('cl_id', 'cl_no', 'contract_id', 'contract_no','buyer_id')
         })
         .ungroup()
         .map(function (m) {
@@ -270,7 +270,7 @@ exports.approve = function (req, res) {
                         return m('book').map(function (m2) {
                             return m2('detail').merge(
                                 m2.pluck('book_id', 'invoice_date', 'invoice_no', 'invoice_type', 'invoice_year', 'ship', 'ship_lot'),
-                                m.pluck('contract_id', 'contract_no', 'cl_id', 'cl_no', 'fee_no', 'fee_round', 'fee_date', 'rate_bank_b', 'rate_tt_b'),
+                                m.pluck('contract_id', 'contract_no','buyer_id', 'cl_id', 'cl_no', 'fee_no', 'fee_round', 'fee_date', 'rate_bank_b', 'rate_tt_b'),
                                 {
                                     fee_id: m('id'),
                                     cheque_status: false,
