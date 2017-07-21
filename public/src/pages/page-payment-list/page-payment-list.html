@@ -397,6 +397,9 @@
                 this.dispatchAction('SET_CONTRACT_ID', contractData)
                 this.dispatchAction('GET_COMMON_BANK_LIST');
                 var buyer_id = this.getCookieBhv("buyerId");
+                this.dispatchAction('SET_BUYER_ID',{
+                    buyer_id:this.getCookieBhv("buyerId")
+                })
                 this.dispatchAction('BOOK_GET_LIST_DATA', contract_id);
                 this.dispatchAction('INVOICE_GET_LIST_DATA', contract_id);
                 this.dispatchAction('FEE_GET_LIST_DATA', { contract_id: this.getCookieBhv("contract_id"), view: 'fin', status: 'true' });

@@ -9,6 +9,7 @@ const initialState = {
     setState: {},
     setPageAndSearch: {},
     contractId: {},
+    buyerId:{},
     confirmId: {},
     bookId: {},
     contryNameEn: {}
@@ -21,6 +22,8 @@ export function commonStateReducer(state = initialState, action) {
             return Object.assign({}, state, { breadCrumbs: action.payload });
         case 'SET_PAGE_AND_SEARCH':
             return Object.assign({}, state, { setPageAndSearch: action.payload });
+        case 'SET_BUYER_ID':
+            return Object.assign({}, state, { buyerId: action.payload });
         case 'SET_CONTRACT_ID':
             return Object.assign({}, state, { contractId: action.payload });
         case 'SET_CONFIRM_ID':
@@ -49,6 +52,11 @@ export function commonStateAction(store) {
         SET_PAGE_AND_SEARCH: function (data) {
             // console.log(data);
             store.dispatch({ type: 'SET_PAGE_AND_SEARCH', payload: data })
+            // return axios.get('/external/upload/list/' + ref + '/' + com)
+        },
+        SET_BUYER_ID: function (data) {
+            // console.log(data);
+            store.dispatch({ type: 'SET_BUYER_ID', payload: data })
             // return axios.get('/external/upload/list/' + ref + '/' + com)
         },
         SET_CONTRACT_ID: function (data) {

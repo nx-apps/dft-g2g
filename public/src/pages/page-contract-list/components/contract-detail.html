@@ -482,7 +482,8 @@
     Polymer({
       is: "contract-detail",
       behaviors: [
-        ReduxBehavior, FormatNumberBehavior, nylonBehavior, g2gLogicBehavior, ValidateFormBehavior, Polymer.IronValidatorBehavior
+        ReduxBehavior, FormatNumberBehavior, nylonBehavior, g2gLogicBehavior,
+         ValidateFormBehavior, Polymer.IronValidatorBehavior
       ],
       properties: {
         localizeContract: {
@@ -509,6 +510,9 @@
             hamonize_code: '',
             hamonize_th2: '',
           }
+        },
+        buyerId:{
+          statePath:'commonState.buyerId'
         },
         buyerList: {
           statePath: 'commonG2g.buyerList',
@@ -646,7 +650,7 @@
 
       },
       resetSearch(year) {
-console.log(year);
+// console.log(year);
         if (year === '' || year === undefined) {
           // console.log(year);
           // console.log(this.dataSeleted.hamonize_code);
@@ -817,6 +821,7 @@ console.log(year);
           let dataResive = JSON.parse(JSON.stringify(this.data))
           dataResive.contract_hamonize = this._getHamonize()
           dataResive.buyer = this.dataShow.obj.buyer
+          dataResive.buyer_id = this.buyerId.buyer_id
           dataResive.country = this.dataShow.obj.country
           dataResive.contract_no = Number(dataResive.contract_no)
           dataResive.country_id = this.dataShow.obj.buyer.country_id

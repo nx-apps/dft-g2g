@@ -160,6 +160,9 @@
                 // console.log(this.getCookieBhv("buyerId"));
                 this.dispatchAction('GET_CONTRACT_OF_BUYER', this.getCookieBhv("buyerId"))
                 this.dispatchAction('SET_COUNTRY_NAME_EN', this.getCookieBhv("country_name_en"));
+                this.dispatchAction('SET_BUYER_ID',{
+                    buyer_id:this.getCookieBhv("buyerId")
+                })
                 // console.log(this.getCookieBhv("buyerId"));
                 // this.dispatchAction('EXPORTER_GET_TYPE_LIC');
                 this.dispatchAction('GET_COMMON_BUYER_LIST');

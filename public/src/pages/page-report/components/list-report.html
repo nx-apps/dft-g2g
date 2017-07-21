@@ -37,7 +37,7 @@
                     <!--<div class="flexchild"></div>-->
                     <!--<div class="flex4child">-->
                     <vaadin-grid id="material" class="material" items="[[report]]">
-                        <vaadin-grid-column width="10%" flex-grow="0">
+                        <vaadin-grid-column width="7%" flex-grow="0">
                             <template class="header ">
                                 <div class="text-center">ลำดับ</div>
                             </template>
@@ -47,12 +47,12 @@
                         </vaadin-grid-column>
 
 
-                        <vaadin-grid-column width="53.9%" flex-grow="0">
+                        <vaadin-grid-column width="41.6%" flex-grow="0" resizable>
                             <template class="header">ชื่อรายงาน</template>
                             <template>[[item.report_name]]</template>
                         </vaadin-grid-column>
 
-                        <vaadin-grid-column width="12%" flex-grow="0">
+                        <vaadin-grid-column width="10.6%" flex-grow="0">
                             <template class="header">
                                 <div class="text-center">PDF</div>
                             </template>
@@ -63,7 +63,7 @@
                             </template>
                         </vaadin-grid-column>
 
-                        <vaadin-grid-column width="12%" flex-grow="0">
+                        <vaadin-grid-column width="10.6%" flex-grow="0">
                             <template class="header">
                                 <div class="text-center">WORD</div>
                             </template>
@@ -74,7 +74,7 @@
                             </template>
                         </vaadin-grid-column>
 
-                        <vaadin-grid-column width="12%" flex-grow="0">
+                        <vaadin-grid-column width="10.6%" flex-grow="0">
                             <template class="header">
                                 <div class="text-center">EXCEL</div>
                             </template>
@@ -82,6 +82,35 @@
                                 <paper-button raised class="btnInTable" id="EXCEL" on-tap="print">
                                     <iron-image class="img" sizing="cover" preload src="/images/icon/type_report/Microsoft_Excel_2013_logo.svg.png"></iron-image>
                                     EXCEL</paper-button>
+                            </template>
+                        </vaadin-grid-column>
+
+                        <vaadin-grid-column width="10.6%" flex-grow="0">
+                            <template class="header">
+                                <!--<vaadin-grid-sorter path="date_updated">-->
+                                <div class="text-center">
+                                    <p>วันที่อัพเดทล่าสุด</div>
+                                <!--</vaadin-grid-sorter>-->
+                            </template>
+                            <template>
+                                <p style="white-space: normal">111
+                                    <!--{{item.date_updated}}-->
+                                </p>
+                            </template>
+                        </vaadin-grid-column>
+
+                        <vaadin-grid-column width="9%" flex-grow="0">
+                            <template class="header">
+                                <div class="text-center">
+                                    <p>เครื่องมือ</div>
+                            </template>
+                            <template>
+                                <div class="text-center">
+                                    <span>
+                                        <paper-icon-button data="{{item}}" icon="create" on-tap="_edit" ></paper-icon-button>
+                                        <paper-icon-button data="{{item}}" icon="delete" on-tap="_delete"></paper-icon-button>
+                                    </span>
+                                </div>
                             </template>
                         </vaadin-grid-column>
                     </vaadin-grid>
@@ -96,17 +125,15 @@
         <paper-dialog id="report_cl_id">
             <div class="layout start-justified">
                 <div class="flex" style=" margin-right: 30px">
-                    <gl-combo-box always-float-label required label="สัญญา" placeholder="สัญญา"
-                        items="{{contractList}}" item-label-path="contract_no" item-value-path="contract_id"
-                        value="{{data.contract_id}}">
+                    <gl-combo-box always-float-label required label="สัญญา" placeholder="สัญญา" items="{{contractList}}" item-label-path="contract_no"
+                        item-value-path="contract_id" value="{{data.contract_id}}">
                         <template>
                             [[item.contract_no]]
                         </template>
                     </gl-combo-box>
                 </div>
                 <div class="flex" style=" margin-right: 30px">
-                    <gl-combo-box always-float-label required label="งวด" placeholder="งวด"
-                        items="{{confirmList}}" item-label-path="cl_no" item-value-path="cl_id"
+                    <gl-combo-box always-float-label required label="งวด" placeholder="งวด" items="{{confirmList}}" item-label-path="cl_no" item-value-path="cl_id"
                         value="{{data.cl_id}}">
                         <template>
                             [[item.cl_no]]
@@ -123,17 +150,15 @@
         <paper-dialog id="report_book_id">
             <div class="layout start-justified">
                 <div class="flex" style=" margin-right: 30px">
-                    <gl-combo-box always-float-label required label="สัญญา" placeholder="สัญญา"
-                        items="{{contractList}}" item-label-path="contract_no" item-value-path="contract_id"
-                        value="{{data.contract_id}}">
+                    <gl-combo-box always-float-label required label="สัญญา" placeholder="สัญญา" items="{{contractList}}" item-label-path="contract_no"
+                        item-value-path="contract_id" value="{{data.contract_id}}">
                         <template>
                             [[item.contract_no]]
                         </template>
                     </gl-combo-box>
                 </div>
                 <div class="flex" style=" margin-right: 30px">
-                    <gl-combo-box always-float-label required label="งวด" placeholder="งวด"
-                        items="{{confirmList}}" item-label-path="cl_no" item-value-path="cl_id"
+                    <gl-combo-box always-float-label required label="งวด" placeholder="งวด" items="{{confirmList}}" item-label-path="cl_no" item-value-path="cl_id"
                         value="{{data.cl_id}}">
                         <template>
                             [[item.cl_no]]
@@ -141,9 +166,8 @@
                     </gl-combo-box>
                 </div>
                 <div class="flex" style=" margin-right: 30px">
-                    <gl-combo-box always-float-label required label="Booking" placeholder="Booking"
-                        items="{{bookList}}" item-label-path="book_no" item-value-path="book_id"
-                        value="{{data.book_id}}">
+                    <gl-combo-box always-float-label required label="Booking" placeholder="Booking" items="{{bookList}}" item-label-path="book_no"
+                        item-value-path="book_id" value="{{data.book_id}}">
                         <template>
                             [[item.book_no]]
                         </template>
@@ -158,17 +182,15 @@
         <paper-dialog id="report_book_of_id">
             <div class="layout start-justified">
                 <div class="flex" style=" margin-right: 30px">
-                    <gl-combo-box always-float-label required label="สัญญา" placeholder="สัญญา"
-                        items="{{contractList}}" item-label-path="contract_no" item-value-path="contract_id"
-                        value="{{data.contract_id}}">
+                    <gl-combo-box always-float-label required label="สัญญา" placeholder="สัญญา" items="{{contractList}}" item-label-path="contract_no"
+                        item-value-path="contract_id" value="{{data.contract_id}}">
                         <template>
                             [[item.contract_no]]
                         </template>
                     </gl-combo-box>
                 </div>
                 <div class="flex" style=" margin-right: 30px">
-                    <gl-combo-box always-float-label required label="งวด" placeholder="งวด"
-                        items="{{confirmList}}" item-label-path="cl_no" item-value-path="cl_id"
+                    <gl-combo-box always-float-label required label="งวด" placeholder="งวด" items="{{confirmList}}" item-label-path="cl_no" item-value-path="cl_id"
                         value="{{data.cl_id}}">
                         <template>
                             [[item.cl_no]]
@@ -176,9 +198,8 @@
                     </gl-combo-box>
                 </div>
                 <div class="flex" style=" margin-right: 30px">
-                    <gl-combo-box always-float-label required label="Booking" placeholder="Booking"
-                        items="{{bookList}}" item-label-path="book_no" item-value-path="book_id"
-                        value="{{data.id}}">
+                    <gl-combo-box always-float-label required label="Booking" placeholder="Booking" items="{{bookList}}" item-label-path="book_no"
+                        item-value-path="book_id" value="{{data.id}}">
                         <template>
                             [[item.book_no]]
                         </template>
@@ -193,9 +214,8 @@
         <paper-dialog id="report_date_contract">
             <div class="layout start-justified">
                 <div class="flex" style=" margin-right: 30px">
-                    <gl-combo-box always-float-label required label="สัญญา" placeholder="สัญญา"
-                        items="{{contractList}}" item-label-path="contract_no" item-value-path="contract_id"
-                        value="{{data.contract_id}}">
+                    <gl-combo-box always-float-label required label="สัญญา" placeholder="สัญญา" items="{{contractList}}" item-label-path="contract_no"
+                        item-value-path="contract_id" value="{{data.contract_id}}">
                         <template>
                             [[item.contract_no]]
                         </template>
@@ -203,7 +223,7 @@
                 </div>
                 <div class="flex" style=" margin-right: 30px">
                     <gl-form-input label="วันที่ที่ต้องการดู:" placeholder="วันที่ที่ต้องการดู" type="date" value="{{data.date}}"></gl-form-input>
-                 </div>
+                </div>
 
                 <div class="flex horizontal end-justified layout buttons">
                     <paper-button raised class="gl-btn-default" dialog-dismiss>ปิด</paper-button>
@@ -214,9 +234,8 @@
         <paper-dialog id="report_date_devr_contract">
             <div class="layout start-justified">
                 <div class="flex" style=" margin-right: 30px">
-                    <gl-combo-box always-float-label required label="สัญญา" placeholder="สัญญา"
-                        items="{{contractList}}" item-label-path="contract_no" item-value-path="contract_id"
-                        value="{{data.contract_id}}">
+                    <gl-combo-box always-float-label required label="สัญญา" placeholder="สัญญา" items="{{contractList}}" item-label-path="contract_no"
+                        item-value-path="contract_id" value="{{data.contract_id}}">
                         <template>
                             [[item.contract_no]]
                         </template>
@@ -224,7 +243,7 @@
                 </div>
                 <div class="flex" style=" margin-right: 30px">
                     <gl-form-input label="วันที่ที่ต้องการดู:" placeholder="วันที่ที่ต้องการดู" type="date" value="{{data.deliver_date}}"></gl-form-input>
-                 </div>
+                </div>
 
                 <div class="flex horizontal end-justified layout buttons">
                     <paper-button raised class="gl-btn-default" dialog-dismiss>ปิด</paper-button>
@@ -235,17 +254,15 @@
         <paper-dialog id="report_contract_cl_fee">
             <div class="layout start-justified">
                 <div class="flex" style=" margin-right: 30px">
-                    <gl-combo-box always-float-label required label="สัญญา" placeholder="สัญญา"
-                        items="{{contractList}}" item-label-path="contract_no" item-value-path="contract_id"
-                        value="{{data.contract_id}}">
+                    <gl-combo-box always-float-label required label="สัญญา" placeholder="สัญญา" items="{{contractList}}" item-label-path="contract_no"
+                        item-value-path="contract_id" value="{{data.contract_id}}">
                         <template>
                             [[item.contract_no]]
                         </template>
                     </gl-combo-box>
                 </div>
                 <div class="flex" style=" margin-right: 30px">
-                    <gl-combo-box always-float-label required label="งวด" placeholder="งวด"
-                        items="{{confirmList}}" item-label-path="cl_no" item-value-path="cl_id"
+                    <gl-combo-box always-float-label required label="งวด" placeholder="งวด" items="{{confirmList}}" item-label-path="cl_no" item-value-path="cl_id"
                         value="{{data.cl_id}}">
                         <template>
                             [[item.cl_no]]
@@ -253,9 +270,8 @@
                     </gl-combo-box>
                 </div>
                 <div class="flex" style=" margin-right: 30px">
-                    <gl-combo-box always-float-label required label="Booking" placeholder="Booking"
-                        items="{{fee_noList}}" item-label-path="fee_no" item-value-path="fee_no"
-                        value="{{data.fee_no}}">
+                    <gl-combo-box always-float-label required label="Booking" placeholder="Booking" items="{{fee_noList}}" item-label-path="fee_no"
+                        item-value-path="fee_no" value="{{data.fee_no}}">
                         <template>
                             [[item.fee_no]]
                         </template>
@@ -270,76 +286,14 @@
     <script>
         Polymer({
             is: 'list-report',
-            behaviors: [ReduxBehavior, nylonBehavior, i18nAction, g2gLogicBehavior, CookieBehavior],
+            behaviors: [ReduxBehavior, nylonBehavior, g2gLogicBehavior, CookieBehavior],
             properties: {
                 date: {
                     type: Object,
                     value: { type: 'PDF' }
                 },
                 report: {
-                    type: Array,
-                    value: [
-                        {
-                            report_id: 1,
-                            report_name: 'รายงานการส่งมอบข้าวให้รัฐบาล',
-                            report_link: '/rice/report1'
-                        },
-                        {
-                            report_id: 2,
-                            report_name: 'แบบร่าง BL',
-                            report_link: '/rice/report2'
-                        },
-                        {
-                            report_id: 3,
-                            report_name: 'หนังสือการส่งมอบข้าวรัฐบาล',
-                            report_link: '/rice/report3'
-                        },
-                        {
-                            report_id: 4,
-                            report_name: 'ใบรายการลำเรือ',
-                            report_link: '/rice/report4'
-                        },
-                        {
-                            report_id: 5,
-                            report_name: 'ออกใบแจ้งหนี้ (Invoice)',
-                            report_link: '/finance/report1'
-                        },
-                        {
-                            report_id: 6,
-                            report_name: 'ทะเบียนคุมการส่งมอบข้าว',
-                            report_link: '/finance/report2'
-                        },
-                        {
-                            report_id: 7,
-                            report_name: 'เอกสารที่ได้รับเงินการส่งออกข้าว',
-                            report_link: '/finance/report3'
-                        },
-                        {
-                            report_id: 8,
-                            report_name: 'รายละเอียดการรับเงินค่าข้าว',
-                            report_link: '/finance/report4'
-                        },
-                        {
-                            report_id: 9,
-                            report_name: 'การเงิน 5',
-                            report_link: '/finance/report5'
-                        },
-                        {
-                            report_id: 10,
-                            report_name: 'การเงิน 6',
-                            report_link: '/finance/report6'
-                        },
-                        {
-                            report_id: 11,
-                            report_name: 'หนังสือรับรองการหักภาษี ณ ที่จ่าย',
-                            report_link: '/finance/report7'
-                        },
-                        {
-                            report_id: 12,
-                            report_name: 'รายการจ่ายเงินค่าข้าวโครงการขายข้าว',
-                            report_link: '/finance/report8'
-                        },
-                    ]
+                    statePath: 'report.reportList'
                 },
                 setType: {
                     type: Object,
@@ -383,7 +337,21 @@
             printReport() {
                 let buyerId = this.getCookieBhv("buyerId")
                 window.open('./api/report/daily/company?date=' + this.data)
-            }
+            },
+            _edit: function (e) {
+                this.fire('open-Drawer')
+                this.dispatchAction('SET_STATE', {
+                    isInsert: true,
+                    btnDisabled: false,
+                    hiddend: true
+                })
+                // this.dispatchAction('PROVINCE_GET_ID', e.target.data.province_id);
+                // this.title = "แก้ไขข้อมูล";
+            },
+            _delete: function (e) {
+                console.log();
+                // this.dispatchAction('PROVINCE_DELETE', e.target.data.province_id);
+            },
 
         });
     </script>

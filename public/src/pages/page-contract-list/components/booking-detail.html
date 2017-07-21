@@ -309,6 +309,9 @@
         localizeCommon: {
           statePath: 'i18n.common'
         },
+        buyerId:{
+          statePath:'commonState.buyerId'
+        },
         commonState: {
           statePath: 'commonState.setState'
         },
@@ -504,6 +507,7 @@
               this.data.ship[index].ship_id = name.ship_id
 
           }
+          dataResive.buyer_id = this.buyerId.buyer_id
           dataResive.cut_date = dataResive.cut_date+ 'T00:00:00+07:00'
           dataResive.eta_date = dataResive.eta_date+ 'T00:00:00+07:00'
           dataResive.etd_date = dataResive.etd_date+ 'T00:00:00+07:00'

@@ -1,26 +1,33 @@
 <link rel="import" href="./../../../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="./../../../bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="./../../../bower_components/paper-tooltip/paper-tooltip.html">
+<link rel="import" href="./../../../bower_components/nylon-panel/nylon-panel-right.html">
+<link rel="import" href="./components/manage-report.html">
 <link rel="import" href="./components/list-report.html">
 <link rel="import" href="./../../layout/shared-styles.html">
 
 <dom-module id="page-report">
     <template>
         <style include="shared-styles">
+             :host {
+                --paper-fab-background: var(--paper-light-blue-500);
+                --paper-fab-keyboard-focus-background: var(--paper-light-blue-900);
+            }
 
             .title {
                 margin: 30px;
                 font-size: 36px;
             }
-            .btnFabBack > paper-fab {
-            left: 25px;
-            --paper-fab-iron-icon: {
-                color: black
+
+            .btnFabBack>paper-fab {
+                left: 25px;
+                --paper-fab-iron-icon: {
+                    color: black
+                }
+                ;
+                --paper-fab-background: #fff
+                /*--paper-fab-background: #fff;*/
             }
-            ;
-            --paper-fab-background: #fff
-            /*--paper-fab-background: #fff;*/
-        }
         </style>
 
         <div class="xcontainer">
@@ -31,27 +38,48 @@
                 <list-report></list-report>
             </div>
         </div>
-
+        <nylon-panel-right title="รายงาน" id="drawerRight" set-width="95%">
+            <div align="left">
+                <manage-report></manage-report>
+            </div>
+        </nylon-panel-right>
         <div class="btnFabBack">
             <paper-fab icon="arrow-back" title="ย้อนกลับ" id="backWard" on-tap="backPage"></paper-fab>
             <paper-tooltip for="addContract" offset="0">ย้อนกลับ</paper-tooltip>
+        </div>
+        <div class="btnFab">
+            <paper-fab icon="note-add" title="เพิ่มรายงาน" id="addReport" on-tap="addReport"></paper-fab>
+            <paper-tooltip for="addReport" offset="0">เพิ่มรายงาน</paper-tooltip>
         </div>
     </template>
     <script>
         Polymer({
             is: 'page-report',
-            behaviors: [ReduxBehavior, nylonBehavior, i18nAction],
+            behaviors: [ReduxBehavior, nylonBehavior, i18nAction,commonStateAction,reportAction],
             // properties: {
             // },
+            listeners: {
+                'open-Drawer': '_flipDrawer',
+                'close-drawer': '_flipDrawerClose',
+            },
             nylonPageActive: function () {
-                // this.dispatchAction('GET_CONTRACT_OF_BUYER', this.getCookieBhv("buyerId"))
+                this.dispatchAction('GET_REPORT_LIST')
                 // this.dispatchAction('SET_COUNTRY_NAME_EN', this.getCookieBhv("country_name_en"));
             },
-            backPage: function() {
+            backPage: function () {
                 // console.log(11111);
                 // console.log(this.$$('#tab7').checked);
                 this.fire('nylon-change-page', { path: '/buyer-list' })
-            }
+            },
+            addReport: function(){
+                console.log(this._flipDrawer())
+            },
+            _flipDrawer: function () {
+                Polymer.dom(this.root).querySelector('#drawerRight').open();
+            },
+            _flipDrawerClose: function () {
+                Polymer.dom(this.root).querySelector('#drawerRight').close();
+            },
             // urlToReport(e) {
             //     window.open('./api' + e.currentTarget.data.path)
             // },

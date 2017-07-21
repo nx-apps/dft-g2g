@@ -234,6 +234,9 @@
         localizeCommon: {
           statePath: 'i18n.common'
         },
+        buyerId:{
+          statePath:'commonState.buyerId'
+        },
         commonState: {
           statePath: 'commonState.setState'
         },
@@ -510,6 +513,7 @@
         return new Promise((res, rej) => {
           let dataResive = JSON.parse(JSON.stringify(this.data))
           dataResive.contract_id = this.contractId.contract_id
+          dataResive.buyer_id = this.buyerId.buyer_id
           dataResive.contract_no = Number(this.contractId.contract_no)
           dataResive.cl_id = this.confirmId.cl_id
           dataResive.cl_no = Number(this.confirmId.cl_no)

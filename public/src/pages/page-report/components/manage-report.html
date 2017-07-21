@@ -1,0 +1,72 @@
+<link rel="import" href="./../../../../bower_components/gl-form/gl-form-panel.html">
+
+<link rel="import" href="./../../../../bower_components/gl-grid/gl-grid-row.html">
+<link rel="import" href="./../../../../bower_components/gl-grid/gl-grid-col.html">
+<link rel="import" href="./../../../../bower_components/gl-form/gl-form-input.html">
+<link rel="import" href="./../../../../bower_components/gl-form/gl-combo-box.html">
+
+<dom-module id="manage-report">
+    <template>
+        <style>
+             :host {
+                display: block;
+            }
+        </style>
+        <gl-form-panel set-padding="10px 20px 10px 20px" set-border="1px">
+
+            <gl-grid-row width="{{getWidth}}">
+                <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+                    <gl-form-input class="margin-top required" required error-message="กรุณากรอกรายงาน" required label="รายงานที่ :" placeholder="กรอกรายงาน"
+                        value="{{data.report_no}}" disabled="{{_checkStatus(statusAction)}}"></gl-form-input>
+                </gl-grid-col>
+                <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,8]]">
+                    <gl-form-input class="margin-top required" required error-message="กรุณากรอกชื่อรายงาน" required label="ชื่อรายงาน ภาษาไทย) :"
+                        placeholder="กรอกชื่อรายงาน " value="{{data.report_name}}" disabled="[[btnState]]"></gl-form-input>
+                </gl-grid-col>
+            </gl-grid-row>
+
+            <gl-grid-row>
+                <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+                    <gl-form-input class="margin-top required" required error-message="กรุณากรอกชื่อไฟล์" required label="ชื่อไฟล์ :" placeholder="กรอกชื่อไฟล์"
+                        value="{{data.report_file}}" disabled="{{_checkStatus(statusAction)}}"></gl-form-input>
+                </gl-grid-col>
+                <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+                    <gl-combo-box id="report_table" label="ตารางข้อมูลที่ต้องการดู" placeholder="ตารางข้อมูลที่ต้องการดู" items="[[hamonizeYear.year]]"
+                        item-label-path="label" value="{{data.report_table}}" item-value-path="label" on-value-changed="searchHamonizeInYear">
+                        <template>
+                            [[item.label]]
+                        </template>
+                    </gl-combo-box>
+                </gl-grid-col>
+                <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+                    <gl-combo-box id="report_type" label="รายงานของ" placeholder="รายงานของ" items="{{report_type}}" item-label-path="id" value="{{data.report_type}}"
+                        item-value-path="label" on-value-changed="searchHamonizeInYear">
+                        <template>
+                            [[item.label]]
+                        </template>
+                    </gl-combo-box>
+                </gl-grid-col>
+            </gl-grid-row>
+        </gl-form-panel>
+    </template>
+    <script>
+        Polymer({
+            is: 'manage-report',
+            properties: {
+                report_type: {
+                    type: Array,
+                    value: [
+                        {
+                            id: 'rice',
+                            label: 'กองข้าว'
+                        },
+                        {
+                            id: 'finance',
+                            label: 'กองคลัง'
+                        }
+                    ]
+                }
+            }
+        });
+    </script>
+</dom-module>

@@ -302,6 +302,9 @@
         localizeContract: {
           statePath: 'i18n.contract'
         },
+        buyerId:{
+          statePath:'commonState.buyerId'
+        },
         commonState: {
           statePath: 'commonState.setState'
         },
@@ -622,6 +625,7 @@
           
           dataResive.cl_date = dataResive.cl_date + 'T00:00:00+07:00',
             // dataResive.cl_hamonize = this._getHamonize(),
+            dataResive.buyer_id = this.buyerId.buyer_id
             dataResive.cl_status = dataResive.cl_status,
             dataResive.cl_weight = dataResive.cl_weight,
             dataResive.incoterms = this.dataShow.incoterms//this._getIncoterms()
