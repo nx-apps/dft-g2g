@@ -280,6 +280,9 @@
         contractId: {
           statePath: 'commonState.contractId'
         },
+        buyerId:{
+          statePath:'commonState.buyerId'
+        },
         sumFee: {
           type: Object,
           value: {
@@ -501,6 +504,7 @@
           rate_bank_b: parseFloat(this.rateBank),
           rate_tt_b: parseFloat(this.rateTt),
           fee_date: this.data.fee_date + 'T00:00:00+07:00',
+          buyer_id : this.buyerId.buyer_id,
           book: this.data.book
         };
         newData.book.map((item) => {

@@ -272,7 +272,7 @@
           // console.log(this.deliver_date);
           dataResive.map((date) => {
             // date.cheque_status = true
-            date.deliver_date = this.deliver_date + 'T00:00:00+07:00'
+            date.deliver_date = this.deliver_date + 'T00:00:00+07:00',
             delete date.check
             delete date.indexItem
             return date.invoice_company_date = date.invoice_company_date + 'T00:00:00+07:00'

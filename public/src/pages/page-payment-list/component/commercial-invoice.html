@@ -324,7 +324,10 @@
         },
         common:{
           statePath : 'commonState.setState'
-        }
+        },
+        buyerId:{
+          statePath:'commonState.buyerId'
+        },
       },
       // observers: [
       //   '_changeDataCommercial(data.invoice_date)'
@@ -390,6 +393,7 @@
           invoice_no : Number(this.data.invoice_no),
           invoice_year : this.data.invoice_year,
           invoice_date : this.data.invoice_date+'T00:00:00+07:00',
+          buyer_id : this.buyerId.buyer_id,
           made_out_to : this.data.made_out_to
         }
         // console.log(data);
