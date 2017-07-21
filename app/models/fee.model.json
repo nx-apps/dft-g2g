@@ -15,6 +15,9 @@
                     "cl_no": {
                         "type": "number"
                     },
+                    "buyer_id": {
+                        "type": "string"
+                    },
                     "contract_id": {
                         "type": "string"
                     },
@@ -109,6 +112,9 @@
             "type": "number"
         },
         "contract_id": {
+            "type": "string"
+        },
+        "buyer_id": {
             "type": "string"
         },
         "fee_date": {

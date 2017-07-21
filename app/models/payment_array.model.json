@@ -54,6 +54,9 @@
             "company": {
                 "type": "object"
             },
+            "buyer_id": {
+                "type": "string"
+            },
             "contract_id": {
                 "type": "string"
             },

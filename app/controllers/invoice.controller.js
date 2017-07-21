@@ -14,14 +14,14 @@ exports.getByContractId = function (req, res) {
 }
 exports.getByBookId = function (req, res) {
     req.r.table('book').get(req.query.id)
-        .pluck('id', 'cl_id', 'ship', 'load_port', 'dest_port', 'deli_port', 'bl_no', 'contract_id', 'invoice_type', 'invoice_no', 'invoice_year', 'invoice_date', 'made_out_to', 'invoice_status')
+        .pluck('id', 'cl_id', 'ship', 'load_port', 'dest_port', 'deli_port', 'bl_no', 'contract_id','buyer_id', 'invoice_type', 'invoice_no', 'invoice_year', 'invoice_date', 'made_out_to', 'invoice_status')
         .merge(function (m) {
             var detail = r.table('book_detail').getAll(req.query.id, { index: 'book_id' })
                 .coerceTo('array')
                 .pluck('package_amount', 'package', 'package_id', 'price_d', 'gross_weight', 'tare_weight', 'net_weight', 'value_d',
                 'hamonize', 'hamonize_id', 'project_en');
             var inct = r.table('confirm_letter').get(m('cl_id')).getField('incoterms');
-            return r.table('contract').get(m('contract_id')).pluck('buyer', 'contract_name')
+            return r.table('contract').get(m('contract_id')).pluck('buyer','buyer_id', 'contract_name')
                 .merge({
                     invoice_of: detail.group('hamonize_id').ungroup()
                         .map(function (m2) {
