@@ -56,8 +56,10 @@ exports.update = function (req, res) {
     if (valid) {
         r.expr(req.body)
             .forEach(function (fe) {
-                fe('paid_date') = r.ISO8601(fe('paid_date')).inTimezone('+07');
-                return r.table('payment').update(fe)
+                // fe.paid_date = r.ISO8601(fe('paid_date')).inTimezone('+07');
+                return r.table('payment').get(fe('id')).update(fe.merge({
+                    paid_date: r.ISO8601(fe('paid_date')).inTimezone('+07')
+                }))
             })
             .run().then(function (data) {
                 res.json(data)
