@@ -35,23 +35,20 @@
     table.gl-table-default>thead.table-head>tr>th {
       text-align: center;
     }
-
-    table.gl-table-default>tbody.table-body>tr>td:nth-child(3) {
-      text-align: left;
-    }
-
     table.gl-table-default>tbody.table-body>tr>td:nth-child(1),
-    table.gl-table-default>tbody.table-body>tr>td:nth-child(2) {
+    {
       width: 5%;
     }
 
+    table.gl-table-default>tbody.table-body>tr>td:nth-child(2) {
+      width: 10%;
+    }
+    table.gl-table-default>thead.table-head>tr>th:nth-child(5),
+    table.gl-table-default>thead.table-head>tr>th:nth-child(4),
+    table.gl-table-default>thead.table-head>tr>th:nth-child(3),
+    table.gl-table-default>tbody.table-body>tr>td:nth-child(5),
     table.gl-table-default>tbody.table-body>tr>td:nth-child(3),
     table.gl-table-default>tbody.table-body>tr>td:nth-child(4) {
-      width: 20%;
-    }
-
-    table.gl-table-default>tbody.table-body>tr>td:nth-child(5),
-    table.gl-table-default>tfoot.table-foot>tr>td:nth-child(3) {
       text-align: right;
       width: 15%;
     }
@@ -105,9 +102,9 @@
                 <td>[[item.invoice_company_no]]</td>
                 <td>
                   [[changeString2Num(item.*,'pay_runing')]]
-                  <gl-form-input type="number" class="required" required="{{item.check}}"  no-label-float value="{{item.pay_runing}}" data="[[item]]"
+                  <gl-form-input type="number" class="required" required="{{item.check}}" no-label-float value="{{item.pay_runing}}" data="[[item]]"
                     on-blur="checkDuplicatePayNo"></gl-form-input>
-                     <!--on-blur="checkDuplicatePayNo"-->
+                  <!--on-blur="checkDuplicatePayNo"-->
                 </td>
               </tr>
             </template>
@@ -136,7 +133,8 @@
         <gl-grid-row>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,2]]"></gl-grid-col>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-            <gl-form-input type="date" class="required" required label="{{localize.label_cheque_date_approve}}" value="{{dataSet.paid_date}}"></gl-form-input>
+            <!--{{localize.label_cheque_date_approve}}-->
+            <gl-form-input type="date" class="required" required label="วันที่จ่ายเช็ค" value="{{dataSet.paid_date}}"></gl-form-input>
           </gl-grid-col>
           <!--<gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
             <gl-form-input class="required" required label="{{localize.text_amount}} :" placeholder="{{localize.text_amount}}" readonly
@@ -163,7 +161,7 @@
         <paper-button class="gl-btn-success" raised on-tap="addPayment">
           <!--{{localize.btn_pay}}-->
           บันทึก
-          </paper-button>
+        </paper-button>
       </gl-form-panel-footer>
     </gl-form-panel>
 
@@ -205,6 +203,10 @@
         },
         contractId: {
           statePath: 'commonState.contractId',
+          // observer: 'get'
+        },
+        companyTaxNo: {
+          statePath: 'commonState.companyTaxNo',
           // observer: 'get'
         },
       },
@@ -327,7 +329,9 @@
           let newData = JSON.parse(JSON.stringify(this.data.filter((item) => item.check == true)))
           let dataForSend = []
           newData.map((item) => {
+            // console.log(item);
             dataForSend.push({
+              id: item.id,
               pay_runing: item.pay_runing,
               bank: this.dataSet.bank,
               bank_branch: this.dataSet.bank_branch,
@@ -367,6 +371,28 @@
               this._resiveFormPayment()
                 .then((res) => {
                   console.log(res);
+                  this.dispatchAction('PAYMENT_PUT_PAID', res)
+                    .then((response) => {
+                      if (response.data.replaced !== undefined && response.data.replaced.length !== 0) {
+                        this.fire('toast', {
+                          status: 'success', text: 'สำเร็จ',  // คำสั่งสำหรับเปิด toast success
+                          callback: () => {
+                          }
+                        })
+                        this.dispatchAction('PAYMENT_GET_LIST_DATA', this.contractId.contract_id)
+                        let url = { contract_id: this.contractId.contract_id, company_taxno: this.companyTaxNo.company_taxno }
+                        // // console.log(url );
+                        this.dispatchAction('PAYMENT_GET_DETAIL_DATA', this.genUrl(url))
+                        this.dispatchAction('SET_DATE_PAYMENY')
+                        this.dispatchAction('PAYMENT_GET_RUNNING_NO')
+                      } else {
+                        this.fire('toast', {
+                          status: 'connectError', text: `ไม่สามารถจ่ายเช็คได้`, //คำสั่งสำหรับเปิด toast error
+                          callback: () => {
+                          }
+                        })
+                      }
+                    })
                 })
                 .catch((error) => {
                   console.log(error);

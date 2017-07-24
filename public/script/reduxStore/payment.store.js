@@ -87,11 +87,7 @@ export function paymentAction(store) {
         // END DATA
         // PUT DATA
         PAYMENT_PUT_PAID: function (data) {
-            console.log(data);
-            // axios.get('./payment/silo')
-            //     .then((response) => {
-            //         store.dispatch({ type: 'PAYMENT_GET_SILO_DATA', payload: response.data })
-            //     })
+            return axios.put('./payment/update',data)
         },
         // END PUT DATA
     }

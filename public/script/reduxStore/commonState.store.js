@@ -4,14 +4,14 @@ const initialState = {
     list: [],
     breadCrumbs: [{ label: 'Overview' },
     { label: 'Subitem1' },
-    { label: 'Subitem2' },
-    { label: 'Subitem3' }],
+    { label: 'Subitem2' }],
     setState: {},
     setPageAndSearch: {},
     contractId: {},
     buyerId:{},
     confirmId: {},
     bookId: {},
+    companyTaxNo: {},
     contryNameEn: {}
 }
 export function commonStateReducer(state = initialState, action) {
@@ -30,6 +30,8 @@ export function commonStateReducer(state = initialState, action) {
             return Object.assign({}, state, { confirmId: action.payload });
         case 'SET_BOOK_ID':
             return Object.assign({}, state, { bookId: action.payload });
+        case 'SET_COMPANY_TAX_NO':
+            return Object.assign({}, state, { companyTaxNo: action.payload });
         case 'SET_COUNTRY_NAME_EN':
             return Object.assign({}, state, { contryNameEn: action.payload });
         default:
@@ -72,6 +74,11 @@ export function commonStateAction(store) {
         SET_BOOK_ID: function (data) {
             // console.log(data);
             store.dispatch({ type: 'SET_BOOK_ID', payload: data })
+            // return axios.get('/external/upload/list/' + ref + '/' + com)
+        },
+        SET_COMPANY_TAX_NO: function (data) {
+            // console.log(data);
+            store.dispatch({ type: 'SET_COMPANY_TAX_NO', payload: data })
             // return axios.get('/external/upload/list/' + ref + '/' + com)
         },
         SET_COUNTRY_NAME_EN: function (data) {
