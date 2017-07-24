@@ -39,14 +39,14 @@ exports.getByCompany = function (req, res) {
             res.json(data);
         })
 }
-exports.getPayRuning = function (req, res) {
+exports.getPayRunning = function (req, res) {
     var run = r.table('payment').getAll(r.now().inTimezone('+07').year(), { index: 'yearPayDate' })
         .filter(function (f) {
-            return f.hasFields('pay_runing')
+            return f.hasFields('pay_running')
         });
 
     r.expr({
-        pay_runing: r.branch(run.count().eq(0), 1, run.max('pay_runing')('pay_runing').add(1))
+        pay_running: r.branch(run.count().eq(0), 1, run.max('pay_running')('pay_running').add(1))
     }).run().then(function (data) {
         res.json(data)
     })

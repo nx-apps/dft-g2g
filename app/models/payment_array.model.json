@@ -21,7 +21,7 @@
                 "type": "string",
                 "format": "date-time"
             },
-            "pay_runing": {
+            "pay_running": {
                 "type": "number"
             },
             "pay_year": {
