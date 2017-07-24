@@ -27,6 +27,9 @@
         "pay_status": {
             "type": "boolean"
         },
+        "pay_remark": {
+            "type": "string"
+        },
         "bank_id": {
             "type": "string"
         },
