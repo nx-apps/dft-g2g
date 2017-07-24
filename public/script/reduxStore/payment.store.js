@@ -31,10 +31,11 @@ export function paymentAction(store) {
         SET_DATE_PAYMENY: function () {
             let set = {
                 pay_value_b: 0,
-                pay_runing:0,
+                pay_running:0,
                 bank_id: 'KTB',
                 bank: {},
                 pay_status: true,
+                pay_remark :'',
                 bank_branch: 'กระทรวงพาณิชย์',
                 paid_date: new Date().toISOString().split('T')[0]
             }
@@ -69,8 +70,8 @@ export function paymentAction(store) {
                         if (val.pay_status !== true) {
                             val.pay_status = false
                         }
-                        if (val.pay_runing === undefined) {
-                            val.pay_runing = ''
+                        if (val.pay_running === undefined) {
+                            val.pay_running = ''
                         }
                         val.check = false
                         return val

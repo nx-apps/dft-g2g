@@ -357,7 +357,7 @@
                 checkRenderPage: {
                     type: Object,
                     value: {
-                        chequeDetail:false,
+                        chequeDetail: false,
                         paymentDetail: false,
                     }
                 },
@@ -397,8 +397,8 @@
                 this.dispatchAction('SET_CONTRACT_ID', contractData)
                 this.dispatchAction('GET_COMMON_BANK_LIST');
                 var buyer_id = this.getCookieBhv("buyerId");
-                this.dispatchAction('SET_BUYER_ID',{
-                    buyer_id:this.getCookieBhv("buyerId")
+                this.dispatchAction('SET_BUYER_ID', {
+                    buyer_id: this.getCookieBhv("buyerId")
                 })
                 this.dispatchAction('BOOK_GET_LIST_DATA', contract_id);
                 this.dispatchAction('INVOICE_GET_LIST_DATA', contract_id);
@@ -583,19 +583,19 @@
             },
             _getPaymentDetail: function (e) {
                 this.dispatchAction('SET_BREADCRUMBS', [{
-                    label: 'จ่ายเงิน ',
+                    label: ' ',
                     href: ''
                 }])
-                this.titlePanelRight = 'จ่ายเงิน'
+                this.titlePanelRight = 'จ่ายเช็ค'
                 // this.genUrl(url)
                 let url = { contract_id: this.getCookieBhv("contract_id"), company_taxno: e.detail.detail.company_taxno }
-                this.dispatchAction('SET_COMPANY_TAX_NO', {company_taxno: e.detail.detail.company_taxno })
-                
+                this.dispatchAction('SET_COMPANY_TAX_NO', { company_taxno: e.detail.detail.company_taxno })
+
                 // console.log(url );
                 // contract_id=60bae3b3-4fb8-4da1-ad66-05bba1662dc4&company_taxno=0185555000021
                 this.dispatchAction('PAYMENT_GET_DETAIL_DATA', this.genUrl(url))
                 this.dispatchAction('SET_DATE_PAYMENY')
-                
+
                 this.dispatchAction('PAYMENT_GET_RUNNING_NO')
                 this.paymentsPageSeleted = 'paymentDetail';
                 // this._flipDrawer();
@@ -650,12 +650,12 @@
                 } else {
                     this.async(() => {
                         this.fire('toast', {
-                                        status: 'success', text: 'โหลดสำเร็จ', callback: () => {
-                                            // this.fire('toast', { status: 'load' });
-                                            this._flipDrawer();
-                                            // this.checkRenderPage.paymentDetail = true;
-                                        }
-                                    })
+                            status: 'success', text: 'โหลดสำเร็จ', callback: () => {
+                                // this.fire('toast', { status: 'load' });
+                                this._flipDrawer();
+                                // this.checkRenderPage.paymentDetail = true;
+                            }
+                        })
                     }, 500)
                 }
             },
@@ -704,7 +704,7 @@
             _flipDrawerClose: function () {
                 Polymer.dom(this.root).querySelector('#panelRight').close();
             },
-            backPage: function() {
+            backPage: function () {
                 // console.log(11111);
                 // console.log(this.$$('#tab7').checked);
                 this.fire('nylon-change-page', { path: '/contract-list' })

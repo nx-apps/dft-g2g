@@ -126,7 +126,7 @@
 
 
 
-        <paper-dialog id="report_dialog">
+        <paper-dialog id="report_dialog" modal>
             <div class="layout start-justified">
 
                 <template is="dom-repeat" items={{report_seleted}}>
@@ -144,8 +144,8 @@
                         </template>
 
                         <template is="dom-if" if={{isList(item.type)}}>
-                            <gl-combo-box id="[[item.res]]" always-float-label required label="[[item.label]]" placeholder="[[item.label]]"
-                                item-label-path="item.view" item-value-path="contract_id" value="{{data.contract_id}}" on-value-changed="getNextparam">
+                            <gl-combo-box id="[[item.res]]" always-float-label required label="[[item.label]]" placeholder="[[item.label]]" item-label-path="[[item.view]]"
+                                item-value-path="[[item.res]]" on-selected-item-changed="getNextparam">
                                 <!--on-value-changed="getNextparam"-->
                                 <template>
                                     [[item.contract_no]]
@@ -160,13 +160,10 @@
 
                     </div>
                 </template>
-
-
-
-                <!--<div class="flex horizontal end-justified layout buttons">
+                <div class="flex horizontal end-justified layout buttons">
                     <paper-button raised class="gl-btn-default" dialog-dismiss>ปิด</paper-button>
                     <paper-button raised class="gl-btn-primary" on-tap="printReport" dialog-confirm autofocus>ออกรายงาน</paper-button>
-                </div>-->
+                </div>
         </paper-dialog>
 
     </template>
@@ -196,10 +193,14 @@
                 buyerId: {
                     statePath: 'commonState.buyerId'
                 },
+                currentSeleted: {
+                    type: Object,
+                }
             },
             print(e) {
                 let type = e.currentTarget.id
                 let data = e.model.__data__.item
+                this.set('currentSeleted', data)
                 let getBuy = JSON.parse(JSON.stringify(data.report_params.find((item) => item.redux === true)))
                 getBuy.req.value = this.buyerId.buyer_id
                 getBuy.report_table = data.report_table
@@ -216,27 +217,13 @@
 
                 })
                 getDate.then((res) => {
-                    console.log(getBuy);
-                    console.log(res.data)
-                    let combobox = this.$$('#'+getBuy.res)
+                    res.data.map((item) => item.old = getBuy)
+                    let combobox = this.$$('#' + getBuy.res)
                     combobox.items = res.data
-                    combobox.itemLabelPath="item.view" 
-                    combobox.itemValuePath="contract_id"
-                    // this.$$('#contract_id').ite
-                    console.log(this.$$('#'+getBuy.res).items);
                 })
                     .catch((error) => {
                         console.log(error);
                     });
-                // let url = `${link}?`
-                // console.log(this.genUrl(url));
-                // console.log(getBuy);
-                // export
-                // console.log(link,type);
-                // this.set('date.type', type)
-                // this.set('date.link', link)
-                // // console.log(e.model.item);
-                // // console.log(e.currentTarget.id);
                 this.$$('#report_dialog').open()
             },
             printReport() {
@@ -262,7 +249,47 @@
                 return type === 'list'
             },
             getNextparam(e) {
-                console.log(e)
+                try {
+                    let report_params_length = this.currentSeleted.report_params.length
+                    let old_data = e.detail.value
+                    if (old_data.old.no <= report_params_length) {
+                        // console.log(old_data.contract_id);
+                        let dataSeleted = JSON.parse(JSON.stringify(this.currentSeleted.report_params[old_data.old.no]))
+                        // console.log(dataSeleted);
+                        // console.log(this.currentSeleted);
+                        // console.log(old_data.old.no)
+                        // let seleteField =  
+                        dataSeleted.req.value = old_data[req[field]]
+                        dataSeleted.report_table = old_data.report_table
+                        console.log(dataSeleted);
+                        // let getDate = new Promise((res, rej) => {
+                        //     // this.set('report_seleted', data.report_params)
+                        //     this.dispatchAction('GET_REPORT_LINK', dataSeleted)
+                        //         .then((respon) => {
+                        //             res(respon)
+                        //         })
+                        //         .catch((error) => {
+                        //             console.log(error);
+                        //             rej(error)
+                        //         });
+
+                        // })
+                        // getDate.then((res) => {
+                        //     console.log(res);
+                        //     // res.data.map((item) => item.old = getBuy)
+                        //     // let combobox = this.$$('#' + getBuy.res)
+                        //     // combobox.items = res.data
+                        //     // this.set('currentSeleted',this.currentSeleted.report_params[old_data.old.no])
+                        // })
+                        //     .catch((error) => {
+                        //         console.log(error);
+                        //     });
+                    }
+                } catch (e) {
+
+                }
+
+
             },
             _edit: function (e) {
                 this.fire('open-Drawer')
