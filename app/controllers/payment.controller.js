@@ -54,17 +54,14 @@ exports.getPayRuning = function (req, res) {
 exports.update = function (req, res) {
     var valid = req.ajv.validate('g2g.payment_array', req.body);
     if (valid) {
-        // r.expr(req.body)
-        //     .forEach(function (fe) {
-        //         var paid_date = r.ISO8601(fe('paid_date')).inTimezone('+07');
-        //         return r.branch(fe.hasFields('pay_date'),
-        //             tb.update({ pay_date: pay_date, pay_year: pay_date.year().add(543) }),
-        //             tb.update({ cheque_status: false, pay_no: r.literal(), deliver_date: r.literal() })
-        //         )
-        //     })
-        //     .run().then(function (data) {
-        //         res.json(data)
-        //     })
+        r.expr(req.body)
+            .forEach(function (fe) {
+                fe('paid_date') = r.ISO8601(fe('paid_date')).inTimezone('+07');
+                return r.table('payment').update(fe)
+            })
+            .run().then(function (data) {
+                res.json(data)
+            })
     } else {
         res.json(req.ajv.errorsText());
     }
