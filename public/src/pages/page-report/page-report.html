@@ -55,7 +55,7 @@
     <script>
         Polymer({
             is: 'page-report',
-            behaviors: [ReduxBehavior, nylonBehavior, i18nAction,commonStateAction,reportAction],
+            behaviors: [ReduxBehavior, nylonBehavior,CookieBehavior, i18nAction,commonStateAction,reportAction],
             // properties: {
             // },
             listeners: {
@@ -63,6 +63,9 @@
                 'close-drawer': '_flipDrawerClose',
             },
             nylonPageActive: function () {
+                this.dispatchAction('SET_BUYER_ID',{
+                    buyer_id:this.getCookieBhv("buyerId")
+                })
                 this.dispatchAction('GET_REPORT_LIST')
                 // this.dispatchAction('SET_COUNTRY_NAME_EN', this.getCookieBhv("country_name_en"));
             },

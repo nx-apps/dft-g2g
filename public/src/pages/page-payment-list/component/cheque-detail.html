@@ -123,11 +123,11 @@
         },
         data: {
           statePath: 'cheque.cheque_detail_list',
-          observer:'setDataCheque'
+          observer: 'setDataCheque'
         },
         dataCheck: {
-          type:Array,
-          value:[]
+          type: Array,
+          value: []
         },
         dataUrl: {
           statePath: 'cheque.dataUrl',
@@ -136,19 +136,20 @@
           statePath: 'commonState.contractId',
           // observer: 'get'
         },
+        
         deliver_date: {
           type: String,
           value: function () {
             return new Date().toISOString().split('T')[0]
           }
         },
-        notDupPayno:{
-          type:Boolean,
-          value:true
+        notDupPayno: {
+          type: Boolean,
+          value: true
         }
       },
-      setDataCheque(data){
-          this.set('dataCheck',JSON.parse(JSON.stringify(data)))
+      setDataCheque(data) {
+        this.set('dataCheck', JSON.parse(JSON.stringify(data)))
       },
       // _selectDataAll: function (val) {
       //   try {
@@ -218,14 +219,14 @@
         let value = Number(e.currentTarget.value)
         // console.log(this.dataCheck.find((item) => item.pay_no === value) );
         if (this.dataCheck.find((item) => item.pay_no === value) !== undefined) {
-          this.set('notDupPayno',false)
+          this.set('notDupPayno', false)
           this.fire('toast', {
             status: 'connectError', text: `เลขที่เช็ค ${value} มีอยู่แล้ว`, //คำสั่งสำหรับเปิด toast error
             callback: () => {
             }
           })
-        }else {
-          this.set('notDupPayno',true)
+        } else {
+          this.set('notDupPayno', true)
         }
         // console.log(e.currentTarget.errorMessage = 'เลขซ้ำ');
       },
@@ -273,7 +274,7 @@
           dataResive.map((date) => {
             // date.cheque_status = true
             date.deliver_date = this.deliver_date + 'T00:00:00+07:00',
-            delete date.check
+              delete date.check
             delete date.indexItem
             return date.invoice_company_date = date.invoice_company_date + 'T00:00:00+07:00'
           })
@@ -325,7 +326,7 @@
                   let text = response.data.pay_no.map((item) => {
                     return " " + item + ","
                   })
-                  console.log(text);
+                  // console.log(text);
                   this.fire('toast', {
                     status: 'connectError', text: `เลขที่เช็ค ${text} มีอยู่แล้ว`, //คำสั่งสำหรับเปิด toast error
                     callback: () => {
@@ -351,7 +352,7 @@
         }
 
       },
-      checkTrue(data,notDupPayno) {
+      checkTrue(data, notDupPayno) {
         if (this.data.find((item) => item.check === true) !== undefined && notDupPayno === true)
           return false
         return true

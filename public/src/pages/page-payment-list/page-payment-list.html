@@ -589,6 +589,8 @@
                 this.titlePanelRight = 'จ่ายเงิน'
                 // this.genUrl(url)
                 let url = { contract_id: this.getCookieBhv("contract_id"), company_taxno: e.detail.detail.company_taxno }
+                this.dispatchAction('SET_COMPANY_TAX_NO', {company_taxno: e.detail.detail.company_taxno })
+                
                 // console.log(url );
                 // contract_id=60bae3b3-4fb8-4da1-ad66-05bba1662dc4&company_taxno=0185555000021
                 this.dispatchAction('PAYMENT_GET_DETAIL_DATA', this.genUrl(url))
