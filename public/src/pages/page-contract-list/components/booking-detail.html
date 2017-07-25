@@ -212,11 +212,7 @@
               placeholder="{{localizeBook.address}}" value="{{dataShow.notify.notify_address}}"></gl-form-textarea>
 
           </gl-grid-col>
-          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-            [[changeString2Num(data.*,'weight_container')]]
-            <gl-form-input required class="required" allowed-pattern="[0-9||,||.]" format-number="on" label="{{localizeBook.cabinet}}"
-              always-float-label placeholder="{{localizeBook.cabinet}}" disabled="[[commonState.btnDisabled]]" value="{{data.weight_container}}"></gl-form-input>
-          </gl-grid-col>
+          
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
             <gl-form-input type="date" required class="required" label="{{localizeBook.packing_date}}" placeholder="{{localizeBook.packing_date}}"
               always-float-label value="{{data.packing_date}}" disabled="[[commonState.btnDisabled]]"></gl-form-input>
@@ -240,6 +236,11 @@
               required class="required" value="{{data.product_date}}" disabled="[[commonState.btnDisabled]]"></gl-form-input>
             <!--<vaadin-date-picker label="{{localizeBook.label_production_date}}" always-float-label required class="required" value="{{data.product_date}}"
               disabled="[[commonState.btnDisabled]]"></vaadin-date-picker>-->
+          </gl-grid-col>
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+            [[changeString2Num(data.*,'weight_container')]]
+            <gl-form-input required class="required" allowed-pattern="[0-9||,||.]" format-number="on" label="{{localizeBook.cabinet}}"
+              always-float-label placeholder="{{localizeBook.cabinet}}" disabled="[[commonState.btnDisabled]]" value="{{data.weight_container}}"></gl-form-input>
           </gl-grid-col>
         </gl-grid-row>
         <gl-grid-row width="{{getWidth}}">
