@@ -64,23 +64,22 @@
         </gl-combo-box>
         <gl-form-panel set-padding="10px 20px 10px 20px" set-border="1px">
           <gl-form-panel-head set-padding="10px" set-border="1px">
-
-            <!--<div class="addconfirm horizontal end-justified layout">
-              <template is="dom-if" if={{clClose}}>
-                <div class="title-ber" hidden="[[_isSeleted(cl_id)]]">
-                  ปิดบัญชี {{setTextCl}}
-                </div>
-              </template>
-</div>-->
             <paper-button raised class="gl-btn-primary" disabled="[[_isSeleted(cl_id)]]" on-tap="createBooking" hidden="{{clClose}}">{{localizeBook.add_booking}}</paper-button>
-
 
           </gl-form-panel-head>
           <br>
           <gl-grid-row width="{{getWidth}}">
             <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,5]]"></gl-grid-col>
           </gl-grid-row>
-
+          <div class="flex searchInput horizontal center-justified layout">
+            <!--<div class="flex title">{{localize.contract_name}} : [[contractId.contract_name]]</div>-->
+            <div class="flex horizontal end-justified layout">
+              <div class="labelSearch">{{localizeBook.ship_lot}}</div>{{_searchInArray(searchInput)}}
+              <paper-input label=" " no-label-float value="{{searchInput}}"></paper-input>
+              <paper-icon-button icon="search"></paper-icon-button>
+              </paper-input>
+            </div>
+          </div>
           <table class="gl-table-default">
             <thead class="table-head">
               <tr>
@@ -91,8 +90,8 @@
               </tr>
             </thead>
             <tbody class="table-body">
-              <template is="dom-repeat" items="[[bookList]]">
-                <tr>
+              <template is="dom-repeat" items="{{bookList}}">
+                <tr hidden="{{item.hidden}}">
                   <td on-tap="getBookingExporter" data="[[item]]"> [[item.ship_lot]] </td>
                   <td on-tap="getBookingExporter" data="[[item]]"> [[item.dest_port.port_name]] </td>
                   <td on-tap="getBookingExporter" data="[[item]]"> [[item.deli_port.port_name]] </td>
@@ -102,7 +101,7 @@
                   </td>
                 </tr>
               </template>
-              <template is="dom-if" if="[[_isHave(bookList)]]">
+              <template is="dom-if" if="[[_isShow(bookList,bookList.*)]]">
                 <tr>
                   <td colspan="4"> {{localizeCommon.no_data}}</td>
                 </tr>
@@ -192,6 +191,33 @@
         // '_get-booking-detail': '_getBookingExporter',
         // '_get-fire-booking-detail': '_getFireBookingDetail',
         // '_get-fire-group-exporter': '_getFireGroupExporter'
+      },
+      _searchInArray: function (searchInput) {
+        // if (searchInput != '') {
+        //   let arr = [];
+        //   this.bl_list.map((el) => {
+        //     var ship_no = el.ship_lot.toString();
+        //     if (ship_no.search(searchInput) > -1) {
+        //       arr.push(el);
+        //     }
+        //   });
+        //   this.newData = arr;
+        // } else {
+        //   this.initDatabl(this.bl_list);
+        // }
+        try {
+          for (var index = 0; index < this.bookList.length; index++) {
+            if (String(this.bookList[index].ship_lot).search(String(searchInput)) > -1) {
+
+              this.set('bookList.' + index + '.hidden', false)
+            } else {
+              this.set('bookList.' + index + '.hidden', true)
+            }
+          }
+        } catch (e) {
+
+        }
+
       },
       setPageFun: function (data) {
         this.set('pageSelected', data.page)
