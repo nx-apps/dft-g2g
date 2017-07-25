@@ -198,9 +198,9 @@
 
           <!--notify/-->
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,12]]">
-            <gl-combo-box required class="required" label="{{localizeBook.name_address}}" placeholder="{{localizeBook.name_address}}" always-float-label
-              item-label-path="notify_name" disabled="[[commonState.btnDisabled]]" item-value-path="notify_id" items="{{notifyListSeleted}}"
-              on-selected-item-changed="getObjectNotify" value="{{data.notify_id}}">
+            <gl-combo-box required class="required" label="{{localizeBook.name_address}}" placeholder="{{localizeBook.name_address}}"
+              always-float-label item-label-path="notify_name" disabled="[[commonState.btnDisabled]]" item-value-path="notify_id"
+              items="{{notifyListSeleted}}" on-selected-item-changed="getObjectNotify" value="{{data.notify_id}}">
               <template>
                 [[item.notify_name]]
               </template>
@@ -208,11 +208,10 @@
           </gl-grid-col>
 
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,12]]">
-            <gl-form-textarea disabled rows="2" label="{{localizeBook.address}}"
-              placeholder="{{localizeBook.address}}" value="{{dataShow.notify.notify_address}}"></gl-form-textarea>
+            <gl-form-textarea disabled rows="2" label="{{localizeBook.address}}" placeholder="{{localizeBook.address}}" value="{{dataShow.notify.notify_address}}"></gl-form-textarea>
 
           </gl-grid-col>
-          
+
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
             <gl-form-input type="date" required class="required" label="{{localizeBook.packing_date}}" placeholder="{{localizeBook.packing_date}}"
               always-float-label value="{{data.packing_date}}" disabled="[[commonState.btnDisabled]]"></gl-form-input>
@@ -268,7 +267,7 @@
         </gl-form-panel-footer>
       </template>-->
       <div class="horizontal end-justified layout">
-
+        <paper-button class="gl-btn-default" raised on-tap="openExporter"> {{localizeBook.list_exporter}}</paper-button>
         <template is="dom-if" if="[[commonState.isInsert]]">
           <paper-button class="gl-btn-default" raised on-tap="cancelInsertShipment"> {{localizeCommon.back_ward}}</paper-button>
           <paper-button class="gl-btn-primary" on-tap="insertBook" raised>{{localizeCommon.add}}</paper-button>
@@ -280,6 +279,7 @@
         </template>
         <template is="dom-if" if="[[commonState.btnDisabled]]">
           <paper-button class="gl-btn-default" raised on-tap="cancelInsertShipment"> {{localizeCommon.back_ward}}</paper-button>
+
           <paper-button class="gl-btn-info" raised on-tap="confirmDrawer" hidden="[[data.book_status]]">{{localizeCommon.confirm}}</paper-button>
         </template>
 
@@ -358,7 +358,7 @@
             dest_port: {},
             notify: {},
             ship: [],
-            address:{}
+            address: {}
           }
         }
       },
@@ -372,14 +372,18 @@
       observers: [
         '_oBChangeBooking(data.book_no)',
         '_oBChangePod(data.dest_port_id)',
-        '_setNotify(data.dest_port_id,notifyList)'
+        '_setNotify(data.deli_port_id,notifyList)'
         //   '_getPod(dataForSelect)',
       ],
       setPort: function (portList, contryNameEn) {
         return portList[contryNameEn]
       },
-      _setNotify(dest_port_id, notifyList) {
-        let newData = notifyList.filter((item) => item.port_id === dest_port_id)
+      openExporter() {
+        this.fire('_openExporter', this.data)
+        // console.log(this.data);
+      },
+      _setNotify(deli_port_id, notifyList) {
+        let newData = notifyList.filter((item) => item.port_id === deli_port_id)
         this.set('notifyListSeleted', newData)
         console.log(newData);
       },
@@ -985,8 +989,11 @@
       //   }
       // },
       _oBChangePod: function (dest_port_id) {
-        this.data.deli_port_id = dest_port_id;
-        this.notifyPath('data.deli_port_id');
+        if (this.data.deli_port_id === undefined || this.data.deli_port_id === null || this.data.deli_port_id === '') {
+          this.data.deli_port_id = dest_port_id;
+          this.notifyPath('data.deli_port_id');
+        }
+
       },
       // _getPod: function (Pod) {
       //   let pol = Pod.countryPort.filter((countryport) => countryport.country_id == 'THA');

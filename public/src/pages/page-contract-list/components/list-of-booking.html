@@ -188,23 +188,11 @@
       // ],
       listeners: {
         '_list-book': '_changeIronPage',
-        // '_get-booking-detail': '_getBookingExporter',
+        '_openExporter': 'openExporter',
         // '_get-fire-booking-detail': '_getFireBookingDetail',
         // '_get-fire-group-exporter': '_getFireGroupExporter'
       },
       _searchInArray: function (searchInput) {
-        // if (searchInput != '') {
-        //   let arr = [];
-        //   this.bl_list.map((el) => {
-        //     var ship_no = el.ship_lot.toString();
-        //     if (ship_no.search(searchInput) > -1) {
-        //       arr.push(el);
-        //     }
-        //   });
-        //   this.newData = arr;
-        // } else {
-        //   this.initDatabl(this.bl_list);
-        // }
         try {
           for (var index = 0; index < this.bookList.length; index++) {
             if (String(this.bookList[index].ship_lot).search(String(searchInput)) > -1) {
@@ -301,31 +289,6 @@
           } else {
             this.dispatchAction('CLEAR_BOOK_LIST')
           }
-          //     (this.dataForSelect.bookBl !== undefined && this.dataForSelect.bookBl !== '')) {
-          //     // console.log(e.detail.value);
-          //     // console.log(this.dataForSelect.bookBl);
-          //     let bookBl = this.g2gClone(this.dataForSelect)
-          //     // console.log(bookBl);
-          //     this.set('book', bookBl.bookBl.filter((item) => item.cl_id == e.detail.value)[0])
-          //     // console.log(this.book);
-          //     // console.log(book);
-          //     this.fire('_get-booking-detail', { detail: this.book })
-          //     // console.log(this.dataForSelect.contract_name);
-          //     let breadcrumbs = datass = [
-          //       {
-          //         label: this.dataForSelect.contract_name,
-          //         href: ''
-          //       },
-          //       {
-          //         label: 'สัญญาย่อยที่ ' + this.book.cl_no,
-          //         href: ''
-          //       },
-          //     ]
-          //     this.set('dataForSelect.breadcrumbs', breadcrumbs)
-          //     this.fire('_set-breadcrumbs', breadcrumbs)
-          //   } else {
-          //     this.set('data', '')
-          //   }
         } catch (e) {
           // console.log(e);
         }
@@ -333,16 +296,6 @@
 
       _changeIronPage: function (data) {
         this.set('pageSelected', data.detail)
-        // this.dispatchAction('SET_BREADCRUMBS', [{
-        //   label: 'สัญญาที่ ' + this.contractId.contract_no,
-        //   href: ''
-        // },
-        // {
-        //   label: 'งวดที่ ' + this.dataShow.cl_no,
-        //   href: ''
-        // },
-        // ])
-        // console.log(data.detail);
       },
       createBooking: function () {
         try {
@@ -430,172 +383,44 @@
           })
         }, 500)
       },
-      // setPageseleted(e) {
-      //   // console.log(1);
-      //   this.set('dataForSelect.cl_close',false)
-      //   // console.log(111112);
-      //   this.set('subPageSelected', 'list-of-booking')
-      // },
-      // _changeComponentBl: function (data) {
-      //   this.set('dataForSelect.cl_close',false)
-      //   // this.set('dataForSelect.cl_close', false);
-      //   // console.log(data.detail.detail);
-      //   this.set('pageSelected', data.detail.detail)
-      // },
-
-      // setTotalRice(e) {
-      //   // console.log(22222);
-      //   // console.log(this.dataForSelect.cl_close);
-      //   this.set('dataForSelect.cl_close',false)
-
-      //   // console.log('this.dataForSelect.book>>>',this.dataForSelect.book);
-      //   // let bookApp = this.dataForSelect.book.filter((status) => status.cl_status == true)
-      //   // // console.log(arr);
-      //   // // console.log(bookApp);
-      //   // this.set('dataForSelect.bookApp', bookApp);
-      //   // this.set('dataForSelect.cl_close', true);
-      //   // console.log(111);
-      //   // try {
-      //   //   if (this.dataForSelect.cl_id != undefined) {
-      //   //     console.log('>>>>>1', this.dataForSelect.cl_type_rice.length);
-      //   //     this.set('dataForSelect.cl_type_rice', []);
-      //   //     let newBooking = this.data.book.filter((rice) => rice.cl_id == this.dataForSelect.cl_id)[0]
-      //   //     // console.log(newBooking);
-      //   //     if (this.dataForSelect.cl_type_rice.length < 1) {
-      //   //       newBooking.cl_type_rice.map((set_name) => {
-      //   //         set_name.type_rice_name_th = '(' + set_name.type_rice_id + ') ' + set_name.type_rice_name_th
-      //   //         set_name.type_rice_name_en = '(' + set_name.type_rice_id + ') ' + set_name.type_rice_name_en
-      //   //       })
-      //   //       // console.log(newBooking);
-      //   //       console.log(1);
-      //   //       this.set('dataForSelect.cl_type_rice', newBooking.cl_type_rice);
-      //   //     }
-      //   //   }
-      //   // } catch (e) {
-      //   //   // console.log(e);
-      //   // }
-      // },
-      // _getBookingExporter: function (e) {
-      //   // console.log(e.detail);
-      //   try {
-      //     // console.log(e.detail.detail);
-      //     // this.set('dataForSelect.cl_type_rice', 
-      //     if (e.detail.detail.cl_id !== 'undefined' && e.detail.detail.cl_id !== '') {
-      //       // console.log(e.detail.detail);
-      //       this.fire('toast', { status: 'load' });
-      //       this.read('./g2g/book/confirm/id/' + e.detail.detail.cl_id, (data) => {
-      //         this.dataSelected = data;
-      //         // console.log(data);
-      //         // console.log('this.data.book',this.data.book);
-      //         // e.detail.detail = this.data.book.filter((item) => item.cl_id == e.detail.detail)[0]
-      //         // console.log(e.detail.detail);
-      //         this.set('dataForSelect.listbooking', data);
-      //         let ship_lot_no
-      //         if (this.dataSelected.length > 0) {
-      //           ship_lot_no = Number(this.dataSelected[0].ship_lot_no) + 1
-      //         } else {
-      //           ship_lot_no = 1
-      //         }
-      //         this.set('dataDefault.ship_lot_no', ship_lot_no);
-      //         this._changeDataBl('undefined');
-      //         this.set('dataForSelect.cl_no', e.detail.detail.cl_no);
-      //         this.set('dataForSelect.cl_id', e.detail.detail.cl_id);
-      //         // this.set('dataForSelect.cl_close', true);
-
-      //         this.set('dataForSelect.cl_type_rice', e.detail.detail.cl_type_rice);
-      //         // }
-
-      //         this.fire('toast', { status: 'load' });
-      //       });
-      //     }
-
-      //   } catch (e) {
-
-      //   }
-
-      // },
-      // getExport(data) {
-      //   try {
-      //     this.async(() => {
-      //       this.set('dataForSelect.exporter', '');
-      //       this.set('dataForSelect.exporter', data.exporter);
-      //       // console.log(this.data.confirm_letter);
-      //       this.set('dataForSelect.conFirmApprove', '');
-      //       let conFirmApprove = this.data.confirm_letter.filter((status) => status.cl_status == true)
-      //       let arr = []
-      //       conFirmApprove.map((data) => {
-      //         //  console.log(data);
-      //         arr.push({
-      //           cl_no: 'สัญญาที่ ' + data.cl_no + ' ปริมาณข้าว ' + this.formatNumberNoZero(data.cl_quantity_total) + ' ตัน',
-      //           cl_id: data.cl_id
-      //         })
-      //       })
-      //       // console.log(this.dataForSelect.book);
-
-      //       let bookApp = this.dataForSelect.book.filter((status) => status.cl_status == true)
-      //       // console.log(arr);
-      //       // console.log(bookApp);
-      //       this.set('dataForSelect.cl_close',false)
-      //       this.set('dataForSelect.bookApp', bookApp);
-
-      //       this.set('dataForSelect.conFirmApprove', arr);
-      //       this.set('dataForSelect.bookBl', this.data.book);
-      //       // console.log(this.data);
-      //       // console.log(this.dataForSelect);
-      //     }, 100);
-      //   } catch (e) {
-
-      //   }
-
-      // },
-      // _getFireGroupExporter(exporterId) {
-      //   //
-      //   if (this._checkUndefined(this.oldData)) {
-      //     // https://localhost:3001/api/g2g/confirm/exporter?contract_id=37d09c7b-b8b3-407d-abca-89f0cc56da21&exporter_id=ba5526b3-cbfa-482d-b0ac-716df09b47f7
-      //     // console.log('exporterId', exporterId);
-      //     if (exporterId.detail == '') {
-      //       this.set('data', this.oldData)
-      //       // console.log(this.data);
-      //     } else {
-      //       this.read('./g2g/confirm/exporter?contract_id=' + this.oldData.contract_id + '&exporter_id=' + exporterId.detail, (data) => {
-      //         // this.data=data;
-      //         // console.log();
-      //         this.set('data.book', data)
-      //       });
-      //     }
-      //   }
-      // },
-      // _getFireBookingDetail: function (e) {
-      //   try {
-      //     // console.log(e.detail.detail.cl_id);
-      //     this.read('./g2g/book/confirm/id/' + e.detail.detail.cl_id, (data) => {
-      //       this.dataSelected = data;
-      //       let ship_lot_no
-      //       if (this.dataSelected.length > 0) {
-      //         ship_lot_no = Number(this.dataSelected[0].ship_lot_no) + 1
-      //       } else {
-      //         ship_lot_no = 1
-      //       }
-      //       this.set('dataDefault.ship_lot_no', ship_lot_no);
-      //       this._changeDataBl('undefined');
-      //     });
-      //   } catch (e) {
-      //     // console.log(e);
-      //   }
-
-      // },
-      // _changeDataBl: function (dateUn) {
-      //   this.getDateg2g(dateUn, (date) => {
-      //     // console.log('date',date);
-      //     // this.set('data.ship', { ship_id: '', ship_voy_no: '' })
-      //     this.set('dataDefault.etd_date', date);
-      //     this.set('dataDefault.eta_date', date);
-      //     this.set('dataDefault.packing_date', date);
-      //     this.set('dataDefault.cut_of_date', date);
-      //     this.set('dataDefault.product_date', date);
-      //     this.set('dataDefault.weight_per_container', 25);
-      //   });
-      // },
+      openExporter(e) {
+        console.log(e);
+        let url = { book_id: e.detail.id, id: e.detail.id }
+        let bookData = {
+          book_id: e.detail.id,
+          ship_lot: e.detail.ship_lot
+        }
+        this.dispatchAction('GET_BOOK_NO', this.genUrl(url))
+        this.dispatchAction('SET_BOOK_ID', bookData)
+        this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
+        this.dispatchAction('SET_STATE', {
+          isInsert: false,
+          btnDisabled: true,
+          hiddend: true
+        })
+        this.dispatchAction('SET_BREADCRUMBS', [{
+          label: 'สัญญาที่ ' + this.contractId.contract_no,
+          href: ''
+        },
+        {
+          label: 'งวดที่ ' + this.dataShow.cl_no,
+          href: ''
+        },
+        {
+          label: 'เรื่อลำที่ ' + e.detail.ship_lot,
+          href: ''
+        },
+        ])
+        this.dispatchAction('GET_BOOK_EXPORTER_LIST', this.genUrl(url))
+        this.async(() => {
+          this.fire('toast', {
+            status: 'success', text: 'โหลดสำเร็จ', callback: () => {
+              this.set('pageSelected', 'list-of-booking-exporter')
+            }
+          })
+        }, 500)
+      },
+      
 
     });
   </script>

@@ -49,6 +49,7 @@ export const book = {
         address:"ที่อยู่ผู้รับสินค้า",
         lot_no:"ลำดับเรือที่",
         list_vessel:"ลำดับเรือ",
+        list_exporter:"ดูข้อมูลผู้ส่งออก",
         port_of_loading:"ท่าเรือต้นทาง",
         port_of_discharge:"ท่าเรือปลายทาง (Discharge)",
         place_of_delivery:"ท่าเรือปลายทาง (Delivery)",
