@@ -89,7 +89,7 @@
                                     <p>วันที่อัพเดทล่าสุด</div>
                             </template>
                             <template>
-                                <p style="white-space: normal">[[_changeDate(item.date_updated)]]
+                                <p class="text-center" style="white-space: normal text">[[_changeDate(item.date_updated)]]
                                 </p>
                             </template>
                         </vaadin-grid-column>
@@ -223,8 +223,8 @@
                 this.currentSeleted.report_params.map((item) => {
                     url[this.$$('#' + item.res).id] = this.$$('#' + item.res).value
                 })
-                console.log(this.currentSeleted);
-                console.log(this.genUrl(url));
+                // console.log(this.currentSeleted);
+                // console.log(this.genUrl(url));
                 window.open(window._config.reportServer + `/api/${this.currentSeleted.report_type}/${this.currentSeleted.report_path}?` + this.genUrl(url))
             },
             isString: function (type) {
