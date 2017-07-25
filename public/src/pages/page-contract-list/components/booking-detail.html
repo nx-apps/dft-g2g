@@ -154,15 +154,6 @@
 
         <!--</gl-grid-col>-->
         <gl-grid-row width="{{getWidth}}">
-          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,12]]">
-            <gl-combo-box required class="required" label="{{localizeBook.address}}" placeholder="{{localizeBook.address}}" always-float-label item-label-path="notify_name"
-              disabled="[[commonState.btnDisabled]]" item-value-path="notify_id" items="{{notifyList}}" on-selected-item-changed="getObjectNotify"
-              value="{{data.notify_id}}">
-              <template>
-                [[item.notify_name]]
-              </template>
-            </gl-combo-box>
-          </gl-grid-col>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
             <gl-combo-box required class="required" label="{{localizeBook.port_of_loading}}" placeholder="{{localizeBook.port_of_loading}}" always-float-label item-label-path="port_name"
               disabled="[[commonState.btnDisabled]]" on-selected-item-changed="getObjectLoadPort" item-value-path="port_id"
@@ -201,6 +192,17 @@
               items="{{setPort(portList,contryNameEn)}}" value="{{data.deli_port_id}}">
               <template>
                 [[item.port_name]]
+              </template>
+            </gl-combo-box>
+          </gl-grid-col>
+
+          <!--notify/-->
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,12]]">
+            <gl-combo-box required class="required" label="{{localizeBook.address}}" placeholder="{{localizeBook.address}}" always-float-label item-label-path="notify_name"
+              disabled="[[commonState.btnDisabled]]" item-value-path="notify_id" items="{{notifyListSeleted}}" on-selected-item-changed="getObjectNotify"
+              value="{{data.notify_id}}">
+              <template>
+                [[item.notify_name]]
               </template>
             </gl-combo-box>
           </gl-grid-col>
@@ -362,10 +364,16 @@
       observers: [
         '_oBChangeBooking(data.book_no)',
         '_oBChangePod(data.dest_port_id)',
+        '_setNotify(data.dest_port_id,notifyList)'
         //   '_getPod(dataForSelect)',
       ],
       setPort: function (portList, contryNameEn) {
         return portList[contryNameEn]
+      },
+      _setNotify(dest_port_id,notifyList){
+        let newData = notifyList.filter((item)=>item.port_id === dest_port_id)
+        this.set('notifyListSeleted',newData)
+        console.log(newData);
       },
       getObjectShipline: function (e) {
         if (e.detail.value !== null) {
