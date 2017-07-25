@@ -45,9 +45,19 @@
                         </vaadin-grid-column>
 
 
-                        <vaadin-grid-column width="41.6%" flex-grow="0" resizable>
+                        <vaadin-grid-column width="31.6%" flex-grow="0" resizable>
                             <template class="header">ชื่อรายงาน</template>
                             <template>[[item.report_name]]</template>
+                        </vaadin-grid-column>
+
+                         <vaadin-grid-column width="9.6%" flex-grow="0">
+                            <template class="header">
+                                <div class="text-center">หน่วยงาน</div>
+                            </template>
+                            <template>
+                                <div class="text-center">
+                                [[changeName(item.report_type)]]</div>
+                            </template>
                         </vaadin-grid-column>
 
                         <vaadin-grid-column width="10.6%" flex-grow="0">
@@ -241,6 +251,20 @@
 
             isList: function (type) {
                 return type === 'list'
+            },
+            changeName:function(name){
+                // let names = [
+                //     {
+                //             id: 'rice',
+                //             label: 'กองข้าว'
+                //         },
+                //         {
+                //             id: 'finance',
+                //             label: 'กองคลัง'
+                //         }
+                // ]
+                if(name === 'rice')return 'กองข้าว'
+                return 'กองคลัง'
             },
             getNextparam(e) {
                 try {

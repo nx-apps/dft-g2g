@@ -385,7 +385,7 @@
       _setNotify(deli_port_id, notifyList) {
         let newData = notifyList.filter((item) => item.port_id === deli_port_id)
         this.set('notifyListSeleted', newData)
-        console.log(newData);
+        // console.log(newData);
       },
       getObjectShipline: function (e) {
         if (e.detail.value !== null) {
@@ -461,7 +461,7 @@
             port_id: e.detail.value.port_id
           }
           this.set('dataShow.notify', data)
-          this.s
+          // this.s
         }
       },
 
@@ -543,6 +543,7 @@
           dataResive.ship = this.data.ship
           delete dataResive.date_updated
           delete dataResive.date_created
+          this.dataShow.notify = {}
           res(dataResive)
         })
       },
