@@ -27,10 +27,12 @@
                 }
             }
         </style>
-        <div class="xcontainer ">
-            <template is="dom-repeat" items={{buyerList}} index-as=index>
-                <buyer-list data="[[item]]"></buyer-list>
-            </template>
+        <div class="layout vertical">
+            <div class="xx horizontal center-justified layout wrap" style="width: 1300px">
+                <template is="dom-repeat" items={{buyerList}} index-as=index>
+                    <buyer-list data="[[item]]"></buyer-list>
+                </template>
+            </div>
         </div>
         <nylon-panel-right title="{{titlePanelRight}}" id="drawerRight" set-width="95%">
             <div class="rightdata" align="left">
