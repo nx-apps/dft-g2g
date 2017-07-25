@@ -139,7 +139,7 @@ export function confirmLetterAction(store) {
                 cl_hamonize: [
                     {
                         cost_price: 0,
-                        cost_value: 0,
+                        // cost_value: 0,
                         hamonize_id: '',
                         hamonize_weight: 0,
                         package: [
@@ -157,7 +157,7 @@ export function confirmLetterAction(store) {
                 cl_status: false,
                 contract_id: data.contract_id,
                 contract_no: Number(data.contract_no),
-                cl_weigh: 0,
+                cl_weight: 0,
                 incoterms: [
                     {
                         inct_id: "",
