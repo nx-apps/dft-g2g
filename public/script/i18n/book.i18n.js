@@ -45,6 +45,7 @@ export const book = {
         vessel:"ชื่อเรือ",
         voy_no:"เที่ยวเรือ",
         surveyor:"Surveyor",
+        name_address:"ชื่อผู้รับสินค้า",
         address:"ที่อยู่ผู้รับสินค้า",
         lot_no:"ลำดับเรือที่",
         list_vessel:"ลำดับเรือ",

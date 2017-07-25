@@ -92,9 +92,9 @@
         </gl-grid-row>
         <gl-grid-row>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-            <gl-combo-box required class="required" label="{{localizeBook.shipping_agent}}" placeholder="{{localizeBook.shipping_agent}}" always-float-label item-label-path="shipline_name"
-              disabled="[[commonState.btnDisabled]]" item-value-path="shipline_id" items="{{shiplineList}}" value="{{data.shipline_id}}"
-              on-selected-item-changed="getObjectShipline">
+            <gl-combo-box required class="required" label="{{localizeBook.shipping_agent}}" placeholder="{{localizeBook.shipping_agent}}"
+              always-float-label item-label-path="shipline_name" disabled="[[commonState.btnDisabled]]" item-value-path="shipline_id"
+              items="{{shiplineList}}" value="{{data.shipline_id}}" on-selected-item-changed="getObjectShipline">
               <template>
                 [[item.shipline_name]]
               </template>
@@ -105,8 +105,9 @@
             <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
               [[_getShip(shipList)]]
               <div class="autocomplete-wrapper">
-                <gl-form-input id="ship-[[index]]" required class="required" disabled="[[commonState.btnDisabled]]" always-float-label label="{{localizeBook.vessel}} [[_ObcountIndex(index)]]" placeholder="{{localizeBook.vessel}} [[_ObcountIndex(index)]]"
-                  value="{{item.ship_name}}" on-blur="getShipId" index="[[index]]"></gl-form-input>
+                <gl-form-input id="ship-[[index]]" required class="required" disabled="[[commonState.btnDisabled]]" always-float-label label="{{localizeBook.vessel}} [[_ObcountIndex(index)]]"
+                  placeholder="{{localizeBook.vessel}} [[_ObcountIndex(index)]]" value="{{item.ship_name}}" on-blur="getShipId"
+                  index="[[index]]"></gl-form-input>
 
                 <paper-autocomplete-suggestions id="shipline-suggestions-[[index]]" for="ship-[[index]]"></paper-autocomplete-suggestions>
 
@@ -131,9 +132,10 @@
           <template is="dom-repeat" items="[[data.surveyor]]">
             <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
               [[_getSurveyor(item.surveyor_id,surveyorList,data.surveyor.*)]]
-              <gl-combo-box required class="required" id="surveyor-[[index]]" index="[[index]]" label="{{localizeBook.surveyor}} [[_ObcountIndex(index)]]" placeholder="{{localizeBook.surveyor}} [[_ObcountIndex(index)]]"
-                always-float-label disabled="[[commonState.btnDisabled]]" item-label-path="surveyor_name" item-value-path="surveyor_id"
-                items="{{surveyorList}}" value="{{item.surveyor_id}}" on-value-changed="_getResetSurveyor" on-selected-item-changed="getObjectSurveyor">
+              <gl-combo-box required class="required" id="surveyor-[[index]]" index="[[index]]" label="{{localizeBook.surveyor}} [[_ObcountIndex(index)]]"
+                placeholder="{{localizeBook.surveyor}} [[_ObcountIndex(index)]]" always-float-label disabled="[[commonState.btnDisabled]]"
+                item-label-path="surveyor_name" item-value-path="surveyor_id" items="{{surveyorList}}" value="{{item.surveyor_id}}"
+                on-value-changed="_getResetSurveyor" on-selected-item-changed="getObjectSurveyor">
                 <template>
                   [[item.surveyor_name]]
                 </template>
@@ -150,14 +152,12 @@
               <iron-icon icon="remove"></iron-icon>{{localizeBook.delete_surveyor}}</paper-button>
           </div>
         </gl-grid-row>
-        <!--<gl-grid-row width="{{getWidth}}">-->
 
-        <!--</gl-grid-col>-->
         <gl-grid-row width="{{getWidth}}">
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-            <gl-combo-box required class="required" label="{{localizeBook.port_of_loading}}" placeholder="{{localizeBook.port_of_loading}}" always-float-label item-label-path="port_name"
-              disabled="[[commonState.btnDisabled]]" on-selected-item-changed="getObjectLoadPort" item-value-path="port_id"
-              items="{{portList.Thailand}}" value="{{data.load_port_id}}">
+            <gl-combo-box required class="required" label="{{localizeBook.port_of_loading}}" placeholder="{{localizeBook.port_of_loading}}"
+              always-float-label item-label-path="port_name" disabled="[[commonState.btnDisabled]]" on-selected-item-changed="getObjectLoadPort"
+              item-value-path="port_id" items="{{portList.Thailand}}" value="{{data.load_port_id}}">
               <template>
                 [[item.port_name]]
               </template>
@@ -165,21 +165,21 @@
           </gl-grid-col>
 
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-            <gl-form-input type="date" required class="required" label="{{localizeBook.etd}}" placeholder="{{localizeBook.etd}}" always-float-label value="{{data.etd_date}}"
-              disabled="[[commonState.btnDisabled]]"></gl-form-input>
+            <gl-form-input type="date" required class="required" label="{{localizeBook.etd}}" placeholder="{{localizeBook.etd}}" always-float-label
+              value="{{data.etd_date}}" disabled="[[commonState.btnDisabled]]"></gl-form-input>
             <!--<vaadin-date-picker required class="required" label="{{localizeBook.label_etd}}" always-float-label value="{{data.etd_date}}"
               disabled="[[commonState.btnDisabled]]"></vaadin-date-picker>-->
           </gl-grid-col>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-            <gl-form-input type="date" required class="required" label="{{localizeBook.eta}}" placeholder="{{localizeBook.eta}}" always-float-label value="{{data.eta_date}}"
-              disabled="[[commonState.btnDisabled]]"></gl-form-input>
+            <gl-form-input type="date" required class="required" label="{{localizeBook.eta}}" placeholder="{{localizeBook.eta}}" always-float-label
+              value="{{data.eta_date}}" disabled="[[commonState.btnDisabled]]"></gl-form-input>
             <!--<vaadin-date-picker required class="required" label="{{localizeBook.label_eta}}" always-float-label value="{{data.eta_date}}"
               disabled="[[commonState.btnDisabled]]"></vaadin-date-picker>-->
           </gl-grid-col>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-            <gl-combo-box required class="required" label="{{localizeBook.port_of_discharge}}" placeholder="{{localizeBook.port_of_discharge}}" always-float-label item-label-path="port_name"
-              disabled="[[commonState.btnDisabled]]" item-value-path="port_id" on-selected-item-changed="getObjectDestPort"
-              items="{{setPort(portList,contryNameEn)}}" value="{{data.dest_port_id}}">
+            <gl-combo-box required class="required" label="{{localizeBook.port_of_discharge}}" placeholder="{{localizeBook.port_of_discharge}}"
+              always-float-label item-label-path="port_name" disabled="[[commonState.btnDisabled]]" item-value-path="port_id"
+              on-selected-item-changed="getObjectDestPort" items="{{setPort(portList,contryNameEn)}}" value="{{data.dest_port_id}}">
               <template>
                 [[item.port_name]]
               </template>
@@ -187,9 +187,9 @@
           </gl-grid-col>
 
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-            <gl-combo-box required class="required" label="{{localizeBook.place_of_delivery}}" placeholder="{{localizeBook.place_of_delivery}}" always-float-label item-label-path="port_name"
-              disabled="[[commonState.btnDisabled]]" item-value-path="port_id" on-selected-item-changed="getObjectDeliPort"
-              items="{{setPort(portList,contryNameEn)}}" value="{{data.deli_port_id}}">
+            <gl-combo-box required class="required" label="{{localizeBook.place_of_delivery}}" placeholder="{{localizeBook.place_of_delivery}}"
+              always-float-label item-label-path="port_name" disabled="[[commonState.btnDisabled]]" item-value-path="port_id"
+              on-selected-item-changed="getObjectDeliPort" items="{{setPort(portList,contryNameEn)}}" value="{{data.deli_port_id}}">
               <template>
                 [[item.port_name]]
               </template>
@@ -198,29 +198,34 @@
 
           <!--notify/-->
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,12]]">
-            <gl-combo-box required class="required" label="{{localizeBook.address}}" placeholder="{{localizeBook.address}}" always-float-label item-label-path="notify_name"
-              disabled="[[commonState.btnDisabled]]" item-value-path="notify_id" items="{{notifyListSeleted}}" on-selected-item-changed="getObjectNotify"
-              value="{{data.notify_id}}">
+            <gl-combo-box required class="required" label="{{localizeBook.name_address}}" placeholder="{{localizeBook.name_address}}" always-float-label
+              item-label-path="notify_name" disabled="[[commonState.btnDisabled]]" item-value-path="notify_id" items="{{notifyListSeleted}}"
+              on-selected-item-changed="getObjectNotify" value="{{data.notify_id}}">
               <template>
                 [[item.notify_name]]
               </template>
             </gl-combo-box>
           </gl-grid-col>
 
-          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-            [[changeString2Num(data.*,'weight_container')]]
-            <gl-form-input required class="required" allowed-pattern="[0-9||,||.]" format-number="on" label="{{localizeBook.label_cabinet}}" 
-              always-float-label placeholder="{{localizeBook.detail}}" disabled="[[commonState.btnDisabled]]" value="{{data.weight_container}}"></gl-form-input>
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,12]]">
+            <gl-form-textarea disabled rows="2" label="{{localizeBook.address}}"
+              placeholder="{{localizeBook.address}}" value="{{dataShow.notify.notify_address}}"></gl-form-textarea>
+
           </gl-grid-col>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-            <gl-form-input type="date" required class="required" label="{{localizeBook.packing_date}}" placeholder="{{localizeBook.packing_date}}" always-float-label value="{{data.packing_date}}"
-              disabled="[[commonState.btnDisabled]]"></gl-form-input>
+            [[changeString2Num(data.*,'weight_container')]]
+            <gl-form-input required class="required" allowed-pattern="[0-9||,||.]" format-number="on" label="{{localizeBook.cabinet}}"
+              always-float-label placeholder="{{localizeBook.cabinet}}" disabled="[[commonState.btnDisabled]]" value="{{data.weight_container}}"></gl-form-input>
+          </gl-grid-col>
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+            <gl-form-input type="date" required class="required" label="{{localizeBook.packing_date}}" placeholder="{{localizeBook.packing_date}}"
+              always-float-label value="{{data.packing_date}}" disabled="[[commonState.btnDisabled]]"></gl-form-input>
             <!--<vaadin-date-picker></vaadin-date-picker>-->
           </gl-grid-col>
 
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-            <gl-form-input type="date" required class="required" label="{{localizeBook.cut_off_date}}" placeholder="{{localizeBook.cut_off_date}}" always-float-label value="{{data.cut_date}}"
-              disabled="[[commonState.btnDisabled]]"></gl-form-input>
+            <gl-form-input type="date" required class="required" label="{{localizeBook.cut_off_date}}" placeholder="{{localizeBook.cut_off_date}}"
+              always-float-label value="{{data.cut_date}}" disabled="[[commonState.btnDisabled]]"></gl-form-input>
             <!--<vaadin-date-picker required class="required" label="{{localizeBook.label_cut_off_date}}" always-float-label value="{{data.cut_of_date}}"
               disabled="[[commonState.btnDisabled]]"></vaadin-date-picker>-->
           </gl-grid-col>
@@ -231,8 +236,8 @@
           </gl-grid-col>
 
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-            <gl-form-input type="date" label="{{localizeBook.production_date}}" placeholder="{{localizeBook.production_date}}" always-float-label required class="required" value="{{data.product_date}}"
-              disabled="[[commonState.btnDisabled]]"></gl-form-input>
+            <gl-form-input type="date" label="{{localizeBook.production_date}}" placeholder="{{localizeBook.production_date}}" always-float-label
+              required class="required" value="{{data.product_date}}" disabled="[[commonState.btnDisabled]]"></gl-form-input>
             <!--<vaadin-date-picker label="{{localizeBook.label_production_date}}" always-float-label required class="required" value="{{data.product_date}}"
               disabled="[[commonState.btnDisabled]]"></vaadin-date-picker>-->
           </gl-grid-col>
@@ -241,7 +246,8 @@
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]"></gl-grid-col>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]"></gl-grid-col>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-            <gl-form-input label="{{localizeBook.note}}" always-float-label value="{{data.book_remark}}" placeholder="{{localizeBook.note}}" disabled="[[commonState.btnDisabled]]"></gl-form-input>
+            <gl-form-input label="{{localizeBook.note}}" always-float-label value="{{data.book_remark}}" placeholder="{{localizeBook.note}}"
+              disabled="[[commonState.btnDisabled]]"></gl-form-input>
           </gl-grid-col>
         </gl-grid-row>
       </gl-form-panel-body>
@@ -299,7 +305,7 @@
         // blNoOld: {
         //   type: String,
         // },
-        localizeBook : {
+        localizeBook: {
           statePath: 'i18n.book'
         },
         localizeContract: {
@@ -311,8 +317,8 @@
         localizeCommon: {
           statePath: 'i18n.common'
         },
-        buyerId:{
-          statePath:'commonState.buyerId'
+        buyerId: {
+          statePath: 'commonState.buyerId'
         },
         commonState: {
           statePath: 'commonState.setState'
@@ -350,7 +356,8 @@
             deli_port: {},
             dest_port: {},
             notify: {},
-            ship: []
+            ship: [],
+            address:{}
           }
         }
       },
@@ -370,9 +377,9 @@
       setPort: function (portList, contryNameEn) {
         return portList[contryNameEn]
       },
-      _setNotify(dest_port_id,notifyList){
-        let newData = notifyList.filter((item)=>item.port_id === dest_port_id)
-        this.set('notifyListSeleted',newData)
+      _setNotify(dest_port_id, notifyList) {
+        let newData = notifyList.filter((item) => item.port_id === dest_port_id)
+        this.set('notifyListSeleted', newData)
         console.log(newData);
       },
       getObjectShipline: function (e) {
@@ -449,6 +456,7 @@
             port_id: e.detail.value.port_id
           }
           this.set('dataShow.notify', data)
+          this.s
         }
       },
 
@@ -516,11 +524,11 @@
 
           }
           dataResive.buyer_id = this.buyerId.buyer_id
-          dataResive.cut_date = dataResive.cut_date+ 'T00:00:00+07:00'
-          dataResive.eta_date = dataResive.eta_date+ 'T00:00:00+07:00'
-          dataResive.etd_date = dataResive.etd_date+ 'T00:00:00+07:00'
-          dataResive.packing_date = dataResive.packing_date+ 'T00:00:00+07:00'
-          dataResive.product_date = dataResive.product_date+ 'T00:00:00+07:00'
+          dataResive.cut_date = dataResive.cut_date + 'T00:00:00+07:00'
+          dataResive.eta_date = dataResive.eta_date + 'T00:00:00+07:00'
+          dataResive.etd_date = dataResive.etd_date + 'T00:00:00+07:00'
+          dataResive.packing_date = dataResive.packing_date + 'T00:00:00+07:00'
+          dataResive.product_date = dataResive.product_date + 'T00:00:00+07:00'
           dataResive.shipline = this.dataShow.shipline
           dataResive.notify_party = this.dataShow.notify
           dataResive.surveyor = this.dataShow.surveyor
