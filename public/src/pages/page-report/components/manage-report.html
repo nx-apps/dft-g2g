@@ -5,15 +5,24 @@
 <link rel="import" href="./../../../../bower_components/gl-form/gl-form-input.html">
 <link rel="import" href="./../../../../bower_components/gl-form/gl-combo-box.html">
 
+<link rel="import" href="./../../../../bower_components/paper-checkbox/paper-checkbox.html">
+
+<link rel="import" href="./../../components/validateFormBehaviors.html">
+
+<link rel="import" href="./../../components/g2g-logic-behavior.html">
+<link rel="import" href="./../../../layout/shared-styles.html">
 <dom-module id="manage-report">
     <template>
-        <style>
+        <style include="shared-styles">
              :host {
                 display: block;
             }
+
+            gl-combo-box {
+                width: 90%;
+            }
         </style>
         <gl-form-panel set-padding="10px 20px 10px 20px" set-border="1px">
-
             <gl-grid-row width="{{getWidth}}">
                 <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
                     <gl-form-input class="margin-top required" required error-message="กรุณากรอกรายงาน" required label="รายงานที่ :" placeholder="กรอกรายงาน"
@@ -28,30 +37,124 @@
             <gl-grid-row>
                 <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
                     <gl-form-input class="margin-top required" required error-message="กรุณากรอกชื่อไฟล์" required label="ชื่อไฟล์ :" placeholder="กรอกชื่อไฟล์"
-                        value="{{data.report_file}}" disabled="{{_checkStatus(statusAction)}}"></gl-form-input>
+                        value="{{data.report_path}}" disabled="{{_checkStatus(statusAction)}}"></gl-form-input>
                 </gl-grid-col>
                 <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-                    <gl-combo-box id="report_table" label="ตารางข้อมูลที่ต้องการดู" placeholder="ตารางข้อมูลที่ต้องการดู" items="[[hamonizeYear.year]]"
-                        item-label-path="label" value="{{data.report_table}}" item-value-path="label" on-value-changed="searchHamonizeInYear">
+                    <gl-combo-box id="report_table" label="ตารางข้อมูลที่ต้องการดู" placeholder="ตารางข้อมูลที่ต้องการดู" items="[[tableList]]"
+                        item-label-path="table_name" value="{{data.report_table}}" item-value-path="table_name" on-selected-item-changed="getObjectTable">
                         <template>
-                            [[item.label]]
+                            [[item.table_name]]
                         </template>
                     </gl-combo-box>
                 </gl-grid-col>
                 <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-                    <gl-combo-box id="report_type" label="รายงานของ" placeholder="รายงานของ" items="{{report_type}}" item-label-path="id" value="{{data.report_type}}"
-                        item-value-path="label" on-value-changed="searchHamonizeInYear">
+                    <gl-combo-box id="report_type" label="รายงานของ" placeholder="รายงานของ" items="{{report_type}}" item-label-path="label"
+                        value="{{data.report_type}}" item-value-path="id">
                         <template>
                             [[item.label]]
                         </template>
                     </gl-combo-box>
                 </gl-grid-col>
             </gl-grid-row>
+            <div class="horizontal end-justified layout">
+                <paper-button raised on-tap="addCondition" class="gl-btn-primary">
+                    <iron-icon icon="add"></iron-icon>เพิ่มตัวแปร</paper-button>
+            </div>
+            <gl-grid-row>
+                <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,12]]">
+                    <vaadin-grid id="material" class="material" aria-label="Basic Binding Example" items="{{data.report_params}}">
+
+                        <vaadin-grid-column width="10%" flex-grow="0">
+                            <template class="header">ลำดับ</template>
+                            <template>
+                                <gl-form-input class="margin-top required" required type="number" style="width:90%" value="{{item.no}}" disabled="{{_checkStatus(statusAction)}}"></gl-form-input>
+                            </template>
+                        </vaadin-grid-column>
+
+                        <vaadin-grid-column width="20%" flex-grow="0">
+                            <template class="header">Label</template>
+                            <template>
+                                <gl-form-input class="margin-top required" required style="width:90%" value="{{item.label}}" disabled="{{_checkStatus(statusAction)}}"></gl-form-input>
+                            </template>
+                        </vaadin-grid-column>
+
+                        <vaadin-grid-column width="15%" flex-grow="0">
+                            <template class="header">View</template>
+                            <template>
+                                <gl-combo-box id="report_type" class="margin-top required" required label="View" placeholder="View" items="{{tableSeleted}}"
+                                    item-label-path="field" value="{{item.view}}" item-value-path="field">
+                                    <template>
+                                        [[item.field]]
+                                    </template>
+                                </gl-combo-box>
+                            </template>
+                        </vaadin-grid-column>
+
+                        <vaadin-grid-column width="15%" flex-grow="0">
+                            <template class="header">res</template>
+                            <template>
+                                <gl-combo-box id="report_type" class="margin-top required" required label="res" placeholder="res" items="{{tableSeleted}}"
+                                    item-label-path="field" value="{{item.res}}" item-value-path="field">
+                                    <template>
+                                        [[item.field]]
+                                    </template>
+                                </gl-combo-box>
+                            </template>
+                        </vaadin-grid-column>
+
+                        <vaadin-grid-column width="15%" flex-grow="0">
+                            <template class="header">type</template>
+                            <template>
+                                <gl-combo-box id="report_type" class="margin-top required" required label="ประเภทข้อมูล" placeholder="ประเภทข้อมูล" items="{{data_type}}"
+                                    item-label-path="label" value="{{item.type}}" item-value-path="id">
+                                    <template>
+                                        [[item.label]]
+                                    </template>
+                                </gl-combo-box>
+                            </template>
+                        </vaadin-grid-column>
+
+                        <vaadin-grid-column width="15%" flex-grow="0">
+                            <template class="header">type</template>
+                            <template>
+                                <gl-combo-box id="report_type" class="margin-top required" required label="field" placeholder="field" items="{{tableSeleted}}"
+                                    item-label-path="field" value="{{item.req.field}}" item-value-path="field">
+                                    <template>
+                                        [[item.field]]
+                                    </template>
+                                </gl-combo-box>
+                            </template>
+                        </vaadin-grid-column>
+
+
+
+                        <vaadin-grid-column width="5%" flex-grow="0">
+                            <template class="header">redux</template>
+                            <template>
+                                <paper-checkbox class="checkBox" on-tap="toggle" checked="{{item.redux}}" aria-labelledby="label3"></paper-checkbox>
+                            </template>
+                        </vaadin-grid-column>
+
+                        <vaadin-grid-column width="5%" flex-grow="0">
+                            <template class="header">ลบ</template>
+                            <template>
+                                <paper-icon-button data="{{item}}" icon="delete" on-tap="_delete"></paper-icon-button>
+                            </template>
+                        </vaadin-grid-column>
+                    </vaadin-grid>
+                </gl-grid-col>
+            </gl-grid-row>
+            <div class="horizontal end-justified layout">
+                <paper-button raised on-tap="addReport" class="gl-btn-primary" hidden="[[!commonState.isInsert]]">เพิ่ม</paper-button>
+                <paper-button raised on-tap="saveReport" class="gl-btn-success" hidden="[[commonState.isInsert]]">บันทึก</paper-button>
+            </div>
         </gl-form-panel>
     </template>
     <script>
         Polymer({
             is: 'manage-report',
+            behaviors: [ReduxBehavior, nylonBehavior, g2gLogicBehavior,
+                ValidateFormBehavior, Polymer.IronValidatorBehavior],
             properties: {
                 report_type: {
                     type: Array,
@@ -65,7 +168,157 @@
                             label: 'กองคลัง'
                         }
                     ]
+                },
+                data_type: {
+                    type: Array,
+                    value: [
+                        {
+                            id: 'string',
+                            label: 'ข้อความ'
+                        },
+                        {
+                            id: 'numbers',
+                            label: 'ตัวเลข'
+                        },
+                        {
+                            id: 'date',
+                            label: 'วันที่'
+                        },
+                        {
+                            id: 'list',
+                            label: 'รายการ'
+                        }
+                    ]
+                },
+                data: {
+                    statePath: 'report.reportDtail'
+                },
+                tableList: {
+                    statePath: 'report.tableList',
+                },
+                commonState: {
+                    statePath: 'commonState.setState'
+                },
+                tableSeleted: {
+                    type: Object
                 }
+            },
+            getObjectTable(d) {
+                if (d.detail.value !== null & d.detail.value !== undefined) {
+                    this.set('tableSeleted', d.detail.value.fields)
+                    // console.log(d.detail.value);
+                }
+
+            },
+            addCondition() {
+                this.push('data.report_params', {
+                    label: "",
+                    no: 1,
+                    redux: false,
+                    req: {
+                        field: "",
+                        value: ""
+                    },
+                    res: "",
+                    type: "",
+                    view: ""
+                })
+                // console.log(this.data);
+            },
+            _delete(e) {
+                // splice 
+                let index = e.model.__data__.index
+                this.splice('data.report_params', index, 1)
+                // console.log(e.model.__data__.index);
+            },
+            _resiveDataReport: function () {
+                return new Promise((res, rej) => {
+                    let dataResive = JSON.parse(JSON.stringify(this.data))
+                    dataResive.report_no = Number(dataResive.report_no)
+                    dataResive.report_params.map((item) => {
+                        return item.no = Number(item.no)
+                    })
+                    delete dataResive.date_updated
+                    delete dataResive.date_created
+                    res(dataResive)
+                })
+            },
+            _resiveFormReport: function () {
+                return new Promise((res, rej) => {
+                    if (this.validateForm('.required')) {
+                        this._resiveDataReport().then((data) => {
+                            res(data)
+                        })
+                    } else {
+                        this.fire('toast', {
+                            status: 'connectError', text: 'กรุณากรอกข้อมูลให้ครบทุกช่อง', //คำสั่งสำหรับเปิด toast error
+                            callback: function () {
+                                rej('error')
+                            }
+                        })
+                    }
+                })
+            },
+            addReport() {
+                // console.log(1212);
+                this._resiveFormReport()
+                    .then((res) => {
+                        // console.log(res)
+                        this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
+                        this.dispatchAction('POST_REPORT_DETAIL', res)
+                            .then((response) => {
+                                if (response.data.inserted !== undefined && response.data.inserted.length !== 0) {
+                                    this.dispatchAction('GET_REPORT_LIST')
+                                    this.fire('toast', {
+                                        status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
+                                        callback: () => {
+                                            this.queryFrom('.required').map((el) => { el.reset(); });
+                                            this.fire('close-drawer')
+                                        }
+                                    })
+                                } else {
+                                    // console.log(1111);
+                                    this.fire('toast', {
+                                        status: 'connectError', text: response.data, //คำสั่งสำหรับเปิด toast error
+                                        callback: () => {
+                                        }
+                                    })
+                                }
+                            })
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
+            },
+            saveReport() {
+                this._resiveFormReport()
+                    .then((res) => {
+                        // console.log(res)
+                        this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
+                        this.dispatchAction('PUT_REPORT_DETAIL', res)
+                            .then((response) => {
+                                if (response.data.replaced !== undefined && response.data.replaced.length !== 0) {
+                                    this.dispatchAction('GET_REPORT_LIST')
+                                    this.fire('toast', {
+                                        status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
+                                        callback: () => {
+                                            this.queryFrom('.required').map((el) => { el.reset(); });
+                                            this.fire('close-drawer')
+                                        }
+                                    })
+                                } else {
+                                    // console.log(1111);
+                                    this.fire('toast', {
+                                        status: 'connectError', text: response.data, //คำสั่งสำหรับเปิด toast error
+                                        callback: () => {
+                                        }
+                                    })
+                                }
+                            })
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
             }
         });
     </script>

@@ -169,6 +169,14 @@
         }
       }
     },
+    _changeDate: function (date){
+      try {
+        return  date.split('T')[0]
+      } catch (error) {
+        
+      }
+      
+    },
     calcelContract: function () {
       this.fire('toast', {  //คำสั่งสำหรับเปิด toast dialog
         status: 'dialog',

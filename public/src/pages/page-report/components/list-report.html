@@ -34,15 +34,13 @@
         <paper-material elevation="1">
             <div class="container">
                 <div class="flex-horizontal-with-ratios">
-                    <!--<div class="flexchild"></div>-->
-                    <!--<div class="flex4child">-->
                     <vaadin-grid id="material" class="material" items="[[report]]">
                         <vaadin-grid-column width="7%" flex-grow="0">
                             <template class="header ">
                                 <div class="text-center">ลำดับ</div>
                             </template>
                             <template>
-                                <div class="text-center">[[item.report_id]]</div>
+                                <div class="text-center">[[item.report_no]]</div>
                             </template>
                         </vaadin-grid-column>
 
@@ -87,14 +85,11 @@
 
                         <vaadin-grid-column width="10.6%" flex-grow="0">
                             <template class="header">
-                                <!--<vaadin-grid-sorter path="date_updated">-->
                                 <div class="text-center">
                                     <p>วันที่อัพเดทล่าสุด</div>
-                                <!--</vaadin-grid-sorter>-->
                             </template>
                             <template>
-                                <p style="white-space: normal">111
-                                    <!--{{item.date_updated}}-->
+                                <p style="white-space: normal">[[_changeDate(item.date_updated)]]
                                 </p>
                             </template>
                         </vaadin-grid-column>
@@ -114,12 +109,8 @@
                             </template>
                         </vaadin-grid-column>
                     </vaadin-grid>
-                    <!--</div>-->
-                    <!--<div class="flexchild"></div>-->
                 </div>
             </div>
-
-
         </paper-material>
 
 
@@ -147,9 +138,9 @@
                             <gl-combo-box id="[[item.res]]" always-float-label required label="[[item.label]]" placeholder="[[item.label]]" item-label-path="[[item.view]]"
                                 item-value-path="[[item.res]]" on-selected-item-changed="getNextparam">
                                 <!--on-value-changed="getNextparam"-->
-                                <template>
+                                <!--<template>
                                     [[item.contract_no]]
-                                </template>
+                                </template>-->
                             </gl-combo-box>
                         </template>
 
@@ -162,7 +153,7 @@
                 </template>
                 <div class="flex horizontal end-justified layout buttons">
                     <paper-button raised class="gl-btn-default" dialog-dismiss>ปิด</paper-button>
-                    <paper-button raised class="gl-btn-primary" on-tap="printReport" dialog-confirm autofocus>ออกรายงาน</paper-button>
+                    <paper-button raised class="gl-btn-primary" on-tap="printReport" autofocus>ออกรายงาน</paper-button>
                 </div>
         </paper-dialog>
 
@@ -170,7 +161,7 @@
     <script>
         Polymer({
             is: 'list-report',
-            behaviors: [ReduxBehavior, nylonBehavior, g2gLogicBehavior, CookieBehavior],
+            behaviors: [ReduxBehavior, nylonBehavior, g2gLogicBehavior, CookieBehavior, reportAction],
             properties: {
                 date: {
                     type: Object,
@@ -198,7 +189,8 @@
                 }
             },
             print(e) {
-                let type = e.currentTarget.id
+                // let type = 
+                this.set('setType', e.currentTarget.id)
                 let data = e.model.__data__.item
                 this.set('currentSeleted', data)
                 let getBuy = JSON.parse(JSON.stringify(data.report_params.find((item) => item.redux === true)))
@@ -227,11 +219,13 @@
                 this.$$('#report_dialog').open()
             },
             printReport() {
-
-                console.log(this.$.report_dialog);
-                console.log(this.$.contract_id);
-                // let buyerId = this.getCookieBhv("buyerId")
-                // window.open('./api/report/daily/company?date=' + this.data)
+                let url = {}
+                this.currentSeleted.report_params.map((item) => {
+                    url[this.$$('#' + item.res).id] = this.$$('#' + item.res).value
+                })
+                console.log(this.currentSeleted);
+                console.log(this.genUrl(url));
+                window.open(window._config.reportServer + `/api/${this.currentSeleted.report_type}/${this.currentSeleted.report_path}?` + this.genUrl(url))
             },
             isString: function (type) {
                 return type === 'string'
@@ -252,39 +246,41 @@
                 try {
                     let report_params_length = this.currentSeleted.report_params.length
                     let old_data = e.detail.value
-                    if (old_data.old.no <= report_params_length) {
-                        // console.log(old_data.contract_id);
-                        let dataSeleted = JSON.parse(JSON.stringify(this.currentSeleted.report_params[old_data.old.no]))
-                        // console.log(dataSeleted);
-                        // console.log(this.currentSeleted);
-                        // console.log(old_data.old.no)
-                        // let seleteField =  
-                        dataSeleted.req.value = old_data[req[field]]
-                        dataSeleted.report_table = old_data.report_table
-                        console.log(dataSeleted);
-                        // let getDate = new Promise((res, rej) => {
-                        //     // this.set('report_seleted', data.report_params)
-                        //     this.dispatchAction('GET_REPORT_LINK', dataSeleted)
-                        //         .then((respon) => {
-                        //             res(respon)
-                        //         })
-                        //         .catch((error) => {
-                        //             console.log(error);
-                        //             rej(error)
-                        //         });
+                    // if (old_data.old.no <= report_params_length) {
+                    // console.log(old_data.contract_id);
+                    let dataSeleted = JSON.parse(JSON.stringify(this.currentSeleted.report_params[old_data.old.no]))
+                    // console.log(dataSeleted);
+                    // console.log(this.currentSeleted);
+                    // console.log(old_data)
+                    // console.log(dataSeleted.req.field);
+                    // let seleteField =  
+                    dataSeleted.req.value = old_data[dataSeleted.req.field]
+                    dataSeleted.report_table = old_data.old.report_table
+                    // console.log(dataSeleted);
+                    let getDate = new Promise((res, rej) => {
+                        // this.set('report_seleted', data.report_params)
+                        this.dispatchAction('GET_REPORT_LINK', dataSeleted)
+                            .then((respon) => {
+                                res(respon)
+                            })
+                            .catch((error) => {
+                                console.log(error);
+                                rej(error)
+                            });
 
-                        // })
-                        // getDate.then((res) => {
-                        //     console.log(res);
-                        //     // res.data.map((item) => item.old = getBuy)
-                        //     // let combobox = this.$$('#' + getBuy.res)
-                        //     // combobox.items = res.data
-                        //     // this.set('currentSeleted',this.currentSeleted.report_params[old_data.old.no])
-                        // })
-                        //     .catch((error) => {
-                        //         console.log(error);
-                        //     });
-                    }
+                    })
+                    getDate.then((res) => {
+                        // console.log(res);
+                        res.data.map((item) => item.old = dataSeleted)
+                        // console.log(res.data);
+                        let combobox = this.$$('#' + dataSeleted.res)
+                        combobox.items = res.data
+                        // this.set('currentSeleted',this.currentSeleted.report_params[old_data.old.no])
+                    })
+                        .catch((error) => {
+                            console.log(error);
+                        });
+                    // }
                 } catch (e) {
 
                 }
@@ -294,15 +290,64 @@
             _edit: function (e) {
                 this.fire('open-Drawer')
                 this.dispatchAction('SET_STATE', {
-                    isInsert: true,
+                    isInsert: false,
                     btnDisabled: false,
                     hiddend: true
                 })
+                let data = e.model.__data__.item
+                this.dispatchAction('GET_REPORT_DETAIL', data)
                 // this.dispatchAction('PROVINCE_GET_ID', e.target.data.province_id);
                 // this.title = "แก้ไขข้อมูล";
             },
             _delete: function (e) {
-                console.log();
+                this.fire('toast', {
+                    status: 'openDialog',
+                    text: 'ต้องการลบข้อมูลใช่หรือไม่ ?',
+                    confirmed: (result) => {
+                        if (result == true) {
+                            console.log(1111);
+                            // this._resiveForm()
+                            //     .then((res) => {
+                            //         // console.log(res);
+                            this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
+                            let data = e.model.__data__.item
+                            this.dispatchAction('DELTE_REPORT_DETAIL', data.id)
+                                .then((response) => {
+                                    if (response.data.deleted !== undefined && response.data.deleted.length !== 0) {
+                                        this.dispatchAction('GET_REPORT_LIST')
+                                        this.fire('toast', {
+                                            status: 'success', text: 'ลบสำเร็จ',  // คำสั่งสำหรับเปิด toast success
+                                            callback: () => {
+                                            }
+                                        })
+                                        this.fire('close-drawer')
+                                    } else {
+                                        // console.log(1111);
+                                        this.fire('toast', {
+                                            status: 'connectError', text: response.data, //คำสั่งสำหรับเปิด toast error
+                                            callback: () => {
+                                            }
+                                        })
+                                    }
+
+                                })
+                            // })
+                            // .catch((error) => {
+                            //     console.log(error);
+                            // });
+                        }
+                    }
+                })
+                // let data = e.model.__data__.item
+                // this.dispatchAction('DELTE_REPORT_DETAIL', data.id)
+                //     .then((res) => {
+                //         console.log(res)
+                //         this.dispatchAction('GET_REPORT_LIST')
+                //         // this.dispatchAction('POST_REPORT_DETAIL', res)
+                //     })
+                //     .catch((error) => {
+                //         console.log(error);
+                //     });
                 // this.dispatchAction('PROVINCE_DELETE', e.target.data.province_id);
             },
 

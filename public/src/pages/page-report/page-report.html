@@ -55,7 +55,7 @@
     <script>
         Polymer({
             is: 'page-report',
-            behaviors: [ReduxBehavior, nylonBehavior,CookieBehavior, i18nAction,commonStateAction,reportAction],
+            behaviors: [ReduxBehavior, nylonBehavior, CookieBehavior, i18nAction, commonStateAction, reportAction],
             // properties: {
             // },
             listeners: {
@@ -63,10 +63,11 @@
                 'close-drawer': '_flipDrawerClose',
             },
             nylonPageActive: function () {
-                this.dispatchAction('SET_BUYER_ID',{
-                    buyer_id:this.getCookieBhv("buyerId")
+                this.dispatchAction('SET_BUYER_ID', {
+                    buyer_id: this.getCookieBhv("buyerId")
                 })
                 this.dispatchAction('GET_REPORT_LIST')
+                this.dispatchAction('GET_TABLE_LIST')
                 // this.dispatchAction('SET_COUNTRY_NAME_EN', this.getCookieBhv("country_name_en"));
             },
             backPage: function () {
@@ -74,8 +75,14 @@
                 // console.log(this.$$('#tab7').checked);
                 this.fire('nylon-change-page', { path: '/buyer-list' })
             },
-            addReport: function(){
-                console.log(this._flipDrawer())
+            addReport: function () {
+                 this.dispatchAction('SET_STATE', {
+                    isInsert: true,
+                    btnDisabled: false,
+                    hiddend: true
+                })
+                this.dispatchAction('SET_REPORT_DETAIL')
+                this._flipDrawer()
             },
             _flipDrawer: function () {
                 Polymer.dom(this.root).querySelector('#drawerRight').open();
