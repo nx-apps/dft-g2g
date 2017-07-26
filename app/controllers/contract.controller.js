@@ -16,7 +16,7 @@ exports.list = function (req, res) {
                             contract_year: contract_merge('contract_date').year(),
                             cl_weight: r.table('confirm_letter').getAll(contract_merge('id'), { index: 'contract_id' }).sum('cl_weight'),
                             book_weight: r.table('book_detail').getAll(contract_merge('id'), { index: 'contract_id' }).sum('net_weight'),
-                            payment_weight: r.table('payment').getAll(contract_merge('id'), { index: 'contract_id' }).sum('pay_amount')
+                            payment_weight: r.table('payment').getAll(contract_merge('id'), { index: 'contract_id' }).sum('pay_value_b')
                         }
                     }),
                 buyer_name: buyer('buyer_name'),
