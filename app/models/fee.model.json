@@ -114,6 +114,9 @@
         "contract_id": {
             "type": "string"
         },
+        "contract_no": {
+            "type": "number"
+        },
         "buyer_id": {
             "type": "string"
         },
