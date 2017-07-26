@@ -3,8 +3,8 @@ import { commonAction } from '../config'
 const initialState = {
     list: [],
     data: {},
-    unallocated_fees:[],
-    allocate_fees:[],
+    unallocated_fees: [],
+    allocate_fees: [],
     list_calc: [],
     list_id: []
 }
@@ -34,15 +34,15 @@ export function feeAction(store) {
             // fin 
             // unallocated_fees  false
             // allocate_fees true
-            
+
             axios.get('./fee/contract?id=' + data.contract_id + '&view=' + data.view + '&status=' + data.status)
                 .then((response) => {
                     // console.log(data.view , data.status);
                     if (data.view === 'fin' && data.status === 'false') {
                         // console.log(1);
                         // console.log( response.data);
-                        store.dispatch({ type: 'FEE_GET_LIST_UNALLOCATED_FEES', payload: response.data }); 
-                    }else if (data.view === 'fin' && data.status === 'true') {
+                        store.dispatch({ type: 'FEE_GET_LIST_UNALLOCATED_FEES', payload: response.data });
+                    } else if (data.view === 'fin' && data.status === 'true') {
                         // console.log(2);
                         // console.log( response.data);
                         store.dispatch({ type: 'FEE_GET_LIST_ALLOCATED_FEES', payload: response.data });
@@ -254,6 +254,11 @@ export function feeAction(store) {
                             this.FEE_GET_LIST_DATA({ contract_id: contract_id, view: 'fin', status: 'true' });
                             this.dispatchAction('FEE_GET_LIST_DATA', { contract_id: contract_id, view: 'fin', status: 'false' })
                             this._flipDrawerClose();
+                            let chequeTrue = { id: contract_id, status: true }
+                            let chequeFasle = { id: contract_id, status: false }
+                            this.dispatchAction('GET_CHEQUE_LIST', this.genUrl(chequeTrue))
+                            // console.log(chequeFasle);
+                            this.dispatchAction('GET_CHEQUE_LIST', this.genUrl(chequeFasle))
                         }
                     })
                 })

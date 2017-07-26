@@ -59,7 +59,7 @@
               <th style="width: 70px">{{localize.period_no}}</th>
               <th style="width: 70px;">{{localize.order_no}}</th>
               <th style="width: 70px;">{{localize.round}}</th>
-              <th style="width: 240px;">{{localize.company}}</th>
+              <th style="width: 240px; text-align: left;">{{localize.company}}</th>
               <th style="width: 170px; text-align: right;">{{localize.total_money}}</th>
               <th style="width: 140px;">{{localize.invoice_no}}</th>
               <th style="width: 140px;">{{localize.invoice_date}}</th>
@@ -76,7 +76,7 @@
                 <td>[[item.cl_no]]</td>
                 <td>[[item.fee_no]]</td>
                 <td>[[item.fee_round]]</td>
-                <td>[[item.company.company_name_th]] </td>
+                <td style="text-align: left;">[[item.company.company_name_th]] </td>
                 <td style="text-align: right;">[[formatNumber(item.value_final_b)]] </td>
                 <td>
                   <gl-form-input placeholder="{{localize.invoice_no}}" disabled="{{item.cheque_status}}" no-label-float value="{{item.invoice_company_no}}"
