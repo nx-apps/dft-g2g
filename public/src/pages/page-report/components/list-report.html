@@ -136,6 +136,18 @@
                             <gl-form-input id="[[item.res]]" label="[[item.label]]" index="" placeholder="[[item.label]]"></gl-form-input>
                         </template>
 
+                        <template is="dom-if" if={{isDay(item.type)}}>
+                            <gl-form-input id="[[item.res]]" label="[[item.label]]" index="" value="{{day}}" placeholder="[[item.label]]"></gl-form-input>
+                        </template>
+
+                        <template is="dom-if" if={{isMonth(item.type)}}>
+                            <gl-form-input id="[[item.res]]" label="[[item.label]]" index="" value="{{month}}" placeholder="[[item.label]]"></gl-form-input>
+                        </template>
+
+                        <template is="dom-if" if={{isYear(item.type)}}>
+                            <gl-form-input id="[[item.res]]" label="[[item.label]]" index="" value="{{year}}" placeholder="[[item.label]]"></gl-form-input>
+                        </template>
+
                         <template is="dom-if" if={{isNumber(item.type)}}>
                             <gl-form-input id="[[item.res]]" label="[[item.label]]" index="" placeholder="[[item.label]]" type="number"></gl-form-input>
                         </template>
@@ -194,11 +206,29 @@
                 buyerId: {
                     statePath: 'commonState.buyerId'
                 },
+                day: {
+                    type: String,
+                    value: function () {
+                        return new Date().getDate()
+                    }
+                },
+                month: {
+                    type: String,
+                    value: function () {
+                        return new Date().getMonth()+1
+                    }
+                },
+                year: {
+                    type: String,
+                    value: function () {
+                        return new Date().getFullYear()
+                    }
+                },
                 currentSeleted: {
                     type: Object,
                 }
             },
-            reload(){
+            reload() {
                 window.location.reload(false)
             },
             print(e) {
@@ -214,28 +244,28 @@
                     // console.log(JSON.parse(JSON.stringify(data.report_params.find((item) => item.redux === true))));
                     // console.log(1212);
                     // if (getBuy !== undefined ) {
-                        getBuy.req.value = this.buyerId.buyer_id
-                        getBuy.report_table = data.report_table
-                        let getDate = new Promise((res, rej) => {
-                            this.set('report_seleted', data.report_params)
-                            this.dispatchAction('GET_REPORT_LINK', getBuy)
-                                .then((respon) => {
-                                    res(respon)
-                                })
-                                .catch((error) => {
-                                    console.log(error);
-                                    rej(error)
-                                });
-
-                        })
-                        getDate.then((res) => {
-                            res.data.map((item) => item.old = getBuy)
-                            let combobox = this.$$('#' + getBuy.res)
-                            combobox.items = res.data
-                        })
+                    getBuy.req.value = this.buyerId.buyer_id
+                    getBuy.report_table = data.report_table
+                    let getDate = new Promise((res, rej) => {
+                        this.set('report_seleted', data.report_params)
+                        this.dispatchAction('GET_REPORT_LINK', getBuy)
+                            .then((respon) => {
+                                res(respon)
+                            })
                             .catch((error) => {
                                 console.log(error);
+                                rej(error)
                             });
+
+                    })
+                    getDate.then((res) => {
+                        res.data.map((item) => item.old = getBuy)
+                        let combobox = this.$$('#' + getBuy.res)
+                        combobox.items = res.data
+                    })
+                        .catch((error) => {
+                            console.log(error);
+                        });
                     // }
 
 
@@ -264,7 +294,16 @@
             isDate: function (type) {
                 return type === 'date'
             },
-
+            isDay: function (type) {
+                return type === 'day'
+            },
+            isMonth: function (type) {
+                return type === 'month'
+            },
+            isYear: function (type) {
+                // console.log(type);
+                return type === 'year'
+            },
             isList: function (type) {
                 return type === 'list'
             },

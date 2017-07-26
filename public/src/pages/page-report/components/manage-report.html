@@ -101,19 +101,19 @@
                                 
 
                                 <template is="dom-if" if={{isDate(item.type)}}>
-                                    <gl-form-input class="margin-top required" required style="width:90%" value="{{item.view}}" type="date"></gl-form-input>
+                                    <gl-form-input class="margin-top required" required style="width:90%" value="{{item.view}}"></gl-form-input>
                                 </template>
 
                                 <template is="dom-if" if={{isDay(item.type)}}>
-                                    <gl-form-input class="margin-top required" required style="width:90%" value="{{item.view}}" type="day"></gl-form-input>
+                                    <gl-form-input class="margin-top required" required style="width:90%" value="{{item.view}}"></gl-form-input>
                                 </template>
 
                                 <template is="dom-if" if={{isMonth(item.type)}}>
-                                    <gl-form-input class="margin-top required" required style="width:90%" value="{{item.view}}" type="month"></gl-form-input>
+                                    <gl-form-input class="margin-top required" required style="width:90%" value="{{item.view}}"></gl-form-input>
                                 </template>
 
                                 <template is="dom-if" if={{isYear(item.type)}}>
-                                    <gl-form-input class="margin-top required" required style="width:90%" value="{{item.view}}" type="year"></gl-form-input>
+                                    <gl-form-input class="margin-top required" required style="width:90%" value="{{item.view}}" ></gl-form-input>
                                 </template>
 
 
@@ -137,19 +137,19 @@
                                 </template>
 
                                 <template is="dom-if" if={{isDate(item.type)}}>
-                                    <gl-form-input class="margin-top required" required style="width:90%" value="{{item.res}}" type="date"></gl-form-input>
+                                    <gl-form-input class="margin-top required" required style="width:90%" value="{{item.res}}"></gl-form-input>
                                 </template>
 
                                 <template is="dom-if" if={{isDay(item.type)}}>
-                                    <gl-form-input class="margin-top required" required style="width:90%" value="{{item.res}}" type="day"></gl-form-input>
+                                    <gl-form-input class="margin-top required" required style="width:90%" value="{{item.res}}"></gl-form-input>
                                 </template>
 
                                 <template is="dom-if" if={{isMonth(item.type)}}>
-                                    <gl-form-input class="margin-top required" required style="width:90%" value="{{item.res}}" type="month"></gl-form-input>
+                                    <gl-form-input class="margin-top required" required style="width:90%" value="{{item.res}}" ></gl-form-input>
                                 </template>
 
                                 <template is="dom-if" if={{isYear(item.type)}}>
-                                    <gl-form-input class="margin-top required" required style="width:90%" value="{{item.res}}" type="year"></gl-form-input>
+                                    <gl-form-input class="margin-top required" required style="width:90%" value="{{item.res}}"></gl-form-input>
                                 </template>
 
                                 <template is="dom-if" if={{isList(item.type)}}>
@@ -174,19 +174,19 @@
                                 </template>
 
                                 <template is="dom-if" if={{isDate(item.type)}}>
-                                    <gl-form-input class="margin-top required" required style="width:90%" value="{{item.req.field}}" type="date"></gl-form-input>
+                                    <gl-form-input class="margin-top required" required style="width:90%" value="{{item.req.field}}" ></gl-form-input>
                                 </template>
 
                                 <template is="dom-if" if={{isDay(item.type)}}>
-                                    <gl-form-input class="margin-top required" required style="width:90%" value="{{item.req.field}}" type="day"></gl-form-input>
+                                    <gl-form-input class="margin-top required" required style="width:90%" value="{{item.req.field}}"></gl-form-input>
                                 </template>
 
                                 <template is="dom-if" if={{isMonth(item.type)}}>
-                                    <gl-form-input class="margin-top required" required style="width:90%" value="{{item.req.field}}" type="month"></gl-form-input>
+                                    <gl-form-input class="margin-top required" required style="width:90%" value="{{item.req.field}}"></gl-form-input>
                                 </template>
 
                                 <template is="dom-if" if={{isYear(item.type)}}>
-                                    <gl-form-input class="margin-top required" required style="width:90%" value="{{item.req.field}}" type="year"></gl-form-input>
+                                    <gl-form-input class="margin-top required" required style="width:90%" value="{{item.req.field}}" ></gl-form-input>
                                 </template>
 
 
@@ -255,22 +255,22 @@
                         //     id: 'numbers',
                         //     label: 'ตัวเลข'
                         // },
-                        // {
-                        //     id: 'date',
-                        //     label: 'วันที่'
-                        // },
-                        // {
-                        //     id: 'day',
-                        //     label: 'วัน'
-                        // },
-                        // {
-                        //     id: 'month',
-                        //     label: 'เดือน'
-                        // },
-                        // {
-                        //     id: 'yaer',
-                        //     label: 'ปี'
-                        // },
+                        {
+                            id: 'date',
+                            label: 'วันที่'
+                        },
+                        {
+                            id: 'day',
+                            label: 'วัน'
+                        },
+                        {
+                            id: 'month',
+                            label: 'เดือน'
+                        },
+                        {
+                            id: 'year',
+                            label: 'ปี'
+                        },
                         {
                             id: 'list',
                             label: 'รายการ'
@@ -308,6 +308,7 @@
                 return type === 'month'
             },
             isYear: function (type) {
+                // console.log(type);
                 return type === 'year'
             },
             isList: function (type) {
