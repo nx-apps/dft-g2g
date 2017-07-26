@@ -534,9 +534,9 @@
                 confirmed: (result) => {
                   if (result === true) {
                     this.dispatchAction('FEE_INSERT', newData);
-                    this.fire('close-drawer')
+                    // this.fire('close-drawer')
                     this.fire('reset-form');
-                    this.queryFrom('.required').map((el) => { el.reset(); });
+                    // this.queryFrom('.required').map((el) => { el.reset(); });
                   }
                 }
               });
