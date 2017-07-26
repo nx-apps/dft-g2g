@@ -50,13 +50,13 @@
                             <template>[[item.report_name]]</template>
                         </vaadin-grid-column>
 
-                         <vaadin-grid-column width="9.6%" flex-grow="0">
+                        <vaadin-grid-column width="9.6%" flex-grow="0">
                             <template class="header">
                                 <div class="text-center">หน่วยงาน</div>
                             </template>
                             <template>
                                 <div class="text-center">
-                                [[changeName(item.report_type)]]</div>
+                                    [[changeName(item.report_type)]]</div>
                             </template>
                         </vaadin-grid-column>
 
@@ -133,15 +133,15 @@
                 <template is="dom-repeat" items={{report_seleted}}>
                     <div class="flex" style=" margin-right: 30px">
                         <template is="dom-if" if={{isString(item.type)}}>
-                            <gl-form-input id="[[item.res]]" label="[[item.label]]" index="" placeholder="[[item.label]]" value="{{data.date}}"></gl-form-input>
+                            <gl-form-input id="[[item.res]]" label="[[item.label]]" index="" placeholder="[[item.label]]"></gl-form-input>
                         </template>
 
                         <template is="dom-if" if={{isNumber(item.type)}}>
-                            <gl-form-input id="[[item.res]]" label="[[item.label]]" index="" placeholder="[[item.label]]" type="number" value="{{data.date}}"></gl-form-input>
+                            <gl-form-input id="[[item.res]]" label="[[item.label]]" index="" placeholder="[[item.label]]" type="number" ></gl-form-input>
                         </template>
 
                         <template is="dom-if" if={{isDate(item.type)}}>
-                            <gl-form-input id="[[item.res]]" label="[[item.label]]" index="" placeholder="[[item.label]]" type="date" value="{{data.date}}"></gl-form-input>
+                            <gl-form-input id="[[item.res]]" label="[[item.label]]" index="" placeholder="[[item.label]]" type="date" ></gl-form-input>
                         </template>
 
                         <template is="dom-if" if={{isList(item.type)}}>
@@ -200,33 +200,39 @@
             },
             print(e) {
                 // let type = 
-                this.set('setType', e.currentTarget.id)
-                let data = e.model.__data__.item
-                this.set('currentSeleted', data)
-                let getBuy = JSON.parse(JSON.stringify(data.report_params.find((item) => item.redux === true)))
-                getBuy.req.value = this.buyerId.buyer_id
-                getBuy.report_table = data.report_table
-                let getDate = new Promise((res, rej) => {
-                    this.set('report_seleted', data.report_params)
-                    this.dispatchAction('GET_REPORT_LINK', getBuy)
-                        .then((respon) => {
-                            res(respon)
-                        })
+                try {
+                    this.$$('#report_dialog').open()
+                    this.set('setType', e.currentTarget.id)
+                    let data = e.model.__data__.item
+                    this.set('currentSeleted', data)
+                    let getBuy = JSON.parse(JSON.stringify(data.report_params.find((item) => item.redux === true)))
+                    getBuy.req.value = this.buyerId.buyer_id
+                    getBuy.report_table = data.report_table
+                    let getDate = new Promise((res, rej) => {
+                        this.set('report_seleted', data.report_params)
+                        this.dispatchAction('GET_REPORT_LINK', getBuy)
+                            .then((respon) => {
+                                res(respon)
+                            })
+                            .catch((error) => {
+                                console.log(error);
+                                rej(error)
+                            });
+
+                    })
+                    getDate.then((res) => {
+                        res.data.map((item) => item.old = getBuy)
+                        let combobox = this.$$('#' + getBuy.res)
+                        combobox.items = res.data
+                    })
                         .catch((error) => {
                             console.log(error);
-                            rej(error)
                         });
+                    
+                } catch (error) {
 
-                })
-                getDate.then((res) => {
-                    res.data.map((item) => item.old = getBuy)
-                    let combobox = this.$$('#' + getBuy.res)
-                    combobox.items = res.data
-                })
-                    .catch((error) => {
-                        console.log(error);
-                    });
-                this.$$('#report_dialog').open()
+                }
+
             },
             printReport() {
                 let url = {}
@@ -252,7 +258,7 @@
             isList: function (type) {
                 return type === 'list'
             },
-            changeName:function(name){
+            changeName: function (name) {
                 // let names = [
                 //     {
                 //             id: 'rice',
@@ -263,7 +269,7 @@
                 //             label: 'กองคลัง'
                 //         }
                 // ]
-                if(name === 'rice')return 'กองข้าว'
+                if (name === 'rice') return 'กองข้าว'
                 return 'กองคลัง'
             },
             getNextparam(e) {

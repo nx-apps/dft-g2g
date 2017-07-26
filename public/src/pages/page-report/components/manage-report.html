@@ -79,32 +79,9 @@
                         </vaadin-grid-column>
 
                         <vaadin-grid-column width="15%" flex-grow="0">
-                            <template class="header">View</template>
-                            <template>
-                                <gl-combo-box id="report_type" class="margin-top required" required label="View" placeholder="View" items="{{tableSeleted}}"
-                                    item-label-path="field" value="{{item.view}}" item-value-path="field">
-                                    <template>
-                                        [[item.field]]
-                                    </template>
-                                </gl-combo-box>
-                            </template>
-                        </vaadin-grid-column>
-
-                        <vaadin-grid-column width="15%" flex-grow="0">
-                            <template class="header">res</template>
-                            <template>
-                                <gl-combo-box id="report_type" class="margin-top required" required label="res" placeholder="res" items="{{tableSeleted}}"
-                                    item-label-path="field" value="{{item.res}}" item-value-path="field">
-                                    <template>
-                                        [[item.field]]
-                                    </template>
-                                </gl-combo-box>
-                            </template>
-                        </vaadin-grid-column>
-
-                        <vaadin-grid-column width="15%" flex-grow="0">
                             <template class="header">type</template>
                             <template>
+                                <!--{{item.type}}-->
                                 <gl-combo-box id="report_type" class="margin-top required" required label="ประเภทข้อมูล" placeholder="ประเภทข้อมูล" items="{{data_type}}"
                                     item-label-path="label" value="{{item.type}}" item-value-path="id">
                                     <template>
@@ -115,14 +92,85 @@
                         </vaadin-grid-column>
 
                         <vaadin-grid-column width="15%" flex-grow="0">
+                            <template class="header">View</template>
+                            <template>
+
+                                <template is="dom-if" if={{isString(item.type)}}>
+                                    <gl-form-input class="margin-top required" required style="width:90%" value="{{item.view}}"></gl-form-input>
+                                </template>
+
+                                <template is="dom-if" if={{isDate(item.type)}}>
+                                    <gl-form-input class="margin-top required" required style="width:90%" value="{{item.view}}" type="date"></gl-form-input>
+                                </template>
+
+                                <template is="dom-if" if={{isList(item.type)}}>
+                                    <gl-combo-box id="report_type" class="margin-top required" required label="View" placeholder="View" items="{{tableSeleted}}"
+                                        item-label-path="field" value="{{item.view}}" item-value-path="field">
+                                        <template>
+                                            [[item.field]]
+                                        </template>
+                                    </gl-combo-box>
+                                </template>
+                            </template>
+                        </vaadin-grid-column>
+
+                        <vaadin-grid-column width="15%" flex-grow="0">
+                            <template class="header">res</template>
+                            <template>
+
+                                <template is="dom-if" if={{isString(item.type)}}>
+                                    <gl-form-input class="margin-top required" required style="width:90%" value="{{item.res}}"></gl-form-input>
+                                </template>
+
+                                <template is="dom-if" if={{isDate(item.type)}}>
+                                    <gl-form-input class="margin-top required" required style="width:90%" value="{{item.view}}" type="date"></gl-form-input>
+                                </template>
+
+                                <template is="dom-if" if={{isDay(item.type)}}>
+                                    <gl-form-input class="margin-top required" required style="width:90%" value="{{item.view}}" type="day"></gl-form-input>
+                                </template>
+
+                                <template is="dom-if" if={{isMonth(item.type)}}>
+                                    <gl-form-input class="margin-top required" required style="width:90%" value="{{item.view}}" type="month"></gl-form-input>
+                                </template>
+
+                                <template is="dom-if" if={{isYear(item.type)}}>
+                                    <gl-form-input class="margin-top required" required style="width:90%" value="{{item.view}}" type="date"></gl-form-input>
+                                </template>
+
+                                <template is="dom-if" if={{isList(item.type)}}>
+                                    <gl-combo-box id="report_type" class="margin-top required" required label="res" placeholder="res" items="{{tableSeleted}}"
+                                        item-label-path="field" value="{{item.res}}" item-value-path="field">
+                                        <template>
+                                            [[item.field]]
+                                        </template>
+                                    </gl-combo-box>
+                                </template>
+                            </template>
+                        </vaadin-grid-column>
+
+
+
+                        <vaadin-grid-column width="15%" flex-grow="0">
                             <template class="header">type</template>
                             <template>
-                                <gl-combo-box id="report_type" class="margin-top required" required label="field" placeholder="field" items="{{tableSeleted}}"
-                                    item-label-path="field" value="{{item.req.field}}" item-value-path="field">
-                                    <template>
-                                        [[item.field]]
-                                    </template>
-                                </gl-combo-box>
+
+                                <template is="dom-if" if={{isString(item.type)}}>
+                                    <gl-form-input class="margin-top required" required style="width:90%" value="{{item.req.field}}"></gl-form-input>
+                                </template>
+
+                                <template is="dom-if" if={{isDate(item.type)}}>
+                                    <gl-form-input class="margin-top required" required style="width:90%" value="{{item.view}}" type="date"></gl-form-input>
+                                </template>
+
+                                <template is="dom-if" if={{isList(item.type)}}>
+                                    <gl-combo-box id="report_type" class="margin-top required" required label="field" placeholder="field" items="{{tableSeleted}}"
+                                        item-label-path="field" value="{{item.req.field}}" item-value-path="field">
+                                        <template>
+                                            [[item.field]]
+                                        </template>
+                                    </gl-combo-box>
+                                </template>
                             </template>
                         </vaadin-grid-column>
 
@@ -176,13 +224,25 @@
                             id: 'string',
                             label: 'ข้อความ'
                         },
-                        {
-                            id: 'numbers',
-                            label: 'ตัวเลข'
-                        },
+                        // {
+                        //     id: 'numbers',
+                        //     label: 'ตัวเลข'
+                        // },
                         {
                             id: 'date',
                             label: 'วันที่'
+                        },
+                        {
+                            id: 'day',
+                            label: 'วัน'
+                        },
+                        {
+                            id: 'month',
+                            label: 'เดือน'
+                        },
+                        {
+                            id: 'yaer',
+                            label: 'ปี'
                         },
                         {
                             id: 'list',
@@ -202,6 +262,29 @@
                 tableSeleted: {
                     type: Object
                 }
+            },
+            isString: function (type) {
+                return type === 'string'
+            },
+
+            isNumber: function (type) {
+                return type === 'numbers'
+            },
+
+            isDate: function (type) {
+                return type === 'date'
+            },
+            isDay: function (type) {
+                return type === 'day'
+            },
+            isMonth: function (type) {
+                return type === 'month'
+            },
+            isYear: function (type) {
+                return type === 'year'
+            },
+            isList: function (type) {
+                return type === 'list'
             },
             getObjectTable(d) {
                 if (d.detail.value !== null & d.detail.value !== undefined) {
