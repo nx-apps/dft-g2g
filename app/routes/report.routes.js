@@ -5,5 +5,7 @@ module.exports = function (app) {
     app.post('/insert', controller.insert);
     app.put('/update', controller.update);
     app.delete('/delete/:id', controller.delete);
+    app.get('/list', controller.list);
+    app.route('/get').get(controller.get).post(controller.get);
 
 }

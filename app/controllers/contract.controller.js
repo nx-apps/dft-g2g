@@ -15,8 +15,8 @@ exports.list = function (req, res) {
                             contract_weight: contract_merge('contract_weight'),
                             contract_year: contract_merge('contract_date').year(),
                             cl_weight: r.table('confirm_letter').getAll(contract_merge('id'), { index: 'contract_id' }).sum('cl_weight'),
-                            book_weight: r.table('book_detail').getAll(contract_merge('id'), { index: 'contract_id' }).sum('book_det_weight'),
-                            payment_weight: r.table('payment').getAll(contract_merge('id'), { index: 'contract_id' }).sum('pay_amount')
+                            book_weight: r.table('book_detail').getAll(contract_merge('id'), { index: 'contract_id' }).sum('net_weight'),
+                            payment_weight: r.table('payment').getAll(contract_merge('id'), { index: 'contract_id' }).sum('pay_value_b')
                         }
                     }),
                 buyer_name: buyer('buyer_name'),
@@ -34,7 +34,7 @@ exports.buyerId = function (req, res) {
         .getAll(req.query.id, { index: 'buyer_id' })
         .map(function (m) {
             var cl_sum = r.table('confirm_letter').getAll(m('id'), { index: 'contract_id' }).sum('cl_weight');
-            var book_sum = r.table('book_detail').getAll(m('id'), { index: 'contract_id' }).sum('book_det_weight');
+            var book_sum = r.table('book_detail').getAll(m('id'), { index: 'contract_id' }).sum('net_weight');
             return m.pluck('contract_name', 'contract_no', 'contract_status')
                 .merge({
                     contract_id: m('id'),
