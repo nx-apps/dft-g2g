@@ -105,7 +105,9 @@
                 this.fire('nylon-change-page',{path:'/contract-list'})
             },
             getChartQuantity(quantity) {
-                // console.log(quantity);
+                // let num = quantity.map((item)=> item.cl_weight)
+                console.log(quantity.map((ed) => ed.contract_year));
+                console.log(quantity.map((item)=> item.cl_weight));
                 return {
                     labels: quantity.map((ed) => ed.contract_year),
                     
@@ -115,7 +117,7 @@
                             backgroundColor: "#003BAE",
                             borderColor: "#96b1d2",
                             borderWidth: 1,
-                            data: quantity.map((ed) => ed.shipment)
+                            data: quantity.map((item)=> item.cl_weight)
                         }
                     ]
                 }
@@ -129,7 +131,7 @@
                             backgroundColor: "#ff4500",
                             borderColor: "#ff9973",
                             borderWidth: 1,
-                            data: value.map((ed) => ed.payment)
+                            data: value.map((ed) => ed.payment_weight)
                         }
                     ]
                 }
