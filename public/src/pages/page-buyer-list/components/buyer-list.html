@@ -3,6 +3,8 @@
 <link rel="import" href="./../../../../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="./../../../../bower_components/paper-button/paper-button.html">
 
+<link rel="import" href="./../../../../bower_components/iron-icons/iron-icons.html">
+
 <link rel="import" href="./../../../../bower_components/chart-elements/chart-bar.html">
 
 <link rel="import" href="../../../layout/shared-styles.html">
@@ -67,8 +69,12 @@
                 </div>
                 <div class="foot-meterial ">
                     <div class="horizontal end-justified layout ">
-                        <paper-button raised class="" data="[[data]]" on-tap="getContractList" class="gl-bg-primary">{{localizeCommon.detail}}</paper-button>
-                        <paper-button raised class=""  on-tap="getReport" class="gl-bg-primary">รายงาน</paper-button>
+                        <paper-button raised class="" data="[[data]]" on-tap="getContractList" class="gl-bg-primary">
+                            <iron-icon icon="assignment"></iron-icon>
+                            ข้อมูล</paper-button>
+                        <paper-button raised class=""  on-tap="getReport" class="gl-bg-primary" icon="add">
+                            <iron-icon icon="note-add"></iron-icon>
+                            รายงาน</paper-button>
                     </div>
                 </div>
 
