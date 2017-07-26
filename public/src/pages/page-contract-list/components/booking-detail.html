@@ -200,7 +200,7 @@
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,12]]">
             <gl-combo-box required class="required" label="{{localizeBook.name_address}}" placeholder="{{localizeBook.name_address}}"
               always-float-label item-label-path="notify_name" disabled="[[commonState.btnDisabled]]" item-value-path="notify_id"
-              items="{{notifyListSeleted}}" on-selected-item-changed="getObjectNotify" value="{{data.notify_id}}">
+              items="{{claNoti(notifyList,data.deli_port_id)}}" on-selected-item-changed="getObjectNotify" value="{{data.notify_id}}">
               <template>
                 [[item.notify_name]]
               </template>
@@ -267,7 +267,7 @@
         </gl-form-panel-footer>
       </template>-->
       <div class="horizontal end-justified layout">
-        <paper-button class="gl-btn-default" raised on-tap="openExporter"> {{localizeBook.list_exporter}}</paper-button>
+        <!--<paper-button class="gl-btn-default" raised on-tap="openExporter"> {{localizeBook.list_exporter}}</paper-button>-->
         <template is="dom-if" if="[[commonState.isInsert]]">
           <paper-button class="gl-btn-default" raised on-tap="cancelInsertShipment"> {{localizeCommon.back_ward}}</paper-button>
           <paper-button class="gl-btn-primary" on-tap="insertBook" raised>{{localizeCommon.add}}</paper-button>
@@ -382,11 +382,22 @@
         this.fire('_openExporter', this.data)
         // console.log(this.data);
       },
-      _setNotify(deli_port_id, notifyList) {
+      claNoti(notifyList,deli_port_id){
+        // console.log(this.data.notify_id);
         let newData = notifyList.filter((item) => item.port_id === deli_port_id)
-        this.set('notifyListSeleted', newData)
         // console.log(newData);
+        // console.log(notifyList,deli_port_id);
+        // console.log(this.data.notify_id);
+        return newData
       },
+      // _setNotify(deli_port_id, notifyList) {
+      //   let newData = notifyList.filter((item) => item.port_id === deli_port_id)
+      //   console.log(newData);
+      //   console.log(this.data.notify_id);
+      //   // this.set('notifyListSeleted', newData)
+      //   // console.log(newData);
+      //   console.log(this.data.notify_id);
+      // },
       getObjectShipline: function (e) {
         if (e.detail.value !== null) {
           let data = {
@@ -923,6 +934,7 @@
           this.pop('data.ship')
       },
       cancelInsertShipment: function () {
+        this.dispatchAction('CLEAR_BOOK_DETAIL', {})
         this.fire('_list-book', 'list-of-booking');
       },
       // editBl: function () {

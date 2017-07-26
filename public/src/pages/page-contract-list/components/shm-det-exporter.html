@@ -50,7 +50,7 @@
       <gl-form-panel-head label="{{localize.label_exporter_detail}}" set-padding="10px" set-border="1px"></gl-form-panel-head>
 
       <gl-form-panel-body>
-        {{_getSellerPhone(data.company_id,dataForSelect)}}
+        <!--{{_getSellerPhone(data.company_id,dataForSelect)}}-->
         <!--[[data.book_id]]////[[data.gross_weight]]-->
         <gl-grid-row width="{{getWidth}}">
           <template is="dom-if" if="[[commonState.isInsert]]">
@@ -135,7 +135,7 @@
             <gl-combo-box class="required" required disabled="[[commonState.btnDisabled]]" 
               placeholder="{{localizeContract.rice_type}}" name="hamonize.hamonize_th" items="[[bookHamonizeList]]" label="{{localizeContract.rice_type}}"
               item-label-path="label" item-value-path="hamonize_id" value="{{data.hamonize_id}}" on-selected-item-changed="getObjectHamonize"
-              on-value-changed="_typeRiceConfirm">
+              >
               <template>
                 [[item.label]]
               </template>
@@ -163,7 +163,7 @@
             <gl-form-input disabled="[[commonState.btnDisabled]]" required allowed-pattern="[0-9||,||.]" format-number="on" class="required"
               label="{{localizeBook.number_of_containers}}" always-float-label value="{{data.num_of_container}}"></gl-form-input>
           </gl-grid-col>
-          [[_getPackageForPrice(data.package_id,dataForSelect)]]
+          <!--[[_getPackageForPrice(data.package_id,dataForSelect)]]-->
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
             <gl-form-input disabled label="{{localizeBook.price_usd_mt}}" format-number="on" value="[[data.price_d]]" always-float-label></gl-form-input>
           </gl-grid-col>

@@ -137,11 +137,11 @@
                         </template>
 
                         <template is="dom-if" if={{isNumber(item.type)}}>
-                            <gl-form-input id="[[item.res]]" label="[[item.label]]" index="" placeholder="[[item.label]]" type="number" ></gl-form-input>
+                            <gl-form-input id="[[item.res]]" label="[[item.label]]" index="" placeholder="[[item.label]]" type="number"></gl-form-input>
                         </template>
 
                         <template is="dom-if" if={{isDate(item.type)}}>
-                            <gl-form-input id="[[item.res]]" label="[[item.label]]" index="" placeholder="[[item.label]]" type="date" ></gl-form-input>
+                            <gl-form-input id="[[item.res]]" label="[[item.label]]" index="" placeholder="[[item.label]]" type="date"></gl-form-input>
                         </template>
 
                         <template is="dom-if" if={{isList(item.type)}}>
@@ -162,7 +162,7 @@
                     </div>
                 </template>
                 <div class="flex horizontal end-justified layout buttons">
-                    <paper-button raised class="gl-btn-default" dialog-dismiss>ปิด</paper-button>
+                    <paper-button raised class="gl-btn-default" dialog-dismiss on-tap="reload">ปิด</paper-button>
                     <paper-button raised class="gl-btn-primary" on-tap="printReport" autofocus>ออกรายงาน</paper-button>
                 </div>
         </paper-dialog>
@@ -198,6 +198,9 @@
                     type: Object,
                 }
             },
+            reload(){
+                window.location.reload(false)
+            },
             print(e) {
                 // let type = 
                 try {
@@ -205,30 +208,37 @@
                     this.set('setType', e.currentTarget.id)
                     let data = e.model.__data__.item
                     this.set('currentSeleted', data)
+                    // console.log(111);
+                    // console.log(data);
                     let getBuy = JSON.parse(JSON.stringify(data.report_params.find((item) => item.redux === true)))
-                    getBuy.req.value = this.buyerId.buyer_id
-                    getBuy.report_table = data.report_table
-                    let getDate = new Promise((res, rej) => {
-                        this.set('report_seleted', data.report_params)
-                        this.dispatchAction('GET_REPORT_LINK', getBuy)
-                            .then((respon) => {
-                                res(respon)
-                            })
+                    // console.log(JSON.parse(JSON.stringify(data.report_params.find((item) => item.redux === true))));
+                    // console.log(1212);
+                    // if (getBuy !== undefined ) {
+                        getBuy.req.value = this.buyerId.buyer_id
+                        getBuy.report_table = data.report_table
+                        let getDate = new Promise((res, rej) => {
+                            this.set('report_seleted', data.report_params)
+                            this.dispatchAction('GET_REPORT_LINK', getBuy)
+                                .then((respon) => {
+                                    res(respon)
+                                })
+                                .catch((error) => {
+                                    console.log(error);
+                                    rej(error)
+                                });
+
+                        })
+                        getDate.then((res) => {
+                            res.data.map((item) => item.old = getBuy)
+                            let combobox = this.$$('#' + getBuy.res)
+                            combobox.items = res.data
+                        })
                             .catch((error) => {
                                 console.log(error);
-                                rej(error)
                             });
+                    // }
 
-                    })
-                    getDate.then((res) => {
-                        res.data.map((item) => item.old = getBuy)
-                        let combobox = this.$$('#' + getBuy.res)
-                        combobox.items = res.data
-                    })
-                        .catch((error) => {
-                            console.log(error);
-                        });
-                    
+
                 } catch (error) {
 
                 }
