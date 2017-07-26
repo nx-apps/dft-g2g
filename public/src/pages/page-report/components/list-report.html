@@ -65,7 +65,7 @@
                                 <div class="text-center">PDF</div>
                             </template>
                             <template>
-                                <paper-button raised class="btnInTable" id="PDF" on-tap="print">
+                                <paper-button raised class="btnInTable" id="pdf" on-tap="print">
                                     <iron-image class="img" sizing="cover" preload src="/images/icon/type_report/pdf.png"></iron-image>
                                     PDF</paper-button>
                             </template>
@@ -76,7 +76,7 @@
                                 <div class="text-center">WORD</div>
                             </template>
                             <template>
-                                <paper-button raised class="btnInTable" id="WORD" on-tap="print">
+                                <paper-button raised class="btnInTable" id="word" on-tap="print">
                                     <iron-image class="img" sizing="cover" preload src="/images/icon/type_report/Microsoft_Word_2013_logo.svg.png"></iron-image>
                                     WORD</paper-button>
                             </template>
@@ -87,7 +87,7 @@
                                 <div class="text-center">EXCEL</div>
                             </template>
                             <template>
-                                <paper-button raised class="btnInTable" id="EXCEL" on-tap="print">
+                                <paper-button raised class="btnInTable" id="excel" on-tap="print">
                                     <iron-image class="img" sizing="cover" preload src="/images/icon/type_report/Microsoft_Excel_2013_logo.svg.png"></iron-image>
                                     EXCEL</paper-button>
                             </template>
@@ -234,6 +234,8 @@
             print(e) {
                 // let type = 
                 try {
+                    // console.log(e.currentTarget.id);
+                    // this.set('typeReport',)
                     this.$$('#report_dialog').open()
                     this.set('setType', e.currentTarget.id)
                     let data = e.model.__data__.item
@@ -281,7 +283,8 @@
                 })
                 // console.log(this.currentSeleted);
                 // console.log(this.genUrl(url));
-                window.open(window._config.reportServer + `/api/${this.currentSeleted.report_type}/${this.currentSeleted.report_path}?` + this.genUrl(url))
+                // &export=this.setType
+                window.open(window._config.reportServer + `/api/${this.currentSeleted.report_type}/${this.currentSeleted.report_path}?` + this.genUrl(url)+'&export='+this.setType)
             },
             isString: function (type) {
                 return type === 'string'

@@ -62,7 +62,7 @@ export function reportAction(store) {
         GET_REPORT_LIST: function () {
             axios.get('/report/list')
                 .then(function (response) {
-                    //         // console.log(response);
+                            // console.log(response);
 
                     store.dispatch({
                         type: 'GET_REPORT_LIST',
