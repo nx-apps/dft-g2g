@@ -48,7 +48,7 @@ export function confirmLetterAction(store) {
             axios.get('./confirm/contract?' + link)
                 .then(function (response) {
                     for (var index = 0; index < response.data.length; index++) {
-                        response.data[index].label = 'งวดที่ ' + response.data[index].cl_no + ' ปริมาณ ' + response.data[index].cl_weight_balance + ' ตัน'
+                        response.data[index].label = 'งวดที่ ' + response.data[index].cl_no + ' ปริมาณ ' + response.data[index].cl_weight + ' ตัน'
                     }
                     let hamonize = response.data
                     let cost_price = Object.keys(hamonize).reduce((previous, current) => previous + hamonize[current].cl_weight, 0)
