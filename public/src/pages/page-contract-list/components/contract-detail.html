@@ -277,7 +277,7 @@
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">[[changeString2Num(data.*,'contract_weight')]]
           <gl-form-input class="required number" required allowed-pattern="[0-9||,||.]" format-number="on" disabled="[[_checkArrayTrue(commonState.btnDisabled,data.contract_status)]]"
             error-message="{{localizeContract.error_input}}{{localizeContract.quantity}}" required label="{{localizeContract.quantity}}"
-            value="{{data.contract_weight}}" placeholder="{{localizeContract.quantity}}" id="contract_weight"></gl-form-input>
+            value="{{data.contract_weight}}" on-click="_setSeleteValue" placeholder="{{localizeContract.quantity}}" id="contract_weight"></gl-form-input>
         </gl-grid-col>
       </gl-grid-row>
 
