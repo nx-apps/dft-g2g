@@ -430,6 +430,7 @@
                     let chequeFasle = { id: this.contractId.contract_id, status: false }
                     this.dispatchAction('GET_CHEQUE_LIST', this.genUrl(chequeTrue))
                     this.dispatchAction('GET_CHEQUE_LIST', this.genUrl(chequeFasle))
+                    this.dispatchAction('PAYMENT_GET_LIST_DATA', this.contractId.contract_id)
                   } else {
                     // console.log(1111);
                     this.fire('toast', {
@@ -479,6 +480,7 @@
                   let chequeFasle = { id: this.contractId.contract_id, status: false }
                   this.dispatchAction('GET_CHEQUE_LIST', this.genUrl(chequeTrue))
                   this.dispatchAction('GET_CHEQUE_LIST', this.genUrl(chequeFasle))
+                  this.dispatchAction('PAYMENT_GET_LIST_DATA', this.contractId.contract_id)
                 })
                 .catch((error) => {
                   this.fire('toast', {

@@ -137,15 +137,15 @@
                         </template>
 
                         <template is="dom-if" if={{isDay(item.type)}}>
-                            <gl-form-input id="[[item.res]]" label="[[item.label]]" index="" value="{{day}}" placeholder="[[item.label]]"></gl-form-input>
+                            <gl-form-input id="[[item.res]]" label="[[item.label]]" index="" value="[[day]]" placeholder="[[item.label]]"></gl-form-input>
                         </template>
 
                         <template is="dom-if" if={{isMonth(item.type)}}>
-                            <gl-form-input id="[[item.res]]" label="[[item.label]]" index="" value="{{month}}" placeholder="[[item.label]]"></gl-form-input>
+                            <gl-form-input id="[[item.res]]" label="[[item.label]]" index="" value="[[month]]" placeholder="[[item.label]]"></gl-form-input>
                         </template>
 
                         <template is="dom-if" if={{isYear(item.type)}}>
-                            <gl-form-input id="[[item.res]]" label="[[item.label]]" index="" value="{{year}}" placeholder="[[item.label]]"></gl-form-input>
+                            <gl-form-input id="[[item.res]]" label="[[item.label]]" index="" value="[[year]]" placeholder="[[item.label]]"></gl-form-input>
                         </template>
 
                         <template is="dom-if" if={{isNumber(item.type)}}>
@@ -153,7 +153,7 @@
                         </template>
 
                         <template is="dom-if" if={{isDate(item.type)}}>
-                            <gl-form-input id="[[item.res]]" label="[[item.label]]" index="" placeholder="[[item.label]]" type="date"></gl-form-input>
+                            <gl-form-input id="[[item.res]]" label="[[item.label]]" index="" placeholder="[[item.label]]" value="[[dateDay]]" type="date"></gl-form-input>
                         </template>
 
                         <template is="dom-if" if={{isList(item.type)}}>
@@ -205,6 +205,12 @@
                 },
                 buyerId: {
                     statePath: 'commonState.buyerId'
+                },
+                dateDay: {
+                    type: String,
+                    value: function () {
+                        return new Date().toISOString().split('T')[0]
+                    }
                 },
                 day: {
                     type: String,
