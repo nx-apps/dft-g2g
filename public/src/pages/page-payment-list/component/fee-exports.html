@@ -324,7 +324,7 @@
         });
       },
       printInput: function(){
-        window.open(window._config.reportServer+'/api/finance/report3?date=' + this.data.fee_date +'&contract_id='+ this.getCookieBhv("contract_id") + '&export=' + 'pdf');
+        window.open(window._config.reportServer+'/api/finance/report3?fee_date=' + this.data.fee_date +'&contract_id='+ this.getCookieBhv("contract_id") + '&export=' + 'pdf');
       }
     });
   </script>
