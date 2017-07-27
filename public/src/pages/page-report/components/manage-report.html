@@ -89,15 +89,55 @@
                         </vaadin-grid-column>
 
                         <vaadin-grid-column width="15%" flex-grow="0">
-                            <template class="header">Show Value</template>
+                            <template class="header">ฟิลด์ที่รับค่า</template>
                             <template>
 
-                                <template is="dom-if" if={{isString(item.type)}}>
-                                    <gl-form-input class="margin-top required" required style="width:90%" value="{{item.view}}"></gl-form-input>
+                                <!--<template is="dom-if" if={{isString(item.type)}}>
+                                    <gl-form-input class="margin-top required" required style="width:90%" value="{{item.req.field}}"></gl-form-input>
+                                </template>-->
+
+                                <!--<template is="dom-if" if={{isDate(item.type)}}>
+                                    <gl-form-input class="margin-top required" required style="width:90%" value="{{item.req.field}}"></gl-form-input>
+                                </template>-->
+
+                                <!--<template is="dom-if" if={{isDay(item.type)}}>
+                                    <gl-form-input class="margin-top required" required style="width:90%" value="{{item.req.field}}"></gl-form-input>
+                                </template>
+
+                                <template is="dom-if" if={{isMonth(item.type)}}>
+                                    <gl-form-input class="margin-top required" required style="width:90%" value="{{item.req.field}}"></gl-form-input>
+                                </template>
+
+                                <template is="dom-if" if={{isYear(item.type)}}>
+                                    <gl-form-input class="margin-top required" required style="width:90%" value="{{item.req.field}}"></gl-form-input>
+                                </template>-->
+
+                                <template is="dom-if" if={{isListmake(item.type)}}>
+                                    <paper-button raised class="btnInTable" data="{{item}}" on-tap="openListMake">ดูรายการ</paper-button>
                                 </template>
 
 
-                                <template is="dom-if" if={{isDate(item.type)}}>
+                                <template is="dom-if" if={{isList(item.type)}}>
+                                    <gl-combo-box id="report_type" class="margin-top required" required label="field" placeholder="field" items="{{tableSeleted}}"
+                                        item-label-path="field" value="{{item.req.field}}" item-value-path="field">
+                                        <template>
+                                            [[item.field]]
+                                        </template>
+                                    </gl-combo-box>
+                                </template>
+                            </template>
+                        </vaadin-grid-column>
+
+                        <vaadin-grid-column width="15%" flex-grow="0">
+                            <template class="header">ฟิลด์ที่แสดงค่า</template>
+                            <template>
+
+                                <!--<template is="dom-if" if={{isString(item.type)}}>
+                                    <gl-form-input class="margin-top required" required style="width:90%" value="{{item.view}}"></gl-form-input>
+                                </template>-->
+
+
+                                <!--<template is="dom-if" if={{isDate(item.type)}}>
                                     <gl-form-input class="margin-top required" required style="width:90%" value="{{item.view}}"></gl-form-input>
                                 </template>
 
@@ -115,7 +155,7 @@
 
                                 <template is="dom-if" if={{isListmake(item.type)}}>
                                     <gl-form-input class="margin-top required" required style="width:90%" value="{{item.view}}"></gl-form-input>
-                                </template>
+                                </template>-->
 
 
                                 <template is="dom-if" if={{isList(item.type)}}>
@@ -130,7 +170,7 @@
                         </vaadin-grid-column>
 
                         <vaadin-grid-column width="15%" flex-grow="0">
-                            <template class="header">Value</template>
+                            <template class="header">ฟิลด์ที่ส่งค่าตัวถัดไป</template>
                             <template>
 
                                 <template is="dom-if" if={{isString(item.type)}}>
@@ -170,46 +210,7 @@
 
 
 
-                        <vaadin-grid-column width="15%" flex-grow="0">
-                            <template class="header">Field</template>
-                            <template>
-
-                                <template is="dom-if" if={{isString(item.type)}}>
-                                    <gl-form-input class="margin-top required" required style="width:90%" value="{{item.req.field}}"></gl-form-input>
-                                </template>
-
-                                <template is="dom-if" if={{isDate(item.type)}}>
-                                    <gl-form-input class="margin-top required" required style="width:90%" value="{{item.req.field}}"></gl-form-input>
-                                </template>
-
-                                <template is="dom-if" if={{isDay(item.type)}}>
-                                    <gl-form-input class="margin-top required" required style="width:90%" value="{{item.req.field}}"></gl-form-input>
-                                </template>
-
-                                <template is="dom-if" if={{isMonth(item.type)}}>
-                                    <gl-form-input class="margin-top required" required style="width:90%" value="{{item.req.field}}"></gl-form-input>
-                                </template>
-
-                                <template is="dom-if" if={{isYear(item.type)}}>
-                                    <gl-form-input class="margin-top required" required style="width:90%" value="{{item.req.field}}"></gl-form-input>
-                                </template>
-
-                                <template is="dom-if" if={{isListmake(item.type)}}>
-                                    <paper-button raised class="btnInTable" data="{{item}}" on-tap="openListMake">ดูรายการ</paper-button>
-                                    <!--<gl-form-input class="margin-top required" required style="width:90%" value="{{item.req.field}}" ></gl-form-input>-->
-                                </template>
-
-
-                                <template is="dom-if" if={{isList(item.type)}}>
-                                    <gl-combo-box id="report_type" class="margin-top required" required label="field" placeholder="field" items="{{tableSeleted}}"
-                                        item-label-path="field" value="{{item.req.field}}" item-value-path="field">
-                                        <template>
-                                            [[item.field]]
-                                        </template>
-                                    </gl-combo-box>
-                                </template>
-                            </template>
-                        </vaadin-grid-column>
+                        
 
 
 

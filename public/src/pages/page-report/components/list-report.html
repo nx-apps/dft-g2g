@@ -4,6 +4,8 @@
 <link rel="import" href="./../../components/g2g-logic-behavior.html">
 <link rel="import" href="./../../../layout/shared-styles.html">
 
+<link rel="import" href="./../../components/validateFormBehaviors.html">
+
 <dom-module id="list-report">
     <template>
         <style include="shared-styles">
@@ -171,7 +173,7 @@
                                 item-value-path="[[item.res]]" on-selected-item-changed="getNextparam">
                                 <!--on-value-changed="getNextparam"-->
                                 <!--<template>
-                                    [[item.contract_no]]
+                                    [[getname(item.view)]]
                                 </template>-->
                             </gl-combo-box>
                         </template>
@@ -193,7 +195,7 @@
     <script>
         Polymer({
             is: 'list-report',
-            behaviors: [ReduxBehavior, nylonBehavior, g2gLogicBehavior, CookieBehavior, reportAction],
+            behaviors: [ReduxBehavior, nylonBehavior, g2gLogicBehavior, CookieBehavior, reportAction,ValidateFormBehavior],
             properties: {
                 date: {
                     type: Object,
@@ -245,7 +247,13 @@
                 }
             },
             reload() {
+                // this.queryFrom('gl-combo-box').items = []
+                // this.queryFrom('gl-combo-box').value = ''
+                // console.log(this.queryFrom('gl-combo-box'));
                 window.location.reload(false)
+            },
+            getname(name){
+                console.log(name);
             },
             print(e) {
                 // let type = 
@@ -266,7 +274,7 @@
                         // console.log(1);
                         this.dispatchAction('GET_REPORT_LINK', getBuy)
                             .then((respon) => {
-                                console.log(33);
+                                // console.log(33);
                                 res(respon)
                             })
                             .catch((error) => {
@@ -304,7 +312,8 @@
                         url[this.$$('#' + item.req.field).id] = this.$$('#' + item.req.field).value
                     }
                 })
-                window.open(window._config.reportServer + `/api/${this.currentSeleted.report_type}/${this.currentSeleted.report_path}?` + this.genUrl(url) + '&export=' + this.setType)
+                console.log(this.buyerId);
+                window.open(window._config.reportServer + `/api/${this.currentSeleted.report_type}/${this.currentSeleted.report_path}?buyer_id=`+this.buyerId.buyer_id +'&' +this.genUrl(url) + '&export=' + this.setType)
             },
             changeName: function (name) {
                 if (name === 'rice') return 'กองข้าว'
