@@ -252,7 +252,7 @@
                 // try {
                 // console.log(e.currentTarget.id);
                 // this.set('typeReport',)
-                console.log(12);
+                // console.log(12);
                 //
                 this.set('setType', e.currentTarget.id)
                 let data = e.model.__data__.item
@@ -263,7 +263,7 @@
                     getBuy.report_table = data.report_table
                     let getDate = new Promise((res, rej) => {
                         this.set('report_seleted', data.report_params)
-                        console.log(1);
+                        // console.log(1);
                         this.dispatchAction('GET_REPORT_LINK', getBuy)
                             .then((respon) => {
                                 console.log(33);
@@ -298,20 +298,12 @@
             printReport() {
                 let url = {}
                 this.currentSeleted.report_params.map((item) => {
-                    console.log(item.res);
-                    console.log(this.$$('#' + item.res));
                     if (this.$$('#' + item.res) !== null) {
                         url[this.$$('#' + item.res).id] = this.$$('#' + item.res).value
                     } else {
                         url[this.$$('#' + item.req.field).id] = this.$$('#' + item.req.field).value
                     }
-                    // console.log(this.$$('#' + item.res).value);
-                    // console.log(item.req.field);
-                    // url[this.$$('#' + item.res).id] = this.$$('#' + item.res).value
                 })
-                // console.log(this.currentSeleted);
-                // console.log(this.genUrl(url));
-                // &export=this.setType
                 window.open(window._config.reportServer + `/api/${this.currentSeleted.report_type}/${this.currentSeleted.report_path}?` + this.genUrl(url) + '&export=' + this.setType)
             },
             changeName: function (name) {
@@ -326,11 +318,11 @@
                     // let seleteField =  
                     dataSeleted.req.value = old_data[dataSeleted.req.field]
                     dataSeleted.report_table = old_data.old.report_table
-                    console.log(dataSeleted);
+                    // console.log(dataSeleted);
                     if (dataSeleted.type === 'list') {
                         let getDate = new Promise((res, rej) => {
                             // this.set('report_seleted', data.report_params)
-                            console.log(2);
+                            // console.log(2);
                             this.dispatchAction('GET_REPORT_LINK', dataSeleted)
                                 .then((respon) => {
                                     res(respon)
@@ -379,7 +371,7 @@
                     text: 'ต้องการลบข้อมูลใช่หรือไม่ ?',
                     confirmed: (result) => {
                         if (result == true) {
-                            console.log(1111);
+                            // console.log(1111);
                             // this._resiveForm()
                             //     .then((res) => {
                             //         // console.log(res);
@@ -412,17 +404,6 @@
                         }
                     }
                 })
-                // let data = e.model.__data__.item
-                // this.dispatchAction('DELTE_REPORT_DETAIL', data.id)
-                //     .then((res) => {
-                //         console.log(res)
-                //         this.dispatchAction('GET_REPORT_LIST')
-                //         // this.dispatchAction('POST_REPORT_DETAIL', res)
-                //     })
-                //     .catch((error) => {
-                //         console.log(error);
-                //     });
-                // this.dispatchAction('PROVINCE_DELETE', e.target.data.province_id);
             },
 
         });
