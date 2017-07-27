@@ -1,10 +1,13 @@
 <script>
     ValidateFormBehavior = {
+        queryFrom:function(required){
+            return Polymer.dom(this.root).querySelectorAll(required)
+        },
         validateForm:function(required){
             return this.queryFrom(required).map((el)=> el.validate()).every(elem => elem == true)
         },
-        queryFrom:function(required){
-            return Polymer.dom(this.root).querySelectorAll(required)
-        }
+        resetFrom:function(required){
+            return this.queryFrom(required).map((el) => el.reset())
+        },
     };
 </script>

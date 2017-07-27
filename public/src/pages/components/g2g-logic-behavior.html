@@ -306,10 +306,10 @@
     },
     _setSeleteValue: function (e) {
       
-      // let value = e.currentTarget
-      // // console.log(value);
-      // value.focus();
-      // value.setSelectionRange(0, 1);
+      let value = e.currentTarget
+      // value.value= ''
+      // console.log(value.updateValueAndPreserveCaret());
+      value.inputElement.select()
     }
   }
 

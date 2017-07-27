@@ -354,7 +354,15 @@
         }
       },
       toUpper:function(e){
-        this.set('data.invoice_type', e.target.value.toUpperCase());
+        try {
+          if (e.target.value!== '') {
+            this.set('data.invoice_type', e.target.value.toUpperCase());
+          }
+           
+        } catch (error) {
+          
+        }
+       
       },
       _getVessel: function (data) {
         if (typeof data !== 'undefined' && data !== 'undefined') {

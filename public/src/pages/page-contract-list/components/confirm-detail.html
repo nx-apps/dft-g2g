@@ -134,13 +134,13 @@
                 [[changeString2Num(item.*,'hamonize_weight')]] [[_obCalcWeight(item.*,'hamonize_weight')]]
                 <gl-form-input class="required" id="[[index]]" required allowed-pattern="[0-9||,||.]" format-number="on" disabled="[[commonState.btnDisabled]]"
                   label="{{localizeContract.quantity}}" placeholder="{{localizeContract.quantity}}" error-message="{{localizeContract.error_input}}{{localizeContract.quantity}}"
-                  value="{{item.hamonize_weight}}" name="hamonize_weight" on-input="getCostPrice"></gl-form-input>
+                  value="{{item.hamonize_weight}}" on-focus="_setSeleteValue" name="hamonize_weight" on-input="getCostPrice"></gl-form-input>
 
               </gl-grid-col>
               <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">[[changeString2Num(item.*,'tolerance_rate')]]
                 <gl-form-input class="required number" required maxlength="3" allowed-pattern="[0-9||,||.]" error-message="{{localizeContract.error_input}}{{localizeConfirmLetter.quantity_tolerance}}"
                   disabled="[[commonState.btnDisabled]]" label="{{localizeConfirmLetter.quantity_tolerance}}" value="{{item.tolerance_rate}}"
-                  placeholder="{{localizeConfirmLetter.quantity_tolerance}}" id="tolerance_rate">
+                  placeholder="{{localizeConfirmLetter.quantity_tolerance}}" id="tolerance_rate" on-focus="_setSeleteValue">
                   <div suffix>%</div>
                 </gl-form-input>
               </gl-grid-col>
@@ -150,15 +150,15 @@
             <gl-grid-row>
               <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
                 <gl-form-input class="required" required disabled="[[commonState.btnDisabled]]" label="{{localizeConfirmLetter.project_th}}"
-                  placeholder="{{localizeConfirmLetter.project_th}}" value="{{item.project_th}}" error-message="{{localizeContract.error_input}}{{localizeConfirmLetter.project_th}}"></gl-form-input>
+                  placeholder="{{localizeConfirmLetter.project_th}}" value="{{item.project_th}}" on-focus="_setSeleteValue" error-message="{{localizeContract.error_input}}{{localizeConfirmLetter.project_th}}"></gl-form-input>
               </gl-grid-col>
               <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
                 <gl-form-input class="required" required disabled="[[commonState.btnDisabled]]" label="{{localizeConfirmLetter.project_en}}"
-                  placeholder="{{localizeConfirmLetter.project_en}}" value="{{item.project_en}}" error-message="{{localizeContract.error_input}}{{localizeConfirmLetter.project_en}}"></gl-form-input>
+                  placeholder="{{localizeConfirmLetter.project_en}}" value="{{item.project_en}}" on-focus="_setSeleteValue" error-message="{{localizeContract.error_input}}{{localizeConfirmLetter.project_en}}"></gl-form-input>
               </gl-grid-col>
               <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
                 [[changeString2Num(item.*,'cost_price')]][[_obCalPrice(item.*,'cost_price')]]
-                <gl-form-input class="required" required disabled="[[commonState.btnDisabled]]" format-number="on" value="{{item.cost_price}}"
+                <gl-form-input class="required" required disabled="[[commonState.btnDisabled]]" on-focus="_setSeleteValue" format-number="on" value="{{item.cost_price}}"
                   label="{{localizeConfirmLetter.cost_price_ton}}" placeholder="{{localizeConfirmLetter.total_cost_price_ton}}"></gl-form-input>
               </gl-grid-col>
               <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
@@ -200,12 +200,12 @@
 
                     </td>
                     <td> [[changeString2Num(packageitem.*,'price_d')]]
-                      <gl-form-input class="required numberBack" required allowed-pattern="[0-9||,||.]" format-number="on" disabled="[[commonState.btnDisabled]]"
+                      <gl-form-input class="required numberBack" required allowed-pattern="[0-9||,||.]" on-focus="_setSeleteValue" format-number="on" disabled="[[commonState.btnDisabled]]"
                         placeholder="{{localizeCommon.price}}" error-message="{{localizeContract.error_input}}{{localizeCommon.price}}"
                         value="{{packageitem.price_d}}" no-label-float></gl-form-input>
                     </td>
                     <td>
-                      <gl-form-input class="numberBack" disabled value="[[_obChangePrice(packageitem.package_id,packageList)]]" name="package_weight_bag"
+                      <gl-form-input class="numberBack" disabled value="[[_obChangePrice(packageitem.package_id,packageList)]]"  name="package_weight_bag"
                         no-label-float></gl-form-input>
                     </td>
                     <td style="text-align:center;">

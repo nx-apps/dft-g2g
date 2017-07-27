@@ -88,10 +88,10 @@
         </table>
       </div>
       <div name="addConfirm">
-        <confirm-detail></confirm-detail>
+        <confirm-detail id="confirm-detail"></confirm-detail>
       </div>
       <div name="confirmDetail">
-        <confirm-detail></confirm-detail>
+        <confirm-detail id="confirm-detail"></confirm-detail>
       </div>
     </iron-pages>
   </template>
@@ -203,6 +203,8 @@
           href: ''
         },
         ])
+        // resetFrom
+        this.$$('confirm-detail').resetFrom('.required')
         this.fire('toast', { status: 'load' });
         this.dispatchAction('SET_STATE', {
           isInsert: true,
@@ -228,6 +230,8 @@
           btnDisabled: true,
           hiddend: true
         })
+        // resetFrom
+        this.$$('confirm-detail').resetFrom('.required')
         this.dispatchAction('SET_BREADCRUMBS', [{
           label: 'สัญญาที่ ' + this.contractId.contract_no,
           href: ''

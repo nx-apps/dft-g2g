@@ -54,13 +54,7 @@
         <!--[[data.book_id]]////[[data.gross_weight]]-->
         <gl-grid-row width="{{getWidth}}">
           <template is="dom-if" if="[[commonState.isInsert]]">
-            <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,12]]">
-              <div class="autocomplete-wrapper">
-                <gl-form-input id="bookNo" required class="required" label="{{localizeBook.booking_no}}" always-float-label placeholder="{{localizeBook.booking_no}}"
-                  value="{{data.book_no}}" disabled="[[commonState.btnDisabled]]"></gl-form-input>
-                <paper-autocomplete-suggestions id="shipline-suggestions" for="bookNo" source="{{bookNo}}"></paper-autocomplete-suggestions>
-              </div>
-            </gl-grid-col>
+            
             <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,8]]">
               <gl-combo-box class="required" required id="company_id" label="{{localizeBook.exporter_name}}" always-float-label item-label-path="label"
                 disabled="[[commonState.btnDisabled]]" on-selected-item-changed="_getObjectcompany" item-value-path="company_taxno"
@@ -75,13 +69,17 @@
               <gl-form-textarea rows="2" disabled label="{{localizeBook.exporter_address}}" value="{{data.company.company_address_th}}  {{data.company.company_province_th}}"
                 always-float-label></gl-form-textarea>
             </gl-grid-col>
+            <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,12]]">
+              <div class="autocomplete-wrapper">
+                <gl-form-input id="bookNo" required class="required" label="{{localizeBook.booking_no}}" always-float-label placeholder="{{localizeBook.booking_no}}"
+                  value="{{data.book_no}}" disabled="[[commonState.btnDisabled]]"></gl-form-input>
+                <paper-autocomplete-suggestions id="shipline-suggestions" for="bookNo" source="{{bookNo}}"></paper-autocomplete-suggestions>
+              </div>
+            </gl-grid-col>
           </template>
           <template is="dom-if" if="[[!commonState.isInsert]]">
             <template is="dom-if" if="[[commonState.btnDisabled]]">
-              <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,12]]">
-                <gl-form-input required class="required" label="{{localizeBook.booking_no}}" always-float-label placeholder="{{localizeBook.booking_no}}"
-                  value="{{data.book_no}}" disabled></gl-form-input>
-              </gl-grid-col>
+              
               <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,8]]">
                 <gl-form-input disabled label="{{localizeBook.exporter_name}}" value="[{{data.company_taxno}}] {{data.company.company_name_th}}"
                   always-float-label></gl-form-input>
@@ -90,12 +88,14 @@
                 <gl-form-textarea rows="2" disabled label="{{localizeBook.exporter_address}}" value="{{data.company.company_address_th}}  {{data.company.company_province_th}}"
                   always-float-label></gl-form-textarea>
               </gl-grid-col>
-            </template>
-            <template is="dom-if" if="[[!commonState.btnDisabled]]">
               <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,12]]">
-                <gl-form-input required class="required" label="{{localizeBook.booking_no}}" always-float-label placeholder="{{localize.booking_no}}"
-                  value="{{data.book_no}}" disabled="[[commonState.btnDisabled]]"></gl-form-input>
+                <gl-form-input required class="required" label="{{localizeBook.booking_no}}" always-float-label placeholder="{{localizeBook.booking_no}}"
+                  value="{{data.book_no}}" disabled></gl-form-input>
               </gl-grid-col>
+            </template>
+
+            <template is="dom-if" if="[[!commonState.btnDisabled]]">
+              
               <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,8]]">
                 <gl-combo-box class="required" required id="company_id" label="{{localizeBook.exporter_name}}" always-float-label item-label-path="label"
                   disabled="[[commonState.btnDisabled]]" on-selected-item-changed="_getObjectcompany" item-value-path="company_taxno"
@@ -109,6 +109,10 @@
               <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,8]]">
                 <gl-form-textarea rows="2" disabled label="{{localizeBook.exporter_address}}" value="{{data.company.company_address_th}}  {{data.company.company_province_th}}"
                   always-float-label></gl-form-textarea>
+              </gl-grid-col>
+              <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,12]]">
+                <gl-form-input required class="required" label="{{localizeBook.booking_no}}" always-float-label placeholder="{{localize.booking_no}}"
+                  value="{{data.book_no}}" disabled="[[commonState.btnDisabled]]"></gl-form-input>
               </gl-grid-col>
             </template>
           </template>
@@ -153,14 +157,14 @@
           </gl-grid-col>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
             [[_calPriceHamonize(data.hamonize_id,data.package_id,data.net_weight)]] [[changeString2Num(data.*,'net_weight')]]
-            <gl-form-input class="required" required allowed-pattern="[0-9||,||.]" format-number="on" label="{{localizeBook.bl_weight}}"
+            <gl-form-input class="required" required allowed-pattern="[0-9||,||.]" on-focus="_setSeleteValue" format-number="on" label="{{localizeBook.bl_weight}}"
               value="{{data.net_weight}}" always-float-label disabled="[[commonState.btnDisabled]]">
               <!--<div suffix>/{{dataForSelect.type_rice_quantity_limit_max_label}}</div>-->
             </gl-form-input>
           </gl-grid-col>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
             [[changeString2Num(data.*,'num_of_container')]]
-            <gl-form-input disabled="[[commonState.btnDisabled]]" required allowed-pattern="[0-9||,||.]" format-number="on" class="required"
+            <gl-form-input disabled="[[commonState.btnDisabled]]" on-focus="_setSeleteValue" required allowed-pattern="[0-9||,||.]" format-number="on" class="required"
               label="{{localizeBook.number_of_containers}}" always-float-label value="{{data.num_of_container}}"></gl-form-input>
           </gl-grid-col>
           <!--[[_getPackageForPrice(data.package_id,dataForSelect)]]-->

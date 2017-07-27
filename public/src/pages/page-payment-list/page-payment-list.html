@@ -18,7 +18,7 @@
 <link rel="import" href="./component/list-of-fee.html">
 <!--<link rel="import" href="./component/list-of-fee-detail.html">-->
 <link rel="import" href="./component/list-of-cheque.html">
-<link rel="import" href="./component/cheque-detail.html">
+<!--<link rel="import" href="./component/cheque-detail.html">-->
 <link rel="import" href="./component/list-of-payments.html">
 <!--<link rel="import" href="./component/payment-detail.html">-->
 <!--<link rel="import" href="./component/list-of-history.html">
@@ -263,27 +263,26 @@
                 </div>
                 <iron-pages selected="{{paymentsPageSeleted}}" attr-for-selected="name">
                     <div name="blPage">
-                        <commercial-invoice></commercial-invoice>
+                        <commercial-invoice id="commercial-invoice"></commercial-invoice>
                     </div>
                     <div name="invoicePage">
-                        <commercial-invoice></commercial-invoice>
+                        <commercial-invoice id="commercial-invoice"></commercial-invoice>
                     </div>
                     <div name="blInvoicePage">
-                        <fee-exports></fee-exports>
+                        <fee-exports  id="fee-exports"></fee-exports>
                     </div>
                     <div name="feePage">
-                        <list-of-fee-detail page-selected="{{pageSelected}}" data="[[dataSelected.fee]]" data-for-select="[[dataForSelect]]" is-input-disabled="[[isInputDisabled]]"
-                            is-view-seleted="[[!isViewSeleted]]"></list-of-fee-detail>
+                        <list-of-fee-detail  id="list-of-fee-detail"></list-of-fee-detail>
                     </div>
                     <div name="chequePage">
-                        <cheque-detail></cheque-detail>
+                        <cheque-detail  id="cheque-detail"></cheque-detail>
                     </div>
                     <div name="paymentDetail">
-                        <payment-detail></payment-detail>
+                        <payment-detail  id="payment-detail"></payment-detail>
                     </div>
-                    <div name="historyDetail">
+                    <!--<div name="historyDetail">
                         <history-detail data="[[dataSelected.historyDetail]]" data-for-select="[[dataForSelect]]"></history-detail>
-                    </div>
+                    </div>-->
                 </iron-pages>
             </div>
         </nylon-panel-right>
@@ -363,23 +362,13 @@
                 },
             },
             listeners: {
-                // 'get-bl-list': '_getBlListFire',
                 'get-bl-detail': '_getBlDetail',
-                // 'get-invoice-list': '_getInvoiceListFire',
                 'get-invoice-detail': '_getBlInvoiceDetail',
-                // 'get-fee-list': '_getFeeListFire',
                 'get-select-draftPayment': '_getInvoiceDetail',
-                // 'get-fee-list-in-shm-event': '_getFeeListInShmEvent',
                 'get-fee-detail': '_getFeeDetail',
-                // 'get-Cheque-list': '_getChequeListFire',
                 'get-cheque-detail': '_getChequeDetail',
-                // 'get-payment-list': '_getPaymentsFire',
-                // 'get-history-payment-list': '_getHistoryListFire',
                 'get-payment-detail': '_getPaymentDetail',
-                // 'get-history-detail': '_getHistoryDetail',
-                // 'flipDrawer': '_flipDrawer',
                 'close-drawer': '_flipDrawerClose',
-                // '_set-breadcrumbs': 'setEventBreadcrumbs'
             },
             observers: [
                 'sumFee(unallocated_fees,allocate_fees)',
@@ -389,10 +378,6 @@
                 this.fire('toast', { status: 'load' });
                 var contract_id = this.getCookieBhv("contract_id");
                 var contract_name = this.getCookieBhv("contractName");
-                // this.contractName = contract_name
-                // this.notifyPath('contractName')
-                // this.set('contractName',contract_name)
-                // console.log(this.contractName);
                 let contractData = { contract_id: contract_id, contract_name: contract_name }
                 this.dispatchAction('SET_CONTRACT_ID', contractData)
                 this.dispatchAction('GET_COMMON_BANK_LIST');
@@ -413,18 +398,6 @@
 
                 this.dispatchAction('PAYMENT_GET_LIST_DATA', contract_id)
             },
-            // ready: function () {
-            //     this._getChequeList(contract_id);
-            //     this._getPaymentsList(contract_id);
-            //     this._getHistoryList(contract_id);
-            //     this._getBank()
-            // },
-            // setEventBreadcrumbs: function (data) {
-            //     this.setBreadcrumbs(data.detail)
-            // },
-            // setBreadcrumbs: function (data) {
-            //     this.set('crumbs', data)
-            // },
             sumFee(unallocated_fees, allocate_fees) {
                 this.set('fee_list_no', unallocated_fees.length + allocate_fees.length)
             },
@@ -436,11 +409,14 @@
             },
             _getBlDetail: function (e) {
                 this.dispatchAction('SET_BREADCRUMBS', [{
-                    label: 'รายละเอียดใบ Invoice',
+                    label: 'รายละเอียดใบแจ้งหนี่้้',
                     href: ''
                 }]);
                 let book_id = e.detail.detail.id;
-                this.titlePanelRight = 'รายละเอียดใบ Invoice';
+                this.titlePanelRight = 'รายละเอียดใบแจ้งหนี้';
+                // resetFrom
+                this.$$('commercial-invoice').resetFrom('.required')
+                
                 this.fire('toast', { status: 'load' });
                 this.dispatchAction('BOOK_GET_ID_DATA', book_id);
                 this.dispatchAction('BOOK_GET_MADE_OUT', this.getCookieBhv("contract_id"));
@@ -452,16 +428,14 @@
                 this.paymentsPageSeleted = 'blPage';
                 this._flipDrawer();
             },
-            _getListInvoice: function () {
-                // this.dispatchAction('INVOICE_GET_LIST_DATA', this.getCookieBhv("contract_id"));
-            },
             _getBlInvoiceDetail: function (e) {
                 this.dispatchAction('SET_BREADCRUMBS', [{
                     label: 'รายละเอียดใบกำกับสินค้า : ' + e.detail.detail.invoice_type + e.detail.detail.invoice_no + '/' + e.detail.detail.invoice_year,
                     href: ''
                 }])
                 this.titlePanelRight = 'รายละเอียดใบกำกับสินค้า'
-                // console.log(e.detail.detail);
+                // resetFrom
+                this.$$('commercial-invoice').resetFrom('.required')
                 this.fire('toast', { status: 'load' });
                 this.dispatchAction('BOOK_GET_ID_DATA', e.detail.detail.id);
                 this.dispatchAction('SET_STATE', {
@@ -477,16 +451,12 @@
                     label: 'เพิ่มรอบการคิดค่าธรรมเนียม',
                     href: ''
                 }])
+                // resetFrom
+                this.$$('fee-exports').resetFrom('.required')
+                this.$$('fee-exports').$$('fee-exports-invoice').resetFrom('.required')
+                
                 var datas = e.detail.detail;
                 this.titlePanelRight = 'เพิ่มรอบการคิดค่าธรรมเนียม'
-                // let url = '';
-                // datas.map((item, index) => {
-                //     if (index === 0) {
-                //         url = url + item.id;
-                //     } else {
-                //         url = url + '_' + item.id;
-                //     }
-                // });
                 let arr = { book_id: [] };
                 datas.map((item) => {
                     arr.book_id.push(item.id);
@@ -501,14 +471,6 @@
                 this.paymentsPageSeleted = 'blInvoicePage';
                 this._flipDrawer();
             },
-            _getListFee: function () {
-                // var data = {
-                //     contract_id: this.getCookieBhv("contract_id"),
-                //     view: 'fin',
-                //     status: 'false'
-                // }
-                // this.dispatchAction('FEE_GET_LIST_DATA', data)
-            },
             _getFeeDetail: function (e) {
                 var round = '';
                 if (e.detail.detail.fee_round == 0) {
@@ -516,6 +478,10 @@
                 } else {
                     round = e.detail.detail.fee_round;
                 }
+                // resetFrom
+                // console.log(this.$$('fee-exports'))
+                this.$$('fee-exports').resetFrom('.required')
+                this.$$('fee-exports').$$('fee-exports-invoice').resetFrom('.required')
                 this.dispatchAction('SET_BREADCRUMBS', [{
                     label: 'งวดที่ ' + e.detail.detail.cl_no + ' ครั้งที่ ' + e.detail.detail.fee_no + ' รอบที่คิดค่าธรรมเนียมครั้งที่ ' + round,
                     href: ''
@@ -534,51 +500,36 @@
                 });
             },
             _getChequeDetail: function (e) {
-                // console.log(e.detail.detail);
                 this.dispatchAction('SET_BREADCRUMBS', [{
                     label: 'ขึ้นเช็ค ',
                     href: ''
                 }])
                 this.titlePanelRight = 'เช็ค'
-                // this.genUrl(url)
+                // resetFrom
+                this.$$('cheque-detail').resetFrom('.required')
+
                 this.dispatchAction('GET_CHEQUE_DETAIL_LIST', { id: e.detail.detail })
                 this.dispatchAction('GET_CHEQUE_NO')
-                // this.fire('toast', { status: 'load' });
-                //     this.read('./g2g/payment/fee/id/' + e.detail.detail.fee_id, (data) => {
-                //     // console.log(data);
-                //     this.set('dataSelected.cheque', data);
-                //     let datass = [
-                //         {
-                //         label: this.dataForSelect.nameContract,
-                //         href: ''
-                //         },
-                //         {
-                //         label: 'รอบที่คิดค่าธรรมเนียมครั้งที่ ' + e.detail.detail.fee_no,
-                //         href: ''
-                //         },
-                //     ]
-                //     this.setBreadcrumbs(datass)
-                //     // console.log('lll=>',this.dataSelected.cheque);
                 this.paymentsPageSeleted = 'chequePage';
-                //     if (this.checkRenderPage.chequeDetail != true) {
-                //         this.async(() => {
-                //         this.importHref(
-                //             this.resolveUrl('./payment/component/cheque-detail.html'),
-                //             () => {
-                //             this.async(() => {
-                //                 this.fire('toast', { status: 'load' });
-                this._flipDrawer();
-                //                 this.checkRenderPage.chequeDetail = true;
-                //             }, 500)
-                //             }, null, true
-                //         );
-                //         }, 1000);
-                //     } else {
-                //         this.async(() => {
-                //         this.fire('toast', { status: 'load' });
-                //         this._flipDrawer();
-                //         }, 500)
-                //     }
+                    if (this.checkRenderPage.chequeDetail != true) {
+                        this.async(() => {
+                        this.importHref(
+                            this.resolveUrl('./component/cheque-detail.html'),
+                            () => {
+                            this.async(() => {
+                                this.fire('toast', { status: 'load' });
+                                this._flipDrawer();
+                                this.checkRenderPage.chequeDetail = true;
+                            }, 500)
+                            }, null, true
+                        );
+                        }, 1000);
+                    } else {
+                        this.async(() => {
+                        this.fire('toast', { status: 'load' });
+                        this._flipDrawer();
+                        }, 500)
+                    }
                 //     });
             },
             _getPaymentDetail: function (e) {
@@ -591,43 +542,13 @@
                 let url = { contract_id: this.getCookieBhv("contract_id"), company_taxno: e.detail.detail.company_taxno }
                 this.dispatchAction('SET_COMPANY_TAX_NO', { company_taxno: e.detail.detail.company_taxno })
 
-                // console.log(url );
-                // contract_id=60bae3b3-4fb8-4da1-ad66-05bba1662dc4&company_taxno=0185555000021
                 this.dispatchAction('PAYMENT_GET_DETAIL_DATA', this.genUrl(url))
                 this.dispatchAction('SET_DATE_PAYMENY')
 
                 this.dispatchAction('PAYMENT_GET_RUNNING_NO')
                 this.paymentsPageSeleted = 'paymentDetail';
-                // this._flipDrawer();
-                //     // console.log(e.detail.detail);
-                //     this.set('dataSelected.paymentDetail', e.detail.detail);
-                //     this.read('g2g/payment/silo', (data) => {
-                //     this.set('dataSelected.silo', data);
-                //     // console.log(this.dataSelected.silo)
-                //     });
-                //     this.read('g2g/payment/checkno/buyer/id/' + this.dataForSelect.buyer_id, (data) => {
-                //     // this.dataSelected.pay_no = data.check_no
-                //     this.set('dataSelected.paymentDetail.pay_no', data.check_no)
-                //     });
 
                 this.fire('toast', { status: 'load' });
-                //     this.set('dataSelected.paymentDetail.bank_id', 'KTB')
-                //     this.set('dataSelected.paymentDetail.bank_branch', 'กระทรวงพาณิชย์')
-                //     // console.log(e.detail.detail);
-                //     let datass = [
-                //     {
-                //         label: this.dataForSelect.nameContract,
-                //         href: ''
-                //     },
-                //     {
-                //         label: 'ใบแจ้งหนี้ ' + e.detail.detail.invoice_no,
-                //         href: ''
-                //     },
-                //     ]
-                //     this.setBreadcrumbs(datass)
-                //     // console.log(this.dataSelected);
-                //     // this._getBank();
-                //     this.paymentsPageSeleted = 'paymentDetail';
                 // console.log(111);
                 if (this.checkRenderPage.paymentDetail != true) {
                     this.async(() => {
@@ -659,45 +580,6 @@
                     }, 500)
                 }
             },
-            // _getHistoryDetail: function (e) {
-            //     this.set('dataSelected.historyDetail', e.detail.detail);
-            //     this.fire('toast', { status: 'load' });
-            //     this.titlePanelRight = 'ประวัติการจ่ายเงิน '
-            //     // this.read('g2g/payment/checkno/buyer/id/'+this.dataForSelect.buyer_id, (data) => {
-            //     //   this.set('dataSelected.paymentDetail.pay_no',data.check_no)
-            //     // });
-            //     let datass = [
-            //     {
-            //         label: this.dataForSelect.nameContract,
-            //         href: ''
-            //     },
-            //     {
-            //         label: 'ใบแจ้งหนี้ ' + e.detail.detail.invoice_no,
-            //         href: ''
-            //     },
-            //     ]
-            //     this.setBreadcrumbs(datass)
-            //     this.paymentsPageSeleted = 'historyDetail';
-            //     if (this.checkRenderPage.historyDetail != true) {
-            //     this.async(() => {
-            //         this.importHref(
-            //         this.resolveUrl('./payment/component/history-detail.html'),
-            //         () => {
-            //             this.async(() => {
-            //             this.fire('toast', { status: 'load' });
-            //             this._flipDrawer();
-            //             this.checkRenderPage.historyDetail = true;
-            //             }, 500)
-            //         }, null, true
-            //         );
-            //     }, 1000);
-            //     } else {
-            //     this.async(() => {
-            //         this.fire('toast', { status: 'load' });
-            // this._flipDrawer();
-            //     }, 500)
-            //     }
-            // },
             _flipDrawer: function () {
                 Polymer.dom(this.root).querySelector('#panelRight').open();
             },

@@ -134,17 +134,17 @@
               <div class="container">
                 <gl-grid-row width="{{getWidth}}">
                   <gl-grid-col width="[[getWidth]]" grid="[[300,6],[500,3]]">
-                    <gl-form-input type="date" class="required" required disabled="[[common.btnDisabled]]" label="{{localize.received_date}}"
+                    <gl-form-input type="date" class="required" on-focus="_setSeleteValue" required disabled="[[common.btnDisabled]]" label="{{localize.received_date}}"
                       value="{{data.fee_date}}" always-float-label></gl-form-input>
                   </gl-grid-col>
                   <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
                     [[changeString2Num(data.*,'rate_tt_b')]]
-                    <gl-form-input autofocus class="required" required label="{{localize.exchange_rate}} [[data.payterm]]" disabled="[[common.btnDisabled]]"
+                    <gl-form-input autofocus class="required" required on-focus="_setSeleteValue" label="{{localize.exchange_rate}} [[data.payterm]]" disabled="[[common.btnDisabled]]"
                       allowed-pattern="[0-9||,||.]" format-number="on" value="{{data.rate_tt_b}}" always-float-label></gl-form-input>
                   </gl-grid-col>
                   <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
                     [[changeString2Num(data.*,'rate_bank_b')]]
-                    <gl-form-input class="required" required label="{{localize.exchange_rate_bank}}" disabled="[[common.btnDisabled]]" allowed-pattern="[0-9||,||.]"
+                    <gl-form-input class="required" required on-focus="_setSeleteValue" label="{{localize.exchange_rate_bank}}" disabled="[[common.btnDisabled]]" allowed-pattern="[0-9||,||.]"
                       format-number="on" value="{{data.rate_bank_b}}" always-float-label></gl-form-input>
                   </gl-grid-col>
                 </gl-grid-row>
@@ -153,13 +153,13 @@
                 <gl-grid-row>
                   <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
                     [[changeString2Num(data.*,'fee_ex_d')]]
-                    <gl-form-input class="required" required label="{{localize.fee_out}} ({{localize.usd}})" disabled="[[common.btnDisabled]]"
+                    <gl-form-input class="required" required on-focus="_setSeleteValue" label="{{localize.fee_out}} ({{localize.usd}})" disabled="[[common.btnDisabled]]"
                       allowed-pattern="[0-9||,||.]" format-number="on" value="{{data.fee_ex_d}}" always-float-label></gl-form-input>
 
                   </gl-grid-col>
                   <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
                     [[changeString2Num(data.*,'fee_in_b')]]
-                    <gl-form-input class="required" required disabled="[[common.btnDisabled]]" allowed-pattern="[0-9||,||.]" format-number="on"
+                    <gl-form-input class="required" required on-focus="_setSeleteValue" disabled="[[common.btnDisabled]]" allowed-pattern="[0-9||,||.]" format-number="on"
                       label="{{localize.fee_in}} ({{localize.baht}})" value="{{data.fee_in_b}}" always-float-label></gl-form-input>
                   </gl-grid-col>
                 </gl-grid-row>
@@ -183,7 +183,7 @@
               {{_balanceChangeBath(data.rate_bank_b,data.balanceLessFees)}} [[changeString2Num(data.*,'feeTotalWithOutUsd')]]
               [[changeString2Num(data.*,'totalbath')]] [[_balanceBath(data.balanceChangeBath,data.feeTotalWithOutUsd)]]
 
-              <fee-exports-invoice fee-ex="{{data.fee_ex_d}}" 
+              <fee-exports-invoice id="fee-exports-invoice" fee-ex="{{data.fee_ex_d}}" 
               fee-in="{{data.fee_in_b}}" 
               rate-bank="{{data.rate_bank_b}}" 
               rate-tt="{{data.rate_tt_b}}"

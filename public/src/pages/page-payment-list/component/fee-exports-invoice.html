@@ -102,12 +102,12 @@
             </div>
             <div class="horizontal layout">
               {{_calcfeeEx(feeEx, indexData)}} [[changeString2Num(item.*,'fee_ex_d')]]
-              <gl-form-input label="{{localize.fee_out}}" class="number required" required format-number="on" style="width:200px;" value="{{item.fee_ex_d}}"
+              <gl-form-input label="{{localize.fee_out}}" class="number required" required format-number="on" on-focus="_setSeleteValue" style="width:200px;" value="{{item.fee_ex_d}}"
                 disabled="[[common.btnDisabled]]"></gl-form-input>
               {{_calcfeeIn(feeIn, indexData)}} [[changeString2Num(item.*,'fee_in_b')]]
-              <gl-form-input label="{{localize.fee_in}}" class="number required" required format-number="on" style="width:200px; margin-left:50px;"
+              <gl-form-input label="{{localize.fee_in}}" class="number required" required format-number="on" on-focus="_setSeleteValue" style="width:200px; margin-left:50px;"
                 value="{{item.fee_in_b}}" disabled="[[common.btnDisabled]]"></gl-form-input>
-              <gl-form-input label="{{localize.fee_total}} ({{localize.baht}})" class="number required" required format-number="on" style="width:240px; margin-left:50px;"
+              <gl-form-input label="{{localize.fee_total}} ({{localize.baht}})" class="number required" required format-number="on" on-focus="_setSeleteValue" style="width:240px; margin-left:50px;"
                 value="{{item.value_fee_b}}" disabled="[[common.btnDisabled]]"></gl-form-input>
               <!--[[_calcFee(calcFee,indexData)]]-->
               [[_calcFeeBAvg(rateBank, item.fee_ex_d,item.fee_in_b, indexData)]] [[changeString2Num(item.*,'value_fee_b')]]
@@ -147,7 +147,7 @@
                     [[changeString2Num(item2.*,'value_fee_b')]]
                     <!--[[_calcValueFeeB(item.fee_ex_d, rateBank, item.fee_in_b, indexData, index)]]-->
                     [[_calcValueFeeB(item.value_fee_b, indexData, index)]]
-                    <gl-form-input class="riceRequired" required style="text-align:right; width:170px;" format-number="on" value="{{item2.value_fee_b}}"
+                    <gl-form-input class="riceRequired" required style="text-align:right; width:170px;" format-number="on" on-focus="_setSeleteValue" value="{{item2.value_fee_b}}"
                       disabled="[[common.inputRice]]" allowed-pattern="[0-9||,||.]"></gl-form-input>
                   </td>
                   [[changeString2Num(item2.*,'value_bal_b')]]

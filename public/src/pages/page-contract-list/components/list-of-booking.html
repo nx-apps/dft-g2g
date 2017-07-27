@@ -115,17 +115,16 @@
         </gl-form-panel>
       </div>
       <div name="list-of-booking-add">
-        <booking-detail></booking-detail>
+        <booking-detail id="booking-detail"></booking-detail>
       </div>
       <div name="list-of-booking-edit">
-        <booking-detail></booking-detail>
+        <booking-detail id="booking-detail"></booking-detail>
       </div>
       <div name="list-of-booking-exporter">
         <list-of-shm></list-of-shm>
       </div>
       <div name="list-of-booking-exporter-detail">
-        <shm-det-exporter></shm-det-exporter>
-        <!--<list-of-shm></list-of-shm>-->
+        <shm-det-exporter id="shm-det-exporter"></shm-det-exporter>
       </div>
     </iron-pages>
 
@@ -172,25 +171,10 @@
         dataShow: {
           type: Object
         },
-        // dataForSelect: {
-        //   type: Object,
-        //   value: { exporter: [], cl_type_rice: [] }
-        // },
-        // dataDefault: {
-        //   type: Object,
-        //   value: { bl_no: '', ship: [{ ship_id: '', ship_voy_no: '' }], surveyor: [{ surveyor_id: '' }] },
-        // }
       },
-      // observers: [
-      //   'getExport(data)',
-      //   'setTotalRice(data)',
-      //   'setdataSelect(dataForSelect)'
-      // ],
       listeners: {
         '_list-book': '_changeIronPage',
         '_openExporter': 'openExporter',
-        // '_get-fire-booking-detail': '_getFireBookingDetail',
-        // '_get-fire-group-exporter': '_getFireGroupExporter'
       },
       _searchInArray: function (searchInput) {
         try {
@@ -252,6 +236,8 @@
           btnDisabled: true,
           hiddend: true
         })
+        // resetFrom
+        this.$$('booking-detail').resetFrom('.required')
         this.dispatchAction('SET_BREADCRUMBS', [{
           label: 'สัญญาที่ ' + this.contractId.contract_no,
           href: ''
@@ -296,10 +282,17 @@
 
       _changeIronPage: function (data) {
         this.set('pageSelected', data.detail)
+        if(data.detail === 'list-of-booking-exporter-detail'){
+          // resetFrom
+        this.$$('shm-det-exporter').resetFrom('.required')
+
+        }
       },
       createBooking: function () {
         try {
           // console.log(data.detail);
+          // resetFrom
+        this.$$('booking-detail').resetFrom('.required')
           this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
           let ship_lot = 0
           if (this.bookList.length > 0) {
@@ -384,7 +377,7 @@
         }, 500)
       },
       openExporter(e) {
-        console.log(e);
+        // console.log(e);
         let url = { book_id: e.detail.id, id: e.detail.id }
         let bookData = {
           book_id: e.detail.id,
