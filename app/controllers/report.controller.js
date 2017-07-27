@@ -93,7 +93,9 @@ exports.get = function (req, res) {
         }).ungroup()
         .getField('group')
         .filter(function (f) {
-            return f.ne({})
+            return f.ne({}).and(
+                f.hasFields(val.view)
+            )
         })
         .orderBy(val.view)
         .run().then(function (data) {
