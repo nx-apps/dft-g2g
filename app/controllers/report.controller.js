@@ -12,7 +12,7 @@ exports.getTable = function (req, res) {
             for (var key in field) {
                 if (field.hasOwnProperty(key)) {
                     data_field.push({
-                        field :  key
+                        field: key
                     })
                 }
             }
@@ -28,50 +28,50 @@ exports.getTable = function (req, res) {
 }
 exports.insert = function (req, res) {
     var r = req.r;
-        var obj = Object.assign(req.body, {
-            date_created: r.now().inTimezone('+07'),
-            date_updated: r.now().inTimezone('+07'),
-            creater: 'admin',
-            updater: 'admin',
-        });
-        r.table("report")
-            .insert(obj)
-            .run()
-            .then(function (response) {
-                res.json(response);
-            })
-            .error(function (err) {
-                res.json(err);
-            })
+    var obj = Object.assign(req.body, {
+        date_created: r.now().inTimezone('+07'),
+        date_updated: r.now().inTimezone('+07'),
+        creater: 'admin',
+        updater: 'admin',
+    });
+    r.table("report")
+        .insert(obj)
+        .run()
+        .then(function (response) {
+            res.json(response);
+        })
+        .error(function (err) {
+            res.json(err);
+        })
 }
 exports.update = function (req, res) {
     var r = req.r;
-        var obj = Object.assign(req.body, {
-            date_updated: r.now().inTimezone('+07'),
-            updater: 'admin',
-        });
-        r.table("report")
+    var obj = Object.assign(req.body, {
+        date_updated: r.now().inTimezone('+07'),
+        updater: 'admin',
+    });
+    r.table("report")
         .get(obj.id)
-            .update(obj)
-            .run()
-            .then(function (response) {
-                res.json(response);
-            })
-            .error(function (err) {
-                res.json(err);
-            })
+        .update(obj)
+        .run()
+        .then(function (response) {
+            res.json(response);
+        })
+        .error(function (err) {
+            res.json(err);
+        })
 }
 exports.delete = function (req, res) {
     var r = req.r;
-        r.table("report").get(req.params.id)
-            .delete()
-            .run()
-            .then(function (response) {
-                res.json(response);
-            })
-            .error(function (err) {
-                res.json(err);
-            })
+    r.table("report").get(req.params.id)
+        .delete()
+        .run()
+        .then(function (response) {
+            res.json(response);
+        })
+        .error(function (err) {
+            res.json(err);
+        })
 }
 
 exports.list = function (req, res) {
@@ -92,6 +92,9 @@ exports.get = function (req, res) {
             return g.pluck([val.res, val.view])
         }).ungroup()
         .getField('group')
+        .filter(function (f) {
+            return f.ne({})
+        })
         .orderBy(val.view)
         .run().then(function (data) {
             res.json(data)
