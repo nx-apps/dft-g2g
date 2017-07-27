@@ -1,16 +1,13 @@
 <link rel="import" href="./../../../../bower_components/gl-form/gl-form-panel.html">
-
 <link rel="import" href="./../../../../bower_components/gl-grid/gl-grid-row.html">
 <link rel="import" href="./../../../../bower_components/gl-grid/gl-grid-col.html">
 <link rel="import" href="./../../../../bower_components/gl-form/gl-form-input.html">
 <link rel="import" href="./../../../../bower_components/gl-form/gl-combo-box.html">
-
 <link rel="import" href="./../../../../bower_components/paper-checkbox/paper-checkbox.html">
-
 <link rel="import" href="./../../components/validateFormBehaviors.html">
-
 <link rel="import" href="./../../components/g2g-logic-behavior.html">
 <link rel="import" href="./../../../layout/shared-styles.html">
+<link rel="import" href="./list-make.html">
 <dom-module id="manage-report">
     <template>
         <style include="shared-styles">
@@ -92,13 +89,13 @@
                         </vaadin-grid-column>
 
                         <vaadin-grid-column width="15%" flex-grow="0">
-                            <template class="header">View</template>
+                            <template class="header">Show Value</template>
                             <template>
 
                                 <template is="dom-if" if={{isString(item.type)}}>
                                     <gl-form-input class="margin-top required" required style="width:90%" value="{{item.view}}"></gl-form-input>
                                 </template>
-                                
+
 
                                 <template is="dom-if" if={{isDate(item.type)}}>
                                     <gl-form-input class="margin-top required" required style="width:90%" value="{{item.view}}"></gl-form-input>
@@ -113,7 +110,11 @@
                                 </template>
 
                                 <template is="dom-if" if={{isYear(item.type)}}>
-                                    <gl-form-input class="margin-top required" required style="width:90%" value="{{item.view}}" ></gl-form-input>
+                                    <gl-form-input class="margin-top required" required style="width:90%" value="{{item.view}}"></gl-form-input>
+                                </template>
+
+                                <template is="dom-if" if={{isListmake(item.type)}}>
+                                    <gl-form-input class="margin-top required" required style="width:90%" value="{{item.view}}"></gl-form-input>
                                 </template>
 
 
@@ -129,7 +130,7 @@
                         </vaadin-grid-column>
 
                         <vaadin-grid-column width="15%" flex-grow="0">
-                            <template class="header">res</template>
+                            <template class="header">Value</template>
                             <template>
 
                                 <template is="dom-if" if={{isString(item.type)}}>
@@ -145,10 +146,14 @@
                                 </template>
 
                                 <template is="dom-if" if={{isMonth(item.type)}}>
-                                    <gl-form-input class="margin-top required" required style="width:90%" value="{{item.res}}" ></gl-form-input>
+                                    <gl-form-input class="margin-top required" required style="width:90%" value="{{item.res}}"></gl-form-input>
                                 </template>
 
                                 <template is="dom-if" if={{isYear(item.type)}}>
+                                    <gl-form-input class="margin-top required" required style="width:90%" value="{{item.res}}"></gl-form-input>
+                                </template>
+
+                                <template is="dom-if" if={{isListmake(item.type)}}>
                                     <gl-form-input class="margin-top required" required style="width:90%" value="{{item.res}}"></gl-form-input>
                                 </template>
 
@@ -166,7 +171,7 @@
 
 
                         <vaadin-grid-column width="15%" flex-grow="0">
-                            <template class="header">type</template>
+                            <template class="header">Field</template>
                             <template>
 
                                 <template is="dom-if" if={{isString(item.type)}}>
@@ -174,7 +179,7 @@
                                 </template>
 
                                 <template is="dom-if" if={{isDate(item.type)}}>
-                                    <gl-form-input class="margin-top required" required style="width:90%" value="{{item.req.field}}" ></gl-form-input>
+                                    <gl-form-input class="margin-top required" required style="width:90%" value="{{item.req.field}}"></gl-form-input>
                                 </template>
 
                                 <template is="dom-if" if={{isDay(item.type)}}>
@@ -186,7 +191,12 @@
                                 </template>
 
                                 <template is="dom-if" if={{isYear(item.type)}}>
-                                    <gl-form-input class="margin-top required" required style="width:90%" value="{{item.req.field}}" ></gl-form-input>
+                                    <gl-form-input class="margin-top required" required style="width:90%" value="{{item.req.field}}"></gl-form-input>
+                                </template>
+
+                                <template is="dom-if" if={{isListmake(item.type)}}>
+                                    <paper-button raised class="btnInTable" data="{{item}}" on-tap="openListMake">ดูรายการ</paper-button>
+                                    <!--<gl-form-input class="margin-top required" required style="width:90%" value="{{item.req.field}}" ></gl-form-input>-->
                                 </template>
 
 
@@ -224,6 +234,18 @@
                 <paper-button raised on-tap="saveReport" class="gl-btn-success" hidden="[[commonState.isInsert]]">บันทึก</paper-button>
             </div>
         </gl-form-panel>
+
+        <paper-dialog id="listMake">
+            <div class="layout start-justified">
+                รายการ
+
+                <list-make id="makeArray" style="width:555px" data={{dataSelete}}></list-make>
+            </div>
+            <div class="flex horizontal end-justified layout buttons">
+                <paper-button raised class="gl-btn-default" dialog-dismiss on-tap="reload">ปิด</paper-button>
+                <paper-button raised class="gl-btn-success" on-tap="getArr" autofocus>บันทึก</paper-button>
+            </div>
+        </paper-dialog>
     </template>
     <script>
         Polymer({
@@ -274,6 +296,10 @@
                         {
                             id: 'list',
                             label: 'รายการ'
+                        },
+                        {
+                            id: 'listmake',
+                            label: 'รายการ (สร้างเอง)'
                         }
                     ]
                 },
@@ -288,31 +314,22 @@
                 },
                 tableSeleted: {
                     type: Object
+                },
+                dataSelete: {
+                    type: Object
                 }
             },
-            isString: function (type) {
-                return type === 'string'
+            
+            openListMake(e) {
+                console.log(e.currentTarget.data);
+                if (typeof e.currentTarget.data.req.value === 'string') {
+                    e.currentTarget.data.req.value = []
+                }
+                this.$.listMake.open()
+                this.set('dataSelete', e.currentTarget.data)
             },
-
-            isNumber: function (type) {
-                return type === 'numbers'
-            },
-
-            isDate: function (type) {
-                return type === 'date'
-            },
-            isDay: function (type) {
-                return type === 'day'
-            },
-            isMonth: function (type) {
-                return type === 'month'
-            },
-            isYear: function (type) {
-                // console.log(type);
-                return type === 'year'
-            },
-            isList: function (type) {
-                return type === 'list'
+            getArr() {
+                // console.log(this.$.makeArray.getValue());
             },
             getObjectTable(d) {
                 if (d.detail.value !== null & d.detail.value !== undefined) {
@@ -357,9 +374,9 @@
             _resiveFormReport: function () {
                 return new Promise((res, rej) => {
                     // if (this.validateForm('.required')) {
-                        this._resiveDataReport().then((data) => {
-                            res(data)
-                        })
+                    this._resiveDataReport().then((data) => {
+                        res(data)
+                    })
                     // } else {
                     //     this.fire('toast', {
                     //         status: 'connectError', text: 'กรุณากรอกข้อมูลให้ครบทุกช่อง', //คำสั่งสำหรับเปิด toast error
@@ -374,7 +391,7 @@
                 // console.log(1212);
                 this._resiveFormReport()
                     .then((res) => {
-                        // console.log(res)
+                        console.log(res)
                         this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
                         this.dispatchAction('POST_REPORT_DETAIL', res)
                             .then((response) => {

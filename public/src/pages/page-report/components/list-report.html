@@ -156,6 +156,16 @@
                             <gl-form-input id="[[item.res]]" label="[[item.label]]" index="" placeholder="[[item.label]]" value="[[dateDay]]" type="date"></gl-form-input>
                         </template>
 
+                        <template is="dom-if" if={{isListmake(item.type)}}>
+                            <gl-combo-box id="[[item.req.field]]" always-float-label required label="[[item.label]]" placeholder="[[item.label]]" item-label-path="[[item.view]]"
+                                item-value-path="[[item.res]]" items="[[item.req.value]]">
+                                <!--on-value-changed="getNextparam"-->
+                                <!--<template>
+                                    [[item.contract_no]]
+                                </template>-->
+                            </gl-combo-box>
+                        </template>
+
                         <template is="dom-if" if={{isList(item.type)}}>
                             <gl-combo-box id="[[item.res]]" always-float-label required label="[[item.label]]" placeholder="[[item.label]]" item-label-path="[[item.view]]"
                                 item-value-path="[[item.res]]" on-selected-item-changed="getNextparam">
@@ -221,7 +231,7 @@
                 month: {
                     type: String,
                     value: function () {
-                        return new Date().getMonth()+1
+                        return new Date().getMonth() + 1
                     }
                 },
                 year: {
@@ -239,25 +249,24 @@
             },
             print(e) {
                 // let type = 
-                try {
-                    // console.log(e.currentTarget.id);
-                    // this.set('typeReport',)
-                    this.$$('#report_dialog').open()
-                    this.set('setType', e.currentTarget.id)
-                    let data = e.model.__data__.item
-                    this.set('currentSeleted', data)
-                    // console.log(111);
-                    // console.log(data);
-                    let getBuy = JSON.parse(JSON.stringify(data.report_params.find((item) => item.redux === true)))
-                    // console.log(JSON.parse(JSON.stringify(data.report_params.find((item) => item.redux === true))));
-                    // console.log(1212);
-                    // if (getBuy !== undefined ) {
+                // try {
+                // console.log(e.currentTarget.id);
+                // this.set('typeReport',)
+                console.log(12);
+                //
+                this.set('setType', e.currentTarget.id)
+                let data = e.model.__data__.item
+                this.set('currentSeleted', data)
+                let getBuy = data.report_params.find((item) => item.redux === true)
+                if (getBuy !== undefined) {
                     getBuy.req.value = this.buyerId.buyer_id
                     getBuy.report_table = data.report_table
                     let getDate = new Promise((res, rej) => {
                         this.set('report_seleted', data.report_params)
+                        console.log(1);
                         this.dispatchAction('GET_REPORT_LINK', getBuy)
                             .then((respon) => {
+                                console.log(33);
                                 res(respon)
                             })
                             .catch((error) => {
@@ -274,59 +283,38 @@
                         .catch((error) => {
                             console.log(error);
                         });
-                    // }
-
-
-                } catch (error) {
-
+                } else {
+                    this.set('report_seleted', data.report_params)
+                    // console.log();
                 }
+                 this.$$('#report_dialog').open()
+
+
+                // } catch (error) {
+
+                // }
 
             },
             printReport() {
                 let url = {}
                 this.currentSeleted.report_params.map((item) => {
-                    url[this.$$('#' + item.res).id] = this.$$('#' + item.res).value
+                    console.log(item.res);
+                    console.log(this.$$('#' + item.res));
+                    if (this.$$('#' + item.res) !== null) {
+                        url[this.$$('#' + item.res).id] = this.$$('#' + item.res).value
+                    } else {
+                        url[this.$$('#' + item.req.field).id] = this.$$('#' + item.req.field).value
+                    }
+                    // console.log(this.$$('#' + item.res).value);
+                    // console.log(item.req.field);
+                    // url[this.$$('#' + item.res).id] = this.$$('#' + item.res).value
                 })
                 // console.log(this.currentSeleted);
                 // console.log(this.genUrl(url));
                 // &export=this.setType
-                window.open(window._config.reportServer + `/api/${this.currentSeleted.report_type}/${this.currentSeleted.report_path}?` + this.genUrl(url)+'&export='+this.setType)
-            },
-            isString: function (type) {
-                return type === 'string'
-            },
-
-            isNumber: function (type) {
-                return type === 'numbers'
-            },
-
-            isDate: function (type) {
-                return type === 'date'
-            },
-            isDay: function (type) {
-                return type === 'day'
-            },
-            isMonth: function (type) {
-                return type === 'month'
-            },
-            isYear: function (type) {
-                // console.log(type);
-                return type === 'year'
-            },
-            isList: function (type) {
-                return type === 'list'
+                window.open(window._config.reportServer + `/api/${this.currentSeleted.report_type}/${this.currentSeleted.report_path}?` + this.genUrl(url) + '&export=' + this.setType)
             },
             changeName: function (name) {
-                // let names = [
-                //     {
-                //             id: 'rice',
-                //             label: 'กองข้าว'
-                //         },
-                //         {
-                //             id: 'finance',
-                //             label: 'กองคลัง'
-                //         }
-                // ]
                 if (name === 'rice') return 'กองข้าว'
                 return 'กองคลัง'
             },
@@ -334,41 +322,39 @@
                 try {
                     let report_params_length = this.currentSeleted.report_params.length
                     let old_data = e.detail.value
-                    // if (old_data.old.no <= report_params_length) {
-                    // console.log(old_data.contract_id);
                     let dataSeleted = JSON.parse(JSON.stringify(this.currentSeleted.report_params[old_data.old.no]))
-                    // console.log(dataSeleted);
-                    // console.log(this.currentSeleted);
-                    // console.log(old_data)
-                    // console.log(dataSeleted.req.field);
                     // let seleteField =  
                     dataSeleted.req.value = old_data[dataSeleted.req.field]
                     dataSeleted.report_table = old_data.old.report_table
-                    // console.log(dataSeleted);
-                    let getDate = new Promise((res, rej) => {
-                        // this.set('report_seleted', data.report_params)
-                        this.dispatchAction('GET_REPORT_LINK', dataSeleted)
-                            .then((respon) => {
-                                res(respon)
-                            })
+                    console.log(dataSeleted);
+                    if (dataSeleted.type === 'list') {
+                        let getDate = new Promise((res, rej) => {
+                            // this.set('report_seleted', data.report_params)
+                            console.log(2);
+                            this.dispatchAction('GET_REPORT_LINK', dataSeleted)
+                                .then((respon) => {
+                                    res(respon)
+                                })
+                                .catch((error) => {
+                                    console.log(error);
+                                    rej(error)
+                                });
+
+                        })
+                        getDate.then((res) => {
+                            // console.log(res);
+                            res.data.map((item) => item.old = dataSeleted)
+                            // console.log(res.data);
+                            let combobox = this.$$('#' + dataSeleted.res)
+                            combobox.items = res.data
+                            // this.set('currentSeleted',this.currentSeleted.report_params[old_data.old.no])
+                        })
                             .catch((error) => {
                                 console.log(error);
-                                rej(error)
                             });
+                        // }
+                    }
 
-                    })
-                    getDate.then((res) => {
-                        // console.log(res);
-                        res.data.map((item) => item.old = dataSeleted)
-                        // console.log(res.data);
-                        let combobox = this.$$('#' + dataSeleted.res)
-                        combobox.items = res.data
-                        // this.set('currentSeleted',this.currentSeleted.report_params[old_data.old.no])
-                    })
-                        .catch((error) => {
-                            console.log(error);
-                        });
-                    // }
                 } catch (e) {
 
                 }

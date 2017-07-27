@@ -107,7 +107,7 @@
                 <td>
                   [[changeString2Num(item.*,'pay_running')]]
                   <gl-form-input type="number" class="required" required="{{item.check}}" no-label-float value="{{item.pay_running}}" data="[[item]]"
-                    on-blur="checkDuplicatePayNo"></gl-form-input>
+                    on-blur="checkDuplicatePayNo" on-focus="_setSeleteValue"></gl-form-input>
                   <!--on-blur="checkDuplicatePayNo"-->
                 </td>
               </tr>
@@ -227,17 +227,6 @@
       toggle: function () {
         this.$.collapse.toggle();
       },
-      // // observers:[
-      // //   '_oBCheckBoxDisabled(data.payment_detail.*)'
-      // // ],
-      // _setCheckBox(data) {
-      //   try {
-      //     return data.payment_detail.map((CheckBox) => CheckBox.status = false)
-      //   } catch (e) {
-      //     // console.log(e);
-      //   }
-
-      // },
 
       checkData: function (e) {
         // console.log(this.data.payment_detail);
@@ -246,8 +235,6 @@
         this.set('dataSet.pay_value_b', 0);
         this.set('dataSet.pay_value_b', Object.keys(dataPay).reduce((previous, current) => previous + dataPay[current].value_final_b, 0));
         //ปิดการไม่ให้เลือกอันอื่นที่ไม่ตรงกับเลือกอันแรก
-        // this._checkBoxDisabled(e.currentTarget.exporterId);
-        // this._checkBoxEabled(dataPay);
       },
       _getBankObject(e) {
         this.set('dataSet.bank', e.detail.value);
@@ -321,24 +308,6 @@
         }
 
       },
-      // _checkBoxDisabled: function (exporter_id) {
-      //   let notCheck = Polymer.dom(this.root).querySelectorAll('paper-checkbox.checkBoxPay')
-      //   notCheck.map((el) => {
-      //     if (exporter_id != el.exporterId) {
-      //       el.disabled = true;
-      //       el.parentNode.parentNode.style.backgroundColor = '#F1F1F1';
-      //     }
-      //   })
-      // },
-      // _checkBoxEabled: function (dataPay) {
-      //   if (dataPay.length < 1) {
-      //     let checkDisabled = Polymer.dom(this.root).querySelectorAll('paper-checkbox.checkBoxPay[aria-disabled="true"]');
-      //     checkDisabled.map((el) => {
-      //       el.disabled = false;
-      //       el.parentNode.parentNode.style.backgroundColor = '#FFFFFF';
-      //     })
-      //   }
-      // },
       _resiveDataPayment: function () {
         return new Promise((res, rej) => {
           let newData = JSON.parse(JSON.stringify(this.data.filter((item) => item.check == true)))
@@ -417,91 +386,7 @@
           }
         })
 
-        //   // / console.log(result, data);
-        //   this.set('data.tags', []);
-        //   // if (payDetId.status) {
-        //   this.push('data.tags', this.data.payment_detail[0].contract_id,
-        //     this.data.payment_detail[0].invoice_id,
-        //     this.data.payment_detail[0].cl_id,
-        //     this.data.payment_detail[0].book_id,
-        //     this.dataForSelect.buyer_id);
-        //   this._cleanDataPayment(this.data, (data) => {
-        //     // console.log(data);
-        //     this.fire('toast', {  //คำสั่งสำหรับเปิด toast dialog
-        //       status: 'dialog',
-        //       text: 'ต้องการจ่ายใช่หรือไม่ ?',
-        //       confirmed: (result) => {
-        //         if (result) {
-        //           // /
-        //           // this._cleanDataPayment(this.data, (data) => {
-        //           // console.log(data);
-        //           let contract_id = this._getUrl();
-
-
-        //           this.insertCall('./g2g/payment/insert', data, () => {
-        //             this.fire('toast', {
-        //               status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
-        //               callback: () => {
-        //                 //
-        //                 this.fire('get-payment-list', { detail: contract_id });
-        //                 this.fire('get-history-payment-list', { detail: contract_id });
-        //                 // _getHistoryList
-        //                 let el = Polymer.dom(this.root).querySelectorAll('.required');
-        //                 el.map((el) => { el.reset(); });
-        //               }
-        //             });
-        //           }, (data) => {
-        //             // console.log(data);
-        //             window.open(window._config.reportServer+'/api/payment/report6/' + data.id[0], '_blank');
-        //             this.fire('close-drawer', { detail: 'close-drawer' });
-        //             // console.log('data=>', data.id[0]);
-        //             let checkDisabled = Polymer.dom(this.root).querySelectorAll('paper-checkbox.checkBoxPay[aria-disabled="true"]');
-        //             checkDisabled.map((el) => {
-        //               el.disabled = false;
-        //               el.parentNode.parentNode.style.backgroundColor = '#FFFFFF';
-        //             })
-        //           });
-        //           // });
-        //         }
-
-        //       }, //function ที่ใช้รับค่า ปุ่ม
-        //       el: this, // compontents
-        //       data: this.data // ข้อมูลที่ส่งไป เช่น id ที่จะใช้ลบข้อมูล ใน db
-        //     })
-        //   })
-
-
-
-
       },
-      // _cleanDataPayment: function (data, callback) {
-      //   let el = Polymer.dom(this.root).querySelectorAll('.required');
-      //   let stat = el.map((el) => el.validate());
-      //   if (stat.every(elem => elem == true)) {
-      //     let { bank_branch, bank_id, exporter_id, fee_id, pay_value_b, pay_date, pay_running, pay_times,pay_full,pay_tax } = data;
-      //     let newData = { bank_branch, bank_id, exporter_id, fee_id, pay_value_b, pay_date, pay_running, pay_times,pay_full,pay_tax  };
-      //     newData.payment_detail = new Array();
-      //     data.payment_detail.map((payDetId) => {
-      //       if (payDetId.status) {
-      //         newData.exporter_id = payDetId.exporter_id;
-      //         newData.fee_id = payDetId.fee_id;
-      //         newData.payment_detail.push({
-      //           pay_det_id: payDetId.pay_det_id,
-      //           // status:payDetId.status
-      //         });
-      //       }
-      //     });
-      //     newData.pay_date = new Date(newData.pay_date+'T00:00:00+07:00').toISOString();
-      //     if (typeof data.tags !== 'undefined') {
-      //       newData.tags = new Array();
-      //       data.tags.map((tag) => {
-      //         newData.tags.push(tag);
-      //       });
-      //     }
-      //     callback(newData)
-      //   }
-      //   //
-      // }
     });
   </script>
 </dom-module>

@@ -80,15 +80,15 @@
                 <td style="text-align: right;">[[formatNumber(item.value_final_b)]] </td>
                 <td>
                   <gl-form-input placeholder="{{localize.invoice_no}}" disabled="{{item.cheque_status}}" no-label-float value="{{item.invoice_company_no}}"
-                    data="[[item]]" on-blur="updateCheque"></gl-form-input>
+                    data="[[item]]" on-focus="_setSeleteValue" on-blur="updateCheque"></gl-form-input>
                 </td>
                 <td>
                   <gl-form-input type="date" class="required" required="{{item.check}}" placeholder="วันที่" disabled="{{item.cheque_status}}"
-                    no-label-float value="{{item.invoice_company_date}}" data="[[item]]"></gl-form-input>
+                    no-label-float value="{{item.invoice_company_date}}"  data="[[item]]"></gl-form-input>
                 </td>
                 <td>[[changeString2Num(item.*,'pay_no')]]
                   <gl-form-input type="number" placeholder="{{localize.cheque_no}}" class="required" required="{{item.check}}" disabled="{{item.cheque_status}}"
-                    no-label-float value="{{item.pay_no}}" data="[[item]]" on-blur="checkDuplicatePayNo"></gl-form-input>
+                    no-label-float value="{{item.pay_no}}" data="[[item]]" on-focus="_setSeleteValue" on-blur="checkDuplicatePayNo"></gl-form-input>
                 </td>
               </tr>
             </template>

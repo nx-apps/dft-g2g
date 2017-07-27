@@ -101,27 +101,7 @@
           // observer: 'get'
         },
       },
-      // observers: [
-      //   'initDataFee(data)'
-      // ],
-      // initDataFee: function (data) {
-      //   // console.log(data);
-      //   this.newData = this.g2gClone(data);
-      // },
       _searchInArray: function (searchInput) {
-        // console.log(searchInput == '');
-        // if (searchInput != '') {
-        //   let arr = [];
-        //   this.data.map((el) => {
-        //     if (String(el.fee_no).search(searchInput) > -1) {
-        //       //  console.log('search==> ',el);
-        //       arr.push(el);
-        //     }
-        //   });
-        //   this.newData = arr;
-        // } else {
-        //   this.initDataFee(this.data);
-        // }
         try {
           for (var index = 0; index < this.data.length; index++) {
             if (String(this.data[index].fee_no).search(String(searchInput)) > -1) {

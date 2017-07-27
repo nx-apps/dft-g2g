@@ -1,0 +1,82 @@
+<link rel="import" href="./../../../layout/shared-styles.html">
+<link rel="import" href="./../../components/g2g-logic-behavior.html">
+<dom-module id="list-make">
+    <template>
+        <style include="shared-styles">
+             :host {
+                display: block;
+            }
+        </style>
+        <div class="flex horizontal end-justified layout buttons">
+            <paper-button raised class="gl-btn-primary" on-tap="addValue" autofocus>เพิ่ม</paper-button>
+        </div>
+        <gl-form-input always-float-label required label="Field" class="margin-top required" required  value="{{data.req.field}}"></gl-form-input>
+        <vaadin-grid id="material" class="material" aria-label="B" items="{{data.req.value}}">
+
+            <vaadin-grid-column width="50px" flex-grow="0">
+                <template class="header">ลำดับ</template>
+                <template>
+                    {{changeString2Num(item.*,'no')}}
+                    <gl-form-input class="margin-top required" required type="number" style="width:90%" value="{{item.no}}"></gl-form-input>
+                </template>
+            </vaadin-grid-column>
+
+            <vaadin-grid-column width="200px" flex-grow="0">
+                <template class="header">Label</template>
+                <template>
+                    <gl-form-input class="margin-top required" required style="width:90%" value="{{item.label}}"></gl-form-input>
+                </template>
+            </vaadin-grid-column>
+
+            <vaadin-grid-column width="200px" flex-grow="0">
+                <template class="header">Value</template>
+                <template>
+                    <gl-form-input class="margin-top required" required style="width:90%" value="{{item.value}}"></gl-form-input>
+                </template>
+            </vaadin-grid-column>
+
+            <vaadin-grid-column width="100px" flex-grow="0">
+                <template class="header">จัดการ</template>
+                <template>
+                    <paper-icon-button data="{{item}}" icon="delete" on-tap="_delete"></paper-icon-button>
+                </template>
+            </vaadin-grid-column>
+        </vaadin-grid>
+    </template>
+    <script>
+        Polymer({
+            is: 'list-make',
+            behaviors: [ReduxBehavior, nylonBehavior, g2gLogicBehavior,
+                ValidateFormBehavior, Polymer.IronValidatorBehavior],
+            properties: {
+                data: {
+                    type: Object,
+                    notify: true
+                },
+                value: {
+                    type: Array,
+                    value: [
+                        {
+                            no: 1,
+                            label: 'ทดสอบ',
+                            value: 'value'
+                        },
+                    ]
+                }
+            },
+            addValue() {
+                this.push('data.req.value', {
+                    no: 1,
+                    label: '',
+                    value: ''
+                })
+            },
+            _delete(e) {
+                // splice 
+                let index = e.model.__data__.index
+                this.splice('data.req.value', index, 1)
+                // console.log(e.model.__data__.index);
+            },
+        });
+    </script>
+</dom-module>

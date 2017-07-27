@@ -305,12 +305,39 @@
       }
     },
     _setSeleteValue: function (e) {
-      
+
       let value = e.currentTarget
       // value.value= ''
       // console.log(value.updateValueAndPreserveCaret());
       value.inputElement.select()
-    }
+    },
+    isString: function (type) {
+      return type === 'string'
+    },
+
+    isNumber: function (type) {
+      return type === 'numbers'
+    },
+
+    isDate: function (type) {
+      return type === 'date'
+    },
+    isDay: function (type) {
+      return type === 'day'
+    },
+    isMonth: function (type) {
+      return type === 'month'
+    },
+    isYear: function (type) {
+      // console.log(type);
+      return type === 'year'
+    },
+    isList: function (type) {
+      return type === 'list'
+    },
+    isListmake: function (type) {
+      return type === 'listmake'
+    },
   }
 
 </script>

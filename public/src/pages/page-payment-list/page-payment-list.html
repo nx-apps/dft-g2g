@@ -269,16 +269,16 @@
                         <commercial-invoice id="commercial-invoice"></commercial-invoice>
                     </div>
                     <div name="blInvoicePage">
-                        <fee-exports  id="fee-exports"></fee-exports>
+                        <fee-exports id="fee-exports"></fee-exports>
                     </div>
                     <div name="feePage">
-                        <list-of-fee-detail  id="list-of-fee-detail"></list-of-fee-detail>
+                        <list-of-fee-detail id="list-of-fee-detail"></list-of-fee-detail>
                     </div>
                     <div name="chequePage">
-                        <cheque-detail  id="cheque-detail"></cheque-detail>
+                        <cheque-detail id="cheque-detail"></cheque-detail>
                     </div>
                     <div name="paymentDetail">
-                        <payment-detail  id="payment-detail"></payment-detail>
+                        <payment-detail id="payment-detail"></payment-detail>
                     </div>
                     <!--<div name="historyDetail">
                         <history-detail data="[[dataSelected.historyDetail]]" data-for-select="[[dataForSelect]]"></history-detail>
@@ -416,7 +416,7 @@
                 this.titlePanelRight = 'รายละเอียดใบแจ้งหนี้';
                 // resetFrom
                 this.$$('commercial-invoice').resetFrom('.required')
-                
+
                 this.fire('toast', { status: 'load' });
                 this.dispatchAction('BOOK_GET_ID_DATA', book_id);
                 this.dispatchAction('BOOK_GET_MADE_OUT', this.getCookieBhv("contract_id"));
@@ -454,7 +454,7 @@
                 // resetFrom
                 this.$$('fee-exports').resetFrom('.required')
                 this.$$('fee-exports').$$('fee-exports-invoice').resetFrom('.required')
-                
+
                 var datas = e.detail.detail;
                 this.titlePanelRight = 'เพิ่มรอบการคิดค่าธรรมเนียม'
                 let arr = { book_id: [] };
@@ -506,30 +506,31 @@
                 }])
                 this.titlePanelRight = 'เช็ค'
                 // resetFrom
-                this.$$('cheque-detail').resetFrom('.required')
+
 
                 this.dispatchAction('GET_CHEQUE_DETAIL_LIST', { id: e.detail.detail })
                 this.dispatchAction('GET_CHEQUE_NO')
                 this.paymentsPageSeleted = 'chequePage';
-                    if (this.checkRenderPage.chequeDetail != true) {
-                        this.async(() => {
+                if (this.checkRenderPage.chequeDetail != true) {
+                    this.async(() => {
                         this.importHref(
                             this.resolveUrl('./component/cheque-detail.html'),
                             () => {
-                            this.async(() => {
-                                this.fire('toast', { status: 'load' });
-                                this._flipDrawer();
-                                this.checkRenderPage.chequeDetail = true;
-                            }, 500)
+                                this.async(() => {
+                                    this.fire('toast', { status: 'load' });
+                                    this._flipDrawer();
+                                    this.checkRenderPage.chequeDetail = true;
+                                }, 500)
                             }, null, true
                         );
-                        }, 1000);
-                    } else {
-                        this.async(() => {
+                    }, 1000);
+                } else {
+                    this.async(() => {
+                        this.$$('cheque-detail').resetFrom('.required')
                         this.fire('toast', { status: 'load' });
                         this._flipDrawer();
-                        }, 500)
-                    }
+                    }, 500)
+                }
                 //     });
             },
             _getPaymentDetail: function (e) {
@@ -573,6 +574,8 @@
                         this.fire('toast', {
                             status: 'success', text: 'โหลดสำเร็จ', callback: () => {
                                 // this.fire('toast', { status: 'load' });
+                                console.log(this.$$('payment-detail').resetFrom('.required'))
+                                this.$$('payment-detail').resetFrom('.required')
                                 this._flipDrawer();
                                 // this.checkRenderPage.paymentDetail = true;
                             }
