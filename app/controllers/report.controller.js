@@ -94,8 +94,10 @@ exports.get = function (req, res) {
         .getField('group')
         .filter(function (f) {
             return f.ne({}).and(
+                f.hasFields(val.res)
+            ).and(
                 f.hasFields(val.view)
-            )
+                )
         })
         .orderBy(val.view)
         .run().then(function (data) {
