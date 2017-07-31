@@ -133,6 +133,9 @@
 
         <paper-dialog id="report_dialog" modal>
             <div class="layout start-justified">
+                <div>
+                    [[currentSeleted.report_no]] : [[currentSeleted.report_name]]
+                </div>
 
                 <template is="dom-repeat" items={{report_seleted}}>
                     <div class="flex" style=" margin-right: 30px">
@@ -143,14 +146,15 @@
 
 
                         <template is="dom-if" if={{isListmake(item.type)}}>
-                            [[setItemListMake(item)]]
+
                             <gl-combo-box id="[[item.req.field]]" always-float-label required label="[[item.label]]" placeholder="[[item.label]]" item-label-path="[[item.view]]"
-                                item-value-path="[[item.res]]" items="[[item.req.value]]" value="">
+                                item-value-path="[[item.res]]" items="[[item.req.value]]" value="[[setItemListMake(item)]]">
                                 <!--on-value-changed="getNextparam"-->
                                 <template>
                                     [[getItemListMake(item)]]
                                 </template>
                             </gl-combo-box>
+
                         </template>
 
                         <template is="dom-if" if={{isList(item.type)}}>
@@ -267,7 +271,7 @@
                 this.currentSeleted.report_params.map((item) => {
                     if (this.$$('#' + item.res) !== null) {
                         this.$$('#' + item.res).reset()
-                        console.log(this.$$('#' + item.res).id);
+                        // console.log(this.$$('#' + item.res).id);
                         this.$$('#' + item.res).value = ''
                         this.$$('#' + item.res).items = []
                         if (this.$$('#' + item.res).id === 'month') {
@@ -280,8 +284,6 @@
                         // console.log(this.$$('#' + item.res));
                         if (this.$$('#' + item.res) !== null)
                             this.$$('#' + item.res).value = ''
-
-                        // console.log(this.$$('#' + item.req.field).id);
                         this.$$('#' + item.req.field).items = []
                         if (this.$$('#' + item.req.field).id === 'month') {
                             this.$$('#' + item.req.field).items = this.month
@@ -298,14 +300,15 @@
                 return name.label
             },
             setItemListMake(item) {
-                console.log(item);
-                // item.req.field
-                console.log(this.$$('#size'));
+                if (item.req.value.length > 0) {
+                    return item.req.value[0][item.res]
+                }
             },
             print(e) {
                 this.set('setType', e.currentTarget.id)
                 let data = e.model.__data__.item
                 this.set('currentSeleted', data)
+                console.log(this.currentSeleted.report_name);
                 let getBuy = data.report_params.find((item) => item.redux === true)
                 if (getBuy !== undefined) {
                     getBuy.req.value = this.buyerId.buyer_id
