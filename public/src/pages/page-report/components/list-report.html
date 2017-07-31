@@ -4,6 +4,8 @@
 <link rel="import" href="./../../components/g2g-logic-behavior.html">
 <link rel="import" href="./../../../layout/shared-styles.html">
 
+<link rel="import" href="./../../components/month-behavior.html">
+
 <link rel="import" href="./../../components/validateFormBehaviors.html">
 
 <dom-module id="list-report">
@@ -138,12 +140,42 @@
                             <gl-form-input id="[[item.res]]" label="[[item.label]]" index="" placeholder="[[item.label]]"></gl-form-input>
                         </template>
 
+
+
+                        <template is="dom-if" if={{isListmake(item.type)}}>
+                            [[setItemListMake(item)]]
+                            <gl-combo-box id="[[item.req.field]]" always-float-label required label="[[item.label]]" placeholder="[[item.label]]" item-label-path="[[item.view]]"
+                                item-value-path="[[item.res]]" items="[[item.req.value]]" value="">
+                                <!--on-value-changed="getNextparam"-->
+                                <template>
+                                    [[getItemListMake(item)]]
+                                </template>
+                            </gl-combo-box>
+                        </template>
+
+                        <template is="dom-if" if={{isList(item.type)}}>
+                            <gl-combo-box id="[[item.res]]" always-float-label required label="[[item.label]]" placeholder="[[item.label]]" item-label-path="[[item.view]]"
+                                item-value-path="[[item.res]]" on-selected-item-changed="getNextparam">
+                                <!--on-value-changed="getNextparam"-->
+                                <template>
+                                    <!--[[item.[item.view]]]-->
+                                    [[getname(item)]]
+                                </template>
+                            </gl-combo-box>
+                        </template>
                         <template is="dom-if" if={{isDay(item.type)}}>
                             <gl-form-input id="[[item.res]]" label="[[item.label]]" index="" value="[[day]]" placeholder="[[item.label]]"></gl-form-input>
                         </template>
 
                         <template is="dom-if" if={{isMonth(item.type)}}>
-                            <gl-form-input id="[[item.res]]" label="[[item.label]]" index="" value="[[month]]" placeholder="[[item.label]]"></gl-form-input>
+                            <!--month-->
+                            <gl-combo-box id="[[item.res]]" index$="month" always-float-label label="[[item.label]]" placeholder="[[item.label]]" item-label-path="name"
+                                item-value-path="id" items="[[month]]" value="[[monthSet]]">
+                                <template>
+                                    [[item.name]]
+                                </template>
+                            </gl-combo-box>
+                            <!--<gl-form-input id="[[item.res]]" label="[[item.label]]" index="" value="[[month]]" placeholder="[[item.label]]"></gl-form-input>-->
                         </template>
 
                         <template is="dom-if" if={{isYear(item.type)}}>
@@ -156,26 +188,6 @@
 
                         <template is="dom-if" if={{isDate(item.type)}}>
                             <gl-form-input id="[[item.res]]" label="[[item.label]]" index="" placeholder="[[item.label]]" value="[[dateDay]]" type="date"></gl-form-input>
-                        </template>
-
-                        <template is="dom-if" if={{isListmake(item.type)}}>
-                            <gl-combo-box id="[[item.req.field]]" always-float-label required label="[[item.label]]" placeholder="[[item.label]]" item-label-path="[[item.view]]"
-                                item-value-path="[[item.res]]" items="[[item.req.value]]">
-                                <!--on-value-changed="getNextparam"-->
-                                <!--<template>
-                                    [[item.contract_no]]
-                                </template>-->
-                            </gl-combo-box>
-                        </template>
-
-                        <template is="dom-if" if={{isList(item.type)}}>
-                            <gl-combo-box id="[[item.res]]" always-float-label required label="[[item.label]]" placeholder="[[item.label]]" item-label-path="[[item.view]]"
-                                item-value-path="[[item.res]]" on-selected-item-changed="getNextparam">
-                                <!--on-value-changed="getNextparam"-->
-                                <!--<template>
-                                    [[getname(item.view)]]
-                                </template>-->
-                            </gl-combo-box>
                         </template>
 
                         <div class="flex" style=" margin-right: 30px">
@@ -195,7 +207,8 @@
     <script>
         Polymer({
             is: 'list-report',
-            behaviors: [ReduxBehavior, nylonBehavior, g2gLogicBehavior, CookieBehavior, reportAction,ValidateFormBehavior],
+            behaviors: [ReduxBehavior, nylonBehavior, g2gLogicBehavior, CookieBehavior,
+                reportAction, ValidateFormBehavior, MonthBehavior],
             properties: {
                 date: {
                     type: Object,
@@ -230,7 +243,7 @@
                         return new Date().getDate()
                     }
                 },
-                month: {
+                monthSet: {
                     type: String,
                     value: function () {
                         return new Date().getMonth() + 1
@@ -250,18 +263,46 @@
                 // this.queryFrom('gl-combo-box').items = []
                 // this.queryFrom('gl-combo-box').value = ''
                 // console.log(this.queryFrom('gl-combo-box'));
-                window.location.reload(false)
+                // window.location.reload(false)
+                this.currentSeleted.report_params.map((item) => {
+                    if (this.$$('#' + item.res) !== null) {
+                        this.$$('#' + item.res).reset()
+                        console.log(this.$$('#' + item.res).id);
+                        this.$$('#' + item.res).value = ''
+                        this.$$('#' + item.res).items = []
+                        if (this.$$('#' + item.res).id === 'month') {
+                            this.$$('#' + item.res).items = this.month
+                            this.$$('#' + item.res).value = new Date().getMonth() + 1
+                        }
+                        // this.$$('#' + item.res).items = this.month
+                    } else {
+                        this.$$('#' + item.req.field).reset()
+                        // console.log(this.$$('#' + item.res));
+                        if (this.$$('#' + item.res) !== null)
+                            this.$$('#' + item.res).value = ''
+
+                        // console.log(this.$$('#' + item.req.field).id);
+                        this.$$('#' + item.req.field).items = []
+                        if (this.$$('#' + item.req.field).id === 'month') {
+                            this.$$('#' + item.req.field).items = this.month
+                            this.$$('#' + item.req.field).value = new Date().getMonth() + 1
+                        }
+
+                    }
+                })
             },
-            getname(name){
-                console.log(name);
+            getname(name) {
+                return name[name.old.view]
+            },
+            getItemListMake(name) {
+                return name.label
+            },
+            setItemListMake(item) {
+                console.log(item);
+                // item.req.field
+                console.log(this.$$('#size'));
             },
             print(e) {
-                // let type = 
-                // try {
-                // console.log(e.currentTarget.id);
-                // this.set('typeReport',)
-                // console.log(12);
-                //
                 this.set('setType', e.currentTarget.id)
                 let data = e.model.__data__.item
                 this.set('currentSeleted', data)
@@ -287,6 +328,9 @@
                         res.data.map((item) => item.old = getBuy)
                         let combobox = this.$$('#' + getBuy.res)
                         combobox.items = res.data
+                        if (res.data.length > 0) {
+                            combobox.value = res.data[res.data.length - 1][combobox.itemValuePath]
+                        }
                     })
                         .catch((error) => {
                             console.log(error);
@@ -295,7 +339,7 @@
                     this.set('report_seleted', data.report_params)
                     // console.log();
                 }
-                 this.$$('#report_dialog').open()
+                this.$$('#report_dialog').open()
 
 
                 // } catch (error) {
@@ -312,53 +356,60 @@
                         url[this.$$('#' + item.req.field).id] = this.$$('#' + item.req.field).value
                     }
                 })
-                console.log(this.buyerId);
-                window.open(window._config.reportServer + `/api/${this.currentSeleted.report_type}/${this.currentSeleted.report_path}?buyer_id=`+this.buyerId.buyer_id +'&' +this.genUrl(url) + '&export=' + this.setType)
+                // console.log(this.buyerId);
+                window.open(window._config.reportServer + `/api/${this.currentSeleted.report_type}/${this.currentSeleted.report_path}?buyer_id=` + this.buyerId.buyer_id + '&' + this.genUrl(url) + '&export=' + this.setType)
             },
             changeName: function (name) {
                 if (name === 'rice') return 'กองข้าว'
                 return 'กองคลัง'
             },
             getNextparam(e) {
-                try {
-                    let report_params_length = this.currentSeleted.report_params.length
-                    let old_data = e.detail.value
-                    let dataSeleted = JSON.parse(JSON.stringify(this.currentSeleted.report_params[old_data.old.no]))
-                    // let seleteField =  
-                    dataSeleted.req.value = old_data[dataSeleted.req.field]
-                    dataSeleted.report_table = old_data.old.report_table
-                    // console.log(dataSeleted);
-                    if (dataSeleted.type === 'list') {
-                        let getDate = new Promise((res, rej) => {
-                            // this.set('report_seleted', data.report_params)
-                            // console.log(2);
-                            this.dispatchAction('GET_REPORT_LINK', dataSeleted)
-                                .then((respon) => {
-                                    res(respon)
-                                })
+                // try {
+                let report_params_length = this.currentSeleted.report_params.length
+                let old_data = e.detail.value
+                // console.log(old_data);
+                if (old_data !== null) {
+                    if (old_data.old.no < report_params_length) {
+                        let dataSeleted = JSON.parse(JSON.stringify(this.currentSeleted.report_params[old_data.old.no]))
+
+                        dataSeleted.req.value = old_data[dataSeleted.req.field]
+                        dataSeleted.report_table = old_data.old.report_table
+                        // console.log(dataSeleted);
+                        if (dataSeleted.type === 'list') {
+                            let getDate = new Promise((res, rej) => {
+                                // console.log(2);
+                                this.dispatchAction('GET_REPORT_LINK', dataSeleted)
+                                    .then((respon) => {
+                                        res(respon)
+                                    })
+                                    .catch((error) => {
+                                        console.log(error);
+                                        rej(error)
+                                    });
+
+                            })
+                            getDate.then((res) => {
+                                res.data.map((item) => item.old = dataSeleted)
+                                let combobox = this.$$('#' + dataSeleted.res)
+                                combobox.items = res.data
+                                if (res.data.length > 0) {
+                                    combobox.value = res.data[res.data.length - 1][combobox.itemValuePath]
+                                }
+                                // this.set('currentSeleted',this.currentSeleted.report_params[old_data.old.no])
+                            })
                                 .catch((error) => {
                                     console.log(error);
-                                    rej(error)
                                 });
-
-                        })
-                        getDate.then((res) => {
-                            // console.log(res);
-                            res.data.map((item) => item.old = dataSeleted)
-                            // console.log(res.data);
-                            let combobox = this.$$('#' + dataSeleted.res)
-                            combobox.items = res.data
-                            // this.set('currentSeleted',this.currentSeleted.report_params[old_data.old.no])
-                        })
-                            .catch((error) => {
-                                console.log(error);
-                            });
-                        // }
+                            // }
+                        }
                     }
 
-                } catch (e) {
-
                 }
+
+
+                // } catch (e) {
+
+                // }
 
 
             },

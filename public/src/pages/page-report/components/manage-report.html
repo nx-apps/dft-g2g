@@ -282,10 +282,10 @@
                             id: 'date',
                             label: 'วันที่'
                         },
-                        {
-                            id: 'day',
-                            label: 'วัน'
-                        },
+                        // {
+                        //     id: 'day',
+                        //     label: 'วัน'
+                        // },
                         {
                             id: 'month',
                             label: 'เดือน'
@@ -322,7 +322,7 @@
             },
             
             openListMake(e) {
-                console.log(e.currentTarget.data);
+                // console.log(e.currentTarget.data);
                 if (typeof e.currentTarget.data.req.value === 'string') {
                     e.currentTarget.data.req.value = []
                 }
