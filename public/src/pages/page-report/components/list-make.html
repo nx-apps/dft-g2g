@@ -8,37 +8,46 @@
             }
         </style>
         <div class="flex horizontal end-justified layout buttons">
-            <paper-button raised class="gl-btn-primary" on-tap="addValue" autofocus>เพิ่ม</paper-button>
+            <paper-button raised class="gl-btn-primary" on-tap="addValue" autofocus>[[localizeReport.add]]</paper-button>
         </div>
-        <gl-form-input always-float-label required label="Field" class="margin-top required" required  value="{{data.req.field}}"></gl-form-input>
-        <vaadin-grid id="material" class="material" aria-label="B" items="{{data.req.value}}">
+        <gl-form-input always-float-label required label="[[localizeReport.field]]" class="margin-top required" required value="{{data.req.field}}"></gl-form-input>
+        <vaadin-grid id="material" class="material" style="height:300px" aria-label="B" items="{{data.req.value}}">
 
             <vaadin-grid-column width="50px" flex-grow="0">
-                <template class="header">ลำดับ</template>
+                <template class="header text-center">[[localizeReport.order]]</template>
                 <template>
                     {{changeString2Num(item.*,'no')}}
-                    <gl-form-input class="margin-top required" required type="number" style="width:90%" value="{{item.no}}"></gl-form-input>
+                    <div class="text-center">
+                        <gl-form-input class="margin-top required" required type="number" style="width:90%" value="{{item.no}}"></gl-form-input>
+                    </div>
+
                 </template>
             </vaadin-grid-column>
 
             <vaadin-grid-column width="200px" flex-grow="0">
-                <template class="header">Label</template>
+                <template class="header text-center">[[localizeReport.Label]]</template>
                 <template>
-                    <gl-form-input class="margin-top required" required style="width:90%" value="{{item.label}}"></gl-form-input>
+                    <div class="text-center">
+                        <gl-form-input class="margin-top required" required style="width:90%" value="{{item.label}}"></gl-form-input>
+                    </div>
                 </template>
             </vaadin-grid-column>
 
             <vaadin-grid-column width="200px" flex-grow="0">
-                <template class="header">Value</template>
+                <template class="header text-center">[[localizeReport.value]]</template>
                 <template>
-                    <gl-form-input class="margin-top required" required style="width:90%" value="{{item.value}}"></gl-form-input>
+                    <div class="text-center">
+                        <gl-form-input class="margin-top required" required style="width:90%" value="{{item.value}}"></gl-form-input>
+                    </div>
                 </template>
             </vaadin-grid-column>
 
             <vaadin-grid-column width="100px" flex-grow="0">
-                <template class="header">จัดการ</template>
+                <template class="header text-center">[[localizeReport.delete]]</template>
                 <template>
-                    <paper-icon-button data="{{item}}" icon="delete" on-tap="_delete"></paper-icon-button>
+                    <div class="text-center">
+                        <paper-icon-button data="{{item}}" icon="delete" on-tap="_delete"></paper-icon-button>
+                    </div>
                 </template>
             </vaadin-grid-column>
         </vaadin-grid>
@@ -52,6 +61,9 @@
                 data: {
                     type: Object,
                     notify: true
+                },
+                localizeReport: {
+                    statePath: 'i18n.report'
                 },
                 value: {
                     type: Array,

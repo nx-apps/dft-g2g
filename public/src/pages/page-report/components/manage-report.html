@@ -18,26 +18,32 @@
             gl-combo-box {
                 width: 90%;
             }
+            .title-report {
+                font-family: CSChatThaiUI;
+                font-size: 18px;
+                font-weight: 400px;
+                margin: 15px 0px;
+            }
         </style>
         <gl-form-panel set-padding="10px 20px 10px 20px" set-border="1px">
             <gl-grid-row width="{{getWidth}}">
                 <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-                    <gl-form-input class="margin-top required" required error-message="กรุณากรอกรายงาน" required label="รายงานที่ :" placeholder="กรอกรายงาน"
+                    <gl-form-input class="margin-top required" required  required label="[[localizeReport.report_order]] :"
                         value="{{data.report_no}}" disabled="{{_checkStatus(statusAction)}}"></gl-form-input>
                 </gl-grid-col>
                 <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,8]]">
-                    <gl-form-input class="margin-top required" required error-message="กรุณากรอกชื่อรายงาน" required label="ชื่อรายงาน ภาษาไทย) :"
-                        placeholder="กรอกชื่อรายงาน " value="{{data.report_name}}" disabled="[[btnState]]"></gl-form-input>
+                    <gl-form-input class="margin-top required" required  required label="[[localizeReport.report_name]] :"
+                         value="{{data.report_name}}" disabled="[[btnState]]"></gl-form-input>
                 </gl-grid-col>
             </gl-grid-row>
 
             <gl-grid-row>
                 <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-                    <gl-form-input class="margin-top required" required error-message="กรุณากรอกชื่อไฟล์" required label="ชื่อไฟล์ :" placeholder="กรอกชื่อไฟล์"
+                    <gl-form-input class="margin-top required" required  required label="[[localizeReport.file_name]] :" 
                         value="{{data.report_path}}" disabled="{{_checkStatus(statusAction)}}"></gl-form-input>
                 </gl-grid-col>
                 <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-                    <gl-combo-box id="report_table" label="ตารางข้อมูลที่ต้องการดู" placeholder="ตารางข้อมูลที่ต้องการดู" items="[[tableList]]"
+                    <gl-combo-box id="report_table" label="[[localizeReport.table_data]]" placeholder="[[localizeReport.table_data]]" items="[[tableList]]"
                         item-label-path="table_name" value="{{data.report_table}}" item-value-path="table_name" on-selected-item-changed="getObjectTable">
                         <template>
                             [[item.table_name]]
@@ -45,7 +51,7 @@
                     </gl-combo-box>
                 </gl-grid-col>
                 <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-                    <gl-combo-box id="report_type" label="รายงานของ" placeholder="รายงานของ" items="{{report_type}}" item-label-path="label"
+                    <gl-combo-box id="report_type" label="[[localizeReport.report_type]]" placeholder="[[localizeReport.report_type]]" items="{{report_type}}" item-label-path="label"
                         value="{{data.report_type}}" item-value-path="id">
                         <template>
                             [[item.label]]
@@ -55,31 +61,31 @@
             </gl-grid-row>
             <div class="horizontal end-justified layout">
                 <paper-button raised on-tap="addCondition" class="gl-btn-primary">
-                    <iron-icon icon="add"></iron-icon>เพิ่มตัวแปร</paper-button>
+                    <iron-icon icon="add"></iron-icon>[[localizeReport.add_item]]</paper-button>
             </div>
             <gl-grid-row>
                 <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,12]]">
                     <vaadin-grid id="material" class="material" aria-label="Basic Binding Example" items="{{data.report_params}}">
 
                         <vaadin-grid-column width="10%" flex-grow="0">
-                            <template class="header">ลำดับ</template>
+                            <template class="header">[[localizeReport.order]]</template>
                             <template>
                                 <gl-form-input class="margin-top required" required type="number" style="width:90%" value="{{item.no}}" disabled="{{_checkStatus(statusAction)}}"></gl-form-input>
                             </template>
                         </vaadin-grid-column>
 
                         <vaadin-grid-column width="20%" flex-grow="0">
-                            <template class="header">Label</template>
+                            <template class="header">[[localizeReport.Label]]</template>
                             <template>
                                 <gl-form-input class="margin-top required" required style="width:90%" value="{{item.label}}" disabled="{{_checkStatus(statusAction)}}"></gl-form-input>
                             </template>
                         </vaadin-grid-column>
 
                         <vaadin-grid-column width="15%" flex-grow="0">
-                            <template class="header">type</template>
+                            <template class="header">[[localizeReport.type]]</template>
                             <template>
                                 <!--{{item.type}}-->
-                                <gl-combo-box id="report_type" class="margin-top required" required label="ประเภทข้อมูล" placeholder="ประเภทข้อมูล" items="{{data_type}}"
+                                <gl-combo-box id="report_type" class="margin-top required" required  items="{{data_type}}"
                                     item-label-path="label" value="{{item.type}}" item-value-path="id">
                                     <template>
                                         [[item.label]]
@@ -89,7 +95,7 @@
                         </vaadin-grid-column>
 
                         <vaadin-grid-column width="15%" flex-grow="0">
-                            <template class="header">ฟิลด์ที่รับค่า</template>
+                            <template class="header">[[localizeReport.field]]</template>
                             <template>
 
                                 <!--<template is="dom-if" if={{isString(item.type)}}>
@@ -113,7 +119,7 @@
                                 </template>-->
 
                                 <template is="dom-if" if={{isListmake(item.type)}}>
-                                    <paper-button raised class="btnInTable" data="{{item}}" on-tap="openListMake">ดูรายการ</paper-button>
+                                    <paper-button raised class="btnInTable" data="{{item}}" on-tap="openListMake">[[localizeReport.see_item]]</paper-button>
                                 </template>
 
 
@@ -129,7 +135,7 @@
                         </vaadin-grid-column>
 
                         <vaadin-grid-column width="15%" flex-grow="0">
-                            <template class="header">ฟิลด์ที่แสดงค่า</template>
+                            <template class="header">[[localizeReport.View]]</template>
                             <template>
 
                                 <!--<template is="dom-if" if={{isString(item.type)}}>
@@ -159,7 +165,7 @@
 
 
                                 <template is="dom-if" if={{isList(item.type)}}>
-                                    <gl-combo-box id="report_type" class="margin-top required" required label="View" placeholder="View" items="{{tableSeleted}}"
+                                    <gl-combo-box id="report_type" class="margin-top required" required items="{{tableSeleted}}"
                                         item-label-path="field" value="{{item.view}}" item-value-path="field">
                                         <template>
                                             [[item.field]]
@@ -170,7 +176,7 @@
                         </vaadin-grid-column>
 
                         <vaadin-grid-column width="15%" flex-grow="0">
-                            <template class="header">ฟิลด์ที่ส่งค่าตัวถัดไป</template>
+                            <template class="header">[[localizeReport.res]]</template>
                             <template>
 
                                 <template is="dom-if" if={{isString(item.type)}}>
@@ -198,7 +204,7 @@
                                 </template>
 
                                 <template is="dom-if" if={{isList(item.type)}}>
-                                    <gl-combo-box id="report_type" class="margin-top required" required label="res" placeholder="res" items="{{tableSeleted}}"
+                                    <gl-combo-box id="report_type" class="margin-top required" required items="{{tableSeleted}}"
                                         item-label-path="field" value="{{item.res}}" item-value-path="field">
                                         <template>
                                             [[item.field]]
@@ -215,14 +221,14 @@
 
 
                         <vaadin-grid-column width="5%" flex-grow="0">
-                            <template class="header">redux</template>
+                            <template class="header">[[localizeReport.redux]]</template>
                             <template>
                                 <paper-checkbox class="checkBox" on-tap="toggle" checked="{{item.redux}}" aria-labelledby="label3"></paper-checkbox>
                             </template>
                         </vaadin-grid-column>
 
                         <vaadin-grid-column width="5%" flex-grow="0">
-                            <template class="header">ลบ</template>
+                            <template class="header">[[localizeReport.delete]]</template>
                             <template>
                                 <paper-icon-button data="{{item}}" icon="delete" on-tap="_delete"></paper-icon-button>
                             </template>
@@ -231,20 +237,21 @@
                 </gl-grid-col>
             </gl-grid-row>
             <div class="horizontal end-justified layout">
-                <paper-button raised on-tap="addReport" class="gl-btn-primary" hidden="[[!commonState.isInsert]]">เพิ่ม</paper-button>
-                <paper-button raised on-tap="saveReport" class="gl-btn-success" hidden="[[commonState.isInsert]]">บันทึก</paper-button>
+                <paper-button raised on-tap="addReport" class="gl-btn-primary" hidden="[[!commonState.isInsert]]">[[localizeReport.add]]</paper-button>
+                <paper-button raised on-tap="saveReport" class="gl-btn-success" hidden="[[commonState.isInsert]]">[[localizeReport.save]]</paper-button>
             </div>
         </gl-form-panel>
 
         <paper-dialog id="listMake">
             <div class="layout start-justified">
-                รายการ
-
+                <div class="title-report">
+                [[localizeReport.list]] [[titleListMake]]
+                </div>
                 <list-make id="makeArray" style="width:555px" data={{dataSelete}}></list-make>
             </div>
             <div class="flex horizontal end-justified layout buttons">
-                <paper-button raised class="gl-btn-default" dialog-dismiss on-tap="reload">ปิด</paper-button>
-                <paper-button raised class="gl-btn-success" on-tap="getArr" autofocus>บันทึก</paper-button>
+                <paper-button raised class="gl-btn-default" dialog-dismiss on-tap="reload">[[localizeReport.close]]</paper-button>
+                <paper-button raised class="gl-btn-success" dialog-confirm on-tap="getArr" autofocus>[[localizeReport.save]]</paper-button>
             </div>
         </paper-dialog>
     </template>
@@ -266,6 +273,9 @@
                             label: 'กองคลัง'
                         }
                     ]
+                },
+                localizeReport: {
+                    statePath: 'i18n.report'
                 },
                 data_type: {
                     type: Array,
@@ -318,11 +328,15 @@
                 },
                 dataSelete: {
                     type: Object
+                },
+                titleListMake :{
+                    type: String
                 }
             },
             
             openListMake(e) {
-                // console.log(e.currentTarget.data);
+                this.set('titleListMake',e.model.__data__.item.label)
+                // console.log(e.model.__data__.item);
                 if (typeof e.currentTarget.data.req.value === 'string') {
                     e.currentTarget.data.req.value = []
                 }
@@ -392,14 +406,14 @@
                 // console.log(1212);
                 this._resiveFormReport()
                     .then((res) => {
-                        console.log(res)
+                        // console.log(res)
                         this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
                         this.dispatchAction('POST_REPORT_DETAIL', res)
                             .then((response) => {
                                 if (response.data.inserted !== undefined && response.data.inserted.length !== 0) {
                                     this.dispatchAction('GET_REPORT_LIST')
                                     this.fire('toast', {
-                                        status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
+                                        status: 'success', text: this.localizeReport.save_success,  // คำสั่งสำหรับเปิด toast success
                                         callback: () => {
                                             this.queryFrom('.required').map((el) => { el.reset(); });
                                             this.fire('close-drawer')
@@ -429,7 +443,7 @@
                                 if (response.data.replaced !== undefined && response.data.replaced.length !== 0) {
                                     this.dispatchAction('GET_REPORT_LIST')
                                     this.fire('toast', {
-                                        status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
+                                        status: 'success', text: this.localizeReport.save_success,  // คำสั่งสำหรับเปิด toast success
                                         callback: () => {
                                             this.queryFrom('.required').map((el) => { el.reset(); });
                                             this.fire('close-drawer')

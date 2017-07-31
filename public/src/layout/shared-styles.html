@@ -16,6 +16,13 @@
                 src: url('../../fonts/CSChatThaiUI.eot?#iefix') format('eot'), url('../../fonts/CSChatThaiUI.woff') format('woff'), url('../../fonts/CSChatThaiUI.ttf') format('truetype'), url('../../fonts/CSChatThaiUI.svg') format('svg');
             }
 
+            paper-button.btnInTable {
+                --paper-button: {
+                    margin-top: 0px;
+                    height: 32px;
+                }
+            }
+
             paper-icon-button.crud {
                 margin: 5px 5px 5px 5px;
             }
@@ -129,6 +136,7 @@
             .gl-btn-danger {
                 background-color: #FF3B3B;
             }
+
             vaadin-grid#material {
                 font-family: 'CSChatThaiUI', sans-serif;
                 -webkit-font-smoothing: antialiased;
@@ -143,7 +151,7 @@
                     font-size: 16px;
                     font-weight: bold;
                     background-color: #F1F1F1;
-                    padding:5px 5px;
+                    padding: 5px 5px;
                     /*border-bottom: 1px solid red;*/
                     /*border: 0.5px solid rgba(0, 0, 0, var(--dark-secondary-opacity));*/
                 }

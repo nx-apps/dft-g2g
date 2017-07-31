@@ -10,6 +10,7 @@
     <template>
         <style include="shared-styles">
              :host {
+                font-family: CSChatThaiUI;
                 --paper-fab-background: var(--paper-light-blue-500);
                 --paper-fab-keyboard-focus-background: var(--paper-light-blue-900);
             }
@@ -32,32 +33,35 @@
 
         <div class="xcontainer">
             <div class="title">
-                รายงาน
+                [[localizeReport.report]]
             </div>
             <div class="container">
                 <list-report></list-report>
             </div>
         </div>
-        <nylon-panel-right title="รายงาน" id="drawerRight" set-width="95%">
+        <nylon-panel-right title="[[localizeReport.report]]" id="drawerRight" set-width="95%">
             <div align="left">
                 <manage-report></manage-report>
             </div>
         </nylon-panel-right>
         <div class="btnFabBack">
-            <paper-fab icon="arrow-back" title="ย้อนกลับ" id="backWard" on-tap="backPage"></paper-fab>
-            <paper-tooltip for="addContract" offset="0">ย้อนกลับ</paper-tooltip>
+            <paper-fab icon="arrow-back" title="[[localizeReport.back]]" id="backWard" on-tap="backPage"></paper-fab>
+            <paper-tooltip for="addContract" offset="0">[[localizeReport.back]]</paper-tooltip>
         </div>
         <div class="btnFab">
-            <paper-fab icon="note-add" title="เพิ่มรายงาน" id="addReport" on-tap="addReport"></paper-fab>
-            <paper-tooltip for="addReport" offset="0">เพิ่มรายงาน</paper-tooltip>
+            <paper-fab icon="note-add" title="[[localizeReport.add_report]]" id="addReport" on-tap="addReport"></paper-fab>
+            <paper-tooltip for="addReport" offset="0">[[localizeReport.add_report]]</paper-tooltip>
         </div>
     </template>
     <script>
         Polymer({
             is: 'page-report',
             behaviors: [ReduxBehavior, nylonBehavior, CookieBehavior, i18nAction, commonStateAction, reportAction],
-            // properties: {
-            // },
+            properties: {
+                localizeReport: {
+                    statePath: 'i18n.report'
+                },
+            },
             listeners: {
                 'open-Drawer': '_flipDrawer',
                 'close-drawer': '_flipDrawerClose',
@@ -76,13 +80,22 @@
                 this.fire('nylon-change-page', { path: '/buyer-list' })
             },
             addReport: function () {
-                 this.dispatchAction('SET_STATE', {
+                this.dispatchAction('SET_STATE', {
                     isInsert: true,
                     btnDisabled: false,
                     hiddend: true
                 })
                 this.dispatchAction('SET_REPORT_DETAIL')
-                this._flipDrawer()
+                this.fire('toast', { status: 'load' });
+                this.async(() => {
+                    this.fire('toast', {
+                        status: 'success', text: 'โหลดสำเร็จ', callback: () => {
+                            this._flipDrawer();
+                        }
+                    })
+
+                }, 500)
+                // this._flipDrawer()
             },
             _flipDrawer: function () {
                 Polymer.dom(this.root).querySelector('#drawerRight').open();

@@ -4,6 +4,8 @@
 <link rel="import" href="./../../components/g2g-logic-behavior.html">
 <link rel="import" href="./../../../layout/shared-styles.html">
 
+<link rel="import" href="./../../../../bower_components/paper-dialog-scrollable/paper-dialog-scrollable.html">
+
 <link rel="import" href="./../../components/month-behavior.html">
 
 <link rel="import" href="./../../components/validateFormBehaviors.html">
@@ -11,6 +13,10 @@
 <dom-module id="list-report">
     <template>
         <style include="shared-styles">
+            * {
+                font-family: CSChatThaiUI;
+            }
+
             vaadin-grid {
                 margin: 0px;
                 width: 100%;
@@ -22,6 +28,13 @@
                 height: 24px;
                 margin: 0px 10px;
                 /*background-color: lightgray;*/
+            }
+
+            .title-report {
+                font-family: CSChatThaiUI;
+                font-size: 18px;
+                font-weight: 400px;
+                margin: 15px 0px;
             }
 
             .text-center {
@@ -41,7 +54,7 @@
                     <vaadin-grid id="material" class="material" items="[[report]]">
                         <vaadin-grid-column width="7%" flex-grow="0">
                             <template class="header ">
-                                <div class="text-center">ลำดับ</div>
+                                <div class="text-center">[[localizeReport.order]]</div>
                             </template>
                             <template>
                                 <div class="text-center">[[item.report_no]]</div>
@@ -50,13 +63,13 @@
 
 
                         <vaadin-grid-column width="31.6%" flex-grow="0" resizable>
-                            <template class="header">ชื่อรายงาน</template>
+                            <template class="header">[[localizeReport.report_name]]</template>
                             <template>[[item.report_name]]</template>
                         </vaadin-grid-column>
 
                         <vaadin-grid-column width="9.6%" flex-grow="0">
                             <template class="header">
-                                <div class="text-center">หน่วยงาน</div>
+                                <div class="text-center">[[localizeReport.report_type]]</div>
                             </template>
                             <template>
                                 <div class="text-center">
@@ -66,41 +79,41 @@
 
                         <vaadin-grid-column width="10.6%" flex-grow="0">
                             <template class="header">
-                                <div class="text-center">PDF</div>
+                                <div class="text-center">[[localizeReport.PDF]]</div>
                             </template>
                             <template>
                                 <paper-button raised class="btnInTable" id="pdf" on-tap="print">
                                     <iron-image class="img" sizing="cover" preload src="/images/icon/type_report/pdf.png"></iron-image>
-                                    PDF</paper-button>
+                                    [[localizeReport.PDF]]</paper-button>
                             </template>
                         </vaadin-grid-column>
 
                         <vaadin-grid-column width="10.6%" flex-grow="0">
                             <template class="header">
-                                <div class="text-center">WORD</div>
+                                <div class="text-center">[[localizeReport.WORD]]</div>
                             </template>
                             <template>
                                 <paper-button raised class="btnInTable" id="word" on-tap="print">
                                     <iron-image class="img" sizing="cover" preload src="/images/icon/type_report/Microsoft_Word_2013_logo.svg.png"></iron-image>
-                                    WORD</paper-button>
+                                    [[localizeReport.WORD]]</paper-button>
                             </template>
                         </vaadin-grid-column>
 
                         <vaadin-grid-column width="10.6%" flex-grow="0">
                             <template class="header">
-                                <div class="text-center">EXCEL</div>
+                                <div class="text-center">[[localizeReport.EXCEL]]</div>
                             </template>
                             <template>
                                 <paper-button raised class="btnInTable" id="excel" on-tap="print">
                                     <iron-image class="img" sizing="cover" preload src="/images/icon/type_report/Microsoft_Excel_2013_logo.svg.png"></iron-image>
-                                    EXCEL</paper-button>
+                                    [[localizeReport.EXCEL]]</paper-button>
                             </template>
                         </vaadin-grid-column>
 
                         <vaadin-grid-column width="10.6%" flex-grow="0">
                             <template class="header">
                                 <div class="text-center">
-                                    <p>วันที่อัพเดทล่าสุด</div>
+                                    <p>[[localizeReport.date_update]]</div>
                             </template>
                             <template>
                                 <p class="text-center" style="white-space: normal text">[[_changeDate(item.date_updated)]]
@@ -111,7 +124,7 @@
                         <vaadin-grid-column width="9%" flex-grow="0">
                             <template class="header">
                                 <div class="text-center">
-                                    <p>เครื่องมือ</div>
+                                    <p>[[localizeReport.tool]]</div>
                             </template>
                             <template>
                                 <div class="text-center">
@@ -131,79 +144,81 @@
 
 
 
-        <paper-dialog id="report_dialog" modal>
+        <paper-dialog id="report_dialog" modal style="min-width: 300px;">
             <div class="layout start-justified">
-                <div>
-                    [[currentSeleted.report_no]] : [[currentSeleted.report_name]]
+                <div class="title-report">
+                    [[localizeReport.report_order]] [[currentSeleted.report_no]] [[localizeReport.report_subject]] [[currentSeleted.report_name]]
                 </div>
+                <paper-dialog-scrollable style="min-height: 300px;">
 
-                <template is="dom-repeat" items={{report_seleted}}>
-                    <div class="flex" style=" margin-right: 30px">
-                        <template is="dom-if" if={{isString(item.type)}}>
-                            <gl-form-input id="[[item.res]]" label="[[item.label]]" index="" placeholder="[[item.label]]"></gl-form-input>
-                        </template>
-
-
-
-                        <template is="dom-if" if={{isListmake(item.type)}}>
-
-                            <gl-combo-box id="[[item.req.field]]" always-float-label required label="[[item.label]]" placeholder="[[item.label]]" item-label-path="[[item.view]]"
-                                item-value-path="[[item.res]]" items="[[item.req.value]]" value="[[setItemListMake(item)]]">
-                                <!--on-value-changed="getNextparam"-->
-                                <template>
-                                    [[getItemListMake(item)]]
-                                </template>
-                            </gl-combo-box>
-
-                        </template>
-
-                        <template is="dom-if" if={{isList(item.type)}}>
-                            <gl-combo-box id="[[item.res]]" always-float-label required label="[[item.label]]" placeholder="[[item.label]]" item-label-path="[[item.view]]"
-                                item-value-path="[[item.res]]" on-selected-item-changed="getNextparam">
-                                <!--on-value-changed="getNextparam"-->
-                                <template>
-                                    <!--[[item.[item.view]]]-->
-                                    [[getname(item)]]
-                                </template>
-                            </gl-combo-box>
-                        </template>
-                        <template is="dom-if" if={{isDay(item.type)}}>
-                            <gl-form-input id="[[item.res]]" label="[[item.label]]" index="" value="[[day]]" placeholder="[[item.label]]"></gl-form-input>
-                        </template>
-
-                        <template is="dom-if" if={{isMonth(item.type)}}>
-                            <!--month-->
-                            <gl-combo-box id="[[item.res]]" index$="month" always-float-label label="[[item.label]]" placeholder="[[item.label]]" item-label-path="name"
-                                item-value-path="id" items="[[month]]" value="[[monthSet]]">
-                                <template>
-                                    [[item.name]]
-                                </template>
-                            </gl-combo-box>
-                            <!--<gl-form-input id="[[item.res]]" label="[[item.label]]" index="" value="[[month]]" placeholder="[[item.label]]"></gl-form-input>-->
-                        </template>
-
-                        <template is="dom-if" if={{isYear(item.type)}}>
-                            <gl-form-input id="[[item.res]]" label="[[item.label]]" index="" value="[[year]]" placeholder="[[item.label]]"></gl-form-input>
-                        </template>
-
-                        <template is="dom-if" if={{isNumber(item.type)}}>
-                            <gl-form-input id="[[item.res]]" label="[[item.label]]" index="" placeholder="[[item.label]]" type="number"></gl-form-input>
-                        </template>
-
-                        <template is="dom-if" if={{isDate(item.type)}}>
-                            <gl-form-input id="[[item.res]]" label="[[item.label]]" index="" placeholder="[[item.label]]" value="[[dateDay]]" type="date"></gl-form-input>
-                        </template>
-
+                    <template is="dom-repeat" items={{report_seleted}}>
                         <div class="flex" style=" margin-right: 30px">
+                            <template is="dom-if" if={{isString(item.type)}}>
+                                <gl-form-input id="[[item.res]]" label="[[item.label]]" index="" placeholder="[[item.label]]"></gl-form-input>
+                            </template>
+
+
+
+                            <template is="dom-if" if={{isListmake(item.type)}}>
+
+                                <gl-combo-box id="[[item.req.field]]" always-float-label required label="[[item.label]]" placeholder="[[item.label]]" item-label-path="[[item.view]]"
+                                    item-value-path="[[item.res]]" items="[[item.req.value]]" value="[[setItemListMake(item)]]">
+                                    <!--on-value-changed="getNextparam"-->
+                                    <template>
+                                        [[getItemListMake(item)]]
+                                    </template>
+                                </gl-combo-box>
+
+                            </template>
+
+                            <template is="dom-if" if={{isList(item.type)}}>
+                                <gl-combo-box id="[[item.res]]" always-float-label required label="[[item.label]]" placeholder="[[item.label]]" item-label-path="[[item.view]]"
+                                    item-value-path="[[item.res]]" on-selected-item-changed="getNextparam">
+                                    <!--on-value-changed="getNextparam"-->
+                                    <template>
+                                        <!--[[item.[item.view]]]-->
+                                        [[getname(item)]]
+                                    </template>
+                                </gl-combo-box>
+                            </template>
+                            <template is="dom-if" if={{isDay(item.type)}}>
+                                <gl-form-input id="[[item.res]]" label="[[item.label]]" index="" value="[[day]]" placeholder="[[item.label]]"></gl-form-input>
+                            </template>
+
+                            <template is="dom-if" if={{isMonth(item.type)}}>
+                                <!--month-->
+                                <gl-combo-box id="[[item.res]]" index$="month" always-float-label label="[[item.label]]" placeholder="[[item.label]]" item-label-path="name"
+                                    item-value-path="id" items="[[month]]" value="[[monthSet]]">
+                                    <template>
+                                        [[item.name]]
+                                    </template>
+                                </gl-combo-box>
+                                <!--<gl-form-input id="[[item.res]]" label="[[item.label]]" index="" value="[[month]]" placeholder="[[item.label]]"></gl-form-input>-->
+                            </template>
+
+                            <template is="dom-if" if={{isYear(item.type)}}>
+                                <gl-form-input id="[[item.res]]" label="[[item.label]]" index="" value="[[year]]" placeholder="[[item.label]]"></gl-form-input>
+                            </template>
+
+                            <template is="dom-if" if={{isNumber(item.type)}}>
+                                <gl-form-input id="[[item.res]]" label="[[item.label]]" index="" placeholder="[[item.label]]" type="number"></gl-form-input>
+                            </template>
+
+                            <template is="dom-if" if={{isDate(item.type)}}>
+                                <gl-form-input id="[[item.res]]" label="[[item.label]]" index="" placeholder="[[item.label]]" value="[[dateDay]]" type="date"></gl-form-input>
+                            </template>
+
+                            <div class="flex" style=" margin-right: 30px">
+
+                            </div>
+
 
                         </div>
-
-
-                    </div>
-                </template>
-                <div class="flex horizontal end-justified layout buttons">
-                    <paper-button raised class="gl-btn-default" dialog-dismiss on-tap="reload">ปิด</paper-button>
-                    <paper-button raised class="gl-btn-primary" on-tap="printReport" autofocus>ออกรายงาน</paper-button>
+                    </template>
+                </paper-dialog-scrollable>
+                <div class="buttons flex horizontal end-justified layout buttons">
+                    <paper-button raised class="gl-btn-default" dialog-dismiss on-tap="reload">[[localizeReport.close]]</paper-button>
+                    <paper-button raised class="gl-btn-primary" on-tap="printReport" autofocus>[[localizeReport.gen_report]]</paper-button>
                 </div>
         </paper-dialog>
 
@@ -217,6 +232,9 @@
                 date: {
                     type: Object,
                     value: { type: 'PDF' }
+                },
+                localizeReport: {
+                    statePath: 'i18n.report'
                 },
                 report: {
                     statePath: 'report.reportList'
@@ -308,7 +326,7 @@
                 this.set('setType', e.currentTarget.id)
                 let data = e.model.__data__.item
                 this.set('currentSeleted', data)
-                console.log(this.currentSeleted.report_name);
+                // console.log(this.currentSeleted.report_name);
                 let getBuy = data.report_params.find((item) => item.redux === true)
                 if (getBuy !== undefined) {
                     getBuy.req.value = this.buyerId.buyer_id
@@ -342,7 +360,17 @@
                     this.set('report_seleted', data.report_params)
                     // console.log();
                 }
-                this.$$('#report_dialog').open()
+                this.fire('toast', { status: 'load' });
+                this.async(() => {
+                    this.fire('toast', {
+                        status: 'success', text: 'โหลดสำเร็จ', callback: () => {
+                            // this.fire('open-Drawer')
+                            this.$$('#report_dialog').open()
+                        }
+                    })
+
+                }, 100)
+                
 
 
                 // } catch (error) {
@@ -417,21 +445,32 @@
 
             },
             _edit: function (e) {
-                this.fire('open-Drawer')
+
                 this.dispatchAction('SET_STATE', {
                     isInsert: false,
                     btnDisabled: false,
                     hiddend: true
                 })
                 let data = e.model.__data__.item
-                this.dispatchAction('GET_REPORT_DETAIL', data)
+                this.fire('toast', { status: 'load' });
+                this.async(() => {
+                    this.fire('toast', {
+                        status: 'success', text: 'โหลดสำเร็จ', callback: () => {
+                            this.fire('open-Drawer')
+                            this.dispatchAction('GET_REPORT_DETAIL', data)
+                        }
+                    })
+
+                }, 500)
+                // this._
+
                 // this.dispatchAction('PROVINCE_GET_ID', e.target.data.province_id);
                 // this.title = "แก้ไขข้อมูล";
             },
             _delete: function (e) {
                 this.fire('toast', {
                     status: 'openDialog',
-                    text: 'ต้องการลบข้อมูลใช่หรือไม่ ?',
+                    text: this.localizeReport.want_delete,
                     confirmed: (result) => {
                         if (result == true) {
                             // console.log(1111);
