@@ -282,10 +282,6 @@
                 }
             },
             reload() {
-                // this.queryFrom('gl-combo-box').items = []
-                // this.queryFrom('gl-combo-box').value = ''
-                // console.log(this.queryFrom('gl-combo-box'));
-                // window.location.reload(false)
                 this.currentSeleted.report_params.map((item) => {
                     if (this.$$('#' + item.res) !== null) {
                         this.$$('#' + item.res).reset()
@@ -363,7 +359,7 @@
                 this.fire('toast', { status: 'load' });
                 this.async(() => {
                     this.fire('toast', {
-                        status: 'success', text: 'โหลดสำเร็จ', callback: () => {
+                        status: 'success', text: this.localizeReport.load_success, callback: () => {
                             // this.fire('open-Drawer')
                             this.$$('#report_dialog').open()
                         }
@@ -391,8 +387,8 @@
                 window.open(window._config.reportServer + `/api/${this.currentSeleted.report_type}/${this.currentSeleted.report_path}?buyer_id=` + this.buyerId.buyer_id + '&' + this.genUrl(url) + '&export=' + this.setType)
             },
             changeName: function (name) {
-                if (name === 'rice') return 'กองข้าว'
-                return 'กองคลัง'
+                if (name === 'rice') return this.localizeReport.rice
+                return this.localizeReport.finance
             },
             getNextparam(e) {
                 // try {
@@ -455,7 +451,7 @@
                 this.fire('toast', { status: 'load' });
                 this.async(() => {
                     this.fire('toast', {
-                        status: 'success', text: 'โหลดสำเร็จ', callback: () => {
+                        status: 'success', text: this.localizeReport.load_success, callback: () => {
                             this.fire('open-Drawer')
                             this.dispatchAction('GET_REPORT_DETAIL', data)
                         }
@@ -484,7 +480,7 @@
                                     if (response.data.deleted !== undefined && response.data.deleted.length !== 0) {
                                         this.dispatchAction('GET_REPORT_LIST')
                                         this.fire('toast', {
-                                            status: 'success', text: 'ลบสำเร็จ',  // คำสั่งสำหรับเปิด toast success
+                                            status: 'success', text: this.localizeReport.delete_success,  // คำสั่งสำหรับเปิด toast success
                                             callback: () => {
                                             }
                                         })

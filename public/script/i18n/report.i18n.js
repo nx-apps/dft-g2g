@@ -32,8 +32,11 @@ export const report = {
         file_name: 'ชื่อไฟล์',
 
         want_delete: 'ต้องการลบข้อมูลใช่หรือไม่ ?',
-
-        save_success :'บันทึกสำเร็จ'
+        rice:'กองข้าว',
+        finance:'กองคลัง',
+        save_success :'บันทึกสำเร็จ',
+        load_success:'โหลดสำเร็จ',
+        delete_success:'ลบสำเร็จ'
 
     }
 }

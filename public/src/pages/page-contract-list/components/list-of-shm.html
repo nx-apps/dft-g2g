@@ -53,24 +53,7 @@
           <paper-icon-button id="printShipment" class="crud" icon="print" raised on-tap="printShipment" hidden="[[!data.shm_status]]"></paper-icon-button>
           <paper-tooltip for="printShipment" offset="0">{{localizeCommon.print}}</paper-tooltip>
         </div>
-        <paper-dialog id="printShipmentReport">
-          <gl-grid-row width="{{getWidth}}">
-            <gl-grid-col width="[[getWidth]]" grid="[[500,4],[700,3]]">
-              [[changeString2Num(printReport.*,'ori')]]
-              <gl-form-input allowed-pattern="[0-9||,||.]" label="{{localizeBook.orignals}}" autofocus maxlength="3" format-number="on"
-                always-float-label placeholder="{{localizeBook.orignals}}" value="{{printReport.ori}}"></gl-form-input>
-            </gl-grid-col>
-            <gl-grid-col width="[[getWidth]]" grid="[[500,6],[700,8]]">
-              [[changeString2Num(printReport.*,'nn')]]
-              <gl-form-input allowed-pattern="[0-9||,||.]" label="{{localizeBook.n_n}}" maxlength="3" format-number="on" always-float-label
-                placeholder="{{localizeBook.n_n}}" value="{{printReport.nn}}"></gl-form-input>
-            </gl-grid-col>
-          </gl-grid-row>
-          <div class="buttons">
-            <paper-button class="gl-btn-default" dialog-confirm raised>{{localizeCommon.close}}</paper-button>
-            <paper-button class="gl-btn-primary" on-tap="printShipmentReports" dialog-confirm autofocus raised>{{localizeCommon.print}}</paper-button>
-          </div>
-        </paper-dialog>
+
       </div>
       <gl-form-panel-head label="{{localize.text_list_exporter_name}}" set-padding="10px" set-border="1px">
         <template is="dom-if" if={{!data.book_status}}>
@@ -103,30 +86,52 @@
           </template>
         </tbody>
       </table>
-      <!--<gl-form-panel-footer set-padding="10px 20px 0px 20px">
-        <template is="dom-if" if={{!_confirmBook(data)}}>
-          <paper-button class="gl-btn-danger" raised dias on-tap="cancerBook">
-            {{localizeCommon.cancer_confirm}}</paper-button>
-        </template>
-        <template is="dom-if" if={{_confirmBook(data)}}>
-          <paper-button class="gl-btn-success" raised dias on-tap="approveBook" hidden="[[_isHave(data)]]">
-            {{localizeCommon.confirm}}</paper-button>
-        </template>-->
       </gl-form-panel-footer>
     </gl-form-panel>
-    <!--<iron-pages selected="{{pageSelected}}" attr-for-selected="name">-->
-    <!--<div name="list-of-shm-det">-->
+    <paper-dialog id="printShipmentReport">
+      <gl-grid-row width="{{getWidth}}">
+        <gl-grid-col width="[[getWidth]]" grid="[[500,4],[700,3]]">
+          [[changeString2Num(printReport.*,'ori')]]
+          <gl-form-input allowed-pattern="[0-9||,||.]" on-focus="_setSeleteValue" label="{{localizeBook.orignals}}" autofocus maxlength="3"
+            format-number="on" always-float-label placeholder="{{localizeBook.orignals}}" value="{{printReport.ori}}"></gl-form-input>
+        </gl-grid-col>
+        <gl-grid-col width="[[getWidth]]" grid="[[500,6],[700,8]]">
+          [[changeString2Num(printReport.*,'nn')]]
+          <gl-form-input allowed-pattern="[0-9||,||.]" on-focus="_setSeleteValue" label="{{localizeBook.n_n}}" maxlength="3" format-number="on"
+            always-float-label placeholder="{{localizeBook.n_n}}" value="{{printReport.nn}}"></gl-form-input>
+        </gl-grid-col>
+      </gl-grid-row>
+      <div class="buttons">
+        <paper-button class="gl-btn-default" dialog-dismiss raised>{{localizeCommon.close}}</paper-button>
+        <paper-button class="gl-btn-primary" on-tap="printShipmentReports" dialog-confirm autofocus raised>{{localizeCommon.print}}</paper-button>
+      </div>
+    </paper-dialog>
 
-    <!--<list-of-shm-det data="{{dataSelected}}" data-for-select="{{dataForSelect}}"></list-of-shm-det>-->
-    <!--</div>-->
-    <!--<div name="list-of-shm-det-add">-->
-    <!--<shm-det-exporter is-input-disabled=[[setFalse]] data-for-select="[[dataForSelect]]" is-view-seleted="[[!isViewSeleted]]"></shm-det-exporter>-->
-    <!--</div>-->
-    <!--<div name="shm-detail">-->
-    <!--<shm-det-exporter data="[[dataEdit]]" is-input-disabled="[[isInputDisabled]]" data-for-select="[[dataForSelect]]" is-view-seleted="[[isViewSeleted]]"></shm-det-exporter>-->
-    <!--</div>-->
-    <!--</iron-pages>-->
-
+    <paper-dialog id="printBook">
+      <!--<gl-grid-row >-->
+      <!--<gl-grid-col width="[[getWidth]]" grid="[[500,4],[700,4]]">-->
+      <div class="layout start-justified">
+        <!--<gl-combo-box style="width: 200px" always-float-label label="{{localizeBook.font_size}}" placeholder="{{localizeClocalizeBookommon.font_size}}"
+          item-label-path="id" item-value-path="id" items="[[fontSize]]" value="{{printReport.fontSize}}">
+          <template>
+            [[item.id]]
+          </template>
+        </gl-combo-box>-->
+        <paper-dropdown-menu label="{{localizeBook.font_size}}">
+          <paper-listbox class="dropdown-content" attr-for-selected="name" selected="{{printReport.fontSize}}" >
+            <template is="dom-repeat" items={{fontSize}}>
+              <paper-item name="{{item.id}}">{{item.id}}</paper-item>
+            </template>
+          </paper-listbox>
+        </paper-dropdown-menu>
+      </div>
+      <!--</gl-grid-col>-->
+      <!--</gl-grid-row>-->
+      <div class="buttons">
+        <paper-button class="gl-btn-default" dialog-dismiss raised>{{localizeCommon.close}}</paper-button>
+        <paper-button class="gl-btn-primary" on-tap="printBookdetail" dialog-confirm autofocus raised>{{localizeCommon.print}}</paper-button>
+      </div>
+    </paper-dialog>
   </template>
   <script>
     Polymer({
@@ -152,9 +157,23 @@
         localizeCommon: {
           statePath: 'i18n.common'
         },
+        fontSize: {
+          type: Array,
+          value: [
+            {
+              id: 12,
+            },
+            {
+              id: 14,
+            },
+            {
+              id: 16,
+            }
+          ]
+        },
         printReport: {
           type: Object,
-          value: { ori: 3, nn: 12, typeReport: '0', typeFile: 'pdf' }
+          value: { ori: 3, nn: 12, typeReport: '0', typeFile: 'pdf', fontSize: 12 }
         },
         report: {
           type: Object,
@@ -162,8 +181,8 @@
           {
             report_name:
             [
-              { report_name: 'รายการเรือ', report_name_id: '0' },
-              { report_name: 'แบบร่าง BL', report_name_id: '1' },
+              { report_name: 'ลิสต์เรือ', report_name_id: '0' },
+              { report_name: 'Draf BL', report_name_id: '1' },
               { report_name: 'หนังสือแจ้งบริษัทเรื่องการส่งมอบข้าว', report_name_id: '2' },
               // { report_name: 'ใบปะหน้าแจ้งการรับเงิน', report_name_id: '3' },
               // { report_name: 'รายละเอียดแจ้งการรับเงิน', report_name_id: '4' },
@@ -224,10 +243,12 @@
         // } else if (this.printReport.typeReport == '5') {
         //   window.open(window._config.reportServer + '/api/rice/report4?id=' + this.confirmId.cl_id + '&export=' + this.printReport.typeFile, '1');
         // }
-        console.log(this.printReport.typeReport);
+        // console.log(this.printReport.typeReport);
         switch (this.printReport.typeReport) {
           case '0':
-            window.open(window._config.reportServer + '/api/rice/report1?id=' + book_id + '&export=' + this.printReport.typeFile, '1');
+
+            this.$.printBook.toggle();
+            // window.open(window._config.reportServer + '/api/rice/report1?id=' + book_id + '&export=' + this.printReport.typeFile, '1');
             break;
           case '1':
             this.$.printShipmentReport.toggle();
@@ -250,6 +271,10 @@
         let book_id = this.data.id
         // window.open(window._config.reportServer+'/api/shipment/report1?shm_id='+this.data.shm_id+'&ori='+this.printReport.ori+'&nn='+this.printReport.nn,'1');
         window.open(window._config.reportServer + '/api/rice/report2?id=' + book_id + '&ori=' + this.printReport.ori + '&nn=' + this.printReport.nn + '&export=' + this.printReport.typeFile, '1');
+      },
+      printBookdetail: function () {
+        let book_id = this.data.id
+        window.open(window._config.reportServer + '/api/rice/report1?id=' + book_id + '&export=' + this.printReport.typeFile + '&size=' + this.printReport.fontSize, '1');
       },
       bookExporterDetail: function (e) {
         let url = { id: e.currentTarget.data.id }

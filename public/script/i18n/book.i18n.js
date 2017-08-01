@@ -64,6 +64,8 @@ export const book = {
         note:"หมายเหตุ (แก้ใข)",
         bl_weight:"ปริมาณ (ตัน)",
 
+        font_size:'ขนาดตัวอักษร',
+
 
 
       

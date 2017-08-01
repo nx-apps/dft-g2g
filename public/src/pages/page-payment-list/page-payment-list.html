@@ -510,6 +510,7 @@
 
                 this.dispatchAction('GET_CHEQUE_DETAIL_LIST', { id: e.detail.detail })
                 this.dispatchAction('GET_CHEQUE_NO')
+                this.fire('toast', { status: 'load' });
                 this.paymentsPageSeleted = 'chequePage';
                 if (this.checkRenderPage.chequeDetail != true) {
                     this.async(() => {
@@ -517,9 +518,14 @@
                             this.resolveUrl('./component/cheque-detail.html'),
                             () => {
                                 this.async(() => {
-                                    this.fire('toast', { status: 'load' });
-                                    this._flipDrawer();
-                                    this.checkRenderPage.chequeDetail = true;
+                                    this.fire('toast', {
+                                        status: 'success', text: 'โหลดสำเร็จ', callback: () => {
+                                            this._flipDrawer();
+                                            this.checkRenderPage.chequeDetail = true;
+                                        }
+                                    })
+                                    // this.fire('toast', { status: 'load' });
+
                                 }, 500)
                             }, null, true
                         );
@@ -527,8 +533,12 @@
                 } else {
                     this.async(() => {
                         this.$$('cheque-detail').resetFrom('.required')
-                        this.fire('toast', { status: 'load' });
-                        this._flipDrawer();
+                        this.fire('toast', {
+                            status: 'success', text: 'โหลดสำเร็จ', callback: () => {
+                                this._flipDrawer();
+                            }
+                        })
+
                     }, 500)
                 }
                 //     });
@@ -574,7 +584,7 @@
                         this.fire('toast', {
                             status: 'success', text: 'โหลดสำเร็จ', callback: () => {
                                 // this.fire('toast', { status: 'load' });
-                                console.log(this.$$('payment-detail').resetFrom('.required'))
+                                // console.log(this.$$('payment-detail').resetFrom('.required'))
                                 this.$$('payment-detail').resetFrom('.required')
                                 this._flipDrawer();
                                 // this.checkRenderPage.paymentDetail = true;
