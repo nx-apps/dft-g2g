@@ -40,8 +40,8 @@
             </div>
         </nylon-panel-right>
         <div class="btnFab">
-            <paper-fab icon="add" title="เพิ่มผู้ส่งออก" id="addCountry" on-tap="addCountry"></paper-fab>
-            <paper-tooltip for="addCountry" offset="0">เพิ่มผู้ส่งออก</paper-tooltip>
+            <paper-fab icon="add" title="[[localizeContract.add_contract]]" id="addCountry" on-tap="addCountry"></paper-fab>
+            <paper-tooltip for="addCountry" offset="0">[[localizeContract.add_contract]]</paper-tooltip>
         </div>
 
     </template>
@@ -58,6 +58,9 @@
                 buyerList: {
                     statePath: 'contract.buyerList'
                 },
+                localizeContract: {
+                    statePath: 'i18n.contract'
+                },
             },
             listeners: {
                 'close-drawer': '_flipDrawerClose',
@@ -66,52 +69,11 @@
 
                 this.dispatchAction('GET_BUYER_LIST');
 
-                // this.dispatchAction('GET_COMMON_BANK_LIST');
                 this.dispatchAction('GET_COMMON_HAMONIZE_LIST');
                 this.dispatchAction('GET_COMMON_BUYER_LIST');
-                // this.dispatchAction('GET_COMMON_CARRIER_LIST');
-                // this.dispatchAction('GET_COMMON_INCOTERMS_LIST');
-                // this.dispatchAction('GET_COMMON_NOTIFY_LIST');
-                // this.dispatchAction('GET_COMMON_PACKAGE_LIST');
-                // this.dispatchAction('GET_COMMON_PORT_LIST');
-                // this.dispatchAction('GET_COMMON_SHIP_LIST');
-                // this.dispatchAction('GET_COMMON_SHIPLINE_LIST');
-                // this.dispatchAction('GET_COMMON_SURVEYOR_LIST');
-                // console.log(111);
             },
-            // _getCountry() {
-            //     this.read('./g2g/contract/list', (data) => {
-            //         this.set('countryList', data)
-            //     });
-            // },
-            // getContractList(e) {
-            //     // console.log(e.detail.buyer_id);
-            //     document.cookie = "buyerId=" + e.detail.buyer_id
-            //     this.fire('nylon-change-page', { path: '/g2g' })
-            // },
-            // _getDataForContract: function () {
-            //     //use data for contract
-            //     this.read(window._config.externalServerCommon+'/api/buyer', (data) => {
-            //         this.dataForSelected.dataForContract.buyer = data;
-            //         this.notifyPath('dataForSelected.dataForContract.buyer');
-            //     });
-            //     this.read(window._config.externalServerCommon+'/api/hamonize?group=g2g', (data) => {
-            //         data.map((set_name) => {
-            //             set_name.type_rice_name_th = '('+ set_name.type_rice_id+ ') ' +set_name.type_rice_name_th
-            //             set_name.type_rice_name_en = '('+ set_name.type_rice_id+ ') ' +set_name.type_rice_name_en
-            //         })
-            //         this.dataForSelected.dataForContract.typeRice = data;
-            //         this.notifyPath('dataForSelected.dataForContract.typeRice');
-            //         // console.log(this.dataForSelected);
-            //     });
-            //     this.read(window._config.externalServerCommon+'/api/incoterms', (data) => {
-            //         this.dataForSelected.dataForContract.incoterms = data;
-            //         this.notifyPath('dataForSelected.dataForContract.incoterms');
-            //     });
-            //     //end use data for contract
-            // },
             addCountry() {
-                this.titlePanelRight = 'เพิ่มสัญญาการซื้อขาย'
+                this.titlePanelRight = this.localizeContract.add_contract
                 this.dispatchAction('CLEAR_CONTRACT')
                 this.dispatchAction('SET_STATE', {
                     isInsert: true,
@@ -121,7 +83,7 @@
                 this.fire('toast', { status: 'load' });
                 this.async(() => {
                     this.fire('toast', {
-                        status: 'success', text: 'โหลดสำเร็จ', callback: () => {
+                        status: 'success', text: this.localizeContract.load_success, callback: () => {
                             this._flipDrawer();
                         }
                     })

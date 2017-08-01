@@ -40,9 +40,7 @@
             }
         </style>
         <div class="horizontal layout center-justified  wrap">
-            <!--<template is="dom-repeat" items={{data}} as=item index-as=index>-->
             <paper-material elevation="1" class="white tree margin-meterial">
-
 
                 <div class="head-meterial">
                     [[data.buyer_name]] ([[data.country_name_en]])
@@ -71,10 +69,10 @@
                     <div class="horizontal end-justified layout ">
                         <paper-button raised class="" data="[[data]]" on-tap="getContractList" class="gl-bg-primary">
                             <iron-icon icon="assignment"></iron-icon>
-                            ข้อมูล</paper-button>
+                            [[localizeCommon.data]]</paper-button>
                         <paper-button raised class=""  on-tap="getReport" class="gl-bg-primary" icon="add">
                             <iron-icon icon="note-add"></iron-icon>
-                            รายงาน</paper-button>
+                            [[localizeCommon.report]]</paper-button>
                     </div>
                 </div>
 
@@ -98,6 +96,9 @@
                     type: String,
                     value: 'ปริมาณการส่งมอบ (ตัน)'
                 },
+                localizeContract: {
+                    statePath: 'i18n.contract'
+                },
                 
             },
             getContractList(e) {
@@ -111,6 +112,8 @@
                 this.fire('nylon-change-page',{path:'/contract-list'})
             },
             getChartQuantity(quantity) {
+                // console.log(this.localizeContract.add_contract);
+                // let label = this.localizeContract.total_send
                 // let num = quantity.map((item)=> item.cl_weight)
                 // console.log(quantity.map((ed) => ed.contract_year));
                 // console.log(quantity.map((item)=> item.cl_weight));
@@ -119,7 +122,7 @@
                     
                     datasets: [
                         {
-                            label: "ปริมาณการส่งมอบ (ตัน)",
+                            label: 'ปริมาณการส่งมอบ (ตัน)',
                             backgroundColor: "#003BAE",
                             borderColor: "#96b1d2",
                             borderWidth: 1,
@@ -129,11 +132,12 @@
                 }
             },
             getChartValue(value) {
+                //  let label = this.localizeContract.total_value_bath
                 return {
                     labels: value.map((ed) => ed.contract_year),
                     datasets: [
                         {
-                            label: "มูลค่าการส่งออก (บาท)",
+                            label: 'มูลค่าการส่งออก (บาท)',
                             backgroundColor: "#ff4500",
                             borderColor: "#ff9973",
                             borderWidth: 1,
@@ -144,13 +148,13 @@
             },
             chartPiePrevious(e) {
                 this.set('page', 0)
-                this.set('title', 'ปริมาณการส่งมอบ (ตัน)')
+                this.set('title', this.localizeContract.total_send)
                 this.$$('#chartQuantity').icon = 'radio-button-checked'
                 this.$$('#chartValue').icon = 'radio-button-unchecked'
             },
             chartPieNext(e) {
                 this.set('page', 1)
-                this.set('title', 'มูลค่าการส่งออก (บาท)')
+                this.set('title', this.localizeContract.total_value_bath)
                 this.$$('#chartQuantity').icon = 'radio-button-unchecked'
                 this.$$('#chartValue').icon = 'radio-button-checked'
             },

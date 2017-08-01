@@ -27,6 +27,8 @@ export const common = {
         error_dropdown: "กรุณาเลือก",
         print:"รายงาน",
         report_type:"รูปแบบรายงาน",
+        data:'ข้อมูล',
+        report:'รายงาน',
 
         
         save_succeed:"บันทึกสำเร็จ",
@@ -40,7 +42,7 @@ export const common = {
         toast_approve:"ต้องการยืนยันข้อมูลใช่หรือไม่",
         toast_cancel_approve:"ต้องการยกเลิกยืนยันข้อมูลใช่หรือไม่",
 
-        load_successfully:"โหลดสำเร็จ",
+        load_successfully:"โหลดข้อมูลสำเร็จ",
     },
     en: {
         foo: 'a',
