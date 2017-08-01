@@ -359,7 +359,7 @@
       calcelBookDetail: function () {
         this.fire('toast', {
           status: 'openDialog',
-          text: 'ต้องการยกเลิกแก้ข้อมูลใช่หรือไม่ ?',
+          text: this.localizeCommon.toast_cancel_approve,
           confirmed: (result) => {
             if (result == true) {
               let url = { id: this.data.id }
@@ -372,7 +372,7 @@
               this.dispatchAction('GET_BOOK_EXPORTER_DETAIL', this.genUrl(url))
               this.async(() => {
                 this.fire('toast', {
-                  status: 'success', text: 'โหลดสำเร็จ', callback: () => {
+                  status: 'success', text: this.localizeCommon.load_successfully, callback: () => {
                     this.queryFrom('.required').map((el) => { el.reset(); });
                     // this.set('pageSelected', 'list-of-booking-edit')
                   }
@@ -537,7 +537,7 @@
             })
           } else {
             this.fire('toast', {
-              status: 'connectError', text: 'กรุณากรอกข้อมูลให้ครบทุกช่อง', //คำสั่งสำหรับเปิด toast error
+              status: 'connectError', text: this.localizeCommon.toast_input_error, //คำสั่งสำหรับเปิด toast error
               callback: function () {
                 rej('error')
               }
@@ -559,7 +559,7 @@
 
                   this.dispatchAction('GET_BOOK_EXPORTER_LIST', this.genUrl(url))
                   this.fire('toast', {
-                    status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
+                    status: 'success', text: this.localizeCommon.save_succeed,  // คำสั่งสำหรับเปิด toast success
                     callback: () => {
                       this.queryFrom('.required').map((el) => { el.reset(); });
                       this.cancelEditShipment()
@@ -595,7 +595,7 @@
         //         this.fire('_get-fire-shm-detail', { book_id: data.book_id });
         //         // this.fire('get-list-shipment-detail',{sm_id:this.dataForSelect.shm_id});
         //         this.fire('toast', {
-        //           status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
+        //           status: 'success', text: this.localizeCommon.save_succeed,  // คำสั่งสำหรับเปิด toast success
         //           callback: () => {
         //             this.cancelInsertShipment();
         //             //  this.fire('refresh-contract', { detail: 'refresh-contract' });
@@ -639,7 +639,7 @@
                     hiddend: true
                   })
                   this.fire('toast', {
-                    status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
+                    status: 'success', text: this.localizeCommon.save_succeed,  // คำสั่งสำหรับเปิด toast success
                     callback: () => {
                       this.queryFrom('.required').map((el) => { el.reset(); });
                       // this.fire('close-drawer')
@@ -694,7 +694,7 @@
       //       this.fire('get-list-shipment-detail', { sm_id: this.dataForSelect.shm_id });
       //       this.editBookDetaIl();
       //       this.fire('toast', {
-      //         status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
+      //         status: 'success', text: this.localizeCommon.save_succeed,  // คำสั่งสำหรับเปิด toast success
       //         callback: function () {
       //           //  detail.el.fire('get-contract-detail',{contractId:detail.data.id});
       //         }
@@ -705,7 +705,7 @@
       deleteBookDetail: function () {
         this.fire('toast', {
           status: 'openDialog',
-          text: 'ต้องการลบข้อมูลใช่หรือไม่ ?',
+          text: this.localizeCommon.toast_delete,
           confirmed: (result) => {
             if (result == true) {
               this._resiveFormBoolExporter()
@@ -719,10 +719,10 @@
                         this.dispatchAction('GET_BOOK_EXPORTER_LIST', this.genUrl(url))
                         // this.dispatchAction('GET_CONTRACT_OF_BUYER', res.buyer_id);
                         this.fire('toast', {
-                          status: 'success', text: 'ลบสำเร็จ',  // คำสั่งสำหรับเปิด toast success
+                          status: 'success', text: this.localizeCommon.delete_succeed,  // คำสั่งสำหรับเปิด toast success
                           callback: () => {
                             this.fire('toast', {
-                              status: 'success', text: 'โหลดสำเร็จ', callback: () => {
+                              status: 'success', text: this.localizeCommon.load_successfully, callback: () => {
                                 this.fire('_list-book', 'list-of-booking-exporter')
                               }
                             })
@@ -748,7 +748,7 @@
         })
         //   this.fire('toast', {  //คำสั่งสำหรับเปิด toast dialog
         //     status: 'dialog',
-        //     text: 'ต้องการลบข้อมูลใช่หรือไม่ ?',
+        //     text: this.localizeCommon.toast_delete,
         //     confirmed: this._deleteExporter.bind(this), //function ที่ใช้รับค่า ปุ่ม
         //     el: this, // compontents
         //     data: this.data// ข้อมูลที่ส่งไป เช่น id ที่จะใช้ลบข้อมูล ใน db
@@ -761,7 +761,7 @@
       //       this.fire('_get-fire-shm-detail', { book_id: detail.data.book_id });
       //       //สั่งปิดแล้วค่อยลบ
       //       this.fire('toast', {
-      //         status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
+      //         status: 'success', text: this.localizeCommon.save_succeed,  // คำสั่งสำหรับเปิด toast success
       //         callback: () => {
       //           // this.fire('refresh-contract', { detail: 'refresh-contract' });
       //           this.fire('get-list-shipment', { contractId: this.dataForSelect.contract_id });
@@ -790,15 +790,15 @@
       cancelEditShipment: function () {
         this.fire('_list-book', 'list-of-booking-exporter')
         this.dispatchAction('SET_BREADCRUMBS', [{
-          label: 'สัญญาที่ ' + this.contractId.contract_no,
+          label: this.localizeContract.contract_at+' ' + this.contractId.contract_no,
           href: ''
         },
         {
-          label: 'งวดที่ ' + this.confirmId.cl_no,
+          label: this.localizeConfirmLetter.ref_no+' ' + this.confirmId.cl_no,
           href: ''
         },
         {
-          label: 'เรือลำที่ ' + this.bookId.ship_lot,
+          label: this.localizeBook.vessel_no+' ' + this.bookId.ship_lot,
           href: ''
         },
         ])

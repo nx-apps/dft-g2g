@@ -370,10 +370,7 @@
         })
       },
       observers: [
-        // '_oBChangeBooking(data.book_no)',
         '_oBChangePod(data.dest_port_id)',
-        // '_setNotify(data.deli_port_id,notifyList)'
-        //   '_getPod(dataForSelect)',
       ],
       setPort: function (portList, contryNameEn) {
         return portList[contryNameEn]
@@ -385,19 +382,8 @@
       claNoti(notifyList,deli_port_id){
         // console.log(this.data.notify_id);
         let newData = notifyList.filter((item) => item.port_id === deli_port_id)
-        // console.log(newData);
-        // console.log(notifyList,deli_port_id);
-        // console.log(this.data.notify_id);
         return newData
       },
-      // _setNotify(deli_port_id, notifyList) {
-      //   let newData = notifyList.filter((item) => item.port_id === deli_port_id)
-      //   console.log(newData);
-      //   console.log(this.data.notify_id);
-      //   // this.set('notifyListSeleted', newData)
-      //   // console.log(newData);
-      //   console.log(this.data.notify_id);
-      // },
       getObjectShipline: function (e) {
         if (e.detail.value !== null) {
           let data = {
@@ -475,23 +461,6 @@
           // this.s
         }
       },
-
-      // getShippingId: function () {
-      //   try {
-      //     var resilte = this.dataForSelect.shipline.filter((item, index) => this.data.shipline_name.toUpperCase() == item.text.toUpperCase())
-      //     if (resilte.length > 0) {
-      //       // console.log(resilte[0].shipline_id);
-      //       this.set('data.shipline_id', resilte[0].shipline_id)
-      //     } else {
-      //       // console.log(this.data.shipline_name);
-
-      //       this.set('data.shipline_id', '')
-      //     }
-      //     this.set('data.shipline_name', this.data.shipline_name.toUpperCase())
-      //   } catch (error) {
-      //     // console.log(error);
-      //   }
-      // },
       getShipId: function (e) {
         try {
           let index = e.currentTarget.index
@@ -524,11 +493,6 @@
         }
 
       },
-      // _checkEdit: function (edit) {
-      //   if (edit == false) {
-      //     return true
-      //   }
-      // },
       _resiveDataBook: function () {
         return new Promise((res, rej) => {
           // console.log(this.data);
@@ -566,7 +530,7 @@
             })
           } else {
             this.fire('toast', {
-              status: 'connectError', text: 'กรุณากรอกข้อมูลให้ครบทุกช่อง', //คำสั่งสำหรับเปิด toast error
+              status: 'connectError', text: this.localizeCommon.toast_input_error, //คำสั่งสำหรับเปิด toast error
               callback: function () {
                 rej('error')
               }
@@ -590,7 +554,7 @@
                   this.dispatchAction('GET_BOOK_LIST', this.genUrl(url));
                   // this.dispatchAction('_list-book', 'list-of-booking');
                   this.fire('toast', {
-                    status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
+                    status: 'success', text: this.localizeCommon.save_succeed,  // คำสั่งสำหรับเปิด toast success
                     callback: () => {
                       this.queryFrom('.required').map((el) => { el.reset(); });
                       this.cancelInsertShipment()
@@ -613,56 +577,11 @@
           .catch((error) => {
             console.log(error);
           })
-        //   let ship_lot = this.data.ship_lot
-        //   // console.log(this.dataBookNo);
-        //   let ship_lot = this.dataBookNo.filter((ship_lot) => ship_lot.ship_lot == ship_lot)
-        //   // console.log(this.dataForSelect.listbooking);
-        //   try {
-        //     // console.log(ship_lot.length)
-        //     if (ship_lot.length > 0 || ship_lot < 0) {
-
-        //       this.fire('toast', {
-        //         status: 'connectError', text: 'ลำดับเรือซ้ำกัน `', //คำสั่งสำหรับเปิด toast error
-        //         callback: function () {
-        //         }
-        //       })
-        //     } else {
-        //       this.data.book_status = false;
-        //       this.data.cl_id = this.dataForSelect.cl_id;
-        //       // console.log(this.data.cl_id);
-        //       this.set('data.tags', [])
-        //       this.push('data.tags', this.dataForSelect.cl_id, this.dataForSelect.contract_id);
-        //       this._cleanDataBl(this.data, (data) => {
-        //         if (data.carrier_id == '' || data.carrier_id == undefined) {
-        //           data.carrier_id = this._checkCarrierIsBlank();
-        //         }
-        //         // console.log(this.data);
-        //         this.insert('./g2g/book/insert', data, () => {
-        //           this.fire('toast', { status: 'load' });
-        //           this.fire('_get-fire-booking-detail', { detail: data });
-        //           this.fire('toast', {
-        //             status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
-        //             callback: () => {
-        //               this.cancelInsertShipment();
-        //               let el = Polymer.dom(this.root).querySelectorAll('.required');
-        //               el.map((el) => { el.value = ''; });
-        //               //ใส่วันปัจจุบันลงไป
-        //               // this._changeDataBl('undefined');
-        //             }
-        //           });
-        //         });
-
-        //         this.cancelInsertShipment();
-        //       })
-        //     }
-        //   } catch (e) {
-
-        //   }
       },
       cancelBook: function () {
         this.fire('toast', {
           status: 'openDialog',
-          text: 'ต้องการยกเลิกแก้ข้อมูลใช่หรือไม่ ?',
+          text: this.localizeCommon.toast_cancel_edit,
           confirmed: (result) => {
             if (result == true) {
               let url = { id: this.data.id }
@@ -675,7 +594,7 @@
               this.dispatchAction('GET_BOOK_DETAIL', this.genUrl(url))
               this.async(() => {
                 this.fire('toast', {
-                  status: 'success', text: 'โหลดสำเร็จ', callback: () => {
+                  status: 'success', text: this.localizeCommon.load_successfully, callback: () => {
                     this.queryFrom('.required').map((el) => { el.reset(); });
                     // this.set('pageSelected', 'list-of-booking-edit')
                   }
@@ -688,7 +607,7 @@
       saveBook: function () {
         this.fire('toast', {
           status: 'openDialog',
-          text: 'ต้องการแก้ข้อมูลใช่หรือไม่ ?',
+          text: this.localizeCommon.toast_edit,
           confirmed: (result) => {
             if (result == true) {
               this._resiveFormBook()
@@ -707,7 +626,7 @@
                           hiddend: true
                         })
                         this.fire('toast', {
-                          status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
+                          status: 'success', text: this.localizeCommon.save_succeed,  // คำสั่งสำหรับเปิด toast success
                           callback: () => {
                             let url = { cl_id: this.data.cl_id }
                             this.dispatchAction('GET_BOOK_LIST', this.genUrl(url));
@@ -734,7 +653,7 @@
       deleteBooking: function () {
         this.fire('toast', {
           status: 'openDialog',
-          text: 'ต้องการลบข้อมูลใช่หรือไม่ ?',
+          text: this.localizeCommon.toast_delete,
           confirmed: (result) => {
             if (result == true) {
               // console.log(res);
@@ -745,7 +664,7 @@
                     let url = { cl_id: this.data.cl_id }
                     this.dispatchAction('GET_BOOK_LIST', this.genUrl(url));
                     this.fire('toast', {
-                      status: 'success', text: 'ลบสำเร็จ',  // คำสั่งสำหรับเปิด toast success
+                      status: 'success', text: this.localizeCommon.delete_succeed,  // คำสั่งสำหรับเปิด toast success
                       callback: () => {
                         this.cancelInsertShipment()
                       }
@@ -770,7 +689,7 @@
       confirmDrawer: function () {
         this.fire('toast', {
           status: 'openDialog',
-          text: 'ต้องการยืนยันข้อมูลใช่หรือไม่ ?',
+          text: this.localizeCommon.toast_approve,
           confirmed: (result) => {
             if (result == true) {
               this._resiveFormBook()
@@ -790,7 +709,7 @@
                           hiddend: true
                         })
                         this.fire('toast', {
-                          status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
+                          status: 'success', text: this.localizeCommon.save_succeed,  // คำสั่งสำหรับเปิด toast success
                           callback: () => {
                             let url = { cl_id: this.data.cl_id }
                             let urlBook = { id: this.data.id }
@@ -818,7 +737,7 @@
                   //         hiddend: true
                   //       })
                   //       this.fire('toast', {
-                  //         status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
+                  //         status: 'success', text: this.localizeCommon.save_succeed,  // คำสั่งสำหรับเปิด toast success
                   //         callback: () => {
                   //           let url = { cl_id: this.data.cl_id }
                   //           let urlBook = { id: this.data.id }
@@ -846,7 +765,7 @@
       cancelconfirmDrawer: function () {
         this.fire('toast', {
           status: 'openDialog',
-          text: 'ต้องการยกเลิกยืนยันข้อมูลใช่หรือไม่ ?',
+          text: this.localizeCommon.toast_cancel_approve,
           confirmed: (result) => {
             if (result == true) {
               this._resiveFormBook()
@@ -866,7 +785,7 @@
                           hiddend: true
                         })
                         this.fire('toast', {
-                          status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
+                          status: 'success', text: this.localizeCommon.save_succeed,  // คำสั่งสำหรับเปิด toast success
                           callback: () => {
                             let url = { cl_id: this.data.cl_id }
                             let urlBook = { id: this.data.id }
@@ -893,30 +812,12 @@
           }
         })
       },
-      // _deleteBooking: function (result, detail) {
-      //   if (result == true) {
-      //     this.delete('./g2g/book/delete/id/', detail.data.id, () => {
-      //       this.fire('get-list-bl', { shm_id: detail.data.shm_id });
-      //       this.fire('_get-fire-booking-detail', { detail: detail.data });
-      //       this.fire('toast', {
-      //         status: 'success', text: 'ลบข้อมูลสำเร็จ',  // คำสั่งสำหรับเปิด toast success
-      //         callback: () => {
-      //           this.cancelInsertShipment();
-      //           // let el = Polymer.dom(this.root).querySelectorAll('.required');
-      //           // el.map((el)=> {el.value='';});
-      //         }
-      //       });
-      //     });
-      //   }
-      // },
       addShip: function () {
         try {
           this.push('data.ship', { ship_id: '', ship_voy: '' });
           this.notifyPath('data.ship');
         } catch (e) {
           // console.log(e);
-        } finally {
-
         }
 
       },
@@ -937,70 +838,6 @@
         this.dispatchAction('CLEAR_BOOK_DETAIL', {})
         this.fire('_list-book', 'list-of-booking');
       },
-      // editBl: function () {
-      //   // let blNo = this.data.bl_no;
-      //   let ship_lot = this.data.ship_lot
-      //   let book_id = this.data.book_id
-      //   let ship_lot = this.dataBookNo.filter((ship_lot) => ship_lot.ship_lot == ship_lot)[0]
-
-      //   if (ship_lot.book_id != this.data.book_id) {
-
-      //     this.fire('toast', {
-      //       status: 'connectError', text: 'ลำดับเรือซ้ำกัน', //คำสั่งสำหรับเปิด toast error
-      //       callback: function () {
-      //       }
-      //     })
-      //   } else {
-      //     this.set('data.tags', [])
-      //     this.fire('toast', { status: 'load' });
-      //     this.push('data.tags', this.dataForSelect.cl_id, this.dataForSelect.contract_id);
-      //     this._cleanDataBl(this.data, (data) => {
-      //       // console.log(this.dataForSelect.carrier);
-      //       if (data.carrier_id == '' || data.carrier_id == undefined) {
-      //         data.carrier_id = this._checkCarrierIsBlank();
-      //       }
-      //       data.id = book_id;
-      //       this.fire('toast', {  //คำสั่งสำหรับเปิด toast dialog
-      //         status: 'dialog',
-      //         text: 'ต้องการแก้ข้อมูลใช่หรือไม่ ?',
-      //         confirmed: this._editBlExporter.bind(this), //function ที่ใช้รับค่า ปุ่ม
-      //         el: this, // compontents
-      //         data: data // ข้อมูลที่ส่งไป เช่น id ที่จะใช้ลบข้อมูล ใน db
-      //       });
-      //     });
-      //   }
-
-      // },
-      // _editBlExporter: function (result, detail) {
-      //   if (result == true) {
-      //     this.editBook();
-      //     // console.log(detail.data);
-      //     this.update('./g2g/book/update', detail.data, () => {
-      //       // console.log(detail.data);
-      //       this.fire('toast', { status: 'load' });
-      //       this.fire('_get-fire-booking-detail', { detail: detail.data });
-      //       this.fire('refresh-contract',{detail:'refresh-contract'});
-      //       this.fire('get-list-shipment',{contractId:this.dataForSelect.contract_id});
-      //       this.fire('get-list-shipment-detail',{sm_id:this.dataForSelect.shm_id});
-      //       this.fire('get-shipMentDetail',{shm_id :detail.data.shm_id,refresh:false ,action:'put'})
-      //       this.fire('get-list-bl',{shm_id:detail.data.shm_id});
-      //       this.fire('toast', {
-      //         status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
-      //         callback: function () {
-      //           //  detail.el.fire('get-contract-detail',{contractId:detail.data.id});
-      //         }
-      //       });
-      //     });
-      //   }
-      // },
-      // _oBChangeBooking: function (book_no) {
-      //   if (typeof book_no !== 'undefined' && book_no !== 'undefined') {
-      //     if (this.data.bl_no.length < this.data.book_no.length) {
-      //       this.data.bl_no = book_no;
-      //       this.notifyPath('data.bl_no')
-      //     }
-      //   }
-      // },
       _oBChangePod: function (dest_port_id) {
         if (this.data.deli_port_id === undefined || this.data.deli_port_id === null || this.data.deli_port_id === '') {
           this.data.deli_port_id = dest_port_id;
@@ -1008,110 +845,7 @@
         }
 
       },
-      // _getPod: function (Pod) {
-      //   let pol = Pod.countryPort.filter((countryport) => countryport.country_id == 'THA');
-      //   this.dataForSelect.pol = pol;
-      //   this.notifyPath('dataForSelect.pol');
-      //   let county = this.dataForSelect.country_id;
-      //   let pod = Pod.countryPort.filter((countryport) => countryport.country_id == county);
-      //   this.dataForSelect.pod = pod;
-      //   this.notifyPath('dataForSelect.pod');
-      //   // console.log(pod[0].ship);
-      // },
-      // _checkCarrierIsBlank: function () {
-      //   var carrierSelete;
-      //   this.dataForSelect.carrier.map((carrier) => {
-      //     if (carrier.carrier_name == '') {
-      //       // console.log('carrier',carrier.carrier_name,":",carrier.carrier_id);
-      //       carrierSelete = carrier.carrier_id;
-      //     }
-      //   });
-      //   // console.log(carrierSelete);
-      //   return carrierSelete;
-      // },
-      // _cleanDataBl: function (data, callback) {
-      //   // console.log(12121);
-      //   let el = Polymer.dom(this.root).querySelectorAll('.required');
-      //   let stat = el.map((el) => el.validate());
-      //   if (stat.every(elem => elem == true)) {
-      //   let { bl_no, book_no, carrier_id, deli_port_id, dest_port_id, eta_date, etd_date,
-      //     load_port_id, packing_date, cut_of_time, cut_of_date, product_date,
-      //     ship_lot, weight_container, book_status, cl_id } = data;
-      //   let newData = {
-      //     bl_no, book_no, carrier_id, deli_port_id, dest_port_id, eta_date, etd_date,
-      //     load_port_id, packing_date, cut_of_time, cut_of_date, product_date,
-      //     ship_lot, weight_container, book_status, cl_id,
-      //   };
-      //   // console.log('newData.book_remark',newData.book_remark);
-      //   // newData.shipline_id = data.shipline_id
-      //   newData.book_remark = '';
-      //   newData.ship = new Array();
-      //   newData.surveyor = new Array();
-      //   newData.eta_date = new Date(newData.eta_date).toISOString();
-      //   newData.etd_date = new Date(newData.etd_date).toISOString();
-      //   newData.cut_of_date = new Date(newData.cut_of_date).toISOString();
-      //   newData.packing_date = new Date(newData.packing_date).toISOString();
-      //   newData.product_date = new Date(newData.product_date).toISOString();
-      //   if (data.shipline_id != '') {
-      //     newData.shipline_id = data.shipline_id
-      //   } else {
-      //     newData.shipline_name = data.shipline_name
-      //   }
-      //   data.ship.map((ships) => {
-      //     if (ships.ship_id != '') {
-      //       newData.ship.push({ ship_id: ships.ship_id, ship_voy: ships.ship_voy });
-      //     } else {
-      //       newData.ship.push({ ship_name: ships.ship_name, ship_voy: ships.ship_voy });
-      //     }
-      //   });
-      //   data.surveyor.map((surveyors) => {
-      //     newData.surveyor.push({ surveyor_id: surveyors.surveyor_id });
-      //   });
-      //   // console.log(newData);
-      //   if (typeof data.tags !== 'undefined') {
-      //     newData.tags = new Array();
-      //     data.tags.map((tag) => {
-      //       newData.tags.push(tag);
-      //     });
-      //   }
-      //   // console.log(typeof data.book_remark == 'undefined')
-      //   if (typeof data.book_remark == 'undefined') {
-      //     newData.book_remark = '';
-      //   } else {
-      //     newData.book_remark = data.book_remark;
-      //   }
-      //   el.map((el) => { el.reset(); });
-
-      //   callback(newData)
-      //   } else {
-      //     this.fire('toast', {
-      //       status: 'connectError', text: 'กรุณากรอกให้ครบทุกช่อง', //คำสั่งสำหรับเปิด toast error
-      //       callback: function () {
-      //       }
-      //     })
-      //   }
-      // }
-      // _getResetShip: function (e) {
-      //   this._getShip(this.data.shipline_id, this.dataForSelect);
-      // },
-      // _getCheckShipline: function (shipline) {
-      //   // console.log(121212);
-      //   // console.log(this.data.shipline_id);
-      //   if (this.data.shipline_id != '') {
-      //     this._getResetShip(1)
-      //     let shipline_id = this.data.shipline_id
-      //     // console.log(this.dataForSelect.shipInShipline.filter((shipline)=>shipline.shipline_id == shipline_id )[0].ship);
-      //   }
-
-      // },
       _getShip: function (shipline_id, dataForSelect) {
-        // console.log(shipline_id, dataForSelect);
-        // console.log(this.data);
-        // let shipline_id = e.detail.value;
-        // if (shipline_id) {
-
-        // this.dataForSelect.ships = ships;
-        // this.notifyPath('dataForSelect.ships');
         try {
           let ships = this.shipList
           this.async(() => {
@@ -1143,13 +877,6 @@
 
         // }
       },
-      // cancelInsertShipment: function () {
-      //   //shipment-detail.html
-      //   this.fire('cancel-insert-shipment', { detail: 'cancel Show' })
-      // },
-      // _getResetSurveyor: function (e) {
-      //   this._getSurveyor('this.data.shipline_id', this.surveyorList);
-      // },
       _getSurveyor: function (surveyor_id, surveyorList) {
         if (surveyor_id) {
           this.async(() => {

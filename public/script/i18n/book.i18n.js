@@ -11,6 +11,7 @@ export const book = {
 
         no:"ลำดับที่",
         vessel_no:'เรือลำที่',
+        expoter:'ผู้ส่งออก',
         list_expoter:"รายชื่อผู้ส่งออก",
         add_exporter:"เพิ่มผู้ส่งออก",
         confirm_exporter:"ยืนยันผู้ส่งออก",

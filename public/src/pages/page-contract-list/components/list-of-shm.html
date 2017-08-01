@@ -279,19 +279,19 @@
       bookExporterDetail: function (e) {
         let url = { id: e.currentTarget.data.id }
         this.dispatchAction('SET_BREADCRUMBS', [{
-          label: 'สัญญาที่ ' + this.contractId.contract_no,
+          label: this.localizeContract.contract_at+' '+ this.contractId.contract_no,
           href: ''
         },
         {
-          label: 'งวดที่ ' + this.confirmId.cl_no,
+          label: this.localizeConfirmLetter.ref_no+' ' + this.confirmId.cl_no,
           href: ''
         },
         {
-          label: 'เรือลำที่ ' + this.bookId.ship_lot,
+          label: this.localizeBook.vessel_no+' ' + this.bookId.ship_lot,
           href: ''
         },
         {
-          label: 'ผู้ส่งออก ' + e.currentTarget.data.company.company_name_th,
+          label: this.localizeBook.expoter +' '+ e.currentTarget.data.company.company_name_th,
           href: ''
         },
         ])
@@ -306,7 +306,7 @@
         this.dispatchAction('GET_BOOK_EXPORTER_DETAIL', this.genUrl(url))
         this.async(() => {
           this.fire('toast', {
-            status: 'success', text: 'โหลดสำเร็จ', callback: () => {
+            status: 'success', text: this.localizeCommon.load_successfully, callback: () => {
               this.fire('_list-book', 'list-of-booking-exporter-detail')
             }
           })
@@ -322,70 +322,31 @@
           hiddend: true
         })
         this.dispatchAction('SET_BREADCRUMBS', [{
-          label: 'สัญญาที่ ' + this.contractId.contract_no,
+          label: this.localizeContract.contract_at+' ' + this.contractId.contract_no,
           href: ''
         },
         {
-          label: 'งวดที่ ' + this.confirmId.cl_no,
+          label: this.localizeConfirmLetter.ref_no+' ' + this.confirmId.cl_no,
           href: ''
         },
         {
-          label: 'เรือลำที่ ' + this.bookId.ship_lot,
+          label:  this.localizeBook.vessel_no+' '+ this.bookId.ship_lot,
           href: ''
         },
         {
-          label: 'เพิ่มผู้ส่งออก ',
+          label: this.localizeBook.add_exporter,
           href: ''
         },
         ])
         // this.dispatchAction('GET_BOOK_EXPORTER_DETAIL', this.genUrl(url))
         this.async(() => {
           this.fire('toast', {
-            status: 'success', text: 'โหลดสำเร็จ', callback: () => {
+            status: 'success', text: this.localizeCommon.load_successfully, callback: () => {
               this.fire('_list-book', 'list-of-booking-exporter-detail')
             }
           })
         }, 500)
       },
-      // properties: {
-      //   pageSelected: {
-      //     type: String,
-      //     value: 'list-of-shm-det',
-      //     notify: true
-      //   },
-      //   dataEdit: {
-      //     type: Object,
-      //     value: {}
-      //   },
-      //   setFalse: {
-      //     type: Boolean,
-      //     value: false
-      //   }
-      // },
-      // created: function () {
-      //   this.nylonLocalizeImport('/i18n-page1.json');
-      // },
-      // listeners: {
-      //   '_change-component-shm': '_changeComponentShm',
-      //   '_get-fire-in-book-shm-detail': '_getFireInBookShmDetail',
-      //   '_post-approve-book': '_postApproveBook'
-      // },
-      // _changeComponentShm: function (data) {
-      //   this.set('pageSelected', data.detail.detail)
-      // },
-      // _getFireInBookShmDetail: function (e) {
-      //   this.dataEdit = e.detail.detail;
-      //   this.set('dataEdit', e.detail.detail)
-      //   this.set('pageSelected', 'shm-detail')
-      // },
-      // _postApproveBook: function (e) {
-      //   // console.log(e.detail);
-      //   // this.fire('toast', { status: 'load' });
-      //   this.update('./g2g/book/update/', e.detail, () => {
-      //     // this.fire('toast', { status: 'load' });
-      //     // console.log(11);
-      //   });
-      // }
 
     });
   </script>
