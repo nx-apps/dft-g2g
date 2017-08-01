@@ -150,14 +150,16 @@
   </style>
   <template>
     <gl-form-panel set-padding="10px 20px 10px 20px" set-border="1px">
-      <!--<template is="dom-if" if="[[_isViewing(isViewSeleted)]]">-->
+      <template is="dom-if" if="[[!commonState.isInsert]]">
       <div class="horizontal end-justified layout">
         <paper-icon-button id="edit" class="crud" icon="create" raised on-tap="editContract" disabled="[[!commonState.btnDisabled]]"></paper-icon-button>
         <paper-tooltip for="edit" offset="0">{{localizeCommon.edit}}</paper-tooltip>
+        <template is="dom-if" if="[[!data.contract_status]]">
         <paper-icon-button id="delete" class="crud" icon="delete" raised on-tap="deleteContract" disabled="[[!commonState.btnDisabled]]"></paper-icon-button>
         <paper-tooltip for="delete" offset="0">{{localizeCommon.delete}}</paper-tooltip>
+        </template>
       </div>
-      <!--</template>-->
+      </template>
       <gl-grid-row width="{{getWidth}}">
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,9]]">
           <gl-form-input required class="required" disabled="[[_checkArrayTrue(commonState.btnDisabled,data.contract_status)]]" error-message="{{localizeContract.error_input}}{{localizeContract.contract_name}}"
@@ -250,10 +252,10 @@
             </div>
             <div class="header-div flex">
               <div style="padding: 10px 15px;">
-                รูปแบบการดู
+                [[localizeCommon.type_see]]
                 <paper-radio-group selected="{{typeSelete}}" >
-                  <paper-radio-button name="list">รายการ</paper-radio-button>
-                  <paper-radio-button name="group">กลุ่ม</paper-radio-button>
+                  <paper-radio-button name="list">[[localizeCommon.list]]</paper-radio-button>
+                  <paper-radio-button name="group">[[localizeCommon.group]]</paper-radio-button>
                 </paper-radio-group>
               </div>
             </div>
@@ -262,11 +264,11 @@
             <div name="list">
               <div class="horizontal layout header-item" warp>
                 <div class="header-div flex"></div>
-                <div class="header-div flex-3">รหัส Hamonize <br>
-                  <gl-form-input label="ค้นหา" disabled="{{!dataSeleted.year}}" type="search" value="{{dataSeleted.hamonize_code}}" on-value-changed="searchHamonizeCode"></gl-form-input>
+                <div class="header-div flex-3">[[localizeContract.hm_code]]<br>
+                  <gl-form-input label="[[localizeCommon.search]]" disabled="{{!dataSeleted.year}}" type="search" value="{{dataSeleted.hamonize_code}}" on-value-changed="searchHamonizeCode"></gl-form-input>
                 </div>
-                <div class="header-div flex-3">ชื่อข้าว<br>
-                  <gl-form-input style="padding-left:20px;" disabled="{{!dataSeleted.year}}" value="{{dataSeleted.hamonize_th2}}" label="ค้นหา"
+                <div class="header-div flex-3">[[localizeContract.hm_name]]<br>
+                  <gl-form-input style="padding-left:20px;" disabled="{{!dataSeleted.year}}" value="{{dataSeleted.hamonize_th2}}" label="[[localizeCommon.search]]"
                     type="search" on-value-changed="searchHamonizeTh"></gl-form-input>
                 </div>
               </div>
@@ -292,15 +294,15 @@
                   <div class=""></div>
                   <div class="header-div flex"></div>
                   <div class="header-div flex"></div>
-                  <div class="header-div flex-3">รหัส Hamonize
-                    <gl-form-input label="ค้นหา" type="search" disabled="{{!dataSeleted.year}}" value="{{dataSeleted.hamonize_code}}" on-value-changed="searchHamonizeCode"></gl-form-input>
+                  <div class="header-div flex-3">[[localizeContract.hm_code]]
+                    <gl-form-input label="[[localizeCommon.search]]" type="search" disabled="{{!dataSeleted.year}}" value="{{dataSeleted.hamonize_code}}" on-value-changed="searchHamonizeCode"></gl-form-input>
                   </div>
-                  <div class="header-div flex-3">ชื่อกลุ่มข้าว</div>
-                  <div class="header-div flex-3">ชื่อข้าว
-                    <gl-form-input style="padding-left:20px;" disabled="{{!dataSeleted.year}}" value="{{dataSeleted.hamonize_th2}}" label="ค้นหา"
+                  <div class="header-div flex-3">[[localizeContract.hm_group]]</div>
+                  <div class="header-div flex-3">[[localizeContract.hm_name]]
+                    <gl-form-input style="padding-left:20px;" disabled="{{!dataSeleted.year}}" value="{{dataSeleted.hamonize_th2}}" label="[[localizeCommon.search]]"
                       type="search" on-value-changed="searchHamonizeTh"></gl-form-input>
                   </div>
-                  <div class="header-div flex-2">ปี</div>
+                  <div class="header-div flex-2">[[localizeContract.hm_year]]</div>
                 </div>
                 <div class="subdiv">
                   <template is="dom-repeat" items={{hamonizeList}} index-as="indexroot">
@@ -423,16 +425,6 @@
           type: String,
           value: 'list'
         },
-        // dataForSelect: {
-        //   type: Object,
-        // },
-        // data: {
-        //   type: Object,
-        //   value: { contract_weight: 0, contract_type_rice: [{}] }
-        // },
-        // dataForUse: {
-        //   type: Object,
-        // },
         payterms: {
           type: Object,
           value: [
@@ -442,9 +434,6 @@
             { payterms_Name: 'D/A', payterms_Id: 'D/A' }
           ]
         }
-      },
-      get(data) {
-        // console.log(data);
       },
       observers: [
         '_checkHamonize(data,hamonizeList)',
@@ -585,9 +574,6 @@
           // console.log(seletedCode);
           for (var index = 0; index < this.hamonizeList.length; index++) {
             for (var index2 = 0; index2 < this.hamonizeList[index].sub.length; index2++) {
-              // console.log((seletedCode).toString().search((this.hamonizeList[index].sub[index2].hamonize_code).toString()))
-              // console.log(String(this.hamonizeList[index].sub[index2].hamonize_code));
-              // if (String(seletedCode).search(String(this.hamonizeList[index].sub[index2].hamonize_code)) > -1) {
               if (String(this.hamonizeList[index].sub[index2].hamonize_code).search(String(seletedCode)) > -1
                 && String(this.hamonizeList[index].sub[index2].hamonize_th2).search(String(hamonize_th2)) > -1
                 && String(this.hamonizeList[index].sub[index2].hamonize_year) === year) {
@@ -603,9 +589,6 @@
               this.set('hamonizeList.' + index + '.hiddend', false)
             }
           }
-          // console.log(this.hamonizeList.length);
-          // console.log(2222);
-          // this.$$('#hamonizeYear').value = ''
         } catch (e) {
 
         }
@@ -728,7 +711,7 @@
             })
           } else {
             this.fire('toast', {
-              status: 'connectError', text: 'กรุณากรอกข้อมูลให้ครบทุกช่อง', //คำสั่งสำหรับเปิด toast error
+              status: 'connectError', text: this.localizeCommon.toast_input_error, //คำสั่งสำหรับเปิด toast error
               callback: function () {
                 rej('error')
               }
@@ -748,7 +731,7 @@
                 if (response.data.inserted !== undefined && response.data.inserted.length !== 0) {
                   this.dispatchAction('GET_CONTRACT_OF_BUYER', res.buyer_id);
                   this.fire('toast', {
-                    status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
+                    status: 'success', text: this.localizeCommon.save_succeed,  // คำสั่งสำหรับเปิด toast success
                     callback: () => {
                       this.queryFrom('.required').map((el) => { el.reset(); });
                       this.fire('close-drawer')
@@ -775,12 +758,12 @@
       saveContract: function () {
         this.fire('toast', {
           status: 'openDialog',
-          text: 'ต้องการแก้ข้อมูลใช่หรือไม่ ?',
+          text: this.localizeCommon.toast_edit,
           confirmed: (result) => {
             if (result == true) {
               this._resiveForm()
                 .then((res) => {
-                  console.log(res);
+                  // console.log(res);
                   // this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
                   this.dispatchAction('PUT_CONTRACT', res)
                     .then((response) => {
@@ -795,7 +778,7 @@
                           hiddend: true
                         })
                         this.fire('toast', {
-                          status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
+                          status: 'success', text: this.localizeCommon.save_succeed,  // คำสั่งสำหรับเปิด toast success
                           callback: () => {
                           }
                         })
@@ -827,7 +810,7 @@
         } else {
           this.fire('toast', {
             status: 'openDialog',
-            text: 'ต้องการลบข้อมูลใช่หรือไม่ ?',
+            text: this.localizeCommon.toast_delete,
             confirmed: (result) => {
               if (result == true) {
                 this._resiveForm()
@@ -839,7 +822,7 @@
                         if (response.data.deleted !== undefined && response.data.deleted.length !== 0) {
                           this.dispatchAction('GET_CONTRACT_OF_BUYER', res.buyer_id);
                           this.fire('toast', {
-                            status: 'success', text: 'ลบสำเร็จ',  // คำสั่งสำหรับเปิด toast success
+                            status: 'success', text: this.localizeCommon.delete_succeed,  // คำสั่งสำหรับเปิด toast success
                             callback: () => {
                             }
                           })
@@ -867,7 +850,7 @@
       calcelContract: function () {
         this.fire('toast', {
           status: 'openDialog',
-          text: 'ต้องการยกเลิกแก้ข้อมูลใช่หรือไม่ ?',
+          text: this.localizeCommon.toast_cancel_edit,
           confirmed: (result) => {
             if (result == true) {
               this._resiveForm()
@@ -887,7 +870,7 @@
       confirmDrawer: function () {
         this.fire('toast', {
           status: 'openDialog',
-          text: 'ต้องการยืนยันสัญญาใช่หรือไม่ ?',
+          text: this.localizeContract.toast_approve_contract,
           confirmed: (result) => {
             if (result == true) {
               this._resiveForm()
@@ -907,7 +890,7 @@
                           hiddend: true
                         })
                         this.fire('toast', {
-                          status: 'success', text: 'บันทึกสำเร็จ',  // คำสั่งสำหรับเปิด toast success
+                          status: 'success', text: this.localizeCommon.save_succeed,  // คำสั่งสำหรับเปิด toast success
                           callback: () => {
                           }
                         })

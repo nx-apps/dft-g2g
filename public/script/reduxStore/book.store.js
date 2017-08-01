@@ -128,33 +128,9 @@ export function bookAction(store) {
                     console.log(error);
                 });
         },
-        // BOOK_GET_LIST_DATA: function (id) {
-
-        //     axios.get('./bl/contract?id=' + id)
-        //         .then((response) => {
-        //             store.dispatch({ type: 'BOOK_GET_LIST_DATA', payload: response.data })
-        //         })
-        // },
-        // BOOK_GET_ID_DATA: function (id) {
-        //     axios.get('./invoice/book?id=' + id)
-        //         .then((response) => {
-        //             store.dispatch({ type: 'BOOK_GET_ID_DATA', payload: response.data })
-        //         })
-        // },
-        // BOOK_INSERT: function (data) {
-        //     console.log(data);
-        //     axios.put('./invoice/update', data)
-        //         .then((response) => {
-        //             console.log(response);
-        //         })
-        //         .catch((err) => {
-        //             console.log(err);
-        //         })
-        // },
         // END GET
         // POST
         POST_BOOK: function (data) {
-            // cutDeDataInObject(data, ['packing_date', 'product_date', 'etd_date', 'eta_date', 'cut_date'])
             // console.log(data);
             return axios.post('./book/insert', data)
         },
@@ -165,12 +141,10 @@ export function bookAction(store) {
         // END POST
         // PUT
         PUT_BOOK: function (data) {
-            // cutDeDataInObject(data, ['packing_date', 'product_date', 'etd_date', 'eta_date', 'cut_date'])
             // console.log(data);
             return axios.put('./book/update', data)
         },
         PUT_BOOK_APPROVE: function (data) {
-            // cutDeDataInObject(data, ['packing_date', 'product_date', 'etd_date', 'eta_date', 'cut_date'])
             return axios.put('./book/approve', data)
         },
         PUT_BOOK_DETAIL: function (data) {

@@ -92,13 +92,14 @@
                 localizeCommon: {
                     statePath: 'i18n.common'
                 },
+                localizeContract: {
+                    statePath: 'i18n.contract'
+                },
                 title: {
                     type: String,
                     value: 'ปริมาณการส่งมอบ (ตัน)'
                 },
-                localizeContract: {
-                    statePath: 'i18n.contract'
-                },
+                
                 
             },
             getContractList(e) {
@@ -112,11 +113,6 @@
                 this.fire('nylon-change-page',{path:'/contract-list'})
             },
             getChartQuantity(quantity) {
-                // console.log(this.localizeContract.add_contract);
-                // let label = this.localizeContract.total_send
-                // let num = quantity.map((item)=> item.cl_weight)
-                // console.log(quantity.map((ed) => ed.contract_year));
-                // console.log(quantity.map((item)=> item.cl_weight));
                 return {
                     labels: quantity.map((ed) => ed.contract_year),
                     

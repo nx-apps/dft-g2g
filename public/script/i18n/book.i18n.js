@@ -10,6 +10,7 @@ export const book = {
         n_n:"สำเนา",
 
         no:"ลำดับที่",
+        vessel_no:'เรือลำที่',
         list_expoter:"รายชื่อผู้ส่งออก",
         add_exporter:"เพิ่มผู้ส่งออก",
         confirm_exporter:"ยืนยันผู้ส่งออก",

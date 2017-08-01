@@ -78,12 +78,12 @@
             </div>
         </nylon-panel-right>
         <div class="btnFabBack">
-            <paper-fab icon="arrow-back" title="ย้อนกลับ" id="backWard" on-tap="backPage"></paper-fab>
-            <paper-tooltip for="addContract" offset="0">ย้อนกลับ</paper-tooltip>
+            <paper-fab icon="arrow-back" title="{{localizeCommon.back_ward}}" id="backWard" on-tap="backPage"></paper-fab>
+            <paper-tooltip for="addContract" offset="0">{{localizeCommon.back_ward}}</paper-tooltip>
         </div>
         <div class="btnFab">
-            <paper-fab icon="add" title="{{localize.label_add_contract}}" id="addContract" on-tap="addContract"></paper-fab>
-            <paper-tooltip for="addContract" offset="0">{{localize.label_add_contract}}</paper-tooltip>
+            <paper-fab icon="add" title="{{localizeContract.add_contract}}" id="addContract" on-tap="addContract"></paper-fab>
+            <paper-tooltip for="addContract" offset="0">{{localizeContract.add_contract}}</paper-tooltip>
         </div>
     </template>
     <script>
@@ -100,23 +100,16 @@
                 contractList: {
                     statePath: 'contract.contractList'
                 },
-                localize: {
-                    statePath: 'i18n.g2g'
+                localizeCommon: {
+                    statePath: 'i18n.common'
+                },
+                localizeContract: {
+                    statePath: 'i18n.contract'
                 },
                 
                 crumbs: {
                     statePath: 'commonState.breadCrumbs',
                 },
-                // feeList: {
-                //     type: Object
-                // },
-                // dataSelected: {
-                //     type: Object,
-                // },
-                // dataForSelected: {
-                //     type: Object,
-                //     value: { dataForContract: {}, dataForConfirm: {}, dataForBooking: {}, dataForFee: {} }
-                // },
                 g2gPageSeleted: {
                     type: String,
                     value: 'addContract'
@@ -131,36 +124,21 @@
                         listOfFee: false
                     }
                 },
-                // titlePanelRight: {
-                //     type: String,
-                //     value: 'การซื้อขายข้าวระหว่างประเทศ'
-                // },
-                // pageInConponents: {
-                //     type: Object,
-                //     value: { listOfConfirm: 'listOfConfirm', listOfShipment: 'listOfShipment' }
-                // }
             },
             listeners: {
-                // 'refresh-contract': '_getContractList',
                 'get-contract-detail': '_getContractDetail',
                 'get-list-confirm': '_getListConfirm',
                 'get-list-booking': '_getListShipment',
                 'get-list-Fee': '_getlistFee',
                 'flipDrawer': '_flipDrawer',
                 'close-drawer': '_flipDrawerClose',
-                // 'name-panel-right': '_namePanelRight',
-                // '_set-breadcrumbs': 'setEventBreadcrumbs'
             },
             nylonPageActive: function () {
-                // console.log(111);
-                // console.log(this.getCookieBhv("buyerId"));
                 this.dispatchAction('GET_CONTRACT_OF_BUYER', this.getCookieBhv("buyerId"))
                 this.dispatchAction('SET_COUNTRY_NAME_EN', this.getCookieBhv("country_name_en"));
                 this.dispatchAction('SET_BUYER_ID',{
                     buyer_id:this.getCookieBhv("buyerId")
                 })
-                // console.log(this.getCookieBhv("buyerId"));
-                // this.dispatchAction('EXPORTER_GET_TYPE_LIC');
                 this.dispatchAction('GET_COMMON_BUYER_LIST');
                 this.dispatchAction('GET_COMMON_HAMONIZE_LIST');
                 this.dispatchAction('GET_COMMON_CARRIER_LIST');
@@ -175,12 +153,12 @@
             // //addContract
             addContract: function () {
                 this.dispatchAction('SET_BREADCRUMBS', [{
-                    label: 'เพิ่มสัญญา',
+                    label: this.localizeContract.add_contract,
                     href: ''
                 }])
                 // resetFrom
                 this.$$('contract-detail').resetFrom('.required')
-                this.titlePanelRight = 'เพิ่มข้อมูลผู้สั่งซื้อ'
+                this.titlePanelRight = this.localizeContract.add_contract
                 this.g2gPageSeleted = 'addContract'
                 this.fire('toast', { status: 'load' });
                 this.dispatchAction('SET_STATE', {
@@ -191,7 +169,7 @@
                 this.dispatchAction('CLEAR_CONTRACT')
                 this.async(() => {
                     this.fire('toast', {
-                        status: 'success', text: 'โหลดสำเร็จ', callback: () => {
+                        status: 'success', text: this.localizeCommon.load_successfully, callback: () => {
                             this._flipDrawer();
                         }
                     })
@@ -200,7 +178,7 @@
             },
             _getContractDetail: function (e) {
                 this.dispatchAction('SET_BREADCRUMBS', [{
-                    label: 'สัญญาที่ ' + e.detail.contract_no,
+                    label: this.localizeContract.contract_at+' ' + e.detail.contract_no,
                     href: ''
                 }])
                 // resetFrom
@@ -208,9 +186,7 @@
                 // console.log(e.detail.contract_id);
                 this.dispatchAction('GET_CONTRACT', e.detail.contract_id)
                 this.g2gPageSeleted = 'contractDetail'
-                // // console.log(typeof e.detail.data === 'undefined');
-                // if (typeof e.detail.data !== 'undefined') {
-                this.titlePanelRight = 'สัญญาที่  : ' + e.detail.contract_no
+                this.titlePanelRight = this.localizeContract.contract_at+' : ' + e.detail.contract_no
                 // if (typeof e.detail.contractId === "undefined") {
                 this.fire('toast', { status: 'load' });
                 this.dispatchAction('SET_STATE', {
@@ -220,7 +196,7 @@
                 })
                 this.async(() => {
                     this.fire('toast', {
-                        status: 'success', text: 'โหลดสำเร็จ', callback: () => {
+                        status: 'success',text: this.localizeCommon.load_successfully, callback: () => {
                             this._flipDrawer();
                         }
                     })
@@ -230,7 +206,7 @@
                 // console.log(e.detail)
                 let url = { contract_id: e.detail.contract_id, status: 'all' }
                 this.dispatchAction('SET_BREADCRUMBS', [{
-                    label: 'สัญญาที่ ' + e.detail.contract_no,
+                    label: this.localizeContract.contract_at+' ' + e.detail.contract_no,
                     href: ''
                 }])
                 this.dispatchAction('GET_CONFIRM_LIST', this.genUrl(url))
@@ -239,13 +215,7 @@
                 this.dispatchAction('GET_CONFIRM_EXCHANG_RATE')
                 this.g2gPageSeleted = 'listOfConfirm'
                 this.dispatchAction('SET_PAGE_AND_SEARCH', { page: 'listOfConfirm', search: '' })
-                // console.log(11111)
-                //     this.set('pageSelected', 'listOfConfirm')
-                //     // listOfConfirm
-                //     this.g2gPageSeleted = 'listOfConfirm';
-                //     if (typeof e.detail.contractId == "undefined") {
-                //     // console.log(e.detail.data)
-                this.titlePanelRight = 'สัญญาที่  : ' + e.detail.contract_no
+                this.titlePanelRight = this.localizeContract.contract_at+' : ' + e.detail.contract_no
                 this.dispatchAction('SET_STATE', {
                     isInsert: false,
                     btnDisabled: false,
@@ -267,7 +237,7 @@
                             this.resolveUrl('./components/list-of-confirm.html'),
                             () => {
                                 this.fire('toast', {
-                                    status: 'success', text: 'โหลดสำเร็จ', callback: () => {
+                                    status: 'success', text: this.localizeCommon.load_successfully, callback: () => {
                                         this._flipDrawer();
                                         this.checkRenderPage.listOfConfirm = true;
                                     }
@@ -277,7 +247,7 @@
                     }, 1000);
                 } else {
                     this.fire('toast', {
-                        status: 'success', text: 'โหลดสำเร็จ', callback: () => {
+                        status: 'success', text: this.localizeCommon.load_successfully, callback: () => {
                             this._flipDrawer();
                         }
                     })
@@ -290,7 +260,7 @@
                 this.dispatchAction('GET_CONFIRM_LIST', this.genUrl(url))
                 this.dispatchAction('GET_HAMONIZE_OF_CONTRACT', this.genUrl(url))
                 this.dispatchAction('SET_BREADCRUMBS', [{
-                    label: 'สัญญาที่ ' + e.detail.contract_no,
+                    label: this.localizeContract.contract_at+' ' + e.detail.contract_no,
                     href: ''
                 }])
                 this.g2gPageSeleted = 'listOfShipment';
@@ -298,7 +268,7 @@
                 this.dispatchAction('SET_CONTRACT_ID', contractData)
                 this.dispatchAction('SET_PAGE_AND_SEARCH', { page: 'list-of-booking', search: '' })
 
-                this.titlePanelRight = 'สัญญาที่  : ' + e.detail.contract_no
+                this.titlePanelRight = this.localizeContract.contract_at+' : ' + e.detail.contract_no
 
                 this.fire('toast', { status: 'load' });
                 if (this.checkRenderPage.listOfShipment != true) {
@@ -308,7 +278,7 @@
                             () => {
                                 this.async(() => {
                                     this.fire('toast', {
-                                        status: 'success', text: 'โหลดสำเร็จ', callback: () => {
+                                        status: 'success', text: this.localizeCommon.load_successfully, callback: () => {
                                             this._flipDrawer();
                                             this.checkRenderPage.listOfShipment = true;
                                         }
@@ -322,7 +292,7 @@
                 } else {
                     this.async(() => {
                         this.fire('toast', {
-                            status: 'success', text: 'โหลดสำเร็จ', callback: () => {
+                            status: 'success', text: this.localizeCommon.load_successfully, callback: () => {
                                 this._flipDrawer();
                             }
                         })
@@ -336,7 +306,7 @@
                     this.dispatchAction('FEE_GET_LIST_DATA', url)
                     // this.dispatchAction('GET_HAMONIZE_OF_CONTRACT', this.genUrl(url))
                     this.dispatchAction('SET_BREADCRUMBS', [{
-                        label: 'สัญญาที่ ' + e.detail.contract_no,
+                        label: this.localizeContract.contract_at+' ' + e.detail.contract_no,
                         href: ''
                     }])
                     // this.backPageFee()
@@ -344,7 +314,7 @@
                     let contractData = { contract_id: e.detail.contract_id, contract_no: e.detail.contract_no }
                     this.dispatchAction('SET_PAGE_AND_SEARCH', { page: 'listOfFee', search: '' })
                     this.dispatchAction('SET_CONTRACT_ID', contractData)
-                    this.titlePanelRight = 'สัญญาที่  : ' + e.detail.contract_no
+                    this.titlePanelRight = this.localizeContract.contract_at+' : ' + e.detail.contract_no
                     this.fire('toast', { status: 'load' });
                     if (this.checkRenderPage.listOfFee != true) {
                         this.async(() => {
@@ -353,7 +323,7 @@
                                 () => {
                                     this.async(() => {
                                         this.fire('toast', {
-                                            status: 'success', text: 'โหลดสำเร็จ', callback: () => {
+                                            status: 'success', text: this.localizeCommon.load_successfully, callback: () => {
                                                 this._flipDrawer();
                                                 this.checkRenderPage.listOfFee = true;
                                             }
@@ -367,7 +337,7 @@
                     } else {
                         this.async(() => {
                             this.fire('toast', {
-                                status: 'success', text: 'โหลดสำเร็จ', callback: () => {
+                                status: 'success', text: this.localizeCommon.load_successfully, callback: () => {
                                     this._flipDrawer();
                                 }
                             })
@@ -377,9 +347,6 @@
                     // console.log(e);
                 }
             },
-            // okload: function () {
-            //     this.checkLoad = true;
-            // },
             // // end_addContract
             _flipDrawer: function () {
                 Polymer.dom(this.root).querySelector('#drawerRight').open();
@@ -392,13 +359,8 @@
                 this.$$('list-of-fee-g2g').backPage()
             },
             backPage: function() {
-                // console.log(11111);
-                // console.log(this.$$('#tab7').checked);
                 this.fire('nylon-change-page', { path: '/buyer-list' })
             }
-            // _namePanelRight: function (name) {
-            //     this.titlePanelRight = name;
-            // }
         });
     </script>
 </dom-module>

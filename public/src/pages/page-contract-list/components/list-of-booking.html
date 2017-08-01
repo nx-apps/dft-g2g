@@ -214,11 +214,11 @@
             this.dispatchAction('SET_CONFIRM_ID', clData)
             // console.log(this.contractId)
             this.dispatchAction('SET_BREADCRUMBS', [{
-              label: 'สัญญาที่ ' + this.contractId.contract_no,
+              label: this.localizeContract.contract_at+' '  + this.contractId.contract_no,
               href: ''
             },
             {
-              label: 'งวดที่ ' + e.detail.value.cl_no,
+              label: this.localizeConfirmLetter.ref_no+' ' + e.detail.value.cl_no,
               href: ''
             },
             ])
@@ -239,11 +239,11 @@
         // resetFrom
         this.$$('booking-detail').resetFrom('.required')
         this.dispatchAction('SET_BREADCRUMBS', [{
-          label: 'สัญญาที่ ' + this.contractId.contract_no,
+          label: this.localizeContract.contract_at+' '  + this.contractId.contract_no,
           href: ''
         },
         {
-          label: 'งวดที่ ' + this.dataShow.cl_no,
+          label: this.localizeConfirmLetter.ref_no+' '  + this.dataShow.cl_no,
           href: ''
         },
         {
@@ -306,11 +306,11 @@
             ship_lot: ship_lot + 1
           }
           this.dispatchAction('SET_BREADCRUMBS', [{
-            label: 'สัญญาที่ ' + data.contract_no,
+            label: this.localizeContract.contract_at+' ' + data.contract_no,
             href: ''
           },
           {
-            label: 'งวดที่ ' + data.cl_no,
+            label: this.localizeConfirmLetter.ref_no+' '+ data.cl_no,
             href: ''
           },
           {
@@ -355,11 +355,11 @@
           hiddend: true
         })
         this.dispatchAction('SET_BREADCRUMBS', [{
-          label: 'สัญญาที่ ' + this.contractId.contract_no,
+          label: this.localizeContract.contract_at+' ' + this.contractId.contract_no,
           href: ''
         },
         {
-          label: 'งวดที่ ' + this.dataShow.cl_no,
+          label: this.localizeConfirmLetter.ref_no+' '+ this.dataShow.cl_no,
           href: ''
         },
         {
@@ -392,11 +392,11 @@
           hiddend: true
         })
         this.dispatchAction('SET_BREADCRUMBS', [{
-          label: 'สัญญาที่ ' + this.contractId.contract_no,
+          label: this.localizeContract.contract_at+' ' + this.contractId.contract_no,
           href: ''
         },
         {
-          label: 'งวดที่ ' + this.dataShow.cl_no,
+          label: this.localizeConfirmLetter.ref_no+' ' + this.dataShow.cl_no,
           href: ''
         },
         {

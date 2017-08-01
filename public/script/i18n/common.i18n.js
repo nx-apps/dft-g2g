@@ -12,6 +12,8 @@ export const common = {
         edit: "แก้ใข",
         save: "บันทึก",
         confirm: "ยืนยัน",
+        search:'ค้นหา',
+        all:'ทั้งหมด',
         cancer_confirm: "ยกเลิกการยืนยัน",
         action:'กระทำการ',
         price: 'ราคา',
@@ -29,20 +31,22 @@ export const common = {
         report_type:"รูปแบบรายงาน",
         data:'ข้อมูล',
         report:'รายงาน',
-
-        
-        save_succeed:"บันทึกสำเร็จ",
-        delete_succeed:"ลบสำเร็จ",
-        toast_edit:"ต้องการแก้ข้อมูลใช่หรือไม่",
-        toast_delete:"ต้องการลบข้อมูลใช่หรือไม่",
+        type_see:'รูปแบบการดู',
+        list:'รายการ',
+        group:'กลุ่ม',
+        load_successfully:"โหลดข้อมูลสำเร็จ",
+        save_succeed:"บันทึกข้อมูลสำเร็จ",
+        delete_succeed:"ลบข้อมูลสำเร็จ",
+        toast_edit:"ต้องการแก้ข้อมูลใช่หรือไม่ ?",
+        toast_delete:"ต้องการลบข้อมูลใช่หรือไม่ ?",
         toast_input_error:"กรุณากรอกข้อมูลให้ครบทุกช่อง",
         toast_over_limit:"ปริมาณสินค้าเกินที่มีในสัญญาไป",
-        toast_cancel_edit:"ต้องการยกเลิกแก้ข้อมูลใช่หรือไม่",
+        toast_cancel_edit:"ต้องการยกเลิกแก้ข้อมูลใช่หรือไม่ ?",
 
         toast_approve:"ต้องการยืนยันข้อมูลใช่หรือไม่",
         toast_cancel_approve:"ต้องการยกเลิกยืนยันข้อมูลใช่หรือไม่",
 
-        load_successfully:"โหลดข้อมูลสำเร็จ",
+        
     },
     en: {
         foo: 'a',

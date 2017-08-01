@@ -1,8 +1,8 @@
 export const confirmLetter = {
     th: {
         Meg: "TH",
-
-
+        buyer_send:'ผู้ส่งออก',
+        add_ref : 'เพิ่มงวด',
         cl_close: "ปิดยอดการชำระ",
         quantity_confirm: "ปริมาณทั้งหมด (ตัน)",
         quantity_confirm_delivery: "ปริมาณที่ส่งมอบ (ตัน)",
@@ -12,6 +12,7 @@ export const confirmLetter = {
         total_cost_price_ton: "ราคารวมประมาณต้นทุนต่อตัน (USD)",
         total_cost_price: "ราคารวมประมาณต้นทุน (บาท)",
         ref_no: "งวดที่",
+        dub_ref_no:'เลขงวดซ้ำกัน',
         ref:"งวด",
         date: "วันที่",
         status: "สถานะ",
@@ -24,13 +25,16 @@ export const confirmLetter = {
         delete_package: "ลบบรรจุภัณฑ์",
         add_hamonize: "เพิ่มชนิดข้าว",
         delete_hamonize: "ลบชนิดข้าว",
-
+        over_limit : 'ปริมาณสินค้าเกินที่มีในสัญญาไป',
         tolerance_rate: "ค่าคลาดเคลื่อนที่ยอมรับได้",
         project_th: "ปีการผลิต (พ.ศ.)",
         project_en: "ปีการผลิต (ค.ศ.)",
         package: "ขนาดบรรจุภัณฑ์",
         incoterms: "เงือนไขการส่งมอบสินค้า",
         total_ton: "ปริมาณรวมทั้งหมด (ตัน)",
+        ton:'ตัน',
+
+        toast_approve_ref:'ต้องการยืนยันงวดนี้ใช่หรือไม่'
 
 
     },
