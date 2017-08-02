@@ -11,6 +11,9 @@
 <link rel="import" href="./../../components/validateFormBehaviors.html">
 <link rel="import" href="./../../components/format-number-behavior.html">
 <link rel="import" href="./../../components/g2g-logic-behavior.html">
+<link rel="import" href="./../../../../bower_components/iron-icons/editor-icons.html">
+<link rel="import" href="./../../../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="./../../components/icon-set-g2g.html">
 
 <link rel="import" href="./shm-det-exporter.html">
 
@@ -38,10 +41,11 @@
       }
 
       table.gl-table-default>tbody.table-body>tr>td {
-        cursor: pointer;
+        /*cursor: pointer;*/
       }
 
-      .gl-btn-info {
+      .gl-btn-info ,
+      .gl-btn-defalse {
         font-family: 'CSChatThaiUI', sans-serif;
         -webkit-font-smoothing: antialiased;
         font-size: 14px;
@@ -92,12 +96,17 @@
             <tbody class="table-body">
               <template is="dom-repeat" items="{{bookList}}">
                 <tr hidden="{{item.hidden}}">
-                  <td on-tap="getBookingExporter" data="[[item]]"> [[item.ship_lot]] </td>
-                  <td on-tap="getBookingExporter" data="[[item]]"> [[item.dest_port.port_name]] </td>
-                  <td on-tap="getBookingExporter" data="[[item]]"> [[item.deli_port.port_name]] </td>
+                  <td > [[item.ship_lot]] </td>
+                  <td > [[item.dest_port.port_name]] </td>
+                  <td > [[item.deli_port.port_name]] </td>
                   <td>
-                    <paper-button class="gl-btn-info gl-small" raised on-tap="btnEditBooking" data="[[item]]">
-                      {{localizeCommon.detail}}</paper-button>
+                    <paper-button class="gl-btn-defalse gl-small" raised on-tap="btnEditBooking" data="[[item]]">
+                     <iron-icon icon="fa:ship"></iron-icon> 
+                      {{localizeBook.book_vessel}}</paper-button>
+                    <paper-button class="gl-btn-defalse gl-small" raised on-tap="getBookingExporter" data="[[item]]">
+                      <iron-icon icon="perm-identity"></iron-icon>
+                      {{localizeBook.exporter_detail_less}}</paper-button>
+                    
                   </td>
                 </tr>
               </template>

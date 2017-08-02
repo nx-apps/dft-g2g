@@ -23,6 +23,8 @@ export const book = {
 
         "":"Shm_det",
         tel:"เบอร์โทร",
+        exporter_detail_less:'ข้อมูลผู้ส่งออก',
+        book_vessel:'ข้อมูลเรือ',
         exporter_address:"ที่อยู่ผู้ส่งออก",
         detail_sender:"รายละเอียดการส่งมอบ",
         exporter_detail:"รายละเอียดผู้ส่งออก",
