@@ -135,7 +135,7 @@
               <gl-combo-box required class="required" id="surveyor-[[index]]" index="[[index]]" label="{{localizeBook.surveyor}} [[_ObcountIndex(index)]]"
                 placeholder="{{localizeBook.surveyor}} [[_ObcountIndex(index)]]" always-float-label disabled="[[commonState.btnDisabled]]"
                 item-label-path="surveyor_name" item-value-path="surveyor_id" items="{{surveyorList}}" value="{{item.surveyor_id}}"
-                on-value-changed="_getResetSurveyor" on-selected-item-changed="getObjectSurveyor">
+                on-selected-item-changed="getObjectSurveyor">
                 <template>
                   [[item.surveyor_name]]
                 </template>
