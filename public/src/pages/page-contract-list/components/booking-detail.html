@@ -382,6 +382,9 @@
       claNoti(notifyList,deli_port_id){
         // console.log(this.data.notify_id);
         let newData = notifyList.filter((item) => item.port_id === deli_port_id)
+        if (newData.length === 0 ) {
+          return notifyList.filter((item) => item.default_status === true)
+        }
         return newData
       },
       getObjectShipline: function (e) {
