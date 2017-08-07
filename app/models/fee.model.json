@@ -78,7 +78,13 @@
                         "type": "string",
                         "format": "date-time"
                     },
+                    "invoice_type": {
+                        "type": "string"
+                    },
                     "invoice_no": {
+                        "type": "string"
+                    },
+                    "invoice_year": {
                         "type": "number"
                     },
                     "net_weight": {

@@ -89,10 +89,10 @@
             "type": "string",
             "format": "date-time"
         },
-        "invoice_no": {
-            "type": "number"
-        },
         "invoice_type": {
+            "type": "string"
+        },
+        "invoice_no": {
             "type": "string"
         },
         "invoice_year": {

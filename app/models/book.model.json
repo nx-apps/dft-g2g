@@ -76,7 +76,7 @@
             "type": "string"
         },
         "invoice_no": {
-            "type": "number"
+            "type": "string"
         },
         "invoice_year": {
             "type": "number"
