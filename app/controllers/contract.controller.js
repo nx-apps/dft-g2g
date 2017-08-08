@@ -41,7 +41,7 @@ exports.buyerId = function (req, res) {
                     contract_weight_confirm: cl_sum,
                     contract_weight_confirm_balance: m('contract_weight').sub(cl_sum),
                     contract_weight_book: book_sum,
-                    contract_weight_book_balance: m('contract_weight').sub(book_sum)
+                    contract_weight_book_balance: cl_sum.sub(book_sum)
                 })
         })
         .orderBy(r.desc('contract_date'))

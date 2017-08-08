@@ -81,7 +81,8 @@
                   <div class="flex">{{localizeContract.balance}}</div>
                 </div>
                 <div class="flex">
-                  <div class="flex">[[formatNumberNoZero(data.contract_weight)]]</div>
+                  <div class="flex">[[_calTotalRice(seleteChartPie,data)]]</div>
+                  <!--<div class="flex">[[formatNumberNoZero(data.contract_weight)]]</div>-->
                   <div class="flex">[[_calConfirm(seleteChartPie,data)]]</div>
                   <div class="flex">[[_calTotal(seleteChartPie,data)]]</div>
                 </div>
@@ -101,12 +102,10 @@
       </div>
       <div class="card-actions horizontal end-justified layout">
         <paper-button raised on-tap="contractDetail">
-          <!--{{localize.btn_contract_detail}}-->
           {{localizeContract.contract}}
         </paper-button>
         <paper-button raised on-tap="listConfirm">
           {{localizeConfirmLetter.ref}}
-          <!--{{localize.btn_confirm_detail}}-->
 
         </paper-button>
         <paper-button raised on-tap="listShipment">
@@ -144,11 +143,11 @@
         },
         nameChart: {
           type: Array,
-          value: ['ทำสัญญา (ตัน)', 'ส่งมอบแล้ว (ตัน)']
+          value: ['ทำสัญญา (ตัน)', 'ส่งมอบ (ตัน)']
         },
         labelName: {
           type: Array,
-          value: ['ทำสัญญา', 'ส่งแล้ว']
+          value: ['ทำสัญญา', 'ส่งมอบ']
         },
         seleteChartPie: {
           type: Number,
@@ -195,19 +194,21 @@
       _labelNames: function (seleteChartPie) {
         return this.labelName[seleteChartPie];
       },
+      _calTotalRice:function (seleteChartPie, data){
+        if (seleteChartPie == 0) 
+          return this.formatNumberNoZero(data.contract_weight)
+        return this.formatNumberNoZero(data.contract_weight_confirm)
+      },
       _calConfirm: function (seleteChartPie, data) {
-        if (seleteChartPie == 0) {
-          return this.formatNumberNoZero(data.contract_weight_confirm);
-        } else {
-          return this.formatNumberNoZero(data.contract_weight_book);
-        }
+        if (seleteChartPie == 0) 
+          return this.formatNumberNoZero(data.contract_weight_confirm)
+        return this.formatNumberNoZero(data.contract_weight_book)
       },
       _calTotal: function (seleteChartPie, data) {
-        if (seleteChartPie == 0) {
-          return this.formatNumberNoZero(data.contract_weight_confirm_balance);
-        } else {
-          return this.formatNumberNoZero(data.contract_weight_book_balance);
-        }
+        if (seleteChartPie == 0) 
+          return this.formatNumberNoZero(data.contract_weight_confirm_balance)
+        return this.formatNumberNoZero(data.contract_weight_book_balance)
+        
       },
       //end_observe
       chartPiePrevious: function () {
