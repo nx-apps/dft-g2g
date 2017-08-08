@@ -109,7 +109,7 @@ export function bookAction(store) {
                 .then(function (response) {
                     for (var index = 0; index < response.data.length; index++) {
                         // response.data[index].label = ''
-                        response.data[index].label = '[' + response.data[index].hamonize.hamonize_code + '] ' + response.data[index].hamonize.hamonize_en2
+                        response.data[index].label = '[' + response.data[index].hamonize.hamonize_code + '] ' + response.data[index].hamonize.hamonize_en + ' '+ response.data[index].hamonize.hamonize_year
                         // console.log(response.data[index].hamonize.hamonize_en );
                     }
                     store.dispatch({ type: 'GET_BOOK_HAMONIZE_LIST', payload: response.data })
