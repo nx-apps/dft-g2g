@@ -308,6 +308,11 @@
         },
         data: {
           statePath: 'confirmLetter.contractDetail',
+          observer:'_cloneConfirmList'
+        },
+        cloneConfirmList:{
+          type: Object,
+          value:{}
         },
         hamonizeLimitContract: {
           statePath: 'confirmLetter.hamonizeLimitContract',
@@ -359,10 +364,15 @@
         '_incotermsConfirm(data.*)',
         '_isHaveForUse(data.cl_hamonize,hamonizeContract,data.cl_hamonize.*)'
       ],
+      _cloneConfirmList: function (cloneConfirmList) {
+        // JSON.parse(JSON.stringify(data));
+        this.set('cloneConfirmList', JSON.parse(JSON.stringify(cloneConfirmList)))
+        // console.log(this.hamonizeList);
+      },
       _setHamonizeLimit: function (contractId, hamonizeLimitContract) {
-        // console.log(this.contractId.contract_weight_confirm_balance);
+        // console.log(this.contractId.contract_weight);
         // console.log(this.hamonizeLimitContract);
-        this.set('dataShow.hamonize_limit', this.contractId.contract_weight_confirm_balance)
+        this.set('dataShow.hamonize_limit', this.contractId.contract_weight - this.hamonizeLimitContract)
 
       },
       canncelConfirm: function () {
@@ -576,14 +586,14 @@
         this._resiveFormConfirm('insert')
           .then((res) => {
             // console.log(res);
-            // let sum = this.dataShow.cl_total_quantity - this.dataShow.hamonize_limit
-            // if (this.dataShow.cl_total_quantity > this.dataShow.hamonize_limit) {
-            //   this.fire('toast', {
-            //     status: 'connectError', text: this.localizeConfirmLetter.over_limit + this.formatNumberNoZero(sum) + this.localizeConfirmLetter.ton, //คำสั่งสำหรับเปิด toast error
-            //     callback: () => {
-            //     }
-            //   })
-            // } else {
+            let sum = this.dataShow.cl_total_quantity - this.dataShow.hamonize_limit
+            if (this.dataShow.cl_total_quantity > this.dataShow.hamonize_limit) {
+              this.fire('toast', {
+                status: 'connectError', text: this.localizeConfirmLetter.over_limit + this.formatNumberNoZero(sum) + this.localizeConfirmLetter.ton, //คำสั่งสำหรับเปิด toast error
+                callback: () => {
+                }
+              })
+            } else {
               // console.log(this.dataShow.cl_total_quantity)
               // console.log(this.dataShow.hamonize_limit)
               this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
@@ -610,7 +620,7 @@
                     })
                   }
                 })
-            // }
+            }
 
           })
           .catch((error) => {
@@ -619,9 +629,7 @@
 
       },
       saveConfirm: function () {
-        // console.log(this.dataShow.hamonize_limit);
-        // console.log(this.dataShow.cl_total_quantity);
-        // console.log(this.dataShow.cl_total_quantity - this.dataShow.hamonize_limit)
+        let limitRice = this.cloneConfirmList.cl_weight + this.dataShow.hamonize_limit
         this.fire('toast', {
           status: 'openDialog',
           text: this.localizeCommon.save_succeed,
@@ -629,15 +637,15 @@
             if (result == true) {
               this._resiveFormConfirm('edit')
                 .then((res) => {
-                  // let sum = this.dataShow.cl_total_quantity - this.dataShow.hamonize_limit
+                  let sum = this.dataShow.cl_total_quantity - limitRice
                   // console.log(this.dataShow.cl_total_quantity - this.dataShow.hamonize_limit);
-                  // if (this.dataShow.cl_total_quantity > this.dataShow.hamonize_limit) {
-                  //   this.fire('toast', {
-                  //     status: 'connectError', text: this.localizeConfirmLetter.over_limit + this.formatNumberNoZero(sum) + this.localizeConfirmLetter.ton, //คำสั่งสำหรับเปิด toast error
-                  //     callback: () => {
-                  //     }
-                  //   })
-                  // } else {
+                  if (this.dataShow.cl_total_quantity > limitRice) {
+                    this.fire('toast', {
+                      status: 'connectError', text: this.localizeConfirmLetter.over_limit + " "+ this.formatNumberNoZero(sum)+ " "+ this.localizeConfirmLetter.ton, //คำสั่งสำหรับเปิด toast error
+                      callback: () => {
+                      }
+                    })
+                  } else {
                     this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
                     this.dispatchAction('PUT_CONFIRM', res)
                       .then((response) => {
@@ -665,7 +673,7 @@
                           })
                         }
                       })
-                  // }
+                  }
                   // console.log(res);
                   // console.log(this.dataShow);
 

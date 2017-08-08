@@ -78,7 +78,7 @@ export function confirmLetterAction(store) {
             axios.get('./confirm/hamonize?' + contract_id)
                 .then(function (response) {
                     response.data.map((item) => {
-                        item.label = '[' + item.hamonize.hamonize_code + '] ' + item.hamonize.hamonize_th2
+                        item.label = '[' + item.hamonize.hamonize_code + '] ' + item.hamonize.hamonize_th + ' ปี ' + item.hamonize.hamonize_year 
                     })
                     // console.log(response.data);
                     store.dispatch({ type: 'GET_HAMONIZE_OF_CONTRACT', payload: response.data })
