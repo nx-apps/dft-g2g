@@ -14,6 +14,9 @@
 <link rel="import" href="./../../../../bower_components/iron-icons/editor-icons.html">
 <link rel="import" href="./../../../../bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="./../../components/icon-set-g2g.html">
+<link rel="import" href="./../../../../bower_components/paper-dialog/paper-dialog.html">
+
+<link rel="import" href="./../../../../bower_components/paper-dialog-scrollable/paper-dialog-scrollable.html">
 
 <link rel="import" href="./shm-det-exporter.html">
 
@@ -44,7 +47,7 @@
         /*cursor: pointer;*/
       }
 
-      .gl-btn-info ,
+      .gl-btn-info,
       .gl-btn-defalse {
         font-family: 'CSChatThaiUI', sans-serif;
         -webkit-font-smoothing: antialiased;
@@ -91,22 +94,26 @@
                 <th>{{localizeBook.port_of_destination}}</th>
                 <th>{{localizeBook.place_of_delivery}}</th>
                 <th>{{localizeCommon.action}}</th>
+                <th>#</th>
               </tr>
             </thead>
             <tbody class="table-body">
               <template is="dom-repeat" items="{{bookList}}">
                 <tr hidden="{{item.hidden}}">
-                  <td > [[item.ship_lot]] </td>
-                  <td > [[item.dest_port.port_name]] </td>
-                  <td > [[item.deli_port.port_name]] </td>
+                  <td> [[item.ship_lot]] </td>
+                  <td> [[item.dest_port.port_name]] </td>
+                  <td> [[item.deli_port.port_name]] </td>
                   <td>
                     <paper-button class="gl-btn-defalse gl-small" raised on-tap="btnEditBooking" data="[[item]]">
-                     <iron-icon icon="fa:ship"></iron-icon> 
+                      <iron-icon icon="fa:ship"></iron-icon>
                       {{localizeBook.book_vessel}}</paper-button>
                     <paper-button class="gl-btn-defalse gl-small" raised on-tap="getBookingExporter" data="[[item]]">
                       <iron-icon icon="perm-identity"></iron-icon>
                       {{localizeBook.exporter_detail_less}}</paper-button>
-                    
+                  </td>
+                  <td>
+                    <paper-icon-button id="printVesel" class="crud" icon="print" raised on-tap="printVesel" data="[[item]]"></paper-icon-button>
+                    <paper-tooltip for="printVesel" offset="0">{{localizeCommon.print}}</paper-tooltip>
                   </td>
                 </tr>
               </template>
@@ -136,7 +143,68 @@
         <shm-det-exporter id="shm-det-exporter"></shm-det-exporter>
       </div>
     </iron-pages>
+    <paper-dialog id="scrolling">
+      <h2>รายงาน</h2>
+      <paper-dialog-scrollable>
+        <p>
+          <!--<gl-combo-box always-float-label label="{{localizeCommon.print}}" placeholder="{{localizeCommon.print}}" value="{{printReport.typeReport}}"
+          item-label-path="report_name" item-value-path="report_name_id" items="{{report.report_name}}" on-selected-item-changed="getObjectReport">
+          <template>
+            [[item.report_name]]
+          </template>
+        </gl-combo-box>&nbsp;-->
+          <paper-dropdown-menu label="{{localizeCommon.print}}" on-value-changed="getObjectReport">
+            <paper-listbox class="dropdown-content" attr-for-selected="name" selected="{{printReport.typeReport}}">
+              <template is="dom-repeat" items={{report.report_name}}>
+                <paper-item name="[[item.report_name_id]]"> [[item.report_name]]</paper-item>
+              </template>
+            </paper-listbox>
+          </paper-dropdown-menu>
+          <br />
+          <!--<gl-combo-box always-float-label label="{{localizeCommon.report_type}}" placeholder="{{localizeCommon.report_type}}" value="{{printReport.typeFile}}"
+          item-label-path="report_type" item-value-path="report_type_id" items="{{report.report_type}}">
+          <template>
+            [[item.report_type]]
+          </template>
+        </gl-combo-box>-->
+          <paper-dropdown-menu label="{{localizeCommon.report_type}}">
+            <paper-listbox class="dropdown-content" attr-for-selected="name" selected="{{printReport.typeFile}}">
+              <template is="dom-repeat" items={{report.report_type}}>
+                <paper-item name="[[item.report_type_id]]">[[item.report_type]]</paper-item>
+              </template>
+            </paper-listbox>
+          </paper-dropdown-menu>
+          <br />
+          <template is="dom-if" if={{dataSetReport.report0}}>
+            <paper-dropdown-menu label="{{localizeBook.font_size}}">
+              <paper-listbox class="dropdown-content" attr-for-selected="name" selected="{{printReport.size}}">
+                <template is="dom-repeat" items={{fontSize}}>
+                  <paper-item name="{{item.id}}">{{item.id}}</paper-item>
+                </template>
+              </paper-listbox>
+            </paper-dropdown-menu>
+          </template>
+          <br />
+          <template is="dom-if" if={{dataSetReport.report2}}>
+            [[changeString2Num(printReport.*,'ori')]]
+            <gl-form-input allowed-pattern="[0-9||,||.]" on-focus="_setSeleteValue" label="{{localizeBook.orignals}}" autofocus maxlength="3"
+              format-number="on" always-float-label placeholder="{{localizeBook.orignals}}" value="{{printReport.ori}}"></gl-form-input>
 
+            [[changeString2Num(printReport.*,'nn')]]
+            <gl-form-input allowed-pattern="[0-9||,||.]" on-focus="_setSeleteValue" label="{{localizeBook.n_n}}" maxlength="3" format-number="on"
+              always-float-label placeholder="{{localizeBook.n_n}}" value="{{printReport.nn}}"></gl-form-input>
+          </template>
+
+
+
+        </p>
+
+      </paper-dialog-scrollable>
+      <div class="buttons">
+        <paper-button dialog-confirm raised>ปิด</paper-button>
+        <paper-button on-tap="printReportBook" raised>ออกรายงาน</paper-button>
+      </div>
+    </paper-dialog>
   </template>
   <script>
     Polymer({
@@ -180,6 +248,52 @@
         dataShow: {
           type: Object
         },
+        dataReport: {
+          type: Object
+        },
+        dataSetReport: {
+          type: Object,
+          value: {
+            report0: false,
+            report2: false,
+          }
+        },
+        printReport: {
+          type: Object,
+          value: { ori: 3, nn: 12, typeReport: '0', typeFile: 'pdf', size: 12 }
+        },
+        fontSize: {
+          type: Array,
+          value: [
+            {
+              id: 12,
+            },
+            {
+              id: 14,
+            },
+            {
+              id: 16,
+            }
+          ]
+        },
+        report: {
+          type: Object,
+          value:
+          {
+            report_name:
+            [
+              { report_name: 'ลิสต์เรือ', report_name_id: '0' },
+              { report_name: 'Draf BL', report_name_id: '1' },
+              { report_name: 'หนังสือแจ้งบริษัทเรื่องการส่งมอบข้าว', report_name_id: '2' }
+            ],
+            report_type:
+            [
+              { report_type: 'PDF', report_type_id: 'pdf' },
+              { report_type: 'WORD', report_type_id: 'word' },
+              { report_type: 'EXCEL', report_type_id: 'excel' }
+            ]
+          }
+        },
       },
       listeners: {
         '_list-book': '_changeIronPage',
@@ -198,6 +312,45 @@
         } catch (e) {
 
         }
+      },
+      printVesel(e) {
+        this.$.scrolling.open()
+        this.set('dataReport', e.currentTarget.data)
+        // console.log(e.currentTarget.data);
+      },
+      getObjectReport(report) {
+        try {
+          // console.log(report.detail.value);
+          let value = this.report.report_name.find((items) => items.report_name === report.detail.value)
+
+          switch (value.report_name_id) {
+            case '0':
+              this.set('dataSetReport.report0', true)
+              this.set('dataSetReport.report2', false)
+              // console.log(0);
+              break;
+            case '1':
+              this.set('dataSetReport.report0', false)
+              this.set('dataSetReport.report2', true)
+              // console.log(1);
+              break;
+            default:
+              this.set('dataSetReport.report0', false)
+              this.set('dataSetReport.report2', false)
+              // console.log(2);
+              break;
+          }
+          // console.log(this.dataSetReport);
+
+        } catch (e) {
+
+        }
+
+      },
+      printReportBook() {
+        // console.log(this.dataReport);
+        // this.this.printReport.typeReport
+        window.open(window._config.reportServer + '/api/rice/report' + (Number(this.printReport.typeReport) + 1) + '?id=' + this.dataReport.id + '&' + this.genUrl(this.printReport), '1');
 
       },
       setPageFun: function (data) {
@@ -216,18 +369,18 @@
       getObjectCl: function (e) {
         try {
           if (e.detail.value !== null) {
-            this.set('searchInput','')
+            this.set('searchInput', '')
             this.set('dataShow', e.detail.value)
             // console.log(e.detail.value);
             let clData = { cl_id: e.detail.value.id, cl_no: e.detail.value.cl_no }
             this.dispatchAction('SET_CONFIRM_ID', clData)
             // console.log(this.contractId)
             this.dispatchAction('SET_BREADCRUMBS', [{
-              label: this.localizeContract.contract_at+' '  + this.contractId.contract_no,
+              label: this.localizeContract.contract_at + ' ' + this.contractId.contract_no,
               href: ''
             },
             {
-              label: this.localizeConfirmLetter.ref_no+' ' + e.detail.value.cl_no,
+              label: this.localizeConfirmLetter.ref_no + ' ' + e.detail.value.cl_no,
               href: ''
             },
             ])
@@ -248,15 +401,15 @@
         // resetFrom
         this.$$('booking-detail').resetFrom('.required')
         this.dispatchAction('SET_BREADCRUMBS', [{
-          label: this.localizeContract.contract_at+' '  + this.contractId.contract_no,
+          label: this.localizeContract.contract_at + ' ' + this.contractId.contract_no,
           href: ''
         },
         {
-          label: this.localizeConfirmLetter.ref_no+' '  + this.dataShow.cl_no,
+          label: this.localizeConfirmLetter.ref_no + ' ' + this.dataShow.cl_no,
           href: ''
         },
         {
-          label: this.localizeBook.vessel_no+' ' + e.currentTarget.data.ship_lot,
+          label: this.localizeBook.vessel_no + ' ' + e.currentTarget.data.ship_lot,
           href: ''
         },
         ])
@@ -291,9 +444,9 @@
 
       _changeIronPage: function (data) {
         this.set('pageSelected', data.detail)
-        if(data.detail === 'list-of-booking-exporter-detail'){
+        if (data.detail === 'list-of-booking-exporter-detail') {
           // resetFrom
-        this.$$('shm-det-exporter').resetFrom('.required')
+          this.$$('shm-det-exporter').resetFrom('.required')
 
         }
       },
@@ -301,7 +454,7 @@
         try {
           // console.log(data.detail);
           // resetFrom
-        this.$$('booking-detail').resetFrom('.required')
+          this.$$('booking-detail').resetFrom('.required')
           this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
           let ship_lot = 0
           if (this.bookList.length > 0) {
@@ -315,15 +468,15 @@
             ship_lot: ship_lot + 1
           }
           this.dispatchAction('SET_BREADCRUMBS', [{
-            label: this.localizeContract.contract_at+' ' + data.contract_no,
+            label: this.localizeContract.contract_at + ' ' + data.contract_no,
             href: ''
           },
           {
-            label: this.localizeConfirmLetter.ref_no+' '+ data.cl_no,
+            label: this.localizeConfirmLetter.ref_no + ' ' + data.cl_no,
             href: ''
           },
           {
-            label: this.localizeBook.add_vessel+' ',
+            label: this.localizeBook.add_vessel + ' ',
             href: ''
           },
           ])
@@ -364,15 +517,15 @@
           hiddend: true
         })
         this.dispatchAction('SET_BREADCRUMBS', [{
-          label: this.localizeContract.contract_at+' ' + this.contractId.contract_no,
+          label: this.localizeContract.contract_at + ' ' + this.contractId.contract_no,
           href: ''
         },
         {
-          label: this.localizeConfirmLetter.ref_no+' '+ this.dataShow.cl_no,
+          label: this.localizeConfirmLetter.ref_no + ' ' + this.dataShow.cl_no,
           href: ''
         },
         {
-          label: this.localizeBook.vessel_no+' ' + e.currentTarget.data.ship_lot,
+          label: this.localizeBook.vessel_no + ' ' + e.currentTarget.data.ship_lot,
           href: ''
         },
         ])
@@ -401,15 +554,15 @@
           hiddend: true
         })
         this.dispatchAction('SET_BREADCRUMBS', [{
-          label: this.localizeContract.contract_at+' ' + this.contractId.contract_no,
+          label: this.localizeContract.contract_at + ' ' + this.contractId.contract_no,
           href: ''
         },
         {
-          label: this.localizeConfirmLetter.ref_no+' ' + this.dataShow.cl_no,
+          label: this.localizeConfirmLetter.ref_no + ' ' + this.dataShow.cl_no,
           href: ''
         },
         {
-          label: this.localizeBook.vessel_no+' ' + e.detail.ship_lot,
+          label: this.localizeBook.vessel_no + ' ' + e.detail.ship_lot,
           href: ''
         },
         ])
@@ -422,7 +575,7 @@
           })
         }, 500)
       },
-      
+
 
     });
   </script>

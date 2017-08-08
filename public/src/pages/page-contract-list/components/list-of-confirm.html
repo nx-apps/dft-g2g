@@ -22,6 +22,7 @@
 
     table.gl-table-default>tbody.table-body>tr>td {
       cursor: pointer;
+      /*padding: 5px 15px;*/
     }
 
     .combo-box {
@@ -225,7 +226,8 @@
       },
 
       printVesel: function (e) {
-        window.open(window._config.reportServer + '/api/shipment/report4/' + e.currentTarget.data.cl_id, '1');
+        // console.log(e.currentTarget.data);
+        window.open(window._config.reportServer + '/api/rice/report4?id=' + e.currentTarget.data.id, '1');
         // console.log(e.currentTarget.data);
       },
       checkMInus: function (cl_quantity_tolerance) {

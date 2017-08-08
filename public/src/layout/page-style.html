@@ -7,43 +7,43 @@
                 padding-top: 20px;
                 padding-bottom: 10px;
             }
-            
+
             .subHeader {
                 font-size: 20px;
             }
-            
+
             .title {
                 font-size: 22px;
                 font-weight: bold;
             }
-            
+
             .section {
                 margin-top: 10px;
                 margin-bottom: 10px;
             }
-            
+
             .material {
                 background-color: #EFEFEF;
                 box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
             }
-            
+
             main {
                 /*min-width: 320px;*/
                 /*max-width: 1000px;*/
                 padding: 5px;
                 margin: 0 auto;
             }
-            
+
             section {
                 display: none;
                 /*padding: 20px 0 0;*/
                 border-top: 1px solid #ddd;
             }
-            
+
             input {
                 display: none;
             }
-            
+
             label {
                 display: inline-block;
                 margin: 0 0 -1px;
@@ -54,7 +54,7 @@
                 border: 1px solid transparent;
                 background: #D5D8DC;
             }
-            
+
             label:before {
                 font-family: fontawesome;
                 font-weight: normal;
@@ -62,12 +62,12 @@
             }
             /*label[for*='1']:before { content: '\f1cb'; }
             label[for*='2']:before { content: '\f17d'; }*/
-            
+
             label:hover {
                 color: #888;
                 cursor: pointer;
             }
-            
+
             input:checked+label {
                 color: #555;
                 border: 1px solid #ddd;
@@ -75,7 +75,7 @@
                 border-bottom: 1px solid #fff;
                 background: #fff;
             }
-            
+
             vaadin-grid#material {
                 /*font-family: Roboto, sans-serif;*/
                 --divider-color: rgba(0, 0, 0, var(--dark-divider-opacity));
@@ -117,57 +117,63 @@
                 }
                 ;
             }
-            
+
             vaadin-grid#material .cell {
                 overflow: hidden;
                 text-overflow: ellipsis;
                 padding-right: 56px;
             }
-            
+
             vaadin-grid#material .cell.last {
                 padding-right: 24px;
             }
-            
+
             vaadin-grid#material .cell.numeric {
                 text-align: right;
             }
-            
+
             vaadin-grid#material paper-checkbox {
                 --primary-color: var(--paper-indigo-500);
                 margin: 0 24px;
             }
-            
+
             vaadin-grid#material vaadin-grid-sorter {
                 --vaadin-grid-sorter-arrow: {
                     display: none !important;
                 }
                 ;
             }
-            
+
             vaadin-grid#material vaadin-grid-sorter .cell {
                 flex: 1;
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
             }
-            
+
             vaadin-grid#material vaadin-grid-sorter iron-icon {
                 transform: scale(0.8);
             }
-            
+
             vaadin-grid#material vaadin-grid-sorter:not([direction]) iron-icon {
                 color: rgba(0, 0, 0, var(--dark-disabled-opacity));
             }
-            
+
             vaadin-grid#material vaadin-grid-sorter[direction] {
                 color: rgba(0, 0, 0, var(--dark-primary-opacity));
             }
-            
+
             vaadin-grid#material vaadin-grid-sorter[direction=desc] iron-icon {
                 transform: scale(0.8) rotate(180deg);
             }
-            .center{
+
+            .center {
                 text-align: center;
+            }
+
+            table.gl-table-default>tbody.table-body>tr>td {
+                /*cursor: pointer;*/
+                padding: 10px 15px;
             }
         </style>
     </template>
