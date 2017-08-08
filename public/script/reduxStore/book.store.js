@@ -64,7 +64,7 @@ export function bookAction(store) {
                     store.dispatch({ type: 'GET_BOOK_LIST', payload: response.data })
                 })
                 .catch(function (error) {
-                    console.log(error);
+                    //console.log(error);
                 });
         },
         GET_BOOK_NO: function (book_id) {
@@ -77,7 +77,7 @@ export function bookAction(store) {
                     store.dispatch({ type: 'GET_BOOK_NO', payload: response.data })
                 })
                 .catch(function (error) {
-                    console.log(error);
+                    //console.log(error);
                 });
         },
         GET_BOOK_DETAIL: function (book_id) {
@@ -91,7 +91,7 @@ export function bookAction(store) {
                     })
                 })
                 .catch(function (error) {
-                    console.log(error);
+                    //console.log(error);
                 });
         },
         GET_BOOK_EXPORTER_LIST: function (booking_id) {
@@ -101,7 +101,7 @@ export function bookAction(store) {
                     store.dispatch({ type: 'GET_BOOK_EXPORTER_LIST', payload: response.data })
                 })
                 .catch(function (error) {
-                    console.log(error);
+                    //console.log(error);
                 });
         },
         GET_BOOK_HAMONIZE_LIST: function (cl_id) {
@@ -115,7 +115,7 @@ export function bookAction(store) {
                     store.dispatch({ type: 'GET_BOOK_HAMONIZE_LIST', payload: response.data })
                 })
                 .catch(function (error) {
-                    console.log(error);
+                    //console.log(error);
                 });
         },
         GET_BOOK_EXPORTER_DETAIL: function (booking_exporter_id) {
@@ -125,7 +125,7 @@ export function bookAction(store) {
                     store.dispatch({ type: 'GET_BOOK_EXPORTER_DETAIL', payload: response.data })
                 })
                 .catch(function (error) {
-                    console.log(error);
+                    //console.log(error);
                 });
         },
         // END GET
@@ -293,7 +293,7 @@ export function bookAction(store) {
                     });
                 })
                 .catch((err) => {
-                    console.log(err);
+                    //console.log(err);
                 })
         },
         BOOK_DELETE: function (data) {
@@ -312,7 +312,7 @@ export function bookAction(store) {
                     });
                 })
                 .catch((err) => {
-                    console.log(err);
+                    //console.log(err);
                 })
         }
     }

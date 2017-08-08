@@ -79,7 +79,7 @@ export function chequeAction(store) {
 
                 })
                 .catch(function (error) {
-                    console.log(error);
+                    //console.log(error);
                 });
         },
         GET_CHEQUE_DETAIL_LIST: function (fee) {
@@ -102,7 +102,7 @@ export function chequeAction(store) {
                     store.dispatch({ type: 'GET_CHEQUE_DETAIL_LIST', payload: response.data })
                 })
                 .catch(function (error) {
-                    console.log(error);
+                    //console.log(error);
                 });
         },
         GET_CHEQUE_NO: function () {
@@ -111,7 +111,7 @@ export function chequeAction(store) {
                     store.dispatch({ type: 'GET_CHEQUE_NO', payload: response.data })
                 })
                 .catch(function (error) {
-                    console.log(error);
+                    //console.log(error);
                 });
         },
         // END GET

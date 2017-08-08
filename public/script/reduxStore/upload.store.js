@@ -33,7 +33,7 @@ export function uploadAction(store) {
                     });
                 })
                 .catch(function (error) {
-                    console.log(error);
+                    //console.log(error);
                 });
         },
         UPLOAD_RECOVERY: function(id, com_id){
@@ -49,7 +49,7 @@ export function uploadAction(store) {
                 }});
             })
             .catch(function (error) {
-                console.log(error);
+                //console.log(error);
             });
         }
     }

@@ -56,7 +56,7 @@ export function reportAction(store) {
                     store.dispatch({ type: 'GET_TABLE_LIST', payload: response.data })
                 })
                 .catch(function (error) {
-                    console.log(error);
+                    //console.log(error);
                 })
         },
         GET_REPORT_LIST: function () {
@@ -70,7 +70,7 @@ export function reportAction(store) {
                     })
                 })
                 .catch(function (error) {
-                    console.log(error);
+                    //console.log(error);
                 })
         },
         GET_REPORT_LINK: function (data) {

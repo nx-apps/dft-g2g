@@ -63,7 +63,7 @@ export function commonG2gAction(store) {
                 })
                 .catch(function (error) {
                     console.log('error');
-                    console.log(error);
+                    //console.log(error);
                 });
         },
         GET_COMMON_BUYER_LIST: function () {
@@ -73,7 +73,7 @@ export function commonG2gAction(store) {
                 })
                 .catch(function (error) {
                     console.log('error');
-                    console.log(error);
+                    //console.log(error);
                 });
         },
         GET_COMMON_HAMONIZE_LIST: function (data) {
@@ -102,7 +102,7 @@ export function commonG2gAction(store) {
                 })
                 .catch(function (error) {
                     console.log('error');
-                    console.log(error);
+                    //console.log(error);
                 });
         },
         GET_COMMON_CARRIER_LIST: function () {
@@ -112,7 +112,7 @@ export function commonG2gAction(store) {
                 })
                 .catch(function (error) {
                     console.log('error');
-                    console.log(error);
+                    //console.log(error);
                 });
         },
         GET_COMMON_INCOTERMS_LIST: function () {
@@ -124,7 +124,7 @@ export function commonG2gAction(store) {
                 })
                 .catch(function (error) {
                     console.log('error');
-                    console.log(error);
+                    //console.log(error);
                 });
         },
         GET_COMMON_NOTIFY_LIST: function () {
@@ -134,7 +134,7 @@ export function commonG2gAction(store) {
                 })
                 .catch(function (error) {
                     console.log('error');
-                    console.log(error);
+                    //console.log(error);
                 });
         },
         GET_COMMON_PACKAGE_LIST: function () {
@@ -144,7 +144,7 @@ export function commonG2gAction(store) {
                 })
                 .catch(function (error) {
                     console.log('error');
-                    console.log(error);
+                    //console.log(error);
                 });
         },
         GET_COMMON_PORT_LIST: function () {
@@ -155,7 +155,7 @@ export function commonG2gAction(store) {
                 })
                 .catch(function (error) {
                     console.log('error');
-                    console.log(error);
+                    //console.log(error);
                 });
         },
         GET_COMMON_SHIP_LIST: function () {
@@ -170,7 +170,7 @@ export function commonG2gAction(store) {
                 })
                 .catch(function (error) {
                     console.log('error');
-                    console.log(error);
+                    //console.log(error);
                 });
         },
         GET_COMMON_SHIPLINE_LIST: function () {
@@ -180,7 +180,7 @@ export function commonG2gAction(store) {
                 })
                 .catch(function (error) {
                     console.log('error');
-                    console.log(error);
+                    //console.log(error);
                 });
         },
         GET_COMMON_SURVEYOR_LIST: function () {
@@ -190,7 +190,7 @@ export function commonG2gAction(store) {
                 })
                 .catch(function (error) {
                     console.log('error');
-                    console.log(error);
+                    //console.log(error);
                 });
         },
         GET_COMMON_EXPORTER_LIST: function () {
@@ -204,7 +204,7 @@ export function commonG2gAction(store) {
                 })
                 .catch(function (error) {
                     console.log('error');
-                    console.log(error);
+                    //console.log(error);
                 });
         },
     }

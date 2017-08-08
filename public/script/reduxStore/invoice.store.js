@@ -55,7 +55,7 @@ export function invoiceAction(store) {
                 });
             })
             .catch((err) => {
-                console.log(err);
+                //console.log(err);
             })
         },
         INVOICE_DELETE: function(data){
@@ -74,7 +74,7 @@ export function invoiceAction(store) {
                 });
             })
             .catch((err) => {
-                console.log(err);
+                //console.log(err);
             })
         }
     }

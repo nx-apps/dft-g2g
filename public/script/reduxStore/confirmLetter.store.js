@@ -58,7 +58,7 @@ export function confirmLetterAction(store) {
                     store.dispatch({ type: 'GET_CONFIRM_LIST', payload: response.data })
                 })
                 .catch(function (error) {
-                    console.log(error);
+                    //console.log(error);
                 });
         },
         GET_CONFIRM_EXPORTER_LIST: function (link = '') {
@@ -71,7 +71,7 @@ export function confirmLetterAction(store) {
                     store.dispatch({ type: 'GET_CONFIRM_EXPORTER_LIST', payload: response.data })
                 })
                 .catch(function (error) {
-                    console.log(error);
+                    //console.log(error);
                 });
         },
         GET_HAMONIZE_OF_CONTRACT: function (contract_id) {
@@ -84,7 +84,7 @@ export function confirmLetterAction(store) {
                     store.dispatch({ type: 'GET_HAMONIZE_OF_CONTRACT', payload: response.data })
                 })
                 .catch(function (error) {
-                    console.log(error);
+                    //console.log(error);
                 });
         },
         GET_CONFIRM_DETAIL: function (cl_id) {
@@ -97,7 +97,7 @@ export function confirmLetterAction(store) {
                     })
                 })
                 .catch(function (error) {
-                    console.log(error);
+                    //console.log(error);
                 });
         },
         GET_CONFIRM_FP: function (data) {
@@ -113,7 +113,7 @@ export function confirmLetterAction(store) {
                     })
                 })
                 .catch(function (error) {
-                    console.log(error);
+                    //console.log(error);
                 });
         },
         // END GET

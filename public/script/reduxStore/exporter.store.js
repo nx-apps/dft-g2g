@@ -45,7 +45,7 @@ export function exporterAction(store) {
                         store.dispatch({ type: 'EXPORTER_GET_DATA', payload: response.data })
                     })
                     .catch(function (error) {
-                        console.log(error);
+                        //console.log(error);
                     });
             },
             EXPORTER_GET_DATA_ID: function (id) {
@@ -62,7 +62,7 @@ export function exporterAction(store) {
                         store.dispatch({ type: 'EXPORTER_GET_DATA_ID', payload: response.data[0] })
                     })
                     .catch(function (error) {
-                        console.log(error);
+                        //console.log(error);
                     });
             },
             EXPORTER_GET_FILE_DELETE: function (id) {
@@ -72,7 +72,7 @@ export function exporterAction(store) {
                     store.dispatch({ type: 'EXPORTER_GET_FILE_DELETE', payload: response.data })
                 })
                 .catch(function (error) {
-                    console.log(error);
+                    //console.log(error);
                 });
             },
             EXPORTER_GET_TYPE_LIC: function(){
@@ -82,7 +82,7 @@ export function exporterAction(store) {
                     store.dispatch({ type: 'EXPORTER_GET_TYPE_LIC', payload: response.data })
                 })
                 .catch(function (error){
-                    console.log(error);
+                    //console.log(error);
                 })
             },
             EXPORTER_GET_DOC_TYPE: function(){
@@ -91,7 +91,7 @@ export function exporterAction(store) {
                     store.dispatch({ type: 'EXPORTER_GET_DOC_TYPE', payload: response.data })
                 })
                 .catch(function (error){
-                    console.log(error);
+                    //console.log(error);
                 })
             },
             EXPORTER_SEARCH: function(val){

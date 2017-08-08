@@ -50,7 +50,7 @@ export function feeAction(store) {
                     store.dispatch({ type: 'FEE_GET_LIST_DATA', payload: response.data });
                 })
                 .catch((err) => {
-                    console.log(err);
+                    //console.log(err);
                 })
         },
         FEE_GET_ID_DATA: function (id) {
@@ -61,7 +61,7 @@ export function feeAction(store) {
                     store.dispatch({ type: 'FEE_GET_ID_DATA', payload: response.data });
                 })
                 .catch((err) => {
-                    console.log(err);
+                    //console.log(err);
                 })
         },
         FEE_CALC_DATA: function (data) {
@@ -86,7 +86,7 @@ export function feeAction(store) {
                     store.dispatch({ type: 'FEE_CALC_DATA', payload: newData });
                 })
                 .catch((err) => {
-                    console.log(err);
+                    //console.log(err);
                 })
         },
         FEE_INSERT: function (data) {
@@ -114,7 +114,7 @@ export function feeAction(store) {
                     });
                 })
                 .catch((err) => {
-                    console.log(err);
+                    //console.log(err);
                 })
         },
         FEE_UPDATE: function (data) {
@@ -137,7 +137,7 @@ export function feeAction(store) {
                     });
                 })
                 .catch((err) => {
-                    console.log(err);
+                    //console.log(err);
                 })
         },
         FEE_DELETE: function (id) {
@@ -156,7 +156,7 @@ export function feeAction(store) {
                     });
                 })
                 .catch((err) => {
-                    console.log(err);
+                    //console.log(err);
                 })
         },
         FEE_APPROVE: function (data) {
@@ -174,7 +174,7 @@ export function feeAction(store) {
                     })
                 })
                 .catch((err) => {
-                    console.log(err);
+                    //console.log(err);
                 })
         },
         FEE_RICE_UPDATE: function (data) {
@@ -198,7 +198,7 @@ export function feeAction(store) {
                     });
                 })
                 .catch((err) => {
-                    console.log(err);
+                    //console.log(err);
                 })
         },
         FEE_RICE_APPROVE: function (data) {
@@ -221,7 +221,7 @@ export function feeAction(store) {
                     })
                 })
                 .catch((err) => {
-                    console.log(err);
+                    //console.log(err);
                 })
         },
         FEE_REJECT: function (data) {
@@ -239,7 +239,7 @@ export function feeAction(store) {
                     })
                 })
                 .catch((err) => {
-                    console.log(err);
+                    //console.log(err);
                 })
         },
         FEE_APPROVE_FINSH: function (data) {
@@ -263,7 +263,7 @@ export function feeAction(store) {
                     })
                 })
                 .catch((err) => {
-                    console.log(err);
+                    //console.log(err);
                 })
         }
     }

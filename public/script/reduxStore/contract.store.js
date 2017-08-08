@@ -41,7 +41,7 @@ export function contractAction(store) {
                     store.dispatch({ type: 'GET_BUYER_LIST', payload: response.data })
                 })
                 .catch(function (error) {
-                    console.log(error);
+                    //console.log(error);
                 });
         },
         GET_CONTRACT_OF_BUYER: function (buyerId, ) {
@@ -51,7 +51,7 @@ export function contractAction(store) {
                     store.dispatch({ type: 'GET_CONTRACT_OF_BUYER', payload: response.data })
                 })
                 .catch(function (error) {
-                    console.log(error);
+                    //console.log(error);
                 });
         },
         GET_CONTRACT: function (contractId, ) {
@@ -65,7 +65,7 @@ export function contractAction(store) {
                     })
                 })
                 .catch(function (error) {
-                    console.log(error);
+                    //console.log(error);
                 });
         },
         // END GET
