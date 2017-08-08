@@ -158,7 +158,7 @@
               </gl-grid-col>
               <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
                 [[changeString2Num(item.*,'cost_price')]][[_obCalPrice(item.*,'cost_price')]]
-                <gl-form-input class="required" required disabled="[[commonState.btnDisabled]]" on-focus="_setSeleteValue" format-number="on" value="{{item.cost_price}}"
+                <gl-form-input class="required"format-number="on"  required disabled="[[commonState.btnDisabled]]" on-focus="_setSeleteValue"value="{{formatNumber(item.cost_price)}}"
                   label="{{localizeConfirmLetter.cost_price_ton}}" placeholder="{{localizeConfirmLetter.total_cost_price_ton}}"></gl-form-input>
               </gl-grid-col>
               <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
@@ -250,7 +250,7 @@
             value="{{dataShow.cl_total_quantity}}"></gl-form-input>
         </gl-grid-col>
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
-          <gl-form-input class="numberBack" disabled format-number="on" label="{{localizeConfirmLetter.total_cost_price_ton}}" value="[[dataShow.cost_price_perton]]"></gl-form-input>
+          <gl-form-input class="numberBack" disabled format-number="on" label="{{localizeConfirmLetter.total_cost_price_ton}}" value="[[formatNumber(dataShow.cost_price_perton)]]"></gl-form-input>
         </gl-grid-col>
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,5]]"></gl-grid-col>
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]"></gl-grid-col>
