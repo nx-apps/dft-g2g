@@ -77,6 +77,7 @@
               <div class="flex-8 layout horizontal textSum">
                 <div class="flex">
                   <div class="flex">{{localizeContract.total}}</div>
+                  <!-- เปลี่ยนชื่อ localizeContract.rice_contract-->
                   <div class="flex">[[_labelNames(seleteChartPie)]]</div>
                   <div class="flex">{{localizeContract.balance}}</div>
                 </div>
@@ -215,7 +216,7 @@
         this.seleteChartPie = 0;
         // ปริมาณข้าวที่ทำสัญญา /
         //  ปริมาณข้าวทีส่งมอบ
-        this.$$('#titleChart').innerHTML = this.localizeContract.rice_sender
+        this.$$('#titleChart').innerHTML = this.localizeContract.rice_contract
         this.$.chartContract.icon = 'radio-button-checked';
         this.$.chartShipment.icon = 'radio-button-unchecked';
         // this.dataChartPie = this._computeChartPie(this.data.contract_quantity_book,this.data.contract_quantity_book_balance,this.nameChart[1],this.colorPie[1]);

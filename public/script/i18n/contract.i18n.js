@@ -22,6 +22,7 @@ export const contract = {
         error_input: "กรุณากรอก",
         error_dropdown: "กรุณาเลือก",
 
+        
         rice_contract: "ปริมาณข้าวที่ทำสัญญา",
         rice_sender: "ปริมาณข้าวที่ส่งมอบ",
         total: "ทั้งหมด",
@@ -30,6 +31,9 @@ export const contract = {
         hm_group:'ชื่อกลุ่มข้าว',
         hm_name:'ชื่อข้าว',
         hm_year:'ปี',
+        all_year:'ทุกปี',
+        selete:'เลือกชนิดข้าว',
+        dele_selete:'ลบทั้งหมด',
         total_send:'ปริมาณการส่งมอบ (ตัน)',
         total_value_bath:'มูลค่าการส่งออก (บาท)',
         toast_approve_contract:'ต้องการยืนยันสัญญาใช่หรือไม่',

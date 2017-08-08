@@ -9,13 +9,12 @@
 <link rel="import" href="./../../../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="./../../../../bower_components/gl-form/gl-combo-box.html">
 <link rel="import" href="./../../../../bower_components/gl-form/gl-form-textarea.html">
-
 <link rel="import" href="./../../../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
 <link rel="import" href="./../../../../bower_components/paper-listbox/paper-listbox.html">
 <link rel="import" href="./../../../../bower_components/paper-item/paper-item.html">
-
 <link rel="import" href="./../../../../bower_components/paper-input/paper-input.html">
-
+<link rel="import" href="./../../../../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="./../../../../bower_components/paper-dialog-scrollable/paper-dialog-scrollable.html">
 <link rel="import" href="./../../../../bower_components/gl-form/gl-form-panel-footer.html">
 <link rel="import" href="./../../../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="./../../../../bower_components/paper-checkbox/paper-checkbox.html">
@@ -45,6 +44,7 @@
       margin-top: 25px;
       font-size: var(--font-size-h5);
     }
+
     .titleName {
       margin-bottom: 10px;
     }
@@ -108,6 +108,10 @@
       /*float: right;*/
     }
 
+    table {
+      border: 0.16px solid #F1F1F1;
+      margin-bottom: 16px;
+    }
 
     .collapse-content {
       padding: 15px;
@@ -147,18 +151,27 @@
     paper-icon-button .hamonize {
       margin-top: -50px;
     }
+
+    paper-dialog.size-position {
+      /*position: absolute;*/
+      /*top: 16px;
+      right: 16px;*/
+      width: 800px;
+      height: 550px;
+      overflow: auto;
+    }
   </style>
   <template>
     <gl-form-panel set-padding="10px 20px 10px 20px" set-border="1px">
       <template is="dom-if" if="[[!commonState.isInsert]]">
-      <div class="horizontal end-justified layout">
-        <paper-icon-button id="edit" class="crud" icon="create" raised on-tap="editContract" disabled="[[!commonState.btnDisabled]]"></paper-icon-button>
-        <paper-tooltip for="edit" offset="0">{{localizeCommon.edit}}</paper-tooltip>
-        <template is="dom-if" if="[[!data.contract_status]]">
-        <paper-icon-button id="delete" class="crud" icon="delete" raised on-tap="deleteContract" disabled="[[!commonState.btnDisabled]]"></paper-icon-button>
-        <paper-tooltip for="delete" offset="0">{{localizeCommon.delete}}</paper-tooltip>
-        </template>
-      </div>
+        <div class="horizontal end-justified layout">
+          <paper-icon-button id="edit" class="crud" icon="create" raised on-tap="editContract" disabled="[[!commonState.btnDisabled]]"></paper-icon-button>
+          <paper-tooltip for="edit" offset="0">{{localizeCommon.edit}}</paper-tooltip>
+          <template is="dom-if" if="[[!data.contract_status]]">
+            <paper-icon-button id="delete" class="crud" icon="delete" raised on-tap="deleteContract" disabled="[[!commonState.btnDisabled]]"></paper-icon-button>
+            <paper-tooltip for="delete" offset="0">{{localizeCommon.delete}}</paper-tooltip>
+          </template>
+        </div>
       </template>
       <gl-grid-row width="{{getWidth}}">
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,9]]">
@@ -227,124 +240,67 @@
             value="{{dataShow.buyerAddress}}"></gl-form-textarea>
         </gl-grid-col>
       </gl-grid-row>
+      <!--{{setHamonize(hamonizeList.*)}}-->
+      <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,12]]">
+        <div class="titleName">{{localizeContract.list_rice}}</div>
+        <div class="horizontal end-justified layout">
+          <div>
 
-      <gl-grid-row>
-        <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,12]]">
+            <template is="dom-if" if=[[!_checkArrayTrue(commonState.btnDisabled)]]>
+              <paper-button raised on-tap="addHamonizeTotable" class="gl-btn-primary">{{localizeContract.selete}}</paper-button>
+              <paper-button raised on-tap="DeleteAllHamonizeTotable" class="gl-btn-danger">{{localizeContract.dele_selete}}</paper-button>
+            </template>
 
-          <div class="titleName">{{localizeContract.label_list_rice}}</div>
 
-
-          <div class="horizontal layout header-item" warp>
-            <div class="header-div flex">
-              <!--<paper-dropdown-menu label="{{localizeContract.year}}">
-                <paper-listbox class="dropdown-content"  attr-for-selected="name" selected="{{dataSeleted.year}}" on-selected-changed="searchHamonizeInYear">
-                  <template is="dom-repeat" items={{hamonizeYear.year}}>
-                    <paper-item name="{{item.label}}">{{item.label}}</paper-item>
-                  </template>
-                </paper-listbox>
-              </paper-dropdown-menu>-->
-              <gl-combo-box id="hamonizeYear" label="{{localizeContract.year}}" placeholder="{{localizeContract.year}}" items="[[hamonizeYear.year]]"
-                item-label-path="label" value="{{dataSeleted.year}}" item-value-path="label" on-value-changed="searchHamonizeInYear">
-                <template>
-                  [[item.label]]
-                </template>
-              </gl-combo-box>
-            </div>
-            <div class="header-div flex">
-              <div style="padding: 10px 15px;">
-                [[localizeCommon.type_see]]
-                <paper-radio-group selected="{{typeSelete}}" >
-                  <paper-radio-button name="list">[[localizeCommon.list]]</paper-radio-button>
-                  <paper-radio-button name="group">[[localizeCommon.group]]</paper-radio-button>
-                </paper-radio-group>
-              </div>
-            </div>
           </div>
-          <iron-pages selected="{{typeSelete}}" attr-for-selected="name">
-            <div name="list">
-              <div class="horizontal layout header-item" warp>
-                <div class="header-div flex"></div>
-                <div class="header-div flex-3">[[localizeContract.hm_code]]<br>
-                  <gl-form-input label="[[localizeCommon.search]]" disabled="{{!dataSeleted.year}}" type="search" value="{{dataSeleted.hamonize_code}}" on-value-changed="searchHamonizeCode"></gl-form-input>
-                </div>
-                <div class="header-div flex-3">[[localizeContract.hm_name]]<br>
-                  <gl-form-input style="padding-left:20px;" disabled="{{!dataSeleted.year}}" value="{{dataSeleted.hamonize_th2}}" label="[[localizeCommon.search]]"
-                    type="search" on-value-changed="searchHamonizeTh"></gl-form-input>
-                </div>
-              </div>
-              <div class="subdiv">
-                <template is="dom-repeat" items={{hamonizeList}} index-as="indexroot">
-                  <div hidden="{{item.hiddend}}">
-                    <template is="dom-repeat" items={{item.sub}} as="subChild">
-                      <div hidden="{{subChild.hiddend}}">
-                        <div class="horizontal layout item">
-                          <div class="row flex">
-                            <paper-checkbox style="padding-left:25px;" id="{{indexroot}}" checked="{{subChild.check}}" on-tap="getSelect" disabled="[[commonState.btnDisabled]]">
-                          </div>
-                          <div class="row flex-3">[[subChild.hamonize_code]]</div>
-                          <div class="row flex-3">[[subChild.hamonize_th]]</div>
-                        </div>
-                      </div>
-                    </template>
-                </template>
-                </div>
-              </div>
-              <div name="group">
-                <div class="horizontal layout header-item" warp>
-                  <div class=""></div>
-                  <div class="header-div flex"></div>
-                  <div class="header-div flex"></div>
-                  <div class="header-div flex-3">[[localizeContract.hm_code]]
-                    <gl-form-input label="[[localizeCommon.search]]" type="search" disabled="{{!dataSeleted.year}}" value="{{dataSeleted.hamonize_code}}" on-value-changed="searchHamonizeCode"></gl-form-input>
-                  </div>
-                  <div class="header-div flex-3">[[localizeContract.hm_group]]</div>
-                  <div class="header-div flex-3">[[localizeContract.hm_name]]
-                    <gl-form-input style="padding-left:20px;" disabled="{{!dataSeleted.year}}" value="{{dataSeleted.hamonize_th2}}" label="[[localizeCommon.search]]"
-                      type="search" on-value-changed="searchHamonizeTh"></gl-form-input>
-                  </div>
-                  <div class="header-div flex-2">[[localizeContract.hm_year]]</div>
-                </div>
-                <div class="subdiv">
-                  <template is="dom-repeat" items={{hamonizeList}} index-as="indexroot">
-                    <div hidden="{{item.hiddend}}">
-                      <div class="horizontal layout item">
-                        <div class="">
-                          <paper-icon-button style="margin-top: -50px;" icon="chevron-right" index="[[indexroot]]" on-tap="toggle"></paper-icon-button>
-                        </div>
-                        <div class="row flex">
-                          <paper-checkbox checked="{{item.check}}" id="{{indexroot}}" on-tap="getCheckChild" disabled="[[commonState.btnDisabled]]">
-                        </div>
-                        <div class="row flex"></div>
-                        <div class="row flex-3"></div>
-                        <div class="row flex-3">[[item.name_th]]</div>
-                        <div class="row flex-3">-</div>
-                        <div class="row flex-2">-</div>
-                      </div>
-                    </div>
-                    <iron-collapse id="collapse-[[indexroot]]">
-                      <template is="dom-repeat" items={{item.sub}} as="subChild">
-                        <div hidden="{{subChild.hiddend}}">
-                          <div class="horizontal layout sub-item">
-                            <div class=""></div>
-                            <div class="row flex">
-                              <paper-checkbox id="{{indexroot}}" checked="{{subChild.check}}" on-tap="getSelect" disabled="[[commonState.btnDisabled]]">
-                            </div>
-                            <div class="row flex"></div>
-                            <div class="row flex-3">[[subChild.hamonize_code]]</div>
-                            <div class="row flex-3">[[item.name_th]]</div>
-                            <div class="row flex-3">[[subChild.hamonize_th]]</div>
-                            <div class="row flex-2">[[subChild.hamonize_year]]</div>
-                          </div>
-                        </div>
-                      </template>
-                    </iron-collapse>
-                  </template>
-                </div>
-              </div>
-          </iron-pages>
+        </div>
 
-        </gl-grid-col>
+        <table class="gl-table-default">
+          <thead class="table-head">
+            <tr>
+              <th>[[localizeContract.order]]</th>
+              <th>[[localizeContract.hm_code]]</th>
+              <th>[[localizeContract.hm_name]]</th>
+              <th>[[localizeContract.hm_year]]</th>
+              <th>#</th>
+            </tr>
+          </thead>
+          <tbody class="table-body">
+            <template is="dom-repeat" items="{{hamonizeSeleted}}">
+              <tr>
+                <td>[[_ObcountIndex(index)]]</td>
+                <td>[[item.hamonize_code]]</td>
+                <td>[[item.hamonize_th]]</td>
+                <td>[[item.hamonize_year]]</td>
+                <td>
+                  <div hidden="[[_checkArrayTrue(commonState.btnDisabled)]]">
+                    <paper-icon-button data="{{item}}" icon="delete" on-tap="_deleteHamonize"></paper-icon-button>
+                  </div>
+                </td>
+              </tr>
+            </template>
+            <template is="dom-if" if="[[_isShow(hamonizeSeleted,hamonizeSeleted.*)]]">
+              <tr>
+                <td colspan="5" style="text-align: center;"> {{localizeCommon.no_data}}</td>
+              </tr>
+            </template>
+          </tbody>
+        </table>
+      </gl-grid-col>
+      <!--<div hidden="{{item.hiddend}}">
+
+        <div hidden="{{subChild.hiddend}}">
+          <div class="horizontal layout item">
+            <div class="row flex">
+              <paper-checkbox style="padding-left:25px;" id="{{indexroot}}" checked="{{subChild.check}}" on-tap="getSelect" disabled="[[commonState.btnDisabled]]">
+            </div>
+            <div class="row flex-3">[[subChild.hamonize_code]]</div>
+            <div class="row flex-3">[[subChild.hamonize_th]]</div>
+          </div>
+        </div>-->
+
       </gl-grid-row>
+
 
       <gl-grid-row>
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,6]]">
@@ -368,12 +324,139 @@
         </div>
       </gl-form-panel-footer>
     </gl-form-panel>
+    <paper-dialog id="hamonizeGroup" class="size-position">
+      <h2>{{localizeContract.list_rice}}</h2>
+      <paper-dialog-scrollable>
+        <!--<gl-grid-row>-->
+        <!--<gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,12]]">-->
+        <div class="horizontal layout header-item" warp>
+          <div class="header-div flex">
+            <paper-dropdown-menu label="{{localizeContract.year}}">
+              <paper-listbox class="dropdown-content" attr-for-selected="name" selected="{{dataSeleted.year}}" on-selected-changed="searchHamonizeInYear">
+                <paper-item name="">{{localizeContract.all_year}}</paper-item>
+                <template is="dom-repeat" items={{hamonizeYear.year}}>
+                  <paper-item name="{{item.label}}">{{item.label}}</paper-item>
+                </template>
+              </paper-listbox>
+            </paper-dropdown-menu>
+            <!--<gl-combo-box id="hamonizeYear" label="{{localizeContract.year}}" placeholder="{{localizeContract.year}}" items="[[hamonizeYear.year]]"
+              item-label-path="label" value="{{dataSeleted.year}}" item-value-path="label" on-value-changed="searchHamonizeInYear">
+              <template>
+                [[item.label]]
+              </template>
+            </gl-combo-box>-->
+          </div>
+          <div class="header-div flex">
+            <div style="padding: 10px 15px;">
+              [[localizeCommon.type_see]]
+              <paper-radio-group selected="{{typeSelete}}">
+                <paper-radio-button name="list">[[localizeCommon.list]]</paper-radio-button>
+                <paper-radio-button name="group">[[localizeCommon.group]]</paper-radio-button>
+              </paper-radio-group>
+            </div>
+          </div>
+        </div>
+        <iron-pages selected="{{typeSelete}}" attr-for-selected="name">
+          <div name="list">
+            <div class="horizontal layout header-item" warp>
+              <div class="header-div flex"></div>
+              <div class="header-div flex-3">
+                <gl-form-input label="[[localizeContract.hm_code]]" always-float-label disabled="{{!dataSeleted.isYear}}" type="search" value="{{dataSeleted.hamonize_code}}"
+                  on-value-changed="searchHamonizeCode"></gl-form-input>
+              </div>
+              <div class="header-div flex-3">
+                <gl-form-input label="[[localizeContract.hm_name]]" always-float-label style="padding-left:20px;" disabled="{{!dataSeleted.isYear}}"
+                  value="{{dataSeleted.hamonize_th}}" label="[[localizeCommon.search]]" type="search" on-value-changed="searchHamonizeTh"></gl-form-input>
+              </div>
+            </div>
+            <div class="subdiv">
+              <template is="dom-repeat" items={{hamonizeList}} index-as="indexroot">
+                <div hidden="{{item.hiddend}}">
+                  <template is="dom-repeat" items={{item.sub}} as="subChild">
+                    <div hidden="{{subChild.hiddend}}">
+                      <div class="horizontal layout item">
+                        <div class="row flex">
+                          <paper-checkbox style="padding-left:25px;" id="{{indexroot}}" checked="{{subChild.check}}" on-tap="getSelect" disabled="[[commonState.btnDisabled]]">
+                        </div>
+                        <div class="row flex-3">[[subChild.hamonize_code]]</div>
+                        <div class="row flex-3">[[subChild.hamonize_th]]</div>
+                      </div>
+                    </div>
+                  </template>
+              </template>
+              </div>
+            </div>
+            <div name="group">
+              <div class="horizontal layout header-item" warp>
+                <div class=""></div>
+                <div class="header-div flex"></div>
+                <div class="header-div flex"></div>
+                <div class="header-div flex-3">[[localizeContract.hm_group]]</div>
+                <div class="header-div flex-3">
+                  <gl-form-input label="[[localizeContract.hm_code]]" always-float-label type="search" disabled="{{!dataSeleted.isYear}}" value="{{dataSeleted.hamonize_code}}"
+                    on-value-changed="searchHamonizeCode"></gl-form-input>
+                </div>
+
+                <div class="header-div flex-3">
+                  <gl-form-input label="[[localizeContract.hm_name]]" style="padding-left:20px;" always-float-label disabled="{{!dataSeleted.isYear}}"
+                    value="{{dataSeleted.hamonize_th}}" label="[[localizeCommon.search]]" type="search" on-value-changed="searchHamonizeTh"></gl-form-input>
+                </div>
+                <div class="header-div flex-2">[[localizeContract.hm_year]]</div>
+              </div>
+              <div class="subdiv">
+                <template is="dom-repeat" items={{hamonizeList}} index-as="indexroot">
+                  <div hidden="{{item.hiddend}}">
+                    <div class="horizontal layout item">
+                      <div class="">
+                        <paper-icon-button style="margin-top: -50px;" icon="chevron-right" index="[[indexroot]]" on-tap="toggle"></paper-icon-button>
+                      </div>
+                      <div class="row flex">
+                        <paper-checkbox checked="{{item.check}}" id="{{indexroot}}" on-tap="getCheckChild" disabled="[[commonState.btnDisabled]]">
+                      </div>
+                      <div class="row flex"></div>
+                      <div class="row flex-3">[[item.name_th]]</div>
+                      <div class="row flex-3"></div>
+
+                      <div class="row flex-3">-</div>
+                      <div class="row flex-2">-</div>
+                    </div>
+                  </div>
+                  <iron-collapse id="collapse-[[indexroot]]">
+                    <template is="dom-repeat" items={{item.sub}} as="subChild">
+                      <div hidden="{{subChild.hiddend}}">
+                        <div class="horizontal layout sub-item">
+                          <div class=""></div>
+                          <div class="row flex">
+                            <paper-checkbox id="{{indexroot}}" checked="{{subChild.check}}" on-tap="getSelect" disabled="[[commonState.btnDisabled]]">
+                          </div>
+                          <div class="row flex"></div>
+                          <div class="row flex-3">[[item.name_th]]</div>
+                          <div class="row flex-3">[[subChild.hamonize_code]]</div>
+
+                          <div class="row flex-3">[[subChild.hamonize_th]]</div>
+                          <div class="row flex-2">[[subChild.hamonize_year]]</div>
+                        </div>
+                      </div>
+                    </template>
+                  </iron-collapse>
+                </template>
+              </div>
+            </div>
+        </iron-pages>
+        <!--</gl-grid-col>-->
+        <!--</gl-grid-row>-->
+      </paper-dialog-scrollable>
+      <div class="buttons">
+        <!--<paper-button dialog-dismiss>Cancel</paper-button>-->
+        <paper-button dialog-confirm autofocus raised on-tap="checkAddHamonize">ปิด</paper-button>
+      </div>
+    </paper-dialog>
   </template>
   <script>
     Polymer({
       is: "contract-detail",
       behaviors: [
-        ReduxBehavior, FormatNumberBehavior, nylonBehavior, g2gLogicBehavior,ValidateFormBehavior
+        ReduxBehavior, FormatNumberBehavior, nylonBehavior, g2gLogicBehavior, ValidateFormBehavior
       ],
       properties: {
         localizeContract: {
@@ -398,11 +481,13 @@
           type: Object,
           value: {
             hamonize_code: '',
-            hamonize_th2: '',
+            hamonize_th: '',
+            year: '',
+            isYear: false
           }
         },
-        buyerId:{
-          statePath:'commonState.buyerId'
+        buyerId: {
+          statePath: 'commonState.buyerId'
         },
         buyerList: {
           statePath: 'commonG2g.buyerList',
@@ -443,6 +528,78 @@
         this.set('hamonizeList', JSON.parse(JSON.stringify(cloneHamonizeList)))
         // console.log(this.hamonizeList);
       },
+      setHamonize: function (Hamonize) {
+        let hm = Hamonize.map(item => item.sub).reduce((a, b) => a.concat(b), []).filter(item => item.check === true)
+        let arr = []
+        let showHm = []
+        hm.map((item) => {
+          arr[item.id] = item
+        })
+        for (var key in arr) {
+          showHm.push(arr[key])
+        }
+        this.set('hamonizeSeleted', showHm)
+      },
+      addHamonizeTotable: function () {
+        this.$.hamonizeGroup.open()
+      },
+      DeleteAllHamonizeTotable: function () {
+        // console.log(this.hamonizeSeleted);
+        let idHm = this.hamonizeSeleted
+        this.fire('toast', {
+          status: 'openDialog',
+          text: this.localizeCommon.toast_delete,
+          confirmed: (result) => {
+            if (result == true) {
+              let myFirstPromise = new Promise((resolve, reject) => {
+                for (var index3 = 0; index3 < idHm.length; index3++) {
+                  // console.log(idHm[index].id);
+                  for (var index = 0; index < this.hamonizeList.length; index++) {
+                    for (var index2 = 0; index2 < this.hamonizeList[index].sub.length; index2++) {
+                      if (this.hamonizeList[index].sub[index2].id === idHm[index3].id) {
+                        this.set('hamonizeList.' + index + '.sub.' + index2 + '.check', false)
+                      }
+                    }
+                  }
+                }
+
+                resolve('ok')
+              });
+              myFirstPromise.then((res) => {
+                this.setHamonize(JSON.parse(JSON.stringify(this.hamonizeList)))
+              })
+            }
+          }
+        })
+      },
+      _deleteHamonize: function (e) {
+        let idHm = e.currentTarget.data.id
+        this.fire('toast', {
+          status: 'openDialog',
+          text: this.localizeCommon.toast_delete,
+          confirmed: (result) => {
+            if (result == true) {
+              let myFirstPromise = new Promise((resolve, reject) => {
+                for (var index = 0; index < this.hamonizeList.length; index++) {
+                  for (var index2 = 0; index2 < this.hamonizeList[index].sub.length; index2++) {
+                    if (this.hamonizeList[index].sub[index2].id === idHm) {
+                      this.set('hamonizeList.' + index + '.sub.' + index2 + '.check', false)
+                    }
+                  }
+                }
+                resolve('ok')
+              });
+              myFirstPromise.then((res) => {
+                this.setHamonize(JSON.parse(JSON.stringify(this.hamonizeList)))
+              })
+            }
+          }
+        })
+
+      },
+      checkAddHamonize() {
+        this.setHamonize(JSON.parse(JSON.stringify(this.hamonizeList)))
+      },
       _checkHamonize: function (data, hamonizeList, status = true) {
         try {
           let contract_hamonize = data.contract_hamonize
@@ -451,7 +608,6 @@
             for (var index2 = 0; index2 < this.hamonizeList[index].sub.length; index2++) {
               this.set('hamonizeList.' + index + '.sub.' + index2 + '.check', false)
             }
-
           }
           status = true
           if (data.id === undefined) {
@@ -472,6 +628,7 @@
             }
           }
           // console.log(this.hamonizeList);
+          this.setHamonize(JSON.parse(JSON.stringify(this.hamonizeList)))
         } catch (e) {
         }
       },
@@ -527,13 +684,11 @@
 
       },
       resetSearch(year) {
-// console.log(year);
+        // console.log(year);
         if (year === '' || year === undefined) {
-          // console.log(year);
-          // console.log(this.dataSeleted.hamonize_code);
-          // this.set('dataSeleted.hamonize_code','')
-          // // console.log(this.dataSeleted.hamonize_code);
-          // this.set('dataSeleted.hamonize_th2','')
+          this.set('dataSeleted.isYear', false)
+        } else {
+          this.set('dataSeleted.isYear', true)
         }
       },
       // searchHamonizeInCode: function (e) {
@@ -568,17 +723,19 @@
           let newHamonize = []
           // console.log(this.dataSeleted.hamonize_code);
           let seletedCode = this.dataSeleted.hamonize_code
-          let hamonize_th2 = this.dataSeleted.hamonize_th2
-          let year = this.$$('#hamonizeYear').value
+          let hamonize_th = this.dataSeleted.hamonize_th
+          let year = this.dataSeleted.year
           // console.log(seletedCode);
           for (var index = 0; index < this.hamonizeList.length; index++) {
             for (var index2 = 0; index2 < this.hamonizeList[index].sub.length; index2++) {
               if (String(this.hamonizeList[index].sub[index2].hamonize_code).search(String(seletedCode)) > -1
-                && String(this.hamonizeList[index].sub[index2].hamonize_th2).search(String(hamonize_th2)) > -1
+                && String(this.hamonizeList[index].sub[index2].hamonize_th).search(String(hamonize_th)) > -1
                 && String(this.hamonizeList[index].sub[index2].hamonize_year) === year) {
                 this.set('hamonizeList.' + index + '.sub.' + index2 + '.hiddend', false)
+                // console.log(3333);
               } else {
                 this.set('hamonizeList.' + index + '.sub.' + index2 + '.hiddend', true)
+                // console.log(1212);
               }
             }
             let checkkFalse = this.hamonizeList[index].sub.find((item) => item.hiddend === false)
@@ -596,13 +753,13 @@
         try {
           let newHamonize = []
           let hamonize_code = this.dataSeleted.hamonize_code
-          let seletedCode = this.dataSeleted.hamonize_th2
-          let year = this.$$('#hamonizeYear').value
+          let seletedCode = this.dataSeleted.hamonize_th
+          let year = this.dataSeleted.year
           // console.log(seletedCode);
           for (var index = 0; index < this.hamonizeList.length; index++) {
             for (var index2 = 0; index2 < this.hamonizeList[index].sub.length; index2++) {
               // if (String(seletedCode).search(String(this.hamonizeList[index].sub[index2].hamonize_code)) > -1) {
-              if (String(this.hamonizeList[index].sub[index2].hamonize_th2).search(String(seletedCode)) > -1
+              if (String(this.hamonizeList[index].sub[index2].hamonize_th).search(String(seletedCode)) > -1
                 && String(this.hamonizeList[index].sub[index2].hamonize_code).search(String(hamonize_code)) > -1
                 && String(this.hamonizeList[index].sub[index2].hamonize_year) === year) {
                 this.set('hamonizeList.' + index + '.sub.' + index2 + '.hiddend', false)
@@ -675,7 +832,7 @@
                 hamonize_en: hamonizeList[index2].sub[index3].hamonize_en,
                 hamonize_en2: hamonizeList[index2].sub[index3].hamonize_en2,
                 hamonize_th: hamonizeList[index2].sub[index3].hamonize_th,
-                hamonize_th2: hamonizeList[index2].sub[index3].hamonize_th2,
+                hamonize_th: hamonizeList[index2].sub[index3].hamonize_th,
                 hamonize_year: hamonizeList[index2].sub[index3].hamonize_year
               }
               hamonizeArr.push({

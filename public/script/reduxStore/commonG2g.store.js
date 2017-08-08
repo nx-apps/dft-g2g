@@ -79,12 +79,13 @@ export function commonG2gAction(store) {
         GET_COMMON_HAMONIZE_LIST: function (data) {
             axios.get(window._config.externalServerCommon + '/api/groupItem?group_id=1a324474-0940-4aa9-b4fd-0b98b9e4ce5c')
                 .then(function (response) {
+                    // console.log(response.data);
                     var hamonizeList = response.data.reduce(function (prev, curr) {
                         return [...prev, ...curr.sub];
                     },[]);
                     for (var index = 0; index < hamonizeList.length; index++) {
                         // response.data[index].label = ''
-                        hamonizeList[index].label = '[' + hamonizeList[index].hamonize_code + '] ' + hamonizeList[index].hamonize_th2
+                        hamonizeList[index].label = '[' + hamonizeList[index].hamonize_code + '] ' + hamonizeList[index].hamonize_th
                         // console.log(response.data[index].hamonize.hamonize_en );
                     }
                     let lisyYear = []

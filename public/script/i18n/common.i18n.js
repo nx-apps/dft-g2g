@@ -2,6 +2,7 @@ export const common = {
     th: {
         foo: 'ก',
         baa: 'ข',
+        order:'ลำดับ',
         close: "ปิด",
         open: "เปิด",
         back_ward: "ย้อนกลับ",

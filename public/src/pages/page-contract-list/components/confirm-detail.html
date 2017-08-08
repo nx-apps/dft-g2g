@@ -360,7 +360,9 @@
         '_isHaveForUse(data.cl_hamonize,hamonizeContract,data.cl_hamonize.*)'
       ],
       _setHamonizeLimit: function (contractId, hamonizeLimitContract) {
-        this.set('dataShow.hamonize_limit', this.contractId.contract_weight_book_balance - this.hamonizeLimitContract)
+        // console.log(this.contractId.contract_weight_confirm_balance);
+        // console.log(this.hamonizeLimitContract);
+        this.set('dataShow.hamonize_limit', this.contractId.contract_weight_confirm_balance)
 
       },
       canncelConfirm: function () {
@@ -574,14 +576,14 @@
         this._resiveFormConfirm('insert')
           .then((res) => {
             // console.log(res);
-            let sum = this.dataShow.cl_total_quantity - this.dataShow.hamonize_limit
-            if (this.dataShow.cl_total_quantity > this.dataShow.hamonize_limit) {
-              this.fire('toast', {
-                status: 'connectError', text: this.localizeConfirmLetter.over_limit + this.formatNumberNoZero(sum) + this.localizeConfirmLetter.ton, //คำสั่งสำหรับเปิด toast error
-                callback: () => {
-                }
-              })
-            } else {
+            // let sum = this.dataShow.cl_total_quantity - this.dataShow.hamonize_limit
+            // if (this.dataShow.cl_total_quantity > this.dataShow.hamonize_limit) {
+            //   this.fire('toast', {
+            //     status: 'connectError', text: this.localizeConfirmLetter.over_limit + this.formatNumberNoZero(sum) + this.localizeConfirmLetter.ton, //คำสั่งสำหรับเปิด toast error
+            //     callback: () => {
+            //     }
+            //   })
+            // } else {
               // console.log(this.dataShow.cl_total_quantity)
               // console.log(this.dataShow.hamonize_limit)
               this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
@@ -608,7 +610,7 @@
                     })
                   }
                 })
-            }
+            // }
 
           })
           .catch((error) => {
@@ -617,7 +619,9 @@
 
       },
       saveConfirm: function () {
-        console.log(this.dataShow.cl_total_quantity - this.dataShow.hamonize_limit)
+        // console.log(this.dataShow.hamonize_limit);
+        // console.log(this.dataShow.cl_total_quantity);
+        // console.log(this.dataShow.cl_total_quantity - this.dataShow.hamonize_limit)
         this.fire('toast', {
           status: 'openDialog',
           text: this.localizeCommon.save_succeed,
@@ -625,14 +629,15 @@
             if (result == true) {
               this._resiveFormConfirm('edit')
                 .then((res) => {
-                  let sum = this.dataShow.cl_total_quantity - this.dataShow.hamonize_limit
-                  if (this.dataShow.cl_total_quantity > this.dataShow.hamonize_limit) {
-                    this.fire('toast', {
-                      status: 'connectError', text: this.localizeConfirmLetter.over_limit + this.formatNumberNoZero(sum) + this.localizeConfirmLetter.ton, //คำสั่งสำหรับเปิด toast error
-                      callback: () => {
-                      }
-                    })
-                  } else {
+                  // let sum = this.dataShow.cl_total_quantity - this.dataShow.hamonize_limit
+                  // console.log(this.dataShow.cl_total_quantity - this.dataShow.hamonize_limit);
+                  // if (this.dataShow.cl_total_quantity > this.dataShow.hamonize_limit) {
+                  //   this.fire('toast', {
+                  //     status: 'connectError', text: this.localizeConfirmLetter.over_limit + this.formatNumberNoZero(sum) + this.localizeConfirmLetter.ton, //คำสั่งสำหรับเปิด toast error
+                  //     callback: () => {
+                  //     }
+                  //   })
+                  // } else {
                     this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
                     this.dispatchAction('PUT_CONFIRM', res)
                       .then((response) => {
@@ -660,7 +665,7 @@
                           })
                         }
                       })
-                  }
+                  // }
                   // console.log(res);
                   // console.log(this.dataShow);
 
