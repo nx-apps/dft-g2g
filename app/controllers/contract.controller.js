@@ -35,10 +35,9 @@ exports.buyerId = function (req, res) {
         .map(function (m) {
             var cl_sum = r.table('confirm_letter').getAll(m('id'), { index: 'contract_id' }).sum('cl_weight');
             var book_sum = r.table('book_detail').getAll(m('id'), { index: 'contract_id' }).sum('net_weight');
-            return m.pluck('contract_name', 'contract_no', 'contract_status')
+            return m.pluck('contract_name', 'contract_no', 'contract_status','contract_weight')
                 .merge({
                     contract_id: m('id'),
-                    contract_weight:m('contract_weight'),
                     contract_weight_confirm: cl_sum,
                     contract_weight_confirm_balance: m('contract_weight').sub(cl_sum),
                     contract_weight_book: book_sum,
