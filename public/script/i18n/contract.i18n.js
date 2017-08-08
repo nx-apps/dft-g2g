@@ -37,6 +37,8 @@ export const contract = {
         total_send:'ปริมาณการส่งมอบ (ตัน)',
         total_value_bath:'มูลค่าการส่งออก (บาท)',
         toast_approve_contract:'ต้องการยืนยันสัญญาใช่หรือไม่',
+        want_hamon_delete_all: 'ต้องการลบทั้งหมดใช่หรือไม่ ?',
+        want_hamon_delete: 'ต้องการลบใช่หรือไม่ ?',
         want_delete: 'ต้องการลบข้อมูลใช่หรือไม่ ?',
         save_success: 'บันทึกสำเร็จ',
         load_success: 'โหลดข้อมูลสำเร็จ',

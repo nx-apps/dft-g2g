@@ -548,7 +548,7 @@
         let idHm = this.hamonizeSeleted
         this.fire('toast', {
           status: 'openDialog',
-          text: this.localizeCommon.toast_delete,
+          text: this.localizeContract.want_hamon_delete_all,
           confirmed: (result) => {
             if (result == true) {
               let myFirstPromise = new Promise((resolve, reject) => {
@@ -576,7 +576,7 @@
         let idHm = e.currentTarget.data.id
         this.fire('toast', {
           status: 'openDialog',
-          text: this.localizeCommon.toast_delete,
+          text: this.localizeContract.want_hamon_delete,
           confirmed: (result) => {
             if (result == true) {
               let myFirstPromise = new Promise((resolve, reject) => {
