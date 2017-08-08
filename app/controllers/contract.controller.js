@@ -38,6 +38,7 @@ exports.buyerId = function (req, res) {
             return m.pluck('contract_name', 'contract_no', 'contract_status')
                 .merge({
                     contract_id: m('id'),
+                    contract_weight:m('contract_weight'),
                     contract_weight_confirm: cl_sum,
                     contract_weight_confirm_balance: m('contract_weight').sub(cl_sum),
                     contract_weight_book: book_sum,
