@@ -161,14 +161,14 @@
             </paper-listbox>
           </paper-dropdown-menu>
           <br />
-          <!--<gl-combo-box always-float-label label="{{localizeCommon.report_type}}" placeholder="{{localizeCommon.report_type}}" value="{{printReport.typeFile}}"
+          <!--<gl-combo-box always-float-label label="{{localizeCommon.report_type}}" placeholder="{{localizeCommon.report_type}}" value="{{printReport.export}}"
           item-label-path="report_type" item-value-path="report_type_id" items="{{report.report_type}}">
           <template>
             [[item.report_type]]
           </template>
         </gl-combo-box>-->
           <paper-dropdown-menu label="{{localizeCommon.report_type}}">
-            <paper-listbox class="dropdown-content" attr-for-selected="name" selected="{{printReport.typeFile}}">
+            <paper-listbox class="dropdown-content" attr-for-selected="name" selected="{{printReport.export}}">
               <template is="dom-repeat" items={{report.report_type}}>
                 <paper-item name="[[item.report_type_id]]">[[item.report_type]]</paper-item>
               </template>
@@ -260,7 +260,7 @@
         },
         printReport: {
           type: Object,
-          value: { ori: 3, nn: 12, typeReport: '0', typeFile: 'pdf', size: 12 }
+          value: { ori: 3, nn: 12, typeReport: '0', export: 'pdf', size: 12 }
         },
         fontSize: {
           type: Array,
@@ -350,6 +350,8 @@
       printReportBook() {
         // console.log(this.dataReport);
         // this.this.printReport.typeReport
+        // console.log(this.printReport);
+        // export
         window.open(window._config.reportServer + '/api/rice/report' + (Number(this.printReport.typeReport) + 1) + '?id=' + this.dataReport.id + '&' + this.genUrl(this.printReport), '1');
 
       },
