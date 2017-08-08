@@ -23,8 +23,8 @@ export const contract = {
         error_dropdown: "กรุณาเลือก",
 
         
-        rice_contract: "ปริมาณข้าวที่ทำสัญญา",
-        rice_sender: "ปริมาณข้าวที่ส่งมอบ",
+        rice_contract: "ปริมาณที่ทำสัญญา",
+        rice_sender: "ปริมาณที่ส่งมอบ",
         total: "ทั้งหมด",
         balance: "คงเหลือ",
         hm_code:'รหัส Hamonize',
