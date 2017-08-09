@@ -140,8 +140,7 @@
                     buyer_id:this.getCookieBhv("buyerId")
                 })
                 this.dispatchAction('GET_COMMON_BUYER_LIST');
-                this.dispatchAction('GET_COMMON_HAMONIZE_LIST');
-                this.dispatchAction('GET_COMMON_HAMONIZE_LIST_NO_GROUP');
+                
                 this.dispatchAction('GET_COMMON_CARRIER_LIST');
                 this.dispatchAction('GET_COMMON_INCOTERMS_LIST');
                 this.dispatchAction('GET_COMMON_NOTIFY_LIST');
@@ -153,6 +152,8 @@
             },
             // //addContract
             addContract: function () {
+                this.dispatchAction('GET_COMMON_HAMONIZE_LIST');
+                this.dispatchAction('GET_COMMON_HAMONIZE_LIST_NO_GROUP');
                 this.dispatchAction('SET_BREADCRUMBS', [{
                     label: this.localizeContract.add_contract,
                     href: ''
@@ -178,6 +179,8 @@
                 }, 500)
             },
             _getContractDetail: function (e) {
+                this.dispatchAction('GET_COMMON_HAMONIZE_LIST');
+                this.dispatchAction('GET_COMMON_HAMONIZE_LIST_NO_GROUP');
                 this.dispatchAction('SET_BREADCRUMBS', [{
                     label: this.localizeContract.contract_at+' ' + e.detail.contract_no,
                     href: ''
