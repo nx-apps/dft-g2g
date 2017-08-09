@@ -6,6 +6,7 @@ const initialState = {
     bankList: [],
     buyerList: [],
     hamonizeList: [],
+    hamonizeListNoGroup:[],
     hamonizeYear: {},
     carrierList: [],
     incotermsList: [],
@@ -25,6 +26,8 @@ export function commonG2gReducer(state = initialState, action) {
             return Object.assign({}, state, { buyerList: action.payload });
         case 'GET_COMMON_HAMONIZE_LIST':
             return Object.assign({}, state, { hamonizeList: action.payload });
+        case 'GET_COMMON_HAMONIZE_LIST_NO_GROUP':
+            return Object.assign({}, state, { hamonizeListNoGroup: action.payload});
         case 'GET_COMMON_HAMONIZE_YEAR':
             return Object.assign({}, state, { hamonizeYear: action.payload });
         case 'GET_COMMON_CARRIER_LIST':
@@ -99,6 +102,16 @@ export function commonG2gAction(store) {
                     
                     store.dispatch({ type: 'GET_COMMON_HAMONIZE_YEAR', payload: xData })
                     store.dispatch({ type: 'GET_COMMON_HAMONIZE_LIST', payload: response.data })
+                })
+                .catch(function (error) {
+                    console.log('error');
+                    //console.log(error);
+                });
+        },
+        GET_COMMON_HAMONIZE_LIST_NO_GROUP: function () {
+            axios.get(window._config.externalServerCommon + '/api/hamonize')
+                .then(function (response) {
+                    store.dispatch({ type: 'GET_COMMON_HAMONIZE_LIST_NO_GROUP', payload: response.data })
                 })
                 .catch(function (error) {
                     console.log('error');
