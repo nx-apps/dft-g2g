@@ -65,7 +65,7 @@ export function commonG2gAction(store) {
                     store.dispatch({ type: 'GET_COMMON_BANK_LIST', payload: response.data })
                 })
                 .catch(function (error) {
-                    console.log('error');
+                    //console.log('error');
                     //console.log(error);
                 });
         },
@@ -75,7 +75,7 @@ export function commonG2gAction(store) {
                     store.dispatch({ type: 'GET_COMMON_BUYER_LIST', payload: response.data })
                 })
                 .catch(function (error) {
-                    console.log('error');
+                    //console.log('error');
                     //console.log(error);
                 });
         },
@@ -104,7 +104,7 @@ export function commonG2gAction(store) {
                     store.dispatch({ type: 'GET_COMMON_HAMONIZE_LIST', payload: response.data })
                 })
                 .catch(function (error) {
-                    console.log('error');
+                    //console.log('error');
                     //console.log(error);
                 });
         },
@@ -114,7 +114,7 @@ export function commonG2gAction(store) {
                     store.dispatch({ type: 'GET_COMMON_HAMONIZE_LIST_NO_GROUP', payload: response.data })
                 })
                 .catch(function (error) {
-                    console.log('error');
+                    //console.log('error');
                     //console.log(error);
                 });
         },
@@ -124,7 +124,7 @@ export function commonG2gAction(store) {
                     store.dispatch({ type: 'GET_COMMON_CARRIER_LIST', payload: response.data })
                 })
                 .catch(function (error) {
-                    console.log('error');
+                    //console.log('error');
                     //console.log(error);
                 });
         },
@@ -136,7 +136,7 @@ export function commonG2gAction(store) {
                     store.dispatch({ type: 'GET_COMMON_INCOTERMS_LIST', payload: response.data })
                 })
                 .catch(function (error) {
-                    console.log('error');
+                    //console.log('error');
                     //console.log(error);
                 });
         },
@@ -146,7 +146,7 @@ export function commonG2gAction(store) {
                     store.dispatch({ type: 'GET_COMMON_NOTIFY_LIST', payload: response.data })
                 })
                 .catch(function (error) {
-                    console.log('error');
+                    //console.log('error');
                     //console.log(error);
                 });
         },
@@ -156,7 +156,7 @@ export function commonG2gAction(store) {
                     store.dispatch({ type: 'GET_COMMON_PACKAGE_LIST', payload: response.data })
                 })
                 .catch(function (error) {
-                    console.log('error');
+                    //console.log('error');
                     //console.log(error);
                 });
         },
@@ -167,7 +167,7 @@ export function commonG2gAction(store) {
                     store.dispatch({ type: 'GET_COMMON_PORT_LIST', payload: group })
                 })
                 .catch(function (error) {
-                    console.log('error');
+                    //console.log('error');
                     //console.log(error);
                 });
         },
@@ -182,7 +182,7 @@ export function commonG2gAction(store) {
                     store.dispatch({ type: 'GET_COMMON_SHIP_LIST', payload: response.data })
                 })
                 .catch(function (error) {
-                    console.log('error');
+                    //console.log('error');
                     //console.log(error);
                 });
         },
@@ -192,7 +192,7 @@ export function commonG2gAction(store) {
                     store.dispatch({ type: 'GET_COMMON_SHIPLINE_LIST', payload: response.data })
                 })
                 .catch(function (error) {
-                    console.log('error');
+                    //console.log('error');
                     //console.log(error);
                 });
         },
@@ -202,7 +202,7 @@ export function commonG2gAction(store) {
                     store.dispatch({ type: 'GET_COMMON_SURVEYOR_LIST', payload: response.data })
                 })
                 .catch(function (error) {
-                    console.log('error');
+                    //console.log('error');
                     //console.log(error);
                 });
         },
@@ -216,7 +216,7 @@ export function commonG2gAction(store) {
                     store.dispatch({ type: 'GET_COMMON_EXPORTER_LIST', payload: response.data })
                 })
                 .catch(function (error) {
-                    console.log('error');
+                    //console.log('error');
                     //console.log(error);
                 });
         },
