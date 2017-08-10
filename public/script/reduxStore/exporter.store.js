@@ -29,7 +29,7 @@ export function exporterAction(store) {
     return [commonAction(),
         {
             EXPORTER_GET_DATA: function () {
-                console.log(1)
+                //console.log(1)
                 axios.get('./external/exporter')
                 
                     .then(function (response) {

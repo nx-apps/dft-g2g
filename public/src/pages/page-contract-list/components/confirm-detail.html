@@ -150,16 +150,19 @@
             <gl-grid-row>
               <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
                 <gl-form-input class="required" required disabled="[[commonState.btnDisabled]]" label="{{localizeConfirmLetter.project_th}}"
-                  placeholder="{{localizeConfirmLetter.project_th}}" value="{{item.project_th}}" on-focus="_setSeleteValue" error-message="{{localizeContract.error_input}}{{localizeConfirmLetter.project_th}}"></gl-form-input>
+                  placeholder="{{localizeConfirmLetter.project_th}}" value="{{item.project_th}}" on-focus="_setSeleteValue"
+                  error-message="{{localizeContract.error_input}}{{localizeConfirmLetter.project_th}}"></gl-form-input>
               </gl-grid-col>
               <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
                 <gl-form-input class="required" required disabled="[[commonState.btnDisabled]]" label="{{localizeConfirmLetter.project_en}}"
-                  placeholder="{{localizeConfirmLetter.project_en}}" value="{{item.project_en}}" on-focus="_setSeleteValue" error-message="{{localizeContract.error_input}}{{localizeConfirmLetter.project_en}}"></gl-form-input>
+                  placeholder="{{localizeConfirmLetter.project_en}}" value="{{item.project_en}}" on-focus="_setSeleteValue"
+                  error-message="{{localizeContract.error_input}}{{localizeConfirmLetter.project_en}}"></gl-form-input>
               </gl-grid-col>
               <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
                 [[changeString2Num(item.*,'cost_price')]][[_obCalPrice(item.*,'cost_price')]]
-                <gl-form-input class="required"format-number="on"  required disabled="[[commonState.btnDisabled]]" on-focus="_setSeleteValue"value="{{formatNumber(item.cost_price)}}"
-                  label="{{localizeConfirmLetter.cost_price_ton}}" placeholder="{{localizeConfirmLetter.total_cost_price_ton}}"></gl-form-input>
+                <gl-form-input class="required" format-number="on" required disabled="[[commonState.btnDisabled]]" on-focus="_setSeleteValue"
+                  value="{{item.cost_price}}" label="{{localizeConfirmLetter.cost_price_ton}}" placeholder="{{localizeConfirmLetter.total_cost_price_ton}}"></gl-form-input>
+                <!--value="{{formatNumber(item.cost_price)}}"-->
               </gl-grid-col>
               <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
                 <!--[[changeString2Num(item.*,'cost_value')]]-->
@@ -200,12 +203,12 @@
 
                     </td>
                     <td> [[changeString2Num(packageitem.*,'price_d')]]
-                      <gl-form-input class="required numberBack" required allowed-pattern="[0-9||,||.]" on-focus="_setSeleteValue" format-number="on" disabled="[[commonState.btnDisabled]]"
-                        placeholder="{{localizeCommon.price}}" error-message="{{localizeContract.error_input}}{{localizeCommon.price}}"
+                      <gl-form-input class="required numberBack" required allowed-pattern="[0-9||,||.]" on-focus="_setSeleteValue" format-number="on"
+                        disabled="[[commonState.btnDisabled]]" placeholder="{{localizeCommon.price}}" error-message="{{localizeContract.error_input}}{{localizeCommon.price}}"
                         value="{{packageitem.price_d}}" no-label-float></gl-form-input>
                     </td>
                     <td>
-                      <gl-form-input class="numberBack" disabled value="[[_obChangePrice(packageitem.package_id,packageList)]]"  name="package_weight_bag"
+                      <gl-form-input class="numberBack" disabled value="[[_obChangePrice(packageitem.package_id,packageList)]]" name="package_weight_bag"
                         no-label-float></gl-form-input>
                     </td>
                     <td style="text-align:center;">
@@ -300,19 +303,19 @@
         localizeContract: {
           statePath: 'i18n.contract'
         },
-        buyerId:{
-          statePath:'commonState.buyerId'
+        buyerId: {
+          statePath: 'commonState.buyerId'
         },
         commonState: {
           statePath: 'commonState.setState'
         },
         data: {
           statePath: 'confirmLetter.contractDetail',
-          observer:'_cloneConfirmList'
+          observer: '_cloneConfirmList'
         },
-        cloneConfirmList:{
+        cloneConfirmList: {
           type: Object,
-          value:{}
+          value: {}
         },
         hamonizeLimitContract: {
           statePath: 'confirmLetter.hamonizeLimitContract',
@@ -445,14 +448,18 @@
               hmcode: hmtype.hamonize.hamonize_code
             }
             // this.throttle
-            this.dispatchAction('GET_CONFIRM_FP', this.genUrl(url))
-              .then((res) => {
-                // console.log(res.data[0].fp2)
-                let rateBath = this.exchangeRate.rates.THB
-                // console.log(this.exchangeRate)
-                this.set('data.cl_hamonize.' + index + '.cost_price', res.data[0].fp2 / rateBath)
+            // console.log(this.commonState.isInsert);
+            if (this.commonState.isInsert) {
+              this.dispatchAction('GET_CONFIRM_FP', this.genUrl(url))
+                .then((res) => {
+                  // console.log(res.data[0].fp2)
+                  let rateBath = this.exchangeRate.rates.THB
+                  // console.log(this.exchangeRate)
+                  this.set('data.cl_hamonize.' + index + '.cost_price', this.formatNumber(res.data[0].fp2 / rateBath))
 
-              })
+                })
+            }
+
 
           }
         } catch (e) {
@@ -463,21 +470,26 @@
       _obCalPrice: function (e) {
         // console.log(e)
         let plus = this.data.cl_hamonize
+        // console.log(this.data);
         let cost_price = Object.keys(plus).reduce((previous, current) => previous + plus[current].cost_price, 0)
-
+        // console.log(cost_price);
         this.set('dataShow.cost_price_perton', cost_price)
       },
       addNewTypeRice: function () {
         this.push('data.cl_hamonize', {
+          cost_price: 0,
+          // cost_value: 0,
           hamonize_id: '',
           hamonize_weight: 0,
-          package:
-          [
+          package: [
             {
               package_id: '',
-              price_d: 0,
-            }
-          ]
+              price_d: 0
+            },
+          ],
+          project_en: 0,
+          project_th: 0,
+          tolerance_rate: 0
         });
       },
       addPackage: function (e) {
@@ -542,18 +554,19 @@
           let dataResive = JSON.parse(JSON.stringify(this.data))
           // console.log(type);
           if (type === 'insert') {
-            if(this.confirmLetterList.find((item)=> item.cl_no === dataResive.cl_no) !==undefined)
-               rej(this.localizeConfirmLetter.dub_ref_no)
+            if (this.confirmLetterList.find((item) => item.cl_no === dataResive.cl_no) !== undefined)
+              rej(this.localizeConfirmLetter.dub_ref_no)
           }
-          
+
           dataResive.cl_date = dataResive.cl_date + 'T00:00:00+07:00',
             // dataResive.cl_hamonize = this._getHamonize(),
             dataResive.buyer_id = this.buyerId.buyer_id
-            dataResive.cl_status = dataResive.cl_status,
+          dataResive.cl_status = dataResive.cl_status,
             // dataResive.cl_weight = dataResive.cl_weight,
             dataResive.incoterms = this.dataShow.incoterms//this._getIncoterms()
           delete dataResive.date_updated
           delete dataResive.date_created
+          // console.log(dataResive);
           res(dataResive)
         })
       },
@@ -561,17 +574,18 @@
         return new Promise((res, rej) => {
           if (this.validateForm('.required')) {
             this._resiveDataConfirm(type).then((data) => {
+              // console.log(data);
               res(data)
             })
-            .catch((err)=>{
-              this.fire('toast', {
-              status: 'connectError', text: this.localizeConfirmLetter.dub_ref_no, //คำสั่งสำหรับเปิด toast error
-              callback: function () {
-                rej(err)
-              }
-            })
-              // console.log(err);
-            })
+              .catch((err) => {
+                this.fire('toast', {
+                  status: 'connectError', text: this.localizeConfirmLetter.dub_ref_no, //คำสั่งสำหรับเปิด toast error
+                  callback: function () {
+                    rej(err)
+                  }
+                })
+                // console.log(err);
+              })
           } else {
             this.fire('toast', {
               status: 'connectError', text: this.localizeCommon.toast_input_error, //คำสั่งสำหรับเปิด toast error
@@ -637,11 +651,12 @@
             if (result == true) {
               this._resiveFormConfirm('edit')
                 .then((res) => {
+                  console.log(res);
                   let sum = this.dataShow.cl_total_quantity - limitRice
                   // console.log(this.dataShow.cl_total_quantity - this.dataShow.hamonize_limit);
                   if (this.dataShow.cl_total_quantity > limitRice) {
                     this.fire('toast', {
-                      status: 'connectError', text: this.localizeConfirmLetter.over_limit + " "+ this.formatNumberNoZero(sum)+ " "+ this.localizeConfirmLetter.ton, //คำสั่งสำหรับเปิด toast error
+                      status: 'connectError', text: this.localizeConfirmLetter.over_limit + " " + this.formatNumberNoZero(sum) + " " + this.localizeConfirmLetter.ton, //คำสั่งสำหรับเปิด toast error
                       callback: () => {
                       }
                     })
@@ -686,7 +701,7 @@
             }
           }
         })
-        
+
       },
       confirmConfirm: function () {
         this.fire('toast', {
@@ -733,7 +748,7 @@
             }
           }
         })
-        
+
       },
       deleteConfirm: function () {
         this.fire('toast', {

@@ -6,6 +6,7 @@ const initialState = {
     bankList: [],
     buyerList: [],
     hamonizeList: [],
+    hamonizeListNoGroup: [],
     hamonizeYear: {},
     carrierList: [],
     incotermsList: [],
@@ -25,6 +26,8 @@ export function commonG2gReducer(state = initialState, action) {
             return Object.assign({}, state, { buyerList: action.payload });
         case 'GET_COMMON_HAMONIZE_LIST':
             return Object.assign({}, state, { hamonizeList: action.payload });
+        case 'GET_COMMON_HAMONIZE_LIST_NO_GROUP':
+            return Object.assign({}, state, { hamonizeListNoGroup: action.payload });
         case 'GET_COMMON_HAMONIZE_YEAR':
             return Object.assign({}, state, { hamonizeYear: action.payload });
         case 'GET_COMMON_CARRIER_LIST':
@@ -62,7 +65,7 @@ export function commonG2gAction(store) {
                     store.dispatch({ type: 'GET_COMMON_BANK_LIST', payload: response.data })
                 })
                 .catch(function (error) {
-                    console.log('error');
+                    //console.log('error');
                     //console.log(error);
                 });
         },
@@ -72,7 +75,7 @@ export function commonG2gAction(store) {
                     store.dispatch({ type: 'GET_COMMON_BUYER_LIST', payload: response.data })
                 })
                 .catch(function (error) {
-                    console.log('error');
+                    //console.log('error');
                     //console.log(error);
                 });
         },
@@ -82,7 +85,7 @@ export function commonG2gAction(store) {
                     // console.log(response.data);
                     var hamonizeList = response.data.reduce(function (prev, curr) {
                         return [...prev, ...curr.sub];
-                    },[]);
+                    }, []);
                     for (var index = 0; index < hamonizeList.length; index++) {
                         // response.data[index].label = ''
                         hamonizeList[index].label = '[' + hamonizeList[index].hamonize_code + '] ' + hamonizeList[index].hamonize_th
@@ -92,16 +95,37 @@ export function commonG2gAction(store) {
                     let groupYear = groupArray(hamonizeList, 'hamonize_year')
                     for (var variable in groupYear) {
                         if (groupYear.hasOwnProperty(variable)) {
-                            lisyYear.push({label:variable,value:variable})
+                            lisyYear.push({ label: variable, value: variable })
                         }
                     }
-                    let xData =  { year :lisyYear ,hamonize:hamonizeList}
-                    
+                    let xData = { year: lisyYear, hamonize: hamonizeList }
+                    for (var index = 0; index < response.data.length; index++) {
+                        for (var index2 = 0; index2 < response.data[index].sub.length; index2++) {
+                            response.data[index].sub[index2].check= false
+                        }
+                    }
                     store.dispatch({ type: 'GET_COMMON_HAMONIZE_YEAR', payload: xData })
                     store.dispatch({ type: 'GET_COMMON_HAMONIZE_LIST', payload: response.data })
                 })
                 .catch(function (error) {
-                    console.log('error');
+                    //console.log('error');
+                    //console.log(error);
+                });
+        },
+        GET_COMMON_HAMONIZE_LIST_NO_GROUP: function () {
+            axios.get(window._config.externalServerCommon + '/api/hamonize?orderby=hamonize_code_num')
+                .then(function (response) {
+
+                    for (var index = 0; index < response.data.length; index++) {
+                        response.data[index].check = false
+                        // this.set('hamonizeListNoGroup.' + index + '.check', false)
+                    }
+                    // console.log(response.data);
+                    //  this.set('hamonizeListNoGroup.' + index +'.check', false)
+                    store.dispatch({ type: 'GET_COMMON_HAMONIZE_LIST_NO_GROUP', payload: response.data })
+                })
+                .catch(function (error) {
+                    //console.log('error');
                     //console.log(error);
                 });
         },
@@ -111,7 +135,7 @@ export function commonG2gAction(store) {
                     store.dispatch({ type: 'GET_COMMON_CARRIER_LIST', payload: response.data })
                 })
                 .catch(function (error) {
-                    console.log('error');
+                    //console.log('error');
                     //console.log(error);
                 });
         },
@@ -123,7 +147,7 @@ export function commonG2gAction(store) {
                     store.dispatch({ type: 'GET_COMMON_INCOTERMS_LIST', payload: response.data })
                 })
                 .catch(function (error) {
-                    console.log('error');
+                    //console.log('error');
                     //console.log(error);
                 });
         },
@@ -133,7 +157,7 @@ export function commonG2gAction(store) {
                     store.dispatch({ type: 'GET_COMMON_NOTIFY_LIST', payload: response.data })
                 })
                 .catch(function (error) {
-                    console.log('error');
+                    //console.log('error');
                     //console.log(error);
                 });
         },
@@ -143,7 +167,7 @@ export function commonG2gAction(store) {
                     store.dispatch({ type: 'GET_COMMON_PACKAGE_LIST', payload: response.data })
                 })
                 .catch(function (error) {
-                    console.log('error');
+                    //console.log('error');
                     //console.log(error);
                 });
         },
@@ -154,7 +178,7 @@ export function commonG2gAction(store) {
                     store.dispatch({ type: 'GET_COMMON_PORT_LIST', payload: group })
                 })
                 .catch(function (error) {
-                    console.log('error');
+                    //console.log('error');
                     //console.log(error);
                 });
         },
@@ -169,7 +193,7 @@ export function commonG2gAction(store) {
                     store.dispatch({ type: 'GET_COMMON_SHIP_LIST', payload: response.data })
                 })
                 .catch(function (error) {
-                    console.log('error');
+                    //console.log('error');
                     //console.log(error);
                 });
         },
@@ -179,7 +203,7 @@ export function commonG2gAction(store) {
                     store.dispatch({ type: 'GET_COMMON_SHIPLINE_LIST', payload: response.data })
                 })
                 .catch(function (error) {
-                    console.log('error');
+                    //console.log('error');
                     //console.log(error);
                 });
         },
@@ -189,7 +213,7 @@ export function commonG2gAction(store) {
                     store.dispatch({ type: 'GET_COMMON_SURVEYOR_LIST', payload: response.data })
                 })
                 .catch(function (error) {
-                    console.log('error');
+                    //console.log('error');
                     //console.log(error);
                 });
         },
@@ -203,7 +227,7 @@ export function commonG2gAction(store) {
                     store.dispatch({ type: 'GET_COMMON_EXPORTER_LIST', payload: response.data })
                 })
                 .catch(function (error) {
-                    console.log('error');
+                    //console.log('error');
                     //console.log(error);
                 });
         },

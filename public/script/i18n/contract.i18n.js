@@ -42,7 +42,9 @@ export const contract = {
         want_delete: 'ต้องการลบข้อมูลใช่หรือไม่ ?',
         save_success: 'บันทึกสำเร็จ',
         load_success: 'โหลดข้อมูลสำเร็จ',
-        delete_success: 'ลบสำเร็จ'
+        delete_success: 'ลบสำเร็จ',
+
+        close: 'ปิด'
 
     },
     en: {
