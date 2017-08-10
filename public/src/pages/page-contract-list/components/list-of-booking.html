@@ -255,6 +255,7 @@
           type: Object,
           value: {
             report0: false,
+            report1: false,
             report2: false,
           }
         },
@@ -317,10 +318,14 @@
         this.$.scrolling.open()
         this.set('dataReport', e.currentTarget.data)
         // console.log(e.currentTarget.data);
+        // this.printReport
+        this.set('printReport.ship_lot',e.currentTarget.data.ship_lot)
+        // ship_lot
       },
       getObjectReport(report) {
         try {
           // console.log(report.detail.value);
+          this.printReport
           let value = this.report.report_name.find((items) => items.report_name === report.detail.value)
 
           switch (value.report_name_id) {
@@ -371,6 +376,9 @@
       getObjectCl: function (e) {
         try {
           if (e.detail.value !== null) {
+            // set cl_id for report  10/08/2560
+            let cl = e.detail.value
+            this.set('printReport.cl_id',cl.id)
             this.set('searchInput', '')
             this.set('dataShow', e.detail.value)
             // console.log(e.detail.value);
