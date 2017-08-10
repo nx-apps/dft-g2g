@@ -5,6 +5,9 @@
             "book_id": {
                 "type": "string"
             },
+            "ship_lot": {
+                "type": "number"
+            },
             "book_no": {
                 "type": "string"
             },
