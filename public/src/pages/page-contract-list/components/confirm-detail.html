@@ -161,7 +161,8 @@
               <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
                 [[changeString2Num(item.*,'cost_price')]][[_obCalPrice(item.*,'cost_price')]]
                 <gl-form-input class="required" format-number="on" required disabled="[[commonState.btnDisabled]]" on-focus="_setSeleteValue"
-                  value="{{formatNumber(item.cost_price)}}" label="{{localizeConfirmLetter.cost_price_ton}}" placeholder="{{localizeConfirmLetter.total_cost_price_ton}}"></gl-form-input>
+                  value="{{item.cost_price}}" label="{{localizeConfirmLetter.cost_price_ton}}" placeholder="{{localizeConfirmLetter.total_cost_price_ton}}"></gl-form-input>
+                <!--value="{{formatNumber(item.cost_price)}}"-->
               </gl-grid-col>
               <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
                 <!--[[changeString2Num(item.*,'cost_value')]]-->
@@ -447,14 +448,18 @@
               hmcode: hmtype.hamonize.hamonize_code
             }
             // this.throttle
-            this.dispatchAction('GET_CONFIRM_FP', this.genUrl(url))
-              .then((res) => {
-                // console.log(res.data[0].fp2)
-                let rateBath = this.exchangeRate.rates.THB
-                // console.log(this.exchangeRate)
-                this.set('data.cl_hamonize.' + index + '.cost_price', res.data[0].fp2 / rateBath)
+            // console.log(this.commonState.isInsert);
+            if (this.commonState.isInsert) {
+              this.dispatchAction('GET_CONFIRM_FP', this.genUrl(url))
+                .then((res) => {
+                  // console.log(res.data[0].fp2)
+                  let rateBath = this.exchangeRate.rates.THB
+                  // console.log(this.exchangeRate)
+                  this.set('data.cl_hamonize.' + index + '.cost_price', this.formatNumber(res.data[0].fp2 / rateBath))
 
-              })
+                })
+            }
+
 
           }
         } catch (e) {
@@ -465,8 +470,9 @@
       _obCalPrice: function (e) {
         // console.log(e)
         let plus = this.data.cl_hamonize
+        // console.log(this.data);
         let cost_price = Object.keys(plus).reduce((previous, current) => previous + plus[current].cost_price, 0)
-
+        // console.log(cost_price);
         this.set('dataShow.cost_price_perton', cost_price)
       },
       addNewTypeRice: function () {
@@ -560,6 +566,7 @@
             dataResive.incoterms = this.dataShow.incoterms//this._getIncoterms()
           delete dataResive.date_updated
           delete dataResive.date_created
+          // console.log(dataResive);
           res(dataResive)
         })
       },
@@ -644,6 +651,7 @@
             if (result == true) {
               this._resiveFormConfirm('edit')
                 .then((res) => {
+                  console.log(res);
                   let sum = this.dataShow.cl_total_quantity - limitRice
                   // console.log(this.dataShow.cl_total_quantity - this.dataShow.hamonize_limit);
                   if (this.dataShow.cl_total_quantity > limitRice) {
