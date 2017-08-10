@@ -122,11 +122,7 @@
             [[item.report_type]]
           </template>
         </gl-combo-box>-->
-          <template is="dom-if" if={{dataSetReport.report1}}>
-            <gl-form-input label="{{localizeBl.ship_lot}}" autofocus always-float-label placeholder="{{localizeBl.ship_lot}}"
-              value="{{printReport.ship_lot}}"></gl-form-input>
 
-          </template>
           <paper-dropdown-menu label="{{localizeCommon.report_type}}">
             <paper-listbox class="dropdown-content" attr-for-selected="name" selected="{{printReport.export}}">
               <template is="dom-repeat" items={{report.report_type}}>
@@ -135,7 +131,10 @@
             </paper-listbox>
           </paper-dropdown-menu>
 
+          <template is="dom-if" if={{dataSetReport.report1}}>
+            <gl-form-input label="{{localizeBl.ship_lot}}" autofocus always-float-label placeholder="{{localizeBl.ship_lot}}" value="{{printReport.ship_lot}}"></gl-form-input>
 
+          </template>
 
 
 
@@ -241,17 +240,17 @@
             case '3':
               this.set('dataSetReport.report0', true)
               this.set('dataSetReport.report1', false)
-              console.log(0);
+              // console.log(0);
               break;
             case '2':
               this.set('dataSetReport.report0', false)
               this.set('dataSetReport.report1', true)
-              console.log(1);
+              // console.log(1);
               break;
             default:
               this.set('dataSetReport.report0', false)
               this.set('dataSetReport.report1', false)
-              console.log(2);
+              // console.log(2);
               break;
           }
           // console.log(this.dataSetReport);
@@ -341,12 +340,12 @@
       },
 
       printVesel: function (e) {
-        console.log(e.currentTarget.data);
+        // console.log(e.currentTarget.data);
         let cl = e.currentTarget.data
         this.$.scrolling.open()
         // this.printReport.
-        console.log(cl);
-        this.set('printReport.cl_id',cl.id)
+        // console.log(cl);
+        this.set('printReport.cl_id', cl.id)
         // window.open(window._config.reportServer + '/api/rice/report4?id=' + e.currentTarget.data.id, '1');
         // console.log(e.currentTarget.data);
       },

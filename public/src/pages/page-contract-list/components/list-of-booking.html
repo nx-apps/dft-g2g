@@ -185,7 +185,7 @@
             </paper-dropdown-menu>
           </template>
           <br />
-          <template is="dom-if" if={{dataSetReport.report2}}>
+          <template is="dom-if" if={{dataSetReport.report1}}>
             [[changeString2Num(printReport.*,'ori')]]
             <gl-form-input allowed-pattern="[0-9||,||.]" on-focus="_setSeleteValue" label="{{localizeBook.orignals}}" autofocus maxlength="3"
               format-number="on" always-float-label placeholder="{{localizeBook.orignals}}" value="{{printReport.ori}}"></gl-form-input>
@@ -195,6 +195,10 @@
               always-float-label placeholder="{{localizeBook.n_n}}" value="{{printReport.nn}}"></gl-form-input>
           </template>
 
+          <template is="dom-if" if={{dataSetReport.report2}}>
+            <gl-form-input label="{{localizeBl.ship_lot}}" autofocus always-float-label placeholder="{{localizeBl.ship_lot}}" value="{{printReport.ship_lot}}"></gl-form-input>
+
+          </template>
 
 
         </p>
@@ -216,6 +220,9 @@
       properties: {
         localizeBook: {
           statePath: 'i18n.book'
+        },
+        localizeBl: {
+          statePath: 'i18n.bl'
         },
         localizeContract: {
           statePath: 'i18n.contract'
@@ -319,7 +326,7 @@
         this.set('dataReport', e.currentTarget.data)
         // console.log(e.currentTarget.data);
         // this.printReport
-        this.set('printReport.ship_lot',e.currentTarget.data.ship_lot)
+        this.set('printReport.ship_lot', e.currentTarget.data.ship_lot)
         // ship_lot
       },
       getObjectReport(report) {
@@ -327,20 +334,29 @@
           // console.log(report.detail.value);
           this.printReport
           let value = this.report.report_name.find((items) => items.report_name === report.detail.value)
-
+          // console.log(value.report_name_id);
           switch (value.report_name_id) {
             case '0':
               this.set('dataSetReport.report0', true)
+              this.set('dataSetReport.report1', false)
               this.set('dataSetReport.report2', false)
               // console.log(0);
               break;
             case '1':
               this.set('dataSetReport.report0', false)
+              this.set('dataSetReport.report1', true)
+              this.set('dataSetReport.report2', false)
+              // console.log(1);
+              break;
+            case '2':
+              this.set('dataSetReport.report0', false)
+              this.set('dataSetReport.report1', false)
               this.set('dataSetReport.report2', true)
               // console.log(1);
               break;
             default:
               this.set('dataSetReport.report0', false)
+              this.set('dataSetReport.report1', false)
               this.set('dataSetReport.report2', false)
               // console.log(2);
               break;
@@ -378,7 +394,7 @@
           if (e.detail.value !== null) {
             // set cl_id for report  10/08/2560
             let cl = e.detail.value
-            this.set('printReport.cl_id',cl.id)
+            this.set('printReport.cl_id', cl.id)
             this.set('searchInput', '')
             this.set('dataShow', e.detail.value)
             // console.log(e.detail.value);
