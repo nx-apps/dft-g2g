@@ -4,7 +4,8 @@
 <link rel="import" href="./../../../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="./../../../../bower_components/gl-form/gl-combo-box.html">
 <link rel="import" href="./../../../../bower_components/paper-icon-button/paper-icon-button.html">
-
+<link rel="import" href="./../../../../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="./../../../../bower_components/paper-dialog-scrollable/paper-dialog-scrollable.html">
 <link rel="import" href="../../components/g2g-logic-behavior.html">
 
 <dom-module id="list-of-confirm">
@@ -48,8 +49,9 @@
         </div>
         <div class="horizontal layout wrap">
           <div id="combox" class="flex">
-            <gl-combo-box id="cl_id" placeholder="[[localizeCommon.all]]" items="{{confirmLetterExporterlist}}" item-label-path="label" label="[[localizeConfirmLetter.buyer_send]]"
-              item-value-path="exporter_id" on-value-changed="getShowByExport" on-selected-item-changed="getObjectConfirm">
+            <gl-combo-box id="cl_id" placeholder="[[localizeCommon.all]]" items="{{confirmLetterExporterlist}}" item-label-path="label"
+              label="[[localizeConfirmLetter.buyer_send]]" item-value-path="exporter_id" on-value-changed="getShowByExport"
+              on-selected-item-changed="getObjectConfirm">
               <template>
                 [[item.label]]
               </template>
@@ -95,6 +97,56 @@
         <confirm-detail id="confirm-detail"></confirm-detail>
       </div>
     </iron-pages>
+
+    <paper-dialog id="scrolling">
+      <h2>รายงาน</h2>
+      <paper-dialog-scrollable>
+        <p>
+          <!--<gl-combo-box always-float-label label="{{localizeCommon.print}}" placeholder="{{localizeCommon.print}}" value="{{printReport.typeReport}}"
+          item-label-path="report_name" item-value-path="report_name_id" items="{{report.report_name}}" on-selected-item-changed="getObjectReport">
+          <template>
+            [[item.report_name]]
+          </template>
+        </gl-combo-box>&nbsp;-->
+          <paper-dropdown-menu label="{{localizeCommon.print}}" on-value-changed="getObjectReport">
+            <paper-listbox class="dropdown-content" attr-for-selected="name" selected="{{printReport.typeReport}}">
+              <template is="dom-repeat" items={{report.report_name}}>
+                <paper-item name="[[item.report_name_id]]"> [[item.report_name]]</paper-item>
+              </template>
+            </paper-listbox>
+          </paper-dropdown-menu>
+          <br />
+          <!--<gl-combo-box always-float-label label="{{localizeCommon.report_type}}" placeholder="{{localizeCommon.report_type}}" value="{{printReport.export}}"
+          item-label-path="report_type" item-value-path="report_type_id" items="{{report.report_type}}">
+          <template>
+            [[item.report_type]]
+          </template>
+        </gl-combo-box>-->
+          <template is="dom-if" if={{dataSetReport.report1}}>
+            <gl-form-input label="{{localizeBl.ship_lot}}" autofocus always-float-label placeholder="{{localizeBl.ship_lot}}"
+              value="{{printReport.ship_lot}}"></gl-form-input>
+
+          </template>
+          <paper-dropdown-menu label="{{localizeCommon.report_type}}">
+            <paper-listbox class="dropdown-content" attr-for-selected="name" selected="{{printReport.export}}">
+              <template is="dom-repeat" items={{report.report_type}}>
+                <paper-item name="[[item.report_type_id]]">[[item.report_type]]</paper-item>
+              </template>
+            </paper-listbox>
+          </paper-dropdown-menu>
+
+
+
+
+
+        </p>
+
+      </paper-dialog-scrollable>
+      <div class="buttons">
+        <paper-button dialog-confirm raised>ปิด</paper-button>
+        <paper-button on-tap="printReportBook" raised>ออกรายงาน</paper-button>
+      </div>
+    </paper-dialog>
   </template>
   <script>
     Polymer({
@@ -112,6 +164,9 @@
       properties: {
         localizeCommon: {
           statePath: 'i18n.common'
+        },
+        localizeBl: {
+          statePath: 'i18n.bl'
         },
         localizeConfirmLetter: {
           statePath: 'i18n.confirmLetter'
@@ -145,6 +200,66 @@
           statePath: 'commonState.contractId',
           observer: 'get'
         },
+        dataSetReport: {
+          type: Object,
+          value: {
+            report0: false,
+            report1: false,
+            report2: false,
+          }
+        },
+        printReport: {
+          type: Object,
+          value: { typeReport: '3', export: 'pdf', ship_lot: '' }
+        },
+        report: {
+          type: Object,
+          value:
+          {
+            report_name:
+            [
+              { report_name: 'ตารางเรือ', report_name_id: '3' },
+              { report_name: 'หนังสือแจ้งการส่งมอบข้าว', report_name_id: '2' },
+              // { report_name: 'หนังสือแจ้งบริษัทเรื่องการส่งมอบข้าว', report_name_id: '2' }
+            ],
+            report_type:
+            [
+              { report_type: 'PDF', report_type_id: 'pdf' },
+              { report_type: 'WORD', report_type_id: 'word' },
+              { report_type: 'EXCEL', report_type_id: 'excel' }
+            ]
+          }
+        },
+      },
+      getObjectReport(report) {
+        try {
+          // console.log(report.detail.value);
+          this.printReport
+          let value = this.report.report_name.find((items) => items.report_name === report.detail.value)
+          // console.log(value.report_name_id);
+          switch (value.report_name_id) {
+            case '3':
+              this.set('dataSetReport.report0', true)
+              this.set('dataSetReport.report1', false)
+              console.log(0);
+              break;
+            case '2':
+              this.set('dataSetReport.report0', false)
+              this.set('dataSetReport.report1', true)
+              console.log(1);
+              break;
+            default:
+              this.set('dataSetReport.report0', false)
+              this.set('dataSetReport.report1', false)
+              console.log(2);
+              break;
+          }
+          // console.log(this.dataSetReport);
+
+        } catch (e) {
+
+        }
+
       },
       setPageFun: function (data) {
         this.set('pageSelected', data.page)
@@ -161,7 +276,7 @@
         data.contract_id = this.contractId.contract_id
         data.contract_no = this.contractId.contract_no
         this.dispatchAction('SET_BREADCRUMBS', [{
-          label: this.localizeContract.contract_at+' ' + this.contractId.contract_no,
+          label: this.localizeContract.contract_at + ' ' + this.contractId.contract_no,
           href: ''
         },
         {
@@ -199,11 +314,11 @@
         // resetFrom
         this.$$('confirm-detail').resetFrom('.required')
         this.dispatchAction('SET_BREADCRUMBS', [{
-          label: this.localizeContract.contract_at+' ' + this.contractId.contract_no,
+          label: this.localizeContract.contract_at + ' ' + this.contractId.contract_no,
           href: ''
         },
         {
-          label: this.localizeConfirmLetter.ref_no+' ' + cl.cl_no,
+          label: this.localizeConfirmLetter.ref_no + ' ' + cl.cl_no,
           href: ''
         },
         ])
@@ -219,16 +334,29 @@
       _backPageConfirm: function (data) {
         this.pageSelected = 'listOfConfirm';
         this.dispatchAction('SET_BREADCRUMBS', [{
-          label: this.localizeContract.contract_at+' ' + this.contractId.contract_no,
+          label: this.localizeContract.contract_at + ' ' + this.contractId.contract_no,
           href: ''
         },
         ])
       },
 
       printVesel: function (e) {
+        console.log(e.currentTarget.data);
+        let cl = e.currentTarget.data
+        this.$.scrolling.open()
+        // this.printReport.
+        console.log(cl);
+        this.set('printReport.cl_id',cl.id)
+        // window.open(window._config.reportServer + '/api/rice/report4?id=' + e.currentTarget.data.id, '1');
         // console.log(e.currentTarget.data);
-        window.open(window._config.reportServer + '/api/rice/report4?id=' + e.currentTarget.data.id, '1');
-        // console.log(e.currentTarget.data);
+      },
+      printReportBook() {
+        // console.log(this.dataReport);
+        // this.this.printReport.typeReport
+        // console.log(this.printReport);
+        // export
+        window.open(window._config.reportServer + '/api/rice/report' + (Number(this.printReport.typeReport) + 1) + '?id=' + this.printReport.cl_id + '&' + this.genUrl(this.printReport), '1');
+
       },
       checkMInus: function (cl_quantity_tolerance) {
         var str = this.formatNumberNoZero(cl_quantity_tolerance);
