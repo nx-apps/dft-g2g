@@ -14,7 +14,7 @@ exports.getByContractId = function (req, res) {
         query = query.map(function (cl) {
             var book = r.table('book').getAll(cl('id'), { index: 'cl_id' }).count();
             var detail = r.table('book_detail').getAll(cl('id'), { index: 'cl_id' }).sum('net_weight');
-            return cl.pluck('id', 'cl_no', 'cl_status', 'cl_weight', 'contract_id', 'contract_no','buyer_id')
+            return cl.pluck('id', 'cl_no', 'cl_status', 'cl_weight', 'contract_id', 'contract_no', 'buyer_id')
                 .merge({
                     book_weight: detail,
                     cl_weight_balance: cl('cl_weight').sub(detail),
@@ -24,7 +24,7 @@ exports.getByContractId = function (req, res) {
     } else {
         query = query.map(function (cl) {
             var detail = r.table('book_detail').getAll([cl('id'), req.query.exporter_id], { index: 'clExporter' });
-            return cl.pluck('id', 'cl_no', 'cl_status', 'cl_weight', 'contract_id', 'contract_no','buyer_id')
+            return cl.pluck('id', 'cl_no', 'cl_status', 'cl_weight', 'contract_id', 'contract_no', 'buyer_id')
                 .merge({
                     book_weight: detail.sum('net_weight'),
                     count_ship: detail.group('book_id').ungroup().count()
@@ -44,6 +44,13 @@ exports.getHmByContract = function (req, res) {
     req.r.table('contract')
         .get(req.query.contract_id)
         .getField('contract_hamonize')
+        .merge(function (m) {
+            return {
+                hamonize: r.db('common').table('hamonize')
+                    .get(m('hamonize_id'))
+                    .without('creater', 'updater', 'date_created', 'date_updated')
+            }
+        })
         .run()
         .then(function (data) {
             res.json(data);
