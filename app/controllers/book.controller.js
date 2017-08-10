@@ -26,7 +26,22 @@ exports.getById = function (req, res) {
         })
 }
 exports.getHamonize = function (req, res) {
-    req.r.table('confirm_letter').get(req.query.cl_id).getField('cl_hamonize')
+    req.r.table('confirm_letter').get(req.query.cl_id)
+        .getField('cl_hamonize')
+        .merge(function (m) {
+            return {
+                hamonize: r.db('common').table('hamonize')
+                    .get(m('hamonize_id'))
+                    .without('creater', 'updater', 'date_created', 'date_updated'),
+                package: m('package').merge(function (m2) {
+                    return {
+                        package: r.db('common').table('package')
+                            .get(m2('package_id'))
+                            .without('creater', 'updater', 'date_created', 'date_updated')
+                    }
+                })
+            }
+        })
         .run()
         .then(function (data) {
             res.json(data)
