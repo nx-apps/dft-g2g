@@ -390,7 +390,7 @@
                   <!--<div hidden="{{subChild.hiddend}}">-->
                   <div class="horizontal layout item">
                     <div class="row flex">
-                      <paper-checkbox style="padding-left:25px;" id="{{indexroot}}" checked="{{item.check}}"  disabled="[[commonState.btnDisabled]]">
+                      <paper-checkbox style="padding-left:25px;" id="{{indexroot}}" checked="{{item.check}}" disabled="[[commonState.btnDisabled]]">
                     </div>
                     <div class="row flex-3">[[item.hamonize_code]]</div>
                     <div class="row flex-3">[[item.hamonize_th]]</div>
@@ -462,7 +462,7 @@
       </paper-dialog-scrollable>
       <div class="buttons">
         <!--<paper-button dialog-dismiss>Cancel</paper-button>-->
-        <paper-button dialog-confirm autofocus raised on-tap="checkAddHamonize">ปิด</paper-button>
+        <paper-button dialog-confirm autofocus raised on-tap="checkAddHamonize">[[localizeContract.close]]</paper-button>
       </div>
     </paper-dialog>
   </template>
@@ -543,8 +543,12 @@
       observers: [
         'cloneHamonizeList(hamonizeListReal,hamonizeListNoGroupReal)',
         '_checkHamonize(data,hamonizeList,hamonizeListNoGroup)',
+        '_checkTrueInHamonize(hamonizeList.*,hamonizeListNoGroup.*)',
         'resetSearch(dataSeleted.year)'
       ],
+      _checkTrueInHamonize(hamonizeList, hamonizeListNoGroup) {
+        // console.log(hamonizeList,hamonizeListNoGroup);
+      },
       cloneHamonizeList: function (hamonizeListReal, hamonizeListNoGroupReal) {
         // JSON.parse(JSON.stringify(data));
         this.set('hamonizeList', JSON.parse(JSON.stringify(hamonizeListReal)))
@@ -717,21 +721,50 @@
         try {
           let newHamonize = []
           let seletedYear = e.detail.value
-          // console.log(1111);
-          for (var index = 0; index < this.hamonizeList.length; index++) {
-            for (var index2 = 0; index2 < this.hamonizeList[index].sub.length; index2++) {
-              if ((String(this.hamonizeList[index].sub[index2].hamonize_year) === e.detail.value) ||
-                (e.detail.value === '' || e.detail.value === undefined)) {
+          // console.log(seletedYear === '');
+          if (seletedYear === '') {
+            this.hamonizeListNoGroup.map((item, index) => {
+                this.set('hamonizeListNoGroup.' + index + '.hiddend', false)
+            })
+            for (var index = 0; index < this.hamonizeList.length; index++) {
+              for (var index2 = 0; index2 < this.hamonizeList[index].sub.length; index2++) {
                 this.set('hamonizeList.' + index + '.sub.' + index2 + '.hiddend', false)
+               
+              }
+              let checkkFalse = this.hamonizeList[index].sub.find((item) => item.hiddend === false)
+              if (checkkFalse === undefined) {
+                this.set('hamonizeList.' + index + '.hiddend', true)
               } else {
-                this.set('hamonizeList.' + index + '.sub.' + index2 + '.hiddend', true)
+                this.set('hamonizeList.' + index + '.hiddend', false)
               }
             }
-            let checkkFalse = this.hamonizeList[index].sub.find((item) => item.hiddend === false)
-            if (checkkFalse === undefined) {
-              this.set('hamonizeList.' + index + '.hiddend', true)
-            } else {
-              this.set('hamonizeList.' + index + '.hiddend', false)
+          } else {
+
+
+            this.hamonizeListNoGroup.map((item, index) => {
+              if (String(this.hamonizeListNoGroup[index].hamonize_year) === seletedYear) {
+                this.set('hamonizeListNoGroup.' + index + '.hiddend', false)
+                // console.log(3333);
+              } else {
+                this.set('hamonizeListNoGroup.' + index + '.hiddend', true)
+                // console.log(1212);
+              }
+            })
+            for (var index = 0; index < this.hamonizeList.length; index++) {
+              for (var index2 = 0; index2 < this.hamonizeList[index].sub.length; index2++) {
+                if ((String(this.hamonizeList[index].sub[index2].hamonize_year) === seletedYear) ||
+                  (seletedYear === '' || seletedYear === undefined)) {
+                  this.set('hamonizeList.' + index + '.sub.' + index2 + '.hiddend', false)
+                } else {
+                  this.set('hamonizeList.' + index + '.sub.' + index2 + '.hiddend', true)
+                }
+              }
+              let checkkFalse = this.hamonizeList[index].sub.find((item) => item.hiddend === false)
+              if (checkkFalse === undefined) {
+                this.set('hamonizeList.' + index + '.hiddend', true)
+              } else {
+                this.set('hamonizeList.' + index + '.hiddend', false)
+              }
             }
           }
 
@@ -746,6 +779,7 @@
           this.set('dataSeleted.isYear', false)
         } else {
           this.set('dataSeleted.isYear', true)
+
         }
       },
       // searchHamonizeInCode: function (e) {
@@ -777,47 +811,47 @@
       // },
       searchHamonizeCode: function (e) {
         // try {
-          // console.log(this.dataSeleted.hamonize_code);
-          let hamonize_code = this.dataSeleted.hamonize_code || ''
-          let hamonize_th = this.dataSeleted.hamonize_th || ''
-          let year = this.dataSeleted.year
-          // console.log(seletedCode);
-          // if (this.typeSelete === 'list') {
-            // console.log(this.hamonizeListNoGroup.length);
-            // for (var index = 0; index < this.hamonizeListNoGroup.length; index++) {
-            this.hamonizeListNoGroup.map((item, index) => {
-              if (String(this.hamonizeListNoGroup[index].hamonize_code).search(String(hamonize_code)) > -1
-                && String(this.hamonizeListNoGroup[index].hamonize_th).search(String(hamonize_th)) > -1
-                && String(this.hamonizeListNoGroup[index].hamonize_year) === year) {
-                this.set('hamonizeListNoGroup.' + index + '.hiddend', false)
-                // console.log(3333);
-              } else {
-                this.set('hamonizeListNoGroup.' + index + '.hiddend', true)
-                // console.log(1212);
-              }
-            })
-            // }
-          // } else {
-            for (var index = 0; index < this.hamonizeList.length; index++) {
-              for (var index2 = 0; index2 < this.hamonizeList[index].sub.length; index2++) {
-                if (String(this.hamonizeList[index].sub[index2].hamonize_code).search(String(hamonize_code)) > -1
-                  && String(this.hamonizeList[index].sub[index2].hamonize_th).search(String(hamonize_th)) > -1
-                  && String(this.hamonizeList[index].sub[index2].hamonize_year) === year) {
-                  this.set('hamonizeList.' + index + '.sub.' + index2 + '.hiddend', false)
-                  // console.log(3333);
-                } else {
-                  this.set('hamonizeList.' + index + '.sub.' + index2 + '.hiddend', true)
-                  // console.log(1212);
-                }
-              }
-              let checkkFalse = this.hamonizeList[index].sub.find((item) => item.hiddend === false)
-              if (checkkFalse === undefined) {
-                this.set('hamonizeList.' + index + '.hiddend', true)
-              } else {
-                this.set('hamonizeList.' + index + '.hiddend', false)
-              }
+        // console.log(this.dataSeleted.hamonize_code);
+        let hamonize_code = this.dataSeleted.hamonize_code || ''
+        let hamonize_th = this.dataSeleted.hamonize_th || ''
+        let year = this.dataSeleted.year
+        // console.log(seletedCode);
+        // if (this.typeSelete === 'list') {
+        // console.log(this.hamonizeListNoGroup.length);
+        // for (var index = 0; index < this.hamonizeListNoGroup.length; index++) {
+        this.hamonizeListNoGroup.map((item, index) => {
+          if (String(this.hamonizeListNoGroup[index].hamonize_code).search(String(hamonize_code)) > -1
+            && String(this.hamonizeListNoGroup[index].hamonize_th).search(String(hamonize_th)) > -1
+            && String(this.hamonizeListNoGroup[index].hamonize_year) === year) {
+            this.set('hamonizeListNoGroup.' + index + '.hiddend', false)
+            // console.log(3333);
+          } else {
+            this.set('hamonizeListNoGroup.' + index + '.hiddend', true)
+            // console.log(1212);
+          }
+        })
+        // }
+        // } else {
+        for (var index = 0; index < this.hamonizeList.length; index++) {
+          for (var index2 = 0; index2 < this.hamonizeList[index].sub.length; index2++) {
+            if (String(this.hamonizeList[index].sub[index2].hamonize_code).search(String(hamonize_code)) > -1
+              && String(this.hamonizeList[index].sub[index2].hamonize_th).search(String(hamonize_th)) > -1
+              && String(this.hamonizeList[index].sub[index2].hamonize_year) === year) {
+              this.set('hamonizeList.' + index + '.sub.' + index2 + '.hiddend', false)
+              // console.log(3333);
+            } else {
+              this.set('hamonizeList.' + index + '.sub.' + index2 + '.hiddend', true)
+              // console.log(1212);
             }
-          // }
+          }
+          let checkkFalse = this.hamonizeList[index].sub.find((item) => item.hiddend === false)
+          if (checkkFalse === undefined) {
+            this.set('hamonizeList.' + index + '.hiddend', true)
+          } else {
+            this.set('hamonizeList.' + index + '.hiddend', false)
+          }
+        }
+        // }
 
         // } catch (e) {
 
@@ -830,16 +864,16 @@
           let year = this.dataSeleted.year
           // console.log(seletedCode);
           this.hamonizeListNoGroup.map((item, index) => {
-              if (String(this.hamonizeListNoGroup[index].hamonize_code).search(String(hamonize_code)) > -1
-                && String(this.hamonizeListNoGroup[index].hamonize_th).search(String(hamonize_th)) > -1
-                && String(this.hamonizeListNoGroup[index].hamonize_year) === year) {
-                this.set('hamonizeListNoGroup.' + index + '.hiddend', false)
-                // console.log(3333);
-              } else {
-                this.set('hamonizeListNoGroup.' + index + '.hiddend', true)
-                // console.log(1212);
-              }
-            })
+            if (String(this.hamonizeListNoGroup[index].hamonize_code).search(String(hamonize_code)) > -1
+              && String(this.hamonizeListNoGroup[index].hamonize_th).search(String(hamonize_th)) > -1
+              && String(this.hamonizeListNoGroup[index].hamonize_year) === year) {
+              this.set('hamonizeListNoGroup.' + index + '.hiddend', false)
+              // console.log(3333);
+            } else {
+              this.set('hamonizeListNoGroup.' + index + '.hiddend', true)
+              // console.log(1212);
+            }
+          })
           for (var index = 0; index < this.hamonizeList.length; index++) {
             for (var index2 = 0; index2 < this.hamonizeList[index].sub.length; index2++) {
               // if (String(seletedCode).search(String(this.hamonizeList[index].sub[index2].hamonize_code)) > -1) {
