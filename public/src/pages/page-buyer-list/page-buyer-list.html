@@ -66,14 +66,14 @@
                 'close-drawer': '_flipDrawerClose',
             },
             nylonPageActive: function () {
-
                 this.dispatchAction('GET_BUYER_LIST');
-
+                
+            },
+            addCountry() {
                 this.dispatchAction('GET_COMMON_HAMONIZE_LIST');
                 this.dispatchAction('GET_COMMON_HAMONIZE_LIST_NO_GROUP');
                 this.dispatchAction('GET_COMMON_BUYER_LIST');
-            },
-            addCountry() {
+                
                 this.titlePanelRight = this.localizeContract.add_contract
                 this.dispatchAction('CLEAR_CONTRACT')
                 this.dispatchAction('SET_STATE', {

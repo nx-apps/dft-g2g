@@ -331,7 +331,7 @@
         <!--<gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,12]]">-->
         <div class="horizontal layout header-item" warp>
           <div class="header-div flex">
-            <paper-dropdown-menu label="{{localizeContract.year}}">
+            <paper-dropdown-menu label="{{localizeContract.year}}">{{dataSeleted.year}}
               <paper-listbox class="dropdown-content" attr-for-selected="name" selected="{{dataSeleted.year}}" on-selected-changed="searchHamonizeInYear">
                 <paper-item name="">{{localizeContract.all_year}}</paper-item>
                 <template is="dom-repeat" items={{hamonizeYear.year}}>
@@ -700,8 +700,14 @@
         let item = e.model.__data__.item
         let indexRoot = e.currentTarget.id
         let checkHost = e.currentTarget.checked
+        let year = Number(this.dataSeleted.year)
         this.hamonizeList[indexRoot].sub.map((item, index) => {
-          this.set('hamonizeList.' + indexRoot + '.sub.' + index + '.check', checkHost)
+          if (this.hamonizeList[indexRoot].sub[index].hamonize_year === year) {
+            this.set('hamonizeList.' + indexRoot + '.sub.' + index + '.check', checkHost)
+          }
+          if(year === 0){
+            this.set('hamonizeList.' + indexRoot + '.sub.' + index + '.check', checkHost)
+          }
         })
       },
       getSelect: function (e) {
@@ -774,7 +780,7 @@
 
       },
       resetSearch(year) {
-        // console.log(year);
+        console.log(year);
         if (year === '' || year === undefined) {
           this.set('dataSeleted.isYear', false)
         } else {
