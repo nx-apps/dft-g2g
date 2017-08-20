@@ -35,6 +35,7 @@
     table.gl-table-default>thead.table-head>tr>th {
       text-align: center;
     }
+
     table.gl-table-default>tbody.table-body>tr>td:nth-child(1),
     {
       width: 5%;
@@ -43,6 +44,7 @@
     table.gl-table-default>tbody.table-body>tr>td:nth-child(2) {
       width: 10%;
     }
+
     table.gl-table-default>thead.table-head>tr>th:nth-child(5),
     table.gl-table-default>thead.table-head>tr>th:nth-child(4),
     table.gl-table-default>thead.table-head>tr>th:nth-child(3),
@@ -58,8 +60,7 @@
     <gl-form-panel set-padding="10px 20px 10px 20px" set-border="1px">
       <gl-form-panel-body label="" set-padding="10px" set-border="1px">
         <div class="textheader-center">
-         เลือกเช็ค
-
+          {{localize.ch_cheque}}
         </div>
       </gl-form-panel-body>
 
@@ -70,22 +71,22 @@
               <th>
                 <paper-checkbox on-tap="_selectDataAll" checked="{{selectDataAll}}"></paper-checkbox>
                 {{localize.text_check_box}}</th>
-              <th>เลขที่เช็ค
+              <th>{{localize.no_cheque}}
                 <!--{{localize.label_order}}-->
               </th>
-              <th>จำนวนเงินที่ได้
+              <th>{{localize.value_bal_b}}
                 <!--{{localize.label_componey}}-->
               </th>
-              <th>หักภาษี 1 % 
+              <th>{{localize.value_tax_b}}
                 <!--{{localize.text_invoice_no}}-->
               </th>
-              <th>จำนวนเงินที่จ่าย 
+              <th>{{localize.value_final_b}}
                 <!--{{localize.label_total_value_pay_full}}-->
               </th>
-              <th>เลขที่ใบแจ้งนี้
+              <th>{{localize.invoice_company_no}}
                 <!--{{localize.label_total_value_pay_tax}}-->
               </th>
-              <th>เลขที่ใบหักภาษี ณ ที่จ่าย
+              <th>{{localize.pay_running}}
                 <!--{{localize.label_total_value_bath}}-->
               </th>
               <!--<th>-->
@@ -115,12 +116,12 @@
           </tbody>
           <tfoot class="table-foot">
             <tr>
-              <td ></td>
-              <td ></td>
-              <td ></td>
-              <td >รวม</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td>{{localize.total}}</td>
               <td style="text-align: right;">[[formatNumber(dataSet.pay_value_b)]]</td>
-              <td ></td>
+              <td></td>
               <td></td>
             </tr>
           </tfoot>
@@ -174,7 +175,7 @@
       <gl-form-panel-footer label="" set-padding="10px">
         <paper-button class="gl-btn-success" raised on-tap="addPayment">
           <!--{{localize.btn_pay}}-->
-          บันทึก
+          {{localize.save}}
         </paper-button>
       </gl-form-panel-footer>
     </gl-form-panel>
@@ -190,7 +191,7 @@
       ],
       properties: {
         localize: {
-          statePath: 'i18n.g2g'
+          statePath: 'i18n.payment'
         },
         data: {
           statePath: 'payment.paymentDetail',

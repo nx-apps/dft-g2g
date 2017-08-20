@@ -54,7 +54,7 @@
     <div class="flex searchInput horizontal center-justified layout">
       <div class="flex title">{{localize.text_of_contract}} : [[contractId.contract_name]]</div>
       <div class="flex horizontal end-justified layout">
-        <div class="labelSearch">เลขประจำตัวผู้เสียภาษี</div>{{_searchInArray(searchInput)}}
+        <div class="labelSearch">{{localize.company_taxno}}</div>{{_searchInArray(searchInput)}}
         <paper-input label=" " no-label-float value="{{searchInput}}"></paper-input>
         <paper-icon-button icon="search"></paper-icon-button>
         </paper-input>
@@ -64,9 +64,9 @@
       <table class="gl-table-default">
         <thead class="table-head">
           <tr>
-            <th>เลขประจำตัวผู้เสียภาษี</th>
-            <th>ชื่อบริษัท</th>
-            <th>จำนวนเช็ค</th>
+            <th>{{localize.company_taxno}}</th>
+            <th>{{localize.company_name_th}}</th>
+            <th>{{localize.cheque_count}}</th>
           </tr>
         </thead>
         <tbody class="table-body">
@@ -95,7 +95,7 @@
       ],
       properties: {
         localize:{
-          statePath : 'i18n.g2g'
+          statePath : 'i18n.payment'
         },
         data: {
           statePath: 'payment.listPayment'
