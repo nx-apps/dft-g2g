@@ -8,7 +8,7 @@ exports.getSilo = function (req, res) {
          WHERE s.Keyword like ? AND s.Active like ? 
          GROUP BY  s.Keyword,s.Status,b.book_id 
          ) bk 
-         INNER JOIN dft_product p on p.status = bk.book_id 
+         INNER JOIN dft_product p on p.book_id = bk.book_id 
          GROUP BY  bk.Keyword,bk.Status `
         ,
         ["GG%", "R3%"],
