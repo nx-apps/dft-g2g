@@ -142,7 +142,7 @@
             </gl-combo-box>
           </gl-grid-col>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-            <gl-form-input class="required" required label="{{localize.label_bank_branch}} :" placeholder="{{localize.label_bank_branch}}"
+            <gl-form-input class="required" required label="{{localize.bank_branch}} :" placeholder="{{localize.bank_branch}}"
               value="{{dataSet.bank_branch}}"></gl-form-input>
           </gl-grid-col>
         </gl-grid-row>
@@ -150,10 +150,10 @@
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,2]]"></gl-grid-col>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
             <!--{{localize.label_cheque_date_approve}}-->
-            <gl-form-input type="date" class="required" required label="วันที่จ่ายเช็ค" value="{{dataSet.paid_date}}"></gl-form-input>
+            <gl-form-input type="date" class="required" required label="{{localize.paid_date}}" value="{{dataSet.paid_date}}"></gl-form-input>
           </gl-grid-col>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-            <gl-form-input label="หมายเหตุ :" placeholder="หมายเหตุ" value="{{dataSet.pay_remark}}"></gl-form-input>
+            <gl-form-input label="{{localize.pay_remark}} :" placeholder="{{localize.pay_remark}}" value="{{dataSet.pay_remark}}"></gl-form-input>
           </gl-grid-col>
         </gl-grid-row>
         <gl-grid-row>
@@ -162,7 +162,7 @@
             <br>
             <paper-checkbox class="checkBox" on-tap="toggle" aria-labelledby="label3"></paper-checkbox>
             <!--<label id="label3">-->
-            {{localize.label_rice_from_stock}}
+            {{localize.rice_from_stock}}
             <!--</label>-->
           </gl-grid-col>
         </gl-grid-row>
@@ -224,9 +224,21 @@
           statePath: 'commonState.companyTaxNo',
           // observer: 'get'
         },
+        // dataFake:{
+        //   type:Array,
+        //   value:
+        //         [
+        //           {id:'Rx1234',name:'ข้าวขาว 5 %',ton:5000,value:200000},
+        //           {id:'Rx1235',name:'ข้าวขาว 15 %',ton:15000,value:400000},
+        //           {id:'Rx1236',name:'ข้าวขาว 25 %',ton:25000,value:500000},
+        //           {id:'Rx1237',name:'ข้าวขาว 35 %',ton:35000,value:700000},
+        //           {id:'Rx1238',name:'ข้าวขาว 45 %',ton:50000,value:1050000},
+        //         ]
+        // }
       },
       toggle: function () {
         this.$.collapse.toggle();
+        this.dispatchAction('PAYMENT_GET_SILO_DATA')
       },
 
       checkData: function (e) {
@@ -356,7 +368,7 @@
             if (result == true) {
               this._resiveFormPayment()
                 .then((res) => {
-                  console.log(res);
+                  // console.log(res);
                   this.dispatchAction('PAYMENT_PUT_PAID', res)
                     .then((response) => {
                       if (response.data.replaced !== undefined && response.data.replaced.length !== 0) {
