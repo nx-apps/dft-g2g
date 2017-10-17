@@ -1,0 +1,94 @@
+{
+    "name": "g2g.book_detail",
+    "items": {
+        "properties": {
+            "book_id": {
+                "type": "string"
+            },
+            "ship_lot": {
+                "type": "number"
+            },
+            "book_no": {
+                "type": "string"
+            },
+            "buyer_id": {
+                "type": "string"
+            },
+            "cl_id": {
+                "type": "string"
+            },
+            "cl_no": {
+                "type": "number"
+            },
+            "company": {
+                "type": "object"
+            },
+            "company_taxno": {
+                "type": "string"
+            },
+            "contract_id": {
+                "type": "string"
+            },
+            "contract_no": {
+                "type": "number"
+            },
+            "exporter_id": {
+                "type": "string"
+            },
+            "exporter_no": {
+                "type": "number"
+            },
+            "gross_weight": {
+                "type": "number"
+            },
+            "hamonize": {
+                "type": "object"
+            },
+            "hamonize_id": {
+                "type": "string"
+            },
+            "id": {
+                "type": "string"
+            },
+            "net_weight": {
+                "type": "number"
+            },
+            "num_of_container": {
+                "type": "number"
+            },
+            "package": {
+                "type": "object"
+            },
+            "package_amount": {
+                "type": "number"
+            },
+            "package_id": {
+                "type": "string"
+            },
+            "price_d": {
+                "type": "number"
+            },
+            "tare_weight": {
+                "type": "number"
+            },
+            "value_b": {
+                "type": "number"
+            },
+            "value_bal_b": {
+                "type": "number"
+            },
+            "value_d": {
+                "type": "number"
+            },
+            "value_fee_b": {
+                "type": "number"
+            },
+            "value_final_b": {
+                "type": "number"
+            },
+            "value_tax_b": {
+                "type": "number"
+            }
+        }
+    }
+}

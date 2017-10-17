@@ -1,0 +1,1247 @@
+<link rel="import" href="./../../../../bower_components/gl-form/gl-form-panel.html">
+<link rel="import" href="./../../../../bower_components/gl-grid/gl-grid-row.html">
+<link rel="import" href="./../../../../bower_components/gl-grid/gl-grid-col.html">
+<link rel="import" href="./../../../../bower_components/gl-form/gl-form-input.html">
+<!--<link rel="import" href="./../../../../bower_components/vaadin-date-picker/vaadin-date-picker.html">-->
+<link rel="import" href="./../../../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="./../../../../bower_components/iron-collapse/iron-collapse.html">
+<link rel="import" href="./../../../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="./../../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="./../../../../bower_components/gl-form/gl-combo-box.html">
+<link rel="import" href="./../../../../bower_components/gl-form/gl-form-textarea.html">
+<link rel="import" href="./../../../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="./../../../../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="./../../../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="./../../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="./../../../../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="./../../../../bower_components/paper-dialog-scrollable/paper-dialog-scrollable.html">
+<link rel="import" href="./../../../../bower_components/gl-form/gl-form-panel-footer.html">
+<link rel="import" href="./../../../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="./../../../../bower_components/paper-checkbox/paper-checkbox.html">
+<link rel="import" href="./../../../../bower_components/paper-radio-group/paper-radio-group.html">
+<link rel="import" href="./../../../../bower_components/iron-input/iron-input.html">
+<link rel="import" href="./../../components/validateFormBehaviors.html">
+<link rel="import" href="./../../components/format-number-behavior.html">
+<link rel="import" href="./../../components/g2g-logic-behavior.html">
+<link rel="import" href="./../../../layout/shared-styles.html">
+
+
+
+<dom-module id="contract-detail">
+  <style include="iron-flex iron-flex-factors iron-flex-alignment shared-styles">
+    * {
+      font-family: 'CSChatThaiUI', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    gl-form-dropdown-menu {
+      width: 100%;
+    }
+
+
+
+    .riceName {
+      margin-top: 25px;
+      font-size: var(--font-size-h5);
+    }
+
+    .titleName {
+      margin-bottom: 10px;
+    }
+
+    .gl-table-default {
+      margin-bottom: 20px;
+    }
+
+    .upGlComboBox {
+      margin-top: -20px;
+    }
+
+    vaadin-date-picker {
+      font-family: 'CSChatThaiUI', sans-serif !important;
+      -webkit-font-smoothing: antialiased !important;
+      color: red !important;
+    }
+
+    paper-button[disabled] {
+      background: #eaeaea;
+      color: #a8a8a8;
+    }
+
+    gl-form-input.number {
+      --paper-input-container-input: {
+        text-align: left;
+      }
+    }
+
+    gl-form-input.number[disabled] {
+      --paper-input-container-input: {
+        text-align: left !important;
+      }
+    }
+
+    iron-icon {
+      height: 16px;
+      width: 16px;
+      margin-right: 8px;
+    }
+
+    div.main {
+      /*background-color: red;*/
+      height: 300px;
+      overflow-y: scroll;
+      /*min-width: 300px;*/
+      border: solid darkblue 1px;
+    }
+
+    span.namesub {
+      display: inline-block;
+      /*background-color: blue;*/
+      width: 70%;
+    }
+
+    span.year {
+      display: inline-block;
+      width: 20%;
+      /*background-color: red;*/
+      /*display: inline;*/
+      /*float: right;*/
+    }
+
+    table {
+      border: 0.16px solid #F1F1F1;
+      margin-bottom: 16px;
+    }
+
+    .collapse-content {
+      padding: 15px;
+      width: 500px;
+      border: 1px solid #dedede;
+    }
+
+    .header-item {
+      border: 1px solid #ddd;
+      background-color: #F1F1F1;
+      padding: 15px;
+    }
+
+    .subdiv {
+      border-bottom: 1px solid #ddd;
+      border-right: 1px solid #ddd;
+      border-left: 1px solid #ddd;
+      height: 300px;
+      overflow-y: scroll;
+    }
+
+    .item,
+    .sub-item {
+      padding: 15px 0px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .item:hover,
+    .sub-item:hover {
+      background-color: #F1F1F1;
+    }
+
+    .sub-item {
+      padding-left: 60px;
+    }
+
+    paper-icon-button .hamonize {
+      margin-top: -50px;
+    }
+
+    paper-dialog.size-position {
+      /*position: absolute;*/
+      /*top: 16px;
+      right: 16px;*/
+      width: 800px;
+      height: 550px;
+      overflow: auto;
+    }
+  </style>
+  <template>
+    <gl-form-panel set-padding="10px 20px 10px 20px" set-border="1px">
+      <template is="dom-if" if="[[!commonState.isInsert]]">
+        <div class="horizontal end-justified layout">
+          <paper-icon-button id="edit" class="crud" icon="create" raised on-tap="editContract" disabled="[[!commonState.btnDisabled]]"></paper-icon-button>
+          <paper-tooltip for="edit" offset="0">{{localizeCommon.edit}}</paper-tooltip>
+          <template is="dom-if" if="[[!data.contract_status]]">
+            <paper-icon-button id="delete" class="crud" icon="delete" raised on-tap="deleteContract" disabled="[[!commonState.btnDisabled]]"></paper-icon-button>
+            <paper-tooltip for="delete" offset="0">{{localizeCommon.delete}}</paper-tooltip>
+          </template>
+        </div>
+      </template>
+      <gl-grid-row width="{{getWidth}}">
+        <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,9]]">
+          <gl-form-input required class="required" disabled="[[_checkArrayTrue(commonState.btnDisabled,data.contract_status)]]" error-message="{{localizeContract.error_input}}{{localizeContract.contract_name}}"
+            label="{{localizeContract.contract_name}}" value="{{data.contract_name}}" placeholder="{{localizeContract.contract_name}}"></gl-form-input>
+        </gl-grid-col>
+        <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
+          <gl-form-input type="date" always-float-label class="required" required disabled="[[_checkArrayTrue(commonState.btnDisabled,data.contract_status)]]"
+            label="{{localizeContract.date}}" error-message="{{localizeContract.error_input}}{{localizeContract.date}}" value="{{data.contract_date}}">
+          </gl-form-input>
+        </gl-grid-col>
+      </gl-grid-row>
+      <gl-grid-row width="{{getWidth}}">
+        <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,9]]">[[changeString2Num(data.*,'contract_no')]]
+          <gl-form-input type="number" required class="required" error-message="{{localizeContract.error_input}}{{localizeContract.contract_no}}"
+            disabled="[[_checkArrayTrue(commonState.btnDisabled,data.contract_status)]]" label="{{localizeContract.contract_no}}"
+            value="{{data.contract_no}}" placeholder="{{localizeContract.contract_no}}"></gl-form-input>
+        </gl-grid-col>
+        <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
+          <!--<gl-form-input type="date" always-float-label class="required" required disabled="[[_checkArrayTrue(commonState.btnDisabled,data.contract_status)]]"
+            label="{{localizeContract.label_date}}" error-message="{{localizeContract.label_error_date}}" value="{{data.contract_date}}">
+            </vaadin-date-picker>-->
+        </gl-grid-col>
+      </gl-grid-row>
+
+      <gl-grid-row width="{{getWidth}}">
+        <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,9]]">
+          <gl-combo-box class="required" required disabled="[[_checkArrayTrue(commonState.btnDisabled,data.contract_status)]]" label="{{localizeContract.payment_type}}"
+            error-message="{{localizeContract.error_input}}{{localizeContract.payment_type}}" placeholder="{{localizeContract.payment_type}}"
+            items="[[payterms]]" item-label-path="payterms_Name" item-value-path="payterms_Id" value="{{data.payterm}}">
+            <template>
+              [[item.payterms_Name]]
+            </template>
+          </gl-combo-box>
+        </gl-grid-col>
+        <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">[[changeString2Num(data.*,'contract_weight')]]
+          <gl-form-input class="required number" required allowed-pattern="[0-9||,||.]" format-number="on" disabled="[[_checkArrayTrue(commonState.btnDisabled,data.contract_status)]]"
+            error-message="{{localizeContract.error_input}}{{localizeContract.quantity}}" required label="{{localizeContract.quantity}}"
+            value="{{data.contract_weight}}" on-focus="_setSeleteValue" placeholder="{{localizeContract.quantity}}" id="contract_weight"></gl-form-input>
+        </gl-grid-col>
+      </gl-grid-row>
+
+      <gl-grid-row>
+        <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,9]]">
+          <!--[[_getBuyerAddressFromData(data)]]-->
+          <gl-combo-box class="required" always-float-label required id="buyer_id" label="{{localizeContract.buyer}}" placeholder="{{localizeContract.buyer}}"
+            disabled="[[_checkArrayTrue(commonState.btnDisabled,data.contract_status)]]" items="{{buyerList}}" item-label-path="buyer_name"
+            item-value-path="buyer_id" error-message="{{localizeContract.error_dropdown}}{{localizeContract.buyer}}" value="{{data.buyer_id}}"
+            on-selected-item-changed="_getBuyerAddress">
+            <template>
+              [[item.buyer_name]]
+            </template>
+          </gl-combo-box>
+        </gl-grid-col>
+      </gl-grid-row>
+
+      <gl-grid-row>
+        <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,9]]">
+          <gl-form-input disabled label="{{localizeContract.fax}}" value="{{dataShow.buyer_fax}}" placeholder="{{localizeContract.fax}}"></gl-form-input>
+        </gl-grid-col>
+      </gl-grid-row>
+      <gl-grid-row>
+
+        <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,6]]">
+          <gl-form-textarea rows="2" disabled label="{{localizeContract.buyer_address}}" placeholder="{{localizeContract.buyer_address}}"
+            value="{{dataShow.buyerAddress}}"></gl-form-textarea>
+        </gl-grid-col>
+      </gl-grid-row>
+      <!--{{setHamonize(hamonizeList.*)}}-->
+      <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,12]]">
+        <div class="titleName">{{localizeContract.list_rice}}</div>
+        <div class="horizontal end-justified layout">
+          <div>
+
+            <template is="dom-if" if=[[!_checkArrayTrue(commonState.btnDisabled)]]>
+              <paper-button raised on-tap="addHamonizeTotable" class="gl-btn-primary">{{localizeContract.selete}}</paper-button>
+              <paper-button raised on-tap="DeleteAllHamonizeTotable" class="gl-btn-danger">{{localizeContract.dele_selete}}</paper-button>
+            </template>
+
+
+          </div>
+        </div>
+
+        <table class="gl-table-default">
+          <thead class="table-head">
+            <tr>
+              <th>[[localizeContract.order]]</th>
+              <th>[[localizeContract.hm_code]]</th>
+              <th>[[localizeContract.hm_name]]</th>
+              <th>[[localizeContract.hm_year]]</th>
+              <th>#</th>
+            </tr>
+          </thead>
+          <tbody class="table-body">
+            <template is="dom-repeat" items="{{hamonizeSeleted}}">
+              <tr>
+                <td>[[_ObcountIndex(index)]]</td>
+                <td>[[item.hamonize_code]]</td>
+                <td>[[item.hamonize_th]]</td>
+                <td>[[item.hamonize_year]]</td>
+                <td>
+                  <div hidden="[[_checkArrayTrue(commonState.btnDisabled)]]">
+                    <paper-icon-button data="{{item}}" icon="delete" on-tap="_deleteHamonize"></paper-icon-button>
+                  </div>
+                </td>
+              </tr>
+            </template>
+            <template is="dom-if" if="[[_isShow(hamonizeSeleted,hamonizeSeleted.*)]]">
+              <tr>
+                <td colspan="5" style="text-align: center;"> {{localizeCommon.no_data}}</td>
+              </tr>
+            </template>
+          </tbody>
+        </table>
+      </gl-grid-col>
+      <!--<div hidden="{{item.hiddend}}">
+
+        <div hidden="{{subChild.hiddend}}">
+          <div class="horizontal layout item">
+            <div class="row flex">
+              <paper-checkbox style="padding-left:25px;" id="{{indexroot}}" checked="{{subChild.check}}" on-tap="getSelect" disabled="[[commonState.btnDisabled]]">
+            </div>
+            <div class="row flex-3">[[subChild.hamonize_code]]</div>
+            <div class="row flex-3">[[subChild.hamonize_th]]</div>
+          </div>
+        </div>-->
+
+      </gl-grid-row>
+
+
+      <gl-grid-row>
+        <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,6]]">
+          <gl-form-textarea disabled="[[_checkArrayTrue(commonState.btnDisabled,data.contract_status)]]" rows="2" label="{{localizeContract.more_detail}}"
+            placeholder="{{localizeContract.more_detail}}" value="{{data.contract_desc}}" name="contract_desc"></gl-form-textarea>
+        </gl-grid-col>
+      </gl-grid-row>
+      <gl-form-panel-footer label="" set-padding="10px">
+        <div class="horizontal end-justified layout">
+
+          <template is="dom-if" if="[[commonState.isInsert]]">
+            <paper-button class="gl-btn-primary" on-tap="insertContract" raised>{{localizeCommon.add}}</paper-button>
+          </template>
+          <template is="dom-if" if="[[!commonState.isInsert]]">
+            <paper-button class="gl-btn-default" on-tap="calcelContract" raised hidden="[[commonState.btnDisabled]]">{{localizeCommon.cancel}}</paper-button>
+            <paper-button class="gl-btn-success" on-tap="saveContract" raised hidden="[[commonState.btnDisabled]]">{{localizeCommon.save}}</paper-button>
+          </template>
+          <template is="dom-if" if="[[commonState.btnDisabled]]">
+            <paper-button class="gl-btn-info" raised on-tap="confirmDrawer" hidden="[[data.contract_status]]">{{localizeCommon.confirm}}</paper-button>
+          </template>
+        </div>
+      </gl-form-panel-footer>
+    </gl-form-panel>
+    <paper-dialog id="hamonizeGroup" class="size-position">
+      <h2>{{localizeContract.list_rice}}</h2>
+      <paper-dialog-scrollable>
+        <!--<gl-grid-row>-->
+        <!--<gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,12]]">-->
+        <div class="horizontal layout header-item" warp>
+          <div class="header-div flex">
+            <paper-dropdown-menu label="{{localizeContract.year}}">{{dataSeleted.year}}
+              <paper-listbox class="dropdown-content" attr-for-selected="name" selected="{{dataSeleted.year}}" on-selected-changed="searchHamonizeInYear">
+                <paper-item name="">{{localizeContract.all_year}}</paper-item>
+                <template is="dom-repeat" items={{hamonizeYear.year}}>
+                  <paper-item name="{{item.label}}">{{item.label}}</paper-item>
+                </template>
+              </paper-listbox>
+            </paper-dropdown-menu>
+            <!--<gl-combo-box id="hamonizeYear" label="{{localizeContract.year}}" placeholder="{{localizeContract.year}}" items="[[hamonizeYear.year]]"
+              item-label-path="label" value="{{dataSeleted.year}}" item-value-path="label" on-value-changed="searchHamonizeInYear">
+              <template>
+                [[item.label]]
+              </template>
+            </gl-combo-box>-->
+          </div>
+          <div class="header-div flex">
+            <div style="padding: 10px 15px;">
+              [[localizeCommon.type_see]]
+              <paper-radio-group selected="{{typeSelete}}">
+                <paper-radio-button name="list">[[localizeCommon.list]]</paper-radio-button>
+                <paper-radio-button name="group">[[localizeCommon.group]]</paper-radio-button>
+              </paper-radio-group>
+            </div>
+          </div>
+        </div>
+        <iron-pages selected="{{typeSelete}}" attr-for-selected="name">
+          <div name="list">
+            <div class="horizontal layout header-item" warp>
+              <div class="header-div flex"></div>
+              <div class="header-div flex-3">
+                <gl-form-input label="[[localizeContract.hm_code]]" always-float-label disabled="{{!dataSeleted.isYear}}" type="search" value="{{dataSeleted.hamonize_code}}"
+                  on-value-changed="searchHamonizeCode"></gl-form-input>
+              </div>
+              <div class="header-div flex-3">
+                <gl-form-input label="[[localizeContract.hm_name]]" always-float-label style="padding-left:20px;" disabled="{{!dataSeleted.isYear}}"
+                  value="{{dataSeleted.hamonize_th}}" label="[[localizeCommon.search]]" type="search" on-value-changed="searchHamonizeThNogroup"></gl-form-input>
+              </div>
+            </div>
+            <div class="subdiv">
+              <!--<template is="dom-repeat" items={{hamonizeList}} index-as="indexroot">
+                <div hidden="{{item.hiddend}}">
+                  <template is="dom-repeat" items={{item.sub}} as="subChild">
+                    <div hidden="{{subChild.hiddend}}">
+                      <div class="horizontal layout item">
+                        <div class="row flex">
+                          <paper-checkbox style="padding-left:25px;" id="{{indexroot}}" checked="{{subChild.check}}" on-tap="getSelect" disabled="[[commonState.btnDisabled]]">
+                        </div>
+                        <div class="row flex-3">[[subChild.hamonize_code]]</div>
+                        <div class="row flex-3">[[subChild.hamonize_th]]</div>
+                      </div>
+                    </div>
+                  </template>
+              </template>-->
+              <template is="dom-repeat" items={{hamonizeListNoGroup}} index-as="indexroot">
+                <div hidden="{{item.hiddend}}">
+                  <!--<template is="dom-repeat" items={{item.sub}} as="subChild">-->
+                  <!--<div hidden="{{subChild.hiddend}}">-->
+                  <div class="horizontal layout item">
+                    <div class="row flex">
+                      <paper-checkbox style="padding-left:25px;" id="{{indexroot}}" checked="{{item.check}}" disabled="[[commonState.btnDisabled]]">
+                    </div>
+                    <div class="row flex-3">[[item.hamonize_code]]</div>
+                    <div class="row flex-3">[[item.hamonize_th]]</div>
+                  </div>
+                  <!--</div>-->
+                  <!--</template>-->
+              </template>
+              </div>
+            </div>
+            <div name="group">
+              <div class="horizontal layout header-item" warp>
+                <div class=""></div>
+                <div class="header-div flex"></div>
+                <div class="header-div flex"></div>
+                <div class="header-div flex-3">[[localizeContract.hm_group]]</div>
+                <div class="header-div flex-3">
+                  <gl-form-input label="[[localizeContract.hm_code]]" always-float-label type="search" disabled="{{!dataSeleted.isYear}}" value="{{dataSeleted.hamonize_code}}"
+                    on-value-changed="searchHamonizeCode"></gl-form-input>
+                </div>
+
+                <div class="header-div flex-3">
+                  <gl-form-input label="[[localizeContract.hm_name]]" style="padding-left:20px;" always-float-label disabled="{{!dataSeleted.isYear}}"
+                    value="{{dataSeleted.hamonize_th}}" label="[[localizeCommon.search]]" type="search" on-value-changed="searchHamonizeTh"></gl-form-input>
+                </div>
+                <div class="header-div flex-2">[[localizeContract.hm_year]]</div>
+              </div>
+              <div class="subdiv">
+                <template is="dom-repeat" items={{hamonizeList}} index-as="indexroot">
+                  <div hidden="{{item.hiddend}}">
+                    <div class="horizontal layout item">
+                      <div class="">
+                        <paper-icon-button style="margin-top: -50px;" icon="chevron-right" index="[[indexroot]]" on-tap="toggle"></paper-icon-button>
+                      </div>
+                      <div class="row flex">
+                        <paper-checkbox checked="{{item.check}}" id="{{indexroot}}" on-tap="getCheckChild" disabled="[[commonState.btnDisabled]]">
+                      </div>
+                      <div class="row flex"></div>
+                      <div class="row flex-3">[[item.name_th]]</div>
+                      <div class="row flex-3"></div>
+
+                      <div class="row flex-3">-</div>
+                      <div class="row flex-2">-</div>
+                    </div>
+                  </div>
+                  <iron-collapse id="collapse-[[indexroot]]">
+                    <template is="dom-repeat" items={{item.sub}} as="subChild">
+                      <div hidden="{{subChild.hiddend}}">
+                        <div class="horizontal layout sub-item">
+                          <div class=""></div>
+                          <div class="row flex">
+                            <paper-checkbox id="{{indexroot}}" checked="{{subChild.check}}" on-tap="getSelect" disabled="[[commonState.btnDisabled]]">
+                          </div>
+                          <div class="row flex"></div>
+                          <div class="row flex-3">[[item.name_th]]</div>
+                          <div class="row flex-3">[[subChild.hamonize_code]]</div>
+
+                          <div class="row flex-3">[[subChild.hamonize_th]]</div>
+                          <div class="row flex-2">[[subChild.hamonize_year]]</div>
+                        </div>
+                      </div>
+                    </template>
+                  </iron-collapse>
+                </template>
+              </div>
+            </div>
+        </iron-pages>
+        <!--</gl-grid-col>-->
+        <!--</gl-grid-row>-->
+      </paper-dialog-scrollable>
+      <div class="buttons">
+        <!--<paper-button dialog-dismiss>Cancel</paper-button>-->
+        <paper-button dialog-confirm autofocus raised on-tap="checkAddHamonize">[[localizeContract.close]]</paper-button>
+      </div>
+    </paper-dialog>
+  </template>
+  <script>
+    Polymer({
+      is: "contract-detail",
+      behaviors: [
+        ReduxBehavior, FormatNumberBehavior, nylonBehavior, g2gLogicBehavior, ValidateFormBehavior
+      ],
+      properties: {
+        localizeContract: {
+          statePath: 'i18n.contract'
+        },
+        localizeCommon: {
+          statePath: 'i18n.common'
+        },
+
+        commonState: {
+          statePath: 'commonState.setState'
+        },
+        data: {
+          statePath: 'contract.contractDetail',
+          // observer: 'checkContract'
+        },
+        dataShow: {
+          type: Object,
+          value: {}
+        },
+        dataSeleted: {
+          type: Object,
+          value: {
+            hamonize_code: '',
+            hamonize_th: '',
+            year: '',
+            isYear: false
+          }
+        },
+        buyerId: {
+          statePath: 'commonState.buyerId'
+        },
+        buyerList: {
+          statePath: 'commonG2g.buyerList',
+          // observer:'get'
+        },
+        hamonizeListReal: {
+          statePath: 'commonG2g.hamonizeList',
+          // observer: 'cloneHamonizeList'
+        },
+        hamonizeListNoGroupReal: {
+          statePath: 'commonG2g.hamonizeListNoGroup',
+        },
+        hamonizeList: {
+          type: Array,
+          value: []
+        },
+        hamonizeListNoGroup: {
+          type: Array,
+          value: []
+        },
+        hamonizeYear: {
+          statePath: 'commonG2g.hamonizeYear',
+          // observer: 'get'
+        },
+        typeSelete: {
+          type: String,
+          value: 'list'
+        },
+        payterms: {
+          type: Object,
+          value: [
+            { payterms_Name: 'L/C', payterms_Id: 'L/C' },
+            { payterms_Name: 'T/T', payterms_Id: 'T/T' },
+            { payterms_Name: 'D/P', payterms_Id: 'D/P' },
+            { payterms_Name: 'D/A', payterms_Id: 'D/A' }
+          ]
+        }
+      },
+      observers: [
+        'cloneHamonizeList(hamonizeListReal,hamonizeListNoGroupReal)',
+        '_checkHamonize(data,hamonizeList,hamonizeListNoGroup)',
+        '_checkTrueInHamonize(hamonizeList.*,hamonizeListNoGroup.*)',
+        'resetSearch(dataSeleted.year)'
+      ],
+      _checkTrueInHamonize(hamonizeList, hamonizeListNoGroup) {
+        // console.log(hamonizeList,hamonizeListNoGroup);
+      },
+      cloneHamonizeList: function (hamonizeListReal, hamonizeListNoGroupReal) {
+        // JSON.parse(JSON.stringify(data));
+        this.set('hamonizeList', JSON.parse(JSON.stringify(hamonizeListReal)))
+        this.set('hamonizeListNoGroup', JSON.parse(JSON.stringify(hamonizeListNoGroupReal)))
+        // console.log(this.hamonizeList);
+      },
+      setHamonize: function (Hamonize, hamonizeListNoGroup) {
+
+        let hm = Hamonize.map(item => item.sub).reduce((a, b) => a.concat(b), []).filter(item => item.check === true)
+        let hmNoGroup = hamonizeListNoGroup.filter(item => item.check === true).map(item => {
+          item.id = item.hamonize_id
+          return item
+        })
+        let arr = []
+        let showHm = []
+        // จับ 2 อาเรย์มารวมกัน ยังไม่ได้ทำ
+        hm.concat(hmNoGroup).map((item) => {
+          // console.log(item);
+          arr[item.id] = item
+        })
+        for (var key in arr) {
+          showHm.push(arr[key])
+        }
+        // console.log(showHm);
+        this.set('hamonizeSeleted', showHm)
+      },
+      addHamonizeTotable: function () {
+        this.$.hamonizeGroup.open()
+      },
+      DeleteAllHamonizeTotable: function () {
+        // console.log(this.hamonizeSeleted);
+        let idHm = this.hamonizeSeleted
+        this.fire('toast', {
+          status: 'openDialog',
+          text: this.localizeContract.want_hamon_delete_all,
+          confirmed: (result) => {
+            if (result == true) {
+              let myFirstPromise = new Promise((resolve, reject) => {
+                for (var index3 = 0; index3 < idHm.length; index3++) {
+                  // console.log(idHm[index].id);
+                  for (var index = 0; index < this.hamonizeList.length; index++) {
+                    for (var index2 = 0; index2 < this.hamonizeList[index].sub.length; index2++) {
+                      if (this.hamonizeList[index].sub[index2].id === idHm[index3].id) {
+                        this.set('hamonizeList.' + index + '.sub.' + index2 + '.check', false)
+                      }
+                    }
+                  }
+                  for (var index4 = 0; index4 < this.hamonizeListNoGroup.length; index4++) {
+                    if (idHm[index3].id === this.hamonizeListNoGroup[index4].hamonize_id) {
+                      this.set('hamonizeListNoGroup.' + index4 + '.check', false)
+                    }
+                  }
+                }
+
+                resolve('ok')
+              });
+              myFirstPromise.then((res) => {
+                this.setHamonize(this.hamonizeList, this.hamonizeListNoGroup)
+              })
+            }
+          }
+        })
+      },
+      _deleteHamonize: function (e) {
+        let idHm = e.currentTarget.data.id
+        this.fire('toast', {
+          status: 'openDialog',
+          text: this.localizeContract.want_hamon_delete,
+          confirmed: (result) => {
+            if (result == true) {
+              let myFirstPromise = new Promise((resolve, reject) => {
+                for (var index = 0; index < this.hamonizeList.length; index++) {
+                  for (var index2 = 0; index2 < this.hamonizeList[index].sub.length; index2++) {
+                    if (this.hamonizeList[index].sub[index2].id === idHm) {
+                      this.set('hamonizeList.' + index + '.sub.' + index2 + '.check', false)
+                    }
+                  }
+                  for (var index4 = 0; index4 < this.hamonizeListNoGroup.length; index4++) {
+                    if (idHm === this.hamonizeListNoGroup[index4].hamonize_id) {
+                      this.set('hamonizeListNoGroup.' + index4 + '.check', false)
+                    }
+                  }
+                }
+                resolve('ok')
+              });
+              myFirstPromise.then((res) => {
+                this.setHamonize(this.hamonizeList, this.hamonizeListNoGroup)
+              })
+            }
+          }
+        })
+
+      },
+      checkAddHamonize() {
+        this.setHamonize(this.hamonizeList, this.hamonizeListNoGroup)
+      },
+      _checkHamonize: function (data, hamonizeList, hamonizeListNoGroup, status = true) {
+        try {
+          if (data.contract_hamonize !== undefined && hamonizeList.length !== 0 && hamonizeListNoGroup.length !== 0) {
+            // console.log(data);
+            this.set('hamonizeSeleted', [])
+            let contract_hamonize = data.contract_hamonize
+            // เซ็ต กลับเป็นค่าเริ่มต้น
+            // for (var index = 0; index < this.hamonizeList.length; index++) {
+            //   for (var index2 = 0; index2 < this.hamonizeList[index].sub.length; index2++) {
+            //     this.set('hamonizeList.' + index + '.sub.' + index2 + '.check', false)
+            //   }
+            // }
+            // for (var index = 0; index < this.hamonizeListNoGroup.length; index++) {
+            //   this.set('hamonizeListNoGroup.' + index +'.check', false)
+            // }
+            // console.log(this.hamonizeList);
+            status = true
+            if (data.id === undefined) {
+              status = false
+            }
+            // console.log(contract_hamonize);
+            for (var index = 0; index < contract_hamonize.length; index++) {
+              for (var index2 = 0; index2 < hamonizeList.length; index2++) {
+                for (var index3 = 0; index3 < hamonizeList[index2].sub.length; index3++) {
+                  // console.log(contract_hamonize[index].hamonize_id);
+                  if (contract_hamonize[index].hamonize_id === hamonizeList[index2].sub[index3].sub_id) {
+                    // console.log(status);
+                    this.set('hamonizeList.' + index2 + '.sub.' + index3 + '.check', status)
+                    // console.log(this.hamonizeList[index2].sub[index3]);
+                    // break
+                  }
+                }
+              }
+              for (var index4 = 0; index4 < hamonizeListNoGroup.length; index4++) {
+                if (contract_hamonize[index].hamonize_id === hamonizeListNoGroup[index4].hamonize_id) {
+                  this.set('hamonizeListNoGroup.' + index4 + '.check', status)
+                }
+              }
+            }
+            // console.log(contract_hamonize);
+            //   hamonizeList.map((item,index)=>{
+            //     item.sub.map((sub)=>{
+            //       // console.log(sub);
+            //     })
+            //   })
+            // console.log(this.hamonizeList.length);
+            this.setHamonize(this.hamonizeList, this.hamonizeListNoGroup)
+          }
+        } catch (e) {
+        }
+      },
+      getCheckChild: function (e) {
+        let item = e.model.__data__.item
+        let indexRoot = e.currentTarget.id
+        let checkHost = e.currentTarget.checked
+        let year = Number(this.dataSeleted.year)
+        this.hamonizeList[indexRoot].sub.map((item, index) => {
+          if (this.hamonizeList[indexRoot].sub[index].hamonize_year === year) {
+            this.set('hamonizeList.' + indexRoot + '.sub.' + index + '.check', checkHost)
+          }
+          if(year === 0){
+            this.set('hamonizeList.' + indexRoot + '.sub.' + index + '.check', checkHost)
+          }
+        })
+      },
+      getSelect: function (e) {
+        let indexRoot = e.currentTarget.id
+        let checkHost = e.currentTarget.checked
+        let checkFalse = this.hamonizeList[indexRoot].sub.find((item) => item.check !== true)
+        this.set('hamonizeList.' + indexRoot + '.check', checkFalse === undefined)
+      },
+      editContract: function () {
+        this.dispatchAction('SET_STATE', {
+          isInsert: false,
+          btnDisabled: false,
+          hiddend: true
+        })
+      },
+      searchHamonizeInYear: function (e) {
+        try {
+          let newHamonize = []
+          let seletedYear = e.detail.value
+          // console.log(seletedYear === '');
+          if (seletedYear === '') {
+            this.hamonizeListNoGroup.map((item, index) => {
+                this.set('hamonizeListNoGroup.' + index + '.hiddend', false)
+            })
+            for (var index = 0; index < this.hamonizeList.length; index++) {
+              for (var index2 = 0; index2 < this.hamonizeList[index].sub.length; index2++) {
+                this.set('hamonizeList.' + index + '.sub.' + index2 + '.hiddend', false)
+               
+              }
+              let checkkFalse = this.hamonizeList[index].sub.find((item) => item.hiddend === false)
+              if (checkkFalse === undefined) {
+                this.set('hamonizeList.' + index + '.hiddend', true)
+              } else {
+                this.set('hamonizeList.' + index + '.hiddend', false)
+              }
+            }
+          } else {
+
+
+            this.hamonizeListNoGroup.map((item, index) => {
+              if (String(this.hamonizeListNoGroup[index].hamonize_year) === seletedYear) {
+                this.set('hamonizeListNoGroup.' + index + '.hiddend', false)
+                // console.log(3333);
+              } else {
+                this.set('hamonizeListNoGroup.' + index + '.hiddend', true)
+                // console.log(1212);
+              }
+            })
+            for (var index = 0; index < this.hamonizeList.length; index++) {
+              for (var index2 = 0; index2 < this.hamonizeList[index].sub.length; index2++) {
+                if ((String(this.hamonizeList[index].sub[index2].hamonize_year) === seletedYear) ||
+                  (seletedYear === '' || seletedYear === undefined)) {
+                  this.set('hamonizeList.' + index + '.sub.' + index2 + '.hiddend', false)
+                } else {
+                  this.set('hamonizeList.' + index + '.sub.' + index2 + '.hiddend', true)
+                }
+              }
+              let checkkFalse = this.hamonizeList[index].sub.find((item) => item.hiddend === false)
+              if (checkkFalse === undefined) {
+                this.set('hamonizeList.' + index + '.hiddend', true)
+              } else {
+                this.set('hamonizeList.' + index + '.hiddend', false)
+              }
+            }
+          }
+
+        } catch (e) {
+
+        }
+
+      },
+      resetSearch(year) {
+        // console.log(year);
+        if (year === '' || year === undefined) {
+          this.set('dataSeleted.isYear', false)
+        } else {
+          this.set('dataSeleted.isYear', true)
+
+        }
+      },
+      // searchHamonizeInCode: function (e) {
+      //   try {
+      //     let newHamonize = []
+      //     let seletedCode = e.detail.value
+      //     // console.log(seletedCode);
+      //     for (var index = 0; index < this.hamonizeList.length; index++) {
+      //       for (var index2 = 0; index2 < this.hamonizeList[index].sub.length; index2++) {
+      //         if ((String(this.hamonizeList[index].sub[index2].sub_id) === seletedCode) ||
+      //           (seletedCode === '' || seletedCode === undefined)) {
+      //           this.set('hamonizeList.' + index + '.sub.' + index2 + '.hiddend', false)
+      //         } else {
+      //           this.set('hamonizeList.' + index + '.sub.' + index2 + '.hiddend', true)
+      //         }
+      //       }
+      //       let checkkFalse = this.hamonizeList[index].sub.find((item) => item.hiddend === false)
+      //       if (checkkFalse === undefined) {
+      //         this.set('hamonizeList.' + index + '.hiddend', true)
+      //       } else {
+      //         this.set('hamonizeList.' + index + '.hiddend', false)
+      //       }
+      //     }
+      //     this.$$('#hamonizeYear').value = ''
+      //   } catch (e) {
+
+      //   }
+
+      // },
+      searchHamonizeCode: function (e) {
+        // try {
+        // console.log(this.dataSeleted.hamonize_code);
+        let hamonize_code = this.dataSeleted.hamonize_code || ''
+        let hamonize_th = this.dataSeleted.hamonize_th || ''
+        let year = this.dataSeleted.year
+        // console.log(seletedCode);
+        // if (this.typeSelete === 'list') {
+        // console.log(this.hamonizeListNoGroup.length);
+        // for (var index = 0; index < this.hamonizeListNoGroup.length; index++) {
+        this.hamonizeListNoGroup.map((item, index) => {
+          if (String(this.hamonizeListNoGroup[index].hamonize_code).search(String(hamonize_code)) > -1
+            && String(this.hamonizeListNoGroup[index].hamonize_th).search(String(hamonize_th)) > -1
+            && String(this.hamonizeListNoGroup[index].hamonize_year) === year) {
+            this.set('hamonizeListNoGroup.' + index + '.hiddend', false)
+            // console.log(3333);
+          } else {
+            this.set('hamonizeListNoGroup.' + index + '.hiddend', true)
+            // console.log(1212);
+          }
+        })
+        // }
+        // } else {
+        for (var index = 0; index < this.hamonizeList.length; index++) {
+          for (var index2 = 0; index2 < this.hamonizeList[index].sub.length; index2++) {
+            if (String(this.hamonizeList[index].sub[index2].hamonize_code).search(String(hamonize_code)) > -1
+              && String(this.hamonizeList[index].sub[index2].hamonize_th).search(String(hamonize_th)) > -1
+              && String(this.hamonizeList[index].sub[index2].hamonize_year) === year) {
+              this.set('hamonizeList.' + index + '.sub.' + index2 + '.hiddend', false)
+              // console.log(3333);
+            } else {
+              this.set('hamonizeList.' + index + '.sub.' + index2 + '.hiddend', true)
+              // console.log(1212);
+            }
+          }
+          let checkkFalse = this.hamonizeList[index].sub.find((item) => item.hiddend === false)
+          if (checkkFalse === undefined) {
+            this.set('hamonizeList.' + index + '.hiddend', true)
+          } else {
+            this.set('hamonizeList.' + index + '.hiddend', false)
+          }
+        }
+        // }
+
+        // } catch (e) {
+
+        // }
+      },
+      searchHamonizeTh: function (e) {
+        try {
+          let hamonize_code = this.dataSeleted.hamonize_code || ''
+          let hamonize_th = this.dataSeleted.hamonize_th || ''
+          let year = this.dataSeleted.year
+          // console.log(seletedCode);
+          this.hamonizeListNoGroup.map((item, index) => {
+            if (String(this.hamonizeListNoGroup[index].hamonize_code).search(String(hamonize_code)) > -1
+              && String(this.hamonizeListNoGroup[index].hamonize_th).search(String(hamonize_th)) > -1
+              && String(this.hamonizeListNoGroup[index].hamonize_year) === year) {
+              this.set('hamonizeListNoGroup.' + index + '.hiddend', false)
+              // console.log(3333);
+            } else {
+              this.set('hamonizeListNoGroup.' + index + '.hiddend', true)
+              // console.log(1212);
+            }
+          })
+          for (var index = 0; index < this.hamonizeList.length; index++) {
+            for (var index2 = 0; index2 < this.hamonizeList[index].sub.length; index2++) {
+              // if (String(seletedCode).search(String(this.hamonizeList[index].sub[index2].hamonize_code)) > -1) {
+              if (String(this.hamonizeList[index].sub[index2].hamonize_th).search(String(hamonize_th)) > -1
+                && String(this.hamonizeList[index].sub[index2].hamonize_code).search(String(hamonize_code)) > -1
+                && String(this.hamonizeList[index].sub[index2].hamonize_year) === year) {
+                this.set('hamonizeList.' + index + '.sub.' + index2 + '.hiddend', false)
+              } else {
+                this.set('hamonizeList.' + index + '.sub.' + index2 + '.hiddend', true)
+              }
+            }
+            let checkkFalse = this.hamonizeList[index].sub.find((item) => item.hiddend === false)
+            if (checkkFalse === undefined) {
+              this.set('hamonizeList.' + index + '.hiddend', true)
+            } else {
+              this.set('hamonizeList.' + index + '.hiddend', false)
+            }
+          }
+          // this.$$('#hamonizeYear').value = ''
+        } catch (e) {
+
+        }
+      },
+      searchHamonizeCodeNogroup: function (e) {
+        try {
+          let hamonize_code = this.dataSeleted.hamonize_code
+          let hamonize_th = this.dataSeleted.hamonize_th
+          let year = this.dataSeleted.year
+          // console.log(seletedCode);
+          // console.log(hamonize_th);
+
+          for (var index = 0; index < this.hamonizeListNoGroup.length; index++) {
+            // for (var index2 = 0; index2 < this.hamonizeListNoGroup[index].sub.length; index2++) {
+            if (String(this.hamonizeListNoGroup[index].hamonize_code).search(String(hamonize_code)) > -1
+              && String(this.hamonizeListNoGroup[index].hamonize_th).search(String(hamonize_th)) > -1
+              && String(this.hamonizeListNoGroup[index].hamonize_year) === year) {
+              this.set('hamonizeListNoGroup.' + index + '.hiddend', false)
+              // console.log(3333);
+            } else {
+              this.set('hamonizeListNoGroup.' + index + '.hiddend', true)
+              // console.log(1212);
+            }
+          }
+        } catch (e) {
+
+        }
+      },
+      searchHamonizeThNogroup: function (e) {
+        try {
+          let hamonize_code = this.dataSeleted.hamonize_code
+          let seletedCode = this.dataSeleted.hamonize_th
+          let year = this.dataSeleted.year
+        } catch (e) {
+
+        }
+      },
+      toggle: function (e) {
+        let index = e.currentTarget.index
+        if (e.currentTarget.icon === 'expand-more') {
+          e.currentTarget.icon = 'chevron-right'
+        } else {
+          e.currentTarget.icon = 'expand-more'
+        }
+        // console.log(e.currentTarget.icon);
+        // console.log(this.$$('#collapse-' + index))
+        // console.log(this.$$('#collapse-' + index).open);
+        this.$$('#collapse-' + index).toggle()
+      },
+      _getBuyerAddress: function (e) {
+        if (e.detail.value) {
+          // console.log(e.detail.value);
+          let data = e.detail.value
+          let buyer = {
+            buyer: {
+              buyer_address: data.buyer_address,
+              buyer_email: data.buyer_email,
+              buyer_fax: data.buyer_fax,
+              buyer_masks: data.buyer_masks,
+              buyer_name: data.buyer_name,
+              buyer_tel: data.buyer_tel,
+              country_id: data.country_id
+            },
+            country: {
+              continent_id: data.continent_id,
+              country_code2: data.country_code2,
+              country_code3: data.country_code3,
+              country_fullname_en: data.country_fullname_en,
+              country_fullname_th: data.country_fullname_th,
+              country_name_en: data.country_name_en,
+              country_name_th: data.country_name_th
+            },
+          }
+          this.set('dataShow.obj', buyer)
+          this.set('dataShow.buyer_fax', e.detail.value.buyer_fax)
+          this.set('dataShow.buyerAddress', e.detail.value.buyer_address)
+        }
+      },
+      _getHamonize: function (hamonizeList) {
+        // let hamonizeArr = []
+        // hamonizeList = hamonizeList || this.hamonizeList
+        // for (var index2 = 0; index2 < hamonizeList.length; index2++) {
+        //   for (var index3 = 0; index3 < hamonizeList[index2].sub.length; index3++) {
+        //     if (hamonizeList[index2].sub[index3].check === true) {
+        //       let data = {
+        //         digits: hamonizeList[index2].sub[index3].digits,
+        //         hamonize_code: hamonizeList[index2].sub[index3].hamonize_code,
+        //         hamonize_en: hamonizeList[index2].sub[index3].hamonize_en,
+        //         hamonize_en2: hamonizeList[index2].sub[index3].hamonize_en2,
+        //         hamonize_th: hamonizeList[index2].sub[index3].hamonize_th,
+        //         hamonize_th2: hamonizeList[index2].sub[index3].hamonize_th2,
+        //         hamonize_year: hamonizeList[index2].sub[index3].hamonize_year
+        //       }
+        //       hamonizeArr.push({
+        //         hamonize_id: hamonizeList[index2].sub[index3].sub_id,
+        //         hamonize: data
+        //       })
+        //     }
+        //   }
+        // }
+        let hamonizeArr = []
+        hamonizeList = this.hamonizeSeleted
+        for (var index = 0; index < this.hamonizeSeleted.length; index++) {
+          hamonizeArr.push({
+            hamonize_id: hamonizeList[index].id,
+            hamonize: {
+              digits: hamonizeList[index].digits,
+              hamonize_code: hamonizeList[index].hamonize_code,
+              hamonize_en: hamonizeList[index].hamonize_en,
+              hamonize_en2: hamonizeList[index].hamonize_en2,
+              hamonize_th: hamonizeList[index].hamonize_th,
+              hamonize_th2: hamonizeList[index].hamonize_th2,
+              hamonize_year: hamonizeList[index].hamonize_year
+            }
+          })
+        }
+        return hamonizeArr
+      },
+      _resiveDataContract: function () {
+        return new Promise((res, rej) => {
+          let dataResive = JSON.parse(JSON.stringify(this.data))
+          dataResive.contract_hamonize = this._getHamonize()
+          dataResive.buyer = this.dataShow.obj.buyer
+          dataResive.buyer_id = this.data.buyer_id
+          dataResive.country = this.dataShow.obj.country
+          dataResive.contract_no = Number(dataResive.contract_no)
+          dataResive.country_id = this.dataShow.obj.buyer.country_id
+          dataResive.contract_date = dataResive.contract_date + 'T00:00:00+07:00'
+          delete dataResive.date_updated
+          delete dataResive.date_created
+          res(dataResive)
+        })
+      },
+      _resiveForm: function () {
+        return new Promise((res, rej) => {
+          if (this.validateForm('.required')) {
+            this._resiveDataContract().then((data) => {
+              res(data)
+            })
+          } else {
+            this.fire('toast', {
+              status: 'connectError', text: this.localizeCommon.toast_input_error, //คำสั่งสำหรับเปิด toast error
+              callback: function () {
+                rej('error')
+              }
+            })
+          }
+        })
+      },
+      insertContract: function () {
+        // console.log(this.validateForm('.required'));
+        this._resiveForm()
+          .then((res) => {
+            this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
+            res.contract_status = false
+            this.dispatchAction('POST_CONTRACT', res)
+              .then((response) => {
+                // console.log(response);
+                if (response.data.inserted !== undefined && response.data.inserted.length !== 0) {
+                  this.dispatchAction('GET_CONTRACT_OF_BUYER', res.buyer_id);
+                  this.fire('toast', {
+                    status: 'success', text: this.localizeCommon.save_succeed,  // คำสั่งสำหรับเปิด toast success
+                    callback: () => {
+                      this.queryFrom('.required').map((el) => { el.reset(); });
+                      this.fire('close-drawer')
+                    }
+                  })
+                } else {
+                  // console.log(1111);
+                  this.fire('toast', {
+                    status: 'connectError', text: response.data, //คำสั่งสำหรับเปิด toast error
+                    callback: () => {
+                    }
+                  })
+                }
+
+
+              })
+          })
+          .catch((error) => {
+            //console.log(error);
+          });
+
+      },
+
+      saveContract: function () {
+        this.fire('toast', {
+          status: 'openDialog',
+          text: this.localizeCommon.toast_edit,
+          confirmed: (result) => {
+            if (result == true) {
+              this._resiveForm()
+                .then((res) => {
+                  // console.log(res);
+                  this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
+                  this.dispatchAction('PUT_CONTRACT', res)
+                    .then((response) => {
+                      // console.log(response);
+                      if (response.data.replaced !== undefined && response.data.replaced.length !== 0) {
+                        this.dispatchAction('GET_CONTRACT_OF_BUYER', res.buyer_id);
+                        this.dispatchAction('GET_CONTRACT', res.id)
+                        this.queryFrom('.required').map((el) => { el.reset(); });
+                        this.dispatchAction('SET_STATE', {
+                          isInsert: false,
+                          btnDisabled: true,
+                          hiddend: true
+                        })
+                        this.fire('toast', {
+                          status: 'success', text: this.localizeCommon.save_succeed,  // คำสั่งสำหรับเปิด toast success
+                          callback: () => {
+                          }
+                        })
+                      } else {
+                        // console.log(1111);
+                        this.fire('toast', {
+                          status: 'connectError', text: response.data, //คำสั่งสำหรับเปิด toast error
+                          callback: () => {
+                          }
+                        })
+                      }
+
+                    })
+                })
+                .catch((error) => {
+                  //console.log(error);
+                });
+            }
+          }
+        })
+      },
+      deleteContract: function () {
+        if (this.data.contract_status === true) {
+          this.fire('toast', {
+            status: 'connectError', text: "สัญญายื่นยันแล้วไม่สามารถลบได้ ถ้าต้องการลบกรุณาติดต่อ Admin", //คำสั่งสำหรับเปิด toast error
+            callback: () => {
+            }
+          })
+        } else {
+          this.fire('toast', {
+            status: 'openDialog',
+            text: this.localizeCommon.toast_delete,
+            confirmed: (result) => {
+              if (result == true) {
+                this._resiveForm()
+                  .then((res) => {
+                    // console.log(res);
+                    this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
+                    this.dispatchAction('DELETE_CONTRACT', res.id)
+                      .then((response) => {
+                        if (response.data.deleted !== undefined && response.data.deleted.length !== 0) {
+                          this.dispatchAction('GET_CONTRACT_OF_BUYER', res.buyer_id);
+                          this.fire('toast', {
+                            status: 'success', text: this.localizeCommon.delete_succeed,  // คำสั่งสำหรับเปิด toast success
+                            callback: () => {
+                            }
+                          })
+                          this.fire('close-drawer')
+                        } else {
+                          // console.log(1111);
+                          this.fire('toast', {
+                            status: 'connectError', text: response.data, //คำสั่งสำหรับเปิด toast error
+                            callback: () => {
+                            }
+                          })
+                        }
+
+                      })
+                  })
+                  .catch((error) => {
+                    //console.log(error);
+                  });
+              }
+            }
+          })
+        }
+
+      },
+      calcelContract: function () {
+        this.fire('toast', {
+          status: 'openDialog',
+          text: this.localizeCommon.toast_cancel_edit,
+          confirmed: (result) => {
+            if (result == true) {
+              this._resiveForm()
+                .then((res) => {
+                  this.dispatchAction('GET_CONTRACT', res.id)
+                  this.dispatchAction('SET_STATE', {
+                    isInsert: false,
+                    btnDisabled: true,
+                    hiddend: true
+                  })
+                  this.queryFrom('.required').map((el) => { el.reset(); });
+                })
+            }
+          }
+        })
+      },
+      confirmDrawer: function () {
+        this.fire('toast', {
+          status: 'openDialog',
+          text: this.localizeContract.toast_approve_contract,
+          confirmed: (result) => {
+            if (result == true) {
+              this._resiveForm()
+                .then((res) => {
+                  res.contract_status = true
+                  // console.log(data);
+                  this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
+                  this.dispatchAction('PUT_CONTRACT', res)
+                    .then((response) => {
+                      if (response.data.replaced !== undefined && response.data.replaced.length !== 0) {
+                        this.dispatchAction('GET_CONTRACT_OF_BUYER', res.buyer_id);
+                        this.dispatchAction('GET_CONTRACT', res.id)
+                        this.queryFrom('.required').map((el) => { el.reset(); });
+                        this.dispatchAction('SET_STATE', {
+                          isInsert: false,
+                          btnDisabled: true,
+                          hiddend: true
+                        })
+                        this.fire('toast', {
+                          status: 'success', text: this.localizeCommon.save_succeed,  // คำสั่งสำหรับเปิด toast success
+                          callback: () => {
+                          }
+                        })
+                      } else {
+                        // console.log(1111);
+                        this.fire('toast', {
+                          status: 'connectError', text: response.data, //คำสั่งสำหรับเปิด toast error
+                          callback: () => {
+                          }
+                        })
+                      }
+                    })
+                })
+                .catch((error) => {
+                  //console.log(error);
+                });
+            }
+          }
+        })
+      }
+
+
+    });
+  </script>
+</dom-module>

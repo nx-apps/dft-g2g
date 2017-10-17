@@ -1,0 +1,152 @@
+<link rel="import" href="./../../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="./../../../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="./../../../layout/shared-styles.html">
+<link rel="import" href="./../../components/format-number-behavior.html">
+<link rel="import" href="./../../components/g2g-logic-behavior.html">
+<dom-module id="list-of-payments">
+  <style include="shared-styles">
+     :host {
+      display: block;
+    }
+    
+    * {
+      font-family: 'CSChatThaiUI', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    
+    .labelSearch {
+      font-size: var(--font-size-h4);
+      margin: 10px 10px 10px 10px;
+    }
+    
+    .table-body>tr>td {
+      cursor: pointer;
+    }
+    
+    .title {
+      margin: 16px;
+      text-align: left;
+      font-size: var(--font-size-h4);
+    }
+    
+    table.gl-table-default {
+      width: 98%;
+      border: 1px solid #ddd;
+      margin-bottom: 15px;
+    }
+    
+    table.gl-table-default>thead.table-head>tr>th, {
+      text-align: center;
+    }
+    
+    table.gl-table-default>thead.table-head>tr>th:nth-child(1) {
+      width: 20%;
+    }
+    table.gl-table-default>thead.table-head>tr>th:nth-child(2) {
+      text-align: left;
+      width: 60%;
+    }
+    table.gl-table-default>thead.table-head>tr>th:nth-child(3) {
+      width: 20%;
+    }
+  </style>
+  <template>
+    <div class="flex searchInput horizontal center-justified layout">
+      <div class="flex title">{{localize.text_of_contract}} : [[contractId.contract_name]]</div>
+      <div class="flex horizontal end-justified layout">
+        <div class="labelSearch">{{localize.company_taxno}}</div>{{_searchInArray(searchInput)}}
+        <paper-input label=" " no-label-float value="{{searchInput}}"></paper-input>
+        <paper-icon-button icon="search"></paper-icon-button>
+        </paper-input>
+      </div>
+    </div>
+    <div class="horizontal center-justified layout">
+      <table class="gl-table-default">
+        <thead class="table-head">
+          <tr>
+            <th>{{localize.company_taxno}}</th>
+            <th>{{localize.company_name_th}}</th>
+            <th>{{localize.cheque_count}}</th>
+          </tr>
+        </thead>
+        <tbody class="table-body">
+          <template is="dom-repeat" items="{{data}}">
+            <tr data="[[item]]" on-tap="getPaymentDetail" level="primary" hidden="{{item.hidden}}">
+              <td>[[item.company_taxno]]</td>
+              <td>[[item.company.company_name_th]]</td>
+              <td>[[item.cheque_count]]</td>
+            </tr>
+          </template>
+          <template is="dom-if" if="[[_isShow(data,data.*)]]">
+            <tr>
+              <td colspan="3" style="text-align:center"> {{localize.no_data}}</td>
+            </tr>
+          </template>
+        </tbody>
+      </table>
+    </div>
+  </template>
+  <script>
+    Polymer({
+      is: "list-of-payments",
+      behaviors: [
+        ReduxBehavior,
+        FormatNumberBehavior, CookieBehavior, g2gLogicBehavior
+      ],
+      properties: {
+        localize:{
+          statePath : 'i18n.payment'
+        },
+        data: {
+          statePath: 'payment.listPayment'
+        },
+        contractId: {
+          statePath: 'commonState.contractId',
+          // observer: 'get'
+        },
+      },
+      // observers: [
+      //   'initDatabl(data)'
+      // ],
+      // created: function () {
+      //   this.nylonLocalizeImport('/i18n-page1.json');
+      // },
+      // initDatabl: function (data) {
+      //   // console.log(data);
+      //   this.newData = this.g2gClone(data);
+      //   // console.log('clone new==>',this.newData);
+      //   // console.log('org==>',this.data);
+      // },
+      _searchInArray: function (searchInput) {
+        // console.log(searchInput == '');
+        // if (searchInput != '') {
+        //   let arr = [];
+        //   this.data.map((el) => {
+        //     if (String(el.invoice_no).search(searchInput) > -1) {
+        //       arr.push(el);
+        //     }
+        //   });
+        //   this.newData = arr;
+        // } else {
+        //   this.initDatabl(this.data);
+        // }
+        try {
+          for (var index = 0; index < this.data.length; index++) {
+            if (String(this.data[index].company_taxno).search(String(searchInput)) > -1) {
+
+              this.set('data.' + index + '.hidden', false)
+            } else {
+              this.set('data.' + index + '.hidden', true)
+            }
+          }
+        } catch (e) {
+
+        }
+      },
+      getPaymentDetail: function (e) {
+        // console.log(e.currentTarget.data.invoice_no);
+        this.fire('get-payment-detail', { detail: e.currentTarget.data });
+      }
+    });
+  </script>
+</dom-module>

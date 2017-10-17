@@ -1,0 +1,468 @@
+<link rel="import" href="./../../../../bower_components/gl-form/gl-form-panel.html">
+<link rel="import" href="./../../../../bower_components/gl-grid/gl-grid-row.html">
+<link rel="import" href="./../../../../bower_components/gl-grid/gl-grid-col.html">
+<link rel="import" href="./../../../../bower_components/gl-form/gl-form-input.html">
+<link rel="import" href="./../../../../bower_components/gl-form/gl-combo-box.html">
+<link rel="import" href="./../../../../bower_components/paper-checkbox/paper-checkbox.html">
+<link rel="import" href="./../../components/validateFormBehaviors.html">
+<link rel="import" href="./../../components/g2g-logic-behavior.html">
+<link rel="import" href="./../../../layout/shared-styles.html">
+<link rel="import" href="./list-make.html">
+<dom-module id="manage-report">
+    <template>
+        <style include="shared-styles">
+             :host {
+                display: block;
+            }
+
+            gl-combo-box {
+                width: 90%;
+            }
+            .title-report {
+                font-family: CSChatThaiUI;
+                font-size: 18px;
+                font-weight: 400px;
+                margin: 15px 0px;
+            }
+        </style>
+        <gl-form-panel set-padding="10px 20px 10px 20px" set-border="1px">
+            <gl-grid-row width="{{getWidth}}">
+                <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+                    <gl-form-input class="margin-top required" required  required label="[[localizeReport.report_order]] :"
+                        value="{{data.report_no}}" disabled="{{_checkStatus(statusAction)}}"></gl-form-input>
+                </gl-grid-col>
+                <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,8]]">
+                    <gl-form-input class="margin-top required" required  required label="[[localizeReport.report_name]] :"
+                         value="{{data.report_name}}" disabled="[[btnState]]"></gl-form-input>
+                </gl-grid-col>
+            </gl-grid-row>
+
+            <gl-grid-row>
+                <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+                    <gl-form-input class="margin-top required" required  required label="[[localizeReport.file_name]] :" 
+                        value="{{data.report_path}}" disabled="{{_checkStatus(statusAction)}}"></gl-form-input>
+                </gl-grid-col>
+                <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+                    <gl-combo-box id="report_table" label="[[localizeReport.table_data]]" placeholder="[[localizeReport.table_data]]" items="[[tableList]]"
+                        item-label-path="table_name" value="{{data.report_table}}" item-value-path="table_name" on-selected-item-changed="getObjectTable">
+                        <template>
+                            [[item.table_name]]
+                        </template>
+                    </gl-combo-box>
+                </gl-grid-col>
+                <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+                    <gl-combo-box id="report_type" label="[[localizeReport.report_type]]" placeholder="[[localizeReport.report_type]]" items="{{report_type}}" item-label-path="label"
+                        value="{{data.report_type}}" item-value-path="id">
+                        <template>
+                            [[item.label]]
+                        </template>
+                    </gl-combo-box>
+                </gl-grid-col>
+            </gl-grid-row>
+            <div class="horizontal end-justified layout">
+                <paper-button raised on-tap="addCondition" class="gl-btn-primary">
+                    <iron-icon icon="add"></iron-icon>[[localizeReport.add_item]]</paper-button>
+            </div>
+            <gl-grid-row>
+                <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,12]]">
+                    <vaadin-grid id="material" class="material" aria-label="Basic Binding Example" items="{{data.report_params}}">
+
+                        <vaadin-grid-column width="10%" flex-grow="0">
+                            <template class="header">[[localizeReport.order]]</template>
+                            <template>
+                                <gl-form-input class="margin-top required" required type="number" style="width:90%" value="{{item.no}}" disabled="{{_checkStatus(statusAction)}}"></gl-form-input>
+                            </template>
+                        </vaadin-grid-column>
+
+                        <vaadin-grid-column width="20%" flex-grow="0">
+                            <template class="header">[[localizeReport.Label]]</template>
+                            <template>
+                                <gl-form-input class="margin-top required" required style="width:90%" value="{{item.label}}" disabled="{{_checkStatus(statusAction)}}"></gl-form-input>
+                            </template>
+                        </vaadin-grid-column>
+
+                        <vaadin-grid-column width="15%" flex-grow="0">
+                            <template class="header">[[localizeReport.type]]</template>
+                            <template>
+                                <!--{{item.type}}-->
+                                <gl-combo-box id="report_type" class="margin-top required" required  items="{{data_type}}"
+                                    item-label-path="label" value="{{item.type}}" item-value-path="id">
+                                    <template>
+                                        [[item.label]]
+                                    </template>
+                                </gl-combo-box>
+                            </template>
+                        </vaadin-grid-column>
+
+                        <vaadin-grid-column width="15%" flex-grow="0">
+                            <template class="header">[[localizeReport.field]]</template>
+                            <template>
+
+                                <!--<template is="dom-if" if={{isString(item.type)}}>
+                                    <gl-form-input class="margin-top required" required style="width:90%" value="{{item.req.field}}"></gl-form-input>
+                                </template>-->
+
+                                <!--<template is="dom-if" if={{isDate(item.type)}}>
+                                    <gl-form-input class="margin-top required" required style="width:90%" value="{{item.req.field}}"></gl-form-input>
+                                </template>-->
+
+                                <!--<template is="dom-if" if={{isDay(item.type)}}>
+                                    <gl-form-input class="margin-top required" required style="width:90%" value="{{item.req.field}}"></gl-form-input>
+                                </template>
+
+                                <template is="dom-if" if={{isMonth(item.type)}}>
+                                    <gl-form-input class="margin-top required" required style="width:90%" value="{{item.req.field}}"></gl-form-input>
+                                </template>
+
+                                <template is="dom-if" if={{isYear(item.type)}}>
+                                    <gl-form-input class="margin-top required" required style="width:90%" value="{{item.req.field}}"></gl-form-input>
+                                </template>-->
+
+                                <template is="dom-if" if={{isListmake(item.type)}}>
+                                    <paper-button raised class="btnInTable" data="{{item}}" on-tap="openListMake">[[localizeReport.see_item]]</paper-button>
+                                </template>
+
+
+                                <template is="dom-if" if={{isList(item.type)}}>
+                                    <gl-combo-box id="report_type" class="margin-top required" required label="field" placeholder="field" items="{{tableSeleted}}"
+                                        item-label-path="field" value="{{item.req.field}}" item-value-path="field">
+                                        <template>
+                                            [[item.field]]
+                                        </template>
+                                    </gl-combo-box>
+                                </template>
+                            </template>
+                        </vaadin-grid-column>
+
+                        <vaadin-grid-column width="15%" flex-grow="0">
+                            <template class="header">[[localizeReport.View]]</template>
+                            <template>
+
+                                <!--<template is="dom-if" if={{isString(item.type)}}>
+                                    <gl-form-input class="margin-top required" required style="width:90%" value="{{item.view}}"></gl-form-input>
+                                </template>-->
+
+
+                                <!--<template is="dom-if" if={{isDate(item.type)}}>
+                                    <gl-form-input class="margin-top required" required style="width:90%" value="{{item.view}}"></gl-form-input>
+                                </template>
+
+                                <template is="dom-if" if={{isDay(item.type)}}>
+                                    <gl-form-input class="margin-top required" required style="width:90%" value="{{item.view}}"></gl-form-input>
+                                </template>
+
+                                <template is="dom-if" if={{isMonth(item.type)}}>
+                                    <gl-form-input class="margin-top required" required style="width:90%" value="{{item.view}}"></gl-form-input>
+                                </template>
+
+                                <template is="dom-if" if={{isYear(item.type)}}>
+                                    <gl-form-input class="margin-top required" required style="width:90%" value="{{item.view}}"></gl-form-input>
+                                </template>
+
+                                <template is="dom-if" if={{isListmake(item.type)}}>
+                                    <gl-form-input class="margin-top required" required style="width:90%" value="{{item.view}}"></gl-form-input>
+                                </template>-->
+
+
+                                <template is="dom-if" if={{isList(item.type)}}>
+                                    <gl-combo-box id="report_type" class="margin-top required" required items="{{tableSeleted}}"
+                                        item-label-path="field" value="{{item.view}}" item-value-path="field">
+                                        <template>
+                                            [[item.field]]
+                                        </template>
+                                    </gl-combo-box>
+                                </template>
+                            </template>
+                        </vaadin-grid-column>
+
+                        <vaadin-grid-column width="15%" flex-grow="0">
+                            <template class="header">[[localizeReport.res]]</template>
+                            <template>
+
+                                <template is="dom-if" if={{isString(item.type)}}>
+                                    <gl-form-input class="margin-top required" required style="width:90%" value="{{item.res}}"></gl-form-input>
+                                </template>
+
+                                <template is="dom-if" if={{isDate(item.type)}}>
+                                    <gl-form-input class="margin-top required" required style="width:90%" value="{{item.res}}"></gl-form-input>
+                                </template>
+
+                                <template is="dom-if" if={{isDay(item.type)}}>
+                                    <gl-form-input class="margin-top required" required style="width:90%" value="{{item.res}}"></gl-form-input>
+                                </template>
+
+                                <template is="dom-if" if={{isMonth(item.type)}}>
+                                    <gl-form-input class="margin-top required" required style="width:90%" value="{{item.res}}"></gl-form-input>
+                                </template>
+
+                                <template is="dom-if" if={{isYear(item.type)}}>
+                                    <gl-form-input class="margin-top required" required style="width:90%" value="{{item.res}}"></gl-form-input>
+                                </template>
+
+                                <template is="dom-if" if={{isListmake(item.type)}}>
+                                    <gl-form-input class="margin-top required" required style="width:90%" value="{{item.res}}"></gl-form-input>
+                                </template>
+
+                                <template is="dom-if" if={{isList(item.type)}}>
+                                    <gl-combo-box id="report_type" class="margin-top required" required items="{{tableSeleted}}"
+                                        item-label-path="field" value="{{item.res}}" item-value-path="field">
+                                        <template>
+                                            [[item.field]]
+                                        </template>
+                                    </gl-combo-box>
+                                </template>
+                            </template>
+                        </vaadin-grid-column>
+
+
+
+                        
+
+
+
+                        <vaadin-grid-column width="5%" flex-grow="0">
+                            <template class="header">[[localizeReport.redux]]</template>
+                            <template>
+                                <paper-checkbox class="checkBox" on-tap="toggle" checked="{{item.redux}}" aria-labelledby="label3"></paper-checkbox>
+                            </template>
+                        </vaadin-grid-column>
+
+                        <vaadin-grid-column width="5%" flex-grow="0">
+                            <template class="header">[[localizeReport.delete]]</template>
+                            <template>
+                                <paper-icon-button data="{{item}}" icon="delete" on-tap="_delete"></paper-icon-button>
+                            </template>
+                        </vaadin-grid-column>
+                    </vaadin-grid>
+                </gl-grid-col>
+            </gl-grid-row>
+            <div class="horizontal end-justified layout">
+                <paper-button raised on-tap="addReport" class="gl-btn-primary" hidden="[[!commonState.isInsert]]">[[localizeReport.add]]</paper-button>
+                <paper-button raised on-tap="saveReport" class="gl-btn-success" hidden="[[commonState.isInsert]]">[[localizeReport.save]]</paper-button>
+            </div>
+        </gl-form-panel>
+
+        <paper-dialog id="listMake">
+            <div class="layout start-justified">
+                <div class="title-report">
+                [[localizeReport.list]] [[titleListMake]]
+                </div>
+                <list-make id="makeArray" style="width:555px" data={{dataSelete}}></list-make>
+            </div>
+            <div class="flex horizontal end-justified layout buttons">
+                <paper-button raised class="gl-btn-default" dialog-dismiss on-tap="reload">[[localizeReport.close]]</paper-button>
+                <paper-button raised class="gl-btn-success" dialog-confirm on-tap="getArr" autofocus>[[localizeReport.save]]</paper-button>
+            </div>
+        </paper-dialog>
+    </template>
+    <script>
+        Polymer({
+            is: 'manage-report',
+            behaviors: [ReduxBehavior, nylonBehavior, g2gLogicBehavior,
+                ValidateFormBehavior, Polymer.IronValidatorBehavior],
+            properties: {
+                report_type: {
+                    type: Array,
+                    value: [
+                        {
+                            id: 'rice',
+                            label: 'กองข้าว'
+                        },
+                        {
+                            id: 'finance',
+                            label: 'กองคลัง'
+                        }
+                    ]
+                },
+                localizeReport: {
+                    statePath: 'i18n.report'
+                },
+                data_type: {
+                    type: Array,
+                    value: [
+                        {
+                            id: 'string',
+                            label: 'ข้อความ'
+                        },
+                        // {
+                        //     id: 'numbers',
+                        //     label: 'ตัวเลข'
+                        // },
+                        {
+                            id: 'date',
+                            label: 'วันที่'
+                        },
+                        // {
+                        //     id: 'day',
+                        //     label: 'วัน'
+                        // },
+                        {
+                            id: 'month',
+                            label: 'เดือน'
+                        },
+                        {
+                            id: 'year',
+                            label: 'ปี'
+                        },
+                        {
+                            id: 'list',
+                            label: 'รายการ'
+                        },
+                        {
+                            id: 'listmake',
+                            label: 'รายการ (สร้างเอง)'
+                        }
+                    ]
+                },
+                data: {
+                    statePath: 'report.reportDtail'
+                },
+                tableList: {
+                    statePath: 'report.tableList',
+                },
+                commonState: {
+                    statePath: 'commonState.setState'
+                },
+                tableSeleted: {
+                    type: Object
+                },
+                dataSelete: {
+                    type: Object
+                },
+                titleListMake :{
+                    type: String
+                }
+            },
+            
+            openListMake(e) {
+                this.set('titleListMake',e.model.__data__.item.label)
+                // console.log(e.model.__data__.item);
+                if (typeof e.currentTarget.data.req.value === 'string') {
+                    e.currentTarget.data.req.value = []
+                }
+                this.$.listMake.open()
+                this.set('dataSelete', e.currentTarget.data)
+            },
+            getArr() {
+                // console.log(this.$.makeArray.getValue());
+            },
+            getObjectTable(d) {
+                if (d.detail.value !== null & d.detail.value !== undefined) {
+                    this.set('tableSeleted', d.detail.value.fields)
+                    // console.log(d.detail.value);
+                }
+
+            },
+            addCondition() {
+                this.push('data.report_params', {
+                    label: "",
+                    no: 1,
+                    redux: false,
+                    req: {
+                        field: "",
+                        value: ""
+                    },
+                    res: "",
+                    type: "",
+                    view: ""
+                })
+                // console.log(this.data);
+            },
+            _delete(e) {
+                // splice 
+                let index = e.model.__data__.index
+                this.splice('data.report_params', index, 1)
+                // console.log(e.model.__data__.index);
+            },
+            _resiveDataReport: function () {
+                return new Promise((res, rej) => {
+                    let dataResive = JSON.parse(JSON.stringify(this.data))
+                    dataResive.report_no = Number(dataResive.report_no)
+                    dataResive.report_params.map((item) => {
+                        return item.no = Number(item.no)
+                    })
+                    delete dataResive.date_updated
+                    delete dataResive.date_created
+                    res(dataResive)
+                })
+            },
+            _resiveFormReport: function () {
+                return new Promise((res, rej) => {
+                    // if (this.validateForm('.required')) {
+                    this._resiveDataReport().then((data) => {
+                        res(data)
+                    })
+                    // } else {
+                    //     this.fire('toast', {
+                    //         status: 'connectError', text: 'กรุณากรอกข้อมูลให้ครบทุกช่อง', //คำสั่งสำหรับเปิด toast error
+                    //         callback: function () {
+                    //             rej('error')
+                    //         }
+                    //     })
+                    // }
+                })
+            },
+            addReport() {
+                // console.log(1212);
+                this._resiveFormReport()
+                    .then((res) => {
+                        // console.log(res)
+                        this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
+                        this.dispatchAction('POST_REPORT_DETAIL', res)
+                            .then((response) => {
+                                if (response.data.inserted !== undefined && response.data.inserted.length !== 0) {
+                                    this.dispatchAction('GET_REPORT_LIST')
+                                    this.fire('toast', {
+                                        status: 'success', text: this.localizeReport.save_success,  // คำสั่งสำหรับเปิด toast success
+                                        callback: () => {
+                                            this.queryFrom('.required').map((el) => { el.reset(); });
+                                            this.fire('close-drawer')
+                                        }
+                                    })
+                                } else {
+                                    // console.log(1111);
+                                    this.fire('toast', {
+                                        status: 'connectError', text: response.data, //คำสั่งสำหรับเปิด toast error
+                                        callback: () => {
+                                        }
+                                    })
+                                }
+                            })
+                    })
+                    .catch((error) => {
+                        //console.log(error);
+                    });
+            },
+            saveReport() {
+                this._resiveFormReport()
+                    .then((res) => {
+                        // console.log(res)
+                        this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
+                        this.dispatchAction('PUT_REPORT_DETAIL', res)
+                            .then((response) => {
+                                if (response.data.replaced !== undefined && response.data.replaced.length !== 0) {
+                                    this.dispatchAction('GET_REPORT_LIST')
+                                    this.fire('toast', {
+                                        status: 'success', text: this.localizeReport.save_success,  // คำสั่งสำหรับเปิด toast success
+                                        callback: () => {
+                                            this.queryFrom('.required').map((el) => { el.reset(); });
+                                            this.fire('close-drawer')
+                                        }
+                                    })
+                                } else {
+                                    // console.log(1111);
+                                    this.fire('toast', {
+                                        status: 'connectError', text: response.data, //คำสั่งสำหรับเปิด toast error
+                                        callback: () => {
+                                        }
+                                    })
+                                }
+                            })
+                    })
+                    .catch((error) => {
+                        //console.log(error);
+                    });
+            }
+        });
+    </script>
+</dom-module>

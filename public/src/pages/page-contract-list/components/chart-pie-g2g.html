@@ -1,0 +1,258 @@
+<link rel="import" href="../../../../bower_components/chart-elements/chart-pie.html">
+<link rel="import" href="../../../../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../../components/format-number-behavior.html">
+<link rel="import" href="../../../layout/shared-styles.html">
+<dom-module id="chart-pie-g2g">
+  <style is="custom-style" include=" shared-styles">
+     :host {
+      --paper-card: {
+        width: 580px;
+        min-height: 350px;
+        margin: 10px;
+        padding: 5px;
+      }
+      --paper-button: {
+        min-width: 82px;
+      }
+    }
+
+    * {
+
+      font-family: 'CSChatThaiUI', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    iron-icon {
+      cursor: pointer;
+    }
+
+    iron-icon.iconNextRadio {
+      --iron-icon-height: 16px;
+      --iron-icon-width: 16px;
+      --iron-icon-stroke-color: var(--gl-gray-lighter-color);
+      --iron-icon-fill-color: var(--gl-gray-color);
+      margin: 16px 0px 16px 0px;
+    }
+
+    div.title {
+      font-size: var(--font-size-h4);
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    div.textSum {
+      padding-top: 10px;
+    }
+
+    div.textSum>div.flex:nth-child(1),
+    div.textSum>div.flex:nth-child(2) {
+      line-height: 32px;
+    }
+
+    div.textSum>div.flex:nth-child(2) {
+      text-align: right;
+    }
+
+    a>paper-button {
+      text-decoration: none;
+    }
+  </style>
+  <template>
+    <paper-card class="statistic" heading="{{localizeContract.contract_at}} {{data.contract_no}}" alt="{{localizeContract.contract_at}} {{data.contract_no}}">
+      <div class="layout horizontal">
+        <div class="horizontal layout center">
+          <iron-icon icon="chevron-left" item-icon on-tap="chartPiePrevious"></iron-icon>
+        </div>
+        <div class="flex">
+          <!-- <iron-pages selected="{{seleteChartPie}}"> -->
+          <div>
+            <div class="title" id="titleChart">
+              <!--ปริมาณข้าวที่ทำสัญญา / ปริมาณข้าวที่ส่งมอบ-->
+            </div>
+            <div class="horizontal layout">
+              <div class="flex-8">
+                <chart-pie id="chartPie" data="[[dataChartPie]]"></chart-pie>
+              </div>
+
+              <div class="flex-8 layout horizontal textSum">
+                <div class="flex">
+                  <div class="flex">{{localizeContract.total}}</div>
+                  <!-- เปลี่ยนชื่อ localizeContract.rice_contract-->
+                  <div class="flex">[[_labelNames(seleteChartPie)]]</div>
+                  <div class="flex">{{localizeContract.balance}}</div>
+                </div>
+                <div class="flex">
+                  <div class="flex">[[_calTotalRice(seleteChartPie,data)]]</div>
+                  <!--<div class="flex">[[formatNumberNoZero(data.contract_weight)]]</div>-->
+                  <div class="flex">[[_calConfirm(seleteChartPie,data)]]</div>
+                  <div class="flex">[[_calTotal(seleteChartPie,data)]]</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <div class="horizontal layout center">
+          <iron-icon icon="chevron-right" item-icon on-tap="chartPieNext"></iron-icon>
+        </div>
+
+      </div>
+      <div class="layout horizontal center-justified">
+        <iron-icon icon="radio-button-checked" item-icon class="iconNextRadio" id="chartContract" on-tap="chartPiePrevious"></iron-icon>
+        <iron-icon icon="radio-button-unchecked" item-icon class="iconNextRadio" id="chartShipment" on-tap="chartPieNext"></iron-icon>
+      </div>
+      <div class="card-actions horizontal end-justified layout">
+        <paper-button raised on-tap="contractDetail">
+          {{localizeContract.contract}}
+        </paper-button>
+        <paper-button raised on-tap="listConfirm">
+          {{localizeConfirmLetter.ref}}
+
+        </paper-button>
+        <paper-button raised on-tap="listShipment">
+          {{localizeBook.list_vessel}}
+        </paper-button>
+        <paper-button id="number" raised on-tap="listFee">{{localizeContract.fee}}</paper-button>
+        <!--<paper-badge for="number" label="4">
+          </paper-badge>-->
+        <paper-button raised on-tap="listPayment">{{localizeContract.payment}}</paper-button>
+      </div>
+    </paper-card>
+
+  </template>
+  <script>
+    Polymer({
+      is: "chart-pie-g2g",
+      behaviors: [
+        ReduxBehavior, FormatNumberBehavior, nylonBehavior
+      ],
+      properties: {
+        // localize: {
+        //   statePath: 'i18n.g2g'
+        // },
+        localizeContract: {
+          statePath: 'i18n.contract'
+        },
+        localizeConfirmLetter: {
+          statePath: 'i18n.confirmLetter'
+        },
+        localizeBook : {
+          statePath: 'i18n.book'
+        },
+        data: {
+          type: Object,
+        },
+        nameChart: {
+          type: Array,
+          value: ['ทำสัญญา (ตัน)', 'ส่งมอบ (ตัน)']
+        },
+        labelName: {
+          type: Array,
+          value: ['ทำสัญญา', 'ส่งมอบ']
+        },
+        seleteChartPie: {
+          type: Number,
+          value: 0
+        },
+        colorPie: {
+          type: Array,
+          value: ['#003BAE', '#ff4500']
+        },
+        colorBg: {
+          type: Array,
+          value: ['#96b1d2', '#ff9973'] //FC3D32
+        }
+      },
+      attached: function () {
+        this.chartPiePrevious();
+      },
+      _computeChartPie: function (confirm, balance, name, colorPie, colorBg) {
+        // this.fire('okload');
+        return {
+          labels: [
+            // "ทั้งหมด (ตัน)",
+            name,
+            this.localizeContract.balance+"(ตัน)"
+          ],
+          datasets: [
+            {
+              data: [
+                confirm,
+                balance
+              ],
+              backgroundColor: [
+                colorPie,
+                colorBg
+              ],
+              hoverBackgroundColor: [
+                colorPie,
+                colorBg
+              ]
+            }]
+        };
+      },
+      //observe
+      _labelNames: function (seleteChartPie) {
+        return this.labelName[seleteChartPie];
+      },
+      _calTotalRice:function (seleteChartPie, data){
+        if (seleteChartPie == 0) 
+          return this.formatNumberNoZero(data.contract_weight)
+        return this.formatNumberNoZero(data.contract_weight_confirm)
+      },
+      _calConfirm: function (seleteChartPie, data) {
+        if (seleteChartPie == 0) 
+          return this.formatNumberNoZero(data.contract_weight_confirm)
+        return this.formatNumberNoZero(data.contract_weight_book)
+      },
+      _calTotal: function (seleteChartPie, data) {
+        if (seleteChartPie == 0) 
+          return this.formatNumberNoZero(data.contract_weight_confirm_balance)
+        return this.formatNumberNoZero(data.contract_weight_book_balance)
+        
+      },
+      //end_observe
+      chartPiePrevious: function () {
+        this.seleteChartPie = 0;
+        // ปริมาณข้าวที่ทำสัญญา /
+        //  ปริมาณข้าวทีส่งมอบ
+        this.$$('#titleChart').innerHTML = this.localizeContract.rice_contract
+        this.$.chartContract.icon = 'radio-button-checked';
+        this.$.chartShipment.icon = 'radio-button-unchecked';
+        // this.dataChartPie = this._computeChartPie(this.data.contract_quantity_book,this.data.contract_quantity_book_balance,this.nameChart[1],this.colorPie[1]);
+        this.dataChartPie = this._computeChartPie(this.data.contract_weight_confirm, this.data.contract_weight_confirm_balance, this.nameChart[0], this.colorPie[0], this.colorBg[0]);
+
+        // console.log(this.dataChartPie);
+      },
+      chartPieNext: function () {
+        this.seleteChartPie = 1;
+        this.$$('#titleChart').innerHTML = this.localizeContract.rice_sender
+        this.$.chartContract.icon = 'radio-button-unchecked';
+        this.$.chartShipment.icon = 'radio-button-checked';
+        this.dataChartPie = this._computeChartPie(this.data.contract_weight_book, this.data.contract_weight_book_balance, this.nameChart[1], this.colorPie[1], this.colorBg[1]);
+
+        // this.dataChartPie = this._computeChartPie(this.data.contract_quantity_confirm,this.data.contract_quantity_confirm_balance,this.nameChart[0],this.colorPie[0]);
+        // console.log(this.dataChartPie);
+      },
+      contractDetail: function () {
+        this.fire('get-contract-detail', this.data);
+      },
+      listConfirm: function () {
+        this.fire('get-list-confirm', this.data);
+      },
+      listShipment: function () {
+        this.fire('get-list-booking', this.data);
+      },
+      listFee: function () {
+        // document.cookie = "contract_id="+this.data.contract_id;
+        // document.cookie = "contractName="+this.data.contract_name;
+        this.fire('get-list-Fee', this.data);
+      },
+      listPayment: function () {
+        document.cookie = "contract_id=" + this.data.contract_id;
+        document.cookie = "contractName=" + this.data.contract_name;
+        this.fire('nylon-change-page', { path: '/payment-list' })
+      },
+    });
+  </script>
+</dom-module>

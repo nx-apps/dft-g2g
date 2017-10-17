@@ -1,0 +1,87 @@
+{
+    "name": "g2g.confirm_letter",
+    "properties": {
+        "id": {
+            "type": "string"
+        },
+        "buyer_id": {
+            "type": "string"
+        },
+        "contract_id": {
+            "type": "string"
+        },
+        "contract_no": {
+            "type": "number"
+        },
+        "cl_no": {
+            "type": "number"
+        },
+        "cl_date": {
+            "type": "string",
+            "format": "date-time"
+        },
+        "cl_weight": {
+            "type": "number"
+        },
+        "cl_hamonize": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "hamonize_id": {
+                        "type": "string"
+                    },
+                    "hamonize": {
+                        "type": "object"
+                    },
+                    "hamonize_weight": {
+                        "type": "number"
+                    },
+                    "project_th": {
+                        "type": "string"
+                    },
+                    "project_en": {
+                        "type": "string"
+                    },
+                    "tolerance_rate": {
+                        "type": "number"
+                    },
+                    "package": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "package_id": {
+                                    "type": "string"
+                                },
+                                "package": {
+                                    "type": "object"
+                                },
+                                "price_d": {
+                                    "type": "number"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "incoterms": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "inct_id": {
+                        "type": "string"
+                    },
+                    "inct_name": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "cl_status": {
+            "type": "boolean"
+        }
+    }
+}

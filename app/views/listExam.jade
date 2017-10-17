@@ -1,0 +1,44 @@
+div
+    h4="ชื่อชุดข้อสอบ : "+name_examination
+    p="คำอธิบาย : "+description
+    p="จำนวนข้อสอบ : "+qty_question +" ข้อ"
+    p="เวลาในการทำข้อสอบ : "+time+" นาที "
+    p="Key User : "+user.name+ " ("+user.email+")"
+    p="วัตถุประสงค์"
+    table
+        each objective, k in objectives
+            tr
+                td=(k+1)+"."+objective.name+" ("+objective.amount+" ข้อ)"
+    hr
+  table
+        each data, i in datas
+            tr
+                th(style="text-align:left;")ข้อที่ #{i+1}.
+                th(style="text-align:left;") !{data.question}
+            
+            if data.image_id
+                th
+                    td
+                        img(src='/api/image/image/' + data.image_id)
+            else
+                th
+                    td
+        
+            each ch, j in data.choice
+                tr
+                    td(style="text-align:right;")
+                        if ans && ch.check
+                            input(type="radio",checked="checked")
+                        else
+                             input(type="radio")
+
+                    td=j+1+". "+ch.name
+
+                if data.image_id
+                    tr
+                        td
+                            img(src='/api/image/image/' + ch.image_id)
+                else
+                    th
+                        td
+                

@@ -1,0 +1,19 @@
+{
+  "entrypoint": "index.html",
+  "shell": "src/nylon-app.html",
+  "fragments": [
+    "src/pages/page-401/page-401.html",
+    "src/pages/page-404/page-404.html"
+  ],
+  "sourceGlobs": [
+    "src/**/*",
+    "images/**/*",
+    "bower.json",
+    "fonts/**/*"
+  ],
+  "includeDependencies": [
+    "bundle.js",
+    "manifest.json",
+    "bower_components/webcomponentsjs/webcomponents-lite.min.js"
+  ]
+}

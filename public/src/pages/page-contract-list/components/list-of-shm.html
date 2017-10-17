@@ -1,0 +1,337 @@
+<!--<link rel="import" href="shm-det-exporter.html">-->
+<!--<link rel="import" href="list-of-shm-det.html">-->
+<link rel="import" href="./../../../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="./../../../../bower_components/gl-form/gl-form-panel.html">
+<link rel="import" href="./../../../../bower_components/gl-form/gl-form-panel-head.html">
+<link rel="import" href="./../../../../bower_components/gl-form/gl-form-panel-footer.html">
+<link rel="import" href="./../../../../bower_components/gl-form/gl-combo-box.html">
+<link rel="import" href="./../../../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="./../../../../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="./../../../../bower_components/gl-grid/gl-grid-row.html">
+<link rel="import" href="./../../../../bower_components/gl-grid/gl-grid-col.html">
+<link rel="import" href="./../../../../bower_components/gl-form/gl-form-input.html">
+<link rel="import" href="./../../../../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="./../../components/format-number-behavior.html">
+<link rel="import" href="./../../components/g2g-logic-behavior.html">
+
+<link rel="import" href="./../../../layout/shared-styles.html">
+
+<dom-module id="list-of-shm">
+  <style include="shared-styles">
+    table.gl-table-default {
+      width: 100%;
+      border: 1px solid #ddd;
+      margin: 20px 0px 10px 0px;
+    }
+
+    table.gl-table-default>tbody.table-body>tr>td {
+      cursor: pointer;
+    }
+
+    .icon_print {
+      margin-top: 15px;
+    }
+  </style>
+  <template>
+    <paper-button class="gl-btn-default" raised on-tap="backWard2Booking">
+      {{localizeCommon.back_ward}}</paper-button>
+    <gl-form-panel>
+      <div class="horizontal end-justified layout center">
+        <!--<gl-combo-box always-float-label label="{{localizeCommon.print}}" placeholder="{{localizeCommon.print}}" value="{{printReport.typeReport}}"
+          item-label-path="report_name" item-value-path="report_name_id" items="{{report.report_name}}">
+          <template>
+            [[item.report_name]]
+          </template>
+        </gl-combo-box>&nbsp;
+        <gl-combo-box always-float-label label="{{localizeCommon.report_type}}" placeholder="{{localizeCommon.report_type}}" value="{{printReport.typeFile}}"
+          item-label-path="report_type" item-value-path="report_type_id" items="{{report.report_type}}">
+          <template>
+            [[item.report_type]]
+          </template>
+        </gl-combo-box>
+        <div class="icon_print">
+          <paper-icon-button id="printShipment" class="crud" icon="print" raised on-tap="printShipment" hidden="[[!data.shm_status]]"></paper-icon-button>
+          <paper-tooltip for="printShipment" offset="0">{{localizeCommon.print}}</paper-tooltip>
+        </div>-->
+
+      </div>
+      <gl-form-panel-head label="{{localize.text_list_exporter_name}}" set-padding="10px" set-border="1px">
+        <template is="dom-if" if={{!data.book_status}}>
+          <paper-button class="gl-btn-primary" raised on-tap="addBookExporter">{{localizeBook.add_exporter}}</paper-button>
+        </template>
+      </gl-form-panel-head>
+
+      <table class="gl-table-default">
+        <thead class="table-head">
+          <tr>
+            <th>{{localizeBook.no}}</th>
+            <th>{{localizeBook.list_expoter}}</th>
+            <th>{{localizeContract.rice_type}}</th>
+            <th>{{localizeContract.quantity}}</th>
+          </tr>
+        </thead>
+        <tbody class="table-body">
+          <template is="dom-repeat" items="[[data.detail]]">
+            <tr on-tap="bookExporterDetail" data="[[item]]">
+              <td>[[_ObcountIndex(index)]]</td>
+              <td>[[item.company.company_name_th]]</td>
+              <td>[[item.hamonize.hamonize_en]]</td>
+              <td>[[formatNumberNoZero(item.net_weight)]]</td>
+            </tr>
+          </template>
+          <template is="dom-if" if="[[_isHave(data.detail)]]">
+            <tr>
+              <td colspan="4" style="text-align: center"> {{localizeCommon.no_data}}</td>
+            </tr>
+          </template>
+        </tbody>
+      </table>
+      </gl-form-panel-footer>
+    </gl-form-panel>
+    <paper-dialog id="printShipmentReport">
+      <gl-grid-row width="{{getWidth}}">
+        <gl-grid-col width="[[getWidth]]" grid="[[500,4],[700,3]]">
+          [[changeString2Num(printReport.*,'ori')]]
+          <gl-form-input allowed-pattern="[0-9||,||.]" on-focus="_setSeleteValue" label="{{localizeBook.orignals}}" autofocus maxlength="3"
+            format-number="on" always-float-label placeholder="{{localizeBook.orignals}}" value="{{printReport.ori}}"></gl-form-input>
+        </gl-grid-col>
+        <gl-grid-col width="[[getWidth]]" grid="[[500,6],[700,8]]">
+          [[changeString2Num(printReport.*,'nn')]]
+          <gl-form-input allowed-pattern="[0-9||,||.]" on-focus="_setSeleteValue" label="{{localizeBook.n_n}}" maxlength="3" format-number="on"
+            always-float-label placeholder="{{localizeBook.n_n}}" value="{{printReport.nn}}"></gl-form-input>
+        </gl-grid-col>
+      </gl-grid-row>
+      <div class="buttons">
+        <paper-button class="gl-btn-default" dialog-dismiss raised>{{localizeCommon.close}}</paper-button>
+        <paper-button class="gl-btn-primary" on-tap="printShipmentReports" dialog-confirm autofocus raised>{{localizeCommon.print}}</paper-button>
+      </div>
+    </paper-dialog>
+
+    <paper-dialog id="printBook">
+      <!--<gl-grid-row >-->
+      <!--<gl-grid-col width="[[getWidth]]" grid="[[500,4],[700,4]]">-->
+      <div class="layout start-justified">
+        <!--<gl-combo-box style="width: 200px" always-float-label label="{{localizeBook.font_size}}" placeholder="{{localizeClocalizeBookommon.font_size}}"
+          item-label-path="id" item-value-path="id" items="[[fontSize]]" value="{{printReport.fontSize}}">
+          <template>
+            [[item.id]]
+          </template>
+        </gl-combo-box>-->
+        <paper-dropdown-menu label="{{localizeBook.font_size}}">
+          <paper-listbox class="dropdown-content" attr-for-selected="name" selected="{{printReport.fontSize}}" >
+            <template is="dom-repeat" items={{fontSize}}>
+              <paper-item name="{{item.id}}">{{item.id}}</paper-item>
+            </template>
+          </paper-listbox>
+        </paper-dropdown-menu>
+      </div>
+      <!--</gl-grid-col>-->
+      <!--</gl-grid-row>-->
+      <div class="buttons">
+        <paper-button class="gl-btn-default" dialog-dismiss raised>{{localizeCommon.close}}</paper-button>
+        <paper-button class="gl-btn-primary" on-tap="printBookdetail" dialog-confirm autofocus raised>{{localizeCommon.print}}</paper-button>
+      </div>
+    </paper-dialog>
+  </template>
+  <script>
+    Polymer({
+      is: "list-of-shm",
+      behaviors: [
+        ReduxBehavior,
+        nylonBehavior,
+        FormatNumberBehavior, g2gLogicBehavior
+        // g2gCongtroller,
+        // g2gModelBehavior,
+        // nylonLocalizeBehavior
+      ],
+      properties: {
+        localizeBook: {
+          statePath: 'i18n.book'
+        },
+        localizeContract: {
+          statePath: 'i18n.contract'
+        },
+        localizeConfirmLetter: {
+          statePath: 'i18n.confirmLetter'
+        },
+        localizeCommon: {
+          statePath: 'i18n.common'
+        },
+        fontSize: {
+          type: Array,
+          value: [
+            {
+              id: 12,
+            },
+            {
+              id: 14,
+            },
+            {
+              id: 16,
+            }
+          ]
+        },
+        printReport: {
+          type: Object,
+          value: { ori: 3, nn: 12, typeReport: '0', typeFile: 'pdf', fontSize: 12 }
+        },
+        report: {
+          type: Object,
+          value:
+          {
+            report_name:
+            [
+              { report_name: 'ลิสต์เรือ', report_name_id: '0' },
+              { report_name: 'Draf BL', report_name_id: '1' },
+              { report_name: 'หนังสือแจ้งบริษัทเรื่องการส่งมอบข้าว', report_name_id: '2' },
+              // { report_name: 'ใบปะหน้าแจ้งการรับเงิน', report_name_id: '3' },
+              // { report_name: 'รายละเอียดแจ้งการรับเงิน', report_name_id: '4' },
+              { report_name: 'ตารางเรือ', report_name_id: '5' }
+            ],
+            report_type:
+            [
+              { report_type: 'PDF', report_type_id: 'pdf' },
+              { report_type: 'WORD', report_type_id: 'word' },
+              { report_type: 'EXCEL', report_type_id: 'excel' }
+            ]
+          }
+        },
+        data: {
+          statePath: 'book.bookExporterList'
+        },
+        contractId: {
+          statePath: 'commonState.contractId',
+          // observer: 'get'
+        },
+        confirmId: {
+          statePath: 'commonState.confirmId',
+          // observer: 'get'
+        },
+        bookId: {
+          statePath: 'commonState.bookId',
+          // observer: 'get'
+        },
+      },
+      backWard2Booking: function () {
+        // console.log(this.dataForSelect);
+        this.fire('_list-book', 'list-of-booking')
+        this.dispatchAction('SET_BREADCRUMBS', [{
+          label: 'สัญญาที่ ' + this.contractId.contract_no,
+          href: ''
+        },
+        {
+          label: 'งวดที่ ' + this.confirmId.cl_no,
+          href: ''
+        },
+        ])
+        // this.fire('_set-breadcrumbs', this.dataForSelect.breadcrumbs)
+      },
+      printShipment: function () {
+        let book_id = this.data.id
+        switch (this.printReport.typeReport) {
+          case '0':
+
+            this.$.printBook.toggle();
+            // window.open(window._config.reportServer + '/api/rice/report1?id=' + book_id + '&export=' + this.printReport.typeFile, '1');
+            break;
+          case '1':
+            this.$.printShipmentReport.toggle();
+            break;
+          case '2':
+            window.open(window._config.reportServer + '/api/rice/report3?id=' + book_id + '&export=' + this.printReport.typeFile, '1');
+            break;
+          case '3':
+            window.open(window._config.reportServer + '/api/rice/report3?id=' + book_id + '&export=' + this.printReport.typeFile, '1');
+            break;
+          case '5':
+            window.open(window._config.reportServer + '/api/rice/report4?id=' + this.confirmId.cl_id + '&export=' + this.printReport.typeFile, '1');
+            break;
+          default:
+            break;
+        }
+
+      },
+      printShipmentReports: function () {
+        let book_id = this.data.id
+        // window.open(window._config.reportServer+'/api/shipment/report1?shm_id='+this.data.shm_id+'&ori='+this.printReport.ori+'&nn='+this.printReport.nn,'1');
+        window.open(window._config.reportServer + '/api/rice/report2?id=' + book_id + '&ori=' + this.printReport.ori + '&nn=' + this.printReport.nn + '&export=' + this.printReport.typeFile, '1');
+      },
+      printBookdetail: function () {
+        let book_id = this.data.id
+        window.open(window._config.reportServer + '/api/rice/report1?id=' + book_id + '&export=' + this.printReport.typeFile + '&size=' + this.printReport.fontSize, '1');
+      },
+      bookExporterDetail: function (e) {
+        let url = { id: e.currentTarget.data.id }
+        this.dispatchAction('SET_BREADCRUMBS', [{
+          label: this.localizeContract.contract_at+' '+ this.contractId.contract_no,
+          href: ''
+        },
+        {
+          label: this.localizeConfirmLetter.ref_no+' ' + this.confirmId.cl_no,
+          href: ''
+        },
+        {
+          label: this.localizeBook.vessel_no+' ' + this.bookId.ship_lot,
+          href: ''
+        },
+        {
+          label: this.localizeBook.expoter +' '+ e.currentTarget.data.company.company_name_th,
+          href: ''
+        },
+        ])
+        // console.log(e.currentTarget.data.company.company_name_th)
+        this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
+        this.dispatchAction('SET_STATE', {
+          isInsert: false,
+          btnDisabled: true,
+          hiddend: true
+        })
+
+        this.dispatchAction('GET_BOOK_EXPORTER_DETAIL', this.genUrl(url))
+        this.async(() => {
+          this.fire('toast', {
+            status: 'success', text: this.localizeCommon.load_successfully, callback: () => {
+              this.fire('_list-book', 'list-of-booking-exporter-detail')
+            }
+          })
+        }, 500)
+
+      },
+      addBookExporter: function (e) {
+        this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
+        this.dispatchAction('CLEAR_BOOK_DETAIL_EXPORTER')
+        this.dispatchAction('SET_STATE', {
+          isInsert: true,
+          btnDisabled: false,
+          hiddend: true
+        })
+        this.dispatchAction('SET_BREADCRUMBS', [{
+          label: this.localizeContract.contract_at+' ' + this.contractId.contract_no,
+          href: ''
+        },
+        {
+          label: this.localizeConfirmLetter.ref_no+' ' + this.confirmId.cl_no,
+          href: ''
+        },
+        {
+          label:  this.localizeBook.vessel_no+' '+ this.bookId.ship_lot,
+          href: ''
+        },
+        {
+          label: this.localizeBook.add_exporter,
+          href: ''
+        },
+        ])
+        // this.dispatchAction('GET_BOOK_EXPORTER_DETAIL', this.genUrl(url))
+        this.async(() => {
+          this.fire('toast', {
+            status: 'success', text: this.localizeCommon.load_successfully, callback: () => {
+              this.fire('_list-book', 'list-of-booking-exporter-detail')
+            }
+          })
+        }, 500)
+      },
+
+    });
+  </script>
+</dom-module>

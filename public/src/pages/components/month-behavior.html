@@ -1,61 +1,98 @@
 <script>
     MonthBehavior={
-        getMonthName:function(id){
-            let month = ['เดือน','มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม',
-            'มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
-            return month[id];
-        },
-        getMonth:function(){
-            return [
+        properties:{
+            month:{
+                    type:Array,
+                    value:[
                         {
-                            id: '1',
+                            id: 1,
                             name: 'มกราคม'
                         },
                         {
-                            id: '2',
+                            id: 2,
                             name: 'กุมภาพันธ์'
                         },
                         {
-                            id: '3',
+                            id: 3,
                             name: 'มีนาคม'
                         },
                         {
-                            id: '4',
+                            id: 4,
                             name: 'เมษายน'
                         },
                         {
-                            id: '5',
+                            id: 5,
                             name: 'พฤษภาคม'
                         },
                         {
-                            id: '6',
+                            id: 6,
                             name: 'มิถุนายน'
                         },
                         {
-                            id: '7',
+                            id: 7,
                             name: 'กรกฎาคม'
                         },
                         {
-                            id: '8',
+                            id: 8,
                             name: 'สิงหาคม'
                         },
                         {
-                            id: '9',
+                            id: 9,
                             name: 'กันยายน'
                         },
                         {
-                            id: '10',
+                            id: 10,
                             name: 'ตุลาคม'
                         },
                         {
-                            id: '11',
+                            id: 11,
                             name: 'พฤศจิกายน'
                         },
                         {
-                            id: '12',
+                            id: 12,
                             name: 'ธันวาคม'
                         }
-                    ];
+                    ]
+                       
+                }
+        },
+        getMonthName:function(id){
+            if(id == '1'){
+                return 'มกราคม'
+            }
+            else if(id == '2'){
+                return 'กุมภาพันธ์'
+            }
+            else if(id == '3'){
+                return 'มีนาคม'
+            }
+            else if(id == '4'){
+                return 'เมษายน'
+            }
+            else if(id == '5'){
+                return 'พฤษภาคม'
+            }
+            else if(id == '6'){
+                return 'มิถุนายน'
+            }
+            else if(id == '7'){
+                return 'กรกฎาคม'
+            }
+            else if(id == '8'){
+                return 'สิงหาคม'
+            }
+            else if(id == '9'){
+                return 'กันยายน'
+            }
+            else if(id == '10'){
+                return 'ตุลาคม'
+            }
+            else if(id == '11'){
+                return 'พฤศจิกายน'
+            }
+            else if(id == '12'){
+                return 'ธันวาคม'
+            }
         }
     }
 </script>

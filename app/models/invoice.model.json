@@ -1,0 +1,36 @@
+{
+    "name": "g2g.invoice",
+    "properties": {
+        "id": {
+            "type": "string"
+        },
+        "book_id": {
+            "type": "string"
+        },
+        "invoice_date": {
+            "type": "string",
+            "format": "date-time"
+        },
+        "invoice_type": {
+            "type": "string"
+        },
+        "invoice_no": {
+            "type": "string"
+        },
+        "invoice_year": {
+            "type": "number"
+        },
+        "made_out_to": {
+            "type": "string"
+        },
+        "invoice_status": {
+            "type": "boolean"
+        },
+        "cl_id": {
+            "type": "string"
+        },
+        "contract_id": {
+            "type": "string"
+        }
+    }
+}

@@ -1,0 +1,130 @@
+<link rel="import" href="./../../components/format-number-behavior.html">
+<link rel="import" href="./../../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="./../../../../bower_components/paper-icon-button/paper-icon-button.html">
+<!-- <link rel="import" href="./../../components/cookie-behavior.html"> -->
+<link rel="import" href="./../../components/g2g-logic-behavior.html">
+
+<dom-module id="list-of-fee-detail">
+  <style include="iron-flex iron-flex-factors iron-flex-alignment gl-styles page-style">
+    * {
+      font-family: 'CSChatThaiUI', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    .labelSearch {
+      font-size: var(--font-size-h4);
+      margin: 10px 10px 10px 10px;
+    }    
+    .table-body>tr>td {
+      cursor: pointer;
+    }    
+    .title {
+      margin: 16px;
+      text-align: left;
+      font-size: var(--font-size-h4);
+    }    
+    table.gl-table-default {
+      width: 98%;
+      border: 1px solid #ddd;
+      margin-bottom: 15px;
+    }    
+    table.gl-table-default>thead.table-head>tr>th {
+      text-align: center;
+    }    
+    /*table.gl-table-default>thead.table-head>tr>th:nth-child(1) {
+      width: 15%;
+    }*/    
+    table.gl-table-default>tbody.table-body>tr>td:not(:first-child) {
+      text-align: right;
+    }
+  </style>
+  <template>
+    <div class="flex searchInput horizontal center-justified layout">
+      <div class="flex title">{{localize.contract_name}} : [[contractId.contract_name]]
+      </div>
+      <div class="flex horizontal end-justified layout">
+        <div class="labelSearch">{{localize.text_fee_no}}</div>{{_searchInArray(searchInput)}}
+        <paper-input label=" " no-label-float value="{{searchInput}}"></paper-input>
+        <paper-icon-button icon="search"></paper-icon-button>
+      </div>
+    </div>
+    <div class="horizontal center-justified layout">
+      <table class="gl-table-default">
+        <thead class="table-head">
+          <tr>
+            <th>{{localize.cal_no}}</th>
+            <th>{{localize.fee_no}}</th>
+            <th>{{localize.additional}}<br>{{localize.fee_round}}</th>
+            <th>{{localize.invoice_no}}</th>
+            <th>{{localize.invoice_count}}</th>
+            <th>{{localize.amount}}{{localize.money}} ({{localize.baht}})</th>
+            <th>{{localize.expenses_fee}} ({{localize.baht}})</th>
+            <th>{{localize.expenses_one_present}} ({{localize.baht}})</th>
+            <th>{{localize.balance}} ({{localize.baht}})</th>
+          </tr>
+        </thead>
+        <tbody class="table-body">
+          <template is="dom-repeat" items="{{data}}">
+            <tr data="[[item]]" on-tap="getFeeDetail"  hidden="{{item.hidden}}">
+              <td><div style="text-align:right;">{{item.cl_no}}</div></td>
+              <td>[[item.fee_no]]</td>
+              <td>[[obRound(item.fee_round)]]</td>
+              <td><div style="text-align:left;">[[item.invoice_no]]</div></td>
+              <td>[[item.invoice_count]]</td>
+              <td>[[formatNumber(item.value_b)]]</td>
+              <td>[[formatNumber(item.value_fee_b)]]</td>
+              <td>[[formatNumber(item.value_tax_b)]]</td>
+              <td>[[formatNumber(item.value_final_b)]]</td>
+            </tr>
+          </template>
+          <template is="dom-if" if="[[_isShow(data,data.*)]]">
+            <tr>
+              <td colspan="9" style="text-align:center"> {{localize.no_data}}</td>
+            </tr>
+          </template>
+        </tbody>
+      </table>
+    </div>
+  </template>
+  <script>
+    Polymer({
+      is: "list-of-fee-detail",
+      behaviors: [ReduxBehavior, FormatNumberBehavior, g2gLogicBehavior, CookieBehavior],
+      properties: {
+        localize:{
+          statePath : 'i18n.fee'
+        },
+        data:{
+          // statePath : 'fee.list'
+        },
+        contractId: {
+          statePath: 'commonState.contractId',
+          // observer: 'get'
+        },
+      },
+      _searchInArray: function (searchInput) {
+        try {
+          for (var index = 0; index < this.data.length; index++) {
+            if (String(this.data[index].fee_no).search(String(searchInput)) > -1) {
+
+              this.set('data.' + index + '.hidden', false)
+            } else {
+              this.set('data.' + index + '.hidden', true)
+            }
+          }
+        } catch (e) {
+
+        }
+      },
+      getFeeDetail: function (e) {
+        this.fire('get-fee-detail', { detail: e.currentTarget.data });
+      },
+      obRound: function(data){
+        if(data == 0){
+          return ''
+        }else{
+          return data
+        }
+      }
+    });
+  </script>
+</dom-module>

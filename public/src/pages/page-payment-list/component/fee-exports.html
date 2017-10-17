@@ -1,0 +1,331 @@
+<link rel="import" href="fee-exports-sum.html">
+<link rel="import" href="fee-exports-invoice.html">
+<link rel="import" href="./../../components/g2g-logic-behavior.html">
+<link rel="import" href="./../../../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="./../../../../bower_components/gl-form/gl-form-panel.html">
+<link rel="import" href="./../../../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="./../../../../bower_components/paper-tooltip/paper-tooltip.html">
+<link rel="import" href="./../../../../bower_components/gl-form/gl-form-input.html">
+<link rel="import" href="./../../../../bower_components/gl-form/gl-combo-box.html">
+<link rel="import" href="./../../../../bower_components/gl-grid/gl-grid-row.html">
+<link rel="import" href="./../../../../bower_components/gl-grid/gl-grid-col.html">
+<link rel="import" href="./../../components/format-number-behavior.html">
+<link rel="import" href="./../../components/validateFormBehaviors.html">
+
+<dom-module id="fee-exports">
+  <style include="iron-flex iron-flex-factors iron-flex-alignment gl-styles page-style">
+     :host {
+      display: block;
+    }
+
+    * {
+      font-family: 'CSChatThaiUI', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    main {
+      padding: 5px;
+      margin: 0 auto;
+    }
+
+    section {
+      display: none;
+      border-top: 1px solid #ddd;
+    }
+
+    input {
+      display: none;
+    }
+
+    label {
+      display: inline-block;
+      margin: 0 0 -1px;
+      padding: 15px 25px;
+      font-weight: 600;
+      text-align: center;
+      color: #bbb;
+      border: 1px solid transparent;
+      background: #D5D8DC;
+    }
+
+    label:before {
+      font-family: fontawesome;
+      font-weight: normal;
+      margin-right: 10px;
+    }
+
+    label:hover {
+      color: #888;
+      cursor: pointer;
+    }
+
+    input:checked+label {
+      color: #555;
+      border: 1px solid #ddd;
+      border-top: 3px solid orange;
+      border-bottom: 1px solid #fff;
+      background: #fff;
+    }
+
+    #tab1:checked~#content1,
+    #tab2:checked~#content2 {
+      display: block;
+    }
+
+    #content1,
+    gl-form-panel {
+      width: 98%;
+    }
+
+    .content-fee {
+      margin: 15px;
+    }
+
+    .text-header {
+      margin: 20px 0px 20px 0px;
+      font-size: 20px;
+    }
+  </style>
+  <template>
+    <div class="content-fee">
+      <paper-material elevation="1" class="paper-meterial">
+        <div class="horizontal center-justified layout wrap">
+          <gl-form-panel set-padding="0px 0px 0px 0px" set-border="0px">
+
+            <template is="dom-if" if="[[!common.isInsert]]">
+              <template is="dom-if" if={{!data.fin_status}}>
+                <template is="dom-if" if={{!data.rice_status}}>
+                  <div class="horizontal end-justified layout">
+                    <paper-icon-button id="print" class="crud" icon="print" raised on-tap="printInput" disabled="[[!common.btnDisabled]]"></paper-icon-button>
+                    <paper-tooltip for="print" offset="0">{{localize.print}}</paper-tooltip>
+                    <paper-icon-button id="edit" class="crud" icon="create" raised on-tap="editInput" disabled="[[!common.btnDisabled]]"></paper-icon-button>
+                    <paper-tooltip for="edit" offset="0">{{localize.edit}}</paper-tooltip>
+                    <paper-icon-button id="delete" class="crud" icon="delete" raised on-tap="_delete" disabled="[[!common.btnDisabled]]"></paper-icon-button>
+                    <paper-tooltip for="delete" offset="0">{{localize.delete}}</paper-tooltip>
+                  </div>
+                </template>
+              </template>
+
+              <template is="dom-if" if={{data.fin_status}}>
+                <template is="dom-if" if={{data.rice_status}}>
+                  <div class="horizontal end-justified layout">
+                    <paper-icon-button id="delete" class="crud" icon="delete" raised on-tap="_delete" disabled="[[!common.btnDisabled]]"></paper-icon-button>
+                    <paper-tooltip for="delete" offset="0">{{localize.delete}}</paper-tooltip>
+                  </div>
+                </template>
+              </template>
+            </template>
+
+            <template is="dom-if" if="[[!common.riceInput]]">
+              <template is="dom-if" if={{data.fin_status}}>
+                <template is="dom-if" if={{!data.rice_status}}>
+                  <div class="horizontal end-justified layout">
+                    <paper-icon-button id="edit" class="crud" icon="create" raised on-tap="editInputRice" disabled="[[common.btnRice]]"></paper-icon-button>
+                    <paper-tooltip for="edit" offset="0">{{localize.edit}}</paper-tooltip>
+                  </div>
+                </template>
+              </template>
+            </template>
+
+            <div name="averagePage">
+              <div class="flex-center-justified">
+                <div class="text-header">{{localize.rice_detail_and_payout}}</div>
+              </div>
+              <div class="container">
+                <gl-grid-row width="{{getWidth}}">
+                  <gl-grid-col width="[[getWidth]]" grid="[[300,6],[500,3]]">
+                    <gl-form-input type="date" class="required" on-focus="_setSeleteValue" required disabled="[[common.btnDisabled]]" label="{{localize.received_date}}"
+                      value="{{data.fee_date}}" always-float-label></gl-form-input>
+                  </gl-grid-col>
+                  <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
+                    [[changeString2Num(data.*,'rate_tt_b')]]
+                    <gl-form-input autofocus class="required" required on-focus="_setSeleteValue" label="{{localize.exchange_rate}} [[data.payterm]]" disabled="[[common.btnDisabled]]"
+                      allowed-pattern="[0-9||,||.]" format-number="on" value="{{data.rate_tt_b}}" always-float-label></gl-form-input>
+                  </gl-grid-col>
+                  <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
+                    [[changeString2Num(data.*,'rate_bank_b')]]
+                    <gl-form-input class="required" required on-focus="_setSeleteValue" label="{{localize.exchange_rate_bank}}" disabled="[[common.btnDisabled]]" allowed-pattern="[0-9||,||.]"
+                      format-number="on" value="{{data.rate_bank_b}}" always-float-label></gl-form-input>
+                  </gl-grid-col>
+                </gl-grid-row>
+              </div>
+              <div class="container">
+                <gl-grid-row>
+                  <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+                    [[changeString2Num(data.*,'fee_ex_d')]]
+                    <gl-form-input class="required" required on-focus="_setSeleteValue" label="{{localize.fee_out}} ({{localize.usd}})" disabled="[[common.btnDisabled]]"
+                      allowed-pattern="[0-9||,||.]" format-number="on" value="{{data.fee_ex_d}}" always-float-label></gl-form-input>
+
+                  </gl-grid-col>
+                  <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+                    [[changeString2Num(data.*,'fee_in_b')]]
+                    <gl-form-input class="required" required on-focus="_setSeleteValue" disabled="[[common.btnDisabled]]" allowed-pattern="[0-9||,||.]" format-number="on"
+                      label="{{localize.fee_in}} ({{localize.baht}})" value="{{data.fee_in_b}}" always-float-label></gl-form-input>
+                  </gl-grid-col>
+                </gl-grid-row>
+              </div>
+              <div class="container">
+                <gl-grid-row>
+                  <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+                    <gl-form-input disabled format-number="on" label="{{localize.received}} ({{localize.usd}})" value="{{data.amount_usd}}" always-float-label></gl-form-input>
+                  </gl-grid-col>
+                  <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+                    <gl-form-input disabled format-number="on" label="{{localize.received}} ({{localize.thb}})" value="{{calBath(data.rate_bank_b,data.amount_usd)}}"
+                      always-float-label></gl-form-input>
+                  </gl-grid-col>
+                  <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+                    <gl-form-input disabled format-number="on" label="{{localize.fee_total}} ({{localize.baht}})" value="{{data.value_fee_b}}"
+                      always-float-label></gl-form-input>
+                  </gl-grid-col>
+                </gl-grid-row>
+              </div>
+              [[changeString2Num(data.*,'balanceLessFees')]] {{_balanceLessFees(data.amount_usd,data.fee_ex_d)}} [[changeString2Num(data.*,'balanceChangeBath')]]
+              {{_balanceChangeBath(data.rate_bank_b,data.balanceLessFees)}} [[changeString2Num(data.*,'feeTotalWithOutUsd')]]
+              [[changeString2Num(data.*,'totalbath')]] [[_balanceBath(data.balanceChangeBath,data.feeTotalWithOutUsd)]]
+
+              <fee-exports-invoice id="fee-exports-invoice" fee-ex="{{data.fee_ex_d}}" 
+              fee-in="{{data.fee_in_b}}" 
+              rate-bank="{{data.rate_bank_b}}" 
+              rate-tt="{{data.rate_tt_b}}"
+              invoice-index="[[_ObcountIndex(index)]]" 
+              invoice-page="[[data.invoicePage]]"
+                is-input-disabled="[[common.btnDisabled]]" check-required="{{check_required}}"></fee-exports-invoice>
+            </div>
+          </gl-form-panel>
+        </div>
+      </paper-material>
+
+    </div>
+  </template>
+  <script>
+    Polymer({
+      is: "fee-exports",
+      behaviors: [ReduxBehavior, nylonBehavior, FormatNumberBehavior, g2gLogicBehavior, ValidateFormBehavior, CookieBehavior],
+      properties: {
+        localize: {
+          statePath: 'i18n.fee'
+        },
+        data: {
+          statePath: 'fee.list_calc'
+        },
+        pages: {
+          type: String,
+          value: "averagePage"
+        },
+        common: {
+          statePath: 'commonState.setState'
+        },
+        check_required: {
+          type: Boolean,
+          value: false,
+          notify: true
+        },
+        list_fee:{
+          statePath: 'fee.list_id'
+        }
+      },
+      observers: [
+        '_getUSD(data)',
+        '_invoicePage(data)',
+        'calRep(data.rate_bank_b,data.fee_ex_d,data.fee_in_b)'
+      ],
+      listeners: {
+        'check-required': 'checkRequired',
+        'reset-form': '_resetForm',
+        'cancel-fee': 'cancelFee'
+      },
+      checkRequired: function () {
+        var check = this.validateForm('.required');
+        this.set('check_required', check);
+      },
+      _resetForm: function(){
+        this.queryFrom('.required').map((el) => { el.reset(); });
+      },
+      _getUSD: function (data) {
+        if (typeof data.book !== 'undefined') {
+          var total = 0;
+          data.book.map((item) => {
+            total += item.value_d;
+          })
+          this.set('data.amount_usd', total);
+        }
+      },
+      _balanceLessFees(amount_usd, fee_ex_d) {
+        this.data.balanceLessFees = amount_usd - fee_ex_d
+        this.notifyPath('data.balanceLessFees');
+      },
+      calBath(rate_bank_b, amount_usd) {
+        return this.formatNumber(numeral().unformat(rate_bank_b) * amount_usd)
+      },
+      calRep(rate_bank_b, fee_ex_d, fee_in_b) {
+        if (rate_bank_b !== '' & fee_ex_d !== '' & fee_in_b !== '') {
+          var calc_value_fee_b = ((numeral().unformat(rate_bank_b) * numeral().unformat(fee_ex_d)) + numeral().unformat(fee_in_b));
+          this.set('data.value_fee_b', Number(calc_value_fee_b.toFixed(2)));
+        } else {
+          this.set('data.value_fee_b', 0);
+        }
+      },
+      _balanceChangeBath: function (rate_bank_b, balanceLessFees) {
+        this.data.balanceChangeBath = rate_bank_b * balanceLessFees;
+        this.notifyPath('data.balanceChangeBath');
+      },
+      _balanceBath(balanceChangeBath, feeTotalWithOutUsd) {
+        try {
+          this.data.totalbath = balanceChangeBath - feeTotalWithOutUsd;
+          this.notifyPath('data.totalbath');
+        } catch (e) {
+        }
+      },
+      _invoicePage: function (invoice = 1) {
+        if (typeof invoice.book !== 'undefined') {
+          this.data.invoicePage = invoice.book.length;
+          this.notifyPath('data.invoicePage');
+        }
+      },
+      editInput: function () {
+        this.dispatchAction('SET_STATE', {
+          isInsert: false,
+          btnDisabled: false,
+          inputRice: true,
+          btnRice: true
+        });
+      },
+      _delete: function () {
+        if(typeof this.data.id !== 'undefined'){
+          this.fire('toast', {
+            status: 'openDialog',
+            text: 'ต้องการลบคิดค่าธรรมเนียมใช่หรือไม่',
+            confirmed: (result) => {
+              if (result === true) {
+                this.dispatchAction('FEE_DELETE', this.data.id);
+              }
+            }
+          })
+        }else{
+          this.fire('toast', {
+            status: 'openDialog',
+            text: 'ต้องการลบคิดค่าธรรมเนียมใช่หรือไม่',
+            confirmed: (result) => {
+              if (result === true) {
+                this.list_fee.map((id) => {
+                  this.dispatchAction('FEE_DELETE', id);
+                });
+              }
+            }
+          });
+        }
+      },
+      editInputRice: function () {
+        this.dispatchAction('SET_STATE', {
+          isInsert: true,
+          btnDisabled: true,
+          inputRice: false,
+          btnRice: true
+        });
+      },
+      printInput: function(){
+        window.open(window._config.reportServer+'/api/finance/report3?fee_date=' + this.data.fee_date +'&contract_id='+ this.getCookieBhv("contract_id") + '&export=' + 'pdf');
+      }
+    });
+  </script>
+</dom-module>

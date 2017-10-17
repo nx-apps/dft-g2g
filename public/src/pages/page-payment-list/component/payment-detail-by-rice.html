@@ -1,0 +1,128 @@
+<link rel="import" href="./../../components/format-number-behavior.html">
+<link rel="import" href="./../../../../bower_components/paper-checkbox/paper-checkbox.html">
+<link rel="import" href="./../../../../bower_components/gl-grid/gl-grid-row.html">
+<link rel="import" href="./../../../../bower_components/gl-grid/gl-grid-col.html">
+<link rel="import" href="./../../../../bower_components/gl-form/gl-form-input.html">
+
+
+<dom-module id="payment-detail-by-rice">
+  <style include="gl-styles">
+     :host {
+      display: block;
+    }
+
+    table.gl-table-default {
+      width: 98%;
+      border: 1px solid #ddd;
+      margin-bottom: 15px;
+    }
+
+    table.gl-table-default>thead.table-head>tr>th,
+    table.gl-table-default>tbody.table-body>tr>td,
+    table.gl-table-default>thead.table-head>tr>th {
+      text-align: center;
+    }
+
+    table.gl-table-default>tbody.table-body>tr>td:nth-child(3) {
+      text-align: left;
+    }
+
+    table.gl-table-default>tbody.table-body>tr>td:nth-child(1),
+    table.gl-table-default>tbody.table-body>tr>td:nth-child(2) {
+      width: 5%;
+    }
+
+    table.gl-table-default>tbody.table-body>tr>td:nth-child(3),
+    table.gl-table-default>tbody.table-body>tr>td:nth-child(4) {
+      width: 20%;
+    }
+
+    table.gl-table-default>tbody.table-body>tr>td:nth-child(5),
+    table.gl-table-default>tfoot.table-foot>tr>td:nth-child(3) {
+      text-align: right;
+      width: 15%;
+    }
+  </style>
+  <template>
+    <br>
+    <table class="gl-table-default">
+      <thead class="table-head">
+        <tr>
+          <th></th>
+          <th>{{localize.booking_code}}</th>
+          <th>{{localize.booking_name}}</th>
+          <th>{{localize.total_tons}}</th>
+          <th>{{localize.amount}}</th>
+        </tr>
+        </tr>
+      </thead>
+      <tbody class="table-body">
+        <template is="dom-repeat" items="[[data]]">
+          <tr>
+            <td>
+              <paper-checkbox id="[[index]]" class="checkBox" data="{{item}}" exporter-id="{{item.exporter_id}}" on-tap="calR2R" checked="{{item.status}}"></paper-checkbox>
+            </td>
+            <td>[[item.keyword]]</td>
+            <td>[[item.statusName]]</td>
+            <td>[[formatNumberNoZero(item.weightAll)]]</td>
+            <td style="text-align: center;">-</td>
+          </tr>
+        </template>
+      </tbody>
+    </table>
+    <gl-grid-row width="{{getWidth}}">
+      <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,2]]"></gl-grid-col>
+      <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+        <gl-form-input disabled label="{{localize.total_ton}} :" placeholder="0" value="{{data.total_ton}}" name="total_ton"></gl-form-input>
+      </gl-grid-col>
+      <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+        <gl-form-input disabled label="{{localize.amount_total}} :" placeholder="-" value="{{data.total_price}}" name="total_price"></gl-form-input>
+      </gl-grid-col>
+    </gl-grid-row>
+  </template>
+  <script>
+    Polymer({
+      is: "payment-detail-by-rice",
+      behaviors: [
+        ReduxBehavior,
+        FormatNumberBehavior,
+        nylonBehavior
+        // nylonLocalizeBehavior
+      ],
+      properties: {
+        localize: {
+          statePath: 'i18n.payment'
+        },
+        data: {
+          statePath: 'payment.siloDetail',
+          // type: Array,
+          // value: [
+          //   { keyword: 'Rx1234', name: 'ข้าวขาว 5 %', weightAll: 5000, text_amount: 200000 },
+          //   { keyword: 'Rx1235', name: 'ข้าวขาว 15 %', weightAll: 15000, text_amount: 400000 },
+          //   { keyword: 'Rx1236', name: 'ข้าวขาว 25 %', weightAll: 25000, text_amount: 500000 },
+          //   { keyword: 'Rx1237', name: 'ข้าวขาว 35 %', weightAll: 35000, text_amount: 700000 },
+          //   { keyword: 'Rx1238', name: 'ข้าวขาว 45 %', weightAll: 50000, text_amount: 1050000 },
+          // ],
+          // observer: '_setCheckBox'
+        },
+      },
+      // created:function(){
+      //     this.nylonLocalizeImport('/i18n-page1.json');
+      // },
+      // calR2R: function () {
+      //   // console.log(this.dataFake);
+      //   this.set('data.total_ton', 0);
+      //   this.set('data.total_price',0);
+      //   // console.log(this.dataFake.filter((item) => item.status == false || typeof item.status == 'undefined' && item.status == undefined));
+      //   // console.log(this.dataFake[0].status == false);
+      //   // console.log(typeof this.dataFake[0].status == 'undefined');
+      //   // console.log(this.dataFake[0].status == undefined);
+
+      //   let dataR2r = this.dataFake.filter((item) => item.status == true);
+      //   this.set('data.total_ton', Object.keys(dataR2r).reduce((previous, current) => previous + dataR2r[current].weightAll, 0).toFixed(2));
+      //   this.set('data.total_price',Object.keys(dataR2r).reduce((previous, current) => previous + dataR2r[current].value , 0))
+      //   // total_price
+      // },
+    });
+  </script>
+</dom-module>

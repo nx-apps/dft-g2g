@@ -1,0 +1,363 @@
+<!--<link rel="import" href="cheque-detail-invoice.html">-->
+<link rel="import" href="./../../../../bower_components/gl-form/gl-form-input.html">
+<link rel="import" href="./../../components/validateFormBehaviors.html">
+<link rel="import" href="./../../components/format-number-behavior.html">
+
+<link rel="import" href="./../../../../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="./../../../../bower_components/neon-animation/animations/scale-up-animation.html">
+<link rel="import" href="./../../../../bower_components/neon-animation/animations/fade-out-animation.html">
+<link rel="import" href="./../../../../bower_components/vaadin-date-picker/vaadin-date-picker.html">
+<link rel="import" href="./../../../../bower_components/gl-form/gl-form-panel.html">
+<link rel="import" href="./../../../../bower_components/gl-grid/gl-grid-row.html">
+<link rel="import" href="./../../../../bower_components/gl-grid/gl-grid-col.html">
+<link rel="import" href="./../../components/g2g-logic-behavior.html">
+<dom-module id="cheque-detail">
+  <style include="iron-flex iron-flex-factors iron-flex-alignment gl-styles">
+     :host {
+      display: block;
+    }
+
+     :host {
+      display: block;
+    }
+
+    table.gl-table-default {
+      width: 98%;
+      border: 1px solid #ddd;
+      margin-bottom: 15px;
+    }
+
+    table.gl-table-default>thead.table-head>tr>th,
+    table.gl-table-default>tbody.table-body>tr>td,
+    table.gl-table-default>thead.table-head>tr>th {
+      text-align: center;
+    }
+
+    table.gl-table-default>tbody.table-body>tr>td:nth-child(2),
+    table.gl-table-default>tbody.table-body>tr>td:nth-child(3) {
+      text-align: left;
+    }
+
+
+
+    vaadin-date-picker {
+      margin-top: -27px;
+    }
+  </style>
+  <template>
+    <gl-form-panel set-padding="10px 20px 10px 20px" set-border="1px">
+      <!--<template is="dom-repeat" items="[[data]]">-->
+      <!--<div class="gl-panel-default">-->
+      <div class="horizontal center-justified layout" style="overflow-x:auto;">
+        <table class="gl-table-default">
+          <thead class="table-head">
+            <tr>
+              <th style="width: 50px;">
+                <paper-checkbox on-tap="_selectDataAll" checked="{{selectDataAll}}"></paper-checkbox>
+              </th>
+              </th>
+              <th style="width: 70px">{{localize.period_no}}</th>
+              <th style="width: 70px;">{{localize.order_no}}</th>
+              <th style="width: 70px;">{{localize.round}}</th>
+              <th style="width: 240px; text-align: left;">{{localize.company}}</th>
+              <th style="width: 170px; text-align: right;">{{localize.total_money}}</th>
+              <th style="width: 140px;">{{localize.invoice_no}}</th>
+              <th style="width: 140px;">{{localize.invoice_date}}</th>
+              <th style="width: 180px">{{localize.cheque_no}}</th>
+            </tr>
+            </tr>
+          </thead>
+          <tbody class="table-body">
+            <template is="dom-repeat" items="{{data}}">
+              <tr style="{{checkStatus(item.cheque_status)}}">
+                <td>
+                  <paper-checkbox data="{{item}}" checked="{{item.check}}" disabled="{{item.cheque_status}}" on-tap="setNoCheque"></paper-checkbox>
+                </td>
+                <td>[[item.cl_no]]</td>
+                <td>[[item.fee_no]]</td>
+                <td>[[item.fee_round]]</td>
+                <td style="text-align: left;">[[item.company.company_name_th]] </td>
+                <td style="text-align: right;">[[formatNumber(item.value_final_b)]] </td>
+                <td>
+                  <gl-form-input placeholder="{{localize.invoice_no}}" disabled="{{item.cheque_status}}" no-label-float value="{{item.invoice_company_no}}"
+                    data="[[item]]" on-focus="_setSeleteValue" on-blur="updateCheque"></gl-form-input>
+                </td>
+                <td>
+                  <gl-form-input type="date" class="required" required="{{item.check}}" placeholder="วันที่" disabled="{{item.cheque_status}}"
+                    no-label-float value="{{item.invoice_company_date}}"  data="[[item]]"></gl-form-input>
+                </td>
+                <td>[[changeString2Num(item.*,'pay_no')]]
+                  <gl-form-input type="number" placeholder="{{localize.cheque_no}}" class="required" required="{{item.check}}" disabled="{{item.cheque_status}}"
+                    no-label-float value="{{item.pay_no}}" data="[[item]]" on-focus="_setSeleteValue" on-blur="checkDuplicatePayNo"></gl-form-input>
+                </td>
+              </tr>
+            </template>
+          </tbody>
+        </table>
+      </div>
+      <div class="btnMoney horizontal end-justified layout">
+        <paper-button class="gl-btn-success" raised on-tap="setDeliverDate" disabled="[[checkTrue(data.*,notDupPayno)]]">{{localize.check_up}}</paper-button>
+        <!--<paper-button class="gl-btn-success" raised on-tap="getChequeDetail" disabled="[[checkTrue(data.*)]]">ขึ้นเช็ค</paper-button>-->
+      </div>
+      <!--</template>-->
+    </gl-form-panel>
+    <paper-dialog id="date" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
+      <h2>{{localize.delivery_date}}</h2>
+      <gl-form-input type="date" placeholder="{{localize.delivery_date}}" class="required" required no-label-float value="{{deliver_date}}"></gl-form-input>
+      <div class="buttons">
+        <paper-button dialog-dismiss raised class="gl-btn-default">{{localize.cancel}}</paper-button>
+        <paper-button dialog-confirm autofocus class="gl-btn-success" raised on-tap="getChequeDetail">{{localize.submit}}</paper-button>
+      </div>
+    </paper-dialog>
+  </template>
+  <script>
+    Polymer({
+      is: "cheque-detail",
+      behaviors: [ReduxBehavior, g2gLogicBehavior, FormatNumberBehavior, ValidateFormBehavior],
+      properties: {
+        localize: {
+          statePath: 'i18n.cheque'
+        },
+        no: {
+          statePath: 'cheque.cheque_no',
+        },
+        data: {
+          statePath: 'cheque.cheque_detail_list',
+          observer: 'setDataCheque'
+        },
+        dataCheck: {
+          type: Array,
+          value: []
+        },
+        dataUrl: {
+          statePath: 'cheque.dataUrl',
+        },
+        contractId: {
+          statePath: 'commonState.contractId',
+          // observer: 'get'
+        },
+        
+        deliver_date: {
+          type: String,
+          value: function () {
+            return new Date().toISOString().split('T')[0]
+          }
+        },
+        notDupPayno: {
+          type: Boolean,
+          value: true
+        }
+      },
+      setDataCheque(data) {
+        this.set('dataCheck', JSON.parse(JSON.stringify(data)))
+      },
+      // _selectDataAll: function (val) {
+      //   try {
+      //     this.data.map((item, index) => {
+      //       this.set('data.' + index + '.check', this.selectDataAll);
+      //     });
+      //   } catch (error) {
+
+      //   }
+      // },
+      checkStatus: function (cheque_status) {
+        if (cheque_status) return 'background-color: #F1F1F1;'
+        return ''
+        // console.log(cheque_status)
+      },
+      _selectDataAll: function (val) {
+        try {
+          if (this.selectDataAll) {
+            this.data.map((item, index) => {
+              // if (item.cheque_status === false) {
+              if (item.cheque_status === false && item.check === false) {
+                this.set('data.' + index + '.check', true)
+                let newCh = this.data.filter((items) => items.check === true && items.cheque_status === false)
+                let result = this.maxNumberInArrayObject(newCh, 'pay_no')
+                if (result === 0) {
+                  this.set('data.' + index + '.pay_no', this.no.pay_no)
+                } else {
+                  this.set('data.' + index + '.pay_no', result + 1)
+                }
+              }
+            })
+          } else {
+            this.data.map((item, index) => {
+              // console.log(item.cheque_status === true);
+
+              if (item.cheque_status === false) {
+                this.set('data.' + index + '.check', true);
+                this.set('data.' + index + '.check', false)
+                this.set('data.' + index + '.pay_no', '');
+              }
+            })
+          }
+          // this.data.map((item, index) => {
+          //   if (item.cheque_status === false && item.check === false) {
+          //     this.set('data.' + index + '.check', this.selectDataAll);
+          //     // console.log(this.data.filter((items)=> items.check === true && items.cheque_status === false && items.pay_no === ''))
+          //     let newCh = this.data.filter((items) => items.check === true && items.cheque_status === false)
+          //     let result = this.maxNumberInArrayObject(newCh, 'pay_no')
+          //     if (result === 0) {
+          //       this.set('data.' + index + '.pay_no', this.no.pay_no + 1)
+          //     } else {
+          //       this.set('data.' + index + '.pay_no', result + 1)
+          //     }
+
+          //   } else {
+          //     if (this.selectDataAll === false) {
+          //       this.set('data.' + index + '.check', this.selectDataAll);
+          //       this.set('data.' + index + '.pay_no', '');
+          //     }
+          //   }
+
+        } catch (error) {
+
+        }
+      },
+      checkDuplicatePayNo(e) {
+        let value = Number(e.currentTarget.value)
+        // console.log(this.dataCheck.find((item) => item.pay_no === value) );
+        if (this.dataCheck.find((item) => item.pay_no === value) !== undefined) {
+          this.set('notDupPayno', false)
+          this.fire('toast', {
+            status: 'connectError', text: `เลขที่เช็ค ${value} มีอยู่แล้ว`, //คำสั่งสำหรับเปิด toast error
+            callback: () => {
+            }
+          })
+        } else {
+          this.set('notDupPayno', true)
+        }
+        // console.log(e.currentTarget.errorMessage = 'เลขซ้ำ');
+      },
+      setNoCheque: function (para) {
+        // console.log(para.model.__data__)
+        //เพิ่ม index ลงไปเพื่อไว้ ใส่ค่ากลับได้ถูกตำแหน่ง
+        this.data.map((item, index) => item.indexItem = index)
+        let item = para.model.__data__
+        // หา item ที่ check แล่วและ cheque_status ยังเป็น false
+        let newCh = this.data.filter((item) => item.check === true && item.cheque_status === false)
+        newCh.sort((a, b) => Number(a.pay_no) - Number(b.pay_no))
+        if (item.item.check === false) {
+          this.set('data.' + item.index + '.pay_no', '')
+          let resultMin = this.minNumberInArrayObject(newCh, 'pay_no')
+          // console.log(this.no.pay_no);
+          if (this.no.pay_no === resultMin - 1) {
+            newCh.map((item, index) => {
+              if (item.pay_no !== resultMin) {
+                this.set('data.' + item.indexItem + '.pay_no', resultMin)
+              }
+              ++resultMin
+            })
+          } else {
+            let no = this.no.pay_no
+            // เรียงจากนค่า pay_no น้อยไปหามาก
+            // newCh.sort(function (a, b) { return a.pay_no + b.pay_no })
+            newCh.map((item, index) => {
+              this.set('data.' + item.indexItem + '.pay_no', ++no)
+            })
+          }
+        } else {
+
+          //อยู่ใน g2gLogicBehavior 
+          let result = this.maxNumberInArrayObject(newCh, 'pay_no')
+          if (result === 0)
+            return this.set('data.' + item.index + '.pay_no', this.no.pay_no)
+          return this.set('data.' + item.index + '.pay_no', result + 1)
+        }
+
+      },
+      _resiveDataContract() {
+        return new Promise((res, rej) => {
+          let dataResive = JSON.parse(JSON.stringify(this.data.filter((item) => item.check === true)))
+          // console.log(this.deliver_date);
+          dataResive.map((date) => {
+            // date.cheque_status = true
+            date.deliver_date = this.deliver_date + 'T00:00:00+07:00',
+              delete date.check
+            delete date.indexItem
+            return date.invoice_company_date = date.invoice_company_date + 'T00:00:00+07:00'
+          })
+          // dataResive.invoice_exporter_date = dataResive.invoice_exporter_date + 'T00:00:00+07:00'
+          // delete dataResive.date_updated
+          // delete dataResive.date_created
+          res(dataResive)
+        })
+      },
+      _resiveChequeForm: function () {
+        return new Promise((res, rej) => {
+          if (this.validateForm('.required')) {
+            this._resiveDataContract().then((data) => {
+              res(data)
+            })
+          } else {
+            this.fire('toast', {
+              status: 'connectError', text: 'กรุณากรอกข้อมูลให้ครบทุกช่อง', //คำสั่งสำหรับเปิด toast error
+              callback: function () {
+                rej('error')
+              }
+            })
+          }
+        })
+      },
+      getChequeDetail: function () {
+        this._resiveChequeForm()
+          .then((res) => {
+            // this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
+            // console.log(res)
+            this.dispatchAction('PUT_CHEQUE_DETAIL_LIST', res)
+              .then((response) => {
+                if (response.data.replaced !== undefined && response.data.replaced.length !== 0) {
+                  // console.log(res);
+                  // contractId
+                  this.fire('toast', {
+                    status: 'success', text: 'ยืนยันแล้ว',  // คำสั่งสำหรับเปิด toast success
+                    callback: () => {
+                    }
+                  })
+                  this.dispatchAction('GET_CHEQUE_NO')
+                  let chequeTrue = { id: this.contractId.contract_id, status: true }
+                  let chequeFasle = { id: this.contractId.contract_id, status: false }
+                  this.dispatchAction('GET_CHEQUE_LIST', this.genUrl(chequeTrue))
+                  this.dispatchAction('GET_CHEQUE_LIST', this.genUrl(chequeFasle))
+                  this.dispatchAction('GET_CHEQUE_DETAIL_LIST', { id: this.dataUrl })
+                } else {
+                  // console.log(1111);
+                  let text = response.data.pay_no.map((item) => {
+                    return " " + item + ","
+                  })
+                  // console.log(text);
+                  this.fire('toast', {
+                    status: 'connectError', text: `เลขที่เช็ค ${text} มีอยู่แล้ว`, //คำสั่งสำหรับเปิด toast error
+                    callback: () => {
+                    }
+                  })
+                }
+                // data.replaced
+
+              })
+
+          })
+      },
+      setDeliverDate() {
+        if (this.validateForm('.required')) {
+          this.$.date.open()
+        } else {
+          this.fire('toast', {
+            status: 'connectError', text: 'กรุณากรอกข้อมูลให้ครบทุกช่อง', //คำสั่งสำหรับเปิด toast error
+            callback: function () {
+              rej('error')
+            }
+          })
+        }
+
+      },
+      checkTrue(data, notDupPayno) {
+        if (this.data.find((item) => item.check === true) !== undefined && notDupPayno === true)
+          return false
+        return true
+        // console.log(data);
+      }
+    });
+  </script>
+</dom-module>

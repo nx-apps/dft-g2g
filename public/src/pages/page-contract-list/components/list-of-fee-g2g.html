@@ -1,0 +1,223 @@
+<link rel="import" href="./../../components/format-number-behavior.html">
+<link rel="import" href="./../../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="./../../../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="./../../components/cookie-behavior.html">
+<link rel="import" href="./../../components/g2g-logic-behavior.html">
+
+<link rel="import" href="../../page-payment-list/component/fee-exports.html">
+
+
+<dom-module id="list-of-fee-g2g">
+  <style include="iron-flex iron-flex-factors iron-flex-alignment gl-styles">
+     :host {
+      display: block;
+    }
+
+    * {
+      font-family: 'CSChatThaiUI', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .labelSearch {
+      font-size: var(--font-size-h4);
+      margin: 10px 10px 10px 10px;
+    }
+
+    .table-body>tr>td {
+      cursor: pointer;
+    }
+
+    .title {
+      margin: 16px;
+      text-align: left;
+      font-size: var(--font-size-h4);
+    }
+
+    table.gl-table-default {
+      width: 98%;
+      border: 1px solid #ddd;
+      margin-bottom: 15px;
+    }
+
+    table.gl-table-default>thead.table-head>tr>th {
+      text-align: center;
+    }
+    /*table.gl-table-default>thead.table-head>tr>th:nth-child(1) {
+      width: 15%;
+    }*/
+
+    table.gl-table-default>tbody.table-body>tr>td {
+      text-align: right;
+    }
+  </style>
+  <template>
+
+    <iron-pages selected="{{pageSelected}}" attr-for-selected="name">
+      <section name="listOfFee">
+        <div class="flex searchInput horizontal center-justified layout">
+          <div class="flex title">
+          </div>
+          <div class="flex horizontal end-justified layout">
+            <div class="labelSearch">{{localize.text_fee_no}}</div>{{_searchInArray(searchInput)}}
+            <paper-input label=" " no-label-float value="{{searchInput}}"></paper-input>
+            <paper-icon-button icon="search"></paper-icon-button>
+          </div>
+        </div>
+        <div class="horizontal center-justified layout">
+          <table class="gl-table-default">
+            <thead class="table-head">
+              <tr>
+                <th>{{localize.cal_no}}</th>
+                <th>{{localize.fee_no}}</th>
+                <th>{{localize.fee_round}}</th>
+                <th>{{localize.invoice_no}}</th>
+                <th>{{localize.invoice_count}}</th>
+                <th>{{localize.amount}}{{localize.money}} ({{localize.baht}})</th>
+                <th>{{localize.expenses_fee}} ({{localize.baht}})</th>
+                <th>{{localize.expenses_one_present}} ({{localize.baht}})</th>
+                <th>{{localize.balance}} ({{localize.baht}})</th>
+              </tr>
+            </thead>
+            <tbody class="table-body">
+              <template is="dom-repeat" items="[[newData]]">
+                <tr data="[[item]]" on-tap="getFeeDetail">
+                  <td>{{item.cl_no}}</td>
+                  <td>[[item.fee_no]]</td>
+                  <td>[[countRound(item.fee_round)]]</td>
+                  <td>
+                    <div style="text-align:left;">[[item.invoice_no]]</div>
+                  </td>
+                  <td>[[item.invoice_count]]</td>
+                  <td>[[formatNumber(item.value_b)]]</td>
+                  <td>[[formatNumber(item.value_fee_b)]]</td>
+                  <td>[[formatNumber(item.value_tax_b)]]</td>
+                  <td>[[formatNumber(item.value_final_b)]]</td>
+                </tr>
+              </template>
+              <template is="dom-if" if="[[_isHave(newData)]]">
+                <tr>
+                  <td colspan="9" style="text-align:center"> {{localize.no_data}}</td>
+                </tr>
+              </template>
+            </tbody>
+          </table>
+        </div>
+      </section>
+      <section name="feeDetail">
+        <paper-button raised on-tap="backPage" class="gl-btn-default">{{localizeCommon.back_ward}}</paper-button>
+        <fee-exports></fee-exports>
+      </section>
+    </iron-pages>
+
+
+  </template>
+  <script>
+    Polymer({
+      is: "list-of-fee-g2g",
+      behaviors: [ReduxBehavior, nylonBehavior, FormatNumberBehavior, CookieBehavior, g2gLogicBehavior],
+      properties: {
+        localize: {
+          statePath: 'i18n.fee'
+        },
+        data: {
+          statePath: 'fee.list'
+        },
+        localizeCommon: {
+          statePath: 'i18n.common'
+        },
+        pageSelected: {
+          type: String,
+          value: 'listOfFee'
+        },
+        setPage: {
+          statePath: 'commonState.setPageAndSearch',
+          observer: 'setPageFun'
+        },
+        contractId: {
+          statePath: 'commonState.contractId',
+          // observer: 'get'
+        },
+      },
+      observers: [
+        'initDataFee(data)'
+      ],
+      listeners: {
+        '_list-Fee': '_changeIronPage',
+      },
+      initDataFee: function (data) {
+        // console.log(data);
+        this.newData = this.g2gClone(data);
+      },
+      _changeIronPage: function (data) {
+        // console.log(data.detail);
+        this.set('pageSelected', data.detail)
+        // console.log(0)
+      },
+      setPageFun: function (data) {
+        this.set('pageSelected', data.page)
+        // console.log(0)
+      },
+      backPage: function (data) {
+        // console.log(11);
+        this.dispatchAction('SET_BREADCRUMBS', [{
+          label: 'สัญญาที่ ' + this.contractId.contract_no,
+          href: ''
+        },
+        ])
+        this.set('pageSelected', 'listOfFee')
+      },
+      _searchInArray: function (searchInput) {
+        // console.log(searchInput == '');
+        if (searchInput != '') {
+          let arr = [];
+          this.data.map((el) => {
+            if (String(el.fee_no).search(searchInput) > -1) {
+              //  console.log('search==> ',el);
+              arr.push(el);
+            }
+          });
+          this.newData = arr;
+        } else {
+          this.initDataFee(this.data);
+        }
+      },
+      getFeeDetail: function (e) {
+        this.dispatchAction('SET_BREADCRUMBS', [{
+          label: 'สัญญาที่ ' + this.contractId.contract_no,
+          href: ''
+        },
+        {
+          label: 'คิดค่าธรรมเนียมครั้งที่' + e.currentTarget.data.fee_no,
+          href: ''
+        },
+        {
+          label: 'รอบที่' + this.countRound(e.currentTarget.data.fee_round),
+          href: ''
+        },
+        ])
+        // console.log(e.currentTarget.data);
+        this.fire('toast', { status: 'load' });
+        this.dispatchAction('SET_STATE', {
+          isInsert: false,
+          btnDisabled: true,
+          inputRice: true
+        })
+        this.dispatchAction('FEE_GET_ID_DATA', e.currentTarget.data.id)
+        this.async(() => {
+          this.fire('toast', {
+            status: 'success', text: 'โหลดสำเร็จ', callback: () => {
+
+              this.set('pageSelected', 'feeDetail')
+            }
+          })
+        }, 500)
+
+
+        // this.fire('get-fee-detail', { detail: e.currentTarget.data });
+      },
+      countRound: function (data) {
+        return data + 1;
+      }
+    });
+  </script>
+</dom-module>

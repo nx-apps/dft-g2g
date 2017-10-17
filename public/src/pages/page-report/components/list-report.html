@@ -1,0 +1,509 @@
+<link rel="import" href="./../../../../bower_components/vaadin-grid/vaadin-grid.html">
+<link rel="import" href="./../../../../bower_components/gl-form/gl-form-input.html">
+<link rel="import" href="./../../components/cookie-behavior.html">
+<link rel="import" href="./../../components/g2g-logic-behavior.html">
+<link rel="import" href="./../../../layout/shared-styles.html">
+
+<link rel="import" href="./../../../../bower_components/paper-dialog-scrollable/paper-dialog-scrollable.html">
+
+<link rel="import" href="./../../components/month-behavior.html">
+
+<link rel="import" href="./../../components/validateFormBehaviors.html">
+
+<dom-module id="list-report">
+    <template>
+        <style include="shared-styles">
+            * {
+                font-family: CSChatThaiUI;
+            }
+
+            vaadin-grid {
+                margin: 0px;
+                width: 100%;
+                height: auto;
+            }
+
+            .img {
+                width: 24px;
+                height: 24px;
+                margin: 0px 10px;
+                /*background-color: lightgray;*/
+            }
+
+            .title-report {
+                font-family: CSChatThaiUI;
+                font-size: 18px;
+                font-weight: 400px;
+                margin: 15px 0px;
+            }
+
+            .text-center {
+                text-align: center;
+            }
+
+            paper-button.btnInTable {
+                --paper-button: {
+                    margin-top: 0px;
+                    height: 32px;
+                }
+            }
+        </style>
+        <paper-material elevation="1">
+            <div class="container">
+                <div class="flex-horizontal-with-ratios">
+                    <vaadin-grid id="material" class="material" items="[[report]]">
+                        <vaadin-grid-column width="7%" flex-grow="0">
+                            <template class="header ">
+                                <div class="text-center">[[localizeReport.order]]</div>
+                            </template>
+                            <template>
+                                <div class="text-center">[[item.report_no]]</div>
+                            </template>
+                        </vaadin-grid-column>
+
+
+                        <vaadin-grid-column width="42.6%" flex-grow="0" resizable>
+                            <template class="header">[[localizeReport.report_name]]</template>
+                            <template>[[item.report_name]]</template>
+                        </vaadin-grid-column>
+
+                        <vaadin-grid-column width="9.6%" flex-grow="0">
+                            <template class="header">
+                                <div class="text-center">[[localizeReport.report_type]]</div>
+                            </template>
+                            <template>
+                                <div class="text-center">
+                                    [[changeName(item.report_type)]]</div>
+                            </template>
+                        </vaadin-grid-column>
+
+                        <vaadin-grid-column width="10.6%" flex-grow="0">
+                            <template class="header">
+                                <div class="text-center">[[localizeReport.PDF]]</div>
+                            </template>
+                            <template>
+                                <paper-button raised class="btnInTable" id="pdf" on-tap="print">
+                                    <iron-image class="img" sizing="cover" preload src="/images/icon/type_report/pdf.png"></iron-image>
+                                    [[localizeReport.PDF]]</paper-button>
+                            </template>
+                        </vaadin-grid-column>
+
+                        <vaadin-grid-column width="10.6%" flex-grow="0">
+                            <template class="header">
+                                <div class="text-center">[[localizeReport.WORD]]</div>
+                            </template>
+                            <template>
+                                <paper-button raised class="btnInTable" id="word" on-tap="print">
+                                    <iron-image class="img" sizing="cover" preload src="/images/icon/type_report/Microsoft_Word_2013_logo.svg.png"></iron-image>
+                                    [[localizeReport.WORD]]</paper-button>
+                            </template>
+                        </vaadin-grid-column>
+
+                        <vaadin-grid-column width="10.6%" flex-grow="0">
+                            <template class="header">
+                                <div class="text-center">[[localizeReport.EXCEL]]</div>
+                            </template>
+                            <template>
+                                <paper-button raised class="btnInTable" id="excel" on-tap="print">
+                                    <iron-image class="img" sizing="cover" preload src="/images/icon/type_report/Microsoft_Excel_2013_logo.svg.png"></iron-image>
+                                    [[localizeReport.EXCEL]]</paper-button>
+                            </template>
+                        </vaadin-grid-column>
+
+                        <!--<vaadin-grid-column width="10.6%" flex-grow="0">
+                            <template class="header">
+                                <div class="text-center">
+                                    <p>[[localizeReport.date_update]]</div>
+                            </template>
+                            <template>
+                                <p class="text-center" style="white-space: normal text">[[_changeDate(item.date_updated)]]
+                                </p>
+                            </template>
+                        </vaadin-grid-column>-->
+
+                        <vaadin-grid-column width="9%" flex-grow="0">
+                            <template class="header">
+                                <div class="text-center">
+                                    <p>[[localizeReport.tool]]</div>
+                            </template>
+                            <template>
+                                <div class="text-center">
+                                    <span>
+                                        <paper-icon-button data="{{item}}" icon="create" on-tap="_edit" ></paper-icon-button>
+                                        <paper-icon-button data="{{item}}" icon="delete" on-tap="_delete"></paper-icon-button>
+                                    </span>
+                                </div>
+                            </template>
+                        </vaadin-grid-column>
+                    </vaadin-grid>
+                </div>
+            </div>
+        </paper-material>
+
+
+
+
+
+        <paper-dialog id="report_dialog" modal style="min-width: 300px;">
+            <div class="layout start-justified">
+                <div class="title-report">
+                    [[localizeReport.report_order]] [[currentSeleted.report_no]] [[localizeReport.report_subject]] [[currentSeleted.report_name]]
+                </div>
+                <paper-dialog-scrollable style="min-height: 300px;">
+
+                    <template is="dom-repeat" items={{report_seleted}}>
+                        <div class="flex" style=" margin-right: 30px">
+                            <template is="dom-if" if={{isString(item.type)}}>
+                                <gl-form-input id="[[item.res]]" label="[[item.label]]" index="" placeholder="[[item.label]]"></gl-form-input>
+                            </template>
+
+
+
+                            <template is="dom-if" if={{isListmake(item.type)}}>
+
+                                <gl-combo-box id="[[item.req.field]]" always-float-label required label="[[item.label]]" placeholder="[[item.label]]" item-label-path="[[item.view]]"
+                                    item-value-path="[[item.res]]" items="[[item.req.value]]" value="[[setItemListMake(item)]]">
+                                    <!--on-value-changed="getNextparam"-->
+                                    <template>
+                                        [[getItemListMake(item)]]
+                                    </template>
+                                </gl-combo-box>
+
+                            </template>
+
+                            <template is="dom-if" if={{isList(item.type)}}>
+                                <gl-combo-box id="[[item.res]]" always-float-label required label="[[item.label]]" placeholder="[[item.label]]" item-label-path="[[item.view]]"
+                                    item-value-path="[[item.res]]" on-selected-item-changed="getNextparam">
+                                    <!--on-value-changed="getNextparam"-->
+                                    <template>
+                                        <!--[[item.[item.view]]]-->
+                                        [[getname(item)]]
+                                    </template>
+                                </gl-combo-box>
+                            </template>
+                            <template is="dom-if" if={{isDay(item.type)}}>
+                                <gl-form-input id="[[item.res]]" label="[[item.label]]" index="" value="[[day]]" placeholder="[[item.label]]"></gl-form-input>
+                            </template>
+
+                            <template is="dom-if" if={{isMonth(item.type)}}>
+                                <!--month-->
+                                <gl-combo-box id="[[item.res]]" index$="month" always-float-label label="[[item.label]]" placeholder="[[item.label]]" item-label-path="name"
+                                    item-value-path="id" items="[[month]]" value="[[monthSet]]">
+                                    <template>
+                                        [[item.name]]
+                                    </template>
+                                </gl-combo-box>
+                                <!--<gl-form-input id="[[item.res]]" label="[[item.label]]" index="" value="[[month]]" placeholder="[[item.label]]"></gl-form-input>-->
+                            </template>
+
+                            <template is="dom-if" if={{isYear(item.type)}}>
+                                <gl-form-input id="[[item.res]]" label="[[item.label]]" index="" value="[[year]]" placeholder="[[item.label]]"></gl-form-input>
+                            </template>
+
+                            <template is="dom-if" if={{isNumber(item.type)}}>
+                                <gl-form-input id="[[item.res]]" label="[[item.label]]" index="" placeholder="[[item.label]]" type="number"></gl-form-input>
+                            </template>
+
+                            <template is="dom-if" if={{isDate(item.type)}}>
+                                <gl-form-input id="[[item.res]]" label="[[item.label]]" index="" placeholder="[[item.label]]" value="[[dateDay]]" type="date"></gl-form-input>
+                            </template>
+
+                            <div class="flex" style=" margin-right: 30px">
+
+                            </div>
+
+
+                        </div>
+                    </template>
+                </paper-dialog-scrollable>
+                <div class="buttons flex horizontal end-justified layout buttons">
+                    <paper-button raised class="gl-btn-default" dialog-dismiss on-tap="reload">[[localizeReport.close]]</paper-button>
+                    <paper-button raised class="gl-btn-primary" on-tap="printReport" autofocus>[[localizeReport.gen_report]]</paper-button>
+                </div>
+        </paper-dialog>
+
+    </template>
+    <script>
+        Polymer({
+            is: 'list-report',
+            behaviors: [ReduxBehavior, nylonBehavior, g2gLogicBehavior, CookieBehavior,
+                reportAction, ValidateFormBehavior, MonthBehavior],
+            properties: {
+                date: {
+                    type: Object,
+                    value: { type: 'PDF' }
+                },
+                localizeReport: {
+                    statePath: 'i18n.report'
+                },
+                report: {
+                    statePath: 'report.reportList'
+                },
+                setType: {
+                    type: Object,
+                    value: {}
+                },
+                data: {
+                    type: Object,
+                    value: {}
+                },
+                report_seleted: {
+                    type: Object,
+                },
+                buyerId: {
+                    statePath: 'commonState.buyerId'
+                },
+                dateDay: {
+                    type: String,
+                    value: function () {
+                        return new Date().toISOString().split('T')[0]
+                    }
+                },
+                day: {
+                    type: String,
+                    value: function () {
+                        return new Date().getDate()
+                    }
+                },
+                monthSet: {
+                    type: String,
+                    value: function () {
+                        return new Date().getMonth() + 1
+                    }
+                },
+                year: {
+                    type: String,
+                    value: function () {
+                        return new Date().getFullYear()
+                    }
+                },
+                currentSeleted: {
+                    type: Object,
+                }
+            },
+            reload() {
+                this.currentSeleted.report_params.map((item) => {
+                    if (this.$$('#' + item.res) !== null) {
+                        this.$$('#' + item.res).reset()
+                        // console.log(this.$$('#' + item.res).id);
+                        this.$$('#' + item.res).value = ''
+                        this.$$('#' + item.res).items = []
+                        if (this.$$('#' + item.res).id === 'month') {
+                            this.$$('#' + item.res).items = this.month
+                            this.$$('#' + item.res).value = new Date().getMonth() + 1
+                        }
+                        // this.$$('#' + item.res).items = this.month
+                    } else {
+                        this.$$('#' + item.req.field).reset()
+                        // console.log(this.$$('#' + item.res));
+                        if (this.$$('#' + item.res) !== null)
+                            this.$$('#' + item.res).value = ''
+                        this.$$('#' + item.req.field).items = []
+                        if (this.$$('#' + item.req.field).id === 'month') {
+                            this.$$('#' + item.req.field).items = this.month
+                            this.$$('#' + item.req.field).value = new Date().getMonth() + 1
+                        }
+
+                    }
+                })
+            },
+            getname(name) {
+                return name[name.old.view]
+            },
+            getItemListMake(name) {
+                return name.label
+            },
+            setItemListMake(item) {
+                if (item.req.value.length > 0) {
+                    return item.req.value[0][item.res]
+                }
+            },
+            print(e) {
+                this.set('setType', e.currentTarget.id)
+                let data = e.model.__data__.item
+                this.set('currentSeleted', data)
+                // console.log(this.currentSeleted.report_name);
+                let getBuy = data.report_params.find((item) => item.redux === true)
+                if (getBuy !== undefined) {
+                    getBuy.req.value = this.buyerId.buyer_id
+                    getBuy.report_table = data.report_table
+                    let getDate = new Promise((res, rej) => {
+                        this.set('report_seleted', data.report_params)
+                        // console.log(1);
+                        this.dispatchAction('GET_REPORT_LINK', getBuy)
+                            .then((respon) => {
+                                // console.log(33);
+                                res(respon)
+                            })
+                            .catch((error) => {
+                                //console.log(error);
+                                rej(error)
+                            });
+
+                    })
+                    getDate.then((res) => {
+                        res.data.map((item) => item.old = getBuy)
+                        let combobox = this.$$('#' + getBuy.res)
+                        combobox.items = res.data
+                        if (res.data.length > 0) {
+                            combobox.value = res.data[res.data.length - 1][combobox.itemValuePath]
+                        }
+                    })
+                        .catch((error) => {
+                            //console.log(error);
+                        });
+                } else {
+                    this.set('report_seleted', data.report_params)
+                    // console.log();
+                }
+                this.fire('toast', { status: 'load' });
+                this.async(() => {
+                    this.fire('toast', {
+                        status: 'success', text: this.localizeReport.load_success, callback: () => {
+                            // this.fire('open-Drawer')
+                            this.$$('#report_dialog').open()
+                        }
+                    })
+
+                }, 100)
+                
+
+
+                // } catch (error) {
+
+                // }
+
+            },
+            printReport() {
+                let url = {}
+                this.currentSeleted.report_params.map((item) => {
+                    if (this.$$('#' + item.res) !== null) {
+                        url[this.$$('#' + item.res).id] = this.$$('#' + item.res).value
+                    } else {
+                        url[this.$$('#' + item.req.field).id] = this.$$('#' + item.req.field).value
+                    }
+                })
+                // console.log(this.buyerId);
+                window.open(window._config.reportServer + `/api/${this.currentSeleted.report_type}/${this.currentSeleted.report_path}?buyer_id=` + this.buyerId.buyer_id + '&' + this.genUrl(url) + '&export=' + this.setType)
+            },
+            changeName: function (name) {
+                if (name === 'rice') return this.localizeReport.rice
+                return this.localizeReport.finance
+            },
+            getNextparam(e) {
+                // try {
+                let report_params_length = this.currentSeleted.report_params.length
+                let old_data = e.detail.value
+                // console.log(old_data);
+                if (old_data !== null) {
+                    if (old_data.old.no < report_params_length) {
+                        let dataSeleted = JSON.parse(JSON.stringify(this.currentSeleted.report_params[old_data.old.no]))
+
+                        dataSeleted.req.value = old_data[dataSeleted.req.field]
+                        dataSeleted.report_table = old_data.old.report_table
+                        // console.log(dataSeleted);
+                        if (dataSeleted.type === 'list') {
+                            let getDate = new Promise((res, rej) => {
+                                // console.log(2);
+                                this.dispatchAction('GET_REPORT_LINK', dataSeleted)
+                                    .then((respon) => {
+                                        res(respon)
+                                    })
+                                    .catch((error) => {
+                                        //console.log(error);
+                                        rej(error)
+                                    });
+
+                            })
+                            getDate.then((res) => {
+                                res.data.map((item) => item.old = dataSeleted)
+                                let combobox = this.$$('#' + dataSeleted.res)
+                                combobox.items = res.data
+                                if (res.data.length > 0) {
+                                    combobox.value = res.data[res.data.length - 1][combobox.itemValuePath]
+                                }
+                                // this.set('currentSeleted',this.currentSeleted.report_params[old_data.old.no])
+                            })
+                                .catch((error) => {
+                                    //console.log(error);
+                                });
+                            // }
+                        }
+                    }
+
+                }
+
+
+                // } catch (e) {
+
+                // }
+
+
+            },
+            _edit: function (e) {
+
+                this.dispatchAction('SET_STATE', {
+                    isInsert: false,
+                    btnDisabled: false,
+                    hiddend: true
+                })
+                let data = e.model.__data__.item
+                this.fire('toast', { status: 'load' });
+                this.async(() => {
+                    this.fire('toast', {
+                        status: 'success', text: this.localizeReport.load_success, callback: () => {
+                            this.fire('open-Drawer')
+                            this.dispatchAction('GET_REPORT_DETAIL', data)
+                        }
+                    })
+
+                }, 500)
+                // this._
+
+                // this.dispatchAction('PROVINCE_GET_ID', e.target.data.province_id);
+                // this.title = "แก้ไขข้อมูล";
+            },
+            _delete: function (e) {
+                this.fire('toast', {
+                    status: 'openDialog',
+                    text: this.localizeReport.want_delete,
+                    confirmed: (result) => {
+                        if (result == true) {
+                            // console.log(1111);
+                            // this._resiveForm()
+                            //     .then((res) => {
+                            //         // console.log(res);
+                            this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
+                            let data = e.model.__data__.item
+                            this.dispatchAction('DELTE_REPORT_DETAIL', data.id)
+                                .then((response) => {
+                                    if (response.data.deleted !== undefined && response.data.deleted.length !== 0) {
+                                        this.dispatchAction('GET_REPORT_LIST')
+                                        this.fire('toast', {
+                                            status: 'success', text: this.localizeReport.delete_success,  // คำสั่งสำหรับเปิด toast success
+                                            callback: () => {
+                                            }
+                                        })
+                                        this.fire('close-drawer')
+                                    } else {
+                                        // console.log(1111);
+                                        this.fire('toast', {
+                                            status: 'connectError', text: response.data, //คำสั่งสำหรับเปิด toast error
+                                            callback: () => {
+                                            }
+                                        })
+                                    }
+
+                                })
+                            // })
+                            // .catch((error) => {
+                            //     //console.log(error);
+                            // });
+                        }
+                    }
+                })
+            },
+
+        });
+    </script>
+</dom-module>

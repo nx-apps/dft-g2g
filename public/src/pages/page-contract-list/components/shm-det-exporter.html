@@ -1,0 +1,914 @@
+<!--<link rel="import" href="../controller/g2gShipmentController.html">-->
+<link rel="import" href="./../../../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="./../../../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="./../../../../bower_components/gl-form/gl-form-panel.html">
+<link rel="import" href="./../../../../bower_components/gl-form/gl-form-panel-head.html">
+<link rel="import" href="./../../../../bower_components/gl-form/gl-form-panel-body.html">
+<link rel="import" href="./../../../../bower_components/gl-form/gl-form-panel-footer.html">
+<link rel="import" href="./../../../../bower_components/gl-form/gl-form-input.html">
+<link rel="import" href="./../../../../bower_components/gl-form/gl-form-textarea.html">
+<link rel="import" href="./../../../../bower_components/gl-grid/gl-grid-row.html">
+<link rel="import" href="./../../../../bower_components/gl-grid/gl-grid-col.html">
+<link rel="import" href="./../../../../bower_components/gl-form/gl-combo-box.html">
+<link rel="import" href="./../../../../bower_components/paper-autocomplete/paper-autocomplete-suggestions.html">
+
+<link rel="import" href="./../../../layout/shared-styles.html">
+<link rel="import" href="./../../components/validateFormBehaviors.html">
+<link rel="import" href="./../../components/format-number-behavior.html">
+<link rel="import" href="./../../components/g2g-logic-behavior.html">
+<dom-module id="shm-det-exporter">
+  <style include="shared-styles">
+    * {
+      font-family: 'CSChatThaiUI', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .title {
+      text-align: center;
+      font-size: var(--font-size-h4);
+    }
+  </style>
+  <template>
+    <!--<template is="dom-if" if="[[!commonState.isInsert]]">
+      <paper-button class="gl-btn-default" raised on-tap="cancelEditShipment">{{localize.btn_back_ward}}</paper-button>
+    </template>-->
+    <!--<template is="dom-if" if={{!checkTrue.book_status}}>-->
+      <paper-button class="gl-btn-default" raised on-tap="cancelEditShipment">
+        {{localizeCommon.back_ward}}</paper-button>
+    <!--</template>-->
+
+    <gl-form-panel set-padding="10px 20px 10px 20px">
+      <div class="horizontal end-justified layout">
+        <template is="dom-if" if={{!checkTrue.book_status}}>
+        <paper-icon-button icon="create" class="crud" id="editExporter" raised on-tap="editBookDetaIl" title="Edit"></paper-icon-button>
+        <paper-tooltip for="editExporter" offset="0">{{localizeCommon.edit}}</paper-tooltip>
+        <paper-icon-button icon="delete" class="crud" id="delExporter" raised on-tap="deleteBookDetail" title="Delete"></paper-icon-button>
+        <paper-tooltip for="delExporter" offset="0">{{localizeCommon.delete}}</paper-tooltip>
+        </template>
+      </div>
+
+      <gl-form-panel-head label="{{localize.label_exporter_detail}}" set-padding="10px" set-border="1px"></gl-form-panel-head>
+
+      <gl-form-panel-body>
+        <!--{{_getSellerPhone(data.company_id,dataForSelect)}}-->
+        <!--[[data.book_id]]////[[data.gross_weight]]-->
+        <gl-grid-row width="{{getWidth}}">
+          <template is="dom-if" if="[[commonState.isInsert]]">
+            
+            <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,8]]">
+              <gl-combo-box class="required" required id="company_id" label="{{localizeBook.exporter_name}}" always-float-label item-label-path="label"
+                disabled="[[commonState.btnDisabled]]" on-selected-item-changed="_getObjectcompany" item-value-path="company_taxno"
+                items="{{exporterList}}" value="{{data.company_taxno}}">
+                <template>
+                  [[item.label]]
+                </template>
+              </gl-combo-box>
+            </gl-grid-col>
+
+            <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,8]]">
+              <gl-form-textarea rows="2" disabled label="{{localizeBook.exporter_address}}" value="{{data.company.company_address_th}}  {{data.company.company_province_th}}"
+                always-float-label></gl-form-textarea>
+            </gl-grid-col>
+            <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,12]]">
+              <div class="autocomplete-wrapper">
+                <gl-form-input id="bookNo" required class="required" label="{{localizeBook.booking_no}}" always-float-label placeholder="{{localizeBook.booking_no}}"
+                  value="{{data.book_no}}" disabled="[[commonState.btnDisabled]]"></gl-form-input>
+                <paper-autocomplete-suggestions id="shipline-suggestions" for="bookNo" source="{{bookNo}}"></paper-autocomplete-suggestions>
+              </div>
+            </gl-grid-col>
+          </template>
+          <template is="dom-if" if="[[!commonState.isInsert]]">
+            <template is="dom-if" if="[[commonState.btnDisabled]]">
+              
+              <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,8]]">
+                <gl-form-input disabled label="{{localizeBook.exporter_name}}" value="[{{data.company_taxno}}] {{data.company.company_name_th}}"
+                  always-float-label></gl-form-input>
+              </gl-grid-col>
+              <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,8]]">
+                <gl-form-textarea rows="2" disabled label="{{localizeBook.exporter_address}}" value="{{data.company.company_address_th}}  {{data.company.company_province_th}}"
+                  always-float-label></gl-form-textarea>
+              </gl-grid-col>
+              <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,12]]">
+                <gl-form-input required class="required" label="{{localizeBook.booking_no}}" always-float-label placeholder="{{localizeBook.booking_no}}"
+                  value="{{data.book_no}}" disabled></gl-form-input>
+              </gl-grid-col>
+            </template>
+
+            <template is="dom-if" if="[[!commonState.btnDisabled]]">
+              
+              <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,8]]">
+                <gl-combo-box class="required" required id="company_id" label="{{localizeBook.exporter_name}}" always-float-label item-label-path="label"
+                  disabled="[[commonState.btnDisabled]]" on-selected-item-changed="_getObjectcompany" item-value-path="company_taxno"
+                  items="{{exporterList}}" value="{{data.company_taxno}}">
+                  <template>
+                    [[item.label]]
+                  </template>
+                </gl-combo-box>
+              </gl-grid-col>
+
+              <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,8]]">
+                <gl-form-textarea rows="2" disabled label="{{localizeBook.exporter_address}}" value="{{data.company.company_address_th}}  {{data.company.company_province_th}}"
+                  always-float-label></gl-form-textarea>
+              </gl-grid-col>
+              <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,12]]">
+                <gl-form-input required class="required" label="{{localizeBook.booking_no}}" always-float-label placeholder="{{localize.booking_no}}"
+                  value="{{data.book_no}}" disabled="[[commonState.btnDisabled]]"></gl-form-input>
+              </gl-grid-col>
+            </template>
+          </template>
+      </gl-form-panel-body>
+
+      <gl-form-panel-body>
+        <div class="title">{{localizeBook.detail_sender}}</div>
+      </gl-form-panel-body>
+
+      <gl-form-panel-body>
+        <gl-grid-row>
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+            <!--<gl-form-input disabled label="{{localize.label_confirmation_letter}}" value="[[dataForSelect.cl_no]]" always-float-label
+              hidden></gl-form-input>-->
+          </gl-grid-col>
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,12]]">
+            <!--<gl-combo-box id="hamonize_id" label="{{localize.label_rice_type}}" item-label-path="type_rice_name_en" disabled="[[commonState.btnDisabled]]"
+              class="required" required item-value-path="hamonize_id" items="[[hamonizeContract]]" value="{{data.hamonize_id}}"
+              always-float-label>
+              <template>
+                  [[item.type_rice_name_en]]
+                </template>
+              </gl-combo-box>-->
+            <gl-combo-box class="required" required disabled="[[commonState.btnDisabled]]" 
+              placeholder="{{localizeContract.rice_type}}" name="hamonize.hamonize_th" items="[[bookHamonizeList]]" label="{{localizeContract.rice_type}}"
+              item-label-path="label" item-value-path="hamonize_id" value="{{data.hamonize_id}}" on-selected-item-changed="getObjectHamonize"
+              >
+              <template>
+                [[item.label]]
+              </template>
+            </gl-combo-box>
+          </gl-grid-col>
+
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,8]]">
+            <gl-combo-box id="package_id" label="{{localizeCommon.packaging_type}}" item-label-path="package_name_en" disabled="[[commonState.btnDisabled]]"
+              class="required" required on-selected-item-changed="_getObjectPackage" item-value-path="package_id" items="[[packageList]]"
+              value="{{data.package_id}}" always-float-label>
+              <template>
+                [[item.package_name_en]]
+              </template>
+            </gl-combo-box>
+          </gl-grid-col>
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+            [[_calPriceHamonize(data.hamonize_id,data.package_id,data.net_weight)]] [[changeString2Num(data.*,'net_weight')]]
+            <gl-form-input class="required" required allowed-pattern="[0-9||,||.]" on-focus="_setSeleteValue" format-number="on" label="{{localizeBook.bl_weight}}"
+              value="{{data.net_weight}}" always-float-label disabled="[[commonState.btnDisabled]]">
+              <!--<div suffix>/{{dataForSelect.type_rice_quantity_limit_max_label}}</div>-->
+            </gl-form-input>
+          </gl-grid-col>
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+            [[changeString2Num(data.*,'num_of_container')]]
+            <gl-form-input disabled="[[commonState.btnDisabled]]" on-focus="_setSeleteValue" required allowed-pattern="[0-9||,||.]" format-number="on" class="required"
+              label="{{localizeBook.number_of_containers}}" always-float-label value="{{data.num_of_container}}"></gl-form-input>
+          </gl-grid-col>
+          <!--[[_getPackageForPrice(data.package_id,dataForSelect)]]-->
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+            <gl-form-input disabled label="{{localizeBook.price_usd_mt}}" format-number="on" value="[[data.price_d]]" always-float-label></gl-form-input>
+          </gl-grid-col>
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+            <gl-form-input disabled label="{{localizeBook.weight_sacks_gram_bag}}"format-number="on" value="[[data.package_weight_bag]]" always-float-label></gl-form-input>
+          </gl-grid-col>
+
+
+          <!--<gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+            <gl-form-input disabled label="{{localize.label_marks}}" value="[[dataForSelect.buyer_masks]]" always-float-label></gl-form-input>
+          </gl-grid-col>-->
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+            <gl-form-input disabled label="{{localizeBook.quantity_bags}}"format-number="on" value="[[data.package_amount]]" always-float-label></gl-form-input>
+          </gl-grid-col>
+        </gl-grid-row>
+
+        <gl-grid-row>
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+            <gl-form-input disabled label="{{localizeBook.gross_weight}}" format-number="on" value="[[data.gross_weight]]" always-float-label></gl-form-input>
+          </gl-grid-col>
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+            <gl-form-input disabled label="{{localizeBook.net_weight}}" format-number="on" value="[[data.net_weight]]" always-float-label></gl-form-input>
+          </gl-grid-col>
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+            <gl-form-input disabled label="{{localizeBook.tare_weight}}" format-number="on" value="[[data.tare_weight]]" always-float-label></gl-form-input>
+          </gl-grid-col>
+        </gl-grid-row>
+      </gl-form-panel-body>
+      <gl-form-panel-footer set-padding="10px 20px 0px 20px">
+        <template is="dom-if" if="[[!commonState.btnDisabled]]">
+          <template is="dom-if" if="[[!commonState.isInsert]]">
+            <paper-button class="gl-btn-default" on-tap="calcelBookDetail" raised>{{localizeCommon.cancel}}</paper-button>
+            <paper-button class="gl-btn-success" raised on-tap="saveExporter">
+              <iron-icon class="gl-icon-size" icon="save"></iron-icon>{{localizeCommon.save}}</paper-button>
+          </template>
+        </template>
+
+        <template is="dom-if" if="[[commonState.isInsert]]">
+          <paper-button class="gl-btn-success" raised on-tap="addExporter"> {{localizeCommon.add}}</paper-button>
+        </template>
+      </gl-form-panel-footer>
+    </gl-form-panel>
+
+  </template>
+  <script>
+    Polymer({
+      is: "shm-det-exporter",
+      behaviors: [
+        ReduxBehavior,
+        nylonBehavior,
+        FormatNumberBehavior,
+         g2gLogicBehavior,
+         ValidateFormBehavior
+        // g2gCongtroller,
+        // g2gModelBehavior,
+        // g2gShipmentController,
+        // nylonLocalizeBehavior,
+      ],
+      properties: {
+        localizeBook : {
+          statePath: 'i18n.book'
+        },
+        localizeContract: {
+          statePath: 'i18n.contract'
+        },
+        localizeConfirmLetter: {
+          statePath: 'i18n.confirmLetter'
+        },
+        localizeCommon: {
+          statePath: 'i18n.common'
+        },
+        buyerId:{
+          statePath:'commonState.buyerId'
+        },
+        commonState: {
+          statePath: 'commonState.setState'
+        },
+        data: {
+          statePath: 'book.bookExporterDetail'
+        },
+        bookHamonizeList: {
+          statePath: 'book.bookHamonizeList',
+          // observer: 'get'
+        },
+        packageList: {
+          type: Array,
+          value: []
+        },
+        checkTrue: {
+          statePath: 'book.bookExporterList'
+        },
+        bookNo: {
+          statePath: 'book.bookNoList'
+        },
+        // packageList: {
+        //   statePath: 'commonG2g.packageList',
+        //   // observer: 'get'
+        // },
+        exporterList: {
+          statePath: 'commonG2g.exporterList',
+          // observer: 'get'
+        },
+        contractId: {
+          statePath: 'commonState.contractId',
+          // observer: 'get'
+        },
+        confirmId: {
+          statePath: 'commonState.confirmId',
+          // observer: 'get'
+        },
+        bookId: {
+          statePath: 'commonState.bookId',
+          // observer: 'get'
+        },
+        // price: {
+        //   type: Object,
+        //   value: { quantityBag: 0, gw: 0, nw: 0, tw: 0, }
+        // },
+        // dataForSelect: {
+        //   type: Object,
+        //   value: { type_rice_quantity_limit_max_label: 0 }
+        // },
+        // dataOld: {
+        //   type: Object,
+        // },
+      },
+      // observers: [
+      //   '_obCalWeight(data.shm_det_quantity,dataForSelect,data.*)',
+      //   'check(data)',
+      //   '_dataSelected(dataForSelect)',
+      //   // '_checkpol(pol)',
+      //   // '_getShip(data.shipline_id,dataForSelect)'
+      // ],
+      editBookDetaIl(e) {
+        this.dispatchAction('SET_STATE', {
+          isInsert: false,
+          btnDisabled: false,
+          hiddend: true
+        })
+      },
+      // created: function () {
+      //   this.nylonLocalizeImport('/i18n-page1.json');
+      // },
+      // _getdata: function (pol) {
+      //   // console.log('pol',pol);
+      // },
+      // _dataSelected: function (dataForSelect) {
+      //   // console.log('dataForSelect.pol=>',dataForSelect.pol);
+      //   // if (dataForSelect.pol != undefined) {
+      //   //   let elements = this.$$('#load_port_id');
+      //   //   let pol = new Array();
+      //   //   dataForSelect.pol.map((el,index)=>{
+      //   //     pol.push({ label:el.port_name, value:el.port_id});
+      //   //   });
+      //   //   elements.items = pol;
+      //   //   console.log(elements.items);
+      //   // }
+
+      // },
+      // setPacket(e) {
+      //   // console.log(e);
+      // },
+      // setValueshmDetQuantity(shm_det_quantity) {
+      //   try {
+      //     // console.log(this.data.shm_det_quantity);
+      //     // console.log(this.dataForSelect.type_rice_quantity_limit_max);
+      //     if (this.data.shm_det_quantity > this.dataForSelect.type_rice_quantity_limit_max)
+      //       this.set('data.shm_det_quantity', this.dataForSelect.type_rice_quantity_limit_max)
+      //   } catch (e) {
+
+      //   }
+
+      // },
+      // _checkDataInPackage: function (hamonize_id) {
+      //   try {
+      //     this._getRiceTypeForPackage(hamonize_id, '', '')
+      //   } catch (e) {
+
+      //   }
+
+      // },
+      // _confirmBook: function (data) {
+      //   // console.log(data);
+      //   if (data.book_status == false) {
+      //     return true;
+      //   } else {
+      //     return false;
+      //   }
+      // },
+      calcelBookDetail: function () {
+        this.fire('toast', {
+          status: 'openDialog',
+          text: this.localizeCommon.toast_cancel_approve,
+          confirmed: (result) => {
+            if (result == true) {
+              let url = { id: this.data.id }
+              this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
+              this.dispatchAction('SET_STATE', {
+                isInsert: false,
+                btnDisabled: true,
+                hiddend: true
+              })
+              this.dispatchAction('GET_BOOK_EXPORTER_DETAIL', this.genUrl(url))
+              this.async(() => {
+                this.fire('toast', {
+                  status: 'success', text: this.localizeCommon.load_successfully, callback: () => {
+                    this.queryFrom('.required').map((el) => { el.reset(); });
+                    // this.set('pageSelected', 'list-of-booking-edit')
+                  }
+                })
+              }, 500)
+            }
+          }
+        })
+      },
+      // calcelContract() {
+      //   this.fire('_change-component-shm', { detail: 'list-of-shm-det' })
+      // },
+      // check: function (data) {
+      //   // console.log(data);
+      //   //  this.set('dataOld', JSON.parse(JSON.stringify(data)));
+      //   // this.dataForSelect.olddata = ;
+      //   // this.notifyPath('dataOld');
+      // },
+      // _getSellerPhone: function (company_id, dataForSelect) {
+      //   if (company_id) {
+      //     // console.log('exporter_id>',company_id);
+      //     let tel = this.dataForSelect.seller.filter((exporters) => exporters.company_id == company_id);
+      //     // console.log(tel);
+      //     this.dataForSelect.company_id = tel[0].company_id;
+      //     this.dataForSelect.exporter_id = tel[0].id;
+      //     this.data.exporter_id = tel[0].id;
+      //     // this.dataForSelect.trader_id=tel[0].trader_id;
+      //     let address = tel[0].company_address_th + ' ' + tel[0].company_province_th
+      //     // console.log(tel[0]);
+      //     this.set('data.company_address', address)
+      //     // return tel[0].company_phone;
+      //   }
+      // },
+      _calPriceHamonize: function (hamonize_id, package_id, net_weight) {
+        try {
+          // console.log(this.packageList);
+          // console.log(package_id);
+          let price = this.packageList.find((item) => item.package_id === package_id)
+
+          this.set('data.price_d', price.price_d)
+          this.set('data.package_weight_bag', price.package.package_weight_bag)
+          net_weight = numeral().unformat(net_weight)
+          // console.log('net_weight'+numeral().unformat(net_weight));
+          let ne = parseFloat(net_weight) * parseFloat(1000)
+          // console.log(ne);
+          let package_amount = ne/ parseFloat(price.package.package_kg_per_bag)
+          this.set('data.package_amount', package_amount)
+          let gw = ((parseFloat(package_amount) * (parseFloat(price.package.package_kg_per_bag) + (parseFloat(price.package.package_weight_bag) / parseFloat(1000))) / parseFloat(1000)));
+          this.set('data.gross_weight', gw)
+          this.set('data.tare_weight', gw - net_weight)
+        } catch (e) {
+
+        }
+      },
+      // _getRiceTypeForPackage: function (hamonize_id, dataForSelect, exporter_id) {
+      //   if (hamonize_id) {
+      //     // console.log('>>>>>>>>>>',this.dataForSelect);
+      //     // let hamonize_id = e.detail.value;
+      //     let packages = this.bookHamonizeList.find((item) => item.hamonize_id === hamonize_id)
+      //     console.log(packages);
+      //     // let typeRice = this.dataForSelect.cl_type_rice.filter((typeRices) => typeRices.hamonize_id == hamonize_id);
+      //     // console.log(typeRice[0]);
+      //     // console.log(this.bookHamonizeList);
+      //     // console.log(typeRice);
+      //     // this.dataForSelect.package = typeRice[0].package;
+      //     // // console.log('fff=>', this.dataForSelect.package);
+      //     // // console.log(typeRice[0]);
+      //     // this.notifyPath('dataForSelect.package');
+      //     // //เซ็นลิมิตข้าวลงใน data.shm_det_quantity
+      //     // this.set('dataForSelect.type_rice_quantity_limit_max_label', this.formatNumberNoZero(typeRice[0].type_rice_quantity_limit_max));
+      //     // this.set('dataForSelect.type_rice_quantity_limit_max', typeRice[0].type_rice_quantity_limit_max);
+      //     // // console.log(typeRice[0].type_rice_quantity_limit_max);
+      //     // this.notifyPath('dataForSelect.type_rice_quantity_limit_max')
+      //     // this.set('data.package_id','')
+      //     // this.set('data.shm_det_quantity','')
+
+
+      //     // let check;
+      //     // newItemPackage = new Array();
+      //     // try {
+      //     //   this.dataOld.map((item) => {
+      //     //     if (item.book_id == book_id && item.exporter_id == exporter_id && item.hamonize_id == hamonize_id) {
+      //     //       check = true;
+      //     //       this.dataForSelect.package.map((packages)=>{
+      //     //         if (packages.package_id != item.package_id) {
+      //     //             newItemPackage.push(packages);
+      //     //         }
+      //     //       })
+      //     //     } else {
+      //     //       check = false;
+      //     //     }
+      //     //   })
+      //     // } catch (e) {
+      //     //
+      //     // }
+      //     // if (check) {
+      //     //   return this.dataForSelect.package =  newItemPackage;
+      //     // }else {
+      //     // return typeRice[0].package;
+      //     // }
+
+
+      //   }
+      // },
+      // _getPackageForPrice: function (package_id, dataForSelect) {
+      //   try {
+      //     this.async(() => {
+      //       let packing = this.dataForSelect.package.filter((packageing) => packageing.package_id == package_id);
+      //       this.price = packing[0];
+      //       // console.log(packing[0]);
+      //       if (typeof packing[0] != 'undefined' && packing[0] != undefined) {
+      //         // console.log(this.price);
+      //         // console.log(this.dataForSelect.book_id);
+      //         this.data.price_per_ton = packing[0].price_per_ton;
+      //         this.notifyPath('data.price_per_ton');
+      //       }
+      //     }, 1000);
+      //     // console.log(this.dataForSelect);
+
+      //   } catch (e) {
+
+      //   }
+      // },
+      // _obCalWeight: function (shm_det_quantity, dataForSelect) {
+      //   let pack = this.price;
+      //   if (typeof pack != 'undefined') {
+      //     shm_det_quantity = numeral().unformat(shm_det_quantity);
+      //     let quantityBag = ((parseFloat(shm_det_quantity) * parseFloat(1000)) / parseFloat(pack.package_kg_per_bag));
+      //     this.data.package_amount = numeral(this._isNan(quantityBag)).format('0,0');
+      //     this.notifyPath('data.package_amount');
+      //     let sumGW = ((parseFloat(quantityBag) * (parseFloat(pack.package_kg_per_bag) + (parseFloat(pack.package_weight_bag) / parseFloat(1000))) / parseFloat(1000)));
+      //     //  this.notifyPath('price.sumGW');
+      //     this.data.gross_weight = numeral(this._isNan(sumGW)).format('0,0.00');
+      //     this.notifyPath('data.gross_weight');
+      //     this.data.net_weight = numeral(parseFloat(shm_det_quantity)).format('0,0.00');
+      //     this.notifyPath('data.net_weight');
+      //     this.data.tare_weight = numeral(this._isNan(((parseFloat(quantityBag) * (parseFloat(pack.package_weight_bag) / parseFloat(1000))) / parseFloat(1000)))).format('0,0.00');
+      //     this.notifyPath('data.tare_weight');
+      //   }
+      // },
+      _resiveDataBookExporter: function () {
+        return new Promise((res, rej) => {
+          let dataResive = JSON.parse(JSON.stringify(this.data))
+          dataResive.contract_id = this.contractId.contract_id
+          dataResive.buyer_id = this.buyerId.buyer_id
+          dataResive.contract_no = Number(this.contractId.contract_no)
+          dataResive.cl_id = this.confirmId.cl_id
+          dataResive.cl_no = Number(this.confirmId.cl_no)
+          dataResive.book_id = this.bookId.book_id
+          dataResive.ship_lot = this.bookId.ship_lot
+          dataResive.value_d = dataResive.net_weight * dataResive.price_d
+          delete dataResive.package_weight_bag
+          delete dataResive.date_updated
+          delete dataResive.date_created
+          res(dataResive)
+        })
+      },
+      _resiveFormBoolExporter: function () {
+        return new Promise((res, rej) => {
+          if (this.validateForm('.required')) {
+            this._resiveDataBookExporter().then((data) => {
+              res(data)
+            })
+          } else {
+            this.fire('toast', {
+              status: 'connectError', text: this.localizeCommon.toast_input_error, //คำสั่งสำหรับเปิด toast error
+              callback: function () {
+                rej('error')
+              }
+            })
+          }
+        })
+      },
+      addExporter: function () {
+        this._resiveFormBoolExporter()
+          .then((res) => {
+            // console.log(res);
+            this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
+            // res.contract_status = false
+            let url = { book_id: res.book_id }
+            this.dispatchAction('POST_BOOK_DETAIL', res)
+              .then((response) => {
+                if (response.data.inserted !== undefined && response.data.inserted.length !== 0) {
+                  // this.dispatchAction('GET_CONTRACT_OF_BUYER', res.buyer_id);
+
+                  this.dispatchAction('GET_BOOK_EXPORTER_LIST', this.genUrl(url))
+                  this.fire('toast', {
+                    status: 'success', text: this.localizeCommon.save_succeed,  // คำสั่งสำหรับเปิด toast success
+                    callback: () => {
+                      this.queryFrom('.required').map((el) => { el.reset(); });
+                      this.cancelEditShipment()
+                      // this.fire('close-drawer')
+                    }
+                  })
+                } else {
+                  // console.log(1111);
+                  this.fire('toast', {
+                    status: 'connectError', text: response.data, //คำสั่งสำหรับเปิด toast error
+                    callback: () => {
+                    }
+                  })
+                }
+              })
+          })
+          .catch((error) => {
+            //console.log(error);
+          });
+        //   this.data.book_id = this.dataForSelect.book_id;
+        //   this.set('data.tags', [])
+        //   // console.log(this.dataForSelect.contract_id+','+this.dataForSelect.cl_id+','+this.dataForSelect.company_id);
+        //   // console.log(this.dataForSelect);
+        //   this.push('data.tags', this.dataForSelect.contract_id, this.dataForSelect.cl_id, this.dataForSelect.company_id);
+        //   // console.log(this.data);
+        //   // console.log(this.dataForSelect.type_rice_quantity_limit_max,this.data.shm_det_quantity);
+        //   if (this.data.shm_det_quantity <= this.dataForSelect.type_rice_quantity_limit_max && this.data.shm_det_quantity > 0) {
+        //     this._cleanShipmentData(this.data, (data) => {
+        //       this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
+        //       // console.log(data);
+        //       this.insert('./g2g/shipment_detail/insert', data, () => {
+        //         // this.fire('refresh-contract',{detail:'refresh-contract'});
+        //         this.fire('_get-fire-shm-detail', { book_id: data.book_id });
+        //         // this.fire('get-list-shipment-detail',{sm_id:this.dataForSelect.shm_id});
+        //         this.fire('toast', {
+        //           status: 'success', text: this.localizeCommon.save_succeed,  // คำสั่งสำหรับเปิด toast success
+        //           callback: () => {
+        //             this.cancelInsertShipment();
+        //             //  this.fire('refresh-contract', { detail: 'refresh-contract' });
+        //             // ดึงข้อมูลใหม่
+        //             this.fire('get-list-shipment', { contractId: this.dataForSelect.contract_id });
+        //             let el = Polymer.dom(this.root).querySelectorAll('.required');
+        //             el.map((el) => { el.reset(); el.value = '' });
+        //             this.cancelEditShipment()
+        //             this.set('data.company_address', '')
+        //             this.set('dataForSelect.type_rice_quantity_limit_max_label', 0)
+        //           }
+        //         });
+        //       });
+
+        //     });
+        //   } else {
+        //     this.fire('toast', {
+        //       status: 'connectError', text: 'ปริมาณข้าวไม่ถูกต้อง', //คำสั่งสำหรับเปิด toast error
+        //       callback: function () {
+        //       }
+        //     })
+        //   }
+      },
+      saveExporter: function () {
+        this._resiveFormBoolExporter()
+          .then((res) => {
+            // console.log(res);
+            this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
+            // res.contract_status = false
+            let url = { book_id: res.book_id }
+            this.dispatchAction('PUT_BOOK_DETAIL', res)
+              .then((response) => {
+                // console.log(response.data);
+
+                if (response.data.replaced !== undefined && response.data.replaced.length !== 0) {
+                  // this.dispatchAction('GET_CONTRACT_OF_BUYER', res.buyer_id);
+                  this.dispatchAction('GET_BOOK_EXPORTER_LIST', this.genUrl(url))
+                  this.dispatchAction('SET_STATE', {
+                    isInsert: false,
+                    btnDisabled: true,
+                    hiddend: true
+                  })
+                  this.fire('toast', {
+                    status: 'success', text: this.localizeCommon.save_succeed,  // คำสั่งสำหรับเปิด toast success
+                    callback: () => {
+                      this.queryFrom('.required').map((el) => { el.reset(); });
+                      // this.fire('close-drawer')
+                    }
+                  })
+                } else {
+                  // console.log(1111);
+                  this.fire('toast', {
+                    status: 'connectError', text: response.data, //คำสั่งสำหรับเปิด toast error
+                    callback: () => {
+                    }
+                  })
+                }
+              })
+          })
+          .catch((error) => {
+            //console.log(error);
+          });
+        //   let sum = this.oldData.shm_det_quantity + this.dataForSelect.type_rice_quantity_limit_max;
+        //   // console.log(sum);
+        //   this.set('data.tags', [])
+        //   this.push('data.tags', this.dataForSelect.contract_id, this.dataForSelect.cl_id, this.dataForSelect.company_id);
+        //   if (this.data.shm_det_quantity <= sum && this.data.shm_det_quantity > 0) {
+        //     this._cleanShipmentData(this.data, (data) => {
+        //       data.shm_id = this.data.shm_id;
+        //       data.id = this.data.shm_det_id;
+        //       this.fire('toast', {  //คำสั่งสำหรับเปิด toast dialog
+        //         status: 'dialog',
+        //         text: 'ต้องการแก้ข้อมูลใช่หรือไม่ ?',
+        //         confirmed: this._saveExporter.bind(this), //function ที่ใช้รับค่า ปุ่ม
+        //         el: this, // compontents
+        //         data: data // ข้อมูลที่ส่งไป เช่น id ที่จะใช้ลบข้อมูล ใน db
+        //       })
+        //     });
+        //   } else {
+        //     this.fire('toast', {
+        //       status: 'connectError', text: 'ปริมาณข้าวไม่ถูกต้อง', //คำสั่งสำหรับเปิด toast error
+        //       callback: function () {
+        //       }
+        //     })
+        //   }
+      },
+      // _saveExporter: function (result, detail) {
+      //   if (result == true) {
+      //     this.update('./g2g/shipment_detail/update', detail.data, () => {
+      //       //  this.fire('get-shipMentDetail',{shm_id :data.shm_id,refresh:false ,action:'put'})
+      //       this.fire('refresh-contract', { detail: 'refresh-contract' });
+      //       // console.log(this.dataForSelect);
+      //       // ดึงข้อมูลใหม่
+      //       this.fire('get-list-shipment', { contractId: this.dataForSelect.contract_id });
+      //       this.fire('_get-fire-shm-detail', { book_id: detail.data.book_id });
+      //       this.fire('get-list-shipment-detail', { sm_id: this.dataForSelect.shm_id });
+      //       this.editBookDetaIl();
+      //       this.fire('toast', {
+      //         status: 'success', text: this.localizeCommon.save_succeed,  // คำสั่งสำหรับเปิด toast success
+      //         callback: function () {
+      //           //  detail.el.fire('get-contract-detail',{contractId:detail.data.id});
+      //         }
+      //       });
+      //     });
+      //   }
+      // },
+      deleteBookDetail: function () {
+        this.fire('toast', {
+          status: 'openDialog',
+          text: this.localizeCommon.toast_delete,
+          confirmed: (result) => {
+            if (result == true) {
+              this._resiveFormBoolExporter()
+                .then((res) => {
+                  // console.log(res);
+                  let url = { book_id: res.book_id }
+                  this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
+                  this.dispatchAction('DELETE_BOOK_DETAIL', res.id)
+                    .then((response) => {
+                      if (response.data.deleted !== undefined && response.data.deleted.length !== 0) {
+                        this.dispatchAction('GET_BOOK_EXPORTER_LIST', this.genUrl(url))
+                        // this.dispatchAction('GET_CONTRACT_OF_BUYER', res.buyer_id);
+                        this.fire('toast', {
+                          status: 'success', text: this.localizeCommon.delete_succeed,  // คำสั่งสำหรับเปิด toast success
+                          callback: () => {
+                            this.fire('toast', {
+                              status: 'success', text: this.localizeCommon.load_successfully, callback: () => {
+                                this.fire('_list-book', 'list-of-booking-exporter')
+                              }
+                            })
+                          }
+                        })
+                        // this.fire('close-drawer')
+                      } else {
+                        // console.log(1111);
+                        this.fire('toast', {
+                          status: 'connectError', text: response.data, //คำสั่งสำหรับเปิด toast error
+                          callback: () => {
+                          }
+                        })
+                      }
+
+                    })
+                })
+                .catch((error) => {
+                  //console.log(error);
+                });
+            }
+          }
+        })
+        //   this.fire('toast', {  //คำสั่งสำหรับเปิด toast dialog
+        //     status: 'dialog',
+        //     text: this.localizeCommon.toast_delete,
+        //     confirmed: this._deleteExporter.bind(this), //function ที่ใช้รับค่า ปุ่ม
+        //     el: this, // compontents
+        //     data: this.data// ข้อมูลที่ส่งไป เช่น id ที่จะใช้ลบข้อมูล ใน db
+        //   })
+      },
+      // _deleteExporter: function (result, detail) {
+      //   if (result == true) {
+      //     // this.fire('min-size-collapse-shipment-detail',{collapse:'collapse'+detail.data.shm_det_id});
+      //     this.delete('./g2g/shipment_detail/delete/id/', detail.data.shm_det_id, () => {
+      //       this.fire('_get-fire-shm-detail', { book_id: detail.data.book_id });
+      //       //สั่งปิดแล้วค่อยลบ
+      //       this.fire('toast', {
+      //         status: 'success', text: this.localizeCommon.save_succeed,  // คำสั่งสำหรับเปิด toast success
+      //         callback: () => {
+      //           // this.fire('refresh-contract', { detail: 'refresh-contract' });
+      //           this.fire('get-list-shipment', { contractId: this.dataForSelect.contract_id });
+      //           this.cancelEditShipment()
+      //           //  detail.el.fire('get-contract-detail',{contractId:detail.data.id});
+      //         }
+      //       });
+      //     });
+
+      //   }
+      // },
+      // cancelEditShipmentDetail: function () {
+      //   Object.assign(this.data, this.dataOld);
+      //   this.notifyPath('data.weight_per_container');
+      //   this.notifyPath('data.hamonize_id');
+      //   this.notifyPath('data.package_id');
+      //   this.notifyPath('data.shm_det_quantity');
+      //   this.notifyPath('data.origin_page');
+      //   this.notifyPath('data.nn_page');
+      //   this.notifyPath('data.exporter_id');
+      //   this.editBookDetaIl();
+      // },
+      // cancelInsertShipment: function () {
+      //   this.fire('cancel-edit-shipment', { detail: 'cancel-insert-shipment' })
+      // },
+      cancelEditShipment: function () {
+        this.fire('_list-book', 'list-of-booking-exporter')
+        this.dispatchAction('SET_BREADCRUMBS', [{
+          label: this.localizeContract.contract_at+' ' + this.contractId.contract_no,
+          href: ''
+        },
+        {
+          label: this.localizeConfirmLetter.ref_no+' ' + this.confirmId.cl_no,
+          href: ''
+        },
+        {
+          label: this.localizeBook.vessel_no+' ' + this.bookId.ship_lot,
+          href: ''
+        },
+        ])
+      },
+      // _cleanShipmentData: function (data, callback) {
+      //   let el = Polymer.dom(this.root).querySelectorAll('.required');
+      //   let stat = el.map((el) => el.validate());
+      //   if (stat.every(elem => elem == true)) {
+      //     if (data.shm_det_quantity > 0) {
+      //       let { book_id, num_of_container, hamonize_id, package_id, shm_det_quantity, exporter_id, price_per_ton} = data;
+      //       let newData = { book_id, num_of_container, hamonize_id, package_id, shm_det_quantity, exporter_id, price_per_ton };
+      //       if (typeof data.tags !== 'undefined') {
+      //         newData.tags = new Array();
+      //         data.tags.map((tag) => {
+      //           newData.tags.push(tag);
+      //         });
+      //       }
+      //       el.map((el) => { el.reset(); });
+      //       // console.log(newData);
+      //       callback(newData)
+      //     } else {
+      //       this.fire('toast', {
+      //         status: 'connectError', text: 'กรุณาใส่ปริมาณข้าวมากกว่า 0 ', //คำสั่งสำหรับเปิด toast error
+      //         callback: function () {
+      //         }
+      //       })
+      //     }
+
+      //   } else {
+      //     this.fire('toast', {
+      //       status: 'connectError', text: 'กรุณากรอกให้ครบทุกช่อง', //คำสั่งสำหรับเปิด toast error
+      //       callback: function () {
+      //       }
+      //     })
+      //   }
+      // },
+      _getObjectcompany: function (e) {
+        if (e.detail.value) {
+          let data = e.detail.value
+          this.set('data.company', {
+            company_address_en: data.company.company_address_en,
+            company_address_th: data.company.company_address_th,
+            company_date: data.company.company_date,
+            company_fax: data.company.company_fax,
+            company_name_en: data.company.company_name_en,
+            company_name_th: data.company.company_name_th,
+            company_phone: data.company.company_phone,
+            company_province_en: data.company.company_province_en,
+            company_province_th: data.company.company_province_th,
+            company_taxno: data.company.company_taxno,
+            id: data.company.id,
+            username: data.company.username
+          })
+          this.set('data.company_taxno', data.company_taxno)
+          this.set('data.exporter_id', data.id)
+          this.set('data.exporter_no', data.exporter_no)
+        }
+      },
+
+      getObjectHamonize: function (e) {
+        if (e.detail.value) {
+          let data = e.detail.value
+          // console.log(data);
+          this.set('data.project_en', data.project_en)
+          this.set('data.project_th', data.project_th)
+          this.set('data.hamonize', {
+            digits: data.hamonize.digits,
+            hamonize_code: data.hamonize.hamonize_code,
+            hamonize_en: data.hamonize.hamonize_en,
+            hamonize_en2: data.hamonize.hamonize_en2,
+            hamonize_th: data.hamonize.hamonize_th,
+            hamonize_th2: data.hamonize.hamonize_th2,
+            hamonize_year: data.hamonize.hamonize_year,
+            id: data.hamonize_id
+          })
+          let HamoPackage = JSON.parse(JSON.stringify(data.package))
+          for (var index = 0; index < HamoPackage.length; index++) {
+            HamoPackage[index].package_name_en = HamoPackage[index].package.package_name_en
+            // package[index].package_kg_per_bag = package[index].package.package_kg_per_bag
+            // package[index].package_name_en = package[index].package.package_name_en
+            // package[index].package_name_th = package[index].package.package_name_th
+            // package[index].package_weight_bag = package[index].package.package_weight_bag
+          }
+          // console.log(package);
+          this.set('packageList', HamoPackage)
+        }
+      },
+      _getObjectPackage: function (e) {
+        if (e.detail.value) {
+          let data = e.detail.value;
+          this.set('data.package', {
+            id: data.package.id,
+            package_kg_per_bag: data.package.package_kg_per_bag,
+            package_name_en: data.package.package_name_en,
+            package_name_th: data.package.package_name_th,
+            package_weight_bag: data.package.package_weight_bag
+          })
+        }
+
+        // "package": {
+        //     "id": "99f6d3c6-1d14-4071-99d4-bae857af43c1",
+        //     "package_kg_per_bag": 25,
+        //     "package_name_en": "NEW SINGLE PP BAGS OF 25 KILOGRAMS NET",
+        //     "package_name_th": "กระสอบขนาด 25 ก.ก./กระสอบ",
+        //     "package_weight_bag": 80
+        //   },
+      },
+
+    });
+  </script>
+</dom-module>

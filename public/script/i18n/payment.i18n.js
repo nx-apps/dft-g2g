@@ -1,0 +1,28 @@
+export const payment = {
+    th: {
+        text_of_contract: "ชื่อสัญญา",
+        company_taxno: "เลขประจำตัวผู้เสียภาษี",
+        company_name_th: "ชื่อบริษัท",
+        cheque_count: "จำนวนเช็ค",
+        ch_cheque: "เลือกเช็ค",
+        no_cheque: "เลขที่เช็ค",
+        value_bal_b: "จำนวนเงินที่ได้",
+        value_tax_b: "หักภาษี 1 %",
+        value_final_b: "จำนวนเงินที่จ่าย",
+        invoice_company_no: "เลขที่ใบแจ้งนี้",
+        pay_running: "เลขที่ใบหักภาษี ณ ที่จ่าย",
+        no_data: "ไม่มีข้อมูล",
+        total: "รวม",
+        save: "บันทึก",
+        booking_code: "รหัสการจอง",
+        booking_name: "ชื่อการจอง",
+        total_tons: "ปริมาณตัน",
+        amount_total: "มูลค่ารวม",
+        amount: "จำนวนเงิน",
+        total_ton: "ปริมาณรวมทั้งหมด (ตัน)",
+        rice_from_stock: "จ่ายเพิ่มเติมด้วยข้าวจากสต็อกของรัฐ",
+        bank_branch: "สาขา",
+        paid_date: "วันที่จ่ายเช็ค",
+        pay_remark: "หมายเหตุ",
+    }
+}   

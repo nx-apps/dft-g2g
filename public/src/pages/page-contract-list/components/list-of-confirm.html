@@ -1,0 +1,390 @@
+<link rel="import" href="confirm-detail.html">
+<link rel="import" href="../../components/month-behavior.html">
+<link rel="import" href="./../../../../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="./../../../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="./../../../../bower_components/gl-form/gl-combo-box.html">
+<link rel="import" href="./../../../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="./../../../../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="./../../../../bower_components/paper-dialog-scrollable/paper-dialog-scrollable.html">
+<link rel="import" href="../../components/g2g-logic-behavior.html">
+
+<dom-module id="list-of-confirm">
+  <style include="iron-flex iron-flex-factors iron-flex-alignment gl-styles page-style">
+    * {
+      font-family: 'CSChatThaiUI', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    table.gl-table-default {
+      width: 100%;
+      border: 1px solid #ddd;
+      margin: 20px 0px 10px 0px;
+    }
+
+    table.gl-table-default>tbody.table-body>tr>td {
+      cursor: pointer;
+      /*padding: 5px 15px;*/
+    }
+
+    .combo-box {
+      width: 100%;
+    }
+
+    .title {
+      font-size: var(--font-size-h3);
+      text-align: center;
+    }
+  </style>
+  <template>
+    <iron-pages selected="{{pageSelected}}" attr-for-selected="name">
+      <div name="listOfConfirm">
+        <div class="addconfirm horizontal end-justified layout">
+          <!--<paper-button raised class="gl-btn-primary" disabled="[[!dataForSelect.contract_status]]" on-tap="createConfirm">{{localize.btn_add}}</paper-button>-->
+          <paper-button raised class="gl-btn-primary" on-tap="createConfirm" disabled="{{!contractId.contract_status}}">{{localizeCommon.add}}</paper-button>
+
+        </div>
+        <br>
+        <div class="title">
+          [[title]]
+        </div>
+        <div class="horizontal layout wrap">
+          <div id="combox" class="flex">
+            <gl-combo-box id="cl_id" placeholder="[[localizeCommon.all]]" items="{{confirmLetterExporterlist}}" item-label-path="label"
+              label="[[localizeConfirmLetter.buyer_send]]" item-value-path="exporter_id" on-value-changed="getShowByExport"
+              on-selected-item-changed="getObjectConfirm">
+              <template>
+                [[item.label]]
+              </template>
+            </gl-combo-box>
+          </div>
+        </div>
+
+        <table class="gl-table-default">
+          <thead class="table-head">
+            <tr>
+              <th>{{localizeConfirmLetter.ref_no}}</th>
+              <th>{{localizeConfirmLetter.total_vessel}}</th>
+              <th>{{localizeConfirmLetter.total_quantity}}</th>
+              <th>{{localizeConfirmLetter.total_send}}</th>
+              <th>#</th>
+            </tr>
+          </thead>
+          <tbody class="table-body">
+            <template is="dom-repeat" items="[[confirmLetterList]]">
+              <tr>
+                <td on-tap="getConfirmDetail" data="[[item]]">[[item.cl_no]]</td>
+                <td on-tap="getConfirmDetail" data="[[item]]">[[item.count_ship]]</td>
+                <td on-tap="getConfirmDetail" data="[[item]]">[[formatNumberNoZero(item.cl_weight)]]</td>
+                <td on-tap="getConfirmDetail" data="[[item]]">[[formatNumberNoZero(item.book_weight)]] [[checkMInus(item.cl_weight_balance)]]</td>
+                <td>
+                  <paper-icon-button id="printShipment" class="crud" icon="print" raised on-tap="printVesel" data="[[item]]"></paper-icon-button>
+                  <paper-tooltip for="printShipment" offset="0">{{localizeCommon.print}}</paper-tooltip>
+                </td>
+              </tr>
+            </template>
+            <template is="dom-if" if="[[_isHave(confirmLetterList)]]">
+              <tr>
+                <td colspan="5" style=" text-align: center;"> {{localizeCommon.no_data}}</td>
+              </tr>
+            </template>
+          </tbody>
+        </table>
+      </div>
+      <div name="addConfirm">
+        <confirm-detail id="confirm-detail"></confirm-detail>
+      </div>
+      <div name="confirmDetail">
+        <confirm-detail id="confirm-detail"></confirm-detail>
+      </div>
+    </iron-pages>
+
+    <paper-dialog id="scrolling">
+      <h2>รายงาน</h2>
+      <paper-dialog-scrollable>
+        <p>
+          <!--<gl-combo-box always-float-label label="{{localizeCommon.print}}" placeholder="{{localizeCommon.print}}" value="{{printReport.typeReport}}"
+          item-label-path="report_name" item-value-path="report_name_id" items="{{report.report_name}}" on-selected-item-changed="getObjectReport">
+          <template>
+            [[item.report_name]]
+          </template>
+        </gl-combo-box>&nbsp;-->
+          <paper-dropdown-menu label="{{localizeCommon.print}}" on-value-changed="getObjectReport">
+            <paper-listbox class="dropdown-content" attr-for-selected="name" selected="{{printReport.typeReport}}">
+              <template is="dom-repeat" items={{report.report_name}}>
+                <paper-item name="[[item.report_name_id]]"> [[item.report_name]]</paper-item>
+              </template>
+            </paper-listbox>
+          </paper-dropdown-menu>
+          <br />
+          <!--<gl-combo-box always-float-label label="{{localizeCommon.report_type}}" placeholder="{{localizeCommon.report_type}}" value="{{printReport.export}}"
+          item-label-path="report_type" item-value-path="report_type_id" items="{{report.report_type}}">
+          <template>
+            [[item.report_type]]
+          </template>
+        </gl-combo-box>-->
+
+          <paper-dropdown-menu label="{{localizeCommon.report_type}}">
+            <paper-listbox class="dropdown-content" attr-for-selected="name" selected="{{printReport.export}}">
+              <template is="dom-repeat" items={{report.report_type}}>
+                <paper-item name="[[item.report_type_id]]">[[item.report_type]]</paper-item>
+              </template>
+            </paper-listbox>
+          </paper-dropdown-menu>
+
+          <template is="dom-if" if={{dataSetReport.report1}}>
+            <gl-form-input label="{{localizeBl.ship_lot}}" autofocus always-float-label placeholder="{{localizeBl.ship_lot}}" value="{{printReport.ship_lot}}"></gl-form-input>
+
+          </template>
+
+
+
+        </p>
+
+      </paper-dialog-scrollable>
+      <div class="buttons">
+        <paper-button dialog-confirm raised>ปิด</paper-button>
+        <paper-button on-tap="printReportBook" raised>ออกรายงาน</paper-button>
+      </div>
+    </paper-dialog>
+  </template>
+  <script>
+    Polymer({
+      is: "list-of-confirm",
+      behaviors: [
+        ReduxBehavior,
+        FormatNumberBehavior,
+        nylonBehavior,
+        MonthBehavior,
+        g2gLogicBehavior
+      ],
+      listeners: {
+        'back-page-confirm': '_backPageConfirm',
+      },
+      properties: {
+        localizeCommon: {
+          statePath: 'i18n.common'
+        },
+        localizeBl: {
+          statePath: 'i18n.bl'
+        },
+        localizeConfirmLetter: {
+          statePath: 'i18n.confirmLetter'
+        },
+        localizeContract: {
+          statePath: 'i18n.contract'
+        },
+        commonState: {
+          statePath: 'commonState.setState'
+        },
+        title: {
+          type: String,
+          value: 'แสดงปริมาณการส่งมอบ'
+        },
+        pageSelected: {
+          type: String,
+          value: 'listOfConfirm',
+          notify: true
+        },
+        setPage: {
+          statePath: 'commonState.setPageAndSearch',
+          observer: 'setPageFun'
+        },
+        confirmLetterList: {
+          statePath: 'confirmLetter.confirmLetterlist',
+        },
+        confirmLetterExporterlist: {
+          statePath: 'confirmLetter.confirmLetterExporterlist',
+        },
+        contractId: {
+          statePath: 'commonState.contractId',
+          observer: 'get'
+        },
+        dataSetReport: {
+          type: Object,
+          value: {
+            report0: false,
+            report1: false,
+            report2: false,
+          }
+        },
+        printReport: {
+          type: Object,
+          value: { typeReport: '3', export: 'pdf', ship_lot: '' }
+        },
+        report: {
+          type: Object,
+          value:
+          {
+            report_name:
+            [
+              { report_name: 'ตารางเรือ', report_name_id: '3' },
+              { report_name: 'หนังสือแจ้งการส่งมอบข้าว', report_name_id: '2' },
+              // { report_name: 'หนังสือแจ้งบริษัทเรื่องการส่งมอบข้าว', report_name_id: '2' }
+            ],
+            report_type:
+            [
+              { report_type: 'PDF', report_type_id: 'pdf' },
+              { report_type: 'WORD', report_type_id: 'word' },
+              { report_type: 'EXCEL', report_type_id: 'excel' }
+            ]
+          }
+        },
+      },
+      getObjectReport(report) {
+        try {
+          // console.log(report.detail.value);
+          this.printReport
+          let value = this.report.report_name.find((items) => items.report_name === report.detail.value)
+          // console.log(value.report_name_id);
+          switch (value.report_name_id) {
+            case '3':
+              this.set('dataSetReport.report0', true)
+              this.set('dataSetReport.report1', false)
+              // console.log(0);
+              break;
+            case '2':
+              this.set('dataSetReport.report0', false)
+              this.set('dataSetReport.report1', true)
+              // console.log(1);
+              break;
+            default:
+              this.set('dataSetReport.report0', false)
+              this.set('dataSetReport.report1', false)
+              // console.log(2);
+              break;
+          }
+          // console.log(this.dataSetReport);
+
+        } catch (e) {
+
+        }
+
+      },
+      setPageFun: function (data) {
+        this.set('pageSelected', data.page)
+        this.$$('#cl_id').value = data.search
+        this.$$('#cl_id').reset()
+      },
+      createConfirm: function () {
+        let data = { cl_no: 0 }
+        if (this.confirmLetterList.length !== 0) {
+          data.cl_no = this.confirmLetterList[0].cl_no
+
+        }
+        data.cl_no++
+        data.contract_id = this.contractId.contract_id
+        data.contract_no = this.contractId.contract_no
+        this.dispatchAction('SET_BREADCRUMBS', [{
+          label: this.localizeContract.contract_at + ' ' + this.contractId.contract_no,
+          href: ''
+        },
+        {
+          label: this.localizeConfirmLetter.add_ref,
+          href: ''
+        },
+        ])
+        // resetFrom
+        this.$$('confirm-detail').resetFrom('.required')
+        this.fire('toast', { status: 'load' });
+        this.dispatchAction('SET_STATE', {
+          isInsert: true,
+          btnDisabled: false,
+          hiddend: true
+        })
+        this.dispatchAction('CLEAR_CONFIRM', data)
+        this.async(() => {
+          this.fire('toast', {
+            status: 'success', text: this.localizeCommon.load_successfully, callback: () => {
+              this.pageSelected = 'addConfirm';
+            }
+          })
+        }, 500)
+
+      },
+      getConfirmDetail: function (e) {
+        this.fire('toast', { status: 'load' });
+        let cl = e.currentTarget.data
+        // console.log(e.currentTarget.data)
+        this.dispatchAction('SET_STATE', {
+          isInsert: false,
+          btnDisabled: true,
+          hiddend: true
+        })
+        // resetFrom
+        this.$$('confirm-detail').resetFrom('.required')
+        this.dispatchAction('SET_BREADCRUMBS', [{
+          label: this.localizeContract.contract_at + ' ' + this.contractId.contract_no,
+          href: ''
+        },
+        {
+          label: this.localizeConfirmLetter.ref_no + ' ' + cl.cl_no,
+          href: ''
+        },
+        ])
+        this.dispatchAction('GET_CONFIRM_DETAIL', cl.id)
+        this.async(() => {
+          this.fire('toast', {
+            status: 'success', text: this.localizeCommon.load_successfully, callback: () => {
+              this.pageSelected = 'confirmDetail';
+            }
+          })
+        }, 500)
+      },
+      _backPageConfirm: function (data) {
+        this.pageSelected = 'listOfConfirm';
+        this.dispatchAction('SET_BREADCRUMBS', [{
+          label: this.localizeContract.contract_at + ' ' + this.contractId.contract_no,
+          href: ''
+        },
+        ])
+      },
+
+      printVesel: function (e) {
+        // console.log(e.currentTarget.data);
+        let cl = e.currentTarget.data
+        this.$.scrolling.open()
+        // this.printReport.
+        // console.log(cl);
+        this.set('printReport.cl_id', cl.id)
+        // window.open(window._config.reportServer + '/api/rice/report4?id=' + e.currentTarget.data.id, '1');
+        // console.log(e.currentTarget.data);
+      },
+      printReportBook() {
+        // console.log(this.dataReport);
+        // this.this.printReport.typeReport
+        // console.log(this.printReport);
+        // export
+        window.open(window._config.reportServer + '/api/rice/report' + (Number(this.printReport.typeReport) + 1) + '?id=' + this.printReport.cl_id + '&' + this.genUrl(this.printReport), '1');
+
+      },
+      checkMInus: function (cl_quantity_tolerance) {
+        var str = this.formatNumberNoZero(cl_quantity_tolerance);
+        //   // console.log(this.formatNumberNoZero(0));
+        if (cl_quantity_tolerance > 0) str = "+" + str;
+        return typeof cl_quantity_tolerance === "undefined" ? '' : "(" + str + ")";
+      },
+      getShowByExport: function (e) {
+        // console.log(e);
+        try {
+          this.set('title', this.localizeConfirmLetter.show_total_send)
+          if (this.contractId.contract_id !== undefined) {
+            if (e.currentTarget.value !== undefined && e.currentTarget.value !== '') {
+              // let = e.currentTarget.value
+              let url = { contract_id: this.contractId.contract_id, status: 'all', exporter_id: e.currentTarget.value }
+              this.dispatchAction('GET_CONFIRM_LIST', this.genUrl(url))
+            } else {
+              let url = { contract_id: this.contractId.contract_id, status: 'all' }
+              this.dispatchAction('GET_CONFIRM_LIST', this.genUrl(url))
+            }
+          }
+        } catch (e) {
+          // console.log(e);
+        }
+      },
+      getObjectConfirm: function (e) {
+        // console.log(e)
+      }
+
+    });
+  </script>
+</dom-module>

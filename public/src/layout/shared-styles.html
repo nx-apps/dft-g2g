@@ -1,0 +1,236 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="./flexbox-grid.html">
+<link rel="import" href="./page-style.html">
+
+<!--<link rel="import" href="./../../bower_components/font-awesome/css/font-awesome.min.css">-->
+
+<link rel="import" href="./../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../../bower_components/gl-styles/gl-styles.html">
+
+<dom-module id="shared-styles">
+    <template>
+        <style include="iron-flex iron-flex-factors iron-flex-alignment gl-styles page-style">
+            @font-face {
+                font-family: CSChatThaiUI;
+                src: url('../../fonts/CSChatThaiUI.eot');
+                src: url('../../fonts/CSChatThaiUI.eot?#iefix') format('eot'), url('../../fonts/CSChatThaiUI.woff') format('woff'), url('../../fonts/CSChatThaiUI.ttf') format('truetype'), url('../../fonts/CSChatThaiUI.svg') format('svg');
+            }
+
+            paper-button.btnInTable {
+                --paper-button: {
+                    margin-top: 0px;
+                    height: 32px;
+                }
+            }
+
+            paper-icon-button.crud {
+                margin: 5px 5px 5px 5px;
+            }
+
+            paper-icon-button.crud:hover {
+                background-color: var(--paper-grey-200);
+                border-radius: 5px;
+                box-shadow: inset 0 0 3px 3px rgba(0, 0, 0, .2);
+            }
+
+            paper-fab {
+                position: fixed;
+                right: 25px;
+                bottom: 25px;
+                color: #fff;
+                --paper-fab-background: var(--paper-light-blue-500);
+                --paper-fab-keyboard-focus-background: var(--paper-light-blue-900);
+            }
+
+            paper-material.white {
+                padding: 5px;
+                background-color: var(--gl-white-color);
+                border-radius: 3px;
+            }
+
+            .breadcrumbs {
+                margin: 38px 38px 0px 38px;
+                border-bottom: 1px solid #ccc!important;
+                padding: 10px;
+            }
+
+             :host {
+                --vaadin-date-picker-label-floating: {
+                    font-size: 21px;
+                    line-height: 30px;
+                }
+                --gl-combo-box-container-label-floating: {
+                    font-size: 22px;
+                    line-height: 30px;
+                }
+                --gl-form-input-container-label-floating: {
+                    font-size: 22px !important;
+                    line-height: 30px;
+                }
+                --gl-form-textarea-container-label-floating: {
+                    font-size: 22px !important;
+                    line-height: 30px;
+                }
+            }
+
+            .page-head {
+                margin: 20px 0px 0px 0px;
+            }
+
+            .paper-meterial {
+                background-color: var(--gl-white-color);
+                border-radius: 3px;
+            }
+
+            .margin-meterial {
+                margin: 20px;
+            }
+
+            .head-meterial,
+            .content-meterial,
+            .foot-meterial {
+                padding: 15px;
+                display: block;
+            }
+
+            .head-meterial {
+                font: var(--font-size-h3);
+                font-weight: bold;
+            }
+
+            .content-meterial {
+                font: var(--font-size-h4);
+            }
+
+            .foot-meterial {
+                font: var(--font-size-h4);
+            }
+            /*vaadin-date-picker {
+            margin-top: -19px;
+        }*/
+
+            .xcontainer {
+                margin: auto;
+            }
+
+            @media screen and (min-width: 1275px) {
+                .xcontainer {
+                    width: 85%;
+                }
+            }
+
+            .tabe-overflow-x {
+                overflow-x: auto;
+                border-right: 1px solid #ddd;
+                border-left: 1px solid #ddd
+            }
+
+            gl-combo-box {
+                --shadow-elevation-2dp: {
+                    font-family: 'CSChatThaiUI', sans-serif;
+                    -webkit-font-smoothing: antialiased;
+                    border: 1px solid #ddd;
+                }
+            }
+
+            .gl-btn-danger {
+                background-color: #FF3B3B;
+            }
+
+            vaadin-grid#material {
+                font-family: 'CSChatThaiUI', sans-serif;
+                -webkit-font-smoothing: antialiased;
+                --divider-color: rgba(0, 0, 0, var(--dark-divider-opacity));
+                --vaadin-grid-cell: {
+                    padding: 0;
+                }
+                ;
+                --vaadin-grid-header-cell: {
+                    min-height: 64px;
+                    color: rgba(0, 0, 0, var(--dark-secondary-opacity));
+                    font-size: 16px;
+                    font-weight: bold;
+                    background-color: #F1F1F1;
+                    padding: 5px 5px;
+                    /*border-bottom: 1px solid red;*/
+                    /*border: 0.5px solid rgba(0, 0, 0, var(--dark-secondary-opacity));*/
+                }
+                ;
+                --vaadin-grid-body-cell: {
+                    min-height: 48px;
+                    color: rgba(0, 0, 0, var(--dark-primary-opacity));
+                    word-warp font-size: 17px;
+                }
+                ;
+                --vaadin-grid-footer-cell: {
+                    min-height: 64px;
+                    color: rgba(0, 0, 0, var(--dark-secondary-opacity));
+                    font-size: 16px;
+                    font-weight: bold;
+                }
+                ;
+                --vaadin-grid-body-row-hover-cell: {
+                    background-color: var(--paper-grey-200);
+                }
+                ;
+                --vaadin-grid-body-row-selected-cell: {
+                    background-color: var(--paper-grey-100);
+                }
+                ;
+                --vaadin-grid-focused-cell: {
+                    box-shadow: none;
+                    font-weight: bold;
+                }
+                ;
+            }
+
+            vaadin-grid#material .text-left {
+                text-align: left;
+                padding-right: 10px;
+            }
+
+            vaadin-grid#material .text-center {
+                text-align: center;
+            }
+
+            vaadin-grid#material .text-right {
+                text-align: right;
+                padding-right: 10px;
+            }
+
+
+
+            vaadin-grid#material .cursor {
+                cursor: pointer
+            }
+
+            .center {
+                text-align: center;
+            }
+
+            * {
+                font-family: 'CSChatThaiUI', sans-serif;
+                -webkit-font-smoothing: antialiased;
+                font-size: var(--font-size-h5);
+            }
+
+            .button-top {
+                margin: 20px;
+            }
+
+            .text-center {
+                text-align: center;
+            }
+
+            .text-head {
+                text-align: center;
+                padding: 10px 0px 10px 10px;
+                background-color: var(--paper-grey-100);
+                color: var(--paper-grey-600);
+                font-size: var(--font-size-h3);
+                /*font-family: 'rsuregular', sans-serif;
+        -webkit-font-smoothing: antialiased;*/
+            }
+        </style>
+    </template>
+</dom-module>

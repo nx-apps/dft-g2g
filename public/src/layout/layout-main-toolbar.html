@@ -1,53 +1,91 @@
-<link rel="import" href="./../../bower_components/app-layout/app-toolbar/app-toolbar.html">
-<link rel="import" href="./../../bower_components/paper-icon-button/paper-icon-button.html">
-<!--<link rel="import" href="./../../bower_components/gl-font/gl-rsu-font.html">-->
-<link rel="import" href="./../../bower_components/iron-image/iron-image.html">
-
+<link rel="import" href="../../bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../bower_components/iron-image/iron-image.html">
+<link rel="import" href="./shared-styles.html">
 
 <dom-module id="layout-main-toolbar">
 	<template>
-        <style is="custom-style">
+		<style is="custom-style" include="shared-styles">
 			app-toolbar {
-				background-color: #f7941e;
+				background-color: #FF5000;
+				/*#FF5000;*/
 				color: white;
-				font-family: 'rsuregular', sans-serif;
-       			-webkit-font-smoothing: antialiased;
+				font-family: CSChatThaiUI, sans-serif;
+				-webkit-font-smoothing: antialiased;
 				--app-toolbar-font-size: 20px;
 				box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
 			}
-			.background{
+			
+			.background {
 				padding: 10px;
 				background-color: white;
 			}
-			iron-image{
+			
+			iron-image {
 				margin-right: 20px;
 				margin-left: 20px;
 			}
-			.sectionContent{
+			
+			.sectionContent {
 				margin-left: 9%;
 				margin-top: 20px;
 				font-size: 16px;
 				padding-bottom: 5px;
 			}
-        }
+			
+			paper-button {
+				font-size: 16px;
+			}
+			
+			.icon {
+				display: inline-block;
+				width: 1em;
+				height: 1em;
+				stroke-width: 0;
+				stroke: currentColor;
+				fill: currentColor;
+			}
 		</style>
-		<app-toolbar sticky fixed>
-				<paper-icon-button icon="menu" on-tap="toggleDrawer"></paper-icon-button>
-				<iron-image src="./../../images/manifest/icon-32.png"></iron-image>
-				<div main-title>ระบบจัดการสัญญาการค้าข้าวระหว่างประเทศ</div>
-				<!--<div class="sectionContent" bottom-item>
-					<iron-icon icon="chevron-right"></iron-icon>
-					รายการจัดสรรปีโควตา
-				</div>-->
+		<app-toolbar>
+			<paper-icon-button icon="menu" on-tap="toggleDrawer"></paper-icon-button>
+			<iron-image src="../../images/02/32.png"></iron-image>
+			<div main-title>ระบบการซื้อขายข้าวรัฐบาลต่อรัฐบาล</div>
+			<paper-button on-tap="changeLanguage">{{localize.Meg}}</paper-button>
 		</app-toolbar>
-
 	</template>
 	<script>
-        Polymer({
-            is: 'layout-main-toolbar',
-            toggleDrawer:function(){
-                this.fire('toggle-drawer');
-            }
-        });
-    </script>
+		Polymer({
+			is: 'layout-main-toolbar',
+			behaviors: [ReduxBehavior, i18nAction],
+			properties: {
+				localize: {
+					statePath: 'i18n.g2g'
+				}
+			},
+			check: function () {
+				if (this.user.id) {
+					this.hidden = false;
+				}
+				else {
+					// this.fire('nylon-change-page',{path:'/login'})
+					this.hidden = true;
+				}
+			},
+			attached: function () {
+				//this.nylonLocalizeImport('/i18n-page1.json');
+			},
+			toggleDrawer: function () {
+				this.fire('toggle-drawer');
+			},
+			changeLanguage: function () {
+				var lang = this.localize.Meg;
+				if(lang == 'TH'){
+					lang = 'en';
+				}else{
+					lang = 'th';
+				}
+				this.dispatchAction('I18N_SELECT_LANGUAGE', lang);
+			}
+		});
+	</script>
 </dom-module>

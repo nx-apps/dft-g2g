@@ -1,17 +1,13 @@
 {
-  "name": "NYLON",
-  "short_name": "NL",
+  "name": "dft-exporter",
+  "short_name": "dft-exporter",
   "icons": [{
-      "src": "images/app-icon-128.png",
-      "sizes": "128x128",
-      "type": "image/png"
-    }, {
-      "src": "images/app-icon-192.png",
+      "src": "images/01/192.png",
       "sizes": "192x192",
       "type": "image/png"
-    },{
-      "src": "images/app-icon-384.png",
-      "sizes": "384x384",
+    }, {
+      "src": "images/01/512.png",
+      "sizes": "512x512",
       "type": "image/png"
     }],
   "start_url": "/",

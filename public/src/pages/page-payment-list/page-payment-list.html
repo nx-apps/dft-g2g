@@ -1,0 +1,609 @@
+<link rel="import" href="./../../../bower_components/polymer/polymer.html">
+<link rel="import" href="./../../../bower_components/paper-material/paper-material.html">
+<link rel="import" href="./../../../bower_components/nylon-panel/nylon-panel-right.html">
+<link rel="import" href="./../../../bower_components/plutonium-breadcrumbs/plutonium-breadcrumbs.html">
+<link rel="import" href="./../../../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="./../../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="./../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="./../../../bower_components/paper-badge/paper-badge.html">
+<link rel="import" href="./../../../bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="./../components/cookie-behavior.html">
+<link rel="import" href="./../components/g2g-logic-behavior.html">
+<link rel="import" href="./../../layout/shared-styles.html">
+
+<link rel="import" href="./component/list-of-bl-pm.html">
+<link rel="import" href="./component/list-of-invoice.html">
+<link rel="import" href="./component/fee-exports.html">
+<link rel="import" href="./component/commercial-invoice.html">
+<link rel="import" href="./component/list-of-fee.html">
+<!--<link rel="import" href="./component/list-of-fee-detail.html">-->
+<link rel="import" href="./component/list-of-cheque.html">
+<!--<link rel="import" href="./component/cheque-detail.html">-->
+<link rel="import" href="./component/list-of-payments.html">
+<!--<link rel="import" href="./component/payment-detail.html">-->
+<!--<link rel="import" href="./component/list-of-history.html">
+<link rel="import" href="./component/cheque-detail.html">
+
+<link rel="import" href="./component/history-detail.html">-->
+
+<dom-module id="page-payment-list">
+    <style media="screen" include="shared-styles">
+         :host {
+            /*--paper-fab-background: var(--paper-light-blue-500);
+            --paper-fab-keyboard-focus-background: var(--paper-light-blue-900);*/
+        }
+
+        * {
+            font-family: 'CSChatThaiUI', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        /*
+        paper-fab {
+            position: fixed;
+            right: 16px;
+            bottom: 16px;
+            color: var(--gl-white-color);
+        }*/
+
+        paper-material {
+            background-color: var(--gl-white-color);
+        }
+
+        nylon-panel-right {
+            --app-toolbar-style: {
+                background-color: #FF5000;
+            }
+        }
+
+        main {
+            padding: 5px;
+            margin: 0 auto;
+        }
+
+        section {
+            display: none;
+            border-top: 1px solid #ddd;
+        }
+
+        input {
+            display: none;
+        }
+
+        label {
+            display: inline-block;
+            margin: 0 0 -1px;
+            padding: 15px 25px;
+            font-weight: 600;
+            text-align: center;
+            color: #bbb;
+            border: 1px solid transparent;
+            background: #D5D8DC;
+        }
+
+        label:before {
+            font-family: fontawesome;
+            font-weight: normal;
+            margin-right: 10px;
+        }
+
+        label:hover {
+            color: #888;
+            cursor: pointer;
+        }
+
+        input:checked+label {
+            color: #555;
+            border: 1px solid #ddd;
+            border-top: 3px solid orange;
+            border-bottom: 1px solid #fff;
+            background: #fff;
+        }
+
+        #tab1:checked~#content1,
+        #tab2:checked~#content2,
+        #tab3:checked~#content3,
+        #tab4:checked~#content4,
+        #tab5:checked~#content5,
+        #tab6:checked~#content6 {
+            display: block;
+        }
+
+        list-of-bl-pm,
+        list-of-invoice,
+        list-of-fee,
+        list-of-cheque,
+        list-of-payments,
+        list-of-history {
+            margin-top: 15px;
+            width: 98%;
+        }
+
+        .breadcrumbs {
+            margin: 38px 38px 0px 38px;
+            border-bottom: 1px solid #ccc!important;
+            padding: 10px;
+        }
+
+        .btnBackPage {
+            margin: 30px;
+            color: black
+        }
+
+        paper-fab {
+            left: 25px;
+            --paper-fab-iron-icon: {
+                color: black
+            }
+            ;
+            --paper-fab-background: #fff
+            /*--paper-fab-background: #fff;*/
+        }
+
+        .container {
+            display: inline-block;
+            margin-left: 30px;
+            margin-right: 30px;
+        }
+        /* Need to position the badge to look like a text superscript */
+
+        .container>paper-badge {
+            --paper-badge-margin-left: 20px;
+            --paper-badge-margin-bottom: 0px;
+        }
+    </style>
+    <template>
+        <!--<div class="btnBackPage horizontal layout">-->
+        <!--<div class="flex">-->
+        <!--{{localize.contract_name}} ทดสอบ : {{contract_name}}-->
+        <!--</div>-->
+
+        <!--</div>-->
+
+        <main>
+            <input id="tab1" type="radio" name="tabs" checked>
+            <label for="tab1">
+                <div class="container" tabindex="0">
+                <span>1.{{localizeBl.bill_of_lading_bl}}</span>
+                <paper-badge label="{{bl_list.length}}"></paper-badge>
+                </div>
+            </label>
+
+            <input id="tab2" type="radio" name="tabs" on-tap="_getListInvoice">
+            <label for="tab2">
+                <div class="container" tabindex="0">
+                <span>2.{{localize.text_invoice}}</span>
+                <paper-badge label="{{invlice_list.length}}"></paper-badge>
+                </div>
+            </label>
+
+            <input id="tab3" type="radio" name="tabs" on-tap="_getListFee">
+            <label for="tab3"><div class="container" tabindex="0">
+                <span>3.{{localize.text_fee}}</span>
+                <paper-badge label="{{fee_list_no}}"></paper-badge>
+                </div>
+            </label>
+
+            <input id="tab4" type="radio" name="tabs">
+            <label for="tab4"><div class="container" tabindex="0">
+                <span>4. {{localizeCheque.send_cheque}} </span>
+                <paper-badge label="{{cheque_list_no}}"></paper-badge>
+                </div>
+                <!--{{localize.text_cheque_no}}-->
+                </label>
+
+            <input id="tab5" type="radio" name="tabs">
+            <label for="tab5">
+                <div class="container" tabindex="0">
+                <span>5.{{localize.text_payment}}</span>
+                <paper-badge label="{{payments.length}}"></paper-badge>
+                </div></label>
+
+            <!--<input id="tab6" type="radio" name="tabs">
+            <label for="tab6">6.{{localize.history_pay}}</label>-->
+
+            <!--<input id="tab1" type="radio" name="tabs">
+            <label for="tab1" on-click="backPage">
+                    <iron-icon icon="exit-to-app"></iron-icon>
+                 ย้อนกลับ (ยัง)
+            </label>-->
+
+            <section id="content1">
+                <paper-material elevation="1">
+                    <div class="list horizontal center-justified layout">
+                        <list-of-bl-pm data="[[dataListPay.blShipment]]" data-for-select="[[dataForSelect]]"></list-of-bl-pm>
+                    </div>
+                </paper-material>
+            </section>
+
+            <section id="content2">
+                <paper-material elevation="1">
+                    <div class="list horizontal center-justified layout">
+                        <list-of-invoice></list-of-invoice>
+                    </div>
+                </paper-material>
+            </section>
+
+            <section id="content3">
+                <paper-material elevation="1">
+                    <div class="list horizontal center-justified layout">
+                        <list-of-fee check-tap="[[checkTap]]"></list-of-fee>
+                    </div>
+                </paper-material>
+            </section>
+
+            <section id="content4">
+                <paper-material elevation="1">
+                    <div class="list horizontal center-justified layout">
+                        <list-of-cheque></list-of-cheque>
+                    </div>
+                </paper-material>
+            </section>
+
+            <section id="content5">
+                <paper-material elevation="1">
+                    <div class="list horizontal center-justified layout">
+                        <list-of-payments></list-of-payments>
+                    </div>
+                </paper-material>
+            </section>
+
+            <section id="content6">
+                <paper-material elevation="1">
+                    <div class="list horizontal center-justified layout">
+                        <list-of-history data="[[dataListPay.history]]" data-for-select="[[dataForSelect]]"></list-of-history>
+                    </div>
+                </paper-material>
+            </section>
+        </main>
+
+        <nylon-panel-right title="{{titlePanelRight}}" id="panelRight" set-width="95%">
+            <div class="rightdata" align="left">
+                <div class="breadcrumbs">
+                    <plutonium-breadcrumbs crumbs="{{crumbs}}" selected-crumb="{{crumb}}"></plutonium-breadcrumbs>
+                </div>
+                <iron-pages selected="{{paymentsPageSeleted}}" attr-for-selected="name">
+                    <div name="blPage">
+                        <commercial-invoice id="commercial-invoice"></commercial-invoice>
+                    </div>
+                    <div name="invoicePage">
+                        <commercial-invoice id="commercial-invoice"></commercial-invoice>
+                    </div>
+                    <div name="blInvoicePage">
+                        <fee-exports id="fee-exports"></fee-exports>
+                    </div>
+                    <div name="feePage">
+                        <list-of-fee-detail id="list-of-fee-detail"></list-of-fee-detail>
+                    </div>
+                    <div name="chequePage">
+                        <cheque-detail id="cheque-detail"></cheque-detail>
+                    </div>
+                    <div name="paymentDetail">
+                        <payment-detail id="payment-detail"></payment-detail>
+                    </div>
+                    <!--<div name="historyDetail">
+                        <history-detail data="[[dataSelected.historyDetail]]" data-for-select="[[dataForSelect]]"></history-detail>
+                    </div>-->
+                </iron-pages>
+            </div>
+        </nylon-panel-right>
+        <div class="btnFab">
+            <paper-fab icon="arrow-back" title="ย้อนกลับ" id="backWard" on-tap="backPage"></paper-fab>
+            <paper-tooltip for="addContract" offset="0">ย้อนกลับ</paper-tooltip>
+        </div>
+    </template>
+    <script>
+        Polymer({
+            is: 'page-payment-list',
+            behaviors: [ReduxBehavior, nylonBehavior, CookieBehavior, i18nAction, bookAction, invoiceAction,
+                commonStateAction, feeAction, chequeAction, paymentAction, g2gLogicBehavior, commonG2gAction],
+            properties: {
+                localize: {
+                    statePath: 'i18n.g2g'
+                },
+                localizeBl: {
+                    statePath: 'i18n.book'
+                },
+                localizeCheque: {
+                    statePath: 'i18n.cheque'
+                },
+                contractName: {
+                    type: String,
+                    value: '1'
+                },
+                bl_list: {
+                    statePath: 'book.list',
+                },
+                invlice_list: {
+                    statePath: 'invoice.list'
+                },
+                fee_list_no: {
+                    type: Number,
+                    value: 0
+                },
+                cheque_list_no: {
+                    type: Number,
+                    value: 0
+                },
+                unallocated_fees: {
+                    statePath: 'fee.unallocated_fees'
+                },
+                allocate_fees: {
+                    statePath: 'fee.allocate_fees'
+                },
+                chequeFasle: {
+                    statePath: 'cheque.cheque_list_fasle',
+                },
+                chequeTrue: {
+                    statePath: 'cheque.cheque_list_true',
+                },
+                payments: {
+                    statePath: 'payment.listPayment'
+                },
+                crumbs: {
+                    statePath: 'commonState.breadCrumbs',
+                },
+                checkTap: {
+                    type: Object,
+                    value: {
+                        one: true,
+                        two: false
+                    }
+                },
+                contractId: {
+                    statePath: 'commonState.contractId',
+                    // observer: 'get'
+                },
+                checkRenderPage: {
+                    type: Object,
+                    value: {
+                        chequeDetail: false,
+                        paymentDetail: false,
+                    }
+                },
+            },
+            listeners: {
+                'get-bl-detail': '_getBlDetail',
+                'get-invoice-detail': '_getBlInvoiceDetail',
+                'get-select-draftPayment': '_getInvoiceDetail',
+                'get-fee-detail': '_getFeeDetail',
+                'get-cheque-detail': '_getChequeDetail',
+                'get-payment-detail': '_getPaymentDetail',
+                'close-drawer': '_flipDrawerClose',
+            },
+            observers: [
+                'sumFee(unallocated_fees,allocate_fees)',
+                'sumCheque(chequeFasle,chequeTrue)'
+            ],
+            nylonPageActive: function () {
+                this.fire('toast', { status: 'load' });
+                var contract_id = this.getCookieBhv("contract_id");
+                var contract_name = this.getCookieBhv("contractName");
+                let contractData = { contract_id: contract_id, contract_name: contract_name }
+                this.dispatchAction('SET_CONTRACT_ID', contractData)
+                this.dispatchAction('GET_COMMON_BANK_LIST');
+                var buyer_id = this.getCookieBhv("buyerId");
+                this.dispatchAction('SET_BUYER_ID', {
+                    buyer_id: this.getCookieBhv("buyerId")
+                })
+                this.dispatchAction('BOOK_GET_LIST_DATA', contract_id);
+                this.dispatchAction('INVOICE_GET_LIST_DATA', contract_id);
+                this.dispatchAction('FEE_GET_LIST_DATA', { contract_id: this.getCookieBhv("contract_id"), view: 'fin', status: 'true' });
+                this.dispatchAction('FEE_GET_LIST_DATA', { contract_id: this.getCookieBhv("contract_id"), view: 'fin', status: 'false' });
+
+                let chequeTrue = { id: contract_id, status: true }
+                let chequeFasle = { id: contract_id, status: false }
+                this.dispatchAction('GET_CHEQUE_LIST', this.genUrl(chequeTrue))
+                // console.log(chequeFasle);
+                this.dispatchAction('GET_CHEQUE_LIST', this.genUrl(chequeFasle))
+
+                this.dispatchAction('PAYMENT_GET_LIST_DATA', contract_id)
+            },
+            sumFee(unallocated_fees, allocate_fees) {
+                this.set('fee_list_no', unallocated_fees.length + allocate_fees.length)
+            },
+            sumCheque(chequeFasle, chequeTrue) {
+                let count = chequeFasle.reduce((pre, cur) => {
+                    return pre + cur.cheque_count
+                }, 0)
+                this.set('cheque_list_no', count + chequeTrue.length)
+            },
+            _getBlDetail: function (e) {
+                this.dispatchAction('SET_BREADCRUMBS', [{
+                    label: 'รายละเอียดใบแจ้งหนี่้้',
+                    href: ''
+                }]);
+                let book_id = e.detail.detail.id;
+                this.titlePanelRight = 'รายละเอียดใบแจ้งหนี้';
+                // resetFrom
+                this.$$('commercial-invoice').resetFrom('.required')
+
+                this.fire('toast', { status: 'load' });
+                this.dispatchAction('BOOK_GET_ID_DATA', book_id);
+                this.dispatchAction('BOOK_GET_MADE_OUT', this.getCookieBhv("contract_id"));
+                this.dispatchAction('SET_STATE', {
+                    isInsert: true,
+                    btnDisabled: false,
+                    hiddend: true
+                });
+                this.paymentsPageSeleted = 'blPage';
+                this._flipDrawer();
+            },
+            _getBlInvoiceDetail: function (e) {
+                this.dispatchAction('SET_BREADCRUMBS', [{
+                    label: 'รายละเอียดใบกำกับสินค้า : ' + e.detail.detail.invoice_type + e.detail.detail.invoice_no + '/' + e.detail.detail.invoice_year,
+                    href: ''
+                }])
+                this.titlePanelRight = 'รายละเอียดใบกำกับสินค้า'
+                // resetFrom
+                this.$$('commercial-invoice').resetFrom('.required')
+                this.fire('toast', { status: 'load' });
+                this.dispatchAction('BOOK_GET_ID_DATA', e.detail.detail.id);
+                this.dispatchAction('SET_STATE', {
+                    isInsert: false,
+                    btnDisabled: true,
+                    inputRice: true
+                });
+                this.paymentsPageSeleted = 'invoicePage';
+                this._flipDrawer();
+            },
+            _getInvoiceDetail: function (e) {
+                this.dispatchAction('SET_BREADCRUMBS', [{
+                    label: 'เพิ่มรอบการคิดค่าธรรมเนียม',
+                    href: ''
+                }])
+                // resetFrom
+                this.$$('fee-exports').resetFrom('.required')
+                this.$$('fee-exports').$$('fee-exports-invoice').resetFrom('.required')
+
+                var datas = e.detail.detail;
+                this.titlePanelRight = 'เพิ่มรอบการคิดค่าธรรมเนียม'
+                let arr = { book_id: [] };
+                datas.map((item) => {
+                    arr.book_id.push(item.id);
+                })
+                this.dispatchAction('FEE_CALC_DATA', arr);
+                this.dispatchAction('SET_STATE', {
+                    isInsert: true,
+                    btnDisabled: false,
+                    inputRice: true,
+                    btnRice: true
+                });
+                this.paymentsPageSeleted = 'blInvoicePage';
+                this._flipDrawer();
+            },
+            _getFeeDetail: function (e) {
+                var round = '';
+                if (e.detail.detail.fee_round == 0) {
+                    round = '';
+                } else {
+                    round = e.detail.detail.fee_round;
+                }
+                // resetFrom
+                // console.log(this.$$('fee-exports'))
+                this.$$('fee-exports').resetFrom('.required')
+                this.$$('fee-exports').$$('fee-exports-invoice').resetFrom('.required')
+                this.dispatchAction('SET_BREADCRUMBS', [{
+                    label: 'งวดที่ ' + e.detail.detail.cl_no + ' ครั้งที่ ' + e.detail.detail.fee_no + ' รอบที่คิดค่าธรรมเนียมครั้งที่ ' + round,
+                    href: ''
+                }])
+                // this.fire('toast', { status: 'load' });
+                this.titlePanelRight = 'รอบที่คิดค่าธรรมเนียมครั้งที่ ' + e.detail.detail.fee_round;
+                this.paymentsPageSeleted = 'blInvoicePage';
+                this._flipDrawer();
+                var id = e.detail.detail.id;
+                this.dispatchAction('FEE_GET_ID_DATA', id);
+                this.dispatchAction('SET_STATE', {
+                    isInsert: false,
+                    btnDisabled: true,
+                    inputRice: true,
+                    btnRice: true
+                });
+            },
+            _getChequeDetail: function (e) {
+                this.dispatchAction('SET_BREADCRUMBS', [{
+                    label: 'ขึ้นเช็ค ',
+                    href: ''
+                }])
+                this.titlePanelRight = 'เช็ค'
+                // resetFrom
+
+
+                this.dispatchAction('GET_CHEQUE_DETAIL_LIST', { id: e.detail.detail })
+                this.dispatchAction('GET_CHEQUE_NO')
+                this.fire('toast', { status: 'load' });
+                this.paymentsPageSeleted = 'chequePage';
+                if (this.checkRenderPage.chequeDetail != true) {
+                    this.async(() => {
+                        this.importHref(
+                            this.resolveUrl('./component/cheque-detail.html'),
+                            () => {
+                                this.async(() => {
+                                    this.fire('toast', {
+                                        status: 'success', text: 'โหลดสำเร็จ', callback: () => {
+                                            this._flipDrawer();
+                                            this.checkRenderPage.chequeDetail = true;
+                                        }
+                                    })
+                                    // this.fire('toast', { status: 'load' });
+
+                                }, 500)
+                            }, null, true
+                        );
+                    }, 1000);
+                } else {
+                    this.async(() => {
+                        this.$$('cheque-detail').resetFrom('.required')
+                        this.fire('toast', {
+                            status: 'success', text: 'โหลดสำเร็จ', callback: () => {
+                                this._flipDrawer();
+                            }
+                        })
+
+                    }, 500)
+                }
+                //     });
+            },
+            _getPaymentDetail: function (e) {
+                this.dispatchAction('SET_BREADCRUMBS', [{
+                    label: ' ',
+                    href: ''
+                }])
+                this.titlePanelRight = 'จ่ายเช็ค'
+                // this.genUrl(url)
+                let url = { contract_id: this.getCookieBhv("contract_id"), company_taxno: e.detail.detail.company_taxno }
+                this.dispatchAction('SET_COMPANY_TAX_NO', { company_taxno: e.detail.detail.company_taxno })
+
+                this.dispatchAction('PAYMENT_GET_DETAIL_DATA', this.genUrl(url))
+                this.dispatchAction('SET_DATE_PAYMENY')
+
+                this.dispatchAction('PAYMENT_GET_RUNNING_NO')
+                this.paymentsPageSeleted = 'paymentDetail';
+
+                this.fire('toast', { status: 'load' });
+                // console.log(111);
+                if (this.checkRenderPage.paymentDetail != true) {
+                    this.async(() => {
+                        this.importHref(
+                            this.resolveUrl('./component/payment-detail.html'),
+                            () => {
+                                this.async(() => {
+                                    this.fire('toast', {
+                                        status: 'success', text: 'โหลดสำเร็จ', callback: () => {
+                                            // this.fire('toast', { status: 'load' });
+                                            this._flipDrawer();
+                                            this.checkRenderPage.paymentDetail = true;
+                                        }
+                                    })
+
+                                }, 500)
+                            }, null, true
+                        );
+                    }, 1000);
+                } else {
+                    this.async(() => {
+                        this.fire('toast', {
+                            status: 'success', text: 'โหลดสำเร็จ', callback: () => {
+                                // this.fire('toast', { status: 'load' });
+                                // console.log(this.$$('payment-detail').resetFrom('.required'))
+                                this.$$('payment-detail').resetFrom('.required')
+                                this._flipDrawer();
+                                // this.checkRenderPage.paymentDetail = true;
+                            }
+                        })
+                    }, 500)
+                }
+            },
+            _flipDrawer: function () {
+                Polymer.dom(this.root).querySelector('#panelRight').open();
+            },
+            _flipDrawerClose: function () {
+                Polymer.dom(this.root).querySelector('#panelRight').close();
+            },
+            backPage: function () {
+                // console.log(11111);
+                // console.log(this.$$('#tab7').checked);
+                this.fire('nylon-change-page', { path: '/contract-list' })
+            }
+        });
+    </script>
+</dom-module>

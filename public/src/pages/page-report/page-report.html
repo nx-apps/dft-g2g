@@ -1,59 +1,108 @@
-<link rel="import" href="components/box-menu.html">
-<link rel="import" href="components/box-menu-search.html">
-<link rel="import" href="components/month-behavior.html">
-<dom-module id="page-report">
-  <style include="iron-flex iron-flex-factors iron-flex-alignment gl-styles">
-    :host {
-      display: block;
-    }
-    .btn-search {
-      margin-top: 15px;
-    }
-  </style>
-  <template>
-    <div class="layout horizontal center-justified wrap">
-      <box-menu-search>
-        <div class="title-head" style="font-size:40px">
-           ภงด.53
-        </div>
-        <div class="layout horizontal center-justified">
-          <div class="menu">
-            เดือนที่
-          </div>
-          <div class="layout horizontal center-justified">
-            <gl-combo-box always-float-label   error-message="กรุณาเลือกเดือนที่ต้องการดูรายงาน"
-             items="[[getMonth()]]" item-label-path="name"   item-value-path="id"  value="{{data.month}}"  >
-            </gl-combo-box>
-          </div>
-          <div class="btn-search">
-            <paper-button raised class="gl-btn-primary" on-tap="getReportPay">เลือก</paper-button>
-          </div>
+<link rel="import" href="./../../../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="./../../../bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="./../../../bower_components/paper-tooltip/paper-tooltip.html">
+<link rel="import" href="./../../../bower_components/nylon-panel/nylon-panel-right.html">
+<link rel="import" href="./components/manage-report.html">
+<link rel="import" href="./components/list-report.html">
+<link rel="import" href="./../../layout/shared-styles.html">
 
+<dom-module id="page-report">
+    <template>
+        <style include="shared-styles">
+             :host {
+                font-family: CSChatThaiUI;
+                --paper-fab-background: var(--paper-light-blue-500);
+                --paper-fab-keyboard-focus-background: var(--paper-light-blue-900);
+            }
+
+            .title {
+                margin: 30px;
+                font-size: 36px;
+            }
+
+            .btnFabBack>paper-fab {
+                left: 25px;
+                --paper-fab-iron-icon: {
+                    color: black
+                }
+                ;
+                --paper-fab-background: #fff
+                /*--paper-fab-background: #fff;*/
+            }
+        </style>
+
+        <div class="xcontainer">
+            <div class="title">
+                [[localizeReport.report]]
+            </div>
+            <div class="container">
+                <list-report></list-report>
+            </div>
         </div>
-      </box-menu-search>
-    </div>
-  </template>
-  <script>
-    Polymer({
-      is: "page-report",
-      behaviors: [
-          MonthBehavior,
-      ],
-      properties: {
-        data:{
-          type: Object,
-          value:{}
-        },
-      },
-      getReportPay:function () {
-        // console.log(this.data);
-        var toYear = new Date().toISOString().split('-')[0];
-        var toMonth = new Date().toISOString().split('-')[1];
-        typeof this.data.month == 'undefined' ? this.data.month = toMonth : this.data.month ;
-        this.data.month < 10 ? this.data.month=this.data.month : this.data.month;
-        window.open('http://localhost:8081/api/payment/report7?date_start='+toYear+'-'+this.data.month+'-01&date_end='+toYear+'-'+this.data.month+'-31','_blank');
-        window.open('http://localhost:8081/api/payment/report8?date_start='+toYear+'-'+this.data.month+'-01&date_end='+toYear+'-'+this.data.month+'-31','_blank');
-      }
-    });
-  </script>
+        <nylon-panel-right title="[[localizeReport.report]]" id="drawerRight" set-width="95%">
+            <div align="left">
+                <manage-report></manage-report>
+            </div>
+        </nylon-panel-right>
+        <div class="btnFabBack">
+            <paper-fab icon="arrow-back" title="[[localizeReport.back]]" id="backWard" on-tap="backPage"></paper-fab>
+            <paper-tooltip for="addContract" offset="0">[[localizeReport.back]]</paper-tooltip>
+        </div>
+        <div class="btnFab">
+            <paper-fab icon="note-add" title="[[localizeReport.add_report]]" id="addReport" on-tap="addReport"></paper-fab>
+            <paper-tooltip for="addReport" offset="0">[[localizeReport.add_report]]</paper-tooltip>
+        </div>
+    </template>
+    <script>
+        Polymer({
+            is: 'page-report',
+            behaviors: [ReduxBehavior, nylonBehavior, CookieBehavior, i18nAction, commonStateAction, reportAction],
+            properties: {
+                localizeReport: {
+                    statePath: 'i18n.report'
+                },
+            },
+            listeners: {
+                'open-Drawer': '_flipDrawer',
+                'close-drawer': '_flipDrawerClose',
+            },
+            nylonPageActive: function () {
+                this.dispatchAction('SET_BUYER_ID', {
+                    buyer_id: this.getCookieBhv("buyerId")
+                })
+                this.dispatchAction('GET_REPORT_LIST')
+                this.dispatchAction('GET_TABLE_LIST')
+                // this.dispatchAction('SET_COUNTRY_NAME_EN', this.getCookieBhv("country_name_en"));
+            },
+            backPage: function () {
+                // console.log(11111);
+                // console.log(this.$$('#tab7').checked);
+                this.fire('nylon-change-page', { path: '/buyer-list' })
+            },
+            addReport: function () {
+                this.dispatchAction('SET_STATE', {
+                    isInsert: true,
+                    btnDisabled: false,
+                    hiddend: true
+                })
+                this.dispatchAction('SET_REPORT_DETAIL')
+                this.fire('toast', { status: 'load' });
+                this.async(() => {
+                    this.fire('toast', {
+                        status: 'success', text: this.localizeReport.load_success, callback: () => {
+                            this._flipDrawer();
+                        }
+                    })
+
+                }, 500)
+                // this._flipDrawer()
+            },
+            _flipDrawer: function () {
+                Polymer.dom(this.root).querySelector('#drawerRight').open();
+            },
+            _flipDrawerClose: function () {
+                Polymer.dom(this.root).querySelector('#drawerRight').close();
+            },
+        });
+    </script>
 </dom-module>

@@ -2,6 +2,12 @@ exports.index=function(req,res){
     res.sendfile('./public/index.html'); 
 }
 exports.db=function(req,res){
+    req.logger.info("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+    req.jdbc.query("mysql","SELECT *  FROM  vet_ages",[],function(err,data){
+        console.log(data);
+    });
+
+
     
     var u={
         id:1333
@@ -23,12 +29,14 @@ exports.db=function(req,res){
         console.log('is loged');
     }
 
-    var valid = req._validator.validate('user', u);
-    if (!valid) console.log(req._validator.errorsText());
+    console.log( req.ajv);
+    var valid = req.ajv.validate('user', u);
+    if (!valid) console.log(req.ajv.errorsText());
 
-    req._r.table('session').coerceTo('array').run().then(function(result) {
+    req.r.table('session').coerceTo('array').run().then(function(result) {
          console.log(result);
          res.json(result);
+
     });
 
 
@@ -96,8 +104,9 @@ exports.report=function(req,res){
        department:"it"
    };
 
-
-  res._ireport("report1.jasper","pdf",datas,parameters);
+  var type=  req.param("type");
+  console.log(type);
+  res.ireport("report1.jasper",type,datas,parameters);
 
 
 

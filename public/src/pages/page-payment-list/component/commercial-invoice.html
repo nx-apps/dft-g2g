@@ -1,0 +1,574 @@
+<link rel="import" href="./../../../../bower_components/gl-form/gl-form-panel.html">
+<link rel="import" href="./../../../../bower_components/gl-form/gl-form-panel-head.html">
+<link rel="import" href="./../../../../bower_components/gl-form/gl-form-panel-body.html">
+<link rel="import" href="./../../../../bower_components/gl-form/gl-form-panel-footer.html">
+<link rel="import" href="./../../../../bower_components/gl-grid/gl-grid-row.html">
+<link rel="import" href="./../../../../bower_components/gl-grid/gl-grid-col.html">
+<link rel="import" href="./../../../../bower_components/gl-form/gl-combo-box.html">
+<link rel="import" href="./../../../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="./../../../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="./../../../../bower_components/paper-tooltip/paper-tooltip.html">
+<link rel="import" href="./../../../../bower_components/gl-form/gl-form-input.html">
+<link rel="import" href="./../../../../bower_components/gl-form/gl-form-textarea.html">
+<link rel="import" href="./../../../../bower_components/vaadin-date-picker/vaadin-date-picker.html">
+<link rel="import" href="./../../../../bower_components/paper-autocomplete/paper-autocomplete-suggestions.html">
+<link rel="import" href="./../../components/format-number-behavior.html">
+<link rel="import" href="./../../components/validateFormBehaviors.html">
+<link rel="import" href="./../../components/g2g-logic-behavior.html">
+
+<dom-module id="commercial-invoice">
+  <style include="iron-flex iron-flex-factors iron-flex-alignment gl-styles page-style">
+    * {
+      font-family: 'CSChatThaiUI', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    
+    .text {
+      text-align: center;
+      font-size: var(--font-size-large);
+    }
+    
+    .table-head>tr>th:nth-child(1) {
+      width: 10%;
+      text-align: center;
+    }
+    
+    .table-head>tr>th:nth-child(2) {
+      width: 10%;
+      text-align: center;
+    }
+    
+    .table-head>tr>th:nth-child(3) {
+      width: 60%;
+      text-align: center;
+    }
+    
+    .table-head>tr>th:nth-child(4) {
+      width: 20%;
+      text-align: center;
+    }
+    
+    .desWeigth:nth-child(4) {
+      text-align: right;
+      /*color: red;*/
+    }
+    
+    .table-foor>tr>td {
+      padding: 15px;
+    }
+    
+    .report>.icon_print {
+      padding-top: 24px;
+    }
+  </style>
+  <template>
+
+    <gl-form-panel set-padding="10px 20px 10px 20px">
+      <template is="dom-if" if="[[!common.isInsert]]">
+        <gl-form-panel-head set-border="1px" set-padding="0px 20px 10px 20px">
+          <div class="horizontal end-justified layout report">
+            <template is="dom-if" if="[[_checkUndefined(data.invoice_no)]]">
+              <gl-combo-box class="required" required always-float-label label="รูปแบบ" placeholder="รูปแบบ" value="{{printReport.typeFile}}"
+                item-label-path="report_type" item-value-path="report_type_id" items="{{report.report_type}}">
+                 <template>
+                  [[item.report_type]]
+                </template>
+                </gl-combo-box>
+              <div class="icon_print">
+                <paper-icon-button id="printInvoice" class="crud" icon="print" raised on-tap="printInvoice"></paper-icon-button>
+                <paper-tooltip for="printInvoice" offset="0">Print Invoice</paper-tooltip>
+              </div>
+            </template>
+            <div class="icon_print">
+              <!--<icon-button-management is-input-disabled="[[!common.btnDisabled]]"></icon-button-management>-->
+              <div class="horizontal end-justified layout">
+                <paper-icon-button id="edit" class="crud" icon="create" raised on-tap="editInvoice" disabled="[[!commonState.btnDisabled]]"></paper-icon-button>
+                <paper-tooltip for="edit" offset="0">แก้ไข</paper-tooltip>
+                <paper-icon-button id="delete" class="crud" icon="delete" raised on-tap="deteleInvoice" disabled="[[!commonState.btnDisabled]]"></paper-icon-button>
+                <paper-tooltip for="delete" offset="0">ลบ</paper-tooltip>
+              </div>
+            </div>
+          </div>
+        </gl-form-panel-head>
+
+      </template>
+      <gl-form-panel-body>
+        <gl-grid-row width="{{getWidth}}">
+          <div style="margin-top:30px;">{{localize.label_invoice_no}} :</div>
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,1]]">
+            <div class="horizontal layout">
+              <gl-form-input style="width:50px;" class="required" required disabled="[[common.btnDisabled]]" value="{{data.invoice_type}}" on-blur="toUpper"></gl-form-input>
+              <gl-form-input style="margin-left:5px;text-align:right;width:80px;" class="required" required disabled="[[common.btnDisabled]]" value="{{data.invoice_no}}"></gl-form-input>
+            </div>
+          </gl-grid-col>
+          <!--<gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,1]]">
+            <gl-form-input style="width:50px" class="required" required disabled="[[common.btnDisabled]]"
+              error-message="{{localize.text_enter_your_detail}}" value="{{data.invoice_no}}"></gl-form-input>
+          </gl-grid-col>-->
+          <div style="margin-top:30px;"> / </div>
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,1]]">
+            [[setYear(data.invoice_date)]]
+            <gl-form-input class="required" required disabled value="{{data.invoice_year}}"></gl-form-input>
+          </gl-grid-col>
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]"></gl-grid-col>
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,2]]">
+            <gl-form-input type="date" class="required" required disabled="[[common.btnDisabled]]" label="{{localize.label_invoice_date}}" value="{{data.invoice_date}}"></gl-form-input>
+          </gl-grid-col>
+        </gl-grid-row>
+
+        <!--<div class="text">{{localize.label_cm_invoice}}</div>
+        <gl-grid-row width="{{getWidth}}">
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,2]]">
+            <gl-form-input class="required" required disabled="[[common.btnDisabled]]" label="{{localize.label_invoice_no}} :" placeholder="{{localize.text_your_detail}}"
+              error-message="{{localize.text_enter_your_detail}}" value="{{data.invoice_no}}"></gl-form-input>
+          </gl-grid-col>
+          <gl-grid-col width="[[getWidth]]" grid="[[300,0],[500,8]]"></gl-grid-col>
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,2]]">
+            <gl-form-input type="date" class="required" required disabled="[[common.btnDisabled]]" label="{{localize.label_invoice_date}}" value="{{data.invoice_date}}"></gl-form-input>
+            <vaadin-date-picker class="required" required disabled="[[common.btnDisabled]]" label="{{localize.label_invoice_date}}" value="{{data.invoice_date}}"></vaadin-date-picker>
+          </gl-grid-col>
+        </gl-grid-row>-->
+
+        <gl-grid-row>
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,12]]">
+            <template is="dom-repeat" items="{{data.detail}}">
+              <gl-form-textarea disabled value="[[formatNumberNoZero(item.package_amount)]] BAGS OF [[_obSetUpper(item.hamonize.hamonize_en)]] BROKENS, [[item.project_en]] CURRENT NEW CROP, DOUBLE POLISHED AND SORTEXED QUALITY." placeholder="{{localize.text_your_detail}}"
+                label="{{localize.label_invoice_of}} :" error-message="{{localize.text_enter_your_detail}}" auto-validate
+                required></gl-form-textarea>
+            </template>
+          </gl-grid-col>
+        </gl-grid-row>
+
+        <gl-grid-row>
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,5]]">
+            <gl-form-input disabled value="{{data.ship}}" label="{{localize.label_shippped_per_invoice}} : [[_ObcountIndex(index)]]"></gl-form-input>
+          </gl-grid-col>
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+            <gl-form-input disabled value="[[_obSetUpper(data.load_port.port_name)]],[[_obSetUpper(data.load_port.country_name_en)]]" label="{{localize.label_port_of_loading_invoice}} :"></gl-form-input>
+          </gl-grid-col>
+        </gl-grid-row>
+
+        <gl-grid-row>
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,5]]">
+            <gl-form-textarea disabled value="[[_obSetUpper(data.deli_port.port_name)]],[[_obSetUpper(data.deli_port.country_fullname_en)]]" label="{{localize.label_port_of_discharge_invoice}}:"></gl-form-label-textarea>
+          </gl-grid-col>
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+            <gl-form-textarea disabled value="[[_obSetUpper(data.dest_port.port_name)]],[[_obSetUpper(data.dest_port.country_fullname_en)]]" label="{{localize.label_place_of_delivery_invoice}} :"></gl-form-textarea>
+          </gl-grid-col>
+        </gl-grid-row>
+
+        <gl-grid-row>
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,8]]">
+            <gl-form-textarea disabled value="[[data.buyer.buyer_address]]" label="{{localize.label_buyer_address_invoice}} :"></gl-form-textarea>
+          </gl-grid-col>
+        </gl-grid-row>
+        
+        <gl-grid-row>
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,12]]">
+            <div class="autocomplete-wrapper">
+              <gl-form-textarea id="myInput" class="required" required disabled="[[common.btnDisabled]]" rows="2" value="{{data.made_out_to}}" placeholder="{{localize.text_your_detail}}"
+                label="{{localize.label_made_out_to}} :"></gl-form-textarea>
+              <paper-autocomplete-suggestions
+                  for="myInput"
+                  source="[[data_madeout]]"></paper-autocomplete-suggestions>
+            </div>
+          </gl-grid-col>
+        </gl-grid-row>
+        <br>
+
+        <gl-grid-row>
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,12]]">
+            <div class="horizontal layout">
+              <div style="padding: 10px 0px 0px 10px;">{{localize.label_bill_of_lading}} : </div>
+              <div style="padding-left: 10px;"><gl-form-input no-label-float disabled value="[[data.bl_no]]"></gl-form-input></div>
+              <div style="padding: 10px 0px 0px 150px;">{{localize.label_dated}} : </div>
+              <div style="padding-left: 10px;"><gl-form-input type="date" no-label-float disabled value="[[data.invoice_date]]"></gl-form-input></div>
+            </div>
+          </gl-grid-col>
+        </gl-grid-row>
+
+        <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,12]]">
+          <table class="gl-table-default">
+            <thead class="table-head">
+              <tr>
+                <th>{{localize.text_marks_no}}</th>
+                <th>{{localize.label_quantity_invoice}}</th>
+                <th>{{localize.label_descriptions_invoice}}</th>
+                <th>{{localize.label_amount_invoice}}</th>
+              </tr>
+            </thead>
+            <tbody class="table-body">
+              <template is="dom-repeat" items="[[data.detail]]">
+                <tr style="font-size:14px">
+                  <td>[[data.buyer.buyer_masks]]</td>
+                  <td>[[formatNumberNoZero(item.package_amount)]] {{localize.text_bags}}</td>
+                  <td>
+                    [[_obSetUpper(item.hamonize.hamonize_en)]] BROKENS, [[item.project_en]] CURRENT NEW CROP,DOUBLE POLISHED AND SORTEXED QUALITY.<br> PACKING: INSTRONG
+                    EXPORT SEA WORTHY NEWSINGLE PP BAGS OF [[item.package.package_kg_per_bag]] KILOGRAMS NET WITH MINIMUM TARE WEIGHT
+                    TO BE AT [[item.package.package_weight_bag]] GRAM/BAG. TWO PERCENT (2%) MARKED SPARE EMPTY BAGS TO BE SUPPLIED
+                    FREE OF CHARGE BY THE SELLER ALONG WITH THE SHIPMENT. <br> PRICE : USD [[item.price_d]] PER METRIC
+                    TON, [[_getIncoterms(data.incoterms)]] BANGKOK OR LAEM CHABANG AT BUYER'S OPTION.<br>
+                    <gl-grid-row>
+                      <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,1]]"></gl-grid-col>
+                      <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,3]]">{{localize.label_gross_weight}}</gl-grid-col>
+                      <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,1]]">:</gl-grid-col>
+                      <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,4]]">[[formatNumber(item.gross_weight)]]</gl-grid-col>
+                      <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,3]]">{{localize.label_metric_ton}}</gl-grid-col>
+                    </gl-grid-row>
+                    <gl-grid-row>
+                      <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,1]]"></gl-grid-col>
+                      <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,3]]">{{localize.label_tare_weight}}</gl-grid-col>
+                      <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,1]]">:</gl-grid-col>
+                      <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,4]]">[[formatNumber(item.tare_weight)]]</gl-grid-col>
+                      <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,3]]">{{localize.label_metric_ton}}</gl-grid-col>
+                    </gl-grid-row>
+
+                    <gl-grid-row>
+                      <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,1]]"></gl-grid-col>
+                      <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,3]]">{{localize.label_net_weight}}</gl-grid-col>
+                      <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,1]]">:</gl-grid-col>
+                      <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,4]]">[[formatNumber(item.net_weight)]]</gl-grid-col>
+                      <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,3]]">{{localize.label_metric_ton}}</gl-grid-col>
+                    </gl-grid-row>
+                    <br> (US.DOLLARS [[_toWords(item.value_d)]] ONLY)
+                  </td>
+                  <td>USD [[formatNumber(item.value_d)]]</td>
+                </tr>
+              </template>
+            </tbody>
+            <tfoot class="table-foor">
+              <tr style="font-size:14px">
+                <td></td>
+                <td>[[formatNumberNoZero(data.package_amount)]] BAGS</td>
+                <td>
+                  TOTAL <br>
+                  <gl-grid-row>
+                    <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,1]]"></gl-grid-col>
+                    <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,3]]">{{localize.label_gross_weight}}</gl-grid-col>
+                    <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,1]]">:</gl-grid-col>
+                    <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,4]]">[[formatNumber(data.gross_weight)]]</gl-grid-col>
+                    <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,3]]">{{localize.label_metric_ton}}</gl-grid-col>
+                  </gl-grid-row>
+                  <gl-grid-row>
+                    <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,1]]"></gl-grid-col>
+                    <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,3]]">{{localize.label_tare_weight}}</gl-grid-col>
+                    <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,1]]">:</gl-grid-col>
+                    <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,4]]">[[formatNumber(data.tare_weight)]]</gl-grid-col>
+                    <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,3]]">{{localize.label_metric_ton}}</gl-grid-col>
+                  </gl-grid-row>
+
+                  <gl-grid-row>
+                    <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,1]]"></gl-grid-col>
+                    <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,3]]">{{localize.label_net_weight}}</gl-grid-col>
+                    <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,1]]">:</gl-grid-col>
+                    <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,4]]">[[formatNumber(data.net_weight)]]</gl-grid-col>
+                    <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,3]]">{{localize.label_metric_ton}}</gl-grid-col>
+                  </gl-grid-row>
+
+                  <br> (US.DOLLARS [[_toWords(data.value_d)]] ONLY)
+                  <br> UNDER THE SELLS AND PURCHASE CONTRACT NO.[[data.contract_name]] BETWEEN [[data.buyer.buyer_name]] AND DEPARTMENT
+                  OF FOREIGN TRADE, MINISTRY OF COMMERCE OF THAILAND DATED [[checkDate(data)]]. <br> PAYMENT BY T/T TO :
+                  KRUNG THAI BANK PUBLIC COMPANY LIMITED, BANGKOK, THAILAND <br> SWIFT CODE : KRTHTHBK <br> NAME ACCOUNT:
+                  DEPARTMENT OF FOREIGN TRADE <br> BANK ACCOUNT NUMBER 385-0-12421-5<br> ADDRESS : 44/100 NONTHABURI 1 ROAD,
+                  NONTHABURI 11000, THAILAND
+                </td>
+                <td>USD [[formatNumber(data.value_d)]]</td>
+              </tr>
+            </tfoot>
+          </table>
+        </gl-grid-col>
+        </gl-grid-row>
+
+
+        <gl-form-panel-footer set-padding="20px 0px 0px 20px">
+          <paper-button class="gl-btn-primary" raised on-tap="createInvoice" hidden="[[!common.isInsert]]">{{localize.btn_add_invoice}}</paper-button>
+          <template is="dom-if" if="[[!common.btnDisabled]]">
+            <paper-button class="gl-btn" on-tap="cancelInvoice" raised hidden="[[common.isInsert]]">{{localize.btn_cancel}}</paper-button>
+            <paper-button class="gl-btn-success" raised on-tap="saveInvoice" hidden="[[common.isInsert]]">{{localize.btn_save_invoice}}</paper-button>
+          </template>
+        </gl-form-panel-footer>
+
+      </gl-form-panel-body>
+    </gl-form-panel>
+  </template>
+  <script>
+    Polymer({
+      is: "commercial-invoice",
+      behaviors: [ReduxBehavior, FormatNumberBehavior, nylonBehavior, ValidateFormBehavior, g2gLogicBehavior],
+      properties: {
+        localize:{
+          statePath : 'i18n.g2g'
+        },
+        data:{
+          statePath : 'book.data',
+          observer : '_setDate'
+        },
+        data_madeout :{
+          statePath : 'book.list_made_out'
+        },
+        printReport: {
+          type: Object,
+          value: { typeFile: 'pdf' }
+        },
+        report: {
+          type: Object,
+          value:
+          {
+            report_type:
+            [
+              { report_type: 'PDF', report_type_id: 'pdf' },
+              // {report_type:'WORD',report_type_id:'word'},
+              // {report_type:'EXCEL',report_type_id:'excel'}
+            ]
+          }
+        },
+        common:{
+          statePath : 'commonState.setState'
+        },
+        buyerId:{
+          statePath:'commonState.buyerId'
+        },
+      },
+      // observers: [
+      //   '_changeDataCommercial(data.invoice_date)'
+      // ],
+      // listeners: {
+      //   'edit-input': 'editInput',
+      //   'delete-input': 'deteleInvoice'
+      // },
+      _setDate:function(data){
+        if(typeof data !== 'undefined'){
+          if(typeof data.invoice_date !== 'undefined'){
+            var date = data.invoice_date.split('T')[0];
+            this.set('data.invoice_date', date);
+          }else{
+            var dateNow = new Date().toISOString().split('T')[0];
+            this.set('data.invoice_date', dateNow);
+          }
+        }
+      },
+      setYear:function(date){
+        if(typeof date !== 'undefined'){
+          var year = date.split('-')[0];
+          this.set('data.invoice_year', Number(year)+543);
+        }
+      },
+      toUpper:function(e){
+        try {
+          if (e.target.value!== '') {
+            this.set('data.invoice_type', e.target.value.toUpperCase());
+          }
+           
+        } catch (error) {
+          
+        }
+       
+      },
+      _getVessel: function (data) {
+        if (typeof data !== 'undefined' && data !== 'undefined') {
+          return data.map((e) => e.ship_name).join(", ");
+        }
+      },
+      _getIncoterms: function (data){
+        if (typeof data !== 'undefined' && data !== 'undefined') {
+          return data.map((e) => e.inct_name).join(", ");
+        }
+      },
+      _obSetUpper: function (data) {
+        if(typeof data !== 'undefined'){
+          if(data !== null){
+            return data.toUpperCase()
+          }
+        }
+      },
+      // _changeDataCommercial: function (dateUn) {
+      //   this.getDateg2g(dateUn, (date) => {
+      //     this.set('data.invoice_date', date);
+      //     this.notifyPath('data.invoice_date');
+      //   });
+      // },
+
+      printInvoice: function () {
+        // report.report_type
+        window.open(window._config.reportServer+'/api/finance/report1?id=' + this.data.id + '&export=' + this.printReport.typeFile);
+      },
+      createInvoice: function () {
+        // console.log(this.data);
+        var data = {
+          id : this.data.id,
+          contract_id : this.data.contract_id,
+          invoice_type : this.data.invoice_type,
+          invoice_no : this.data.invoice_no,
+          invoice_year : this.data.invoice_year,
+          invoice_date : this.data.invoice_date+'T00:00:00+07:00',
+          buyer_id : this.buyerId.buyer_id,
+          made_out_to : this.data.made_out_to
+        }
+        // console.log(data);
+        var check = this.validateForm('.required');
+        if(check === true){
+          this.fire('toast', {
+            status: 'openDialog', 
+            text: 'ต้องการเพิ่มใบแจ้งหนี้ใช่หรือไม่',
+            confirmed: (result) =>{
+              if(result === true){
+                this.dispatchAction('BOOK_INSERT', data);
+                this.queryFrom('.required').map((el) => { el.reset(); });
+              }
+            }
+          });
+        }else{
+          this.fire('toast', {
+            status: 'connectError', text: 'กรุณากรอกข้อมูลให้ครบถ้วน',callback: () => {}
+          });
+        }
+    },
+    editInvoice:function(){
+      this.dispatchAction('SET_STATE', {
+          isInsert: false,
+          btnDisabled: false,
+          hiddend: true
+      });
+    },
+      saveInvoice: function () {
+        var data = {
+          id : this.data.id,
+          contract_id : this.data.contract_id,
+          invoice_type : this.data.invoice_type,
+          invoice_no : this.data.invoice_no,
+          invoice_year : this.data.invoice_year,
+          invoice_date : this.data.invoice_date+'T00:00:00+07:00',
+          made_out_to : this.data.made_out_to
+        }
+        // console.log(data);
+        var check = this.validateForm('.required');
+        if(check === true){
+          this.fire('toast', {
+            status: 'openDialog', 
+            text: 'ต้องการแก้ไขใบแจ้งหนี้ใช่หรือไม่',
+            confirmed: (result) =>{
+              if(result === true){
+                this.dispatchAction('INVOICE_SAVE', data);
+                this.queryFrom('.required').map((el) => { el.reset(); });
+              }
+            }
+          });
+        }else{
+          this.fire('toast', {
+            status: 'connectError', text: 'กรุณากรอกข้อมูลให้ครบถ้วน',callback: () => {}
+          });
+        }
+      },
+      deteleInvoice: function () {
+        this.fire('toast', {  //คำสั่งสำหรับเปิด toast dialog
+          status: 'openDialog',
+          text: 'ต้องการลบใบแจ้งหนี้ใช่หรือไม่ ?',
+          confirmed: (result) =>{
+            if(result === true){
+              this.dispatchAction('INVOICE_DELETE', this.data);
+            }
+          }
+        });
+      },
+      cancelInvoice: function(){
+        this.dispatchAction('BOOK_GET_ID_DATA', this.data.id);
+        // this.dispatchAction('SET_STATE', {
+        //     isInsert: false,
+        //     btnDisabled: true,
+        //     hiddend: true
+        // });
+      },
+      checkDate: function (data) {
+        // console.log(data);
+        // this._toWords(data.base.amount_usd);
+        // console.log(this._toWords(data.base.amount_usd));
+        if (typeof data.contract_date !== 'undefined' && data.contract_date !== 'undefined') {
+          var monthNames = ["January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+          ];
+          // console.log(Number(this.data.contract_date.substring(5, 7))-1);
+          var monthNum = Number(data.contract_date.substring(5, 7)) - 1;
+          let contractDate = data.contract_date.substring(8, 10) + " " + monthNames[monthNum] + " " + data.contract_date.substring(0, 4);
+          return contractDate.toUpperCase();
+        }
+      },
+      _toWords: function (amount_usd) {
+        if (typeof amount_usd !== 'undefined' && amount_usd !== 'undefined') {
+          // num = num.base.amount_usd || 0;
+          // Convert numbers to words
+          // copyright 25th July 2006, by Stephen Chapman https://javascript.about.com
+          // permission to use this Javascript on your web page is granted
+          // provided that all of the code (including this copyright notice) is
+          // used exactly as shown (you can change the numbering system if you wish)
+          // American Numbering System
+          var th = ['', 'thousand', 'million', 'billion', 'trillion'];
+          // uncomment this line for English Number System
+          // var th = ['','thousand','million', 'milliard','billion'];
+          var dg = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'];
+          var tn = ['ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen'];
+          var tw = ['twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'];
+          // console.log(amount_usd);
+          var s = amount_usd.toString();
+          s = s.replace(/[\, ]/g, '');
+          if (s != parseFloat(s)) return 'not a number';
+          var x = s.indexOf('.');
+          if (x == -1) x = s.length;
+          if (x > 15) return 'too big';
+          var n = s.split('');
+          var str = '';
+          var sk = 0;
+          for (var i = 0; i < x; i++) {
+            if ((x - i) % 3 == 2) {
+              if (n[i] == '1') {
+                str += tn[Number(n[i + 1])] + ' ';
+                i++;
+                sk = 1;
+              } else if (n[i] != 0) {
+                str += tw[n[i] - 2] + ' ';
+                sk = 1;
+              }
+            } else if (n[i] != 0) {
+              str +=
+                dg[n[i]] + ' ';
+              if ((x - i) % 3 == 0) str += 'hundred ';
+              sk = 1;
+            }
+            if ((x - i) % 3 == 1) {
+              if (sk)
+                str += th[(x - i - 1) / 3] + ' ';
+              sk = 0;
+            }
+          }
+          if (x != s.length) {
+            var y = s.length;
+            str +=
+              'point ';
+            for (var i = x + 1; i < y; i++) str += dg[n[i]] + ' ';
+          }
+          let priceWords = str.replace(/\s+/g, ' ').toUpperCase();
+          return priceWords;
+        } else {
+          return 0;
+        }
+      },
+      // _cleanDataInvoice: function (data, callback) {
+      //   let el = Polymer.dom(this.root).querySelectorAll('.required');
+      //   let stat = el.map((el) => el.validate());
+      //   if (stat.every(elem => elem == true)) {
+      //     let {bl_no, invoice_no, invoice_date, invoice_status, made_out_to, book_id} = data;
+      //     let newData = { bl_no, invoice_no, invoice_date, invoice_status, made_out_to, book_id };
+      //     newData.tags = new Array();
+      //     newData.invoice_date = new Date(newData.invoice_date).toISOString();
+      //     if (typeof data.tags !== 'undefined') {
+      //       newData.tags = new Array();
+      //       data.tags.map((tag) => {
+      //         newData.tags.push(tag);
+      //       });
+      //     }
+      //     el.map((el) => { el.reset(); });
+      //     callback(newData);
+      //   }
+      // }
+    });
+  </script>
+</dom-module>

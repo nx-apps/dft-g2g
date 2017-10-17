@@ -1,0 +1,405 @@
+<link rel="import" href="payment-detail-by-rice.html">
+<link rel="import" href="./../../components/format-number-behavior.html">
+<link rel="import" href="./../../../../bower_components/gl-form/gl-form-panel.html">
+<link rel="import" href="./../../../../bower_components/gl-form/gl-form-panel-body.html">
+<link rel="import" href="./../../../../bower_components/gl-form/gl-form-panel-footer.html">
+<link rel="import" href="./../../../../bower_components/paper-checkbox/paper-checkbox.html">
+<link rel="import" href="./../../../../bower_components/gl-grid/gl-grid-row.html">
+<link rel="import" href="./../../../../bower_components/gl-grid/gl-grid-col.html">
+<link rel="import" href="./../../../../bower_components/gl-form/gl-combo-box.html">
+<link rel="import" href="./../../../../bower_components/gl-form/gl-form-input.html">
+<link rel="import" href="./../../../../bower_components/iron-collapse/iron-collapse.html">
+<link rel="import" href="./../../components/g2g-logic-behavior.html">
+<link rel="import" href="./../../components/validateFormBehaviors.html">
+<link rel="import" href="./../../components/format-number-behavior.html">
+<dom-module id="payment-detail">
+  <style include="iron-flex iron-flex-factors iron-flex-alignment gl-styles page-style">
+     :host {
+      display: block;
+    }
+
+    .textheader-center {
+      margin: 25px;
+      text-align: center;
+      font-size: var(--font-size-large);
+    }
+
+    table.gl-table-default {
+      width: 98%;
+      border: 1px solid #ddd;
+      margin-bottom: 15px;
+    }
+
+    table.gl-table-default>thead.table-head>tr>th,
+    table.gl-table-default>tbody.table-body>tr>td,
+    table.gl-table-default>thead.table-head>tr>th {
+      text-align: center;
+    }
+
+    table.gl-table-default>tbody.table-body>tr>td:nth-child(1),
+    {
+      width: 5%;
+    }
+
+    table.gl-table-default>tbody.table-body>tr>td:nth-child(2) {
+      width: 10%;
+    }
+
+    table.gl-table-default>thead.table-head>tr>th:nth-child(5),
+    table.gl-table-default>thead.table-head>tr>th:nth-child(4),
+    table.gl-table-default>thead.table-head>tr>th:nth-child(3),
+    table.gl-table-default>tbody.table-body>tr>td:nth-child(5),
+    table.gl-table-default>tbody.table-body>tr>td:nth-child(3),
+    table.gl-table-default>tbody.table-body>tr>td:nth-child(4),
+    table.gl-table-default>tbody.table-foot>tr>td:nth-child(4) {
+      text-align: right;
+      width: 15%;
+    }
+  </style>
+  <template>
+    <gl-form-panel set-padding="10px 20px 10px 20px" set-border="1px">
+      <gl-form-panel-body label="" set-padding="10px" set-border="1px">
+        <div class="textheader-center">
+          {{localize.ch_cheque}}
+        </div>
+      </gl-form-panel-body>
+
+      <gl-form-panel-body label="" set-padding="10px" set-border="1px">
+        <table class="gl-table-default">
+          <thead class="table-head">
+            <tr>
+              <th>
+                <paper-checkbox on-tap="_selectDataAll" checked="{{selectDataAll}}"></paper-checkbox>
+                {{localize.text_check_box}}</th>
+              <th>{{localize.no_cheque}}
+                <!--{{localize.label_order}}-->
+              </th>
+              <th>{{localize.value_bal_b}}
+                <!--{{localize.label_componey}}-->
+              </th>
+              <th>{{localize.value_tax_b}}
+                <!--{{localize.text_invoice_no}}-->
+              </th>
+              <th>{{localize.value_final_b}}
+                <!--{{localize.label_total_value_pay_full}}-->
+              </th>
+              <th>{{localize.invoice_company_no}}
+                <!--{{localize.label_total_value_pay_tax}}-->
+              </th>
+              <th>{{localize.pay_running}}
+                <!--{{localize.label_total_value_bath}}-->
+              </th>
+              <!--<th>-->
+              <!--{{localize.label_total_value_bath}}-->
+              <!--</th>-->
+            </tr>
+          </thead>
+          <tbody class="table-body">
+            <template is="dom-repeat" items="{{data}}">
+              <tr>
+                <td>
+                  <paper-checkbox id="index" class="checkBoxPay" data="{{item}}" on-tap="checkData" on-click="setNoCheque" checked="{{item.check}}"></paper-checkbox>
+                </td>
+                <td>[[_ObcountIndex(index)]]</td>
+                <td>[[formatNumber(item.value_bal_b)]]</td>
+                <td>[[formatNumber(item.value_tax_b)]]</td>
+                <td>[[formatNumber(item.value_final_b)]]</td>
+                <td>[[item.invoice_company_no]]</td>
+                <td>
+                  [[changeString2Num(item.*,'pay_running')]]
+                  <gl-form-input type="number" class="required" required="{{item.check}}" no-label-float value="{{item.pay_running}}" data="[[item]]"
+                    on-blur="checkDuplicatePayNo" on-focus="_setSeleteValue"></gl-form-input>
+                  <!--on-blur="checkDuplicatePayNo"-->
+                </td>
+              </tr>
+            </template>
+          </tbody>
+          <tfoot class="table-foot">
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td>{{localize.total}}</td>
+              <td style="text-align: right;">[[formatNumber(dataSet.pay_value_b)]]</td>
+              <td></td>
+              <td></td>
+            </tr>
+          </tfoot>
+        </table>
+      </gl-form-panel-body>
+      <!--[[calValue(data.*)]]-->
+      <gl-form-panel-body label="" set-padding="10px" set-border="1px">
+        <br> {{localize.label_detail}}
+
+        <gl-grid-row width="{{getWidth}}">
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,2]]"></gl-grid-col>
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+            <gl-combo-box class="required" required id="bank" label="ธนาคาร" item-label-path="bank_name_th" item-value-path="bank_id"
+              items="[[dataBank]]" value="{{dataSet.bank_id}}" on-selected-item-changed="_getBankObject">
+              <template>
+                [[item.bank_name_th]]
+              </template>
+            </gl-combo-box>
+          </gl-grid-col>
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+            <gl-form-input class="required" required label="{{localize.bank_branch}} :" placeholder="{{localize.bank_branch}}"
+              value="{{dataSet.bank_branch}}"></gl-form-input>
+          </gl-grid-col>
+        </gl-grid-row>
+        <gl-grid-row>
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,2]]"></gl-grid-col>
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+            <!--{{localize.label_cheque_date_approve}}-->
+            <gl-form-input type="date" class="required" required label="{{localize.paid_date}}" value="{{dataSet.paid_date}}"></gl-form-input>
+          </gl-grid-col>
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+            <gl-form-input label="{{localize.pay_remark}} :" placeholder="{{localize.pay_remark}}" value="{{dataSet.pay_remark}}"></gl-form-input>
+          </gl-grid-col>
+        </gl-grid-row>
+        <gl-grid-row>
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,2]]"></gl-grid-col>
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+            <br>
+            <paper-checkbox class="checkBox" on-tap="toggle" aria-labelledby="label3"></paper-checkbox>
+            <!--<label id="label3">-->
+            {{localize.rice_from_stock}}
+            <!--</label>-->
+          </gl-grid-col>
+        </gl-grid-row>
+
+        <iron-collapse id="collapse">
+          <payment-detail-by-rice data-fake="[[dataSilo]]"></payment-detail-by-rice>
+        </iron-collapse>
+      </gl-form-panel-body>
+
+      <gl-form-panel-footer label="" set-padding="10px">
+        <paper-button class="gl-btn-success" raised on-tap="addPayment">
+          <!--{{localize.btn_pay}}-->
+          {{localize.save}}
+        </paper-button>
+      </gl-form-panel-footer>
+    </gl-form-panel>
+
+  </template>
+  <script>
+    Polymer({
+      is: "payment-detail",
+      behaviors: [
+        ReduxBehavior,
+        nylonBehavior,
+        g2gLogicBehavior, FormatNumberBehavior, ValidateFormBehavior
+      ],
+      properties: {
+        localize: {
+          statePath: 'i18n.payment'
+        },
+        data: {
+          statePath: 'payment.paymentDetail',
+          // type: Object,
+          // value: {},
+          // observer: '_setCheckBox'
+        },
+        no: {
+          statePath: 'payment.payRunning',
+          // type: Object,
+          // value: {
+          //   pay_running:1
+          // }
+        },
+        dataSet: {
+          statePath: 'payment.dataSetPayment',
+          // type: Object,
+          // value:{
+          //   pay_value_b:0
+          // }
+        },
+        dataBank: {
+          statePath: 'commonG2g.bankList',
+        },
+        contractId: {
+          statePath: 'commonState.contractId',
+          // observer: 'get'
+        },
+        companyTaxNo: {
+          statePath: 'commonState.companyTaxNo',
+          // observer: 'get'
+        },
+        // dataFake:{
+        //   type:Array,
+        //   value:
+        //         [
+        //           {id:'Rx1234',name:'ข้าวขาว 5 %',ton:5000,value:200000},
+        //           {id:'Rx1235',name:'ข้าวขาว 15 %',ton:15000,value:400000},
+        //           {id:'Rx1236',name:'ข้าวขาว 25 %',ton:25000,value:500000},
+        //           {id:'Rx1237',name:'ข้าวขาว 35 %',ton:35000,value:700000},
+        //           {id:'Rx1238',name:'ข้าวขาว 45 %',ton:50000,value:1050000},
+        //         ]
+        // }
+      },
+      toggle: function () {
+        this.$.collapse.toggle();
+        this.dispatchAction('PAYMENT_GET_SILO_DATA')
+      },
+
+      checkData: function (e) {
+        // console.log(this.data.payment_detail);
+        let dataPay = this.data.filter((item) => item.check === true)
+        // console.log(dataPay);
+        this.set('dataSet.pay_value_b', 0);
+        this.set('dataSet.pay_value_b', Object.keys(dataPay).reduce((previous, current) => previous + dataPay[current].value_final_b, 0));
+        //ปิดการไม่ให้เลือกอันอื่นที่ไม่ตรงกับเลือกอันแรก
+      },
+      _getBankObject(e) {
+        this.set('dataSet.bank', e.detail.value);
+      },
+      _selectDataAll: function (val) {
+        try {
+          if (this.selectDataAll) {
+            this.data.map((item, index) => {
+              // console.log(111);
+              // console.log(item.pay_status === false);
+              // if (item.pay_status === false) {
+              if (item.pay_status === false && item.check === false) {
+                this.set('data.' + index + '.check', true)
+                let newCh = this.data.filter((items) => items.check === true && items.pay_status === false)
+                let result = this.maxNumberInArrayObject(newCh, 'pay_running')
+                // console.log(result);
+                if (result === 0) {
+                  this.set('data.' + index + '.pay_running', this.no.pay_running)
+                } else {
+                  this.set('data.' + index + '.pay_running', result + 1)
+                }
+              }
+            })
+          } else {
+            this.data.map((item, index) => {
+
+              if (item.pay_status === false) {
+                this.set('data.' + index + '.check', true);
+                this.set('data.' + index + '.check', false)
+                this.set('data.' + index + '.pay_running', '');
+              }
+            })
+          }
+
+        } catch (error) {
+
+        }
+      },
+      setNoCheque: function (para) {
+        // console.log(para.model.__data__)
+        //เพิ่ม index ลงไปเพื่อไว้ ใส่ค่ากลับได้ถูกตำแหน่ง
+        this.data.map((item, index) => item.indexItem = index)
+        let item = para.model.__data__
+        // หา item ที่ check แล่วและ pay_status ยังเป็น false
+        let newCh = this.data.filter((item) => item.check === true && item.pay_status === false)
+        newCh.sort((a, b) => Number(a.pay_running) - Number(b.pay_running))
+        if (item.item.check === false) {
+          this.set('data.' + item.index + '.pay_running', '')
+          let resultMin = this.minNumberInArrayObject(newCh, 'pay_running')
+          if (this.no.pay_running === resultMin - 1) {
+            newCh.map((item, index) => {
+              if (item.pay_running !== resultMin) {
+                this.set('data.' + item.indexItem + '.pay_running', resultMin)
+              }
+              ++resultMin
+            })
+          } else {
+            let no = this.no.pay_running
+            // เรียงจากนค่า pay_running น้อยไปหามาก
+            newCh.map((item, index) => {
+              this.set('data.' + item.indexItem + '.pay_running', ++no)
+            })
+          }
+        } else {
+
+          //อยู่ใน g2gLogicBehavior 
+          let result = this.maxNumberInArrayObject(newCh, 'pay_running')
+          if (result === 0)
+            return this.set('data.' + item.index + '.pay_running', this.no.pay_running)
+          return this.set('data.' + item.index + '.pay_running', result + 1)
+        }
+
+      },
+      _resiveDataPayment: function () {
+        return new Promise((res, rej) => {
+          let newData = JSON.parse(JSON.stringify(this.data.filter((item) => item.check == true)))
+          let dataForSend = []
+          newData.map((item) => {
+            // console.log(item);
+            dataForSend.push({
+              id: item.id,
+              pay_running: item.pay_running,
+              bank: this.dataSet.bank,
+              bank_branch: this.dataSet.bank_branch,
+              bank_id: this.dataSet.bank_id,
+              paid_date: this.dataSet.paid_date + 'T00:00:00+07:00',
+              pay_status: this.dataSet.pay_status,
+              pay_value_b: item.value_final_b,
+              pay_remark: this.dataSet.pay_remark
+            })
+          })
+          // console.log(dataForSend);
+          res(dataForSend)
+        })
+      },
+      _resiveFormPayment: function () {
+        return new Promise((res, rej) => {
+          if (this.validateForm('.required')) {
+            this._resiveDataPayment().then((data) => {
+              res(data)
+            })
+          } else {
+            this.fire('toast', {
+              status: 'connectError', text: 'กรุณากรอกข้อมูลให้ครบทุกช่อง', //คำสั่งสำหรับเปิด toast error
+              callback: function () {
+                rej('error')
+              }
+            })
+          }
+        })
+      },
+      addPayment: function () {
+        // console.log(this.data);
+        this.fire('toast', {
+          status: 'openDialog',
+          text: 'ต้องการชำระเงินใช่หรือไม่ ?',
+          confirmed: (result) => {
+            if (result == true) {
+              this._resiveFormPayment()
+                .then((res) => {
+                  // console.log(res);
+                  this.dispatchAction('PAYMENT_PUT_PAID', res)
+                    .then((response) => {
+                      if (response.data.replaced !== undefined && response.data.replaced.length !== 0) {
+                        this.fire('toast', {
+                          status: 'success', text: 'สำเร็จ',  // คำสั่งสำหรับเปิด toast success
+                          callback: () => {
+                          }
+                        })
+                        this.dispatchAction('PAYMENT_GET_LIST_DATA', this.contractId.contract_id)
+                        let url = { contract_id: this.contractId.contract_id, company_taxno: this.companyTaxNo.company_taxno }
+                        // // console.log(url );
+                        this.dispatchAction('PAYMENT_GET_DETAIL_DATA', this.genUrl(url))
+                        this.dispatchAction('SET_DATE_PAYMENY')
+                        this.dispatchAction('PAYMENT_GET_RUNNING_NO')
+                      } else {
+                        this.fire('toast', {
+                          status: 'connectError', text: `ไม่สามารถจ่ายเช็คได้`, //คำสั่งสำหรับเปิด toast error
+                          callback: () => {
+                          }
+                        })
+                      }
+                    })
+                })
+                .catch((error) => {
+                  //console.log(error);
+                })
+            }
+          }
+        })
+
+      },
+    });
+  </script>
+</dom-module>

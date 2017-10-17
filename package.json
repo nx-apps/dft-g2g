@@ -1,0 +1,50 @@
+{
+  "name": "dft-g2g",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "npm-run-all --parallel webpack nylon",
+    "dev": "npm-run-all --parallel webpack polymer",
+    "build": "cd public && polymer build",
+    "test": "polymer serve ./public/build/bundled --port 8081",
+    "nylon": "nylon-cli serve",
+    "bower": "cd ./public && bower install",
+    "webpack": "webpack",
+    "polymer": "polymer serve ./public --port 8080"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "babel": "^6.5.2",
+    "babel-core": "^6.22.1",
+    "babel-loader": "^6.2.10",
+    "babel-polyfill": "^6.23.0",
+    "babel-preset-es2015": "^6.22.0",
+    "babel-preset-stage-0": "^6.22.0",
+    "bulma": "^0.3.1",
+    "exec": "^0.2.1",
+    "gulp": "^3.9.1",
+    "nodemon": "^1.11.0",
+    "npm-run-all": "^4.0.1",
+    "webpack": "^2.2.1"
+  },
+  "dependencies": {
+    "async": "^2.1.4",
+    "axios": "^0.15.3",
+    "csv-parse": "^1.2.0",
+    "group-array": "^0.3.3",
+    "iconv-lite": "^0.4.15",
+    "js-cookie": "^2.1.3",
+    "js-sha1": "^0.4.1",
+    "jsonwebtoken": "^7.2.1",
+    "jwt-decode": "^2.1.0",
+    "multiparty": "^4.1.2",
+    "nodemailer": "^3.1.4",
+    "polymer-redux": "^0.4.2",
+    "redux": "^3.6.0",
+    "sleep": "^5.1.0",
+    "unzip": "^0.1.11",
+    "xlsx": "^0.8.3"
+  }
+}

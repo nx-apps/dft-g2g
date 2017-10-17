@@ -1,0 +1,911 @@
+<!--<link rel="import" href="../controller/g2gShipmentController.html">-->
+<link rel="import" href="./../../../../bower_components/paper-autocomplete/paper-autocomplete-suggestions.html">
+<link rel="import" href="./../../../../bower_components/gl-form/gl-form-panel.html">
+<link rel="import" href="./../../../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="./../../../../bower_components/gl-form/gl-form-panel-body.html">
+<link rel="import" href="./../../../../bower_components/gl-grid/gl-grid-row.html">
+<link rel="import" href="./../../../../bower_components/gl-grid/gl-grid-col.html">
+<link rel="import" href="./../../../../bower_components/gl-form/gl-form-input.html">
+<link rel="import" href="./../../../../bower_components/gl-form/gl-combo-box.html">
+<link rel="import" href="./../../../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="./../../../../bower_components/vaadin-date-picker/vaadin-date-picker.html">
+<link rel="import" href="./../../../../bower_components/gl-form/gl-form-panel-footer.html">
+<link rel="import" href="./../../../layout/shared-styles.html">
+<link rel="import" href="./../../components/validateFormBehaviors.html">
+<link rel="import" href="./../../components/format-number-behavior.html">
+<link rel="import" href="./../../components/g2g-logic-behavior.html">
+
+<dom-module id="booking-detail">
+  <style include="iron-flex iron-flex-factors iron-flex-alignment shared-styles">
+    * {
+      font-family: 'CSChatThaiUI', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .btnVessel {
+      min-height: 32px;
+      min-width: 32px;
+    }
+
+    .btnVessel>iron-icon {
+      height: 16px;
+      width: 16px;
+      margin-right: 8px;
+    }
+
+    div.title {
+      margin-top: 16px;
+      text-align: center;
+      font-size: var(--font-size-h4);
+    }
+  </style>
+  <template>
+
+    <gl-form-panel>
+      <!--<template is="dom-if" if="[[commonState.btnDisabled]]">-->
+
+      <!--<template is="dom-if" if="[[_checkEdit(data.book_status)]]">-->
+      <template is="dom-if" if="[[!data.book_status]]">
+        <div class="horizontal end-justified layout">
+          <paper-icon-button id="editConfirm" class="crud" icon="create" raised on-tap="editBook"></paper-icon-button>
+          <paper-tooltip for="editConfirm" offset="0">{{localizeCommon.edit}}</paper-tooltip>
+          <paper-icon-button id="deleteConfirm" class="crud" icon="delete" raised on-tap="deleteBooking"></paper-icon-button>
+          <paper-tooltip for="deleteConfirm" offset="0">{{localizeCommon.delete}}</paper-tooltip>
+        </div>
+      </template>
+      <!--</template>-->
+
+      <!--</template>-->
+      <gl-form-panel-body>
+        <div class="title">{{localizeBook.lot_no}}</div>
+      </gl-form-panel-body>
+      <gl-form-panel-body>
+        <gl-grid-row width="{{getWidth}}">
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+          </gl-grid-col>
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+          </gl-grid-col>
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+            [[changeString2Num(data.*,'ship_lot')]]
+            <gl-form-input required class="required" label="{{localizeBook.lot_no}}" always-float-label placeholder="{{localizeBook.lot_no}}"
+              value="{{data.ship_lot}}" disabled="[[commonState.btnDisabled]]" type="number" min="0"></gl-form-input>
+          </gl-grid-col>
+        </gl-grid-row>
+        <gl-grid-row width="{{getWidth}}">
+          <!--<gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+            <gl-form-input required class="required" label="{{localizeBook.label_booking_no}}" always-float-label placeholder="{{localizeBook.label_booking_no}}"
+              value="{{data.book_no}}" disabled="[[commonState.btnDisabled]]"></gl-form-input>
+          </gl-grid-col>-->
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+            <gl-form-input label="{{localizeBook.bill_of_lading}}" always-float-label placeholder="{{localizeBook.bill_of_lading}}"
+              value="{{data.bl_no}}" disabled="[[commonState.btnDisabled]]"></gl-form-input>
+          </gl-grid-col>
+
+          <!--<gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">-->
+          <!--<gl-combo-box label="ที่อยู่ผู้รับสินค้า (ยัง)" always-float-label item-label-path="notify_name" disabled="[[commonState.btnDisabled]]"
+              item-value-path="notify_id" items="{{notifyList}}" value="{{data.notify_id}}">
+              <template>
+                [[item.notify_name]]
+              </template>
+            </gl-combo-box>-->
+          <!--</gl-grid-col>-->
+        </gl-grid-row>
+        <gl-grid-row>
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+            <gl-combo-box required class="required" label="{{localizeBook.shipping_agent}}" placeholder="{{localizeBook.shipping_agent}}"
+              always-float-label item-label-path="shipline_name" disabled="[[commonState.btnDisabled]]" item-value-path="shipline_id"
+              items="{{shiplineList}}" value="{{data.shipline_id}}" on-selected-item-changed="getObjectShipline">
+              <template>
+                [[item.shipline_name]]
+              </template>
+            </gl-combo-box>
+          </gl-grid-col>
+
+          <template is="dom-repeat" items="[[data.ship]]">
+            <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+              [[_getShip(shipList)]]
+              <div class="autocomplete-wrapper">
+                <gl-form-input id="ship-[[index]]" required class="required" disabled="[[commonState.btnDisabled]]" always-float-label label="{{localizeBook.vessel}} [[_ObcountIndex(index)]]"
+                  placeholder="{{localizeBook.vessel}} [[_ObcountIndex(index)]]" value="{{item.ship_name}}" on-blur="getShipId"
+                  index="[[index]]"></gl-form-input>
+
+                <paper-autocomplete-suggestions id="shipline-suggestions-[[index]]" for="ship-[[index]]"></paper-autocomplete-suggestions>
+
+              </div>
+            </gl-grid-col>
+            <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+              <gl-form-input required class="required" label="{{localizeBook.voy_no}}" always-float-label placeholder="{{localizeBook.voy_no}}"
+                value="{{item.ship_voy}}" disabled="[[commonState.btnDisabled]]"></gl-form-input>
+            </gl-grid-col>
+            <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]"></gl-grid-col>
+          </template>
+
+          <div class="horizontal end-justified layout">
+            <paper-button raised class="gl-btn-primary btnVessel" on-tap="addShip" hidden="[[commonState.btnDisabled]]">
+              <iron-icon icon="add"></iron-icon>{{localizeBook.add_vessel}}</paper-button>
+            <paper-button raised class="gl-btn-danger btnVessel" on-tap="deleteShip" hidden="[[commonState.btnDisabled]]" disabled="[[_isHaveForDelete(data.ship,data.ship.*)]]">
+              <iron-icon icon="remove"></iron-icon>{{localizeBook.delete_vessel}}</paper-button>
+          </div>
+
+        </gl-grid-row>
+        <gl-grid-row width="{{getWidth}}">
+          <template is="dom-repeat" items="[[data.surveyor]]">
+            <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+              [[_getSurveyor(item.surveyor_id,surveyorList,data.surveyor.*)]]
+              <gl-combo-box required class="required" id="surveyor-[[index]]" index="[[index]]" label="{{localizeBook.surveyor}} [[_ObcountIndex(index)]]"
+                placeholder="{{localizeBook.surveyor}} [[_ObcountIndex(index)]]" always-float-label disabled="[[commonState.btnDisabled]]"
+                item-label-path="surveyor_name" item-value-path="surveyor_id" items="{{surveyorList}}" value="{{item.surveyor_id}}"
+                on-selected-item-changed="getObjectSurveyor">
+                <template>
+                  [[item.surveyor_name]]
+                </template>
+              </gl-combo-box>
+            </gl-grid-col>
+            <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]"></gl-grid-col>
+            <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]"></gl-grid-col>
+          </template>
+
+          <div class="horizontal end-justified layout">
+            <paper-button raised class="gl-btn-primary btnVessel" on-tap="addSurveyor" hidden="[[commonState.btnDisabled]]" disabled="[[!_isHaveForUse(data.surveyor,dataForSelect.surveyor,data.surveyor.*)]]">
+              <iron-icon icon="add"></iron-icon>{{localizeBook.add_surveyor}}</paper-button>
+            <paper-button raised class="gl-btn-danger btnVessel" on-tap="deleteSurveyor" hidden="[[commonState.btnDisabled]]" disabled="[[_isHaveForDelete(data.surveyor,data.surveyor.*)]]">
+              <iron-icon icon="remove"></iron-icon>{{localizeBook.delete_surveyor}}</paper-button>
+          </div>
+        </gl-grid-row>
+
+        <gl-grid-row width="{{getWidth}}">
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+            <gl-combo-box required class="required" label="{{localizeBook.port_of_loading}}" placeholder="{{localizeBook.port_of_loading}}"
+              always-float-label item-label-path="port_name" disabled="[[commonState.btnDisabled]]" on-selected-item-changed="getObjectLoadPort"
+              item-value-path="port_id" items="{{portList.Thailand}}" value="{{data.load_port_id}}">
+              <template>
+                [[item.port_name]]
+              </template>
+            </gl-combo-box>
+          </gl-grid-col>
+
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+            <gl-form-input type="date" required class="required" label="{{localizeBook.etd}}" placeholder="{{localizeBook.etd}}" always-float-label
+              value="{{data.etd_date}}" disabled="[[commonState.btnDisabled]]"></gl-form-input>
+            <!--<vaadin-date-picker required class="required" label="{{localizeBook.label_etd}}" always-float-label value="{{data.etd_date}}"
+              disabled="[[commonState.btnDisabled]]"></vaadin-date-picker>-->
+          </gl-grid-col>
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+            <gl-form-input type="date" required class="required" label="{{localizeBook.eta}}" placeholder="{{localizeBook.eta}}" always-float-label
+              value="{{data.eta_date}}" disabled="[[commonState.btnDisabled]]"></gl-form-input>
+            <!--<vaadin-date-picker required class="required" label="{{localizeBook.label_eta}}" always-float-label value="{{data.eta_date}}"
+              disabled="[[commonState.btnDisabled]]"></vaadin-date-picker>-->
+          </gl-grid-col>
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+            <gl-combo-box required class="required" label="{{localizeBook.port_of_discharge}}" placeholder="{{localizeBook.port_of_discharge}}"
+              always-float-label item-label-path="port_name" disabled="[[commonState.btnDisabled]]" item-value-path="port_id"
+              on-selected-item-changed="getObjectDestPort" items="{{setPort(portList,contryNameEn)}}" value="{{data.dest_port_id}}">
+              <template>
+                [[item.port_name]]
+              </template>
+            </gl-combo-box>
+          </gl-grid-col>
+
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+            <gl-combo-box required class="required" label="{{localizeBook.place_of_delivery}}" placeholder="{{localizeBook.place_of_delivery}}"
+              always-float-label item-label-path="port_name" disabled="[[commonState.btnDisabled]]" item-value-path="port_id"
+              on-selected-item-changed="getObjectDeliPort" items="{{setPort(portList,contryNameEn)}}" value="{{data.deli_port_id}}">
+              <template>
+                [[item.port_name]]
+              </template>
+            </gl-combo-box>
+          </gl-grid-col>
+
+          <!--notify/-->
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,12]]">
+            <gl-combo-box required class="required" label="{{localizeBook.name_address}}" placeholder="{{localizeBook.name_address}}"
+              always-float-label item-label-path="notify_name" disabled="[[commonState.btnDisabled]]" item-value-path="notify_id"
+              items="{{claNoti(notifyList,data.deli_port_id)}}" on-selected-item-changed="getObjectNotify" value="{{data.notify_id}}">
+              <template>
+                [[item.notify_name]]
+              </template>
+            </gl-combo-box>
+          </gl-grid-col>
+
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,12]]">
+            <gl-form-textarea disabled rows="2" label="{{localizeBook.address}}" placeholder="{{localizeBook.address}}" value="{{dataShow.notify.notify_address}}"></gl-form-textarea>
+
+          </gl-grid-col>
+
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+            <gl-form-input type="date" required class="required" label="{{localizeBook.packing_date}}" placeholder="{{localizeBook.packing_date}}"
+              always-float-label value="{{data.packing_date}}" disabled="[[commonState.btnDisabled]]"></gl-form-input>
+            <!--<vaadin-date-picker></vaadin-date-picker>-->
+          </gl-grid-col>
+
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+            <gl-form-input type="date" required class="required" label="{{localizeBook.cut_off_date}}" placeholder="{{localizeBook.cut_off_date}}"
+              always-float-label value="{{data.cut_date}}" disabled="[[commonState.btnDisabled]]"></gl-form-input>
+            <!--<vaadin-date-picker required class="required" label="{{localizeBook.label_cut_off_date}}" always-float-label value="{{data.cut_of_date}}"
+              disabled="[[commonState.btnDisabled]]"></vaadin-date-picker>-->
+          </gl-grid-col>
+
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+            <gl-form-input label="{{localizeBook.cut_off_time}}" always-float-label required class="required" type="time" placeholder="{{localizeBook.cut_off_time}}"
+              value="{{data.cut_time}}" disabled="[[commonState.btnDisabled]]"></gl-form-input>
+          </gl-grid-col>
+
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+            <gl-form-input type="date" label="{{localizeBook.production_date}}" placeholder="{{localizeBook.production_date}}" always-float-label
+              required class="required" value="{{data.product_date}}" disabled="[[commonState.btnDisabled]]"></gl-form-input>
+            <!--<vaadin-date-picker label="{{localizeBook.label_production_date}}" always-float-label required class="required" value="{{data.product_date}}"
+              disabled="[[commonState.btnDisabled]]"></vaadin-date-picker>-->
+          </gl-grid-col>
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+            [[changeString2Num(data.*,'weight_container')]]
+            <gl-form-input required class="required" allowed-pattern="[0-9||,||.]" format-number="on" label="{{localizeBook.cabinet}}"
+              always-float-label placeholder="{{localizeBook.cabinet}}" disabled="[[commonState.btnDisabled]]" value="{{data.weight_container}}"></gl-form-input>
+          </gl-grid-col>
+        </gl-grid-row>
+        <gl-grid-row width="{{getWidth}}">
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]"></gl-grid-col>
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]"></gl-grid-col>
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
+            <gl-form-input label="{{localizeBook.note}}" always-float-label value="{{data.book_remark}}" placeholder="{{localizeBook.note}}"
+              disabled="[[commonState.btnDisabled]]"></gl-form-input>
+          </gl-grid-col>
+        </gl-grid-row>
+      </gl-form-panel-body>
+
+      <!--<template is="dom-if" if="[[!commonState.isInsert]]">
+        <gl-form-panel-footer>
+          <paper-button class="gl-btn-default" raised on-tap="cancelInsertShipment"> {{localizeBook.btn_back_ward}}</paper-button>
+          <paper-button class="gl-btn-primary" raised on-tap="insertBook"> {{localizeBook.btn_add}}</paper-button>
+        </gl-form-panel-footer>
+      </template>
+      <template is="dom-if" if="[[commonState.isInsert]]">
+        <gl-form-panel-footer>
+          <paper-button class="gl-btn-default" raised on-tap="cancelInsertShipment" hidden="[[!commonState.btnDisabled]]">
+            {{localizeBook.btn_back_ward}}</paper-button>
+          <paper-button class="gl-btn" on-tap="calcelBl" raised hidden="[[commonState.btnDisabled]]">{{localizeBook.btn_cancel}}</paper-button>
+          <paper-button class="gl-btn-success" raised on-tap="editBl" hidden="[[commonState.btnDisabled]]"> {{localizeBook.btn_save}}</paper-button>
+        </gl-form-panel-footer>
+      </template>-->
+      <div class="horizontal end-justified layout">
+        <!--<paper-button class="gl-btn-default" raised on-tap="openExporter"> {{localizeBook.list_exporter}}</paper-button>-->
+        <template is="dom-if" if="[[commonState.isInsert]]">
+          <paper-button class="gl-btn-default" raised on-tap="cancelInsertShipment"> {{localizeCommon.back_ward}}</paper-button>
+          <paper-button class="gl-btn-primary" on-tap="insertBook" raised>{{localizeCommon.add}}</paper-button>
+
+        </template>
+        <template is="dom-if" if="[[!commonState.isInsert]]">
+          <paper-button class="gl-btn-default" on-tap="cancelBook" raised hidden="[[commonState.btnDisabled]]">{{localizeCommon.cancel}}</paper-button>
+          <paper-button class="gl-btn-success" on-tap="saveBook" raised hidden="[[commonState.btnDisabled]]">{{localizeCommon.save}}</paper-button>
+        </template>
+        <template is="dom-if" if="[[commonState.btnDisabled]]">
+          <paper-button class="gl-btn-default" raised on-tap="cancelInsertShipment"> {{localizeCommon.back_ward}}</paper-button>
+
+          <paper-button class="gl-btn-info" raised on-tap="confirmDrawer" hidden="[[data.book_status]]">{{localizeCommon.confirm}}</paper-button>
+        </template>
+
+        <template is="dom-if" if="[[data.book_status]]">
+          <paper-button class="gl-btn-danger  " raised on-tap="cancelconfirmDrawer" hidden="[[data.invoice_status]]">{{localizeCommon.cancer_confirm}}</paper-button>
+        </template>
+      </div>
+  </template>
+  <script>
+    Polymer({
+      is: "booking-detail",
+      behaviors: [
+        ReduxBehavior,
+        nylonBehavior,
+        FormatNumberBehavior, g2gLogicBehavior, ValidateFormBehavior
+      ],
+      properties: {
+        data: {
+          statePath: 'book.bookDetail'
+        },
+        // dataForSelect: {
+        //   type: Object,
+        // },
+        // blNoOld: {
+        //   type: String,
+        // },
+        localizeBook: {
+          statePath: 'i18n.book'
+        },
+        localizeContract: {
+          statePath: 'i18n.contract'
+        },
+        localizeConfirmLetter: {
+          statePath: 'i18n.confirmLetter'
+        },
+        localizeCommon: {
+          statePath: 'i18n.common'
+        },
+        buyerId: {
+          statePath: 'commonState.buyerId'
+        },
+        commonState: {
+          statePath: 'commonState.setState'
+        },
+        contryNameEn: {
+          statePath: 'commonState.contryNameEn'
+        },
+        shipList: {
+          statePath: 'commonG2g.shipList',
+          // observer:'get'
+        },
+        notifyList: {
+          statePath: 'commonG2g.notifyList',
+          // observer:'get'
+        },
+        shiplineList: {
+          statePath: 'commonG2g.shiplineList',
+          // observer:'get'
+        },
+        surveyorList: {
+          statePath: 'commonG2g.surveyorList',
+          // observer:'get'
+        },
+        portList: {
+          statePath: 'commonG2g.portList',
+          // observer:'get'
+        },
+        dataShow: {
+          type: Object,
+          value: {
+            shipline: {},
+            notify_party: {},
+            surveyor: [],
+            load_port: {},
+            deli_port: {},
+            dest_port: {},
+            notify: {},
+            ship: [],
+            address: {}
+          }
+        }
+      },
+      editBook: function () {
+        this.dispatchAction('SET_STATE', {
+          isInsert: false,
+          btnDisabled: false,
+          hiddend: true
+        })
+      },
+      observers: [
+        '_oBChangePod(data.dest_port_id)',
+      ],
+      setPort: function (portList, contryNameEn) {
+        return portList[contryNameEn]
+      },
+      openExporter() {
+        this.fire('_openExporter', this.data)
+        // console.log(this.data);
+      },
+      claNoti(notifyList,deli_port_id){
+        // console.log(this.data.notify_id);
+        let newData = notifyList.filter((item) => item.port_id === deli_port_id)
+        if (newData.length === 0 ) {
+          return notifyList.filter((item) => item.default_status === true)
+        }
+        return newData
+      },
+      getObjectShipline: function (e) {
+        if (e.detail.value !== null) {
+          let data = {
+            id: e.detail.value.shipline_id,
+            shipline_name: e.detail.value.shipline_name,
+            shipline_name2: e.detail.value.shipline_name2,
+            shipline_tel: e.detail.value.shipline_tel
+          }
+          this.set('dataShow.shipline', data)
+        }
+      },
+      getObjectSurveyor: function (e) {
+
+        if (e.detail.value !== null) {
+          // let data = JSON.parse(JSON.stringify(e.detail.value))
+          let index = e.currentTarget.index
+          let data = {
+            surveyor_id: e.detail.value.surveyor_id,
+            surveyor_name: e.detail.value.surveyor_name
+          }
+          this.set('dataShow.surveyor.' + index, data)
+        }
+      },
+      getObjectLoadPort: function (e) {
+        if (e.detail.value !== null) {
+          let data = {
+            country_fullname_en: e.detail.value.country_fullname_en,
+            country_fullname_th: e.detail.value.country_fullname_th,
+            country_name_en: e.detail.value.country_name_en,
+            country_name_th: e.detail.value.country_name_th,
+            id: e.detail.value.port_id,
+            port_name: e.detail.value.port_name
+          }
+          this.set('dataShow.load_port', data)
+        }
+      },
+      getObjectDeliPort: function (e) {
+        if (e.detail.value !== null) {
+          let data = {
+            country_fullname_en: e.detail.value.country_fullname_en,
+            country_fullname_th: e.detail.value.country_fullname_th,
+            country_name_en: e.detail.value.country_name_en,
+            country_name_th: e.detail.value.country_name_th,
+            id: e.detail.value.port_id,
+            port_name: e.detail.value.port_name
+          }
+          this.set('dataShow.deli_port', data)
+        }
+      },
+      getObjectDestPort: function (e) {
+        if (e.detail.value !== null) {
+          let data = {
+            country_fullname_en: e.detail.value.country_fullname_en,
+            country_fullname_th: e.detail.value.country_fullname_th,
+            country_name_en: e.detail.value.country_name_en,
+            country_name_th: e.detail.value.country_name_th,
+            id: e.detail.value.port_id,
+            port_name: e.detail.value.port_name
+          }
+          this.set('dataShow.dest_port', data)
+        }
+      },
+      getObjectNotify: function (e) {
+        if (e.detail.value !== null) {
+          let data = {
+            buyer_id: e.detail.value.buyer_id,
+            id: e.detail.value.notify_id,
+            notify_address: e.detail.value.notify_address,
+            notify_fax: e.detail.value.notify_fax,
+            notify_name: e.detail.value.notify_name,
+            notify_tel: e.detail.value.notify_tel,
+            port_id: e.detail.value.port_id
+          }
+          this.set('dataShow.notify', data)
+          // this.s
+        }
+      },
+      getShipId: function (e) {
+        try {
+          let index = e.currentTarget.index
+          // this.set('data.ship['+index+'].ship_name',this.data.ship[index].ship_name.toUpperCase())
+          this.data.ship[index].ship_name = this.data.ship[index].ship_name.toUpperCase()
+          this.notifyPath('data.ship.' + index + '.ship_name');
+          let sugg = this.$$('#shipline-suggestions-' + index)
+          // console.log(sugg);
+          // shipList
+          //     if (this.data.shipline_id != '') {
+
+          // let source = this.$$('#shipline-suggestions-' + index).source
+          // console.log(source);
+          // let ship_name = this.data.ship[index].ship_name
+          // var resulte = source.filter((item, index) => ship_name == item.text.toUpperCase())
+          //       // console.log(resulte);
+          //       if (resulte.length > 0) {
+          //         // this.set('data.ship['+index+'].ship_id', resulte[0].ship_id)
+          //         this.data.ship[index].ship_id = resulte[0].ship_id
+          //         // console.log(this.data.ship);
+          //       } else {
+          //         // console.log(this.data.ship);
+          //         // this.set('data.shipline_name',this.data.shipline_name)
+          //         this.set('data.ship.' + index + '..ship_id', '')
+          //       }
+          //     }else {
+          //     }
+        } catch (e) {
+          //     // console.log(e);
+        }
+
+      },
+      _resiveDataBook: function () {
+        return new Promise((res, rej) => {
+          // console.log(this.data);
+          let dataResive = JSON.parse(JSON.stringify(this.data))
+          for (var index = 0; index < this.data.ship.length; index++) {
+            let name = this.shipList.find((item) => item.ship_name === this.data.ship[index].ship_name)
+            if (name !== undefined)
+              this.data.ship[index].ship_id = name.ship_id
+
+          }
+          dataResive.buyer_id = this.buyerId.buyer_id
+          dataResive.cut_date = dataResive.cut_date + 'T00:00:00+07:00'
+          dataResive.eta_date = dataResive.eta_date + 'T00:00:00+07:00'
+          dataResive.etd_date = dataResive.etd_date + 'T00:00:00+07:00'
+          dataResive.packing_date = dataResive.packing_date + 'T00:00:00+07:00'
+          dataResive.product_date = dataResive.product_date + 'T00:00:00+07:00'
+          dataResive.shipline = this.dataShow.shipline
+          dataResive.notify_party = this.dataShow.notify
+          dataResive.surveyor = this.dataShow.surveyor
+          dataResive.load_port = this.dataShow.load_port
+          dataResive.deli_port = this.dataShow.deli_port
+          dataResive.dest_port = this.dataShow.dest_port
+          dataResive.ship = this.data.ship
+          delete dataResive.date_updated
+          delete dataResive.date_created
+          this.dataShow.notify = {}
+          res(dataResive)
+        })
+      },
+      _resiveFormBook: function () {
+        return new Promise((res, rej) => {
+          if (this.validateForm('.required')) {
+            this._resiveDataBook().then((data) => {
+              res(data)
+            })
+          } else {
+            this.fire('toast', {
+              status: 'connectError', text: this.localizeCommon.toast_input_error, //คำสั่งสำหรับเปิด toast error
+              callback: function () {
+                rej('error')
+              }
+            })
+          }
+        })
+      },
+      insertBook: function () {
+        // console.log(this.data);
+        // console.log(this.dataShow);
+        this._resiveFormBook()
+          .then((res) => {
+            // console.log(this.data);
+            this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
+            // console.log(res.cl_id);
+            let cl_id = res.cl_id
+            this.dispatchAction('POST_BOOK', res)
+              .then((response) => {
+                if (response.data.inserted !== undefined && response.data.inserted.length !== 0) {
+                  let url = { cl_id: cl_id }
+                  this.dispatchAction('GET_BOOK_LIST', this.genUrl(url));
+                  // this.dispatchAction('_list-book', 'list-of-booking');
+                  this.fire('toast', {
+                    status: 'success', text: this.localizeCommon.save_succeed,  // คำสั่งสำหรับเปิด toast success
+                    callback: () => {
+                      this.queryFrom('.required').map((el) => { el.reset(); });
+                      this.cancelInsertShipment()
+                      this.dispatchAction('GET_COMMON_SHIP_LIST');
+                    }
+                  })
+                } else {
+                  // console.log(1111);
+                  this.fire('toast', {
+                    status: 'connectError', text: response.data, //คำสั่งสำหรับเปิด toast error
+                    callback: () => {
+                    }
+                  })
+                }
+              })
+
+            // this.dispatchAction('POST_BOOK',res)
+            // console.log(this.data.ship);
+          })
+          .catch((error) => {
+            //console.log(error);
+          })
+      },
+      cancelBook: function () {
+        this.fire('toast', {
+          status: 'openDialog',
+          text: this.localizeCommon.toast_cancel_edit,
+          confirmed: (result) => {
+            if (result == true) {
+              let url = { id: this.data.id }
+              this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
+              this.dispatchAction('SET_STATE', {
+                isInsert: false,
+                btnDisabled: true,
+                hiddend: true
+              })
+              this.dispatchAction('GET_BOOK_DETAIL', this.genUrl(url))
+              this.async(() => {
+                this.fire('toast', {
+                  status: 'success', text: this.localizeCommon.load_successfully, callback: () => {
+                    this.queryFrom('.required').map((el) => { el.reset(); });
+                    // this.set('pageSelected', 'list-of-booking-edit')
+                  }
+                })
+              }, 500)
+            }
+          }
+        })
+      },
+      saveBook: function () {
+        this.fire('toast', {
+          status: 'openDialog',
+          text: this.localizeCommon.toast_edit,
+          confirmed: (result) => {
+            if (result == true) {
+              this._resiveFormBook()
+                .then((res) => {
+                  // console.log(res);
+                  this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
+                  this.dispatchAction('PUT_BOOK', res)
+                    .then((response) => {
+                      if (response.data.replaced !== undefined && response.data.replaced.length !== 0) {
+                        // this.dispatchAction('GET_CONTRACT_OF_BUYER', res.buyer_id);
+                        // this.dispatchAction('GET_CONTRACT', res.id)
+                        this.queryFrom('.required').map((el) => { el.reset(); });
+                        this.dispatchAction('SET_STATE', {
+                          isInsert: false,
+                          btnDisabled: true,
+                          hiddend: true
+                        })
+                        this.fire('toast', {
+                          status: 'success', text: this.localizeCommon.save_succeed,  // คำสั่งสำหรับเปิด toast success
+                          callback: () => {
+                            let url = { cl_id: this.data.cl_id }
+                            this.dispatchAction('GET_BOOK_LIST', this.genUrl(url));
+                            this.dispatchAction('GET_COMMON_SHIP_LIST');
+                          }
+                        })
+                      } else {
+                        // console.log(1111);
+                        this.fire('toast', {
+                          status: 'connectError', text: response.data, //คำสั่งสำหรับเปิด toast error
+                          callback: () => {
+                          }
+                        })
+                      }
+                    })
+                })
+                .catch((error) => {
+                  //console.log(error);
+                });
+            }
+          }
+        })
+      },
+      deleteBooking: function () {
+        this.fire('toast', {
+          status: 'openDialog',
+          text: this.localizeCommon.toast_delete,
+          confirmed: (result) => {
+            if (result == true) {
+              // console.log(res);
+              this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
+              this.dispatchAction('DELETE_BOOK', this.data.id)
+                .then((response) => {
+                  if (response.data.deleted !== undefined && response.data.deleted.length !== 0) {
+                    let url = { cl_id: this.data.cl_id }
+                    this.dispatchAction('GET_BOOK_LIST', this.genUrl(url));
+                    this.fire('toast', {
+                      status: 'success', text: this.localizeCommon.delete_succeed,  // คำสั่งสำหรับเปิด toast success
+                      callback: () => {
+                        this.cancelInsertShipment()
+                      }
+                    })
+                  } else {
+                    // console.log(1111);
+                    this.fire('toast', {
+                      status: 'connectError', text: response.data, //คำสั่งสำหรับเปิด toast error
+                      callback: () => {
+                      }
+                    })
+                  }
+
+                })
+                .catch((error) => {
+                  //console.log(error);
+                });
+            }
+          }
+        })
+      },
+      confirmDrawer: function () {
+        this.fire('toast', {
+          status: 'openDialog',
+          text: this.localizeCommon.toast_approve,
+          confirmed: (result) => {
+            if (result == true) {
+              this._resiveFormBook()
+                .then((res) => {
+                  res.book_status = true
+                  // console.log(res);
+                  this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
+                  this.dispatchAction('PUT_BOOK_APPROVE', res)
+                    .then((response) => {
+                      if (response.data.replaced !== undefined && response.data.replaced.length !== 0) {
+                        // this.dispatchAction('GET_CONTRACT_OF_BUYER', res.buyer_id);
+                        // this.dispatchAction('GET_CONTRACT', res.id)
+                        this.queryFrom('.required').map((el) => { el.reset(); });
+                        this.dispatchAction('SET_STATE', {
+                          isInsert: false,
+                          btnDisabled: true,
+                          hiddend: true
+                        })
+                        this.fire('toast', {
+                          status: 'success', text: this.localizeCommon.save_succeed,  // คำสั่งสำหรับเปิด toast success
+                          callback: () => {
+                            let url = { cl_id: this.data.cl_id }
+                            let urlBook = { id: this.data.id }
+                            this.dispatchAction('GET_BOOK_DETAIL', this.genUrl(urlBook))
+                            this.dispatchAction('GET_BOOK_LIST', this.genUrl(url));
+                            this.dispatchAction('GET_COMMON_SHIP_LIST');
+                          }
+                        })
+                      } else {
+                        // console.log(1111);
+                        this.fire('toast', {
+                          status: 'connectError', text: response.data, //คำสั่งสำหรับเปิด toast error
+                          callback: () => {
+                          }
+                        })
+                      }
+                    })
+                  // if (response.data.replaced !== undefined && response.data.replaced.length !== 0) {
+                  //       // this.dispatchAction('GET_CONTRACT_OF_BUYER', res.buyer_id);
+                  //       // this.dispatchAction('GET_CONTRACT', res.id)
+                  //       this.queryFrom('.required').map((el) => { el.reset(); });
+                  //       this.dispatchAction('SET_STATE', {
+                  //         isInsert: false,
+                  //         btnDisabled: true,
+                  //         hiddend: true
+                  //       })
+                  //       this.fire('toast', {
+                  //         status: 'success', text: this.localizeCommon.save_succeed,  // คำสั่งสำหรับเปิด toast success
+                  //         callback: () => {
+                  //           let url = { cl_id: this.data.cl_id }
+                  //           let urlBook = { id: this.data.id }
+                  //           this.dispatchAction('GET_BOOK_EXPORTER_DETAIL', this.genUrl(urlBook))
+                  //           this.dispatchAction('GET_BOOK_LIST', this.genUrl(url));
+                  //         }
+                  //       })
+                  //     } else {
+                  //       // console.log(1111);
+                  //       this.fire('toast', {
+                  //         status: 'connectError', text: response.data, //คำสั่งสำหรับเปิด toast error
+                  //         callback: () => {
+                  //         }
+                  //       })
+                  //     }
+
+                })
+                .catch((error) => {
+                  //console.log(error);
+                });
+            }
+          }
+        })
+      },
+      cancelconfirmDrawer: function () {
+        this.fire('toast', {
+          status: 'openDialog',
+          text: this.localizeCommon.toast_cancel_approve,
+          confirmed: (result) => {
+            if (result == true) {
+              this._resiveFormBook()
+                .then((res) => {
+                  res.book_status = false
+                  // console.log(res);
+                  this.fire('toast', { status: 'load' }); //คำสั่งสำหรับเปิด toast load
+                  this.dispatchAction('PUT_BOOK_APPROVE', res)
+                    .then((response) => {
+                      if (response.data.replaced !== undefined && response.data.replaced.length !== 0) {
+                        // this.dispatchAction('GET_CONTRACT_OF_BUYER', res.buyer_id);
+                        // this.dispatchAction('GET_CONTRACT', res.id)
+                        this.queryFrom('.required').map((el) => { el.reset(); });
+                        this.dispatchAction('SET_STATE', {
+                          isInsert: false,
+                          btnDisabled: true,
+                          hiddend: true
+                        })
+                        this.fire('toast', {
+                          status: 'success', text: this.localizeCommon.save_succeed,  // คำสั่งสำหรับเปิด toast success
+                          callback: () => {
+                            let url = { cl_id: this.data.cl_id }
+                            let urlBook = { id: this.data.id }
+                            this.dispatchAction('GET_BOOK_DETAIL', this.genUrl(urlBook))
+                            this.dispatchAction('GET_BOOK_LIST', this.genUrl(url));
+                            this.dispatchAction('GET_COMMON_SHIP_LIST');
+                          }
+                        })
+                      } else {
+                        // console.log(1111);
+                        this.fire('toast', {
+                          status: 'connectError', text: response.data, //คำสั่งสำหรับเปิด toast error
+                          callback: () => {
+                          }
+                        })
+                      }
+                    })
+
+                })
+                .catch((error) => {
+                  //console.log(error);
+                });
+            }
+          }
+        })
+      },
+      addShip: function () {
+        try {
+          this.push('data.ship', { ship_id: '', ship_voy: '' });
+          this.notifyPath('data.ship');
+        } catch (e) {
+          // console.log(e);
+        }
+
+      },
+      addSurveyor: function () {
+        this.push('data.surveyor', { surveyor_id: '' });
+        this.notifyPath('data.surveyor');
+      },
+      deleteSurveyor: function () {
+        if (this.data.surveyor.length > 1)
+          this.pop('data.surveyor')
+      },
+
+      deleteShip: function () {
+        if (this.data.ship.length > 1)
+          this.pop('data.ship')
+      },
+      cancelInsertShipment: function () {
+        this.dispatchAction('CLEAR_BOOK_DETAIL', {})
+        this.fire('_list-book', 'list-of-booking');
+      },
+      _oBChangePod: function (dest_port_id) {
+        if (this.data.deli_port_id === undefined || this.data.deli_port_id === null || this.data.deli_port_id === '') {
+          this.data.deli_port_id = dest_port_id;
+          this.notifyPath('data.deli_port_id');
+        }
+
+      },
+      _getShip: function (shipline_id, dataForSelect) {
+        try {
+          let ships = this.shipList
+          this.async(() => {
+            let comboboxs, arrForItem, itemif;
+            for (var i = 0; i < this.data.ship.length; i++) {
+              arrForItem = JSON.parse(JSON.stringify(ships));
+              //  console.log('arrForItem',arrForItem);
+              this.data.ship.map((item, index) => {
+                //  console.log(item);
+                if (i != index) {
+                  //ตัดอาเรย์ตอนที่ไม่เท่ากับค่าของตัวเอง
+                  if (arrForItem.filter((blDetail) => blDetail.ship_id == item.ship_id)[0] != undefined) {
+                    itemif = arrForItem.indexOf(arrForItem.filter((blDetail) => blDetail.ship_id == item.ship_id)[0]);
+                    //  console.log(itemif);
+                    arrForItem.splice(itemif, 1);
+                  }
+                }
+              });
+              comboboxs = Polymer.dom(this.root).querySelector('#shipline-suggestions-' + i);
+              // console.log(comboboxs);
+              comboboxs.source = arrForItem;
+              // console.log(comboboxs.source);
+
+            }
+          }, 1);
+        } catch (e) {
+
+        }
+
+        // }
+      },
+      _getSurveyor: function (surveyor_id, surveyorList) {
+        if (surveyor_id) {
+          this.async(() => {
+            let comboboxs, arrForItem, itemif;
+            for (var i = 0; i < this.data.surveyor.length; i++) {
+              arrForItem = JSON.parse(JSON.stringify(this.surveyorList));
+              //  console.log('arrForItem',arrForItem);
+              this.data.surveyor.map((item, index) => {
+                //  console.log(item);
+                if (i != index) {
+                  //ตัดอาเรย์ตอนที่ไม่เท่ากับค่าของตัวเอง
+                  if (arrForItem.filter((shipment) => shipment.surveyor_id == item.surveyor_id)[0] != undefined) {
+                    itemif = arrForItem.indexOf(arrForItem.filter((shipment) => shipment.surveyor_id == item.surveyor_id)[0]);
+                    //  console.log(itemif);
+                    arrForItem.splice(itemif, 1);
+                  }
+                }
+              });
+              comboboxs = Polymer.dom(this.root).querySelector('#surveyor-' + i);
+              comboboxs.items = arrForItem;
+              //  console.log(comboboxs);
+              //  console.log(comboboxs.items);
+            }
+          }, 1);
+        }
+      }
+    });
+  </script>
+</dom-module>

@@ -1,0 +1,56 @@
+{
+    "name": "g2g.contract",
+    "properties": {
+        "id": {
+            "type": "string"
+        },
+        "contract_name": {
+            "type": "string"
+        },
+        "contract_no": {
+            "type": "number"
+        },
+        "buyer_id": {
+            "type": "string"
+        },
+        "buyer": {
+            "type": "object"
+        },
+        "contract_date": {
+            "type": "string",
+            "format": "date-time"
+        },
+        "contract_desc": {
+            "type": "string"
+        },
+        "contract_weight": {
+            "type": "number"
+        },
+        "contract_hamonize": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "hamonize_id": {
+                        "type": "string"
+                    },
+                    "hamonize": {
+                        "type": "object"
+                    }
+                }
+            }
+        },
+        "contract_status": {
+            "type": "boolean"
+        },
+        "country_id": {
+            "type": "string"
+        },
+        "country": {
+            "type": "object"
+        },
+        "payterm": {
+            "type": "string"
+        }
+    }
+}

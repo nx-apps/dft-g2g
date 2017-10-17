@@ -1,0 +1,370 @@
+<link rel="import" href="./../../../bower_components/polymer/polymer.html">
+<link rel="import" href="./../../../bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="./../../../bower_components/paper-tooltip/paper-tooltip.html">
+<link rel="import" href="./../../../bower_components/nylon-panel/nylon-panel-right.html">
+<link rel="import" href="./../../../bower_components/plutonium-breadcrumbs/plutonium-breadcrumbs.html">
+
+
+<link rel="import" href="./../../../bower_components/iron-pages/iron-pages.html">
+
+<link rel="import" href="./components/chart-pie-g2g.html">
+<link rel="import" href="./components/contract-detail.html">
+<link rel="import" href="./../components/cookie-behavior.html">
+<link rel="import" href="./../components/g2g-logic-behavior.html">
+<link rel="import" href="./../../layout/shared-styles.html">
+<dom-module id="page-contract-list">
+    <style media="screen" include="iron-flex iron-flex-factors iron-flex-alignment shared-styles">
+         :host {
+            --paper-fab-background: var(--paper-light-blue-500);
+            --paper-fab-keyboard-focus-background: var(--paper-light-blue-900);
+        }
+
+        * {
+            font-family: 'CSChatThaiUI', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .addContract {
+            margin: 16px;
+            margin-bottom: 80px;
+            padding: 7.5px;
+        }
+
+        nylon-panel-right {
+            --app-toolbar-style: {
+                background-color: #FF5000;
+            }
+        }
+        .btnFabBack > paper-fab {
+            left: 25px;
+            --paper-fab-iron-icon: {
+                color: black
+            }
+            ;
+            --paper-fab-background: #fff
+            /*--paper-fab-background: #fff;*/
+        }
+    </style>
+    <template>
+        <div class="layout vertical">
+            <div class="xx horizontal center-justified layout wrap" style="width: 1300px">
+                <template is="dom-repeat" items="[[contractList]]">
+                    <chart-pie-g2g chart-name="[[item.contract_name]]" data="[[item]]"></chart-pie-g2g>
+                </template>
+            </div>
+        </div>
+        <nylon-panel-right title="{{titlePanelRight}}" id="drawerRight" set-width="95%">
+            <div align="left">
+                <div class="breadcrumbs">
+                    <plutonium-breadcrumbs crumbs="{{crumbs}}" selected-crumb="{{crumb}}"></plutonium-breadcrumbs>
+                </div>
+                <iron-pages selected="{{g2gPageSeleted}}" attr-for-selected="name">
+                    <div class="addContract" name="addContract">
+                        <contract-detail id="contract-detail"></contract-detail>
+                    </div>
+                    <div class="addContract" name="contractDetail">
+                        <contract-detail id="contract-detail"></contract-detail>
+                    </div>
+                    <div class="addContract" name="listOfConfirm">
+                        <list-of-confirm></list-of-confirm>
+                    </div>
+                    <div class="addContract" name="listOfShipment">
+                        <list-of-booking></list-of-booking>
+                    </div>
+                    <div class="addContract" name="listOfFee">
+                        <list-of-fee-g2g></list-of-fee-g2g>
+                    </div>
+                </iron-pages>
+            </div>
+        </nylon-panel-right>
+        <div class="btnFabBack">
+            <paper-fab icon="arrow-back" title="{{localizeCommon.back_ward}}" id="backWard" on-tap="backPage"></paper-fab>
+            <paper-tooltip for="addContract" offset="0">{{localizeCommon.back_ward}}</paper-tooltip>
+        </div>
+        <div class="btnFab">
+            <paper-fab icon="add" title="{{localizeContract.add_contract}}" id="addContract" on-tap="addContract"></paper-fab>
+            <paper-tooltip for="addContract" offset="0">{{localizeContract.add_contract}}</paper-tooltip>
+        </div>
+    </template>
+    <script>
+        Polymer({
+            is: 'page-contract-list',
+            behaviors: [ReduxBehavior, nylonBehavior, i18nAction, CookieBehavior,
+                contractAction, commonStateAction, commonG2gAction, confirmLetterAction, g2gLogicBehavior,
+                bookAction, feeAction, invoiceAction],
+            properties: {
+                layerContent: {
+                    type: String,
+                    value: "detailRegExporter"
+                },
+                contractList: {
+                    statePath: 'contract.contractList'
+                },
+                localizeCommon: {
+                    statePath: 'i18n.common'
+                },
+                localizeContract: {
+                    statePath: 'i18n.contract'
+                },
+                
+                crumbs: {
+                    statePath: 'commonState.breadCrumbs',
+                },
+                g2gPageSeleted: {
+                    type: String,
+                    value: 'addContract'
+                },
+                checkRenderPage: {
+                    type: Object,
+                    value:
+                    {
+                        contractDetail: false,
+                        listOfConfirm: false,
+                        listOfShipment: false,
+                        listOfFee: false
+                    }
+                },
+            },
+            listeners: {
+                'get-contract-detail': '_getContractDetail',
+                'get-list-confirm': '_getListConfirm',
+                'get-list-booking': '_getListShipment',
+                'get-list-Fee': '_getlistFee',
+                'flipDrawer': '_flipDrawer',
+                'close-drawer': '_flipDrawerClose',
+            },
+            nylonPageActive: function () {
+                this.dispatchAction('GET_CONTRACT_OF_BUYER', this.getCookieBhv("buyerId"))
+                this.dispatchAction('SET_COUNTRY_NAME_EN', this.getCookieBhv("country_name_en"));
+                this.dispatchAction('SET_BUYER_ID',{
+                    buyer_id:this.getCookieBhv("buyerId")
+                })
+                this.dispatchAction('GET_COMMON_BUYER_LIST');
+                
+                this.dispatchAction('GET_COMMON_CARRIER_LIST');
+                this.dispatchAction('GET_COMMON_INCOTERMS_LIST');
+                this.dispatchAction('GET_COMMON_NOTIFY_LIST');
+                this.dispatchAction('GET_COMMON_PACKAGE_LIST');
+                this.dispatchAction('GET_COMMON_PORT_LIST');
+                this.dispatchAction('GET_COMMON_SHIP_LIST');
+                this.dispatchAction('GET_COMMON_SHIPLINE_LIST');
+                this.dispatchAction('GET_COMMON_SURVEYOR_LIST');
+            },
+            // //addContract
+            addContract: function () {
+                this.dispatchAction('GET_COMMON_HAMONIZE_LIST');
+                this.dispatchAction('GET_COMMON_HAMONIZE_LIST_NO_GROUP');
+                this.dispatchAction('SET_BREADCRUMBS', [{
+                    label: this.localizeContract.add_contract,
+                    href: ''
+                }])
+                // resetFrom
+                this.$$('contract-detail').resetFrom('.required')
+                this.titlePanelRight = this.localizeContract.add_contract
+                this.g2gPageSeleted = 'addContract'
+                this.fire('toast', { status: 'load' });
+                this.dispatchAction('SET_STATE', {
+                    isInsert: true,
+                    btnDisabled: false,
+                    hiddend: true
+                })
+                this.dispatchAction('CLEAR_CONTRACT')
+                this.async(() => {
+                    this.fire('toast', {
+                        status: 'success', text: this.localizeCommon.load_successfully, callback: () => {
+                            this._flipDrawer();
+                        }
+                    })
+
+                }, 500)
+            },
+            _getContractDetail: function (e) {
+                this.dispatchAction('GET_COMMON_HAMONIZE_LIST');
+                this.dispatchAction('GET_COMMON_HAMONIZE_LIST_NO_GROUP');
+                this.dispatchAction('SET_BREADCRUMBS', [{
+                    label: this.localizeContract.contract_at+' ' + e.detail.contract_no,
+                    href: ''
+                }])
+                // resetFrom
+                this.$$('contract-detail').resetFrom('.required')
+                // console.log(e.detail.contract_id);
+                this.dispatchAction('GET_CONTRACT', e.detail.contract_id)
+                this.g2gPageSeleted = 'contractDetail'
+                this.titlePanelRight = this.localizeContract.contract_at+' : ' + e.detail.contract_no
+                // if (typeof e.detail.contractId === "undefined") {
+                this.fire('toast', { status: 'load' });
+                this.dispatchAction('SET_STATE', {
+                    isInsert: false,
+                    btnDisabled: true,
+                    hiddend: true
+                })
+                this.async(() => {
+                    this.fire('toast', {
+                        status: 'success',text: this.localizeCommon.load_successfully, callback: () => {
+                            this._flipDrawer();
+                        }
+                    })
+                }, 500)
+            },
+            _getListConfirm: function (e) {
+                // console.log(e.detail)
+                let url = { contract_id: e.detail.contract_id, status: 'all' }
+                this.dispatchAction('SET_BREADCRUMBS', [{
+                    label: this.localizeContract.contract_at+' ' + e.detail.contract_no,
+                    href: ''
+                }])
+                this.dispatchAction('GET_CONFIRM_LIST', this.genUrl(url))
+                this.dispatchAction('GET_HAMONIZE_OF_CONTRACT', this.genUrl(url))
+                this.dispatchAction('GET_CONFIRM_EXPORTER_LIST', this.genUrl(url))
+                this.dispatchAction('GET_CONFIRM_EXCHANG_RATE')
+                this.g2gPageSeleted = 'listOfConfirm'
+                this.dispatchAction('SET_PAGE_AND_SEARCH', { page: 'listOfConfirm', search: '' })
+                this.titlePanelRight = this.localizeContract.contract_at+' : ' + e.detail.contract_no
+                this.dispatchAction('SET_STATE', {
+                    isInsert: false,
+                    btnDisabled: false,
+                    hiddend: true,
+                })
+                let contractData = {
+                    contract_id: e.detail.contract_id,
+                    contract_no: e.detail.contract_no,
+                    contract_status: e.detail.contract_status,
+                    contract_weight: e.detail.contract_weight,
+                }
+                this.dispatchAction('SET_CONTRACT_ID', contractData)
+                // console.log(11111)
+                // console.log(e.detail.contract_id)
+                this.fire('toast', { status: 'load' });
+                if (this.checkRenderPage.listOfConfirm != true) {
+                    this.async(() => {
+                        this.importHref(
+                            this.resolveUrl('./components/list-of-confirm.html'),
+                            () => {
+                                this.fire('toast', {
+                                    status: 'success', text: this.localizeCommon.load_successfully, callback: () => {
+                                        this._flipDrawer();
+                                        this.checkRenderPage.listOfConfirm = true;
+                                    }
+                                })
+                            }, null, true
+                        );
+                    }, 1000);
+                } else {
+                    this.fire('toast', {
+                        status: 'success', text: this.localizeCommon.load_successfully, callback: () => {
+                            this._flipDrawer();
+                        }
+                    })
+                }
+            },
+            _getListShipment: function (e) {
+                //     // 
+                // console.log(e.detail);
+                let url = { contract_id: e.detail.contract_id, status: true }
+                this.dispatchAction('GET_CONFIRM_LIST', this.genUrl(url))
+                this.dispatchAction('GET_HAMONIZE_OF_CONTRACT', this.genUrl(url))
+                this.dispatchAction('SET_BREADCRUMBS', [{
+                    label: this.localizeContract.contract_at+' ' + e.detail.contract_no,
+                    href: ''
+                }])
+                this.g2gPageSeleted = 'listOfShipment';
+                let contractData = { contract_id: e.detail.contract_id, contract_no: e.detail.contract_no }
+                this.dispatchAction('SET_CONTRACT_ID', contractData)
+                this.dispatchAction('SET_PAGE_AND_SEARCH', { page: 'list-of-booking', search: '' })
+
+                this.titlePanelRight = this.localizeContract.contract_at+' : ' + e.detail.contract_no
+
+                this.fire('toast', { status: 'load' });
+                if (this.checkRenderPage.listOfShipment != true) {
+                    this.async(() => {
+                        this.importHref(
+                            this.resolveUrl('./components/list-of-booking.html'),
+                            () => {
+                                this.async(() => {
+                                    this.fire('toast', {
+                                        status: 'success', text: this.localizeCommon.load_successfully, callback: () => {
+                                            this._flipDrawer();
+                                            this.checkRenderPage.listOfShipment = true;
+                                        }
+                                    })
+                                    // console.log(this.dataForSelected.dataForContract);
+
+                                }, 500)
+                            }, null, true
+                        );
+                    }, 1000);
+                } else {
+                    this.async(() => {
+                        this.fire('toast', {
+                            status: 'success', text: this.localizeCommon.load_successfully, callback: () => {
+                                this._flipDrawer();
+                            }
+                        })
+                    }, 1000);
+                }
+
+            },
+            _getlistFee: function (e) {
+                try {
+                    let url = { contract_id: e.detail.contract_id, view: 'rice' }
+                    this.dispatchAction('FEE_GET_LIST_DATA', url)
+                    // this.dispatchAction('GET_HAMONIZE_OF_CONTRACT', this.genUrl(url))
+                    this.dispatchAction('SET_BREADCRUMBS', [{
+                        label: this.localizeContract.contract_at+' ' + e.detail.contract_no,
+                        href: ''
+                    }])
+                    // this.backPageFee()
+                    this.g2gPageSeleted = 'listOfFee';
+                    let contractData = { contract_id: e.detail.contract_id, contract_no: e.detail.contract_no }
+                    this.dispatchAction('SET_PAGE_AND_SEARCH', { page: 'listOfFee', search: '' })
+                    this.dispatchAction('SET_CONTRACT_ID', contractData)
+                    this.titlePanelRight = this.localizeContract.contract_at+' : ' + e.detail.contract_no
+                    this.fire('toast', { status: 'load' });
+                    if (this.checkRenderPage.listOfFee != true) {
+                        this.async(() => {
+                            this.importHref(
+                                this.resolveUrl('./components/list-of-fee-g2g.html'),
+                                () => {
+                                    this.async(() => {
+                                        this.fire('toast', {
+                                            status: 'success', text: this.localizeCommon.load_successfully, callback: () => {
+                                                this._flipDrawer();
+                                                this.checkRenderPage.listOfFee = true;
+                                            }
+                                        })
+                                        // console.log(this.dataForSelected.dataForContract);
+
+                                    }, 500)
+                                }, null, true
+                            );
+                        }, 1000);
+                    } else {
+                        this.async(() => {
+                            this.fire('toast', {
+                                status: 'success', text: this.localizeCommon.load_successfully, callback: () => {
+                                    this._flipDrawer();
+                                }
+                            })
+                        }, 1000);
+                    }
+                } catch (e) {
+                    // console.log(e);
+                }
+            },
+            // // end_addContract
+            _flipDrawer: function () {
+                Polymer.dom(this.root).querySelector('#drawerRight').open();
+            },
+            _flipDrawerClose: function () {
+                Polymer.dom(this.root).querySelector('#drawerRight').close();
+            },
+            backPageFee: function () {
+                // console.log(this.$$('list-of-fee-g2g'))
+                this.$$('list-of-fee-g2g').backPage()
+            },
+            backPage: function() {
+                this.fire('nylon-change-page', { path: '/buyer-list' })
+            }
+        });
+    </script>
+</dom-module>
