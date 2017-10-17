@@ -88,7 +88,7 @@
         <tbody class="table-body">
           
           <!--<template is="dom-repeat" items="{{newData}}">-->
-          <template is="dom-repeat" items="{{bl_list}}">
+          <template is="dom-repeat" items="{{bl_list}}" initial-count="20">
             <tr level="primary" hidden="{{item.hidden}}">
               <td data="[[item]]" on-tap="getBlDetail">[[item.cl_no]]</td>
               <td data="[[item]]" on-tap="getBlDetail">
