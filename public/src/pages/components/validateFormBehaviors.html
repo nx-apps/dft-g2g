@@ -1,4 +1,9 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
 <script>
+    /**
+	 * 
+	 * @polymerBehavior
+	 */ 
     ValidateFormBehavior = {
         queryFrom:function(required){
             return Polymer.dom(this.root).querySelectorAll(required)

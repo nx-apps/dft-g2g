@@ -3,15 +3,21 @@
   "shell": "src/nylon-app.html",
   "fragments": [
     "src/pages/page-401/page-401.html",
-    "src/pages/page-404/page-404.html"
+    "src/pages/page-403/page-403.html",
+    "src/pages/page-404/page-404.html",
+    "src/pages/page-buyer-list/page-buyer-list.html",
+    "src/pages/page-contract-list/page-contract-list.html",
+    "src/pages/page-payment-list/page-payment-list.html",
+    "src/pages/page-report/page-report.html"
   ],
-  "sourceGlobs": [
+  "sources": [
     "src/**/*",
     "images/**/*",
     "bower.json",
-    "fonts/**/*"
+    "fonts/**/*",
+    "bower_components/gl-font/**/*"
   ],
-  "includeDependencies": [
+  "extraDependencies": [
     "bundle.js",
     "manifest.json",
     "bower_components/webcomponentsjs/webcomponents-lite.min.js"
