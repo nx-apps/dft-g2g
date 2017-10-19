@@ -27,9 +27,11 @@
 <link rel="import" href="../../action/feeAction.html">
 <link rel="import" href="../../action/invoiceAction.html">
 
+<!-- <link rel="import" href="../page-payment-list/component/commercial-invoice.html"> -->
+
 <dom-module id="page-contract-list">
     <style media="screen" include="iron-flex iron-flex-factors iron-flex-alignment shared-styles">
-         :host {
+        :host {
             --paper-fab-background: var(--paper-light-blue-500);
             --paper-fab-keyboard-focus-background: var(--paper-light-blue-900);
         }
@@ -50,7 +52,8 @@
                 background-color: #FF5000;
             }
         }
-        .btnFabBack > paper-fab {
+
+        .btnFabBack>paper-fab {
             left: 25px;
             --paper-fab-iron-icon: {
                 color: black
@@ -121,7 +124,7 @@
                 localizeContract: {
                     statePath: 'i18n.contract'
                 },
-                
+
                 crumbs: {
                     statePath: 'commonState.breadCrumbs',
                 },
@@ -151,11 +154,11 @@
             nylonPageActive: function () {
                 this.dispatchAction('GET_CONTRACT_OF_BUYER', this.getCookieBhv("buyerId"))
                 this.dispatchAction('SET_COUNTRY_NAME_EN', this.getCookieBhv("country_name_en"));
-                this.dispatchAction('SET_BUYER_ID',{
-                    buyer_id:this.getCookieBhv("buyerId")
+                this.dispatchAction('SET_BUYER_ID', {
+                    buyer_id: this.getCookieBhv("buyerId")
                 })
                 this.dispatchAction('GET_COMMON_BUYER_LIST');
-                
+
                 this.dispatchAction('GET_COMMON_CARRIER_LIST');
                 this.dispatchAction('GET_COMMON_INCOTERMS_LIST');
                 this.dispatchAction('GET_COMMON_NOTIFY_LIST');
@@ -197,7 +200,7 @@
                 this.dispatchAction('GET_COMMON_HAMONIZE_LIST');
                 this.dispatchAction('GET_COMMON_HAMONIZE_LIST_NO_GROUP');
                 this.dispatchAction('SET_BREADCRUMBS', [{
-                    label: this.localizeContract.contract_at+' ' + e.detail.contract_no,
+                    label: this.localizeContract.contract_at + ' ' + e.detail.contract_no,
                     href: ''
                 }])
                 // resetFrom
@@ -205,7 +208,7 @@
                 // console.log(e.detail.contract_id);
                 this.dispatchAction('GET_CONTRACT', e.detail.contract_id)
                 this.g2gPageSeleted = 'contractDetail'
-                this.titlePanelRight = this.localizeContract.contract_at+' : ' + e.detail.contract_no
+                this.titlePanelRight = this.localizeContract.contract_at + ' : ' + e.detail.contract_no
                 // if (typeof e.detail.contractId === "undefined") {
                 this.fire('toast', { status: 'load' });
                 this.dispatchAction('SET_STATE', {
@@ -215,7 +218,7 @@
                 })
                 this.async(() => {
                     this.fire('toast', {
-                        status: 'success',text: this.localizeCommon.load_successfully, callback: () => {
+                        status: 'success', text: this.localizeCommon.load_successfully, callback: () => {
                             this._flipDrawer();
                         }
                     })
@@ -225,7 +228,7 @@
                 // console.log(e.detail)
                 let url = { contract_id: e.detail.contract_id, status: 'all' }
                 this.dispatchAction('SET_BREADCRUMBS', [{
-                    label: this.localizeContract.contract_at+' ' + e.detail.contract_no,
+                    label: this.localizeContract.contract_at + ' ' + e.detail.contract_no,
                     href: ''
                 }])
                 this.dispatchAction('GET_CONFIRM_LIST', this.genUrl(url))
@@ -234,7 +237,7 @@
                 this.dispatchAction('GET_CONFIRM_EXCHANG_RATE')
                 this.g2gPageSeleted = 'listOfConfirm'
                 this.dispatchAction('SET_PAGE_AND_SEARCH', { page: 'listOfConfirm', search: '' })
-                this.titlePanelRight = this.localizeContract.contract_at+' : ' + e.detail.contract_no
+                this.titlePanelRight = this.localizeContract.contract_at + ' : ' + e.detail.contract_no
                 this.dispatchAction('SET_STATE', {
                     isInsert: false,
                     btnDisabled: false,
@@ -279,7 +282,7 @@
                 this.dispatchAction('GET_CONFIRM_LIST', this.genUrl(url))
                 this.dispatchAction('GET_HAMONIZE_OF_CONTRACT', this.genUrl(url))
                 this.dispatchAction('SET_BREADCRUMBS', [{
-                    label: this.localizeContract.contract_at+' ' + e.detail.contract_no,
+                    label: this.localizeContract.contract_at + ' ' + e.detail.contract_no,
                     href: ''
                 }])
                 this.g2gPageSeleted = 'listOfShipment';
@@ -287,7 +290,7 @@
                 this.dispatchAction('SET_CONTRACT_ID', contractData)
                 this.dispatchAction('SET_PAGE_AND_SEARCH', { page: 'list-of-booking', search: '' })
 
-                this.titlePanelRight = this.localizeContract.contract_at+' : ' + e.detail.contract_no
+                this.titlePanelRight = this.localizeContract.contract_at + ' : ' + e.detail.contract_no
 
                 this.fire('toast', { status: 'load' });
                 if (this.checkRenderPage.listOfShipment != true) {
@@ -325,7 +328,7 @@
                     this.dispatchAction('FEE_GET_LIST_DATA', url)
                     // this.dispatchAction('GET_HAMONIZE_OF_CONTRACT', this.genUrl(url))
                     this.dispatchAction('SET_BREADCRUMBS', [{
-                        label: this.localizeContract.contract_at+' ' + e.detail.contract_no,
+                        label: this.localizeContract.contract_at + ' ' + e.detail.contract_no,
                         href: ''
                     }])
                     // this.backPageFee()
@@ -333,7 +336,7 @@
                     let contractData = { contract_id: e.detail.contract_id, contract_no: e.detail.contract_no }
                     this.dispatchAction('SET_PAGE_AND_SEARCH', { page: 'listOfFee', search: '' })
                     this.dispatchAction('SET_CONTRACT_ID', contractData)
-                    this.titlePanelRight = this.localizeContract.contract_at+' : ' + e.detail.contract_no
+                    this.titlePanelRight = this.localizeContract.contract_at + ' : ' + e.detail.contract_no
                     this.fire('toast', { status: 'load' });
                     if (this.checkRenderPage.listOfFee != true) {
                         this.async(() => {
@@ -377,7 +380,7 @@
                 // console.log(this.$$('list-of-fee-g2g'))
                 this.$$('list-of-fee-g2g').backPage()
             },
-            backPage: function() {
+            backPage: function () {
                 this.fire('nylon-change-page', { path: '/buyer-list' })
             }
         });

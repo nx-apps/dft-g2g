@@ -12,6 +12,8 @@
 <link rel="import" href="./../../components/format-number-behavior.html">
 <link rel="import" href="./../../components/validateFormBehaviors.html">
 
+<link rel="import" href="../../../layout/shared-styles.html">
+
 <link rel="import" href="../../../redux-behavior.html">
 
 <link rel="import" href="../../../nylon-behavior.html">
@@ -19,8 +21,8 @@
 <link rel="import" href="../../components/cookie-behavior.html">
 
 <dom-module id="fee-exports">
-  <style include="iron-flex iron-flex-factors iron-flex-alignment gl-styles page-style">
-     :host {
+  <style include="gl-styles shared-styles">
+    :host {
       display: block;
     }
 
@@ -138,7 +140,7 @@
                 <div class="text-header">{{localize.rice_detail_and_payout}}</div>
               </div>
               <div class="container">
-                <gl-grid-row width="{{getWidth}}">
+                <!-- <gl-grid-row width="{{getWidth}}">
                   <gl-grid-col width="[[getWidth]]" grid="[[300,6],[500,3]]">
                     <gl-form-input type="date" class="required" on-focus="_setSeleteValue" required disabled="[[common.btnDisabled]]" label="{{localize.received_date}}"
                       value="{{data.fee_date}}" always-float-label></gl-form-input>
@@ -153,10 +155,29 @@
                     <gl-form-input class="required" required on-focus="_setSeleteValue" label="{{localize.exchange_rate_bank}}" disabled="[[common.btnDisabled]]" allowed-pattern="[0-9||,||.]"
                       format-number="on" value="{{data.rate_bank_b}}" always-float-label></gl-form-input>
                   </gl-grid-col>
-                </gl-grid-row>
+                </gl-grid-row> -->
+                <div class="horizontal layout">
+                  <div class="flex-3 flex-padding">
+                    <gl-form-input type="date" class="required" on-focus="_setSeleteValue" required disabled="[[common.btnDisabled]]" label="{{localize.received_date}}"
+                      value="{{data.fee_date}}" always-float-label></gl-form-input>
+                  </div>
+                  <div class="flex-3 flex-padding">
+                    [[changeString2Num(data.*,'rate_tt_b')]]
+                    <gl-form-input autofocus class="required" required on-focus="_setSeleteValue" label="{{localize.exchange_rate}} [[data.payterm]]"
+                      disabled="[[common.btnDisabled]]" allowed-pattern="[0-9||,||.]" format-number="on" value="{{data.rate_tt_b}}"
+                      always-float-label></gl-form-input>
+                  </div>
+                  <div class="flex-3 flex-padding">
+                    [[changeString2Num(data.*,'rate_bank_b')]]
+                    <gl-form-input class="required" required on-focus="_setSeleteValue" label="{{localize.exchange_rate_bank}}" disabled="[[common.btnDisabled]]"
+                      allowed-pattern="[0-9||,||.]" format-number="on" value="{{data.rate_bank_b}}" always-float-label></gl-form-input>
+                  </div>
+                  <div class="flex-3">
+                  </div>
+                </div>
               </div>
               <div class="container">
-                <gl-grid-row>
+                <!-- <gl-grid-row>
                   <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
                     [[changeString2Num(data.*,'fee_ex_d')]]
                     <gl-form-input class="required" required on-focus="_setSeleteValue" label="{{localize.fee_out}} ({{localize.usd}})" disabled="[[common.btnDisabled]]"
@@ -165,13 +186,27 @@
                   </gl-grid-col>
                   <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
                     [[changeString2Num(data.*,'fee_in_b')]]
-                    <gl-form-input class="required" required on-focus="_setSeleteValue" disabled="[[common.btnDisabled]]" allowed-pattern="[0-9||,||.]" format-number="on"
-                      label="{{localize.fee_in}} ({{localize.baht}})" value="{{data.fee_in_b}}" always-float-label></gl-form-input>
+                    <gl-form-input class="required" required on-focus="_setSeleteValue" disabled="[[common.btnDisabled]]" allowed-pattern="[0-9||,||.]"
+                      format-number="on" label="{{localize.fee_in}} ({{localize.baht}})" value="{{data.fee_in_b}}" always-float-label></gl-form-input>
                   </gl-grid-col>
-                </gl-grid-row>
+                </gl-grid-row> -->
+                <div class="horizontal layout">
+                  <div class="flex-3 flex-padding">
+                    [[changeString2Num(data.*,'fee_ex_d')]]
+                    <gl-form-input class="required" required on-focus="_setSeleteValue" label="{{localize.fee_out}} ({{localize.usd}})" disabled="[[common.btnDisabled]]"
+                      allowed-pattern="[0-9||,||.]" format-number="on" value="{{data.fee_ex_d}}" always-float-label></gl-form-input>
+                  </div>
+                  <div class="flex-3 flex-padding">
+                    [[changeString2Num(data.*,'fee_in_b')]]
+                    <gl-form-input class="required" required on-focus="_setSeleteValue" disabled="[[common.btnDisabled]]" allowed-pattern="[0-9||,||.]"
+                      format-number="on" label="{{localize.fee_in}} ({{localize.baht}})" value="{{data.fee_in_b}}" always-float-label></gl-form-input>
+                  </div>
+                  <div class="flex-6">
+                  </div>
+                </div>
               </div>
               <div class="container">
-                <gl-grid-row>
+                <!-- <gl-grid-row>
                   <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
                     <gl-form-input disabled format-number="on" label="{{localize.received}} ({{localize.usd}})" value="{{data.amount_usd}}" always-float-label></gl-form-input>
                   </gl-grid-col>
@@ -183,19 +218,28 @@
                     <gl-form-input disabled format-number="on" label="{{localize.fee_total}} ({{localize.baht}})" value="{{data.value_fee_b}}"
                       always-float-label></gl-form-input>
                   </gl-grid-col>
-                </gl-grid-row>
+                </gl-grid-row> -->
+                <div class="horizontal layout">
+                  <div class="flex-4 flex-padding">
+                    <gl-form-input disabled format-number="on" label="{{localize.received}} ({{localize.usd}})" value="{{data.amount_usd}}" always-float-label></gl-form-input>
+                  </div>
+                  <div class="flex-4 flex-padding">
+                    <gl-form-input disabled format-number="on" label="{{localize.received}} ({{localize.thb}})" value="{{calBath(data.rate_bank_b,data.amount_usd)}}"
+                      always-float-label></gl-form-input>
+                  </div>
+                  <div class="flex-4 flex-padding">
+                    <gl-form-input disabled format-number="on" label="{{localize.fee_total}} ({{localize.baht}})" value="{{data.value_fee_b}}"
+                      always-float-label></gl-form-input>
+                  </div>
+                </div>
               </div>
               [[changeString2Num(data.*,'balanceLessFees')]] {{_balanceLessFees(data.amount_usd,data.fee_ex_d)}} [[changeString2Num(data.*,'balanceChangeBath')]]
               {{_balanceChangeBath(data.rate_bank_b,data.balanceLessFees)}} [[changeString2Num(data.*,'feeTotalWithOutUsd')]]
               [[changeString2Num(data.*,'totalbath')]] [[_balanceBath(data.balanceChangeBath,data.feeTotalWithOutUsd)]]
 
-              <fee-exports-invoice id="fee-exports-invoice" fee-ex="{{data.fee_ex_d}}" 
-              fee-in="{{data.fee_in_b}}" 
-              rate-bank="{{data.rate_bank_b}}" 
-              rate-tt="{{data.rate_tt_b}}"
-              invoice-index="[[_ObcountIndex(index)]]" 
-              invoice-page="[[data.invoicePage]]"
-                is-input-disabled="[[common.btnDisabled]]" check-required="{{check_required}}"></fee-exports-invoice>
+              <fee-exports-invoice id="fee-exports-invoice" fee-ex="{{data.fee_ex_d}}" fee-in="{{data.fee_in_b}}" rate-bank="{{data.rate_bank_b}}"
+                rate-tt="{{data.rate_tt_b}}" invoice-index="[[_ObcountIndex(index)]]" invoice-page="[[data.invoicePage]]" is-input-disabled="[[common.btnDisabled]]"
+                check-required="{{check_required}}"></fee-exports-invoice>
             </div>
           </gl-form-panel>
         </div>
@@ -226,7 +270,7 @@
           value: false,
           notify: true
         },
-        list_fee:{
+        list_fee: {
           statePath: 'fee.list_id'
         }
       },
@@ -244,7 +288,7 @@
         var check = this.validateForm('.required');
         this.set('check_required', check);
       },
-      _resetForm: function(){
+      _resetForm: function () {
         this.queryFrom('.required').map((el) => { el.reset(); });
       },
       _getUSD: function (data) {
@@ -297,7 +341,7 @@
         });
       },
       _delete: function () {
-        if(typeof this.data.id !== 'undefined'){
+        if (typeof this.data.id !== 'undefined') {
           this.fire('toast', {
             status: 'openDialog',
             text: 'ต้องการลบคิดค่าธรรมเนียมใช่หรือไม่',
@@ -307,7 +351,7 @@
               }
             }
           })
-        }else{
+        } else {
           this.fire('toast', {
             status: 'openDialog',
             text: 'ต้องการลบคิดค่าธรรมเนียมใช่หรือไม่',
@@ -329,8 +373,8 @@
           btnRice: true
         });
       },
-      printInput: function(){
-        window.open(window._config.reportServer+'/api/finance/report3?fee_date=' + this.data.fee_date +'&contract_id='+ this.getCookieBhv("contract_id") + '&export=' + 'pdf');
+      printInput: function () {
+        window.open(window._config.reportServer + '/api/finance/report3?fee_date=' + this.data.fee_date + '&contract_id=' + this.getCookieBhv("contract_id") + '&export=' + 'pdf');
       }
     });
   </script>

@@ -16,51 +16,55 @@
 <link rel="import" href="./../../components/validateFormBehaviors.html">
 <link rel="import" href="./../../components/g2g-logic-behavior.html">
 
+<link rel="import" href="../../../layout/flexbox-grid.html">
+
 <link rel="import" href="../../../redux-behavior.html">
 
 <link rel="import" href="../../../nylon-behavior.html">
 
+<link rel="import" href="../../../layout/shared-styles.html">
+
 <dom-module id="commercial-invoice">
-  <style include="iron-flex iron-flex-factors iron-flex-alignment gl-styles page-style">
+  <style include="flexbox-grid shared-styles gl-styles ">
     * {
       font-family: 'CSChatThaiUI', sans-serif;
       -webkit-font-smoothing: antialiased;
     }
-    
+
     .text {
       text-align: center;
       font-size: var(--font-size-large);
     }
-    
+
     .table-head>tr>th:nth-child(1) {
       width: 10%;
       text-align: center;
     }
-    
+
     .table-head>tr>th:nth-child(2) {
       width: 10%;
       text-align: center;
     }
-    
+
     .table-head>tr>th:nth-child(3) {
       width: 60%;
       text-align: center;
     }
-    
+
     .table-head>tr>th:nth-child(4) {
       width: 20%;
       text-align: center;
     }
-    
+
     .desWeigth:nth-child(4) {
       text-align: right;
       /*color: red;*/
     }
-    
+
     .table-foor>tr>td {
       padding: 15px;
     }
-    
+
     .report>.icon_print {
       padding-top: 24px;
     }
@@ -74,10 +78,10 @@
             <template is="dom-if" if="[[_checkUndefined(data.invoice_no)]]">
               <gl-combo-box class="required" required always-float-label label="รูปแบบ" placeholder="รูปแบบ" value="{{printReport.typeFile}}"
                 item-label-path="report_type" item-value-path="report_type_id" items="{{report.report_type}}">
-                 <template>
+                <template>
                   [[item.report_type]]
                 </template>
-                </gl-combo-box>
+              </gl-combo-box>
               <div class="icon_print">
                 <paper-icon-button id="printInvoice" class="crud" icon="print" raised on-tap="printInvoice"></paper-icon-button>
                 <paper-tooltip for="printInvoice" offset="0">Print Invoice</paper-tooltip>
@@ -97,18 +101,16 @@
 
       </template>
       <gl-form-panel-body>
-        <gl-grid-row width="{{getWidth}}">
+        <!-- <gl-grid-row width="{{getWidth}}">
           <div style="margin-top:30px;">{{localize.label_invoice_no}} :</div>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,1]]">
             <div class="horizontal layout">
-              <gl-form-input style="width:50px;" class="required" required disabled="[[common.btnDisabled]]" value="{{data.invoice_type}}" on-blur="toUpper"></gl-form-input>
-              <gl-form-input style="margin-left:5px;text-align:right;width:80px;" class="required" required disabled="[[common.btnDisabled]]" value="{{data.invoice_no}}"></gl-form-input>
+              <gl-form-input style="width:50px;" class="required" required disabled="[[common.btnDisabled]]" value="{{data.invoice_type}}"
+                on-blur="toUpper"></gl-form-input>
+              <gl-form-input style="margin-left:5px;text-align:right;width:80px;" class="required" required disabled="[[common.btnDisabled]]"
+                value="{{data.invoice_no}}"></gl-form-input>
             </div>
           </gl-grid-col>
-          <!--<gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,1]]">
-            <gl-form-input style="width:50px" class="required" required disabled="[[common.btnDisabled]]"
-              error-message="{{localize.text_enter_your_detail}}" value="{{data.invoice_no}}"></gl-form-input>
-          </gl-grid-col>-->
           <div style="margin-top:30px;"> / </div>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,1]]">
             [[setYear(data.invoice_date)]]
@@ -116,9 +118,97 @@
           </gl-grid-col>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]"></gl-grid-col>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,2]]">
-            <gl-form-input type="date" class="required" required disabled="[[common.btnDisabled]]" label="{{localize.label_invoice_date}}" value="{{data.invoice_date}}"></gl-form-input>
+            <gl-form-input type="date" class="required" required disabled="[[common.btnDisabled]]" label="{{localize.label_invoice_date}}"
+              value="{{data.invoice_date}}"></gl-form-input>
           </gl-grid-col>
-        </gl-grid-row>
+        </gl-grid-row> -->
+        <div class="row middle-md">
+          <div class="col-md-6 ">
+            <div class="row middle-md">
+              <div class="col-md-3">
+                <div>{{localize.label_invoice_no}} :</div>
+              </div>
+              <div class="col-md-1">
+                <gl-form-input style="width:50px;" no-label-float class="required" required disabled="[[common.btnDisabled]]" value="{{data.invoice_type}}"
+                  on-blur="toUpper"></gl-form-input>
+              </div>
+              <div class="col-md-2">
+                <gl-form-input no-label-float style="margin-left:5px;text-align:right;width:80px;" class="required" required disabled="[[common.btnDisabled]]"
+                  value="{{data.invoice_no}}"></gl-form-input>
+              </div>
+              <div>
+                /
+              </div>
+              <div class="col-md-2">
+                [[setYear(data.invoice_date)]]
+                <gl-form-input class="required" no-label-float required disabled value="{{data.invoice_year}}"></gl-form-input>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="row middle-md">
+              <div class="col-md-4">
+                <gl-form-input type="date" always-float-label class="required" required disabled="[[common.btnDisabled]]" label="{{localize.label_invoice_date}}"
+                  value="{{data.invoice_date}}"></gl-form-input>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- <div class="horizontal center layout">
+        <div class="flex-1">
+          <div>{{localize.label_invoice_no}} :</div>
+        </div>
+        <div class="flex-1">
+          <div class="horizontal layout">
+            <div class="flex-6">
+              <gl-form-input no-label-float class="required" required disabled="[[common.btnDisabled]]" value="{{data.invoice_type}}" on-blur="toUpper"></gl-form-input>
+            </div>
+            <div class="flex-6">
+              <gl-form-input style="margin-left:5px;text-align:right;" no-label-float class="required" required disabled="[[common.btnDisabled]]"
+                value="{{data.invoice_no}}"></gl-form-input>
+            </div>
+          </div>
+        </div>
+        <div> / </div>
+        [[setYear(data.invoice_date)]]
+        <gl-form-input class="required" required disabled no-label-float value="{{data.invoice_year}}"></gl-form-input>
+        <div class="flex-3"></div>
+        <div class="flex-2">
+          <gl-form-input type="date" class="required" required no-label-float disabled="[[common.btnDisabled]]" label="{{localize.label_invoice_date}}"
+            value="{{data.invoice_date}}"></gl-form-input>
+        </div>
+        </div> -->
+
+        <!-- <div class="horizontal layout">
+          <div class="flex-5 flex-padding">
+            <div class="horizontal center layout">
+              <div class="flex-1">
+                <div style="text-align: left;  ">{{localize.label_invoice_no}} :</div>
+              </div>
+              <div class="flex-1">
+                <div class="horizontal layout">
+                  <div class="flex-6">
+                    <gl-form-input no-label-float class="required" required disabled="[[common.btnDisabled]]" value="{{data.invoice_type}}" on-blur="toUpper"></gl-form-input>
+                  </div>
+                  <div class="flex-6">
+                    <gl-form-input style="margin-left:5px;text-align:right;" no-label-float class="required" required disabled="[[common.btnDisabled]]"
+                      value="{{data.invoice_no}}"></gl-form-input>
+                  </div>
+                </div>
+              </div>
+              <div> / </div>
+              <div style="text-align: left;    padding-left: 13px;">[[setYear(data.invoice_date)]]
+                <gl-form-input class="required" required disabled no-label-float value="{{data.invoice_year}}"></gl-form-input>
+              </div>
+            </div>
+          </div>
+          <div class="flex-5 flex-padding">
+            <gl-form-input type="date" class="required" style="width:150px" required no-label-float disabled="[[common.btnDisabled]]" label="{{localize.label_invoice_date}}"
+              value="{{data.invoice_date}}"></gl-form-input>
+          </div>
+          <div class="flex-2 ">
+          </div>
+        </div> -->
 
         <!--<div class="text">{{localize.label_cm_invoice}}</div>
         <gl-grid-row width="{{getWidth}}">
@@ -133,65 +223,128 @@
           </gl-grid-col>
         </gl-grid-row>-->
 
-        <gl-grid-row>
-          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,12]]">
+        <!-- <gl-grid-row width="{{getWidth}}">
+          <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,12]]">1111
             <template is="dom-repeat" items="{{data.detail}}">
-              <gl-form-textarea disabled value="[[formatNumberNoZero(item.package_amount)]] BAGS OF [[_obSetUpper(item.hamonize.hamonize_en)]] BROKENS, [[item.project_en]] CURRENT NEW CROP, DOUBLE POLISHED AND SORTEXED QUALITY." placeholder="{{localize.text_your_detail}}"
-                label="{{localize.label_invoice_of}} :" error-message="{{localize.text_enter_your_detail}}" auto-validate
-                required></gl-form-textarea>
+              <gl-form-textarea disabled value="[[formatNumberNoZero(item.package_amount)]] BAGS OF [[_obSetUpper(item.hamonize.hamonize_en)]] BROKENS, [[item.project_en]] CURRENT NEW CROP, DOUBLE POLISHED AND SORTEXED QUALITY."
+                placeholder="{{localize.text_your_detail}}" label="{{localize.label_invoice_of}} :" error-message="{{localize.text_enter_your_detail}}"
+                auto-validate required></gl-form-textarea>
             </template>
           </gl-grid-col>
-        </gl-grid-row>
+        </gl-grid-row> -->
+        <div class="row middle-md">
+          <div class="col-md-12 ">
+            <template is="dom-repeat" items="{{data.detail}}">
+              <gl-form-textarea disabled always-float-label value="[[formatNumberNoZero(item.package_amount)]] BAGS OF [[_obSetUpper(item.hamonize.hamonize_en)]] BROKENS, [[item.project_en]] CURRENT NEW CROP, DOUBLE POLISHED AND SORTEXED QUALITY."
+                placeholder="{{localize.text_your_detail}}" label="{{localize.label_invoice_of}} :" error-message="{{localize.text_enter_your_detail}}"
+                auto-validate required></gl-form-textarea>
+            </template>
+          </div>
+        </div>
 
-        <gl-grid-row>
+
+        <!-- <gl-grid-row>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,5]]">
             <gl-form-input disabled value="{{data.ship}}" label="{{localize.label_shippped_per_invoice}} : [[_ObcountIndex(index)]]"></gl-form-input>
           </gl-grid-col>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-            <gl-form-input disabled value="[[_obSetUpper(data.load_port.port_name)]],[[_obSetUpper(data.load_port.country_name_en)]]" label="{{localize.label_port_of_loading_invoice}} :"></gl-form-input>
+            <gl-form-input disabled value="[[_obSetUpper(data.load_port.port_name)]],[[_obSetUpper(data.load_port.country_name_en)]]"
+              label="{{localize.label_port_of_loading_invoice}} :"></gl-form-input>
           </gl-grid-col>
-        </gl-grid-row>
+        </gl-grid-row> -->
+        <div class="row middle-md">
+          <div class="col-md-6 ">
+            <gl-form-input disabled always-float-label value="{{data.ship}}" label="{{localize.label_shippped_per_invoice}} : [[_ObcountIndex(index)]]"></gl-form-input>
+          </div>
+          <div class="col-md-6">
+            <gl-form-input disabled always-float-label value="[[_obSetUpper(data.load_port.port_name)]],[[_obSetUpper(data.load_port.country_name_en)]]"
+              label="{{localize.label_port_of_loading_invoice}} :"></gl-form-input>
+          </div>
+        </div>
 
-        <gl-grid-row>
+        <!-- <gl-grid-row>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,5]]">
-            <gl-form-textarea disabled value="[[_obSetUpper(data.deli_port.port_name)]],[[_obSetUpper(data.deli_port.country_fullname_en)]]" label="{{localize.label_port_of_discharge_invoice}}:"></gl-form-label-textarea>
+            <gl-form-textarea disabled value="[[_obSetUpper(data.deli_port.port_name)]],[[_obSetUpper(data.deli_port.country_fullname_en)]]"
+              label="{{localize.label_port_of_discharge_invoice}}:"></gl-form-label-textarea>
           </gl-grid-col>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-            <gl-form-textarea disabled value="[[_obSetUpper(data.dest_port.port_name)]],[[_obSetUpper(data.dest_port.country_fullname_en)]]" label="{{localize.label_place_of_delivery_invoice}} :"></gl-form-textarea>
+            <gl-form-textarea disabled value="[[_obSetUpper(data.dest_port.port_name)]],[[_obSetUpper(data.dest_port.country_fullname_en)]]"
+              label="{{localize.label_place_of_delivery_invoice}} :"></gl-form-textarea>
           </gl-grid-col>
-        </gl-grid-row>
+        </gl-grid-row> -->
 
-        <gl-grid-row>
+        <div class="row middle-md">
+          <div class="col-md-6 ">
+            <gl-form-textarea disabled always-float-label value="[[_obSetUpper(data.deli_port.port_name)]],[[_obSetUpper(data.deli_port.country_fullname_en)]]"
+              label="{{localize.label_port_of_discharge_invoice}}:"></gl-form-label-textarea>
+          </div>
+          <div class="col-md-6">
+            <gl-form-textarea disabled always-float-label value="[[_obSetUpper(data.dest_port.port_name)]],[[_obSetUpper(data.dest_port.country_fullname_en)]]"
+              label="{{localize.label_place_of_delivery_invoice}} :"></gl-form-textarea>
+          </div>
+
+        </div>
+
+        <!-- <gl-grid-row>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,8]]">
             <gl-form-textarea disabled value="[[data.buyer.buyer_address]]" label="{{localize.label_buyer_address_invoice}} :"></gl-form-textarea>
           </gl-grid-col>
-        </gl-grid-row>
-        
-        <gl-grid-row>
+        </gl-grid-row> -->
+        <div class="row middle-md">
+          <div class="col-md-8 ">
+            <gl-form-textarea disabled always-float-label value="[[data.buyer.buyer_address]]" label="{{localize.label_buyer_address_invoice}} :"></gl-form-textarea>
+          </div>
+        </div>
+
+        <!-- <gl-grid-row>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,12]]">
             <div class="autocomplete-wrapper">
-              <gl-form-textarea id="myInput" class="required" required disabled="[[common.btnDisabled]]" rows="2" value="{{data.made_out_to}}" placeholder="{{localize.text_your_detail}}"
-                label="{{localize.label_made_out_to}} :"></gl-form-textarea>
-              <paper-autocomplete-suggestions
-                  for="myInput"
-                  source="[[data_madeout]]"></paper-autocomplete-suggestions>
+              <gl-form-textarea id="myInput" class="required" required disabled="[[common.btnDisabled]]" rows="2" value="{{data.made_out_to}}"
+                placeholder="{{localize.text_your_detail}}" label="{{localize.label_made_out_to}} :"></gl-form-textarea>
+              <paper-autocomplete-suggestions for="myInput" source="[[data_madeout]]"></paper-autocomplete-suggestions>
             </div>
           </gl-grid-col>
-        </gl-grid-row>
+        </gl-grid-row> -->
+        <div class="row middle-md">
+          <div class="col-md-12 ">
+            <div class="autocomplete-wrapper">
+              <gl-form-textarea id="myInput" class="required" required disabled="[[common.btnDisabled]]" rows="2" value="{{data.made_out_to}}"
+                placeholder="{{localize.text_your_detail}}" label="{{localize.label_made_out_to}} :"></gl-form-textarea>
+              <paper-autocomplete-suggestions for="myInput" source="[[data_madeout]]"></paper-autocomplete-suggestions>
+            </div>
+          </div>
+        </div>
         <br>
 
-        <gl-grid-row>
+        <!-- <gl-grid-row>
           <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,12]]">
             <div class="horizontal layout">
               <div style="padding: 10px 0px 0px 10px;">{{localize.label_bill_of_lading}} : </div>
-              <div style="padding-left: 10px;"><gl-form-input no-label-float disabled value="[[data.bl_no]]"></gl-form-input></div>
+              <div style="padding-left: 10px;">
+                <gl-form-input no-label-float disabled value="[[data.bl_no]]"></gl-form-input>
+              </div>
               <div style="padding: 10px 0px 0px 150px;">{{localize.label_dated}} : </div>
-              <div style="padding-left: 10px;"><gl-form-input type="date" no-label-float disabled value="[[data.invoice_date]]"></gl-form-input></div>
+              <div style="padding-left: 10px;">
+                <gl-form-input type="date" no-label-float disabled value="[[data.invoice_date]]"></gl-form-input>
+              </div>
             </div>
           </gl-grid-col>
-        </gl-grid-row>
+        </gl-grid-row> -->
 
-        <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,12]]">
+        <div class="row middle-md">
+          <div class="col-md-12 ">
+            <div class="horizontal layout">
+              <div style="padding: 10px 0px 0px 10px;">{{localize.label_bill_of_lading}} : </div>
+              <div style="padding-left: 10px;">
+                <gl-form-input no-label-float disabled value="[[data.bl_no]]"></gl-form-input>
+              </div>
+              <div style="padding: 10px 0px 0px 150px;">{{localize.label_dated}} : </div>
+              <div style="padding-left: 10px;">
+                <gl-form-input type="date" no-label-float disabled value="[[data.invoice_date]]"></gl-form-input>
+              </div>
+            </div>
+          </div>
+          <!-- <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,12]]"> -->
           <table class="gl-table-default">
             <thead class="table-head">
               <tr>
@@ -207,33 +360,56 @@
                   <td>[[data.buyer.buyer_masks]]</td>
                   <td>[[formatNumberNoZero(item.package_amount)]] {{localize.text_bags}}</td>
                   <td>
-                    [[_obSetUpper(item.hamonize.hamonize_en)]] BROKENS, [[item.project_en]] CURRENT NEW CROP,DOUBLE POLISHED AND SORTEXED QUALITY.<br> PACKING: INSTRONG
-                    EXPORT SEA WORTHY NEWSINGLE PP BAGS OF [[item.package.package_kg_per_bag]] KILOGRAMS NET WITH MINIMUM TARE WEIGHT
-                    TO BE AT [[item.package.package_weight_bag]] GRAM/BAG. TWO PERCENT (2%) MARKED SPARE EMPTY BAGS TO BE SUPPLIED
-                    FREE OF CHARGE BY THE SELLER ALONG WITH THE SHIPMENT. <br> PRICE : USD [[item.price_d]] PER METRIC
-                    TON, [[_getIncoterms(data.incoterms)]] BANGKOK OR LAEM CHABANG AT BUYER'S OPTION.<br>
-                    <gl-grid-row>
-                      <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,1]]"></gl-grid-col>
-                      <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,3]]">{{localize.label_gross_weight}}</gl-grid-col>
-                      <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,1]]">:</gl-grid-col>
-                      <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,4]]">[[formatNumber(item.gross_weight)]]</gl-grid-col>
-                      <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,3]]">{{localize.label_metric_ton}}</gl-grid-col>
-                    </gl-grid-row>
-                    <gl-grid-row>
+                    [[_obSetUpper(item.hamonize.hamonize_en)]] BROKENS, [[item.project_en]] CURRENT NEW CROP,DOUBLE POLISHED AND SORTEXED QUALITY.
+                    <br> PACKING: INSTRONG EXPORT SEA WORTHY NEWSINGLE PP BAGS OF [[item.package.package_kg_per_bag]] KILOGRAMS
+                    NET WITH MINIMUM TARE WEIGHT TO BE AT [[item.package.package_weight_bag]] GRAM/BAG. TWO PERCENT (2%)
+                    MARKED SPARE EMPTY BAGS TO BE SUPPLIED FREE OF CHARGE BY THE SELLER ALONG WITH THE SHIPMENT.
+                    <br> PRICE : USD [[item.price_d]] PER METRIC TON, [[_getIncoterms(data.incoterms)]] BANGKOK OR LAEM CHABANG
+                    AT BUYER'S OPTION.
+                    <br>
+                    <!-- <gl-grid-row>
+                        <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,1]]"></gl-grid-col>
+                        <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,3]]">{{localize.label_gross_weight}}</gl-grid-col>
+                        <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,1]]">:</gl-grid-col>
+                        <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,4]]">[[formatNumber(item.gross_weight)]]</gl-grid-col>
+                        <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,3]]">{{localize.label_metric_ton}}</gl-grid-col>
+                      </gl-grid-row> -->
+                    <div class="row middle-md">
+                      <div class="col-md-1  desWeigth"></div>
+                      <div class="col-md-3 desWeigth">{{localize.label_gross_weight}}</div>
+                      <div class="col-md-1 desWeigth">:</div>
+                      <div class="col-md-4 desWeigth">[[formatNumber(item.gross_weight)]]</div>
+                      <div class="col-md-3 desWeigth">{{localize.label_metric_ton}}</div>
+                    </div>
+
+                    <!-- <gl-grid-row>
                       <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,1]]"></gl-grid-col>
                       <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,3]]">{{localize.label_tare_weight}}</gl-grid-col>
                       <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,1]]">:</gl-grid-col>
                       <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,4]]">[[formatNumber(item.tare_weight)]]</gl-grid-col>
                       <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,3]]">{{localize.label_metric_ton}}</gl-grid-col>
-                    </gl-grid-row>
-
-                    <gl-grid-row>
+                    </gl-grid-row> -->
+                    <div class="row middle-md">
+                      <div class="col-md-1  desWeigth"></div>
+                      <div class="col-md-3 desWeigth">{{localize.label_tare_weight}}</div>
+                      <div class="col-md-1 desWeigth">:</div>
+                      <div class="col-md-4 desWeigth">[[formatNumber(item.tare_weight)]]</div>
+                      <div class="col-md-3 desWeigth">{{localize.label_metric_ton}}</div>
+                    </div>
+                    <!-- <gl-grid-row>
                       <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,1]]"></gl-grid-col>
                       <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,3]]">{{localize.label_net_weight}}</gl-grid-col>
                       <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,1]]">:</gl-grid-col>
                       <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,4]]">[[formatNumber(item.net_weight)]]</gl-grid-col>
                       <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,3]]">{{localize.label_metric_ton}}</gl-grid-col>
-                    </gl-grid-row>
+                    </gl-grid-row> -->
+                    <div class="row middle-md">
+                      <div class="col-md-1  desWeigth"></div>
+                      <div class="col-md-3 desWeigth">{{localize.label_net_weight}}</div>
+                      <div class="col-md-1 desWeigth">:</div>
+                      <div class="col-md-4 desWeigth">[[formatNumber(item.net_weight)]]</div>
+                      <div class="col-md-3 desWeigth">{{localize.label_metric_ton}}</div>
+                    </div>
                     <br> (US.DOLLARS [[_toWords(item.value_d)]] ONLY)
                   </td>
                   <td>USD [[formatNumber(item.value_d)]]</td>
@@ -245,70 +421,104 @@
                 <td></td>
                 <td>[[formatNumberNoZero(data.package_amount)]] BAGS</td>
                 <td>
-                  TOTAL <br>
-                  <gl-grid-row>
+                  TOTAL
+                  <br>
+                  <!-- <gl-grid-row>
                     <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,1]]"></gl-grid-col>
                     <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,3]]">{{localize.label_gross_weight}}</gl-grid-col>
                     <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,1]]">:</gl-grid-col>
                     <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,4]]">[[formatNumber(data.gross_weight)]]</gl-grid-col>
                     <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,3]]">{{localize.label_metric_ton}}</gl-grid-col>
-                  </gl-grid-row>
-                  <gl-grid-row>
+                  </gl-grid-row> -->
+                  <div class="row middle-md">
+                    <div class="col-md-1  desWeigth"></div>
+                    <div class="col-md-3 desWeigth">{{localize.label_gross_weight}}</div>
+                    <div class="col-md-1 desWeigth">:</div>
+                    <div class="col-md-4 desWeigth">[[formatNumber(data.gross_weight)]]</div>
+                    <div class="col-md-3 desWeigth">{{localize.label_metric_ton}}</div>
+                  </div>
+                  <!-- <gl-grid-row>
                     <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,1]]"></gl-grid-col>
                     <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,3]]">{{localize.label_tare_weight}}</gl-grid-col>
                     <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,1]]">:</gl-grid-col>
                     <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,4]]">[[formatNumber(data.tare_weight)]]</gl-grid-col>
                     <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,3]]">{{localize.label_metric_ton}}</gl-grid-col>
-                  </gl-grid-row>
-
-                  <gl-grid-row>
+                  </gl-grid-row> -->
+                  <div class="row middle-md">
+                    <div class="col-md-1  desWeigth"></div>
+                    <div class="col-md-3 desWeigth">{{localize.label_tare_weight}}</div>
+                    <div class="col-md-1 desWeigth">:</div>
+                    <div class="col-md-4 desWeigth">[[formatNumber(data.tare_weight)]]</div>
+                    <div class="col-md-3 desWeigth">{{localize.label_metric_ton}}</div>
+                  </div>
+                  <!-- <gl-grid-row>
                     <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,1]]"></gl-grid-col>
                     <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,3]]">{{localize.label_net_weight}}</gl-grid-col>
                     <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,1]]">:</gl-grid-col>
                     <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,4]]">[[formatNumber(data.net_weight)]]</gl-grid-col>
                     <gl-grid-col class="desWeigth" width="[[getWidth]]" grid="[[300,12],[500,3]]">{{localize.label_metric_ton}}</gl-grid-col>
-                  </gl-grid-row>
+                  </gl-grid-row> -->
+                  <div class="row middle-md">
+                    <div class="col-md-1  desWeigth"></div>
+                    <div class="col-md-3 desWeigth">{{localize.label_net_weight}}</div>
+                    <div class="col-md-1 desWeigth">:</div>
+                    <div class="col-md-4 desWeigth">[[formatNumber(data.net_weight)]]</div>
+                    <div class="col-md-3 desWeigth">{{localize.label_metric_ton}}</div>
+                  </div>
 
                   <br> (US.DOLLARS [[_toWords(data.value_d)]] ONLY)
-                  <br> UNDER THE SELLS AND PURCHASE CONTRACT NO.[[data.contract_name]] BETWEEN [[data.buyer.buyer_name]] AND DEPARTMENT
-                  OF FOREIGN TRADE, MINISTRY OF COMMERCE OF THAILAND DATED [[checkDate(data)]]. <br> PAYMENT BY T/T TO :
-                  KRUNG THAI BANK PUBLIC COMPANY LIMITED, BANGKOK, THAILAND <br> SWIFT CODE : KRTHTHBK <br> NAME ACCOUNT:
-                  DEPARTMENT OF FOREIGN TRADE <br> BANK ACCOUNT NUMBER 385-0-12421-5<br> ADDRESS : 44/100 NONTHABURI 1 ROAD,
-                  NONTHABURI 11000, THAILAND
+                  <br> UNDER THE SELLS AND PURCHASE CONTRACT NO.[[data.contract_name]] BETWEEN [[data.buyer.buyer_name]] AND
+                  DEPARTMENT OF FOREIGN TRADE, MINISTRY OF COMMERCE OF THAILAND DATED [[checkDate(data)]].
+                  <br> PAYMENT BY T/T TO : KRUNG THAI BANK PUBLIC COMPANY LIMITED, BANGKOK, THAILAND
+                  <br> SWIFT CODE : KRTHTHBK
+                  <br> NAME ACCOUNT: DEPARTMENT OF FOREIGN TRADE
+                  <br> BANK ACCOUNT NUMBER 385-0-12421-5
+                  <br> ADDRESS : 44/100 NONTHABURI 1 ROAD, NONTHABURI 11000, THAILAND
                 </td>
                 <td>USD [[formatNumber(data.value_d)]]</td>
               </tr>
             </tfoot>
           </table>
-        </gl-grid-col>
-        </gl-grid-row>
+          <!-- </gl-grid-col> -->
+          <!-- </gl-grid-row> -->
 
 
-        <gl-form-panel-footer set-padding="20px 0px 0px 20px">
+
+
+      </gl-form-panel-body>
+      <!-- <gl-form-panel-footer set-padding="10px"> -->
+      <!-- <div class="horizontal end-justified layout">
           <paper-button class="gl-btn-primary" raised on-tap="createInvoice" hidden="[[!common.isInsert]]">{{localize.btn_add_invoice}}</paper-button>
           <template is="dom-if" if="[[!common.btnDisabled]]">
             <paper-button class="gl-btn" on-tap="cancelInvoice" raised hidden="[[common.isInsert]]">{{localize.btn_cancel}}</paper-button>
             <paper-button class="gl-btn-success" raised on-tap="saveInvoice" hidden="[[common.isInsert]]">{{localize.btn_save_invoice}}</paper-button>
           </template>
-        </gl-form-panel-footer>
-
-      </gl-form-panel-body>
+        </div> -->
+      <!-- </gl-form-panel-footer> -->
     </gl-form-panel>
+    </div>
+    <div class="horizontal end-justified layout">
+      <paper-button class="gl-btn-primary" raised on-tap="createInvoice" hidden="[[!common.isInsert]]">{{localize.btn_add_invoice}}</paper-button>
+      <template is="dom-if" if="[[!common.btnDisabled]]">
+        <paper-button class="gl-btn" on-tap="cancelInvoice" raised hidden="[[common.isInsert]]">{{localize.btn_cancel}}</paper-button>
+        <paper-button class="gl-btn-success" raised on-tap="saveInvoice" hidden="[[common.isInsert]]">{{localize.btn_save_invoice}}</paper-button>
+      </template>
+    </div>
   </template>
   <script>
     Polymer({
       is: "commercial-invoice",
       behaviors: [ReduxBehavior, FormatNumberBehavior, nylonBehavior, ValidateFormBehavior, g2gLogicBehavior],
       properties: {
-        localize:{
-          statePath : 'i18n.g2g'
+        localize: {
+          statePath: 'i18n.g2g'
         },
-        data:{
-          statePath : 'book.data',
-          observer : '_setDate'
+        data: {
+          statePath: 'book.data',
+          observer: '_setDate'
         },
-        data_madeout :{
-          statePath : 'book.list_made_out'
+        data_madeout: {
+          statePath: 'book.list_made_out'
         },
         printReport: {
           type: Object,
@@ -326,11 +536,11 @@
             ]
           }
         },
-        common:{
-          statePath : 'commonState.setState'
+        common: {
+          statePath: 'commonState.setState'
         },
-        buyerId:{
-          statePath:'commonState.buyerId'
+        buyerId: {
+          statePath: 'commonState.buyerId'
         },
       },
       // observers: [
@@ -340,47 +550,47 @@
       //   'edit-input': 'editInput',
       //   'delete-input': 'deteleInvoice'
       // },
-      _setDate:function(data){
-        if(typeof data !== 'undefined'){
-          if(typeof data.invoice_date !== 'undefined'){
+      _setDate: function (data) {
+        if (typeof data !== 'undefined') {
+          if (typeof data.invoice_date !== 'undefined') {
             var date = data.invoice_date.split('T')[0];
             this.set('data.invoice_date', date);
-          }else{
+          } else {
             var dateNow = new Date().toISOString().split('T')[0];
             this.set('data.invoice_date', dateNow);
           }
         }
       },
-      setYear:function(date){
-        if(typeof date !== 'undefined'){
+      setYear: function (date) {
+        if (typeof date !== 'undefined') {
           var year = date.split('-')[0];
-          this.set('data.invoice_year', Number(year)+543);
+          this.set('data.invoice_year', Number(year) + 543);
         }
       },
-      toUpper:function(e){
+      toUpper: function (e) {
         try {
-          if (e.target.value!== '') {
+          if (e.target.value !== '') {
             this.set('data.invoice_type', e.target.value.toUpperCase());
           }
-           
+
         } catch (error) {
-          
+
         }
-       
+
       },
       _getVessel: function (data) {
         if (typeof data !== 'undefined' && data !== 'undefined') {
           return data.map((e) => e.ship_name).join(", ");
         }
       },
-      _getIncoterms: function (data){
+      _getIncoterms: function (data) {
         if (typeof data !== 'undefined' && data !== 'undefined') {
           return data.map((e) => e.inct_name).join(", ");
         }
       },
       _obSetUpper: function (data) {
-        if(typeof data !== 'undefined'){
-          if(data !== null){
+        if (typeof data !== 'undefined') {
+          if (data !== null) {
             return data.toUpperCase()
           }
         }
@@ -394,72 +604,72 @@
 
       printInvoice: function () {
         // report.report_type
-        window.open(window._config.reportServer+'/api/finance/report1?id=' + this.data.id + '&export=' + this.printReport.typeFile);
+        window.open(window._config.reportServer + '/api/finance/report1?id=' + this.data.id + '&export=' + this.printReport.typeFile);
       },
       createInvoice: function () {
         // console.log(this.data);
         var data = {
-          id : this.data.id,
-          contract_id : this.data.contract_id,
-          invoice_type : this.data.invoice_type,
-          invoice_no : this.data.invoice_no,
-          invoice_year : this.data.invoice_year,
-          invoice_date : this.data.invoice_date+'T00:00:00+07:00',
-          buyer_id : this.buyerId.buyer_id,
-          made_out_to : this.data.made_out_to
+          id: this.data.id,
+          contract_id: this.data.contract_id,
+          invoice_type: this.data.invoice_type,
+          invoice_no: this.data.invoice_no,
+          invoice_year: this.data.invoice_year,
+          invoice_date: this.data.invoice_date + 'T00:00:00+07:00',
+          buyer_id: this.buyerId.buyer_id,
+          made_out_to: this.data.made_out_to
         }
         // console.log(data);
         var check = this.validateForm('.required');
-        if(check === true){
+        if (check === true) {
           this.fire('toast', {
-            status: 'openDialog', 
+            status: 'openDialog',
             text: 'ต้องการเพิ่มใบแจ้งหนี้ใช่หรือไม่',
-            confirmed: (result) =>{
-              if(result === true){
+            confirmed: (result) => {
+              if (result === true) {
                 this.dispatchAction('BOOK_INSERT', data);
                 this.queryFrom('.required').map((el) => { el.reset(); });
               }
             }
           });
-        }else{
+        } else {
           this.fire('toast', {
-            status: 'connectError', text: 'กรุณากรอกข้อมูลให้ครบถ้วน',callback: () => {}
+            status: 'connectError', text: 'กรุณากรอกข้อมูลให้ครบถ้วน', callback: () => { }
           });
         }
-    },
-    editInvoice:function(){
-      this.dispatchAction('SET_STATE', {
+      },
+      editInvoice: function () {
+        this.dispatchAction('SET_STATE', {
           isInsert: false,
           btnDisabled: false,
           hiddend: true
-      });
-    },
+        });
+      },
       saveInvoice: function () {
         var data = {
-          id : this.data.id,
-          contract_id : this.data.contract_id,
-          invoice_type : this.data.invoice_type,
-          invoice_no : this.data.invoice_no,
-          invoice_year : this.data.invoice_year,
-          invoice_date : this.data.invoice_date+'T00:00:00+07:00',
-          made_out_to : this.data.made_out_to
+          id: this.data.id,
+          contract_id: this.data.contract_id,
+          invoice_type: this.data.invoice_type,
+          invoice_no: this.data.invoice_no,
+          invoice_year: this.data.invoice_year,
+          invoice_date: this.data.invoice_date + 'T00:00:00+07:00',
+          made_out_to: this.data.made_out_to
         }
         // console.log(data);
         var check = this.validateForm('.required');
-        if(check === true){
+        if (check === true) {
           this.fire('toast', {
-            status: 'openDialog', 
+            status: 'openDialog',
             text: 'ต้องการแก้ไขใบแจ้งหนี้ใช่หรือไม่',
-            confirmed: (result) =>{
-              if(result === true){
+            confirmed: (result) => {
+              if (result === true) {
                 this.dispatchAction('INVOICE_SAVE', data);
                 this.queryFrom('.required').map((el) => { el.reset(); });
               }
             }
           });
-        }else{
+        } else {
           this.fire('toast', {
-            status: 'connectError', text: 'กรุณากรอกข้อมูลให้ครบถ้วน',callback: () => {}
+            status: 'connectError', text: 'กรุณากรอกข้อมูลให้ครบถ้วน', callback: () => { }
           });
         }
       },
@@ -467,14 +677,14 @@
         this.fire('toast', {  //คำสั่งสำหรับเปิด toast dialog
           status: 'openDialog',
           text: 'ต้องการลบใบแจ้งหนี้ใช่หรือไม่ ?',
-          confirmed: (result) =>{
-            if(result === true){
+          confirmed: (result) => {
+            if (result === true) {
               this.dispatchAction('INVOICE_DELETE', this.data);
             }
           }
         });
       },
-      cancelInvoice: function(){
+      cancelInvoice: function () {
         this.dispatchAction('BOOK_GET_ID_DATA', this.data.id);
         // this.dispatchAction('SET_STATE', {
         //     isInsert: false,

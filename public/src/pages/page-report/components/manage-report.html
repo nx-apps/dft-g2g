@@ -13,18 +13,21 @@
 
 <link rel="import" href="../../../nylon-behavior.html">
 
+<link rel="import" href="../../../layout/flexbox-grid.html">
+
 <link rel="import" href="../../../../bower_components/iron-validator-behavior/iron-validator-behavior.html">
 
 <dom-module id="manage-report">
     <template>
-        <style include="shared-styles">
-             :host {
+        <style include="flexbox-grid shared-styles">
+            :host {
                 display: block;
             }
 
             gl-combo-box {
                 width: 90%;
             }
+
             .title-report {
                 font-family: CSChatThaiUI;
                 font-size: 18px;
@@ -33,7 +36,7 @@
             }
         </style>
         <gl-form-panel set-padding="10px 20px 10px 20px" set-border="1px">
-            <gl-grid-row width="{{getWidth}}">
+            <!-- <gl-grid-row width="{{getWidth}}">
                 <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
                     <gl-form-input class="margin-top required" required  required label="[[localizeReport.report_order]] :"
                         value="{{data.report_no}}" disabled="{{_checkStatus(statusAction)}}"></gl-form-input>
@@ -42,12 +45,21 @@
                     <gl-form-input class="margin-top required" required  required label="[[localizeReport.report_name]] :"
                          value="{{data.report_name}}" disabled="[[btnState]]"></gl-form-input>
                 </gl-grid-col>
-            </gl-grid-row>
-
-            <gl-grid-row>
+            </gl-grid-row> -->
+            <div class="row middle-md">
+                <div class="col-md-4 ">
+                    <gl-form-input class="margin-top required" required required label="[[localizeReport.report_order]] :" value="{{data.report_no}}"
+                        disabled="{{_checkStatus(statusAction)}}"></gl-form-input>
+                </div>
+                <div class="col-md-8">
+                    <gl-form-input class="margin-top required" required required label="[[localizeReport.report_name]] :" value="{{data.report_name}}"
+                        disabled="[[btnState]]"></gl-form-input>
+                </div>
+            </div>
+            <!-- <gl-grid-row>
                 <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-                    <gl-form-input class="margin-top required" required  required label="[[localizeReport.file_name]] :" 
-                        value="{{data.report_path}}" disabled="{{_checkStatus(statusAction)}}"></gl-form-input>
+                    <gl-form-input class="margin-top required" required required label="[[localizeReport.file_name]] :" value="{{data.report_path}}"
+                        disabled="{{_checkStatus(statusAction)}}"></gl-form-input>
                 </gl-grid-col>
                 <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
                     <gl-combo-box id="report_table" label="[[localizeReport.table_data]]" placeholder="[[localizeReport.table_data]]" items="[[tableList]]"
@@ -58,20 +70,45 @@
                     </gl-combo-box>
                 </gl-grid-col>
                 <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,4]]">
-                    <gl-combo-box id="report_type" label="[[localizeReport.report_type]]" placeholder="[[localizeReport.report_type]]" items="{{report_type}}" item-label-path="label"
-                        value="{{data.report_type}}" item-value-path="id">
+                    <gl-combo-box id="report_type" label="[[localizeReport.report_type]]" placeholder="[[localizeReport.report_type]]" items="{{report_type}}"
+                        item-label-path="label" value="{{data.report_type}}" item-value-path="id">
                         <template>
                             [[item.label]]
                         </template>
                     </gl-combo-box>
                 </gl-grid-col>
-            </gl-grid-row>
+            </gl-grid-row> -->
+            <div class="row middle-md">
+                <div class="col-md-4 ">
+                    <gl-form-input class="margin-top required" required required label="[[localizeReport.file_name]] :" value="{{data.report_path}}"
+                        disabled="{{_checkStatus(statusAction)}}"></gl-form-input>
+                </div>
+                <div class="col-md-4">
+                    <gl-combo-box id="report_table" label="[[localizeReport.table_data]]" placeholder="[[localizeReport.table_data]]" items="[[tableList]]"
+                        item-label-path="table_name" value="{{data.report_table}}" item-value-path="table_name" on-selected-item-changed="getObjectTable">
+                        <template>
+                            [[item.table_name]]
+                        </template>
+                    </gl-combo-box>
+                </div>
+                <div class="col-md-4">
+                    <gl-combo-box id="report_type" label="[[localizeReport.report_type]]" placeholder="[[localizeReport.report_type]]" items="{{report_type}}"
+                        item-label-path="label" value="{{data.report_type}}" item-value-path="id">
+                        <template>
+                            [[item.label]]
+                        </template>
+                    </gl-combo-box>
+                </div>
+            </div>
             <div class="horizontal end-justified layout">
                 <paper-button raised on-tap="addCondition" class="gl-btn-primary">
                     <iron-icon icon="add"></iron-icon>[[localizeReport.add_item]]</paper-button>
             </div>
-            <gl-grid-row>
-                <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,12]]">
+            <!-- <gl-grid-row>
+                <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,12]]"> -->
+            <div class="row middle-md">
+                <div class="col-md-12">
+
                     <vaadin-grid id="material" class="material" aria-label="Basic Binding Example" items="{{data.report_params}}">
 
                         <vaadin-grid-column width="10%" flex-grow="0">
@@ -92,8 +129,8 @@
                             <template class="header">[[localizeReport.type]]</template>
                             <template>
                                 <!--{{item.type}}-->
-                                <gl-combo-box id="report_type" class="margin-top required" required  items="{{data_type}}"
-                                    item-label-path="label" value="{{item.type}}" item-value-path="id">
+                                <gl-combo-box id="report_type" class="margin-top required" required items="{{data_type}}" item-label-path="label" value="{{item.type}}"
+                                    item-value-path="id">
                                     <template>
                                         [[item.label]]
                                     </template>
@@ -172,8 +209,8 @@
 
 
                                 <template is="dom-if" if={{isList(item.type)}}>
-                                    <gl-combo-box id="report_type" class="margin-top required" required items="{{tableSeleted}}"
-                                        item-label-path="field" value="{{item.view}}" item-value-path="field">
+                                    <gl-combo-box id="report_type" class="margin-top required" required items="{{tableSeleted}}" item-label-path="field" value="{{item.view}}"
+                                        item-value-path="field">
                                         <template>
                                             [[item.field]]
                                         </template>
@@ -211,8 +248,8 @@
                                 </template>
 
                                 <template is="dom-if" if={{isList(item.type)}}>
-                                    <gl-combo-box id="report_type" class="margin-top required" required items="{{tableSeleted}}"
-                                        item-label-path="field" value="{{item.res}}" item-value-path="field">
+                                    <gl-combo-box id="report_type" class="margin-top required" required items="{{tableSeleted}}" item-label-path="field" value="{{item.res}}"
+                                        item-value-path="field">
                                         <template>
                                             [[item.field]]
                                         </template>
@@ -223,7 +260,7 @@
 
 
 
-                        
+
 
 
 
@@ -241,8 +278,10 @@
                             </template>
                         </vaadin-grid-column>
                     </vaadin-grid>
-                </gl-grid-col>
-            </gl-grid-row>
+                </div>
+            </div>
+            <!-- </gl-grid-col>
+            </gl-grid-row> -->
             <div class="horizontal end-justified layout">
                 <paper-button raised on-tap="addReport" class="gl-btn-primary" hidden="[[!commonState.isInsert]]">[[localizeReport.add]]</paper-button>
                 <paper-button raised on-tap="saveReport" class="gl-btn-success" hidden="[[commonState.isInsert]]">[[localizeReport.save]]</paper-button>
@@ -252,7 +291,7 @@
         <paper-dialog id="listMake">
             <div class="layout start-justified">
                 <div class="title-report">
-                [[localizeReport.list]] [[titleListMake]]
+                    [[localizeReport.list]] [[titleListMake]]
                 </div>
                 <list-make id="makeArray" style="width:555px" data={{dataSelete}}></list-make>
             </div>
@@ -336,13 +375,13 @@
                 dataSelete: {
                     type: Object
                 },
-                titleListMake :{
+                titleListMake: {
                     type: String
                 }
             },
-            
+
             openListMake(e) {
-                this.set('titleListMake',e.model.__data__.item.label)
+                this.set('titleListMake', e.model.__data__.item.label)
                 // console.log(e.model.__data__.item);
                 if (typeof e.currentTarget.data.req.value === 'string') {
                     e.currentTarget.data.req.value = []

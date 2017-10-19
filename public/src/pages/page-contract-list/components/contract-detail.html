@@ -177,7 +177,7 @@
           </template>
         </div>
       </template>
-      <gl-grid-row width="{{getWidth}}">
+      <!-- <gl-grid-row width="{{getWidth}}">
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,9]]">
           <gl-form-input required class="required" disabled="[[_checkArrayTrue(commonState.btnDisabled,data.contract_status)]]" error-message="{{localizeContract.error_input}}{{localizeContract.contract_name}}"
             label="{{localizeContract.contract_name}}" value="{{data.contract_name}}" placeholder="{{localizeContract.contract_name}}"></gl-form-input>
@@ -187,21 +187,39 @@
             label="{{localizeContract.date}}" error-message="{{localizeContract.error_input}}{{localizeContract.date}}" value="{{data.contract_date}}">
           </gl-form-input>
         </gl-grid-col>
-      </gl-grid-row>
-      <gl-grid-row width="{{getWidth}}">
+      </gl-grid-row> -->
+      <div class="horizontal layout">
+        <div class="flex-9 flex-padding">
+          <gl-form-input required class="required" disabled="[[_checkArrayTrue(commonState.btnDisabled,data.contract_status)]]" error-message="{{localizeContract.error_input}}{{localizeContract.contract_name}}"
+            label="{{localizeContract.contract_name}}" value="{{data.contract_name}}" placeholder="{{localizeContract.contract_name}}"></gl-form-input>
+        </div>
+        <div class="flex-3">
+          <gl-form-input type="date" always-float-label class="required" required disabled="[[_checkArrayTrue(commonState.btnDisabled,data.contract_status)]]"
+            label="{{localizeContract.date}}" error-message="{{localizeContract.error_input}}{{localizeContract.date}}" value="{{data.contract_date}}">
+        </div>
+      </div>
+      <!-- <gl-grid-row width="{{getWidth}}">
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,9]]">[[changeString2Num(data.*,'contract_no')]]
           <gl-form-input type="number" required class="required" error-message="{{localizeContract.error_input}}{{localizeContract.contract_no}}"
             disabled="[[_checkArrayTrue(commonState.btnDisabled,data.contract_status)]]" label="{{localizeContract.contract_no}}"
             value="{{data.contract_no}}" placeholder="{{localizeContract.contract_no}}"></gl-form-input>
         </gl-grid-col>
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,3]]">
-          <!--<gl-form-input type="date" always-float-label class="required" required disabled="[[_checkArrayTrue(commonState.btnDisabled,data.contract_status)]]"
+          <gl-form-input type="date" always-float-label class="required" required disabled="[[_checkArrayTrue(commonState.btnDisabled,data.contract_status)]]"
             label="{{localizeContract.label_date}}" error-message="{{localizeContract.label_error_date}}" value="{{data.contract_date}}">
-            </vaadin-date-picker>-->
+            </vaadin-date-picker>
         </gl-grid-col>
-      </gl-grid-row>
-
-      <gl-grid-row width="{{getWidth}}">
+      </gl-grid-row> -->
+      <div class="horizontal layout">
+        <div class="flex-9 flex-padding">[[changeString2Num(data.*,'contract_no')]]
+          <gl-form-input type="number" required class="required" error-message="{{localizeContract.error_input}}{{localizeContract.contract_no}}"
+            disabled="[[_checkArrayTrue(commonState.btnDisabled,data.contract_status)]]" label="{{localizeContract.contract_no}}"
+            value="{{data.contract_no}}" placeholder="{{localizeContract.contract_no}}"></gl-form-input>
+        </div>
+        <div class="flex-3">
+        </div>
+      </div>
+      <!-- <gl-grid-row width="{{getWidth}}">
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,9]]">
           <gl-combo-box class="required" required disabled="[[_checkArrayTrue(commonState.btnDisabled,data.contract_status)]]" label="{{localizeContract.payment_type}}"
             error-message="{{localizeContract.error_input}}{{localizeContract.payment_type}}" placeholder="{{localizeContract.payment_type}}"
@@ -216,11 +234,27 @@
             error-message="{{localizeContract.error_input}}{{localizeContract.quantity}}" required label="{{localizeContract.quantity}}"
             value="{{data.contract_weight}}" on-focus="_setSeleteValue" placeholder="{{localizeContract.quantity}}" id="contract_weight"></gl-form-input>
         </gl-grid-col>
-      </gl-grid-row>
+      </gl-grid-row> -->
+      <div class="horizontal layout">
+        <div class="flex-9 flex-padding">
+          <gl-combo-box class="required" required disabled="[[_checkArrayTrue(commonState.btnDisabled,data.contract_status)]]" label="{{localizeContract.payment_type}}"
+            error-message="{{localizeContract.error_input}}{{localizeContract.payment_type}}" placeholder="{{localizeContract.payment_type}}"
+            items="[[payterms]]" item-label-path="payterms_Name" item-value-path="payterms_Id" value="{{data.payterm}}">
+            <template>
+              [[item.payterms_Name]]
+            </template>
+          </gl-combo-box>
+        </div>
+        <div class="flex-3">
+          [[changeString2Num(data.*,'contract_weight')]]
+          <gl-form-input class="required number" required allowed-pattern="[0-9||,||.]" format-number="on" disabled="[[_checkArrayTrue(commonState.btnDisabled,data.contract_status)]]"
+            error-message="{{localizeContract.error_input}}{{localizeContract.quantity}}" required label="{{localizeContract.quantity}}"
+            value="{{data.contract_weight}}" on-focus="_setSeleteValue" placeholder="{{localizeContract.quantity}}" id="contract_weight"></gl-form-input>
+        </div>
+      </div>
 
-      <gl-grid-row>
+      <!-- <gl-grid-row width="{{getWidth}}">
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,9]]">
-          <!--[[_getBuyerAddressFromData(data)]]-->
           <gl-combo-box class="required" always-float-label required id="buyer_id" label="{{localizeContract.buyer}}" placeholder="{{localizeContract.buyer}}"
             disabled="[[_checkArrayTrue(commonState.btnDisabled,data.contract_status)]]" items="{{buyerList}}" item-label-path="buyer_name"
             item-value-path="buyer_id" error-message="{{localizeContract.error_dropdown}}{{localizeContract.buyer}}" value="{{data.buyer_id}}"
@@ -230,68 +264,98 @@
             </template>
           </gl-combo-box>
         </gl-grid-col>
-      </gl-grid-row>
+      </gl-grid-row> -->
 
-      <gl-grid-row>
+      <div class="horizontal layout">
+        <div class="flex-9 flex-padding">
+          <gl-combo-box class="required" always-float-label required id="buyer_id" label="{{localizeContract.buyer}}" placeholder="{{localizeContract.buyer}}"
+            disabled="[[_checkArrayTrue(commonState.btnDisabled,data.contract_status)]]" items="{{buyerList}}" item-label-path="buyer_name"
+            item-value-path="buyer_id" error-message="{{localizeContract.error_dropdown}}{{localizeContract.buyer}}" value="{{data.buyer_id}}"
+            on-selected-item-changed="_getBuyerAddress">
+            <template>
+              [[item.buyer_name]]
+            </template>
+          </gl-combo-box>
+        </div>
+        <div class="flex-3">
+        </div>
+      </div>
+
+      <!-- <gl-grid-row width="{{getWidth}}">
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,9]]">
           <gl-form-input disabled label="{{localizeContract.fax}}" value="{{dataShow.buyer_fax}}" placeholder="{{localizeContract.fax}}"></gl-form-input>
         </gl-grid-col>
-      </gl-grid-row>
-      <gl-grid-row>
+      </gl-grid-row> -->
+      <div class="horizontal layout">
+        <div class="flex-9 flex-padding">
+          <gl-form-input disabled label="{{localizeContract.fax}}" value="{{dataShow.buyer_fax}}" placeholder="{{localizeContract.fax}}"></gl-form-input>
+        </div>
+        <div class="flex-3">
+        </div>
+      </div>
 
+      <!-- <gl-grid-row width="{{getWidth}}">
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,6]]">
           <gl-form-textarea rows="2" disabled label="{{localizeContract.buyer_address}}" placeholder="{{localizeContract.buyer_address}}"
             value="{{dataShow.buyerAddress}}"></gl-form-textarea>
         </gl-grid-col>
-      </gl-grid-row>
-      <!--{{setHamonize(hamonizeList.*)}}-->
-      <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,12]]">
-        <div class="titleName">{{localizeContract.list_rice}}</div>
-        <div class="horizontal end-justified layout">
-          <div>
-
-            <template is="dom-if" if=[[!_checkArrayTrue(commonState.btnDisabled)]]>
-              <paper-button raised on-tap="addHamonizeTotable" class="gl-btn-primary">{{localizeContract.selete}}</paper-button>
-              <paper-button raised on-tap="DeleteAllHamonizeTotable" class="gl-btn-danger">{{localizeContract.dele_selete}}</paper-button>
-            </template>
-
-
-          </div>
+      </gl-grid-row> -->
+      <div class="horizontal layout">
+        <div class="flex-6 flex-padding">
+          <gl-form-textarea rows="2" disabled label="{{localizeContract.buyer_address}}" placeholder="{{localizeContract.buyer_address}}"
+            value="{{dataShow.buyerAddress}}"></gl-form-textarea>
         </div>
+        <div class="flex-3">
+        </div>
+      </div>
+      <!--{{setHamonize(hamonizeList.*)}}-->
+      <!-- <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,12]]"> -->
+      <div class="horizontal layout">
+        <div class="flex">
 
-        <table class="gl-table-default">
-          <thead class="table-head">
-            <tr>
-              <th>[[localizeContract.order]]</th>
-              <th>[[localizeContract.hm_code]]</th>
-              <th>[[localizeContract.hm_name]]</th>
-              <th>[[localizeContract.hm_year]]</th>
-              <th>#</th>
-            </tr>
-          </thead>
-          <tbody class="table-body">
-            <template is="dom-repeat" items="{{hamonizeSeleted}}">
+          <div class="titleName">{{localizeContract.list_rice}}</div>
+          <div class="horizontal end-justified layout">
+            <div>
+              <template is="dom-if" if=[[!_checkArrayTrue(commonState.btnDisabled)]]>
+                <paper-button raised on-tap="addHamonizeTotable" class="gl-btn-primary">{{localizeContract.selete}}</paper-button>
+                <paper-button raised on-tap="DeleteAllHamonizeTotable" class="gl-btn-danger">{{localizeContract.dele_selete}}</paper-button>
+              </template>
+            </div>
+          </div>
+
+          <table class="gl-table-default">
+            <thead class="table-head">
               <tr>
-                <td>[[_ObcountIndex(index)]]</td>
-                <td>[[item.hamonize_code]]</td>
-                <td>[[item.hamonize_th]]</td>
-                <td>[[item.hamonize_year]]</td>
-                <td>
-                  <div hidden="[[_checkArrayTrue(commonState.btnDisabled)]]">
-                    <paper-icon-button data="{{item}}" icon="delete" on-tap="_deleteHamonize"></paper-icon-button>
-                  </div>
-                </td>
+                <th>[[localizeContract.order]]</th>
+                <th>[[localizeContract.hm_code]]</th>
+                <th>[[localizeContract.hm_name]]</th>
+                <th>[[localizeContract.hm_year]]</th>
+                <th>#</th>
               </tr>
-            </template>
-            <template is="dom-if" if="[[_isShow(hamonizeSeleted,hamonizeSeleted.*)]]">
-              <tr>
-                <td colspan="5" style="text-align: center;"> {{localizeCommon.no_data}}</td>
-              </tr>
-            </template>
-          </tbody>
-        </table>
-      </gl-grid-col>
-      <!--<div hidden="{{item.hiddend}}">
+            </thead>
+            <tbody class="table-body">
+              <template is="dom-repeat" items="{{hamonizeSeleted}}">
+                <tr>
+                  <td>[[_ObcountIndex(index)]]</td>
+                  <td>[[item.hamonize_code]]</td>
+                  <td>[[item.hamonize_th]]</td>
+                  <td>[[item.hamonize_year]]</td>
+                  <td>
+                    <div hidden="[[_checkArrayTrue(commonState.btnDisabled)]]">
+                      <paper-icon-button data="{{item}}" icon="delete" on-tap="_deleteHamonize"></paper-icon-button>
+                    </div>
+                  </td>
+                </tr>
+              </template>
+              <template is="dom-if" if="[[_isShow(hamonizeSeleted,hamonizeSeleted.*)]]">
+                <tr>
+                  <td colspan="5" style="text-align: center;"> {{localizeCommon.no_data}}</td>
+                </tr>
+              </template>
+            </tbody>
+          </table>
+          <!-- </gl-grid-col> -->
+          <!--<div hidden="{{item.hiddend}}">
 
         <div hidden="{{subChild.hiddend}}">
           <div class="horizontal layout item">
@@ -303,15 +367,24 @@
           </div>
         </div>-->
 
-      </gl-grid-row>
+          <!-- </gl-grid-row> -->
+        </div>
+      </div>
 
-
-      <gl-grid-row>
+      <!-- <gl-grid-row>
         <gl-grid-col width="[[getWidth]]" grid="[[300,12],[500,6]]">
           <gl-form-textarea disabled="[[_checkArrayTrue(commonState.btnDisabled,data.contract_status)]]" rows="2" label="{{localizeContract.more_detail}}"
             placeholder="{{localizeContract.more_detail}}" value="{{data.contract_desc}}" name="contract_desc"></gl-form-textarea>
         </gl-grid-col>
-      </gl-grid-row>
+      </gl-grid-row> -->
+      <div class="horizontal layout">
+        <div class="flex-9 flex-padding">
+          <gl-form-textarea disabled="[[_checkArrayTrue(commonState.btnDisabled,data.contract_status)]]" rows="2" label="{{localizeContract.more_detail}}"
+            placeholder="{{localizeContract.more_detail}}" value="{{data.contract_desc}}" name="contract_desc"></gl-form-textarea>
+        </div>
+        <div class="flex-3">
+        </div>
+      </div>
       <gl-form-panel-footer label="" set-padding="10px">
         <div class="horizontal end-justified layout">
 
@@ -388,7 +461,7 @@
                     </div>
                   </template>
               </template>-->
-              <template is="dom-repeat" items={{hamonizeListNoGroup}} index-as="indexroot">
+              <template is="dom-repeat" items={{hamonizeListNoGroup}} index-as="indexroot" initial-count="20">
                 <div hidden="{{item.hiddend}}">
                   <!--<template is="dom-repeat" items={{item.sub}} as="subChild">-->
                   <!--<div hidden="{{subChild.hiddend}}">-->
@@ -422,7 +495,7 @@
                 <div class="header-div flex-2">[[localizeContract.hm_year]]</div>
               </div>
               <div class="subdiv">
-                <template is="dom-repeat" items={{hamonizeList}} index-as="indexroot">
+                <template is="dom-repeat" items={{hamonizeList}} index-as="indexroot" initial-count="20">
                   <div hidden="{{item.hiddend}}">
                     <div class="horizontal layout item">
                       <div class="">
@@ -440,7 +513,7 @@
                     </div>
                   </div>
                   <iron-collapse id="collapse-[[indexroot]]">
-                    <template is="dom-repeat" items={{item.sub}} as="subChild">
+                    <template is="dom-repeat" items={{item.sub}} as="subChild" initial-count="20">
                       <div hidden="{{subChild.hiddend}}">
                         <div class="horizontal layout sub-item">
                           <div class=""></div>
@@ -709,7 +782,7 @@
           if (this.hamonizeList[indexRoot].sub[index].hamonize_year === year) {
             this.set('hamonizeList.' + indexRoot + '.sub.' + index + '.check', checkHost)
           }
-          if(year === 0){
+          if (year === 0) {
             this.set('hamonizeList.' + indexRoot + '.sub.' + index + '.check', checkHost)
           }
         })
@@ -734,12 +807,12 @@
           // console.log(seletedYear === '');
           if (seletedYear === '') {
             this.hamonizeListNoGroup.map((item, index) => {
-                this.set('hamonizeListNoGroup.' + index + '.hiddend', false)
+              this.set('hamonizeListNoGroup.' + index + '.hiddend', false)
             })
             for (var index = 0; index < this.hamonizeList.length; index++) {
               for (var index2 = 0; index2 < this.hamonizeList[index].sub.length; index2++) {
                 this.set('hamonizeList.' + index + '.sub.' + index2 + '.hiddend', false)
-               
+
               }
               let checkkFalse = this.hamonizeList[index].sub.find((item) => item.hiddend === false)
               if (checkkFalse === undefined) {
